@@ -4,163 +4,774 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Computer Science Portal | Class XI, XII & CUET</title>
-    <meta name="description" content="Explore comprehensive resources for CBSE Class 11 & 12 Computer Science and CUET preparation by Rohit Singh Sir." />
+    <title>SinghClasses | CBSE CS, IP & AI Classes</title>
+
+    <meta name="description" content="SinghClasses by Rohit Singh - Expert online and offline coaching for CBSE Class 9-12 Computer Science (CS), Informatics Practices (IP), and Artificial Intelligence (AI). Flexible batches available in Delhi." />
+    <meta name="keywords" content="Singh Classes, Rohit Singh, Computer Science, Informatics Practices, Artificial Intelligence, online coaching, offline classes, Delhi, CBSE, Class 11, Class 12, programming, Python, MySQL, AI, machine learning" />
+    <meta name="author" content="Rohit Singh" />
+
+    <link rel="icon" href="../assets/images/favicon/favicon.ico" type="image/x-icon" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Pacifico&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-    <link rel="stylesheet" href="../assets/css/style.css" />
-    <link rel="stylesheet" href="../assets/css/dashboard.css" />
+    <!-- Embedded Polished Premium Architecture Design System CSS -->
+    <style>
+        /* ==========================================================================
+           01. ARCHITECTURE DESIGN SYSTEM CORE & RESET
+           ========================================================================== */
+        :root {
+            --dark-navy: #0f172a; 
+            --primary-green: #0d9488; 
+            --nav-teal: #0f4c4c; 
+            --bg-light: #f8fafc; 
+            --bg-card: #ffffff;
+            --accent-amber: #f59e0b; 
+            --text-main: #1e293b; 
+            --text-muted: #64748b; 
+            --border-color: #e2e8f0; 
+            --border-light: #f1f5f9;
+            --radius-lg: 24px; 
+            --radius-md: 16px; 
+            --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            
+            /* GEOMETRIC GAP CONSTANTS FOR SYSTEM-WIDE BALANCE */
+            --gap-section: 40px;  /* Perfect spatial breathing room between blocks */
+            --gap-element: 24px;  /* Crisp baseline padding inside blocks */
+        }
 
+        body.dark-mode {
+            --bg-light: #0b1329; 
+            --bg-card: #111c44; 
+            --text-main: #f8fafc; 
+            --text-muted: #94a3b8; 
+            --border-color: #1e293b;
+            --border-light: #1e2e4a; 
+            --dark-navy: #f8fafc;
+        }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+        }
+
+        html { 
+            scroll-behavior: smooth; 
+        }
+
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background: var(--bg-light); 
+            color: var(--text-main); 
+            transition: background 0.3s, color 0.3s; 
+            display: flex; 
+            flex-direction: column; 
+            min-height: 100vh; 
+            overflow-x: hidden; 
+        }
+
+        a { 
+            text-decoration: none; 
+            transition: var(--transition-smooth); 
+        }
+
+        button { 
+            border: none; 
+            background: none; 
+            font-family: inherit; 
+            cursor: pointer; 
+        }
+
+        .container-inner { 
+            max-width: 1250px; 
+            margin: 0 auto; 
+            padding: 0 20px; 
+            width: 100%; 
+        }
+
+        /* Helpers & Icon Typography */
+        .inline-svg-icon { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; vertical-align: middle; margin-right: 6px; }
+        .inline-svg-icon stroke { stroke: currentColor; }
+        .icon-teal, .color-teal { color: var(--primary-green); }
+        .icon-orange, .color-orange { color: var(--accent-amber); }
+        .header-svg-icon { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; color: var(--primary-green); vertical-align: middle; }
+        
+        .section-decor-header { text-align: center; margin-bottom: var(--gap-element); display: flex; align-items: center; justify-content: center; gap: 15px; }
+        .section-decor-header h2 { font-size: 1.4rem; color: var(--dark-navy); font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .section-decor-header::before, .section-decor-header::after { content: ''; height: 2px; width: 45px; background: var(--border-color); border-radius: 2px; }
+
+        /* ==========================================================================
+           02. HEADER UI & ANNOUNCEMENT NOTICE ELEMENTS
+           ========================================================================== */
+        .site-header { background: transparent; width: 100%; display: flex; justify-content: center; position: relative; z-index: 100; padding: 0 20px; margin-top: 20px; }
+        .header-container { position: relative; display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 1250px; flex-wrap: wrap; gap: 15px; background: var(--nav-teal); padding: 16px 24px; border-radius: 16px; box-shadow: 0 10px 30px rgba(15, 76, 76, 0.15); transition: background 0.3s; }
+        body.dark-mode .header-container { background: #063e3b; }
+        .logo-brand { display: flex; align-items: center; gap: 12px; }
+        .logo-icon-box { color: #ffffff; width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; }
+        .logo-title { font-size: 18px; color: #fff; line-height: 1.1; font-weight: 600; letter-spacing: -.3px; }
+        .logo-tagline { font-size: 11px; color: #ccfbf1; font-weight: 500; margin-top: 2px; display: block; }
+        .nav-links-list { list-style: none; display: flex; align-items: center; gap: 24px; }
+        .nav-link { color: #f8fafc; font-weight: 500; font-size: 0.9rem; }
+        .nav-link:hover, .nav-link.active { color: var(--accent-amber); }
+
+        /* MEASURED ANNOUNCEMENT GAP RULE */
+        .announcement-bar { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 50px; padding: 14px 28px; margin: 30px auto var(--gap-section) auto; display: flex; justify-content: center; align-items: center; gap: 15px; font-size: 0.88rem; font-weight: 600; color: var(--text-main); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); flex-wrap: wrap; transition: var(--transition-smooth); }
+        .announcement-cta { color: var(--primary-green); text-decoration: underline; }
+        .announcement-bar .divider { color: var(--border-color); font-weight: 300; }
+
+        /* ==========================================================================
+           03. HERO & ARCHITECTURAL MASTER DASHBOARD COMPONENTS
+           ========================================================================== */
+        .hero-wrapper { margin: 0 auto 20px auto; }
+        .hero-container { position: relative; overflow: hidden; background: linear-gradient(135deg, #e6f7f5 0%, #f0fdfa 100%); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 45px 50px; display: flex; gap: 40px; align-items: center; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02); transition: var(--transition-smooth); }
+        body.dark-mode .hero-container { background: linear-gradient(135deg, #111e30 0%, #0c1a2e 100%); }
+        .hero-left-content, .hero-right-stats, .teacher-photo-frame, .teacher-biography, .db-cards-grid, .db-subscribe-ribbon, .db-billboard-inner, .db-features-strip { position: relative; z-index: 2; }
+        .hero-left-content { flex: 1.2; }
+        .hero-right-stats { flex: 0.9; }
+        .hero-matrix-dots { position: absolute; width: 80px; height: 80px; background-image: radial-gradient(#0d9488 12%, transparent 30%); background-size: 16px 16px; opacity: 0.18; pointer-events: none; z-index: 1; }
+        .hero-dots-bl { bottom: 15px; left: 20px; }
+        .hero-dots-tr { top: 25px; right: 25px; }
+        .hero-pill-badge { display: inline-flex; align-items: center; gap: 6px; background: #ccfbf1; color: #0f4c32; padding: 6px 16px; border-radius: 30px; font-size: 0.85rem; font-weight: 600; margin-bottom: 20px; }
+        .hero-left-content h1 { font-size: clamp(2.2rem, 3.8vw, 3.2rem); font-weight: 700; color: var(--dark-navy); line-height: 1.15; margin-bottom: 15px; letter-spacing: -0.5px; }
+        .hero-left-content h1 span.text-green { color: var(--primary-green); }
+        .hero-description { font-size: 1.05rem; color: var(--text-muted); max-width: 520px; margin-bottom: 30px; }
+        .hero-action-buttons { display: flex; gap: 15px; align-items: center; flex-wrap: wrap; }
+
+        .db-master-zone-box { position: relative; overflow: hidden; background: linear-gradient(135deg, #f0fdfa 0%, #f4fbf9 100%); border: 1px solid rgba(13, 148, 136, 0.18); border-radius: var(--radius-lg, 24px); padding: 35px 35px 25px 35px; margin: 35px auto; box-shadow: 0 10px 30px rgba(13, 148, 136, 0.02); transition: var(--transition-smooth); }
+        body.dark-mode .db-master-zone-box { background: linear-gradient(135deg, #111e30 0%, #0c1a2e 100%); border-color: rgba(13, 148, 136, 0.08); }
+        .db-cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 25px; }
+        .db-card { background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 35px 24px; text-align: center; transition: var(--transition-smooth); display: flex; flex-direction: column; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.01); }
+        .db-card:hover { transform: translateY(-6px); box-shadow: 0 15px 30px rgba(0,0,0,0.04); }
+        .card-border-green { border-top: 4px solid #0d9488; }
+        .card-border-blue { border-top: 4px solid #2563eb; }
+        .card-border-purple { border-top: 4px solid #7c3aed; }
+        .db-card-icon { width: 60px; height: 60px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 20px; }
+        .bg-light-green { background: #e6f7f5; color: #0d9488; }
+        .bg-light-blue { background: #e0f2fe; color: #2563eb; }
+        .bg-light-purple { background: #f3e8ff; color: #7c3aed; }
+        .db-card h3 { font-size: 1.2rem; color: var(--dark-navy); font-weight: 700; margin-bottom: 12px; letter-spacing: -0.3px; }
+        .db-card-desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 25px; flex-grow: 1; }
+        .db-card .btn { width: 100%; justify-content: center; border-radius: 50px; }
+
+        .btn { padding: 12px 26px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 8px; transition: var(--transition-smooth); }
+        .btn-primary { background: var(--primary-green); color: #fff !important; box-shadow: 0 4px 12px rgba(13, 148, 136, 0.15); }
+        .btn-primary:hover { background: #0a756c; }
+        .btn-outline { background: transparent; border: 1px solid var(--primary-green); color: var(--primary-green) !important; }
+        .btn-outline:hover { background: rgba(13, 148, 136, 0.04); }
+        .btn-green { background: #0d9488; } .btn-green:hover { background: #0a756c; }
+        .btn-blue { background: #2563eb; } .btn-blue:hover { background: #1d4ed8; }
+        .btn-purple { background: #7c3aed; } .btn-purple:hover { background: #6d28d9; }
+
+        .db-subscribe-ribbon { background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(13, 148, 136, 0.12); border-radius: var(--radius-md); padding: 16px 25px; display: flex; justify-content: space-between; align-items: center; gap: 20px; transition: var(--transition-smooth); }
+        body.dark-mode .db-subscribe-ribbon { background: rgba(17, 30, 48, 0.4); border-color: rgba(255, 255, 255, 0.05); }
+        .db-ribbon-content { display: flex; align-items: center; gap: 18px; }
+        .db-ribbon-icon { width: 44px; height: 44px; background: var(--bg-card); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 1.15rem; color: #0d9488; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+        .db-ribbon-text h4 { color: var(--dark-navy); font-size: 1.05rem; font-weight: 700; }
+        .db-ribbon-text p { color: var(--text-muted); font-size: 0.88rem; margin-top: 2px; }
+        .btn-ribbon-action { background: #1e293b; color: #ffffff !important; border-radius: 50px; white-space: nowrap; transition: var(--transition-smooth); box-shadow: 0 4px 12px rgba(30, 41, 59, 0.15); }
+        .btn-ribbon-action:hover { background: #ef4444; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); }
+        body.dark-mode .btn-ribbon-action { background: #f8fafc; color: #0f172a !important; }
+        body.dark-mode .btn-ribbon-action:hover { background: #ef4444; color: #ffffff !important; }
+        .db-billboard-inner { text-align: center; padding: 40px 20px 45px 20px; }
+        .db-billboard-inner h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); color: var(--dark-navy); font-weight: 800; line-height: 1.3; text-shadow: 0 2px 4px rgba(13, 148, 136, 0.04); }
+        .db-features-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 20px 10px 10px 10px; border-top: 1px solid rgba(13, 148, 136, 0.08); }
+        body.dark-mode .db-features-strip { border-color: rgba(255, 255, 255, 0.05); }
+        .db-feature-pill { display: flex; align-items: center; gap: 12px; justify-content: center; }
+        .db-pill-icon { font-size: 1.2rem; display: inline-flex; align-items: center; justify-content: center; }
+        .db-pill-info h5 { color: var(--dark-navy); font-size: 0.88rem; font-weight: 700; }
+        .db-pill-info p { color: var(--text-muted); font-size: 0.78rem; margin-top: 1px; }
+        .sc-canvas-bg-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+
+        .hero-stat-strip { display: flex; flex-direction: column; background: var(--bg-card); border-radius: 20px; padding: 10px 25px; border: 1px solid var(--border-light); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02); transition: var(--transition-smooth); }
+        .hero-stat-item { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding: 22px 0; border-bottom: 1px solid var(--border-light); }
+        .hero-stat-item:last-child { border-bottom: none; }
+        .hero-stat-left-group { display: flex; align-items: center; gap: 20px; }
+        .hero-stat-icon-box { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .hero-stat-icon-box svg { width: 22px; height: 22px; }
+        .icon-teal-bg { background: #ccfbf1; color: #0d9488; }
+        .icon-amber-bg { background: #fef9c3; color: #a16207; }
+        .icon-blue-bg { background: #e0f2fe; color: #1d4ed8; }
+        .hero-stat-info-text h4 { color: var(--dark-navy); font-size: .9rem; font-weight: 600; letter-spacing: 0.2px; margin-bottom: 3px; }
+        .hero-stat-info-text p { color: var(--text-muted) !important; font-size: 0.8rem !important; }
+        .hero-stat-checkmark { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .chk-green { background: #e6f7f5; color: #0d9488; }
+        .chk-amber { background: #fef9c3; color: #a16207; }
+        .chk-blue { background: #e0f2fe; color: #1d4ed8; }
+
+        /* ==========================================================================
+           04. PROFILES, ACHIEVEMENTS & MODULE CARD PATHWAYS
+           ========================================================================== */
+        .teacher-section { position: relative; overflow: hidden; background: #0c1a2e; color: #fff; border-radius: var(--radius-lg); padding: 40px 30px; display: flex; gap: 40px; align-items: center; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03); transition: background 0.3s; margin-bottom: 25px; }
+        body.dark-mode .teacher-section { background: #07101c; }
+        .teacher-photo-frame { background: linear-gradient(135deg, #2dd4bf, #0d9488); padding: 5px; border-radius: 50%; width: 180px; height: 180px; display: flex; justify-content: center; align-items: center; flex-shrink: 0; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); }
+        .teacher-photo-frame img { width: 170px; height: 170px; object-fit: cover; border-radius: 50%; border: 4px solid #0c1a2e; }
+        body.dark-mode .teacher-photo-frame img { border-color: #07101c; }
+        .teacher-biography { flex: 1; }
+        .teacher-biography h2 { font-family: 'Pacifico', cursive; color: var(--accent-amber); font-size: 2.8rem; font-weight: 400; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); margin-bottom: 5px; }
+        .teacher-biography h3 { color: #99f6e4; font-size: 1rem; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 15px; }
+        .teacher-biography p { color: #cbd5e1; font-size: 0.95rem; font-weight: 300; text-align: left; line-height: 1.6; }
+
+        .results-section { border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 25px 30px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02); }
+        .results-layout-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 35px; }
+        .result-card { background: var(--bg-light); border: 1px solid var(--border-light); border-radius: 16px; padding: 25px 20px; text-align: center; transition: var(--transition-smooth); }
+        body.dark-mode .result-card { background: #111e30; }
+        .result-card:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(13, 148, 136, 0.08); }
+        .result-badge { display: inline-flex; align-items: center; justify-content: center; background: var(--primary-green); color: #ffffff; font-weight: 700; font-size: 1.2rem; padding: 6px 18px; border-radius: 30px; margin-bottom: 12px; min-height: 38px; box-sizing: border-box; }
+        .result-card h4 { font-size: 1.1rem; color: var(--dark-navy); margin-bottom: 8px; }
+        .result-card p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; }
+
+        .ts-header-badge { background: #078269; color: #ffffff; font-size: 1.25rem; font-weight: 700; padding: 8px 12px; border-radius: 8px; text-align: center; margin-bottom: 12px; width: 100%; box-sizing: border-box; }
+        body.dark-mode .ts-header-badge { background: rgba(13, 148, 136, 0.35); color: #2dd4bf; }
+        .testimonials-slider-container { position: relative; background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px 20px 12px 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02); }
+        body.dark-mode .testimonials-slider-container { background: #111e30; border-color: #1e293b; }
+        .slides-track { position: relative; width: 100%; }
+        .testimonial-slide { display: none; grid-template-columns: 380px 1fr; align-items: stretch; gap: 24px; opacity: 0; width: 100%; transition: opacity 0.4s ease; }
+        .testimonial-slide.active { display: grid; opacity: 1; }
+        .ts-left-panel { display: flex; width: 100%; }
+        .ts-profile-card { background: var(--bg-card); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 24px 20px; width: 100%; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.01); display: flex; flex-direction: column; gap: 22px; box-sizing: border-box; }
+        body.dark-mode .ts-profile-card { background: #0c1a2e; border-color: #1e293b; }
+        .ts-profile-header { display: flex; align-items: center; gap: 16px; }
+        .ts-avatar-wrapper { position: relative; width: 85px; height: 85px; border-radius: 50%; border: 3px solid var(--primary-green); overflow: hidden; background: #f1f5f9; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04); min-width: 85px !important; min-height: 85px !important; flex-shrink: 0 !important; }
+        .ts-avatar-wrapper img { width: 100%; height: 100%; object-fit: cover !important; }
+        .ts-meta-details { flex: 1; display: flex; flex-direction: column; gap: 9px; overflow: visible; }
+        .ts-meta-row { display: grid; grid-template-columns: 18px 54px 8px 1fr; align-items: center; gap: 4px; font-size: 0.85rem; }
+        .ts-row-icon { display: inline-flex; align-items: center; justify-content: center; color: var(--primary-green); }
+        .ts-row-icon svg { width: 13px; height: 13px; }
+        .ts-row-label { color: var(--text-muted); font-weight: 500; }
+        .ts-row-sep { color: var(--text-muted); text-align: center; }
+        .ts-row-value { color: var(--dark-navy); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ts-pill-badge { display: flex; align-items: center; justify-content: center; gap: 6px; background: #e6f7f5; color: #0d9488; font-size: 1.15rem; font-weight: 800; padding: 10px 16px; border-radius: 8px; text-align: center; }
+        body.dark-mode .ts-pill-badge { background: rgba(13, 148, 136, 0.1); }
+        .ts-right-panel { position: relative; background: #f2f8f7; border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 24px 28px; display: flex; flex-direction: column; justify-content: flex-start; box-sizing: border-box; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.01); }
+        body.dark-mode .ts-right-panel { background: #0c1a2e; border-color: #1e293b; }
+        .testimonial-slide .ts-profile-card, .testimonial-slide .ts-right-panel { transform: scale(0.98); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .testimonial-slide.active .ts-profile-card, .testimonial-slide.active .ts-right-panel { transform: scale(1); }
+        .ts-quote-mark { font-family: 'Pacifico', cursive, sans-serif; font-size: 2rem; color: rgba(13, 148, 136, 0.2); line-height: 0; display: block; }
+        .top-quote { align-self: flex-start; margin-bottom: 2px; margin-left: -4px; }
+        .bottom-quote { align-self: flex-end; margin-top: 2px; margin-right: -4px; }
+        .testimonial-quote { font-size: 0.95rem; color: var(--text-main); line-height: 1.6; font-weight: 500; text-align: left; }
+        .ts-highlight { color: var(--primary-green); font-weight: 700; }
+        .slider-controls { display: flex; align-items: center; justify-content: space-between; margin-top: 6px; border-top: 1px solid var(--border-light); padding-top: 6px; }
+        .slider-nav-btn { background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04); }
+        .slider-nav-btn:hover { background: var(--primary-green); color: #ffffff; border-color: var(--primary-green); }
+        .slider-nav-btn svg { width: 14px; height: 14px; }
+        .slider-dots { display: flex; gap: 8px; align-items: center; }
+        .slider-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-muted); opacity: 0.35; cursor: pointer; transition: width 0.38s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.38s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.38s cubic-bezier(0.4, 0, 0.2, 1); }
+        .slider-dot:hover { opacity: 0.75; }
+        .slider-dot.active { background: var(--primary-green); width: 20px; border-radius: 100px; opacity: 1; }
+
+        .classes-section { position: relative; overflow: hidden; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 35px 40px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.04); transition: var(--transition-smooth); margin-bottom: 25px; }
+        .classes-layout-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 25px; }
+        .class-card { background: var(--bg-light); border-radius: var(--radius-md); padding: 18px; display: flex; align-items: center; gap: 15px; border: 1px solid transparent; transition: var(--transition-smooth); }
+        .class-card:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.04); border-color: var(--border-color); }
+        body.dark-mode .class-card { background: #111e30; }
+        .c-icon-box { width: 55px; height: 55px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: bold; flex-shrink: 0; }
+        .c-icon-box svg { width: 24px; height: 24px; }
+        .c-theme-green .c-icon-box { background: #0d9488; }
+        .c-theme-blue .c-icon-box { background: #2563eb; }
+        .c-theme-purple .c-icon-box { background: #7c3aed; }
+        .class-info-metadata h4 { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+        .class-info-metadata h3 { margin-top: 4px; font-size: 1.05rem; color: var(--dark-navy); font-weight: 600; }
+        .classes-summary-footer { display: flex; justify-content: center; gap: 25px; border-top: 1px solid var(--border-color); padding-top: 20px; color: var(--text-muted); font-size: 0.9rem; font-weight: 500; flex-wrap: wrap; }
+
+        .playlists-section { position: relative; overflow: hidden; background: #f0fdf4; border: 1px solid var(--border-color); border-radius: 20px; padding: 40px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02); transition: var(--transition-smooth); }
+        body.dark-mode .playlists-section { background: var(--bg-card); border-color: var(--border-color); }
+        .pl-header-wrap { text-align: center; margin-bottom: 25px; }
+        .pl-main-title { display: flex; justify-content: center; align-items: center; gap: 12px; font-size: 1.8rem; font-weight: 600; color: var(--dark-navy); margin-bottom: 8px; }
+        .pl-main-title::before, .pl-main-title::after { content: ''; height: 2px; width: 45px; background: var(--border-color); border-radius: 2px; }
+        .title-play-icon { width: 22px; height: 22px; }
+        .pl-sub-title { color: var(--text-muted); font-size: 0.95rem; }
+        .pl-group-divider { display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 500; color: var(--text-muted); margin: 25px 0 12px 0; }
+        .pl-group-divider::before, .pl-group-divider::after { content: ''; flex: 1; height: 1px; background: var(--border-color); margin: 0 15px; }
+        .pl-dashboard-row { display: flex; align-items: center; justify-content: space-between; background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 14px 20px; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.01); transition: all 0.2s ease; }
+        .pl-dashboard-row:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(13, 148, 136, 0.06); border-color: var(--primary-green); }
+        body.dark-mode .pl-dashboard-row { background: #111e30; border-color: #1e293b; }
+        .pl-left-meta { display: flex; align-items: center; gap: 15px; }
+        .pl-icon-square { width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+        .pl-icon-square svg { width: 20px; height: 20px; color: var(--text-main); }
+        .row-theme-green .pl-icon-square { background: #e6f7ed; } .row-theme-yellow .pl-icon-square { background: #fef9c3; }
+        .row-theme-blue .pl-icon-square { background: #e0f2fe; } .row-theme-purple .pl-icon-square { background: #f3e8ff; }
+        .row-theme-orange .pl-icon-square { background: #ffedd5; } .row-theme-pink .pl-icon-square { background: #fce7f3; }
+        body.dark-mode .row-theme-green .pl-icon-square { background: #064e3b; } body.dark-mode .row-theme-yellow .pl-icon-square { background: #713f12; }
+        body.dark-mode .row-theme-blue .pl-icon-square { background: #0c4a6e; } body.dark-mode .row-theme-purple .pl-icon-square { background: #4c1d95; }
+        body.dark-mode .row-theme-orange .pl-icon-square { background: #7c2d12; } body.dark-mode .row-theme-pink .pl-icon-square { background: #831843; }
+        .pl-item-title { font-size: 1.05rem; font-weight: 600; color: var(--dark-navy); }
+        .pl-item-desc { font-size: 0.85rem; color: var(--text-muted); margin-top: 2px; }
+        .pl-arrow-circle { width: 36px; height: 36px; border-radius: 50%; background: var(--bg-light); border: 1px solid var(--border-light); display: flex; align-items: center; justify-content: center; color: var(--primary-green); transition: all 0.25s ease; }
+        body.dark-mode .pl-arrow-circle { background: #0c1a2e; }
+        .pl-dashboard-row:hover .pl-arrow-circle { background: var(--primary-green); color: #ffffff; border-color: var(--primary-green); transform: translateX(3px); }
+        .pl-arrow-circle svg { width: 16px; height: 16px; }
+
+        /* ==========================================================================
+           05. STANDARDIZED MATHEMATICAL GAP SYMMETRY ENGINE
+           ========================================================================== */
+        .sc-learning-blend-zone {
+          background: var(--bg-card);
+          border-radius: var(--radius-lg);
+          padding: var(--gap-section) 35px;
+          margin-bottom: var(--gap-section); /* Standardized constant gap mapping */
+          border: 1px solid var(--border-color);
+          box-shadow: 0 10px 40px rgba(0,0,0,0.02);
+        }
+
+        .sc-grid { 
+          display: grid; 
+          grid-template-columns: repeat(4, 1fr); 
+          gap: var(--gap-element); /* Internal components spacing grid pattern */
+          margin-bottom: var(--gap-section); 
+          position: relative; 
+          z-index: 2;
+          background: transparent;
+          padding: 0;
+        }
+
+        .sc-card {
+          border-radius: var(--radius-md); 
+          padding: 30px 20px;
+          text-align: center; 
+          text-decoration: none !important;
+          transition: var(--transition-smooth); 
+          display: flex; 
+          flex-direction: column; 
+          align-items: center;
+          border: 1px solid var(--border-color); 
+          box-shadow: 0 4px 15px rgba(0,0,0,0.02); 
+          height: 100%;
+          background: var(--bg-card);
+        }
+        .sc-card:hover { 
+          transform: translateY(-5px); 
+          box-shadow: 0 20px 35px rgba(13, 148, 136, 0.08); 
+          border-color: var(--primary-green);
+        }
+
+        .sc-card-icon-svg { display: inline-flex; align-items: center; justify-content: center; height: 40px; width: 40px; margin-bottom: 16px; transition: transform 0.3s ease; }
+        .sc-card:hover .sc-card-icon-svg { transform: scale(1.1); }
+        .sc-card h3 { font-size: 15px; font-weight: 700; color: var(--dark-navy) !important; margin-bottom: 8px; letter-spacing: 0.2px; }
+        .sc-card-desc { font-size: 12px; color: var(--text-muted) !important; margin-bottom: 20px; line-height: 1.5; flex-grow: 1; }
+        .sc-card-btn { font-size: 12px; font-weight: 600; padding: 10px 16px; border-radius: 50px; width: 100%; color: #fff !important; transition: background 0.2s; margin-top: auto; }
+        
+        .sc-btn-active { background: #0e7490; } 
+        .sc-btn-active:hover { background: #0a5c73; }
+        .sc-btn-disabled { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted) !important; cursor: not-allowed; }
+        .sc-card:hover .sc-btn-disabled { border-color: var(--primary-green); color: var(--primary-green) !important; background: rgba(13, 148, 136, 0.02); }
+
+        .sc-subscribe {
+          position: relative;
+          background: var(--border-light);
+          border: 1px solid var(--border-color);
+          border-radius: var(--radius-md);
+          padding: 24px 40px; 
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 20px;
+          overflow: hidden;
+        }
+        body.dark-mode .sc-subscribe { background: #1e2e4a; }
+        .sc-canvas-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.5; }
+        .sc-sub-content, .sc-sub-action { position: relative; z-index: 2; }
+        .sc-sub-content { display: flex; align-items: center; gap: 16px; }
+        .sc-sub-icon { display: inline-block; background: var(--bg-card); padding: 12px; border-radius: 50%; font-size: 22px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .sc-sub-text h4 { font-size: 16px; font-weight: 700; color: var(--dark-navy) !important; margin-bottom: 4px; }
+        .sc-sub-text p { font-size: 13px; color: var(--text-muted) !important; }
+
+        @keyframes scSubscribePulse { 0% { box-shadow: 0 0 0 0 rgba(13, 148, 136, 0.3); } 70% { box-shadow: 0 0 0 10px rgba(13, 148, 136, 0); } 100% { box-shadow: 0 0 0 0 rgba(13, 148, 136, 0); } }
+        .sc-sub-btn { background: var(--primary-green) !important; color: #fff !important; padding: 12px 24px; border-radius: 50px; font-weight: 600; font-size: 14px; white-space: nowrap; display: flex; align-items: center; gap: 8px; animation: scSubscribePulse 2s infinite; }
+        .sc-sub-btn:hover { background: #0a756c !important; }
+
+        .sc-hero-wrapper {
+          border-radius: var(--radius-lg);
+          border: 1px solid var(--border-color);
+          box-shadow: 0 10px 40px rgba(0,0,0,0.02);
+          display: flex;
+          flex-direction: column;
+          background: var(--bg-card);
+          overflow: hidden; 
+          margin-bottom: var(--gap-section); /* Standardized constant gap mapping */
+        }
+        .sc-hero-top {
+          position: relative;
+          background: linear-gradient(135deg, #f0fdfa 0%, #f8fafc 100%);
+          padding: 60px 20px;
+          text-align: center;
+          overflow: hidden; 
+        }
+        body.dark-mode .sc-hero-top { background: linear-gradient(135deg, #111c44 0%, #0b1329 100%); }
+        .sc-hero-content { position: relative; z-index: 2; pointer-events: none; text-shadow: 0 0 15px rgba(255,255,255,0.9); }
+        .sc-hero-content h1 { font-size: clamp(1.8rem, 4.2vw, 2.4rem); font-weight: 800; color: #0f172a; line-height: 1.3; margin-bottom: 0; letter-spacing: -0.5px; }
+        .sc-text-green { color: var(--primary-green); }
+        
+        .sc-features-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 30px 40px; 
+          background: var(--bg-card);
+          border-top: 1px solid var(--border-color);
+          flex-wrap: wrap;
+          gap: 20px;
+          position: relative;
+          z-index: 5; 
+        }
+        .sc-feature-item { display: flex; align-items: center; gap: 10px; padding: 5px; border-radius: 8px; transition: background 0.2s; }
+        .sc-feature-item:hover { background: rgba(21, 104, 69, 0.05); }
+        .sc-feature-icon { display: inline-block; font-size: 26px; transition: transform 0.3s ease; }
+        .sc-feature-item:hover .sc-feature-icon { animation: scEmojiMotion 0.6s ease-in-out infinite; }
+        .sc-feature-text h5 { font-size: 13px; font-weight: 700; color: #0f172a !important; margin-bottom: 2px; }
+        .sc-feature-text p { font-size: 12px; color: #64748b !important; }
+
+        /* ==========================================================================
+           06. SITE FOOTER INTERFACES & DYNAMIC HUD INTERACTION SYSTEMS
+           ========================================================================== */
+        .site-footer { background: #090f1c; color: #94a3b8; padding: 60px 20px 30px 20px; margin-top: auto; border-top: 1px solid var(--border-color); }
+        .footer-layout-grid { display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 50px; max-width: 1200px; margin: 0 auto 40px auto; }
+        .centers-sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 25px; }
+        .center-item { display: flex; align-items: flex-start; gap: 14px; }
+        .center-text strong { display: block; color: #ffffff; font-size: 1rem; margin-bottom: 6px; }
+        .center-text p { font-size: 0.9rem; color: #cbd5e1; line-height: 1.6; }
+        .footer-map-link { display: inline-block; margin-top: 8px; color: var(--accent-amber) !important; font-size: 0.85rem; font-weight: 500; }
+        .footer-map-link:hover { text-decoration: underline; }
+        .footer-icon { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0; margin-top: 4px; }
+
+        .email-footer-row { display: flex; align-items: center; gap: 12px; margin-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 20px; }
+        .email-footer-row a { color: #cbd5e1; font-size: 0.95rem; } .email-footer-row a:hover { color: #ffffff; }
+        .footer-column h4 { color: #fff; font-size: 1.1rem; margin-bottom: 24px; font-weight: 600; letter-spacing: 0.5px; }
+        .social-links-list { list-style: none; } .social-links-list li { margin-bottom: 14px; }
+
+        .site-footer .social-links-list .social-item-card { background: transparent !important; border: none !important; padding: 4px 0 !important; width: auto !important; display: inline-flex !important; align-items: center; color: #cbd5e1 !important; gap: 12px; font-weight: 500; transition: var(--transition-smooth); }
+        .site-footer .social-links-list .social-item-card:hover { color: var(--accent-amber) !important; transform: translateX(6px); }
+        .social-icon-wrapper { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; }
+        .footer-bottom-bar { border-top: 1px solid rgba(255, 255, 255, 0.06); padding-top: 20px; display: flex; justify-content: space-between; max-width: 1200px; margin: 0 auto; font-size: 0.9rem; color: #94a3b8; flex-wrap: wrap; }
+        .footer-legal-links a { color: #94a3b8; margin-left: 24px; } .footer-legal-links a:hover { color: var(--accent-amber); }
+
+        /* HUD CONTROLS BACKDROP RECONCILIATION */
+        .floating-action-hud { position: fixed; right: 25px; bottom: 35px; display: flex; flex-direction: column; gap: 12px; z-index: 999; background: transparent !important; }
+        .hud-btn { width: 50px; height: 50px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08); transition: var(--transition-smooth); }
+        .hud-btn:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(13, 148, 136, 0.2); }
+        
+        .floating-action-hud .hud-btn { backdrop-filter: blur(12px) !important; -webkit-backdrop-filter: blur(12px) !important; background: rgba(255, 255, 255, 0.85) !important; border: 1px solid var(--border-color) !important; }
+        body.dark-mode .floating-action-hud .hud-btn { background: rgba(17, 28, 68, 0.85) !important; border: 1px solid rgba(255,255,255,0.08) !important; }
+        .theme-toggle-btn { color: #f59e0b; }
+        .icon-sun { display: none; } body.dark-mode .icon-moon { display: none; } body.dark-mode .icon-sun { display: block; }
+        .share-action-btn { color: var(--primary-green); }
+        .floating-action-hud .scroll-top-btn { background: var(--primary-green) !important; color: #ffffff !important; border: 1px solid var(--primary-green) !important; }
+
+        .toast-notification { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: #0f172a; color: #fff; padding: 14px 28px; border-radius: 50px; font-size: 0.95rem; font-weight: 500; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); opacity: 0; visibility: hidden; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 1000; }
+        .toast-notification.show { transform: translateX(-50%) translateY(0); opacity: 1; visibility: visible; }
+
+        /* ==========================================================================
+           07. ADAPTIVE PLATFORM RESPONSIVENESS SYSTEM
+           ========================================================================== */
+        @media (max-width: 1100px) {
+            .footer-layout-grid { grid-template-columns: 1fr; gap: 35px; }
+            .centers-sub-grid { grid-template-columns: 1fr; gap: 20px; }
+        }
+
+        @media (max-width: 992px) {
+          .sc-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+          .sc-features-row { grid-template-columns: repeat(2, 1fr); display: grid; padding: 20px; }
+        }
+
+        @media (max-width: 960px) {
+            .sc-subscribe { flex-direction: column; text-align: center; padding: 25px 20px; }
+            .sc-sub-content { flex-direction: column; text-align: center; }
+            .sc-sub-btn { width: 100%; justify-content: center; }
+        }
+
+        @media (max-width: 900px) {
+            .header-container { padding: 15px; }
+            .nav-links-list { flex-wrap: wrap; justify-content: center; gap: 12px; }
+        }
+
+        @media (max-width: 600px) {
+            .announcement-bar { flex-direction: column; text-align: center; gap: 5px; padding: 12px; margin: 20px auto 35px auto; }
+            .announcement-bar .divider, .hide-mobile { display: none; }
+            .sc-hero-content h1 { font-size: 28px; }
+            .footer-bottom-bar { flex-direction: column; gap: 15px; align-items: center; }
+            .sc-grid { grid-template-columns: 1fr; }
+            .sc-features-row { grid-template-columns: 1fr; gap: 16px; }
+        }
+    </style>
 </head>
 
 <body>
 
-    <header role="banner">
-        <div class="sc-top-header">
-            <a class="sc-logo-area" href="../index.html">
-                <div class="sc-logo-icon">SC</div>
-                <div class="sc-logo-text">
-                    <strong>SinghClasses.in</strong>
-                    <span>Think Logic . Code Magic</span>
+    <header class="site-header" role="banner">
+        <div class="header-container">
+            <a class="logo-brand" href="../index.html" aria-label="SinghClasses Home">
+                <div class="logo-icon-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="2" y="5" width="20" height="14" rx="4" />
+                        <path d="M7.5 14.5l-2.5-2.5 2.5-2.5M11 17.3l2-7M16.5 9.5l2.5 2.5-2.5 2.5" />
+                    </svg>
+                </div>
+                <div class="logo-text-box">
+                    <strong class="logo-title">SinghClasses.in</strong>
+                    <span class="logo-tagline">Think Logic . Code Magic</span>
                 </div>
             </a>
-            <nav id="nav-menu">
-                <ul>
-                    <li><a href="index.html" class="active">Computer Science</a></li>
-                    <li><a href="../informatics-practices/index.html">Informatics Practices</a></li>
-                    <li><a href="../artificial-intelligence/index.html">Artificial Intelligence</a></li>
-                    <li><a href="../higher-education/ugc-net/index.html">Higher Edu</a></li>
-                    <li><a href="../about/index.html">About Us</a></li>
-                    <li><a href="../contact/index.html">Contact Us</a></li>
+            <nav class="main-navigation" id="nav-menu" aria-label="Primary Navigation">
+                <ul class="nav-links-list">
+                    <li><a class="nav-link" href="../computer-science/index.html">Computer Science</a></li>
+                    <li><a class="nav-link" href="../informatics-practices/index.html">Informatics Practices</a></li>
+                    <li><a class="nav-link" href="index.html">Artificial Intelligence</a></li>
+                    <li><a class="nav-link" href="../about/index.html">About Us</a></li>
+                    <li><a class="nav-link" href="../contact/index.html">Contact Us</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <main class="container-inner">
+    <main class="main-content container-inner">
 
-        <div class="sc-learning-blend-zone">
-            <div class="sc-grid">
-                <div class="sc-card">
-                    <div class="sc-card-icon">🎓</div>
-                    <h3>CLASS XII CS</h3>
-                    <p class="sc-card-desc">Build strong concepts for exams with notes, dynamic DPPs, and structured mock test matrices.</p>
-                    <a href="class-12/index.html" class="sc-card-btn sc-btn-green">Start Learning</a>
+        <div class="announcement-bar" role="status">
+            <span class="announcement-segment">
+                <span class="inline-svg-icon icon-teal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                        <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                        <path d="M2 2l7.5 1.5"></path>
+                        <path d="M14 14l3 3"></path>
+                    </svg>
+                </span>
+                Admissions Now Open <span class="divider" aria-hidden="true">|</span>
+                <a href="https://wa.me/918800873871?text=i%20want%20a%20demo%20class" target="_blank" rel="noopener noreferrer" class="announcement-cta">Book Your Free Demo Class</a>
+            </span>
+            <span class="divider hide-mobile" aria-hidden="true">|</span>
+            <span class="announcement-segment hide-mobile">
+                <span class="inline-svg-icon icon-teal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                        <line x1="2" y1="20" x2="22" y2="20"></line>
+                        <line x1="12" y1="17" x2="12" y2="20"></line>
+                    </svg>
+                </span>
+                Learn CS, IP & AI with Rohit Singh
+            </span>
+            <span class="divider hide-mobile" aria-hidden="true">|</span>
+            <span class="announcement-segment hide-mobile">
+                <span class="inline-svg-icon icon-teal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                </span>
+                Online & Offline Classes Available
+            </span>
+        </div>
+
+    <div class="sc-learning-blend-zone">
+        <div class="section-decor-header">
+            <h2>🔮 Explore AI Learning Paths</h2>
+        </div>
+        <div class="sc-grid">
+            <!-- CLASS IX AI -->
+            <a href="https://www.singhclasses.in/p/artificial-intelligence-for-class-ix_0122912825.html" class="sc-card">
+                <div class="sc-card-icon-svg">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                        <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
+                    </svg>
                 </div>
+                <h3>CLASS IX AI</h3>
+                <div class="sc-card-desc">Build strong concepts for exams</div>
+                <div class="sc-card-btn sc-btn-active">Start Learning</div>
+            </a>
 
-                <div class="sc-card">
-                    <div class="sc-card-icon">📑</div>
-                    <h3>CLASS XI CS</h3>
-                    <p class="sc-card-desc">Strengthen your programming fundamentals, Python data structures, and foundational principles.</p>
-                    <a href="class-11/index.html" class="sc-card-btn sc-btn-blue">Start Learning</a>
+            <!-- CLASS X AI -->
+            <a href="https://www.singhclasses.in/p/artificial-intelligence-for-class-x-cbse.html" class="sc-card">
+                <div class="sc-card-icon-svg">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                        <polyline points="10 9 9 9 8 9"/>
+                    </svg>
                 </div>
+                <h3>CLASS X AI</h3>
+                <div class="sc-card-desc">Focused preparation for success.</div>
+                <div class="sc-card-btn sc-btn-active">Start Learning</div>
+            </a>
 
-                <div class="sc-card">
-                    <div class="sc-card-icon">📄</div>
-                    <h3>CUET CS 2026-27</h3>
-                    <p class="sc-card-desc">Focused higher examination preparation with core topic test blueprints and success roadmaps.</p>
-                    <a href="cuet/index.html" class="sc-card-btn sc-btn-purple">Start Learning</a>
+            <!-- CLASS XI AI -->
+            <a href="#" class="sc-card">
+                <div class="sc-card-icon-svg">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                    </svg>
+                </div>
+                <h3>CLASS XI AI</h3>
+                <div class="sc-card-desc">Strengthen your fundamentals</div>
+                <div class="sc-card-btn sc-btn-disabled">Coming Soon</div>
+            </a>
+
+            <!-- CLASS XII AI -->
+            <a href="#" class="sc-card">
+                <div class="sc-card-icon-svg">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="8" r="7"/>
+                        <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>
+                    </svg>
+                </div>
+                <h3>CLASS XII AI</h3>
+                <div class="sc-card-desc">Build strong concepts for exams</div>
+                <div class="sc-card-btn sc-btn-disabled">Coming Soon</div>
+            </a>
+        </div>
+
+        <div class="sc-subscribe" id="scSubscribeBanner">
+            <canvas id="scParticleCanvas2" class="sc-canvas-bg"></canvas>
+            <div class="sc-sub-content">
+                <div class="sc-sub-icon">📢</div>
+                <div class="sc-sub-text">
+                    <h4>Learn Faster with My OneShot YouTube Classes</h4>
+                    <p>Free lectures. Exam-focused. No fluff.</p>
                 </div>
             </div>
+            <div class="sc-sub-action">
+                <a href="https://www.youtube.com/channel/UCQpNeGvzbBLsRLnNX7ga8FQ?sub_confirmation=1" target="_blank" class="sc-sub-btn">
+                    🔔 Subscribe Now
+                </a>
+            </div>
+        </div>
+    </div>
 
-            <div class="sc-subscribe" id="scSubscribeBanner">
-                <canvas id="scParticleCanvas2" class="sc-canvas-bg"></canvas>
-                <div class="sc-sub-content">
-                    <div class="sc-sub-icon">📢</div>
-                    <div class="sc-sub-text">
-                        <h4>Learn Faster with My OneShot YouTube Classes</h4>
-                        <p>Free lectures. Board-focused syllabus coverage. Zero fluff processing.</p>
-                    </div>
+    <div class="sc-hero-wrapper">
+        <div class="sc-hero-top" id="scHeroTop">
+            <canvas id="scParticleCanvas1" class="sc-canvas-bg"></canvas>
+            <div class="sc-hero-content">
+                <h1>Alone we learn.<br>Together we build <span class="sc-text-green">wisdom.</span></h1>
+            </div>
+        </div>
+        <div class="sc-features-row">
+            <div class="sc-feature-item">
+                <div class="sc-feature-icon">🎯</div>
+                <div class="sc-feature-text">
+                    <h5>Exam Focused</h5>
+                    <p>Concepts that matter</p>
                 </div>
-                <div class="sc-sub-btn-wrapper">
-                    <a href="https://www.youtube.com/channel/UCQpNeGvzbBLsRLnNX7ga8FQ?sub_confirmation=1" target="_blank" class="pl-watch-btn">
-                        🔔 Subscribe Now
-                    </a>
+            </div>
+            <div class="sc-feature-item">
+                <div class="sc-feature-icon">💡</div>
+                <div class="sc-feature-text">
+                    <h5>Concept Clarity</h5>
+                    <p>Understand with ease</p>
+                </div>
+            </div>
+            <div class="sc-feature-item">
+                <div class="sc-feature-icon">🔔</div>
+                <div class="sc-feature-text">
+                    <h5>Regular Updates</h5>
+                    <p>Stay ahead always</p>
+                </div>
+            </div>
+            <div class="sc-feature-item">
+                <div class="sc-feature-icon">🎓</div>
+                <div class="sc-feature-text">
+                    <h5>CBSE Oriented</h5>
+                    <p>Your success, our mission</p>
                 </div>
             </div>
         </div>
-
-        <div class="sc-hero-wrapper">
-            <div class="sc-hero-top" id="scHeroTop">
-                <canvas id="scParticleCanvas1" class="sc-canvas-bg"></canvas>
-                <div class="sc-hero-content">
-                    <h1>Alone we learn.<br>Together we build <span class="sc-text-green">wisdom.</span></h1>
-                </div>
-            </div>
-
-            <div class="sc-features-row">
-                <div class="sc-feature-item">
-                    <div class="sc-feature-icon">🎯</div>
-                    <div class="sc-feature-text">
-                        <h5>Exam Focused</h5>
-                        <p>Concepts that matter</p>
-                    </div>
-                </div>
-                <div class="sc-feature-item">
-                    <div class="sc-feature-icon">💡</div>
-                    <div class="sc-feature-text">
-                        <h5>Concept Clarity</h5>
-                        <p>Understand with ease</p>
-                    </div>
-                </div>
-                <div class="sc-feature-item">
-                    <div class="sc-feature-icon">🔔</div>
-                    <div class="sc-feature-text">
-                        <h5>Regular Updates</h5>
-                        <p>Stay ahead always</p>
-                    </div>
-                </div>
-                <div class="sc-feature-item">
-                    <div class="sc-feature-icon">🎓</div>
-                    <div class="sc-feature-text">
-                        <h5>CBSE Oriented</h5>
-                        <p>Sure Success</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+    </div>
 
     </main>
 
-    <footer class="site-footer">
-        <div class="footer-grid">
-            <div class="footer-col contact-col">
-                <h4>Contact Us</h4>
-                <ul>
-                    <li><span>📍</span> RS Classes - 122/16/2, Street 5, Cross Road, Sant Nagar, Delhi</li>
-                    <li><span>📍</span> Sonu Institute - 1964/5, Outram Lines, Mukherjee Nagar, Delhi</li>
-                    <li><span>✉️</span> beyondsyntaxcode@gmail.com</li>
-                </ul>
+    <footer class="site-footer" role="contentinfo">
+        <div class="footer-layout-grid">
+            <div class="footer-column contact-column">
+                <h4>Offline Centers</h4>
+                <div class="centers-sub-grid">
+                    <div class="center-item">
+                        <span class="footer-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                        </span>
+                        <div class="center-text">
+                            <strong>Sant Nagar Center:</strong>
+                            <p style="text-align: justify;">RS Classes - 122/16/2, Street 5, Cross Road, Sant Nagar, Delhi</p>
+                            <a href="https://maps.app.goo.gl/Buy9SC9iWityttYW9" target="_blank" rel="noopener noreferrer" class="footer-map-link">View on Google Map →</a>
+                        </div>
+                    </div>
+                    <div class="center-item">
+                        <span class="footer-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                        </span>
+                        <div class="center-text">
+                            <strong>Mukherjee Nagar Center:</strong>
+                            <p style="text-align: justify;">Sonu Institute - 1964/5, Outram Lines, Mukherjee Nagar, Delhi</p>
+                            <a href="https://maps.app.goo.gl/2RtuAwQ2135CBhkx5" target="_blank" rel="noopener noreferrer" class="footer-map-link">View on Google Map →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="email-footer-row">
+                    <span class="footer-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                    </span>
+                    <a href="mailto:beyondsyntaxcode@gmail.com">beyondsyntaxcode@gmail.com</a>
+                </div>
             </div>
-            <div class="footer-col">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="index.html">Computer Science</a></li>
-                    <li><a href="../informatics-practices/index.html">Informatics Practices</a></li>
-                    <li><a href="../artificial-intelligence/index.html">Artificial Intelligence</a></li>
+
+            <div class="footer-column social-column">
+                <h4>Connect with Us</h4>
+                <ul class="social-links-list">
+                    <li>
+                        <a href="https://wa.me/918800873871" target="_blank" rel="noopener noreferrer" class="social-item-card whatsapp-theme">
+                            <span class="social-icon-wrapper">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                                </svg>
+                            </span>
+                            WhatsApp Support
+                        </a>
+                    </li>
+                    <li>
+                    </li>
+                    <li>
+                        <a href="https://t.me/+918800873871" target="_blank" rel="noopener noreferrer" class="social-item-card telegram-theme">
+                            <span class="social-icon-wrapper">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                </svg>
+                            </span>
+                            Telegram Channel
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
-        <div class="footer-bottom">
-            <div>&copy; 2026 SinghClasses.in | Designed with <span style="color:#ef4444">&#10084;&#65039;</span> by Rohit Singh</div>
-            <div class="footer-bottom-links">
-                <a href="../privacy/index.html">Privacy Policy</a> |
-                <a href="../terms/index.html">Terms of Service</a> |
+
+        <div class="footer-bottom-bar">
+            <div class="copyright-text">© <span id="current-year">2026</span> SinghClasses.in | Designed with <span class="heart-icon" aria-label="love">❤️</span> by Rohit Singh</div>
+            <div class="footer-legal-links">
+                <a href="../privacy/index.html">Privacy Policy</a>
+                <a href="../terms/index.html">Terms of Service</a>
                 <a href="../disclaimer/index.html">Disclaimer</a>
             </div>
         </div>
     </footer>
 
-    <div class="floating-actions">
-        <a class="fa-btn dm-btn" href="#" id="darkModeToggle" title="Toggle Dark Mode">
-            <svg class="icon-moon" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20">
+    <div class="floating-action-hud" role="complementary" aria-label="Quick Actions">
+        <button class="hud-btn theme-toggle-btn" id="darkModeToggle" aria-label="Toggle Dark Mode">
+            <svg class="icon-moon" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" aria-hidden="true">
                 <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
             </svg>
-            <svg class="icon-sun" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20">
+            <svg class="icon-sun" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" aria-hidden="true">
                 <circle cx="12" cy="12" r="5" />
                 <line x1="12" x2="12" y1="1" y2="3" />
                 <line x1="12" x2="12" y1="21" y2="23" />
@@ -171,22 +782,26 @@
                 <line x1="4.22" x2="5.64" y1="19.78" y2="18.36" />
                 <line x1="18.36" x2="19.78" y1="5.64" y2="4.22" />
             </svg>
-        </a>
-        <a class="fa-btn share-btn" href="#" id="sharePageToggle" title="Share Page"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24" width="20">
+        </button>
+        <button class="hud-btn share-action-btn" id="sharePageToggle" aria-label="Share page link">
+            <svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24" width="20" aria-hidden="true">
                 <circle cx="18" cy="5" r="3" />
                 <circle cx="6" cy="12" r="3" />
                 <circle cx="18" cy="19" r="3" />
                 <line x1="8.59" x2="15.42" y1="13.51" y2="17.49" />
                 <line x1="15.41" x2="8.59" y1="6.51" y2="10.49" />
-            </svg></a>
-        <a class="fa-btn up-btn" href="#" onclick="window.scrollTo({top:0, behavior:'smooth'}); return false;" title="Scroll to Top"><svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" viewBox="0 0 24 24" width="24">
+            </svg>
+        </button>
+        <button class="hud-btn scroll-top-btn" id="scrollTopAction" aria-label="Scroll back to top">
+            <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" viewBox="0 0 24 24" width="24" aria-hidden="true">
                 <polyline points="18 15 12 9 6 15" />
-            </svg></a>
+            </svg>
+        </button>
     </div>
-    <div class="toast-notification" id="toast-notification">🚧 Material update in progress. Coming soon!</div>
+
+    <div class="toast-notification" id="toast-notification" role="alert" aria-live="polite">🚧 Material update in progress. Coming soon!</div>
 
     <script src="../assets/js/script.js"></script>
-    <script src="../assets/js/dashboard.js"></script>
 </body>
 
 </html>
