@@ -1,0 +1,16 @@
+{
+  "short_name": "MySite",
+  "name": "My Custom GitHub Pages Site",
+  "icons": [
+    {
+      "src": "icon.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ],
+  "start_url": "/index.html",
+  "background_color": "#ffffff",
+  "theme_color": "#0076ff",
+  "display": "standalone",
+  "orientation": "portrait"
+}

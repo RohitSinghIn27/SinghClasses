@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Privacy Policy | SinghClasses</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #f7f9fc;
+      color: #1a1a1a;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      background: #fff;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .container.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+      color: #111;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #777;
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      font-size: 20px;
+      margin-top: 25px;
+      margin-bottom: 10px;
+      color: #2563eb;
+    }
+
+    p {
+      font-size: 15px;
+      line-height: 1.7;
+      color: #444;
+      margin-bottom: 14px;
+    }
+
+    a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .btn-home {
+      display: inline-flex;
+      align-items: center;
+      margin-top: 25px;
+      padding: 12px 24px;
+      background: #2563eb;
+      color: #fff !important;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+      transition: all 0.3s ease;
+    }
+
+    .btn-home:hover {
+      background: #1e4ed8;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
+    }
+
+    .footer {
+      margin-top: 35px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+      font-size: 13px;
+      text-align: center;
+      color: #666;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 25px;
+      }
+
+      h1 {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container" id="policy">
+
+    <h1>Privacy Policy</h1>
+    <div class="subtitle">Your data, handled with clarity and respect</div>
+
+    <p>
+      At SinghClasses.in, accessible from 
+      <a href="index.html">www.singhclasses.in</a>, 
+      the privacy of our visitors is extremely important to us. This document outlines 
+      what information is collected and how it is used.
+    </p>
+
+    <h2>Log Files</h2>
+    <p>
+      Like most websites, SinghClasses.in uses log files. These include IP addresses, 
+      browser type, ISP, timestamps, referring/exit pages, and clicks. This data helps 
+      analyze trends, manage the site, and understand user behavior.
+    </p>
+    <p>
+      This information is not linked to anything personally identifiable.
+    </p>
+
+    <h2>Cookies and Web Beacons</h2>
+    <p>
+      We use cookies to store visitor preferences and track which pages are accessed. 
+      This helps us customize content based on your browser and improve your experience.
+    </p>
+
+    <h2>Google DoubleClick DART Cookie</h2>
+    <p>
+      Google, as a third-party vendor, uses cookies (including DART cookies) to serve ads 
+      based on your visits to this and other websites.
+    </p>
+    <p>
+      You can opt out by visiting the 
+      <a href="https://policies.google.com/technologies/ads" target="_blank">
+        Google Ads Privacy Policy
+      </a> page.
+    </p>
+
+    <h2>Third-Party Privacy Policies</h2>
+    <p>
+      SinghClasses.in’s privacy policy does not apply to external advertisers or websites. 
+      We recommend reviewing their respective privacy policies for detailed information 
+      and opt-out instructions.
+    </p>
+
+    <h2>Contact</h2>
+    <p>
+      If you have any questions or need more information, feel free to contact us at:
+    </p>
+    <p>
+      <strong>beyondsyntaxcode@gmail.com</strong>
+    </p>
+
+    <a href="index.html" class="btn-home">
+      ← Back to Home
+    </a>
+
+    <div class="footer">
+      Last updated — 2026 | SinghClasses.in
+    </div>
+
+  </div>
+
+  <script>
+    // Safe entrance framework initialization script
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        document.getElementById("policy").classList.add("show");
+      }, 100);
+    });
+  </script>
+
+</body>
+</html>
