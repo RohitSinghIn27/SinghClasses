@@ -1,248 +1,227 @@
-/* --- Micro-Animation Engine for Emojis --- */
-@keyframes scEmojiMotion {
-  0% { transform: scale(1.15) rotate(0deg); }
-  25% { transform: scale(1.25) rotate(-10deg); }
-  50% { transform: scale(1.25) rotate(10deg); }
-  75% { transform: scale(1.25) rotate(-10deg); }
-  100% { transform: scale(1.15) rotate(0deg); }
+/* ==========================================================================
+   DASHBOARD COMPONENTS EXCLUSIVE DESIGN INTERFACES
+   ========================================================================== */
+
+/* Cards Layout Matrix Engine */
+.db-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin: 40px auto 30px auto;
 }
 
-/* --- Increased Section Padding & Layout Isolation Gaps --- */
-.sc-learning-blend-zone {
-  background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(13, 148, 136, 0.02) 40%, rgba(13, 148, 136, 0.06) 100%);
-  border-radius: 24px;
-  padding: 24px;
-  margin-top: 15px;
-  margin-bottom: 40px; 
-  border: 1px solid var(--border-color);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.01);
+.db-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    padding: 30px 24px;
+    text-align: center;
+    transition: var(--transition-smooth);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-body.dark-mode .sc-learning-blend-zone {
-  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(13, 148, 136, 0.04) 100%);
+.db-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.04);
 }
 
-.sc-grid { 
-  display: grid; 
-  grid-template-columns: repeat(3, 1fr); 
-  gap: 24px; 
-  margin-bottom: 30px; 
+.card-border-green:hover { border-color: #0d9488; }
+.card-border-blue:hover { border-color: #2563eb; }
+.card-border-purple:hover { border-color: #7c3aed; }
+
+.db-card-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
 }
 
-.sc-card {
-  background: var(--bg-card);
-  border-radius: 16px; 
-  padding: 28px 24px;
-  text-align: center; 
-  border: 1px solid var(--border-light); 
-  box-shadow: 0 4px 12px rgba(0,0,0,0.02); 
-  display: flex; 
-  flex-direction: column; 
-  align-items: center;
-  height: 100%;
-  transition: all 0.3s ease;
+.bg-light-green { background: #e6f7f5; }
+.bg-light-blue { background: #e0f2fe; }
+.bg-light-purple { background: #f3e8ff; }
+
+.text-green { color: #0d9488; }
+.text-blue { color: #2563eb; }
+.text-purple { color: #7c3aed; }
+
+.db-card h3 {
+    font-size: 1.25rem;
+    color: var(--dark-navy);
+    font-weight: 700;
+    margin-bottom: 12px;
 }
 
-.sc-card:hover { 
-  transform: translateY(-4px); 
-  box-shadow: 0 10px 22px rgba(0,0,0,0.06); 
-  border-color: var(--border-color);
+.db-card-desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 25px;
+    flex-grow: 1;
 }
 
-.sc-card-icon { 
-  font-size: 32px; 
-  margin-bottom: 10px; 
-  transition: transform 0.3s ease; 
+.db-card .btn {
+    width: 100%;
+    justify-content: center;
+    border-radius: 50px;
 }
 
-.sc-card:hover .sc-card-icon { 
-  animation: scEmojiMotion 0.6s ease-in-out infinite; 
+.btn-green { background: #0d9488; }
+.btn-green:hover { background: #0a756c; }
+.btn-blue { background: #2563eb; }
+.btn-blue:hover { background: #1d4ed8; }
+.btn-purple { background: #7c3aed; }
+.btn-purple:hover { background: #6d28d9; }
+
+/* Premium Full-Width Subscription Ribbon Layer */
+.db-subscribe-ribbon {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(90deg, #e6f7f5 0%, #f0fdfa 100%);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    transition: var(--transition-smooth);
 }
 
-.sc-card h3 { 
-  font-size: 1.1rem; 
-  font-weight: 700; 
-  color: var(--dark-navy); 
-  margin-bottom: 6px; 
+body.dark-mode .db-subscribe-ribbon {
+    background: linear-gradient(90deg, #111e30 0%, #0c1a2e 100%);
 }
 
-.sc-card-desc { 
-  font-size: 0.88rem; 
-  color: var(--text-muted); 
-  margin-bottom: 16px; 
-  line-height: 1.4; 
-  flex-grow: 1; 
+.db-ribbon-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    z-index: 2;
 }
 
-.sc-card-btn { 
-  font-size: 0.9rem; 
-  font-weight: 600; 
-  padding: 8px 16px; 
-  border-radius: 8px; 
-  width: 100%; 
-  color: #fff !important; 
-  text-align: center;
-  transition: background 0.2s; 
+.db-ribbon-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--bg-card);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: #0d9488;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
 }
 
-.sc-btn-green { background: #156845; } 
-.sc-card:hover .sc-btn-green { background: #0f4c32; }
-.sc-btn-blue { background: #0369a1; } 
-.sc-card:hover .sc-btn-blue { background: #075985; }
-.sc-btn-purple { background: #6b21a8; } 
-.sc-card:hover .sc-btn-purple { background: #581c87; }
-
-/* Streaming Bar Layout */
-.sc-subscribe {
-  position: relative;
-  background: var(--bg-card);
-  border: 1px solid var(--border-light);
-  border-radius: 16px;
-  padding: 16px 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 15px;
-  overflow: hidden;
+.db-ribbon-text h4 {
+    color: var(--dark-navy);
+    font-size: 1.1rem;
+    font-weight: 700;
 }
 
-.sc-canvas-bg { 
-  position: absolute; 
-  top: 0; 
-  left: 0; 
-  width: 100%; 
-  height: 100%; 
-  z-index: 1; 
-  pointer-events: none; 
-  opacity: 0.4; 
+.db-ribbon-text p {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    margin-top: 2px;
 }
 
-.sc-sub-content { 
-  display: flex; 
-  align-items: center; 
-  gap: 15px; 
-  z-index: 2; 
+.btn-ribbon-action {
+    background: #0d9488;
+    color: #fff !important;
+    border-radius: 50px;
+    white-space: nowrap;
+    z-index: 2;
 }
 
-.sc-sub-icon { 
-  font-size: 24px; 
-  background: var(--bg-light); 
-  width: 48px; 
-  height: 48px; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  border-radius: 50%; 
-  transition: transform 0.3s ease; 
+/* Fluid Billboard Graphic Space Wrapper Layout */
+.db-billboard-wrapper {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 60px 20px;
+    text-align: center;
+    margin-bottom: 30px;
 }
 
-.sc-subscribe:hover .sc-sub-icon { 
-  animation: scEmojiMotion 0.6s ease-in-out infinite; 
+body.dark-mode .db-billboard-wrapper {
+    background: linear-gradient(135deg, #111e30 0%, #0c1a2e 100%);
 }
 
-.sc-sub-text h4 { 
-  font-size: 1.05rem; 
-  font-weight: 700; 
-  color: var(--dark-navy); 
-  margin-bottom: 2px; 
+.db-billboard-inner h2 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    color: var(--dark-navy);
+    font-weight: 800;
+    line-height: 1.25;
+    z-index: 2;
+    position: relative;
 }
 
-.sc-sub-text p { 
-  font-size: 0.85rem; 
-  color: var(--text-muted); 
+/* Feature Metrics Layout Bar Component */
+.db-features-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    margin-bottom: 40px;
 }
 
-.sc-sub-btn-wrapper { 
-  z-index: 2; 
+.db-feature-pill {
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
-/* Wisdom Banner Elements */
-.sc-hero-wrapper {
-  border-radius: 20px;
-  border: 1px solid var(--border-color);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.02);
-  display: flex;
-  flex-direction: column;
-  background: var(--bg-card);
-  overflow: hidden; 
-  margin-top: 10px;
-  margin-bottom: 50px; 
+.db-pill-icon {
+    font-size: 1.35rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.sc-hero-top {
-  position: relative;
-  background: linear-gradient(135deg, #e6f4ef 0%, #f0faf6 100%);
-  padding: 65px 20px;
-  text-align: center;
+.db-pill-info h5 {
+    color: var(--dark-navy);
+    font-size: 0.95rem;
+    font-weight: 700;
 }
 
-body.dark-mode .sc-hero-top {
-  background: linear-gradient(135deg, #111e30 0%, #0c1a2e 100%);
+.db-pill-info p {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    margin-top: 2px;
 }
 
-.sc-hero-content { 
-  position: relative; 
-  z-index: 2; 
+/* Canvas Integration Positioning Base Layer Override */
+.sc-canvas-bg-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
 }
 
-.sc-hero-content h1 { 
-  font-size: clamp(1.8rem, 3.5vw, 2.5rem); 
-  font-weight: 700; 
-  color: var(--dark-navy); 
-  line-height: 1.3; 
-}
-
-.sc-text-green { 
-  color: var(--primary-green); 
-}
-
-.sc-features-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 15px;
-  padding: 28px 24px; 
-  background: var(--bg-card);
-  border-top: 1px solid var(--border-light);
-}
-
-.sc-feature-item { 
-  display: flex; 
-  align-items: center; 
-  gap: 12px; 
-  padding: 8px; 
-  border-radius: 10px; 
-}
-
-.sc-feature-icon { 
-  font-size: 24px; 
-  transition: transform 0.3s ease; 
-}
-
-.sc-feature-item:hover .sc-feature-icon { 
-  animation: scEmojiMotion 0.6s ease-in-out infinite; 
-}
-
-.sc-feature-text h5 { 
-  font-size: 0.9rem; 
-  font-weight: 700; 
-  color: var(--dark-navy); 
-  margin-bottom: 2px; 
-}
-
-.sc-feature-text p { 
-  font-size: 0.8rem; 
-  color: var(--text-muted); 
-}
-
-/* Adaptive Layout Engine Rules */
-@media (max-width: 992px) {
-  .sc-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
-  .sc-features-row { grid-template-columns: repeat(2, 1fr); }
+/* ==========================================================================
+   RESPONSIVE LAYOUT MATRIX ADAPTER MODIFIERS
+   ========================================================================== */
+@media (max-width: 960px) {
+    .db-cards-grid { grid-template-columns: 1fr; gap: 20px; }
+    .db-features-strip { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .db-subscribe-ribbon { flex-direction: column; text-align: center; padding: 30px 20px; }
+    .db-ribbon-content { flex-direction: column; }
+    .btn-ribbon-action { width: 100%; justify-content: center; }
 }
 
 @media (max-width: 600px) {
-  .sc-grid { grid-template-columns: 1fr; }
-  .sc-subscribe { flex-direction: column; text-align: center; padding: 20px; }
-  .sc-sub-content { flex-direction: column; }
-  .sc-features-row { grid-template-columns: 1fr; }
+    .db-features-strip { grid-template-columns: 1fr; gap: 20px; }
 }
