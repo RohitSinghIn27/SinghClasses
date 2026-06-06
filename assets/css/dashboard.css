@@ -1,31 +1,56 @@
 /* ==========================================================================
-   DASHBOARD COMPONENTS EXCLUSIVE DESIGN INTERFACES
+   DASHBOARD ARCHITECTURAL MASTER DESIGN ZONE SPECIFICATIONS
    ========================================================================== */
 
-/* Cards Layout Matrix Engine */
+/* Universal Premium Container Frame Boxes */
+.db-master-zone-box {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f0fdfa 0%, #f4fbf9 100%);
+    border: 1px solid rgba(13, 148, 136, 0.18);
+    border-radius: var(--radius-lg, 24px);
+    padding: 35px 35px 25px 35px;
+    margin: 35px auto;
+    box-shadow: 0 10px 30px rgba(13, 148, 136, 0.02);
+    transition: var(--transition-smooth);
+}
+
+body.dark-mode .db-master-zone-box {
+    background: linear-gradient(135deg, #111e30 0%, #0c1a2e 100%);
+    border-color: rgba(13, 148, 136, 0.08);
+}
+
+/* Master Cards Internal Matrix Layout Engine */
 .db-cards-grid {
+    position: relative;
+    z-index: 5;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 24px;
-    margin: 40px auto 30px auto;
+    margin-bottom: 25px;
 }
 
 .db-card {
     background: var(--bg-card);
     border: 1px solid var(--border-light);
     border-radius: var(--radius-md);
-    padding: 30px 24px;
+    padding: 35px 24px;
     text-align: center;
     transition: var(--transition-smooth);
     display: flex;
     flex-direction: column;
     align-items: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.01);
 }
 
 .db-card:hover {
     transform: translateY(-6px);
     box-shadow: 0 15px 30px rgba(0,0,0,0.04);
 }
+
+.card-border-green { border-top: 4px solid #0d9488; }
+.card-border-blue { border-top: 4px solid #2563eb; }
+.card-border-purple { border-top: 4px solid #7c3aed; }
 
 .card-border-green:hover { border-color: #0d9488; }
 .card-border-blue:hover { border-color: #2563eb; }
@@ -35,30 +60,27 @@
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     margin-bottom: 20px;
 }
 
-.bg-light-green { background: #e6f7f5; }
-.bg-light-blue { background: #e0f2fe; }
-.bg-light-purple { background: #f3e8ff; }
-
-.text-green { color: #0d9488; }
-.text-blue { color: #2563eb; }
-.text-purple { color: #7c3aed; }
+.bg-light-green { background: #e6f7f5; color: #0d9488; }
+.bg-light-blue { background: #e0f2fe; color: #2563eb; }
+.bg-light-purple { background: #f3e8ff; color: #7c3aed; }
 
 .db-card h3 {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     color: var(--dark-navy);
     font-weight: 700;
     margin-bottom: 12px;
+    letter-spacing: -0.3px;
 }
 
 .db-card-desc {
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     color: var(--text-muted);
     line-height: 1.6;
     margin-bottom: 25px;
@@ -78,49 +100,48 @@
 .btn-purple { background: #7c3aed; }
 .btn-purple:hover { background: #6d28d9; }
 
-/* Premium Full-Width Subscription Ribbon Layer */
+/* Premium Full-Width Nested Subscription Ribbon Layer */
 .db-subscribe-ribbon {
     position: relative;
-    overflow: hidden;
-    background: linear-gradient(90deg, #e6f7f5 0%, #f0fdfa 100%);
-    border: 1px solid var(--border-color);
+    z-index: 5;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(13, 148, 136, 0.12);
     border-radius: var(--radius-md);
-    padding: 20px 30px;
+    padding: 16px 25px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 20px;
-    margin-bottom: 30px;
     transition: var(--transition-smooth);
 }
 
 body.dark-mode .db-subscribe-ribbon {
-    background: linear-gradient(90deg, #111e30 0%, #0c1a2e 100%);
+    background: rgba(17, 30, 48, 0.4);
+    border-color: rgba(255, 255, 255, 0.05);
 }
 
 .db-ribbon-content {
     display: flex;
     align-items: center;
-    gap: 20px;
-    z-index: 2;
+    gap: 18px;
 }
 
 .db-ribbon-icon {
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
     background: var(--bg-card);
     border-radius: 50%;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     color: #0d9488;
     box-shadow: 0 4px 10px rgba(0,0,0,0.02);
 }
 
 .db-ribbon-text h4 {
     color: var(--dark-navy);
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 700;
 }
 
@@ -131,76 +152,90 @@ body.dark-mode .db-subscribe-ribbon {
 }
 
 .btn-ribbon-action {
-    background: #0d9488;
-    color: #fff !important;
+    background: #1e293b;
+    color: #ffffff !important;
     border-radius: 50px;
     white-space: nowrap;
-    z-index: 2;
+    transition: var(--transition-smooth);
+    box-shadow: 0 4px 12px rgba(30, 41, 59, 0.15);
 }
 
-/* Fluid Billboard Graphic Space Wrapper Layout */
-.db-billboard-wrapper {
+.btn-ribbon-action:hover {
+    background: #ef4444; /* Premium reveal on direct active actions */
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+}
+
+body.dark-mode .btn-ribbon-action {
+    background: #f8fafc;
+    color: #0f172a !important;
+}
+
+body.dark-mode .btn-ribbon-action:hover {
+    background: #ef4444;
+    color: #ffffff !important;
+}
+
+/* Fluid Interior Billboard Layer Structure */
+.db-billboard-inner {
     position: relative;
-    overflow: hidden;
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    padding: 60px 20px;
+    z-index: 5;
     text-align: center;
-    margin-bottom: 30px;
-}
-
-body.dark-mode .db-billboard-wrapper {
-    background: linear-gradient(135deg, #111e30 0%, #0c1a2e 100%);
+    padding: 40px 20px 45px 20px;
 }
 
 .db-billboard-inner h2 {
-    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
     color: var(--dark-navy);
     font-weight: 800;
-    line-height: 1.25;
-    z-index: 2;
-    position: relative;
+    line-height: 1.3;
+    text-shadow: 0 2px 4px rgba(13, 148, 136, 0.04);
 }
 
-/* Feature Metrics Layout Bar Component */
+/* Horizontal Feature List Base Structure */
 .db-features-strip {
+    position: relative;
+    z-index: 5;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius-md);
-    padding: 24px;
-    margin-bottom: 40px;
+    gap: 15px;
+    padding: 20px 10px 10px 10px;
+    border-top: 1px solid rgba(13, 148, 136, 0.08);
+}
+
+body.dark-mode .db-features-strip {
+    border-color: rgba(255, 255, 255, 0.05);
 }
 
 .db-feature-pill {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
+    justify-content: center;
 }
 
 .db-pill-icon {
-    font-size: 1.35rem;
-    display: flex;
+    font-size: 1.2rem;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
 }
 
+.color-teal { color: #0d9488; }
+.color-orange { color: #f59e0b; }
+
 .db-pill-info h5 {
     color: var(--dark-navy);
-    font-size: 0.95rem;
+    font-size: 0.88rem;
     font-weight: 700;
 }
 
 .db-pill-info p {
     color: var(--text-muted);
-    font-size: 0.8rem;
-    margin-top: 2px;
+    font-size: 0.78rem;
+    margin-top: 1px;
 }
 
-/* Canvas Integration Positioning Base Layer Override */
+/* Base Canvas Layer Settings */
 .sc-canvas-bg-layer {
     position: absolute;
     top: 0;
@@ -211,17 +246,49 @@ body.dark-mode .db-billboard-wrapper {
     z-index: 1;
 }
 
+/* Footer Performance Overrides */
+.site-footer .social-links-list .social-item-card {
+    background: transparent !important;
+    border: none !important;
+    padding: 4px 0 !important;
+    width: auto !important;
+    display: inline-flex !important;
+    align-items: center;
+    color: #cbd5e1 !important;
+    transition: var(--transition-smooth);
+}
+
+.site-footer .social-links-list .social-item-card:hover {
+    color: var(--accent-amber) !important;
+    transform: translateX(6px);
+}
+
+/* HUD Glassmorphism Isolation */
+.floating-action-hud .hud-btn {
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    background: rgba(255, 255, 255, 0.82) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+body.dark-mode .floating-action-hud .hud-btn {
+    background: rgba(17, 30, 48, 0.85) !important;
+    border: 1px solid #1e293b !important;
+}
+
 /* ==========================================================================
    RESPONSIVE LAYOUT MATRIX ADAPTER MODIFIERS
    ========================================================================== */
 @media (max-width: 960px) {
+    .db-master-zone-box { padding: 25px 20px; }
     .db-cards-grid { grid-template-columns: 1fr; gap: 20px; }
-    .db-features-strip { grid-template-columns: repeat(2, 1fr); gap: 24px; }
-    .db-subscribe-ribbon { flex-direction: column; text-align: center; padding: 30px 20px; }
-    .db-ribbon-content { flex-direction: column; }
+    .db-features-strip { grid-template-columns: repeat(2, 1fr); gap: 24px; padding-top: 25px; }
+    .db-subscribe-ribbon { flex-direction: column; text-align: center; padding: 25px 20px; }
+    .db-ribbon-content { flex-direction: column; text-align: center; }
     .btn-ribbon-action { width: 100%; justify-content: center; }
 }
 
 @media (max-width: 600px) {
     .db-features-strip { grid-template-columns: 1fr; gap: 20px; }
+    .db-feature-pill { justify-content: flex-start; max-width: 240px; margin: 0 auto; }
 }
