@@ -1,73 +1,88 @@
-document.addEventListener('DOMContentLoaded', function() {
-  function initParticleCanvas(containerId, canvasId, particleCount, connectionDistance) {
-    const container = document.getElementById(containerId);
-    const canvas = document.getElementById(canvasId);
-    if (!container || !canvas) return;
+/**
+ * SinghClasses Sub-Portal Dashboard Engine Addition
+ * Architecture: Non-redundant Canvas Interactivity Fabric
+ */
 
-    const ctx = canvas.getContext('2d');
-    let width, height, particles = [];
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // Abstracted Canvas Particle Instantiation Function to prevent code replication
+    const injectDashboardFabric = (containerSelector, useLightDots = false) => {
+        const targetElement = document.querySelector(containerSelector);
+        if (!targetElement) return;
 
-    function resizeCanvas() {
-      width = container.offsetWidth;
-      height = container.offsetHeight;
-      canvas.width = width;
-      canvas.height = height;
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
+        const canvas = document.createElement('canvas');
+        canvas.className = 'sc-canvas-bg-layer';
+        targetElement.insertBefore(canvas, targetElement.firstChild);
 
-    class Particle {
-      constructor() {
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        this.vx = (Math.random() - 0.5) * 0.8; 
-        this.vy = (Math.random() - 0.5) * 0.8; 
-        this.radius = 1.5;
-      }
-      update() {
-        this.x += this.vx;
-        this.y += this.vy;
-        if (this.x < 0 || this.x > width) this.vx *= -1;
-        if (this.y < 0 || this.y > height) this.vy *= -1;
-      }
-      draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = document.body.classList.contains('dark-mode') ? 'rgba(255, 255, 255, 0.25)' : 'rgba(21, 104, 69, 0.4)';
-        ctx.fill();
-      }
-    }
+        const context = canvas.getContext('2d');
+        let width = 0, height = 0, pointArray = [];
 
-    for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+        const calculateCanvasSize = () => {
+            width = canvas.width = targetElement.offsetWidth;
+            height = canvas.height = targetElement.offsetHeight;
+        };
 
-    function animate() {
-      ctx.clearRect(0, 0, width, height);
-      for (let i = 0; i < particles.length; i++) {
-        particles[i].update();
-        particles[i].draw();
-        
-        for (let j = i + 1; j < particles.length; j++) {
-          let dx = particles[i].x - particles[j].x;
-          let dy = particles[i].y - particles[j].y;
-          let dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < connectionDistance) {
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = document.body.classList.contains('dark-mode') ? 
-              `rgba(255, 255, 255, ${0.15 - (dist/connectionDistance) * 0.15})` : 
-              `rgba(21, 104, 69, ${0.25 - (dist/connectionDistance) * 0.25})`;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-          }
-        }
-      }
-      requestAnimationFrame(animate);
-    }
-    animate();
-  }
+        new ResizeObserver(() => {
+            calculateCanvasSize();
+            pointArray = [];
+            const structuralDensity = Math.min(Math.floor((width * height) / 35000), 15) || 8;
+            
+            for (let i = 0; i < structuralDensity; i++) {
+                pointArray.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    horizontalVelocity: (Math.random() - 0.5) * 1.0,
+                    verticalVelocity: (Math.random() - 0.5) * 1.0,
+                    radius: Math.random() * 0.8 + 0.3
+                });
+            }
+        }).observe(targetElement);
 
-  // Run dynamic components
-  initParticleCanvas('scHeroTop', 'scParticleCanvas1', 50, 85);
-  initParticleCanvas('scSubscribeBanner', 'scParticleCanvas2', 25, 75);
+        const renderFrameLoop = () => {
+            if (!width || !height) return requestAnimationFrame(renderFrameLoop);
+            context.clearRect(0, 0, width, height);
+
+            const isDarkActive = document.body.classList.contains('dark-mode');
+            const colorBase = (useLightDots || isDarkActive) ? 'rgba(255,255,255,0.2)' : 'rgba(13,148,136,0.2)';
+            const colorLine = (useLightDots || isDarkActive) ? 'rgba(255,255,255,0.06)' : 'rgba(13,148,136,0.06)';
+
+            // Connection Link Execution
+            for (let i = 0; i < pointArray.length; i++) {
+                for (let j = i + 1; j < pointArray.length; j++) {
+                    let spatialX = pointArray[i].x - pointArray[j].x;
+                    let spatialY = pointArray[i].y - pointArray[j].y;
+                    if ((spatialX * spatialX + spatialY * spatialY) < 7000) {
+                        context.beginPath();
+                        context.moveTo(pointArray[i].x, pointArray[i].y);
+                        context.lineTo(pointArray[j].x, pointArray[j].y);
+                        context.strokeStyle = colorLine;
+                        context.lineWidth = 0.7;
+                        context.stroke();
+                    }
+                }
+            }
+
+            // Node Travel Path Updates
+            pointArray.forEach(node => {
+                node.x += node.horizontalVelocity;
+                node.y += node.verticalVelocity;
+
+                if (node.x < 0 || node.x > width) node.horizontalVelocity *= -1;
+                if (node.y < 0 || node.y > height) node.verticalVelocity *= -1;
+
+                context.beginPath();
+                context.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+                context.fillStyle = colorBase;
+                context.fill();
+            });
+
+            requestAnimationFrame(renderFrameLoop);
+        };
+
+        renderFrameLoop();
+    };
+
+    // Trigger unique instances securely without repeating code logic
+    injectDashboardFabric('#youtubeBannerSector', false);
+    injectDashboardFabric('#billboardCanvasSector', false);
 });
