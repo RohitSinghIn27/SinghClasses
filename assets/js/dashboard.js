@@ -1,121 +1,187 @@
-/**
- * SinghClasses Sub-Portal Premium Interactive Engine Additions
- * Performance Tuning: Premium low-density nodes with luxury proximity tracking lines
- */
-
 document.addEventListener('DOMContentLoaded', () => {
+
+  // --- Dynamic Current Year ---
+  const yr = document.getElementById('current-year');
+  if (yr) yr.textContent = new Date().getFullYear();
+
+  // --- Dark Mode Logic ---
+  const dmBtn = document.getElementById('darkModeToggle');
+  if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
+  
+  if (dmBtn) {
+    dmBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    });
+  }
+
+  // --- Unified Share Engine ---
+  const initShareEngine = (btnId) => {
+    const btn = document.getElementById(btnId);
+    if(btn) {
+      btn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        if (navigator.share) {
+          try { 
+            await navigator.share({ title: document.title, url: window.location.href }); 
+          } catch (err) { 
+            console.log('Error sharing page context:', err); 
+          }
+        } else {
+          navigator.clipboard.writeText(window.location.href).then(() => {
+            alert('Link copied to clipboard!');
+          });
+        }
+      });
+    }
+  };
+  
+  initShareEngine('sharePageToggle');
+
+  // --- Smooth Scroll & Original Footer Collision Logic ---
+  const scrollTopAction = document.getElementById('scrollTopAction');
+  const footerNode = document.querySelector('.site-footer');
+  // We target the entire wrapper so the particles slide up with the buttons!
+  const hudWrapper = document.querySelector('.premium-hud-wrapper');
+
+  if (scrollTopAction) {
+    scrollTopAction.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  // Exact collision logic restored from original files
+  if (footerNode && hudWrapper) {
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          let r = footerNode.getBoundingClientRect();
+          let vh = window.innerHeight;
+          // Slides the whole wrapper (buttons + particles) up when reaching the footer
+          hudWrapper.style.transform = (r.top < vh) ? `translateY(-${vh - r.top}px)` : 'translateY(0)';
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+  }
+
+  // --- Interactive Particle Canvas Fabric Engine ---
+  const initDynamicFabric = (selector, canvasId, particleCount, connectionDistance, forceLight = false) => {
+    const wrapper = document.querySelector(selector);
+    const specificCanvas = document.getElementById(canvasId);
     
-    const instantiatePremiumFabric = (parentContainerSelector) => {
-        const containerNode = document.querySelector(parentContainerSelector);
-        if (!containerNode) return;
+    if (!wrapper) return;
+    
+    let canvas = specificCanvas;
+    if (!canvas) {
+      canvas = document.createElement('canvas');
+      canvas.className = 'sc-canvas-bg-layer';
+      wrapper.insertBefore(canvas, wrapper.firstChild);
+    }
 
-        const canvasElement = document.createElement('canvas');
-        canvasElement.className = 'sc-canvas-bg-layer';
-        containerNode.insertBefore(canvasElement, containerNode.firstChild);
+    const ctx = canvas.getContext('2d');
+    let w = 0, h = 0, dots = [], cursor = { x: -2000, y: -2000 };
 
-        const canvasContext = canvasElement.getContext('2d');
-        let viewWidth = 0, viewHeight = 0, nodesArray = [];
-        let mouseCoordinates = { x: -2000, y: -2000 };
-
-        const configureDimensions = () => {
-            viewWidth = canvasElement.width = containerNode.offsetWidth;
-            viewHeight = canvasElement.height = containerNode.offsetHeight;
-        };
-
-        // Execution of Premium Fluid Density limits
-        new ResizeObserver(() => {
-            configureDimensions();
-            nodesArray = [];
-            
-            // Fixed clean ratio bounds to maintain premium minimalistic fidelity spacing
-            const luxuryTargetDensity = Math.min(Math.floor((viewWidth * viewHeight) / 48000), 24) || 12;
-            
-            for (let i = 0; i < luxuryTargetDensity; i++) {
-                nodesArray.push({
-                    currentX: Math.random() * viewWidth,
-                    currentY: Math.random() * viewHeight,
-                    moveX: (Math.random() - 0.5) * 0.55, // Slow premium floating vector acceleration
-                    moveY: (Math.random() - 0.5) * 0.55,
-                    nodeRadius: Math.random() * 0.7 + 0.3 // Sleek narrow visual profiles
-                });
-            }
-        }).observe(containerNode);
-
-        // Track Pointer proximity bounds across the unified container box layers
-        containerNode.addEventListener('mousemove', (event) => {
-            const boundaries = containerNode.getBoundingClientRect();
-            mouseCoordinates.x = event.clientX - boundaries.left;
-            mouseCoordinates.y = event.clientY - boundaries.top;
+    const resizeObserver = new ResizeObserver(() => {
+      w = canvas.width = wrapper.offsetWidth;
+      h = canvas.height = wrapper.offsetHeight;
+      dots = [];
+      // If a specific particleCount is passed, use it. Otherwise calculate density.
+      const density = particleCount || (Math.min(Math.floor((w * h) / 30000), 20) || 15);
+      
+      for (let i = 0; i < density; i++) {
+        dots.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 1.2,
+          vy: (Math.random() - 0.5) * 1.2,
+          r: Math.random() * 0.8 + 0.3
         });
+      }
+    });
+    resizeObserver.observe(wrapper);
 
-        containerNode.addEventListener('mouseleave', () => {
-            mouseCoordinates.x = -2000;
-            mouseCoordinates.y = -2000;
-        });
+    wrapper.addEventListener('mousemove', e => {
+      const box = wrapper.getBoundingClientRect();
+      cursor.x = e.clientX - box.left;
+      cursor.y = e.clientY - box.top;
+    });
+    wrapper.addEventListener('mouseleave', () => cursor.x = cursor.y = -2000);
 
-        const frameExecutionLoop = () => {
-            if (!viewWidth || !viewHeight) return requestAnimationFrame(frameExecutionLoop);
-            canvasContext.clearRect(0, 0, viewWidth, viewHeight);
+    const runLoop = () => {
+      if (!w || !h) return requestAnimationFrame(runLoop);
+      ctx.clearRect(0, 0, w, h);
+      
+      const dark = document.body.classList.contains('dark-mode');
+      const lightTheme = forceLight || dark;
+      
+      const cBase = lightTheme ? 'rgba(255,255,255,0.35)' : 'rgba(21, 104, 69, 0.4)';
+      const cLink = lightTheme ? 'rgba(255,255,255,0.12)' : 'rgba(21, 104, 69, 0.15)';
+      const cHigh = lightTheme ? 'rgba(255,255,255,0.95)' : 'rgba(15, 76, 50, 0.8)';
+      
+      const connDist = connectionDistance || 80;
 
-            const isDarkActiveMode = document.body.classList.contains('dark-mode');
-            const particleColor = isDarkActiveMode ? 'rgba(255, 255, 255, 0.18)' : 'rgba(13, 148, 136, 0.18)';
-            const structureLineColor = isDarkActiveMode ? 'rgba(255, 255, 255, 0.04)' : 'rgba(13, 148, 136, 0.04)';
-            const interactiveLineColor = isDarkActiveMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(13, 148, 136, 0.08)';
+      for (let i = 0; i < dots.length; i++) {
+        for (let j = i + 1; j < dots.length; j++) {
+          let dx = dots[i].x - dots[j].x;
+          let dy = dots[i].y - dots[j].y;
+          let distSq = dx * dx + dy * dy;
+          
+          if (distSq < (connDist * connDist)) {
+            ctx.beginPath();
+            ctx.moveTo(dots[i].x, dots[i].y);
+            ctx.lineTo(dots[j].x, dots[j].y);
+            ctx.strokeStyle = cLink;
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
+        }
+      }
 
-            // Render Node Connections Layout Matrix
-            for (let i = 0; i < nodesArray.length; i++) {
-                for (let j = i + 1; j < nodesArray.length; j++) {
-                    let distanceDeltaX = nodesArray[i].currentX - nodesArray[j].currentX;
-                    let distanceDeltaY = nodesArray[i].currentY - nodesArray[j].currentY;
-                    let squaredDistance = distanceDeltaX * distanceDeltaX + distanceDeltaY * distanceDeltaY;
+      dots.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        
+        if (p.x < 0 || p.x > w) p.vx *= -1;
+        if (p.y < 0 || p.y > h) p.vy *= -1;
+        
+        let cDist = (cursor.x - p.x) ** 2 + (cursor.y - p.y) ** 2;
+        let size = p.r;
+        let color = cBase;
 
-                    if (squaredDistance < 8500) { // Clean linear prox parameters
-                        canvasContext.beginPath();
-                        canvasContext.moveTo(nodesArray[i].currentX, nodesArray[i].currentY);
-                        canvasContext.lineTo(nodesArray[j].currentX, nodesArray[j].currentY);
-                        canvasContext.strokeStyle = structureLineColor;
-                        canvasContext.lineWidth = 0.6;
-                        canvasContext.stroke();
-                    }
-                }
-            }
-
-            // Animate and Paint Nodes Individually
-            nodesArray.forEach(particle => {
-                particle.currentX += particle.moveX;
-                particle.currentY += particle.moveY;
-
-                // Handle Boundary Reversals cleanly
-                if (particle.currentX < 0 || particle.currentX > viewWidth) particle.moveX *= -1;
-                if (particle.currentY < 0 || particle.currentY > viewHeight) particle.moveY *= -1;
-
-                // Handle Interactive Mouse Proximity Connections
-                let pointerDeltaX = mouseCoordinates.x - particle.currentX;
-                let pointerDeltaY = mouseCoordinates.y - particle.currentY;
-                let pointerDistanceSquared = pointerDeltaX * pointerDeltaX + pointerDeltaY * pointerDeltaY;
-
-                if (pointerDistanceSquared < 18000) {
-                    canvasContext.beginPath();
-                    canvasContext.moveTo(particle.currentX, particle.currentY);
-                    canvasContext.lineTo(mouseCoordinates.x, mouseCoordinates.y);
-                    canvasContext.strokeStyle = interactiveLineColor;
-                    canvasContext.lineWidth = 0.8;
-                    canvasContext.stroke();
-                }
-
-                canvasContext.beginPath();
-                canvasContext.arc(particle.currentX, particle.currentY, particle.nodeRadius, 0, Math.PI * 2);
-                canvasContext.fillStyle = particleColor;
-                canvasContext.fill();
-            });
-
-            requestAnimationFrame(frameExecutionLoop);
-        };
-
-        frameExecutionLoop();
+        if (cDist < 10000) {
+          size = p.r + ((1 - Math.sqrt(cDist) / 100) * 2);
+          color = cHigh;
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(cursor.x, cursor.y);
+          ctx.strokeStyle = cLink;
+          ctx.lineWidth = 1.1;
+          ctx.stroke();
+        }
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+      });
+      requestAnimationFrame(runLoop);
     };
+    runLoop();
+  };
+  
+  // Initialize specific canvases
+  initDynamicFabric('#scHeroTop', 'scParticleCanvas1', 20, 60);
+  initDynamicFabric('#scSubscribeBanner', 'scParticleCanvas2', 15, 50);
+  
+  // Apply generalized dynamic fabric onto broader sections
+  ['.header-container', '.classes-section', '.playlists-section', '.results-section'].forEach(s => initDynamicFabric(s, null, null, null, false));
 
-    // Invoke premium canvas engines flawlessly inside respective container sectors
-    instantiatePremiumFabric('#learningZoneSector');
-    instantiatePremiumFabric('#billboardZoneSector');
+  // NEW: Inject dynamic fabric exclusively into the HUD Wrapper!
+  // I passed 12 particles and a short connection distance of 40 so it looks delicate.
+  initDynamicFabric('#hudParticleWrapper', 'hudCanvas', 6, 20, false);
+
 });
