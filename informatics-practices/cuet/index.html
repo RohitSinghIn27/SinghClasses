@@ -1,372 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CUET (UG) 2026 - SinghClasses.in</title>
-
-  <style>
-    :root {
-      /* Card Section Colors */
-      --bg-light-blue: #eff6ff;
-      --bg-light-yellow: #fefce8;
-      --bg-light-orange: #fff7ed;
-      --heading-navy: #0f172a;
-      --btn-blue-text: #2563eb;
-      --btn-blue-hover2: #3b82f6;
-      --btn-yellow-text: #ca8a04;
-      --btn-yellow-hover2: #eab308;
-      --btn-orange-text: #ea580c;
-      --btn-orange-hover2: #f97316;
-      --btn-mcq-text: #9C27B0;
-      --bg-light-purple: #f3e8f5;
-      --btn-pyq-text: #E91E63;
-      --bg-light-pink: #fce4ec;
-      --btn-dpp-text: #009688;
-      --bg-light-teal: #e0f2f1;
-
-      /* Blended Bottom Section Colors */
-      --blend-dark-green: #1A531A; 
-      --blend-ivory: #FDFCF0;      
-      --blend-light-bg: #F2F9F3;   
-      --blend-text-main: #2D3748;  
-      --blend-text-accent: #0B2F0B;
-    }
-
-    body {
-      background-color: #f0fdf4; /* Subtle light green background outside widget */
-      margin: 0;
-      padding: 20px 10px;
-      font-family: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
-    }
-
-    /* --- PROGRESS BAR --- */
-    .sc-progress-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 4px; z-index: 5000; }
-    .sc-progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #176643, #4ade80, #176643); transition: width .15s ease-out; box-shadow: 0 0 10px rgba(74, 222, 128, 0.5); }
-
-    .sc-widget-container {
-      color: #1e293b;
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 12px;
-      box-sizing: border-box;
-      line-height: 1.3;
-      position: relative;
-      background: #fcfcfc;
-      border: 1px solid rgba(23, 102, 67, 0.4);
-      border-radius: 20px;
-      box-shadow: 0 0 20px rgba(23, 102, 67, 0.15), 0 8px 30px rgba(23, 102, 67, 0.08);
-      transition: box-shadow 0.3s ease;
-    }
-    
-    .sc-widget-container * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    /* --- EMOJI HOVER ANIMATION --- */
-    .sc-emoji {
-      display: inline-block;
-      transform-origin: center bottom;
-    }
-    
-    @keyframes sc-emoji-bounce {
-      0% { transform: scale(1) translateY(0); }
-      30% { transform: scale(1.2) translateY(-3px) rotate(-10deg); }
-      60% { transform: scale(1.2) translateY(-3px) rotate(10deg); }
-      100% { transform: scale(1) translateY(0) rotate(0deg); }
-    }
-
-    .sc-feature-item:hover .sc-emoji,
-    .sc-cta-content:hover .sc-emoji,
-    .sc-cta-btn:hover .sc-emoji,
-    .sc-card-links a:hover .sc-emoji,
-    .sc-marquee a:hover .sc-emoji {
-      animation: sc-emoji-bounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    }
-
-    /* --- 1. TOP HEADER LOGO & LINKS --- */
-    .sc-top-header {
-      display: flex !important;
-      justify-content: space-between !important;
-      align-items: center !important;
-      margin-bottom: 28px !important; 
-      flex-wrap: wrap !important;
-      gap: 10px !important;
-      position: relative !important;
-      background: #176643 !important;
-      padding: 12px 20px !important;
-      border-radius: 12px !important;
-      box-shadow: 0 4px 12px rgba(23, 102, 67, 0.2) !important;
-      z-index: 50;
-    }
-
-    .sc-logo-area { display: flex !important; align-items: center !important; gap: 10px !important; }
-    .sc-logo-icon {
-      border: 2px solid #ffffff !important;
-      color: #ffffff !important;
-      font-weight: 700 !important;
-      font-size: 14px !important;
-      padding: 4px 8px !important;
-      border-radius: 6px !important;
-      border-bottom-width: 3px !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-    }
-    .sc-logo-text { display: flex !important; flex-direction: column !important; }
-    .sc-logo-text strong { font-size: 16px !important; color: #ffffff !important; line-height: 1.1 !important; letter-spacing: -0.3px !important; }
-    .sc-logo-text span { font-size: 11px !important; color: #a7f3d0 !important; font-weight: 500 !important; }
-    
-    .sc-top-nav { display: flex; gap: 10px; font-size: 14.5px; font-weight: 600; align-items: center; overflow-x: auto; margin-left: auto !important; }
-    
-    .sc-top-nav::-webkit-scrollbar { display: none; }
-    .sc-top-nav a { color: #dcfce7 !important; text-decoration: none !important; white-space: nowrap !important; transition: 0.2s !important; padding: 4px 8px; border-radius: 6px;}
-    .sc-top-nav a:hover, .sc-top-nav a.active { background: rgba(255, 255, 255, 0.15); color: #ffffff !important; }
-
-    .sc-header-controls { display: flex; align-items: center; gap: 10px; }
-    .sc-hamburger { display: none; width: 32px; height: 32px; background: #0f4c32 !important; color: #ffffff !important; border-radius: 6px; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; transition: background 0.2s; border: 1px solid #155738 !important; }
-
-    /* --- 2. STACKED LAYOUT --- */        
-    .sc-main-grid { display: flex; flex-direction: column; gap: 30px; margin-bottom: 20px; }
-
-    .sc-column {
-      width: 100%; padding: 0 15px 20px 15px; 
-      border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.04);
-      position: relative; transition: box-shadow 0.3s ease;
-    }
-    .sc-column:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.06); }
-    
-    .sc-column-bg {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      border-radius: inherit; overflow: hidden; z-index: 0;
-      pointer-events: none; opacity: 0.4;
-    }
-
-    .sc-column-a { background-color: var(--bg-light-blue); border: 2px solid #dbeafe; }
-    .sc-column-b { background-color: var(--bg-light-orange); border: 2px solid #fed7aa; }
-
-    .sc-section-title {
-      font-size: 14px; letter-spacing: 0.5px; font-weight: 800; text-transform: uppercase;
-      color: var(--heading-navy); text-align: center; background: #ffffff;
-      padding: 6px 22px; border-radius: 50px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-      width: fit-content; margin: -18px auto 20px auto; position: relative; z-index: 2; 
-    }
-    .sc-column-a .sc-section-title { border: 2px solid #93c5fd; }
-    .sc-column-b .sc-section-title { border: 2px solid #fdba74; }
-
-    .sc-cards-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 12px; position: relative; z-index: 2; 
-    }
-
-    .sc-custom-card {
-      background-color: #ffffff; border: 1px solid #e2e8f0;
-      border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.02), 0 8px 12px rgba(0,0,0,0.03);
-      padding: 12px; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease;
-      display: flex; flex-direction: column; justify-content: space-between;
-    }
-    .sc-custom-card:hover { 
-      transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.08); border-color: #cbd5e1;
-    }
-
-    .sc-custom-card h4 {
-      font-size: 14px; font-weight: 700; margin: 8px 0 12px;
-      color: var(--heading-navy); text-align: center; flex-grow: 1;
-    }
-
-    .sc-unit-badge {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 3px 6px 3px 8px; font-size: 10.5px; 
-      font-weight: 700; background: #fff5eb; border-radius: 6px;
-      color: #9a3412; width: 100%; margin-bottom: 8px;
-    }
-    
-    .sc-unit-badge span:nth-child(2) {
-      position: relative; overflow: hidden; padding: 3px 8px;
-      border-radius: 5px; 
-      color: #7c2d12;
-      font-weight: 800;
-      background: linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.4) 100%);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-      border: 1px solid rgba(255,255,255,0.9); 
-      box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.9), 0 2px 4px rgba(0,0,0,0.05);
-      text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
-      z-index: 1;
-    }
-
-    .sc-custom-card .sc-card-links { 
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: auto;
-    }
-    .sc-custom-card .sc-card-links a:only-child { grid-column: span 3; }
-    .sc-custom-card .sc-card-links a {
-      text-align: center; padding: 5px 3px; border-radius: 6px; 
-      text-decoration: none; font-weight: 600; font-size: 10.5px; 
-      border: 1px solid transparent; transition: all 0.25s ease;
-      display: flex; justify-content: center; align-items: center;
-      gap: 3px; white-space: nowrap; 
-    }
-
-    .sc-custom-card .sc-card-links a.sc-btn-video { background-color: var(--bg-light-blue); color: var(--btn-blue-text); border-color: #dbeafe; }
-    .sc-custom-card .sc-card-links a.sc-btn-notes { background-color: var(--bg-light-yellow); color: var(--btn-yellow-text); border-color: #fef08a; }
-    .sc-custom-card .sc-card-links a.sc-btn-pro { background-color: var(--bg-light-orange); color: var(--btn-orange-text); border-color: #ffedd5; }
-    .sc-custom-card .sc-card-links a.sc-btn-mcq { background-color: var(--bg-light-purple); color: var(--btn-mcq-text); border-color: #f3e8f5; }
-
-    .sc-custom-card .sc-card-links a:hover { color: #fff !important; border-color: transparent; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-    .sc-custom-card .sc-card-links a.sc-btn-video:hover { background: var(--btn-blue-hover2); }
-    .sc-custom-card .sc-card-links a.sc-btn-notes:hover { background: var(--btn-yellow-hover2); }
-    .sc-custom-card .sc-card-links a.sc-btn-pro:hover { background: var(--btn-orange-hover2); }
-    .sc-custom-card .sc-card-links a.sc-btn-mcq:hover { background: #ab47bc; }
-
-    /* --- MARQUEE & CTA SECTION --- */
-    .sc-single-box {
-      background: #ffffff; border: 1.5px solid #bbf7d0; border-radius: 12px;
-      overflow: hidden; box-shadow: 0 8px 18px rgba(23, 102, 67, 0.06);
-      margin-top: 10px; margin-bottom: 20px; position: relative; z-index: 5;
-    }
-    .sc-marquee { white-space: nowrap; overflow: hidden; background: #f0fdf4; border-bottom: 1px solid #bbf7d0; }
-    .sc-marquee span { display: inline-block; padding: 12px 0; animation: marquee-scroll 22s linear infinite; font-size: 13.5px; font-weight: 700; color: #166534; }
-    .sc-marquee:hover span { animation-play-state: paused; } 
-    .sc-marquee span a { color: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
-    @keyframes marquee-scroll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
-    .sc-cta-box { text-align: center; padding: 15px; }
-    .sc-cta-box a { 
-      display: inline-flex; align-items: center; gap: 8px; text-decoration: none; 
-      padding: 10px 25px; border-radius: 999px; font-weight: 700; font-size: 14px;
-      color: #064e3b; background: #dcfce7; border: 1px solid #86efac; transition: all 0.2s ease; 
-    }
-    .sc-cta-box a:hover { background: #bbf7d0; color: #022c22; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(22, 101, 52, 0.1); }
-
-    /* --- 3. BOTTOM SECTION --- */
-    .sc-bottom-blended-wrapper {
-      border-radius: 16px; overflow: hidden; border: 1px solid rgba(26, 83, 26, 0.1);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-    }
-
-    .sc-top-cta { background: var(--blend-dark-green); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
-    .sc-cta-content { display: flex; align-items: center; gap: 14px; }
-    .sc-cta-icon { background: #ffffff; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); }
-    .sc-cta-text h4 { color: var(--blend-ivory); font-size: 16px; font-weight: 700; margin-bottom: 2px; }
-    .sc-cta-text p { color: rgba(253, 252, 240, 0.75); font-size: 13px; }
-
-    .sc-cta-btn { background: #0B2F0B; color: var(--blend-ivory); text-decoration: none; padding: 8px 20px; border-radius: 30px; font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px; transition: background 0.3s ease, transform 0.2s ease; box-shadow: 0 4px 12px rgba(11, 47, 11, 0.3); }
-    .sc-cta-btn:hover { background: #072007; transform: translateY(-2px); color: white;}
-
-    .sc-middle-section { background: linear-gradient(180deg, #E6F4EB 0%, var(--blend-light-bg) 40%, #ffffff 100%); padding: 24px 20px 20px; text-align: center; position: relative; }
-    .sc-network-bg { position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.03; background-image: radial-gradient(var(--blend-dark-green) 1px, transparent 1px); background-size: 30px 30px; pointer-events: none; z-index: 1; }
-
-    .sc-wisdom-text { position: relative; z-index: 2; font-size: 30px; font-weight: 800; color: var(--blend-text-main); line-height: 1.2; margin-bottom: 24px; letter-spacing: -0.5px; }
-    .sc-wisdom-text span { color: var(--blend-dark-green); }
-
-    .sc-features-grid { position: relative; z-index: 2; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; border-top: 1px solid rgba(26, 83, 26, 0.08); padding-top: 20px; }
-    .sc-feature-item { display: flex; align-items: flex-start; text-align: left; gap: 10px; padding: 6px; border-radius: 8px; transition: background 0.3s ease; }
-    .sc-feature-item:hover { background: rgba(26, 83, 26, 0.04); }
-    .sc-feature-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
-    .sc-feature-text h5 { color: var(--blend-text-accent); font-size: 14px; font-weight: 700; margin-bottom: 2px; }
-    .sc-feature-text p { color: #64748b; font-size: 12px; line-height: 1.3; }
-
-    .sc-bottom-footer { background: var(--blend-dark-green); padding: 12px 20px; text-align: center; color: var(--blend-ivory); font-size: 13px; font-weight: 500; border-top: 1px solid rgba(255,255,255,0.1); margin: 0; }
-
-    /* --- 4. FLOATING ACTIONS --- */
-    .sc-floating-actions { position: fixed; bottom: 24px; right: 24px; display: flex; flex-direction: column; gap: 12px; z-index: 100; }
-    .sc-fab { width: 48px; height: 48px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.12); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-    .sc-fab:hover { transform: translateY(-4px) scale(1.05); box-shadow: 0 8px 20px rgba(0,0,0,0.18); }
-    .sc-fab:active { transform: scale(0.95); }
-    .sc-fab svg { width: 22px; height: 22px; transition: transform 0.4s ease; }
-    .sc-fab-share { background: #ffffff; color: #156845; }
-    .sc-fab-scroll { background: #156845; color: #ffffff; }
-    .sc-fab-scroll.sc-point-down svg { transform: rotate(180deg); }
-
-    /* --- TOAST NOTIFICATION --- */
-    .sc-toast {
-      visibility: hidden; min-width: 250px; background-color: #0f4c32; 
-      color: #ffffff; text-align: center; border-radius: 30px; padding: 12px 24px;
-      position: fixed; z-index: 6000; left: 50%; bottom: 20px;
-      transform: translateX(-50%); font-size: 14px; font-weight: 600;
-      box-shadow: 0 10px 25px rgba(15, 76, 50, 0.4); opacity: 0;
-      transition: opacity 0.3s ease, bottom 0.3s ease, visibility 0.3s ease;
-    }
-    .sc-toast.show { visibility: visible; opacity: 1; bottom: 40px; }
-
-    /* --- YOUTUBE CONFIRMATION MODAL --- */
-    .sc-yt-modal-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(15, 76, 50, 0.7); backdrop-filter: blur(5px);
-      z-index: 6000; display: flex; justify-content: center; align-items: center;
-      opacity: 0; visibility: hidden; transition: all 0.3s ease;
-    }
-    .sc-yt-modal-overlay.show { opacity: 1; visibility: visible; }
-    .sc-yt-modal-content {
-      background: #ffffff; padding: 35px 25px; border-radius: 20px;
-      max-width: 380px; width: 90%; text-align: center;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.25); transform: translateY(20px);
-      transition: transform 0.3s ease; font-family: inherit; border: 1px solid rgba(23, 102, 67, 0.2);
-    }
-    .sc-yt-modal-overlay.show .sc-yt-modal-content { transform: translateY(0); }
-    .sc-yt-modal-content h3 { color: #0f4c32; font-size: 20px; font-weight: 800; margin-bottom: 25px; }
-    .sc-yt-modal-actions { display: flex; gap: 12px; justify-content: center; }
-    .sc-yt-btn { padding: 10px 20px; border-radius: 50px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s ease; }
-    .sc-yt-btn.cancel { background: #f1f5f9; color: #64748b; }
-    .sc-yt-btn.cancel:hover { background: #e2e8f0; color: #0f4c32; }
-    .sc-yt-btn.confirm { background: linear-gradient(135deg, #176643, #2ea043); color: #ffffff; box-shadow: 0 4px 12px rgba(23, 102, 67, 0.2); }
-    .sc-yt-btn.confirm:hover { transform: scale(1.05); box-shadow: 0 6px 15px rgba(23, 102, 67, 0.35); }
-
-    /* --- 5. RESPONSIVE --- */
-    @media (max-width: 992px) {
-      .sc-cards-grid { grid-template-columns: repeat(2, 1fr); } 
-      .sc-hamburger { display: flex !important; }
-      .sc-top-nav { position: absolute; top: 64px; left: 10px; right: 10px; background: #176643 !important; flex-direction: column; align-items: flex-start; gap: 8px; padding: 16px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important; border: 1px solid #0f4c32 !important; z-index: 9999 !important; display: flex !important; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease; }
-      .sc-top-nav.show-mobile-menu { opacity: 1; visibility: visible; transform: translateY(0); }
-      .sc-top-nav a { width: 100%; padding: 10px 0 !important; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; font-size: 15px !important; }
-      .sc-top-nav a:last-child { border-bottom: none !important; }
-      .sc-features-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
-      .sc-wisdom-text { font-size: 26px; }
-    }
-    @media (max-width: 600px) {
-      .sc-cards-grid { grid-template-columns: 1fr; } 
-      .sc-top-header { padding: 12px 16px !important; margin-bottom: 25px !important; }
-      .sc-floating-actions { bottom: 16px; right: 16px; }
-      .sc-top-cta { flex-direction: column; text-align: center; }
-      .sc-cta-content { flex-direction: column; gap: 12px; }
-      .sc-features-grid { grid-template-columns: 1fr; gap: 20px; }
-      .sc-feature-item { align-items: center; text-align: center; flex-direction: column; }
-      .sc-feature-icon { margin-top: 0; }
-      .sc-wisdom-text { font-size: 22px; }
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SinghClasses | CBSE CS, IP & AI Classes</title>
+  <meta name="description" content="SinghClasses by Rohit Singh - Expert online and offline coaching for CBSE Class 9-12 Computer Science (CS), Informatics Practices (IP), and Artificial Intelligence (AI).">
+  <meta name="keywords" content="Singh Classes, Rohit Singh, Computer Science, Informatics Practices, Artificial Intelligence, online coaching, offline classes, Delhi, CBSE, Class 11, Class 12, Python, MySQL, AI">
+  <meta name="author" content="Rohit Singh">
+  
+  <link rel="icon" href="../assets/images/favicon/favicon.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <link rel="stylesheet" href="../../assets/css/dashboard.css">
+  <link rel="stylesheet" href="../../assets/css/syllabus.css">
 </head>
 <body>
 
-  <div class="sc-progress-wrapper"><div class="sc-progress-fill" id="scProgressBar"></div></div>
+  <header class="site-header" role="banner">
+    <div class="header-container">
+      <a class="logo-brand" href="../../index.html" aria-label="SinghClasses Home">
+        <div class="logo-icon-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M7.5 14.5l-2.5-2.5 2.5-2.5M11 17.3l2-7M16.5 9.5l2.5 2.5-2.5 2.5"/></svg>
+        </div>
+        <div class="logo-text-box"><strong class="logo-title">SinghClasses.in</strong><span class="logo-tagline">Think Logic . Code Magic</span></div>
+      </a>
+      <nav class="main-navigation" id="nav-menu" aria-label="Primary Navigation">
+        <ul class="nav-links-list">
+          <li><a class="nav-link" href="../../computer-science/index.html">Computer Science</a></li>
+          <li><a class="nav-link" href="../../informatics-practices/index.html">Informatics Practices</a></li>
+          <li><a class="nav-link" href="../../artificial-intelligence/index.html">Artificial Intelligence</a></li>
+          <li><a class="nav-link" href="../../higher-education/index.html">Higher Edu.</a></li>
+          <li><a class="nav-link" href="../../about/index.html">About Us</a></li>
+          <li><a class="nav-link" href="../../contact/index.html">Contact Us</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 
-  <div class="sc-widget-container">
+  <main class="main-content container-inner">
+    <div class="announcement-bar" role="status">
+      <span class="announcement-segment">
+        <span class="inline-svg-icon icon-teal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.5 1.5"></path><path d="M14 14l3 3"></path></svg>
+        </span>
+        Admissions Now Open 
+        <span class="divider" aria-hidden="true">|</span>
+        <a href="https://wa.me/918800873871?text=i%20want%20a%20demo%20class" target="_blank" rel="noopener noreferrer" class="announcement-cta">Book Your Free Demo Class</a>
+      </span>
+      <span class="divider hide-mobile" aria-hidden="true">|</span>
+      <span class="announcement-segment hide-mobile">
+        <span class="inline-svg-icon icon-teal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="20" x2="22" y2="20"></line><line x1="12" y1="17" x2="12" y2="20"></line></svg>
+        </span>
+        Learn CS, IP & AI with Rohit Singh
+      </span>
+      <span class="divider hide-mobile" aria-hidden="true">|</span>
+      <span class="announcement-segment hide-mobile">
+        <span class="inline-svg-icon icon-teal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+        </span>
+        Online & Offline Classes Available
+      </span>
+    </div>
     
-    <div id="scToast" class="sc-toast">🚀 This material is coming soon! Stay tuned.</div>
-
-    <div class="sc-top-header">
-      <div class="sc-logo-area">
-        <div class="sc-logo-icon">&lt;/&gt;</div>
-        <div class="sc-logo-text">
-          <strong>Informatics Practices</strong>
-          <span>CUET (UG) 2026-27</span>
+    <div class="sc-widget-container">
+  
+      <div id="scVideoModal" class="sc-modal-overlay">
+        <div class="sc-modal-card">
+          <div class="sc-modal-icon-wrapper">
+            <div class="sc-modal-icon-bg"></div>
+            <div class="sc-modal-particle">✦</div>
+            <div class="sc-modal-particle">▲</div>
+            <div class="sc-modal-particle">●</div>
+            <div class="sc-modal-particle">✦</div>
+            <div class="sc-modal-play-btn">▶</div>
+          </div>
+          <h2>Want to watch this video?</h2>
+          <p>Choose an option below to continue.</p>
+          <div class="sc-modal-actions">
+            <button id="scModalStay" class="sc-modal-btn sc-btn-stay">
+              <span style="color:#dc2626; font-size:18px">◷</span> Stay
+            </button>
+            <button id="scModalWatch" class="sc-modal-btn sc-btn-watch">
+              ▶ Watch
+            </button>
+          </div>
         </div>
       </div>
-      <div class="sc-top-nav" id="scMobileMenu">
-<a href="https://www.singhclasses.in/" >Home</a>
-  <a href="../computer-science/index.html">Computer Science</a>
-  <a href="../informatics-practices/index.html">Informatics Practices</a>
-  <a href="../artificial-intelligence/index.html">Artificial Intelligence</a>
-  <a href="../higher-education/index.html">Higher Edu.</a>
-  <a href="../about/index.html">About Us</a>
-  <a href="../contact/index.html">Contact Us</a>
 
-      </div>
-      <div class="sc-header-controls">
-        <div class="sc-hamburger" id="scMenuToggle">☰</div>
-      </div>
-    </div>
+      <div id="scToast" class="sc-toast">🚧 We are currently preparing this material. Coming soon!</div>
 
     <div class="sc-main-grid">
         
@@ -475,305 +200,132 @@
 
     </div> 
 
-    <div class="sc-bottom-blended-wrapper">
-      <div class="sc-top-cta">
-        <div class="sc-cta-content">
-          <div class="sc-cta-icon"><span class="sc-emoji">📢</span></div>
-          <div class="sc-cta-text">
-            <h4>Learn Faster with My OneShot YouTube Classes</h4>
-            <p>Free lectures. Exam-focused. No fluff.</p>
-          </div>
-        </div>
-        <a href="https://www.youtube.com/channel/UCQpNeGvzbBLsRLnNX7ga8FQ?sub_confirmation=1" target="_blank" class="sc-cta-btn">
-          <span class="sc-emoji">🔔</span> Subscribe Now
-        </a>
-      </div>
-
-      <div class="sc-middle-section" id="bottomSection">
-        <div class="sc-column-bg" style="opacity: 0.6;"><canvas id="canvasBottom" class="sc-canvas-bg"></canvas></div>
-        <div class="sc-network-bg"></div>
-        
-        <div class="sc-wisdom-text">
-          Alone we learn.<br>
-          Together we build <span>wisdom.</span>
-        </div>
-
-        <div class="sc-features-grid">
-          <div class="sc-feature-item">
-            <div class="sc-feature-icon"><span class="sc-emoji">🎯</span></div>
-            <div class="sc-feature-text">
-              <h5>Exam Focused</h5>
-              <p>Concepts that matter</p>
-            </div>
-          </div>
-          
-          <div class="sc-feature-item">
-            <div class="sc-feature-icon"><span class="sc-emoji">💡</span></div>
-            <div class="sc-feature-text">
-              <h5>Concept Clarity</h5>
-              <p>Understand with ease</p>
-            </div>
-          </div>
-          
-          <div class="sc-feature-item">
-            <div class="sc-feature-icon"><span class="sc-emoji">🔔</span></div>
-            <div class="sc-feature-text">
-              <h5>Regular Updates</h5>
-              <p>Stay ahead always</p>
-            </div>
-          </div>
-          
-          <div class="sc-feature-item">
-            <div class="sc-feature-icon"><span class="sc-emoji">🎓</span></div>
-            <div class="sc-feature-text">
-              <h5>CBSE Oriented</h5>
-              <p>Your success, our mission</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="sc-bottom-footer">
-        &copy; SinghClasses.in | Designed with ❤️ by Rohit Sir
-      </div>
-    </div>
-
-    <div class="sc-floating-actions">
-      <button id="scShareBtn" class="sc-fab sc-fab-share" aria-label="Share Page" title="Share Page">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="18" cy="5" r="3"></circle>
-          <circle cx="6" cy="12" r="3"></circle>
-          <circle cx="18" cy="19" r="3"></circle>
-          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-        </svg>
-      </button>
-      <button id="scScrollToggleBtn" class="sc-fab sc-fab-scroll sc-point-down" aria-label="Scroll Toggle" title="Scroll Top/Bottom">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18 15l-6-6-6 6" />
-        </svg>
-      </button>
-    </div>
-
-  </div> <div id="ytConfirmModal" class="sc-yt-modal-overlay">
-      <div class="sc-yt-modal-content">
-          <h3>Want to watch this Video?</h3>
-          <div class="sc-yt-modal-actions">
-              <button class="sc-yt-btn cancel" onclick="closeYtModal()">Stay</button>
-              <button class="sc-yt-btn confirm" onclick="proceedToYoutube()">Watch</button>
-          </div>
-      </div>
-  </div>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
       
-      // --- Scroll Progress Bar Logic ---
-      window.addEventListener('scroll', function(){
-          const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-          const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-          const scrollPercent = (scrollTop / scrollHeight) * 100;
-          document.getElementById("scProgressBar").style.width = scrollPercent + "%";
-      });
+      <div class="sc-bottom-blended-wrapper">
+        <div class="sc-top-cta">
+          <div class="sc-cta-content">
+            <div class="sc-cta-icon"><span class="sc-svg-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg></span></div>
+            <div class="sc-cta-text">
+              <h4>Master Concepts with One-Shot Revision Classes</h4>
+              <p>Concise explanations. Exam-ready preparation.</p>
+            </div>
+          </div>
+          <a href="https://www.youtube.com/channel/UCQpNeGvzbBLsRLnNX7ga8FQ?sub_confirmation=1" target="_blank" class="sc-cta-btn">
+            <span class="sc-svg-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></span> Subscribe Now
+          </a>
+        </div>
 
-      // --- COMING SOON TOAST LOGIC (Intercepts empty/hash links) ---
-      const allLinks = document.querySelectorAll('a');
-      const toast = document.getElementById('scToast');
-      let toastTimeout;
+        <div class="sc-middle-section" id="bottomSection">
+          <div class="sc-column-bg" style="opacity: 0.6;"><canvas id="canvasBottom" class="sc-canvas-bg"></canvas></div>
+          <div class="sc-network-bg"></div>
+          
+          <div class="sc-wisdom-text">
+            Alone we learn.<br>
+            Together we build <span>wisdom.</span>
+          </div>
 
-      allLinks.forEach(link => {
-          const href = link.getAttribute('href');
-          if (!href || href === '#' || href.trim() === '') {
-              link.addEventListener('click', function(e) {
-                  e.preventDefault(); 
-                  toast.classList.add('show');
-                  clearTimeout(toastTimeout);
-                  toastTimeout = setTimeout(() => {
-                      toast.classList.remove('show');
-                  }, 3000);
-              });
-          }
-      });
+          <div class="sc-features-grid">
+            <div class="sc-feature-item">
+              <div class="sc-feature-icon"><span class="sc-svg-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg></span></div>
+              <div class="sc-feature-text">
+                <h5>Exam Focused</h5>
+                <p>Concepts that matter</p>
+              </div>
+            </div>
+            <div class="sc-feature-item">
+              <div class="sc-feature-icon"><span class="sc-svg-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"></path><path d="M10 22h4"></path><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path></svg></span></div>
+              <div class="sc-feature-text">
+                <h5>Concept Clarity</h5>
+                <p>Understand with ease</p>
+              </div>
+            </div>
+            <div class="sc-feature-item">
+              <div class="sc-feature-icon"><span class="sc-svg-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></span></div>
+              <div class="sc-feature-text">
+                <h5>Regular Updates</h5>
+                <p>Stay ahead always</p>
+              </div>
+            </div>
+            <div class="sc-feature-item">
+              <div class="sc-feature-icon"><span class="sc-svg-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"></path></svg></span></div>
+              <div class="sc-feature-text">
+                <h5>CBSE Oriented</h5>
+                <p>Your success, our mission</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-      // --- NEW: YOUTUBE CONFIRMATION MODAL LOGIC ---
-      const ytModal = document.getElementById('ytConfirmModal');
-      let pendingYtUrl = '';
+      </div>
 
-      allLinks.forEach(link => {
-          if(link.href.includes('youtu.be') || link.href.includes('youtube.com')) {
-              link.addEventListener('click', function(e) {
-                  e.preventDefault(); 
-                  pendingYtUrl = this.href; 
-                  ytModal.classList.add('show'); 
-              });
-          }
-      });
+      <div class="sc-floating-actions">
+        <button id="scShareBtn" class="sc-fab sc-fab-share" aria-label="Share Page" title="Share Page">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="18" cy="5" r="3"></circle>
+            <circle cx="6" cy="12" r="3"></circle>
+            <circle cx="18" cy="19" r="3"></circle>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+          </svg>
+        </button>
+        <button id="scScrollToggleBtn" class="sc-fab sc-fab-scroll sc-point-down" aria-label="Scroll Toggle" title="Scroll Top/Bottom">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 15l-6-6-6 6" />
+          </svg>
+        </button>
+      </div>
 
-      window.closeYtModal = function() {
-          ytModal.classList.remove('show');
-          pendingYtUrl = '';
-      }
+    </div>
+    
+  </main>
 
-      window.proceedToYoutube = function() {
-          if(pendingYtUrl) {
-              window.open(pendingYtUrl, '_blank');
-              closeYtModal(); 
-          }
-      }
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-layout-grid">
+      <div class="footer-column contact-column">
+        <h4>Offline Centers</h4>
+        <div class="centers-sub-grid">
+          <div class="center-item">
+            <span class="footer-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></span>
+            <div class="center-text">
+              <strong>Sant Nagar Center:</strong>
+              <p>RS Classes - 122/16/2, Street 5, Cross Road, Sant Nagar, Delhi</p>
+              <a href="https://maps.app.goo.gl/Buy9SC9iWityttYW9" target="_blank" rel="noopener noreferrer" class="footer-map-link">View on Google Map →</a>
+            </div>
+          </div>
+          <div class="center-item">
+            <span class="footer-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></span>
+            <div class="center-text">
+              <strong>Mukherjee Nagar Center:</strong>
+              <p>Sonu Institute - 1964/5, Outram Lines, Mukherjee Nagar, Delhi</p>
+              <a href="https://maps.app.goo.gl/2RtuAwQ2135CBhkx5" target="_blank" rel="noopener noreferrer" class="footer-map-link">View on Google Map →</a>
+            </div>
+          </div>
+        </div>
+        <div class="email-footer-row">
+          <span class="footer-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg></span>
+          <a href="mailto:beyondsyntaxcode@gmail.com">beyondsyntaxcode@gmail.com</a>
+        </div>
+      </div>
+      <div class="footer-column social-column">
+        <h4>Connect with Us</h4>
+        <ul class="social-links-list">
+          <li><a href="https://wa.me/918800873871" target="_blank" rel="noopener noreferrer" class="social-item-card whatsapp-theme"><span class="social-icon-wrapper"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg></span>WhatsApp Support</a></li>
+          <li><a href="https://t.me/+TcYc2oIrIZxuEECi" target="_blank" rel="noopener noreferrer" class="social-item-card telegram-theme"><span class="social-icon-wrapper"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg></span>Telegram Channel</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom-bar">
+      <div class="copyright-text">© <span id="current-year">2026</span> SinghClasses.in | Designed with <span class="heart-icon" aria-label="love">❤️</span> by Rohit Singh</div>
+      <div class="footer-legal-links">
+        <a href="../privacy/index.html">Privacy Policy</a>
+        <a href="../terms/index.html">Terms of Service</a>
+        <a href="../disclaimer/index.html">Disclaimer</a>
+      </div>
+    </div>
+  </footer>
 
-      // --- Mobile Menu Toggle ---
-      const menuToggle = document.getElementById('scMenuToggle');
-      const mobileMenu = document.getElementById('scMobileMenu');
-      if (menuToggle && mobileMenu) {
-        menuToggle.addEventListener('click', function() {
-          mobileMenu.classList.toggle('show-mobile-menu');
-          menuToggle.innerHTML = mobileMenu.classList.contains('show-mobile-menu') ? '✕' : '☰';
-        });
-      }
-
-      // --- Floating Actions Logic ---
-      const shareBtn = document.getElementById('scShareBtn');
-      const scrollBtn = document.getElementById('scScrollToggleBtn');
-
-      if (shareBtn) {
-        shareBtn.addEventListener('click', async () => {
-          if (navigator.share) {
-            try {
-              await navigator.share({
-                title: document.title,
-                url: window.location.href
-              });
-            } catch (err) {
-              console.log('Error sharing:', err);
-            }
-          } else {
-            navigator.clipboard.writeText(window.location.href).then(() => {
-              alert('Link copied to clipboard!');
-            });
-          }
-        });
-      }
-
-      if (scrollBtn) {
-        const checkScroll = () => {
-          if (window.scrollY > 150) {
-            scrollBtn.classList.remove('sc-point-down');
-          } else {
-            scrollBtn.classList.add('sc-point-down');
-          }
-        };
-
-        window.addEventListener('scroll', checkScroll);
-        checkScroll(); 
-
-        scrollBtn.addEventListener('click', () => {
-          if (window.scrollY > 150) {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          } else {
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-          }
-        });
-      }
-
-      // --- Reusable Particle Canvas Function ---
-      function initParticleCanvas(containerId, canvasId, particleCount, connectionDistance) {
-        const container = document.getElementById(containerId);
-        const canvas = document.getElementById(canvasId);
-        if (!container || !canvas) return;
-
-        const ctx = canvas.getContext('2d');
-        let width, height;
-        let particles = [];
-        let mouse = { x: null, y: null };
-
-        function resizeCanvas() {
-          width = container.offsetWidth;
-          height = container.offsetHeight;
-          canvas.width = width;
-          canvas.height = height;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        container.addEventListener('mousemove', function(e) {
-          const rect = container.getBoundingClientRect();
-          mouse.x = e.clientX - rect.left;
-          mouse.y = e.clientY - rect.top;
-        });
-        container.addEventListener('mouseleave', function() {
-          mouse.x = null;
-          mouse.y = null;
-        });
-
-        class Particle {
-          constructor() {
-            this.x = Math.random() * width;
-            this.y = Math.random() * height;
-            this.vx = (Math.random() - 0.5) * 0.8; 
-            this.vy = (Math.random() - 0.5) * 0.8; 
-            this.radius = 1.5;
-          }
-          update() {
-            this.x += this.vx;
-            this.y += this.vy;
-            if (this.x < 0 || this.x > width) this.vx *= -1;
-            if (this.y < 0 || this.y > height) this.vy *= -1;
-          }
-          draw() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(21, 104, 69, 0.4)';
-            ctx.fill();
-          }
-        }
-
-        for (let i = 0; i < particleCount; i++) {
-          particles.push(new Particle());
-        }
-
-        function animate() {
-          ctx.clearRect(0, 0, width, height);
-          for (let i = 0; i < particles.length; i++) {
-            particles[i].update();
-            particles[i].draw();
-            
-            for (let j = i + 1; j < particles.length; j++) {
-              let dx = particles[i].x - particles[j].x;
-              let dy = particles[i].y - particles[j].y;
-              let dist = Math.sqrt(dx * dx + dy * dy);
-              if (dist < connectionDistance) {
-                ctx.beginPath();
-                ctx.moveTo(particles[i].x, particles[i].y);
-                ctx.lineTo(particles[j].x, particles[j].y);
-                ctx.strokeStyle = `rgba(21, 104, 69, ${0.25 - (dist/connectionDistance) * 0.25})`;
-                ctx.lineWidth = 1;
-                ctx.stroke();
-              }
-            }
-            
-            if (mouse.x !== null && mouse.y !== null) {
-              let dx = particles[i].x - mouse.x;
-              let dy = particles[i].y - mouse.y;
-              let dist = Math.sqrt(dx * dx + dy * dy);
-              if (dist < 100) {
-                ctx.beginPath();
-                ctx.moveTo(particles[i].x, particles[i].y);
-                ctx.lineTo(mouse.x, mouse.y);
-                ctx.strokeStyle = `rgba(21, 104, 69, ${0.35 - (dist/100) * 0.35})`;
-                ctx.lineWidth = 1;
-                ctx.stroke();
-              }
-            }
-          }
-          requestAnimationFrame(animate);
-        }
-        animate();
-      }
-
-      initParticleCanvas('colA', 'canvasA', 35, 60);
-      initParticleCanvas('colB', 'canvasB', 35, 60);
-      initParticleCanvas('bottomSection', 'canvasBottom', 40, 75);
-    });
-  </script>
+  <script src="../../assets/js/dashboard.js"></script>
+  <script src="../../assets/js/script.js"></script>
+  <script src="../../assets/js/syllabus.js"></script>
 </body>
 </html>
