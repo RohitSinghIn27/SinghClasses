@@ -1,0 +1,594 @@
+<div class="sc-widget-container">
+  <style>
+    .sc-widget-container {
+      font-family: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 5px;
+      box-sizing: border-box;
+      line-height: 1.3;
+      position: relative;
+    }
+    .sc-widget-container * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* --- 2. TOP HEADER LOGO & LINKS --- */
+    .sc-top-header {
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      margin-bottom: 20px !important;
+      flex-wrap: wrap !important;
+      gap: 10px !important;
+      position: relative !important;
+      background: #176643 !important;
+      padding: 12px 20px !important;
+      border-radius: 12px !important;
+      box-shadow: 0 4px 12px rgba(23, 102, 67, 0.2) !important;
+      z-index: 50;
+    }
+
+    .sc-logo-area { display: flex !important; align-items: center !important; gap: 10px !important; }
+    .sc-logo-icon {
+      border: 2px solid #ffffff !important;
+      color: #ffffff !important;
+      font-weight: 700 !important;
+      font-size: 14px !important;
+      padding: 4px 8px !important;
+      border-radius: 6px !important;
+      border-bottom-width: 3px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+    .sc-logo-text { display: flex !important; flex-direction: column !important; }
+    .sc-logo-text strong { font-size: 16px !important; color: #ffffff !important; line-height: 1.1 !important; letter-spacing: -0.3px !important; }
+    .sc-logo-text span { font-size: 11px !important; color: #a7f3d0 !important; font-weight: 500 !important; }
+        .sc-top-nav { display: flex; gap: 18px; font-size: 14px; font-weight: 700; align-items: center; overflow-x: auto; margin-left: auto !important; }
+    
+    .sc-top-nav::-webkit-scrollbar { display: none; }
+    .sc-top-nav a { color: #dcfce7 !important; text-decoration: none !important; white-space: nowrap !important; transition: 0.2s !important; }
+    .sc-top-nav a:hover { color: #ffffff !important; }
+    .sc-top-nav a.active-top { background: #ffffff !important; color: #176643 !important; padding: 6px 14px !important; border-radius: 20px !important; display: flex !important; align-items: center !important; gap: 6px !important; }
+
+    .sc-header-controls { display: flex; align-items: center; gap: 10px; }
+    .sc-hamburger { display: none; width: 32px; height: 32px; background: #0f4c32 !important; color: #ffffff !important; border-radius: 6px; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; transition: background 0.2s; border: 1px solid #155738 !important; }
+    
+    /* --- EMOJI MOTION ANIMATION --- */
+    @keyframes scEmojiMotion {
+      0% { transform: scale(1.15) rotate(0deg); }
+      25% { transform: scale(1.25) rotate(-10deg); }
+      50% { transform: scale(1.25) rotate(10deg); }
+      75% { transform: scale(1.25) rotate(-10deg); }
+      100% { transform: scale(1.15) rotate(0deg); }
+    }
+
+    /* --- 3. BLENDED SECTION: CARDS + YOUTUBE --- */
+    .sc-learning-blend-zone {
+      background: linear-gradient(180deg, rgba(255,255,255,0) 0%, #f4fdf7 40%, #e6f4ef 100%);
+      border-radius: 16px;
+      padding: 12px 12px 0 12px;
+      margin-bottom: 24px;
+      border: 1px solid #2F6B3F;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+    }
+
+    .sc-grid { 
+      display: grid; 
+      grid-template-columns: repeat(3, 1fr); 
+      gap: 12px; 
+      margin-bottom: 12px; 
+      position: relative; 
+      z-index: 2;
+      background: rgba(255, 255, 255, 0.55); 
+      padding: 16px; 
+      border-radius: 14px; 
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.01);
+    }
+    
+    .sc-card {
+      border-radius: 12px; 
+      padding: 14px 10px;
+      text-align: center; 
+      text-decoration: none !important;
+      transition: all 0.3s ease; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center;
+      border: 1px solid rgba(0,0,0,0.04); 
+      box-shadow: 0 4px 10px rgba(0,0,0,0.03); 
+      height: 100%;
+      background: #ffffff;
+    }
+    .sc-card:hover { transform: translateY(-3px); box-shadow: 0 8px 16px rgba(0,0,0,0.07); }
+    
+    .sc-card-icon { display: inline-block; font-size: 28px; margin-bottom: 6px; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    /* Apply animation to card icon on hover */
+    .sc-card:hover .sc-card-icon { animation: scEmojiMotion 0.6s ease-in-out infinite; }
+    
+    .sc-card h3 { font-size: 14px; font-weight: 800; color: #0f172a !important; margin-bottom: 4px; }
+    .sc-card-desc { font-size: 11px; color: #475569 !important; margin-bottom: 12px; line-height: 1.3; flex-grow: 1; display: flex; flex-direction: column; justify-content: flex-start; }
+    
+    .sc-card-btn { font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 16px; width: 100%; color: #fff !important; transition: background 0.2s, color 0.2s; margin-top: auto; }
+
+    .sc-bg-green { background: #f6fcf8; } .sc-btn-green { background: #156845; } .sc-card.sc-bg-green:hover .sc-btn-green { background: #0f4c32; }
+    .sc-bg-yellow { background: #fffbeb; } .sc-btn-yellow { background: #d97706; color: #ffffff !important; font-weight: 800; } .sc-card.sc-bg-yellow:hover .sc-btn-yellow { background: #b45309; }
+    .sc-bg-purple { background: #faf5ff; } .sc-btn-purple { background: #6b21a8; } .sc-card.sc-bg-purple:hover .sc-btn-purple { background: #581c87; }
+    .sc-bg-blue { background: #f0f9ff; } .sc-btn-blue { background: #0369a1; } .sc-card.sc-bg-blue:hover .sc-btn-blue { background: #075985; }
+
+    .sc-subscribe {
+      position: relative;
+      background: transparent;
+      border: none;
+      padding: 16px 12px 24px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      overflow: hidden;
+    }
+    
+    .sc-canvas-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.5; }
+    .sc-sub-content, .sc-sub-action { position: relative; z-index: 2; }
+    .sc-sub-content { display: flex; align-items: center; gap: 14px; pointer-events: none; }
+    
+    .sc-sub-icon { display: inline-block; background: #ffffff; padding: 10px; border-radius: 50%; font-size: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); transition: transform 0.3s ease; }
+    /* Apply animation to subscribe icon on hover */
+    .sc-subscribe:hover .sc-sub-icon { animation: scEmojiMotion 0.6s ease-in-out infinite; pointer-events: auto; }
+
+    .sc-sub-text h4 { font-size: 17px; font-weight: 800; color: #0f172a !important; margin-bottom: 2px; letter-spacing: -0.3px; }
+    .sc-sub-text p { font-size: 13px; color: #475569 !important; }
+
+    @keyframes scSubscribePulse { 0% { box-shadow: 0 0 0 0 rgba(21, 104, 69, 0.4); } 70% { box-shadow: 0 0 0 8px rgba(21, 104, 69, 0); } 100% { box-shadow: 0 0 0 0 rgba(21, 104, 69, 0); } }
+    
+    .sc-sub-btn { background: #156845 !important; color: #fff !important; text-decoration: none !important; padding: 10px 20px; border-radius: 24px; font-weight: 700; font-size: 14px; white-space: nowrap; display: flex; align-items: center; gap: 8px; transition: background 0.2s, transform 0.2s; animation: scSubscribePulse 2s infinite; pointer-events: auto; }
+    .sc-sub-btn:hover { background: #0f4c32 !important; transform: scale(1.02); animation-play-state: paused; }
+
+    /* --- 4. BLENDED SECTION: HERO + FOOTER --- */
+    .sc-hero-wrapper {
+      border-radius: 12px;
+      border: 1px solid #005F02;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.03);
+      display: flex;
+      flex-direction: column;
+      background: #ffffff;
+      overflow: hidden; 
+    }
+    
+    .sc-hero-top {
+      position: relative;
+      background: linear-gradient(135deg, #e6f4ef 0%, #f0faf6 100%);
+      padding: 36px 16px;
+      text-align: center;
+      overflow: hidden; 
+    }
+
+    .sc-hero-content { position: relative; z-index: 2; pointer-events: none; text-shadow: 0 0 15px rgba(255,255,255,0.9); }
+    .sc-hero-content h1 { font-size: 34px; font-weight: 800; color: #0f172a; line-height: 1.2; margin-bottom: 0; letter-spacing: -0.5px; }
+    .sc-text-green { color: #136040; }
+
+    .sc-features-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 20px 30px 20px; 
+      background: linear-gradient(to bottom, #ffffff 60%, #e6f4ef 100%); 
+      border-top: 1px solid #e2e8f0;
+      flex-wrap: wrap;
+      gap: 10px;
+      position: relative;
+      z-index: 5; 
+    }
+    
+    .sc-feature-item { display: flex; align-items: center; gap: 10px; padding: 5px; border-radius: 8px; transition: background 0.2s; }
+    .sc-feature-item:hover { background: rgba(21, 104, 69, 0.05); }
+    
+    .sc-feature-icon { display: inline-block; font-size: 26px; transition: transform 0.3s ease; }
+    /* Apply animation to feature icon on hover */
+    .sc-feature-item:hover .sc-feature-icon { animation: scEmojiMotion 0.6s ease-in-out infinite; }
+
+    .sc-feature-text h5 { font-size: 13px; font-weight: 700; color: #0f172a !important; margin-bottom: 2px; }
+    .sc-feature-text p { font-size: 12px; color: #64748b !important; }
+
+    .sc-bottom-footer { 
+      background: #156845; 
+      padding: 14px 10px; 
+      color: #eafff4 !important; 
+      text-align: center; 
+      font-size: 12px; 
+      font-weight: 500; 
+      margin: 0; 
+    }
+    .sc-bottom-footer a { color: #ffffff !important; text-decoration: underline !important; font-weight: 700; }
+
+    /* --- 5. FLOATING ACTIONS (SHARE & SCROLL) --- */
+    .sc-floating-actions {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 100;
+    }
+    .sc-fab {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .sc-fab:hover { transform: translateY(-4px) scale(1.05); box-shadow: 0 8px 20px rgba(0,0,0,0.18); }
+    .sc-fab:active { transform: scale(0.95); }
+    
+    .sc-fab svg { 
+      width: 22px; 
+      height: 22px; 
+      transition: transform 0.4s ease; 
+    }
+
+    .sc-fab-share { 
+      background: #ffffff; 
+      color: #156845; 
+    }
+    .sc-fab-scroll { 
+      background: #156845; 
+      color: #ffffff; 
+    }
+    /* Flips the chevron when user is near the top */
+    .sc-fab-scroll.sc-point-down svg { 
+      transform: rotate(180deg); 
+    }
+
+    /* --- TOAST NOTIFICATION CSS --- */
+    .sc-toast {
+      visibility: hidden;
+      min-width: 250px;
+      background-color: #0f4c32; /* Matches widget dark green */
+      color: #ffffff;
+      text-align: center;
+      border-radius: 30px;
+      padding: 12px 24px;
+      position: fixed;
+      z-index: 3000;
+      left: 50%;
+      bottom: 20px;
+      transform: translateX(-50%);
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(15, 76, 50, 0.4);
+      opacity: 0;
+      transition: opacity 0.3s ease, bottom 0.3s ease, visibility 0.3s ease;
+    }
+
+    .sc-toast.show {
+      visibility: visible;
+      opacity: 1;
+      bottom: 40px; 
+    }
+
+    /* --- 6. RESPONSIVE --- */
+    @media (max-width: 992px) {
+      .sc-grid { grid-template-columns: repeat(2, 1fr); }
+      .sc-hero-content h1 { font-size: 28px; }
+      .sc-features-row { grid-template-columns: repeat(2, 1fr); display: grid; }
+      .sc-hamburger { display: flex !important; }
+      .sc-top-nav { position: absolute; top: 64px; left: 10px; right: 10px; background: #176643 !important; flex-direction: column; align-items: flex-start; gap: 8px; padding: 16px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important; border: 1px solid #0f4c32 !important; z-index: 9999 !important; display: flex !important; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease; }
+      .sc-top-nav.show-mobile-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+      .sc-top-nav a { width: 100%; padding: 10px 0 !important; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; font-size: 15px !important; color: #ffffff !important; }
+      .sc-top-nav a:last-child { border-bottom: none !important; }
+      .sc-top-nav a.active-top { background: transparent !important; color: #a7f3d0 !important; justify-content: flex-start !important; }
+    }
+    @media (max-width: 600px) {
+      .sc-grid { grid-template-columns: 1fr; }
+      .sc-top-header { padding: 12px 16px !important; }
+      .sc-subscribe { flex-direction: column; text-align: center; }
+      .sc-sub-content { flex-direction: column; gap: 10px; }
+      .sc-features-row { grid-template-columns: 1fr; gap: 16px; text-align: left; }
+      .sc-floating-actions { bottom: 16px; right: 16px; }
+    }
+  </style>
+
+  <div id="scToast" class="sc-toast">🚧 We are currently preparing this material. Coming soon!</div>
+
+  <div class="sc-top-header">
+    <div class="sc-logo-area">
+      <div class="sc-logo-icon">&lt;/&gt;</div>
+      <div class="sc-logo-text">
+        <strong>Informatics Practices </strong>
+        <span>For Class XI, XII &amp; CUET</span>
+      </div>
+    </div>
+    <div class="sc-top-nav" id="scMobileMenu">
+<a href="https://www.singhclasses.in/" >Home</a>
+  <a href="../computer-science/index.html">Computer Science</a>
+  <a href="../informatics-practices/index.html">Informatics Practices</a>
+  <a href="../artificial-intelligence/index.html">Artificial Intelligence</a>
+  <a href="../higher-education/index.html">Higher Edu.</a>
+  <a href="../about/index.html">About Us</a>
+  <a href="../contact/index.html">Contact Us</a>
+    </div>
+
+
+
+    <div class="sc-header-controls">
+      <div class="sc-hamburger" id="scMenuToggle">☰</div>
+    </div>
+  </div>
+  
+
+    <div class="sc-subscribe" id="scSubscribeBanner">
+      <canvas id="scParticleCanvas2" class="sc-canvas-bg"></canvas>
+      <div class="sc-sub-content">
+        <div class="sc-sub-icon">📢</div>
+        <div class="sc-sub-text">
+          <h4>Learn Faster with My OneShot YouTube Classes</h4>
+          <p>Free lectures. Exam-focused. No fluff.</p>
+        </div>
+      </div>
+      <div class="sc-sub-action">
+        <a href="https://www.youtube.com/channel/UCQpNeGvzbBLsRLnNX7ga8FQ?sub_confirmation=1" target="_blank" class="sc-sub-btn">
+          🔔 Subscribe Now
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="sc-hero-wrapper">
+    <div class="sc-hero-top" id="scHeroTop">
+      <canvas id="scParticleCanvas1" class="sc-canvas-bg"></canvas>
+      <div class="sc-hero-content">
+        <h1>Alone we learn.<br>Together we build <span class="sc-text-green">wisdom.</span></h1>
+      </div>
+    </div>
+    <div class="sc-features-row">
+      <div class="sc-feature-item">
+        <div class="sc-feature-icon">🎯</div>
+        <div class="sc-feature-text">
+          <h5>Exam Focused</h5>
+          <p>Concepts that matter</p>
+        </div>
+      </div>
+      <div class="sc-feature-item">
+        <div class="sc-feature-icon">💡</div>
+        <div class="sc-feature-text">
+          <h5>Concept Clarity</h5>
+          <p>Understand with ease</p>
+        </div>
+      </div>
+      <div class="sc-feature-item">
+        <div class="sc-feature-icon">🔔</div>
+        <div class="sc-feature-text">
+          <h5>Regular Updates</h5>
+          <p>Stay ahead always</p>
+        </div>
+      </div>
+      <div class="sc-feature-item">
+        <div class="sc-feature-icon">🎓</div>
+        <div class="sc-feature-text">
+          <h5>CBSE Oriented</h5>
+          <p>Your success, our mission</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="sc-bottom-footer">
+     © SinghClasses.in |  Designed with ❤️ by Rohit Sir
+    </div>
+  </div>
+
+  <div class="sc-floating-actions">
+    <button id="scShareBtn" class="sc-fab sc-fab-share" aria-label="Share Page" title="Share Page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="18" cy="5" r="3"></circle>
+        <circle cx="6" cy="12" r="3"></circle>
+        <circle cx="18" cy="19" r="3"></circle>
+        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+      </svg>
+    </button>
+    <button id="scScrollToggleBtn" class="sc-fab sc-fab-scroll sc-point-down" aria-label="Scroll Toggle" title="Scroll Top/Bottom">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 15l-6-6-6 6" />
+      </svg>
+    </button>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      
+      // --- COMING SOON TOAST LOGIC ---
+      const allLinks = document.querySelectorAll('a');
+      const toast = document.getElementById('scToast');
+      let toastTimeout;
+
+      allLinks.forEach(link => {
+          const href = link.getAttribute('href');
+          
+          // If the link has no href, an empty href, or just a "#" symbol
+          if (!href || href === '#' || href.trim() === '') {
+              link.addEventListener('click', function(e) {
+                  e.preventDefault(); // Prevents jumping to top or opening a blank new tab
+                  
+                  // Show the toast
+                  toast.classList.add('show');
+                  
+                  // Hide the toast automatically after 3 seconds
+                  clearTimeout(toastTimeout);
+                  toastTimeout = setTimeout(() => {
+                      toast.classList.remove('show');
+                  }, 3000);
+              });
+          }
+      });
+
+      // --- Mobile Menu Toggle ---
+      const menuToggle = document.getElementById('scMenuToggle');
+      const mobileMenu = document.getElementById('scMobileMenu');
+      if (menuToggle && mobileMenu) {
+        menuToggle.addEventListener('click', function() {
+          mobileMenu.classList.toggle('show-mobile-menu');
+          menuToggle.innerHTML = mobileMenu.classList.contains('show-mobile-menu') ? '✕' : '☰';
+        });
+      }
+
+      // --- Floating Actions Logic ---
+      const shareBtn = document.getElementById('scShareBtn');
+      const scrollBtn = document.getElementById('scScrollToggleBtn');
+
+      // Native Share API + Clipboard Fallback
+      if (shareBtn) {
+        shareBtn.addEventListener('click', async () => {
+          if (navigator.share) {
+            try {
+              await navigator.share({
+                title: document.title,
+                url: window.location.href
+              });
+            } catch (err) {
+              console.log('Error sharing:', err);
+            }
+          } else {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+              alert('Link copied to clipboard!');
+            });
+          }
+        });
+      }
+
+      // Scroll Toggle Logic
+      if (scrollBtn) {
+        // Toggle direction based on scroll depth
+        const checkScroll = () => {
+          if (window.scrollY > 150) {
+            scrollBtn.classList.remove('sc-point-down');
+          } else {
+            scrollBtn.classList.add('sc-point-down');
+          }
+        };
+
+        window.addEventListener('scroll', checkScroll);
+        checkScroll(); // Init state
+
+        scrollBtn.addEventListener('click', () => {
+          if (window.scrollY > 150) {
+            // If scrolled down, go to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          } else {
+            // If at top, go to bottom
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+          }
+        });
+      }
+
+      // --- Reusable Particle Canvas Function ---
+      function initParticleCanvas(containerId, canvasId, particleCount, connectionDistance) {
+        const container = document.getElementById(containerId);
+        const canvas = document.getElementById(canvasId);
+        if (!container || !canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+        let mouse = { x: null, y: null };
+
+        function resizeCanvas() {
+          width = container.offsetWidth;
+          height = container.offsetHeight;
+          canvas.width = width;
+          canvas.height = height;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        container.addEventListener('mousemove', function(e) {
+          const rect = container.getBoundingClientRect();
+          mouse.x = e.clientX - rect.left;
+          mouse.y = e.clientY - rect.top;
+        });
+        container.addEventListener('mouseleave', function() {
+          mouse.x = null;
+          mouse.y = null;
+        });
+
+        class Particle {
+          constructor() {
+            this.x = Math.random() * width;
+            this.y = Math.random() * height;
+            this.vx = (Math.random() - 0.5) * 0.8; 
+            this.vy = (Math.random() - 0.5) * 0.8; 
+            this.radius = 1.5;
+          }
+          update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            if (this.x < 0 || this.x > width) this.vx *= -1;
+            if (this.y < 0 || this.y > height) this.vy *= -1;
+          }
+          draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(21, 104, 69, 0.4)';
+            ctx.fill();
+          }
+        }
+
+        for (let i = 0; i < particleCount; i++) {
+          particles.push(new Particle());
+        }
+
+        function animate() {
+          ctx.clearRect(0, 0, width, height);
+          for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            particles[i].draw();
+            
+            for (let j = i + 1; j < particles.length; j++) {
+              let dx = particles[i].x - particles[j].x;
+              let dy = particles[i].y - particles[j].y;
+              let dist = Math.sqrt(dx * dx + dy * dy);
+              if (dist < connectionDistance) {
+                ctx.beginPath();
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(particles[j].x, particles[j].y);
+                ctx.strokeStyle = `rgba(21, 104, 69, ${0.25 - (dist/connectionDistance) * 0.25})`;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+              }
+            }
+            
+            if (mouse.x !== null && mouse.y !== null) {
+              let dx = particles[i].x - mouse.x;
+              let dy = particles[i].y - mouse.y;
+              let dist = Math.sqrt(dx * dx + dy * dy);
+              if (dist < 100) {
+                ctx.beginPath();
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(mouse.x, mouse.y);
+                ctx.strokeStyle = `rgba(21, 104, 69, ${0.35 - (dist/100) * 0.35})`;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+              }
+            }
+          }
+          requestAnimationFrame(animate);
+        }
+        animate();
+      }
+
+      // Initialize canvases
+      initParticleCanvas('scHeroTop', 'scParticleCanvas1', 60, 80);
+      initParticleCanvas('scSubscribeBanner', 'scParticleCanvas2', 25, 70);
+    });
+  </script>
+</div>
