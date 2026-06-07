@@ -108,10 +108,8 @@
 
     /* --- 2. STACKED LAYOUT --- */        
     .sc-main-grid { display: flex; flex-direction: column; gap: 30px; margin-bottom: 20px; }
-
     .sc-column { width: 100%; padding: 0 15px 20px 15px; border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.04); position: relative; transition: box-shadow 0.3s ease; }
     .sc-column:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.06); }
-    
     .sc-column-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: inherit; overflow: hidden; z-index: 0; pointer-events: none; opacity: 0.4; }
 
     .sc-column-a { background-color: var(--bg-light-blue); border: 2px solid #dbeafe; }
@@ -124,7 +122,6 @@
     .sc-column-c .sc-section-title { border: 2px solid #fdba74; }
 
     .sc-cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; position: relative; z-index: 2; }
-
     .sc-custom-card { background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.02), 0 8px 12px rgba(0,0,0,0.03); padding: 12px; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; }
     .sc-custom-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.08); border-color: #cbd5e1; }
     .sc-custom-card h4 { font-size: 14px; font-weight: 700; margin: 8px 0 12px; color: var(--heading-navy); text-align: center; flex-grow: 1; }
@@ -152,10 +149,7 @@
     .sc-card-links a.sc-btn-dpp:hover { background: #26a69a; }
 
     /* --- LOCKED LINKS OVERRIDE --- */
-    .sc-card-links a.sc-locked, .sc-cta-box a.sc-locked {
-      background-color: #f1f5f9 !important; color: #94a3b8 !important; border-color: #e2e8f0 !important;
-      cursor: not-allowed; box-shadow: none !important; transform: none !important;
-    }
+    .sc-card-links a.sc-locked { background-color: #f1f5f9 !important; color: #94a3b8 !important; border-color: #e2e8f0 !important; cursor: not-allowed; box-shadow: none !important; transform: none !important; }
 
     /* --- MARQUEE & CTA SECTION --- */
     .sc-single-box { background: #ffffff; border: 1.5px solid #bbf7d0; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 18px rgba(23, 102, 67, 0.06); margin-top: 10px; margin-bottom: 20px; position: relative; z-index: 5; }
@@ -177,19 +171,22 @@
     .sc-cta-text p { color: rgba(253, 252, 240, 0.75); font-size: 13px; }
     .sc-cta-btn { background: #0B2F0B; color: var(--blend-ivory); text-decoration: none; padding: 8px 20px; border-radius: 30px; font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px; transition: background 0.3s ease, transform 0.2s ease; box-shadow: 0 4px 12px rgba(11, 47, 11, 0.3); }
     .sc-cta-btn:hover { background: #072007; transform: translateY(-2px); color: white;}
+    
     .sc-middle-section { background: linear-gradient(180deg, #E6F4EB 0%, var(--blend-light-bg) 40%, #ffffff 100%); padding: 24px 20px 20px; text-align: center; position: relative; }
     .sc-network-bg { position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.03; background-image: radial-gradient(var(--blend-dark-green) 1px, transparent 1px); background-size: 30px 30px; pointer-events: none; z-index: 1; }
     .sc-wisdom-text { position: relative; z-index: 2; font-size: 30px; font-weight: 800; color: var(--blend-text-main); line-height: 1.2; margin-bottom: 24px; letter-spacing: -0.5px; }
     .sc-wisdom-text span { color: var(--blend-dark-green); }
+    
     .sc-features-grid { position: relative; z-index: 2; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; border-top: 1px solid rgba(26, 83, 26, 0.08); padding-top: 20px; }
     .sc-feature-item { display: flex; align-items: flex-start; text-align: left; gap: 10px; padding: 6px; border-radius: 8px; transition: background 0.3s ease; }
     .sc-feature-item:hover { background: rgba(26, 83, 26, 0.04); }
     .sc-feature-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
     .sc-feature-text h5 { color: var(--blend-text-accent); font-size: 14px; font-weight: 700; margin-bottom: 2px; }
     .sc-feature-text p { color: #64748b; font-size: 12px; line-height: 1.3; }
+    
     .sc-bottom-footer { background: var(--blend-dark-green); padding: 12px 20px; text-align: center; color: var(--blend-ivory); font-size: 13px; font-weight: 500; border-top: 1px solid rgba(255,255,255,0.1); margin: 0; }
 
-    /* --- 4. FLOATING ACTIONS --- */
+    /* --- 4. FLOATING ACTIONS & TOAST --- */
     .sc-floating-actions { position: fixed; bottom: 24px; right: 24px; display: flex; flex-direction: column; gap: 12px; z-index: 100; }
     .sc-fab { width: 48px; height: 48px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.12); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     .sc-fab:hover { transform: translateY(-4px) scale(1.05); box-shadow: 0 8px 20px rgba(0,0,0,0.18); }
@@ -199,22 +196,25 @@
     .sc-fab-scroll { background: #156845; color: #ffffff; }
     .sc-fab-scroll.sc-point-down svg { transform: rotate(180deg); }
 
-    /* --- TOAST NOTIFICATION --- */
-    .sc-toast {
-      visibility: hidden; min-width: 250px; background-color: #0f4c32; 
-      color: #ffffff; text-align: center; border-radius: 30px; padding: 12px 24px;
-      position: fixed; z-index: 6000; left: 50%; bottom: 20px;
-      transform: translateX(-50%); font-size: 14px; font-weight: 600;
-      box-shadow: 0 10px 25px rgba(15, 76, 50, 0.4); opacity: 0;
-      transition: opacity 0.3s ease, bottom 0.3s ease, visibility 0.3s ease;
-    }
+    .sc-toast { visibility: hidden; min-width: 250px; background-color: #0f4c32; color: #ffffff; text-align: center; border-radius: 30px; padding: 12px 24px; position: fixed; z-index: 6000; left: 50%; bottom: 20px; transform: translateX(-50%); font-size: 14px; font-weight: 600; box-shadow: 0 10px 25px rgba(15, 76, 50, 0.4); opacity: 0; transition: all 0.3s ease; }
     .sc-toast.show { visibility: visible; opacity: 1; bottom: 40px; }
 
-    /* --- ANIMATED YOUTUBE CONFIRMATION MODAL --- */
-    .sc-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; z-index: 9999; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+    /* --- ANIMATED VIDEO CONFIRMATION MODAL --- */
+    .sc-modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5); backdrop-filter: blur(5px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999; opacity: 0; visibility: hidden; transition: all 0.3s ease;
+    }
     .sc-modal-overlay.show { opacity: 1; visibility: visible; }
-    .sc-modal-card { background: #ffffff; border-radius: 20px; padding: 40px 24px 30px; width: 90%; max-width: 440px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.25); transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .sc-modal-card {
+      background: #ffffff; border-radius: 20px; padding: 40px 24px 30px;
+      width: 90%; max-width: 440px; text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
     .sc-modal-overlay.show .sc-modal-card { transform: scale(1); }
+    
     .sc-modal-icon-wrapper { position: relative; margin: 0 auto 24px; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; }
     .sc-modal-icon-bg { position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 3px solid #fee2e2; background: #fff5f5; animation: sc-pulse-ring 2s infinite ease-out; }
     .sc-modal-play-btn { z-index: 2; color: #dc2626; font-size: 32px; animation: sc-pulse-icon 2s infinite ease-out; }
@@ -231,7 +231,11 @@
     .sc-modal-card h2 { font-size: 24px; color: #111827; margin-bottom: 8px; font-weight: 800; }
     .sc-modal-card p { font-size: 15px; color: #6b7280; margin-bottom: 30px; font-weight: 500;}
     .sc-modal-actions { display: flex; gap: 16px; }
-    .sc-modal-btn { flex: 1; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 16px; cursor: pointer; transition: all 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
+    .sc-modal-btn {
+      flex: 1; padding: 12px; border-radius: 10px; font-weight: 700;
+      font-size: 16px; cursor: pointer; transition: all 0.2s;
+      display: flex; justify-content: center; align-items: center; gap: 8px;
+    }
     .sc-btn-stay { background: #ffffff; border: 1px solid #d1d5db; color: #374151; }
     .sc-btn-stay:hover { background: #f9fafb; border-color: #9ca3af; }
     .sc-btn-watch { background: #dc2626; border: 1px solid #dc2626; color: #ffffff; }
@@ -290,25 +294,23 @@
 
   <div class="sc-widget-container">
     
-    <div id="scToast" class="sc-toast">🚀 This material is coming soon! Stay tuned.</div>
+    <div id="scToast" class="sc-toast">🚧 We are currently preparing this material. Coming soon!</div>
 
     <div class="sc-top-header">
       <div class="sc-logo-area">
         <div class="sc-logo-icon">&lt;/&gt;</div>
         <div class="sc-logo-text">
           <strong>Artificial Intelligence</strong>
-          <span> for class X CBSE</span>
+          <span> for class IX CBSE</span>
         </div>
       </div>
       <div class="sc-top-nav" id="scMobileMenu">
-<a href="https://www.singhclasses.in/" >Home</a>
-  <a href="../computer-science/index.html">Computer Science</a>
-  <a href="../informatics-practices/index.html">Informatics Practices</a>
-  <a href="../artificial-intelligence/index.html">Artificial Intelligence</a>
-  <a href="../higher-education/index.html">Higher Edu.</a>
-  <a href="../about/index.html">About Us</a>
-  <a href="../contact/index.html">Contact Us</a>
-
+        <a href="https://www.singhclasses.in/" >Home</a>
+        <a href="https://www.singhclasses.in/p/computer-science-for-class-xi-xii-and.html">Computer Science</a>
+        <a href="https://www.singhclasses.in/p/informatics-practices-for-class-xi-xii.html">Informatics Practices</a>
+        <a href="https://www.singhclasses.in/p/artificial-intelligence-for-class-xi_01491388000.html" class="active">Artificial Intelligence</a>
+        <a href="#">FIT</a>
+        <a href="#">CA</a>
       </div>
       <div class="sc-header-controls">
         <div class="sc-hamburger" id="scMenuToggle">☰</div>
@@ -323,7 +325,7 @@
             <div class="sc-cards-grid">
                 
                 <div class="sc-custom-card">
-                    <div class="sc-unit-badge"><span>Class X</span><span>AI 2026</span></div>
+                    <div class="sc-unit-badge"><span>Class IX</span><span>AI 2026</span></div>
                     <h4>Syllabus</h4>
                     <div class="sc-card-links">
                         <a href="https://drive.google.com/file/d/1qE0m7m8wp-KyvXLjKNPOThd0nC_qHhbM/view?usp=sharing" target="_blank" class="sc-btn-notes"><span class="sc-emoji">🔍</span> View Now</a>
@@ -334,7 +336,7 @@
                     <div class="sc-unit-badge"><span>NCERT</span><span>AI 2026</span></div>
                     <h4>AI HandBook</h4>
                     <div class="sc-card-links">
-                         <a href="https://drive.google.com/file/d/16OcSl4r6rB_G4sh8FYuXgHbnaTEuBUTM/view?usp=sharing" target="_blank" class="sc-btn-notes"><span class="sc-emoji">🔍</span> View Now</a>
+                         <a href="https://drive.google.com/file/d/1YzfojPJMxN7-_44lf-zbsqplySzdyOjN/view?usp=sharing" target="_blank" class="sc-btn-notes"><span class="sc-emoji">🔍</span> View Now</a>
                     </div>
                 </div>
               
@@ -439,14 +441,53 @@
                 </div>
 
                 <div class="sc-custom-card">
+                    <div class="sc-unit-badge"><span>Part B · Unit I</span><span>Practical</span></div>
+                    <h4>AI Reflection</h4>
+                    <div class="sc-card-links">
+                        <a href="#" class="sc-btn-oneshot"><span class="sc-emoji">🎥</span> OneShot</a>
+                        <a href="https://drive.google.com/file/d/1I_I6hKz-JzFP0BGe5rs8dlYgco-Rf6oW/view?usp=sharing" target="_blank" class="sc-btn-notes"><span class="sc-emoji">📒</span> Notes</a>
+                        <a href="#" target="_blank" class="sc-btn-pro"><span class="sc-emoji">💎</span> Pro</a>
+                        <a href="#" target="_blank" class="sc-btn-pyq"><span class="sc-emoji">🎯</span> PYQs</a>
+                        <a href="#" target="_blank" class="sc-btn-mcq"><span class="sc-emoji">⏱️</span> MCQ</a>
+                        <a href="#" target="_blank" class="sc-btn-dpp"><span class="sc-emoji">📖</span> DPP</a>
+                    </div>
+                </div>
+
+                <div class="sc-custom-card">
+                    <div class="sc-unit-badge"><span>Part B · Unit II</span><span>8 Marks</span></div>
+                    <h4>Data Literacy</h4>
+                    <div class="sc-card-links">
+                        <a href="#" class="sc-btn-oneshot"><span class="sc-emoji">🎥</span> OneShot</a>
+                        <a href="https://drive.google.com/file/d/1caoVIuMN0f1i7626_tQ7j1JpFVT0pLp2/view?usp=sharing" target="_blank" class="sc-btn-notes"><span class="sc-emoji">📒</span> Notes</a>
+                        <a href="#" target="_blank" class="sc-btn-pro"><span class="sc-emoji">💎</span> Pro</a>
+                        <a href="#" target="_blank" class="sc-btn-pyq"><span class="sc-emoji">🎯</span> PYQs</a>
+                        <a href="#" target="_blank" class="sc-btn-mcq"><span class="sc-emoji">⏱️</span> MCQ</a>
+                        <a href="#" target="_blank" class="sc-btn-dpp"><span class="sc-emoji">📖</span> DPP</a>
+                    </div>
+                </div>
+
+                <div class="sc-custom-card">
                     <div class="sc-unit-badge"><span>Part B · Unit II</span><span>8 Marks</span></div>
                     <h4>Modeling in AI</h4>
                     <div class="sc-card-links">
                         <a href="https://youtu.be/cqiM2VVs-HM" target="_blank" class="sc-btn-oneshot"><span class="sc-emoji">🎥</span> OneShot</a>
-                        <a href="https://drive.google.com/file/d/11PcsKvf07GSG0VhgxWPSCfbCNvDbcmRq/view?usp=sharing" target="_blank" class="sc-btn-notes"><span class="sc-emoji">📄</span> Notes</a>
+                        <a href="https://drive.google.com/file/d/11PcsKvf07GSG0VhgxWPSCfbCNvDbcmRq/view?usp=sharing" target="_blank" class="sc-btn-notes"><span class="sc-emoji">📒</span> Notes</a>
                         <a href="#" target="_blank" class="sc-btn-pro"><span class="sc-emoji">💎</span> Pro</a>
                         <a href="#" target="_blank" class="sc-btn-pyq"><span class="sc-emoji">🎯</span> PYQs</a>
-                        <a href="https://www.singhclasses.in/2026/05/advanced-concepts-of-modelling-in-ai.html" target="_blank" class="sc-btn-mcq"><span class="sc-emoji">⏱️</span> MCQ</a>
+                        <a href="#" target="_blank" class="sc-btn-mcq"><span class="sc-emoji">⏱️</span> MCQ</a>
+                        <a href="#" target="_blank" class="sc-btn-dpp"><span class="sc-emoji">📖</span> DPP</a>
+                    </div>
+                </div>
+
+                <div class="sc-custom-card">
+                    <div class="sc-unit-badge"><span>Part B · Unit III</span><span>6 Marks</span></div>
+                    <h4>Math for AI</h4>
+                    <div class="sc-card-links">
+                        <a href="#" class="sc-btn-oneshot"><span class="sc-emoji">🎥</span> OneShot</a>
+                        <a href="https://drive.google.com/file/d/1QXxObfna0DWV0JXvPZ93pK-32msPIE3s/view?usp=sharing" target="_blank" class="sc-btn-notes"><span class="sc-emoji">📒</span> Notes</a>
+                        <a href="#" target="_blank" class="sc-btn-pro"><span class="sc-emoji">💎</span> Pro</a>
+                        <a href="#" target="_blank" class="sc-btn-pyq"><span class="sc-emoji">🎯</span> PYQs</a>
+                        <a href="#" target="_blank" class="sc-btn-mcq"><span class="sc-emoji">⏱️</span> MCQ</a>
                         <a href="#" target="_blank" class="sc-btn-dpp"><span class="sc-emoji">📖</span> DPP</a>
                     </div>
                 </div>
@@ -456,7 +497,20 @@
                     <h4>Evaluating Models</h4>
                     <div class="sc-card-links">
                         <a href="https://youtu.be/-T6SyMESEKE" target="_blank" class="sc-btn-oneshot"><span class="sc-emoji">🎥</span> OneShot</a>
-                        <a href="https://drive.google.com/file/d/17BpCXbUMqxd9HDuV6_f9pxHlnUAZ4hco/view?usp=sharing" target="_blank" class="sc-btn-notes"><span class="sc-emoji">📄</span> Notes</a>
+                        <a href="https://drive.google.com/file/d/17BpCXbUMqxd9HDuV6_f9pxHlnUAZ4hco/view?usp=sharing" target="_blank" class="sc-btn-notes"><span class="sc-emoji">📒</span> Notes</a>
+                        <a href="#" target="_blank" class="sc-btn-pro"><span class="sc-emoji">💎</span> Pro</a>
+                        <a href="#" target="_blank" class="sc-btn-pyq"><span class="sc-emoji">🎯</span> PYQs</a>
+                        <a href="#" target="_blank" class="sc-btn-mcq"><span class="sc-emoji">⏱️</span> MCQ</a>
+                        <a href="#" target="_blank" class="sc-btn-dpp"><span class="sc-emoji">📖</span> DPP</a>
+                    </div>
+                </div>
+
+                <div class="sc-custom-card">
+                    <div class="sc-unit-badge"><span>Part B · Unit IV</span><span>Practical</span></div>
+                    <h4>Generative AI</h4>
+                    <div class="sc-card-links">
+                        <a href="#" class="sc-btn-oneshot"><span class="sc-emoji">🎥</span> OneShot</a>
+                        <a href="https://drive.google.com/file/d/1m5cSM8nE31G1bAoJyO6s_RsxclovXSRF/view?usp=sharing" target="_blank" class="sc-btn-notes"><span class="sc-emoji">📒</span> Notes</a>
                         <a href="#" target="_blank" class="sc-btn-pro"><span class="sc-emoji">💎</span> Pro</a>
                         <a href="#" target="_blank" class="sc-btn-pyq"><span class="sc-emoji">🎯</span> PYQs</a>
                         <a href="#" target="_blank" class="sc-btn-mcq"><span class="sc-emoji">⏱️</span> MCQ</a>
@@ -469,7 +523,7 @@
                     <h4>Computer Vision</h4>
                     <div class="sc-card-links">
                         <a href="https://youtu.be/OHSN4Y9yaD0" target="_blank" class="sc-btn-oneshot"><span class="sc-emoji">🎥</span> OneShot</a>
-                        <a href="https://drive.google.com/file/d/1xBB5v1SIluweSaNWtbbjiMEwrsm9feTg/view?usp=sharing" target="_blank" class="sc-btn-notes"><span class="sc-emoji">📄</span> Notes</a>
+                        <a href="https://drive.google.com/file/d/1xBB5v1SIluweSaNWtbbjiMEwrsm9feTg/view?usp=sharing" target="_blank" class="sc-btn-notes"><span class="sc-emoji">📒</span> Notes</a>
                         <a href="#" target="_blank" class="sc-btn-pro"><span class="sc-emoji">💎</span> Pro</a>
                         <a href="#" target="_blank" class="sc-btn-pyq"><span class="sc-emoji">🎯</span> PYQs</a>
                         <a href="#" target="_blank" class="sc-btn-mcq"><span class="sc-emoji">⏱️</span> MCQ</a>
@@ -477,19 +531,18 @@
                     </div>
                 </div>
 
-                 <div class="sc-custom-card">
+                <div class="sc-custom-card">
                     <div class="sc-unit-badge"><span>Part B · Unit VI</span><span>8 Marks</span></div>
-                    <h4>Natural Language</h4>
+                    <h4>N L P</h4>
                     <div class="sc-card-links">
                         <a href="https://youtu.be/QAhTbu1f6rA" target="_blank" class="sc-btn-oneshot"><span class="sc-emoji">🎥</span> OneShot</a>
-                        <a href="https://drive.google.com/file/d/1OqRqjgJrPHof_zbds86Ct34gKawXKizG/view?usp=sharing" target="_blank" class="sc-btn-notes"><span class="sc-emoji">📄</span> Notes</a>
+                        <a href="https://drive.google.com/file/d/1OqRqjgJrPHof_zbds86Ct34gKawXKizG/view?usp=sharing" target="_blank" class="sc-btn-notes"><span class="sc-emoji">📒</span> Notes</a>
                         <a href="#" target="_blank" class="sc-btn-pro"><span class="sc-emoji">💎</span> Pro</a>
                         <a href="#" target="_blank" class="sc-btn-pyq"><span class="sc-emoji">🎯</span> PYQs</a>
                         <a href="#" target="_blank" class="sc-btn-mcq"><span class="sc-emoji">⏱️</span> MCQ</a>
                         <a href="#" target="_blank" class="sc-btn-dpp"><span class="sc-emoji">📖</span> DPP</a>
                     </div>
                 </div>
-              
             </div>
         </div>
 
@@ -554,7 +607,6 @@
                         <a href="#" target="_blank" class="sc-btn-dpp"><span class="sc-emoji">✍️</span> SET 12</a>
                     </div>
                 </div>
-              
             </div>
         </div>
 
@@ -619,7 +671,6 @@
                         <a href="#" class="sc-btn-notes"><span class="sc-emoji">📄</span> Details</a>
                     </div>
                 </div>
-
             </div>
         </div>
 
@@ -759,7 +810,7 @@
                   toastTimeout = setTimeout(() => { toast.classList.remove('show'); }, 3000);
               });
           } 
-          // 2. YouTube Modal interception logic (excluding subscribe links)
+          // 2. YouTube Modal interception logic (excluding subscribe confirmation paths)
           else if ((href.includes('youtu.be') || href.includes('youtube.com')) && !href.includes('sub_confirmation')) {
               link.addEventListener('click', function(e) {
                   e.preventDefault(); 

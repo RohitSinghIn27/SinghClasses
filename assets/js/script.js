@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const href = link.getAttribute('href');
     
     // TRIGGER TOAST IF: Link is empty, is exactly "#", or points to an unbuilt folder page
-    if (!href || href === '#' || href.trim() === '' || href.includes('computer-science/')) {
+    if (!href || href === '#' || href.trim() === '') {
       link.addEventListener('click', function(e) {
         e.preventDefault(); // Prevents layout jumping or blank view routing
         

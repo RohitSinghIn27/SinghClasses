@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SinghClasses.in - CBT Mock</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            font-size: 16px;
+            user-select: none; 
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        #cbt-app-container {
+            width: 100%;
+            padding: 0; 
+            box-sizing: border-box;
+            position: relative;
+            transition: filter 0.3s ease; 
+        }
+
+        #cbt-app-container * { 
+            box-sizing: border-box; 
+        }
+
+        /* --- NAVIGATION STYLES --- */
+        .top-nav {
+            background-color: #0a1128; 
+            padding: 12px 30px;
+            width: 100%;
+            border-bottom: 3px solid #ffcc00; 
+            position: relative;
+        }
+
+        .nav-items {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 25px;
+            text-align: center;
+        }
+
+        .nav-item { 
+            color: #ffffff; 
+            text-decoration: none; 
+            font-size: 1rem; 
+            font-weight: 600; 
+            transition: color 0.3s ease; 
+        }
+
+        .nav-item:hover { 
+            color: #ffcc00; 
+        }
+
+        /* Hamburger Icon hidden by default on desktop */
+        .hamburger {
+            display: none;
+            color: #ffffff;
+            font-size: 1.8rem;
+            cursor: pointer;
+            text-align: right;
+        }
+
+        /* --- LAYOUT STYLES --- */
+        .main-wrapper {
+            display: flex; 
+            width: 100%; 
+            max-width: 1100px; 
+            margin: 15px auto; 
+            gap: 15px; 
+            flex-direction: row; 
+            padding: 0 10px;
+        }
+
+        .cbt-container {
+            flex: 3; 
+            background: #fff; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 2px solid #091413; 
+            border-radius: 8px; 
+            overflow: hidden;
+            display: flex; 
+            flex-direction: column; 
+            position: relative; 
+            scroll-margin-top: 20px;
+        }
+
+        .palette-container {
+            flex: 1; 
+            background: #fff; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 2px solid #091413; 
+            border-radius: 8px; 
+            padding: 15px; 
+            display: flex; 
+            flex-direction: column; 
+            min-width: 260px; 
+            position: sticky;
+        }
+
+        /* --- HEADER & TIMER --- */
+        .header {
+            background: #003366; 
+            color: #fff; 
+            padding: 15px 20px; 
+            display: flex;
+            justify-content: space-between; 
+            align-items: center; 
+            font-weight: bold; 
+            flex-wrap: wrap; 
+            gap: 10px; 
+            font-size: 1.2em;
+        }
+
+        .progress-container { 
+            width: 100%; 
+            height: 4px; 
+            background: #e9ecef; 
+        }
+
+        .progress-bar { 
+            height: 100%; 
+            background: #ffcc00; 
+            width: 0%; 
+            transition: width 0.4s ease-out; 
+        }
+
+        .timer {
+            font-size: 1.25em; 
+            font-weight: bold; 
+            background: #ffcc00; 
+            color: #000;
+            border: 2px solid #1E104E; 
+            padding: 5px 12px; 
+            border-radius: 4px; 
+            transition: all 0.5s ease; 
+            display: flex; 
+            align-items: center; 
+            gap: 6px;
+        }
+
+        .timer.warning { 
+            background: #fd7e14; 
+            color: #fff; 
+            box-shadow: 0 0 8px rgba(253, 126, 20, 0.4); 
+        }
+
+        .timer.danger { 
+            background: #dc3545; 
+            color: #fff; 
+            animation: pulse 1.5s infinite cubic-bezier(0.66, 0, 0, 1), shiver 0.15s infinite; 
+        }
+
+        @keyframes pulse { 
+            to { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); } 
+        }
+
+        @keyframes shiver {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 1px) rotate(-1deg); }
+            75% { transform: translate(1px, 1px) rotate(1deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        /* --- CONTENT & QUESTIONS --- */
+        .content { 
+            padding: 25px 30px; 
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        .content-header {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 20px; 
+            flex-wrap: wrap; 
+            gap: 10px; 
+            border-bottom: 1px solid #091413; 
+            padding-bottom: 10px;
+        }
+
+        .fade-in { 
+            animation: slideFade 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards; 
+        }
+
+        @keyframes slideFade {
+            from { opacity: 0; transform: translateY(12px) scale(0.99); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .question-number { 
+            font-weight: 500; 
+            font-size: 1em; 
+            color: #888; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            margin-bottom: 0; 
+        }
+
+        .question-text { 
+            font-size: 1.15em; 
+            margin-bottom: 20px; 
+            line-height: 1.7; 
+            color: #222; 
+            white-space: pre-wrap; 
+            text-align: justify; 
+        }
+
+        .options { 
+            list-style-type: none; 
+            padding: 0; 
+            margin: 0; 
+        }
+
+        .options li { 
+            margin-bottom: 12px; 
+        }
+
+        .options label {
+            display: flex; 
+            align-items: center; 
+            padding: 12px 16px; 
+            background: #fdfdfd;
+            border: 1px solid #e2e8f0; 
+            border-radius: 6px; 
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            word-break: break-word; 
+            font-size: 1.05em; 
+            color: #222; 
+            transform: translateZ(0); 
+        }
+
+        .options label:not(.disabled-label):hover { 
+            background: #e6f2ff; 
+            border-color: #b8daff; 
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15); 
+            transform: translateY(-1px); 
+        }
+
+        .options label:not(.disabled-label):active { 
+            transform: scale(0.98); 
+        }
+
+        .options input { 
+            margin-right: 15px; 
+            transform: scale(1.2); 
+            cursor: pointer; 
+            flex-shrink: 0; 
+            accent-color: #007bff; 
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        }
+
+        .options input:checked { 
+            transform: scale(1.4); 
+        }
+
+        .options label.selected { 
+            background: #e6f2ff; 
+            border-color: #007bff; 
+            box-shadow: 0 0 5px rgba(0,123,255,0.3); 
+            font-weight: bold; 
+        }
+
+        .options label.disabled-label { 
+            cursor: not-allowed; 
+            opacity: 0.7; 
+            background: #f0f0f0; 
+        }
+
+        .options label.correct-answer { 
+            background: #d4edda !important; 
+            border-color: #28a745 !important; 
+            color: #155724 !important; 
+            font-weight: bold; 
+            opacity: 1; 
+        }
+
+        .options label.wrong-answer { 
+            background: #f8d7da !important; 
+            border-color: #dc3545 !important; 
+            color: #721c24 !important; 
+            text-decoration: line-through; 
+            opacity: 0.8; 
+        }
+
+        /* --- FOOTER BUTTONS --- */
+        .footer {
+            background: #f8f9fa; 
+            padding: 15px 25px; 
+            display: flex; 
+            justify-content: space-between;
+            border-top: 1px solid #edf2f7; 
+            flex-wrap: wrap; 
+            gap: 15px;
+        }
+
+        .footer-left { 
+            display: flex; 
+            gap: 12px; 
+            flex-wrap: wrap; 
+        }
+
+        button { 
+            padding: 12px 20px; 
+            font-size: 1.1em; 
+            cursor: pointer; 
+            border: none; 
+            border-radius: 5px; 
+            font-weight: bold; 
+            transition: all 0.2s; 
+        }
+
+        button:hover:not(:disabled) { 
+            opacity: 0.9; 
+            transform: translateY(-1px); 
+        }
+
+        button:active:not(:disabled) { 
+            transform: scale(0.97); 
+        }
+
+        button:disabled { 
+            opacity: 0.5; 
+            cursor: not-allowed; 
+            transform: none; 
+            box-shadow: none; 
+        }
+
+        .btn-prev { background: #6c757d; color: white; border: 2px solid #091413; }
+        .btn-clear { background: #ffcc00; color: #000; border: 2px solid #091413; }
+        .btn-next { background: #007bff; color: white; border: 2px solid #091413; box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2); }
+        .btn-submit-section { background: #007bff; color: white; width: 100%; padding: 14px; box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2); border: 2px solid #091413; margin-top: auto; }
+
+        /* --- PALETTE --- */
+        .palette-title { 
+            text-align: center; 
+            font-weight: bold; 
+            font-size: 1.15em; 
+            margin-bottom: 16px; 
+            padding-bottom: 12px; 
+            border-bottom: 1px solid #edf2f7; 
+            color: #333; 
+        }
+
+        .mini-stats { 
+            display: flex; 
+            justify-content: space-between; 
+            gap: 8px; 
+            margin-bottom: 20px; 
+        }
+
+        .stat-col { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 10px 4px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03); 
+            border: 1px solid rgba(0,0,0,0.05); 
+            transition: transform 0.2s ease;
+        }
+
+        .stat-lbl { 
+            font-size: 0.70em; 
+            color: #6c757d; 
+            text-transform: uppercase; 
+            font-weight: 700; 
+            letter-spacing: 0.5px; 
+            margin-bottom: 4px; 
+        }
+
+        .stat-val { 
+            font-size: 1.35em; 
+            font-weight: 800; 
+        }
+
+        .stat-right-col { background-color: #f0fdf4; border-color: #dcfce7; }
+        .stat-right-col .stat-val { color: #16a34a; }
+        .stat-wrong-col { background-color: #fef2f2; border-color: #fee2e2; }
+        .stat-wrong-col .stat-val { color: #dc2626; }
+        .stat-score-col { background-color: #eff6ff; border-color: #dbeafe; }
+        .stat-score-col .stat-val { color: #2563eb; } 
+
+        .palette-grid { 
+            display: grid; 
+            grid-template-columns: repeat(4, minmax(32px, 1fr)); 
+            gap: 6px; 
+            margin-bottom: 15px; 
+            max-height: 350px; 
+            overflow-y: auto; 
+            padding-right: 5px; 
+            padding-bottom: 5px; 
+        }
+
+        .palette-grid::-webkit-scrollbar { width: 5px; }
+        .palette-grid::-webkit-scrollbar-thumb { background: #bbb; border-radius: 4px; }
+
+        .palette-btn { 
+            position: relative; 
+            padding: 6px 0; 
+            text-align: center; 
+            border-radius: 4px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            color: #fff; 
+            font-size: 0.95em; 
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        }
+
+        .palette-btn:hover { opacity: 0.8; transform: translateY(-2px); }
+        .palette-btn:active { transform: scale(0.90); }
+        .unvisited { background: #e0e0e0; color: #333; }
+        .not-answered { background: #ffcc00; color: #000; } 
+        .answered { background: #28a745; }
+
+        /* --- MODALS --- */
+        .custom-modal-overlay {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: rgba(9, 20, 19, 0.7); 
+            display: none; 
+            justify-content: center; 
+            align-items: center; 
+            z-index: 1000;
+            backdrop-filter: blur(3px); 
+            overflow-y: auto; 
+        }
+
+        .custom-modal-box {
+            background: #fff; 
+            padding: 30px; 
+            border-radius: 8px; 
+            width: 95%; 
+            max-width: 550px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
+            border: 2px solid #091413;
+            animation: slideFade 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+            margin: 20px auto; 
+            text-align: center;
+        }
+
+        .instructions-container { text-align: left; margin-bottom: 20px; }
+        .instructions-container h3 { color: #003366; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-top: 0; margin-bottom: 5px; font-size: 1.1em; }
+        .instructions-list { line-height: 1.5; color: #444; padding-left: 20px; font-size: 0.95em; margin-top: 5px; margin-bottom: 10px; }
+        
+        .palette-legend { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 15px; background: #f8f9fa; padding: 10px 15px; border-radius: 8px; border: 1px solid #e0e0e0; }
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.85em; color: #555; font-weight: 600; }
+        .legend-box { width: 20px; height: 20px; border-radius: 4px; display: inline-block; border: 1px solid rgba(0,0,0,0.1); }
+
+        .input-group { display: flex; flex-direction: column; align-items: center; margin-top: 15px; border-top: 2px solid #eee; padding-top: 15px; }
+        .modal-input { width: 85%; padding: 12px; font-size: 1.1em; border: 2px solid #e0e0e0; border-radius: 5px; margin-bottom: 15px; box-sizing: border-box; text-align: center; }
+
+        .security-box { background-color: #fef0f0; border: 3px solid #d32f2f; }
+        .security-title { color: #b71c1c; font-size: 2em; font-weight: bold; margin-bottom: 20px; }
+        .security-text { color: #8b0000; font-size: 1.3em; font-weight: 600; margin-bottom: 15px; line-height: 1.4; }
+        .security-subtext { color: #8b0000; font-size: 1.1em; margin-bottom: 10px; }
+        .security-count { color: #8b0000; font-size: 1.1em; margin-bottom: 25px; }
+
+        .modal-title { font-size: 1.6em; color: #003366; font-weight: bold; margin-bottom: 5px; }
+        .modal-text { font-size: 1.1em; color: #444; margin-bottom: 25px; line-height: 1.6; }
+        .modal-btn-row { display: flex; flex-direction: column; align-items: center; gap: 15px; width: 100%; }
+        .modal-btn-row.horizontal { flex-direction: row; justify-content: center; }
+        
+        .modal-btn { width: 100%; max-width: 280px; padding: 15px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 1.1em; border: none; color: white; transition: all 0.2s;}
+        .modal-btn:hover { opacity: 0.9; }
+        .modal-btn-success { background: #007bff; }
+        .modal-btn-secondary { background: #6c757d; }
+        .modal-btn-danger { background-color: #d32f2f; }
+
+        /* --- FEEDBACK SCREENS --- */
+        .feedback-screen { 
+            display: none; 
+            width: 100%; 
+            max-width: 550px; 
+            background: #ffffff; 
+            margin: 40px auto; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
+            border: 1px solid #e0e0e0; 
+            border-radius: 10px; 
+            padding: 25px 20px; 
+            box-sizing: border-box; 
+            text-align: center;
+        }
+
+        .feedback-title { color: #003366; font-size: 1.6em; font-weight: 800; margin-bottom: 10px; }
+        .feedback-candidate { color: #555; font-size: 1.2em; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        .feedback-divider { border: 0; border-bottom: 2px dashed #e0e0e0; width: 50%; margin: 15px auto; }
+        .feedback-score { font-size: 1.5em; color: #222; margin-bottom: 10px; font-weight: bold;}
+        .feedback-stats { font-size: 1em; color: #333; margin-bottom: 10px; }
+        .feedback-time { font-size: 0.95em; color: #666; margin-bottom: 20px; }
+        
+        .feedback-btn {
+            background-color: #007bff; 
+            color: #fff; 
+            border: none; 
+            border-radius: 6px;
+            padding: 12px 30px; 
+            font-size: 1.1em; 
+            font-weight: bold; 
+            cursor: pointer;
+            transition: background-color 0.2s; 
+            display: inline-block; 
+            text-decoration: none;
+        }
+        .feedback-btn:hover { background-color: #0056b3; }
+
+        .security-results {
+            background-color: #fef2f2; 
+            border: 1px solid #fee2e2; 
+            color: #b71c1c; 
+            padding: 10px; 
+            border-radius: 5px; 
+            margin-top: 15px; 
+            font-weight: 600; 
+            text-align: center; 
+            font-size: 0.85em;
+        }
+
+        .section-results-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 10px; 
+            margin-top: 20px; 
+            text-align: left;
+        }
+
+        .section-result-card { 
+            background: #fcfcfc; 
+            border: 1px solid #eee; 
+            border-radius: 6px; 
+            padding: 10px; 
+            position: relative; 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        .section-result-card::before { 
+            content: ''; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 3px; 
+            background: #007bff; 
+        }
+
+        .src-title { font-size: 0.85em; font-weight: 800; color: #333; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 6px; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+        .src-score { font-size: 1.2em; font-weight: 900; color: #007bff; margin-bottom: 8px; text-align: center;}
+        .src-score span { font-size: 0.6em; color: #888; font-weight: 700; }
+        .src-stats { font-size: 0.75em; color: #666; display: flex; flex-direction: column; gap: 4px; }
+        .src-stat-row { display: flex; justify-content: space-between; font-weight: 500;}
+
+        /* --- FOOTER BRANDING --- */
+        .branding-footer {
+            margin-top: 30px;
+            padding: 18px 15px;
+            background: #fdfdfd;
+            border-radius: 8px;
+            border: 2px dashed #007bff;
+            font-size: 0.95em;
+            color: #444;
+            line-height: 1.5;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            text-align: center;
+        }
+
+        .branding-footer strong {
+            color: #003366;
+            font-size: 1.1em;
+        }
+
+        /* --- MOBILE RESPONSIVENESS --- */
+        @media (max-width: 768px) {
+            .top-nav {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                padding: 12px 20px;
+            }
+
+            .hamburger {
+                display: block; /* Show hamburger icon */
+            }
+
+            .nav-items {
+                display: none; /* Hide nav links by default */
+                flex-direction: column;
+                width: 100%;
+                background-color: #0a1128;
+                padding-top: 15px;
+                gap: 15px;
+                text-align: right;
+            }
+
+            .nav-items.active {
+                display: flex; /* Show nav links when toggled */
+            }
+
+            .main-wrapper { 
+                flex-direction: column; 
+                padding: 10px; 
+            }
+            .palette-container { 
+                order: 2; 
+                min-width: 100%; 
+            }
+            .cbt-container { 
+                order: 1; 
+            }
+            .modal-input { 
+                width: 100%; 
+            }
+            .modal-btn-row.horizontal { 
+                flex-direction: column !important; 
+            }
+            .modal-btn { 
+                max-width: 100%; 
+            } 
+            .section-results-grid { 
+                grid-template-columns: 1fr; 
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="cbt-app-container">
+        
+        <!-- Navigation with Mobile Hamburger Menu -->
+        <nav class="top-nav">
+            <div class="hamburger" onclick="toggleNav()">&#9776;</div>
+            <div class="nav-items" id="nav-items">
+                <a href="https://www.singhclasses.in/" class="nav-item">Home</a>
+                <a href="https://www.singhclasses.in/p/computer-science-for-class-xi-and-xii.html" class="nav-item">Computer Science</a>
+                <a href="https://www.singhclasses.in/p/informatics-practices-for-class-xi-and.html" class="nav-item">Informatics Practices</a>
+                <a href="https://www.singhclasses.in/p/artificial-intelligence-for-class-ix-to.html" class="nav-item">AI</a>
+            </div>
+        </nav>
+
+        <!-- Modals -->
+        <div id="modal-welcome" class="custom-modal-overlay">
+            <div class="custom-modal-box">
+                <div class="modal-title">MCQ Test @ SinghClasses.in</div>
+                <div class="instructions-container">
+                    <h3>📌General Instructions:</h3>
+                    <ul class="instructions-list">
+                        <li><strong>Time:</strong> Auto-submits when the timer ends.</li>
+                        <li><strong>Security:</strong> Any unfair practices = <span style="color:#dc3545; font-weight:bold;">-2 Marks</span>.</li>
+                        <li>
+                            <strong>Marking Scheme:</strong> 
+                            <span style="color:#28a745; font-weight:600;">+5 Correct</span> |
+                            <span style="color:#dc3545; font-weight:600;">-1 Incorrect</span> |
+                            <span style="color:#6c757d; font-weight:600;">0 Unattempted</span>
+                        </li>
+                    </ul>
+                    <div class="palette-legend" style="align-items: center;">
+                        <div style="font-weight: bold; color: #003366; font-size: 0.8em;">Question Status:</div>
+                        <div class="legend-item"><div class="legend-box unvisited"></div> Not Visited</div>
+                        <div class="legend-item"><div class="legend-box not-answered"></div> Not Answered</div>
+                        <div class="legend-item"><div class="legend-box answered"></div> Answered</div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="student-name-input" class="modal-input" placeholder="Enter your Name to Begin" autocomplete="off">
+                    <div class="modal-btn-row">
+                        <button class="modal-btn modal-btn-success" onclick="beginExam()">Let's begin</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-security" class="custom-modal-overlay">
+            <div class="custom-modal-box security-box">
+                <div class="security-title">Security Warning</div>
+                <div class="security-text">&#9888;&#65039; Tab switching and screenshots are not allowed during the exam.</div>
+                <div class="security-subtext">This incident has been recorded silently.</div>
+                <div class="security-count" id="warning-count-display">Total Warnings: 1 (Penalty: -2 Marks)</div>
+                <div class="modal-btn-row">
+                    <button class="modal-btn modal-btn-danger" onclick="closeSecurityModal()">Continue</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-submit-section" class="custom-modal-overlay">
+            <div class="custom-modal-box">
+                <div class="modal-title">Submit</div>
+                <div class="modal-text">Are you sure you want to submit this section? <br> <b>You cannot return to these questions once submitted.</b></div>
+                <div class="modal-btn-row horizontal">
+                    <button class="modal-btn modal-btn-secondary" onclick="closeSectionSubmitModal()">Cancel</button>
+                    <button class="modal-btn modal-btn-success" onclick="confirmSectionSubmit()">Yes, Submit Section</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Interface -->
+        <div id="quiz-screen" style="display: none;">
+            <div class="main-wrapper">
+                <div class="cbt-container">
+                    <div class="header">
+                        <div id="quiz-header-title">SinghClasses.in | CBT MCQ Test</div>
+                        <div class="timer" id="timer-box">&#9201;&#65039; <span id="time-left">00:00</span></div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-bar" id="exam-progress"></div>
+                    </div>
+                    
+                    <div class="content" id="question-content">
+                        <div class="content-header">
+                            <div class="question-number" id="q-number">Loading...</div>
+                        </div>
+                        <div class="question-text" id="q-text">Loading question...</div>
+                        <ul class="options" id="q-options"></ul>
+                    </div>
+                    
+                    <div class="footer">
+                        <div class="footer-left">
+                            <button class="btn-prev" id="btn-prev" onclick="prevQuestion()">Previous</button>
+                            <button class="btn-clear" id="btn-clear" onclick="clearResponse()">Clear Response</button>
+                        </div>
+                        <button class="btn-next" id="btn-next" onclick="nextQuestion()">Save & Next</button>
+                    </div>
+                </div>
+
+                <div class="palette-container">
+                    <div class="palette-title" id="palette-section-title">Question Palette</div>
+                    <div class="mini-stats">
+                        <div class="stat-col stat-right-col">
+                            <span class="stat-lbl">Right</span>
+                            <span class="stat-val" id="stat-right">0</span>
+                        </div>
+                        <div class="stat-col stat-wrong-col">
+                            <span class="stat-lbl">Wrong</span>
+                            <span class="stat-val" id="stat-wrong">0</span>
+                        </div>
+                        <div class="stat-col stat-score-col">
+                            <span class="stat-lbl">Score</span>
+                            <span class="stat-val" id="stat-score">0</span>
+                        </div>
+                    </div>
+                    <div class="palette-grid" id="palette-grid"></div>
+                    
+                    <button class="btn-submit-section" id="btn-submit-section" onclick="showSectionSubmitModal()">Submit</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Intermediate Feedback Screen -->
+        <div id="inter-screen" class="feedback-screen">
+            <div class="feedback-title" id="inter-title">Section Submitted Successfully</div>
+            <div class="feedback-candidate" id="inter-candidate">CANDIDATE: NAME</div>
+            <hr class="feedback-divider">
+            <div class="feedback-score" id="inter-score">0 / 0</div>
+            <div class="feedback-stats" id="inter-stats">Correct: 0 | Incorrect: 0 | Unattempted: 0</div>
+            <div class="feedback-time" id="inter-time">Time Taken: 0m 0s</div>
+            <button id="inter-btn" class="feedback-btn">Proceed</button>
+        </div>
+
+        <!-- Final Result Screen -->
+        <div id="result-screen" class="feedback-screen">
+            <div class="feedback-title">Exam Submitted Successfully</div>
+            <div class="feedback-candidate" id="final-candidate-name">CANDIDATE: NAME</div>
+            <hr class="feedback-divider">
+            <div class="feedback-score" id="final-score-display" style="font-size: 2.2em; font-weight: 800; color: #007bff;">0 / 0</div>
+            <div class="feedback-stats" id="final-stats-display">Correct: 0 | Incorrect: 0 | Unattempted: 0</div>
+            <div class="feedback-time" id="final-time-display">Total Time Taken: 0m 0s</div>
+            
+            <div id="final-security-results" class="security-results" style="display: none;"></div>
+
+            <div class="section-results-grid" id="section-results-grid"></div>
+            
+            <a href="https://www.singhclasses.in/" class="feedback-btn" style="margin-top: 25px; width: 100%; max-width: 250px;">HomePage</a>
+            
+            <!-- NEW FOOTER BRANDING -->
+            <div class="branding-footer">
+                Looking for deeper insights?<br>
+                Visit <strong>SinghClasses</strong> offline at our Sant Nagar or Hudson Lane centers.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. MODULAR EXAM STRUCTURE
+        // ==========================================
+        const examSections = [
+            {
+                title: "SinghClasses.in | Section A",
+                timeSpent: 0,
+                questions: [
+                    { question: "Which stage can be repeated multiple times if needed?", options: ["(A) Problem Scoping", "(B) Data Acquisition", "(C) Modelling and Data Exploration", "(D) Evaluation and Deployment"], answer: "c2NfYW5zXzI=" },
+                    { question: "At which stage will you correct any incorrect data entries that you find?", options: ["(A) Problem Scoping", "(B) Data Acquisition", "(C) Data Exploration", "(D) Evaluation"], answer: "c2NfYW5zXzI=" }
+                ]
+            },
+            {
+                title: "SinghClasses.in | Section A",
+                timeSpent: 0,
+                questions: [
+                    { question: "Which stage can be repeated multiple times if needed?", options: ["(A) Problem Scoping", "(B) Data Acquisition", "(C) Modelling and Data Exploration", "(D) Evaluation and Deployment"], answer: "c2NfYW5zXzI=" },
+                    { question: "At which stage will you correct any incorrect data entries that you find?", options: ["(A) Problem Scoping", "(B) Data Acquisition", "(C) Data Exploration", "(D) Evaluation"], answer: "c2NfYW5zXzI=" },
+                    { question: "____ is not a crucial parameter in the 4W Canvas Problem.", options: ["(A) What", "(B) How", "(C) Where", "(D) Why"], answer: "c2NfYW5zXzE=" },
+                    { question: "Testing the accuracy of an AI model is part of which stage?", options: ["(A) Problem Scoping", "(B) Data Acquisition", "(C) Data Exploration", "(D) Evaluation"], answer: "c2NfYW5zXzM=" },
+                    { question: "____ is the second stage of the Al Project Cycle.", options: ["(A) Data Acquisition", "(B) Modelling", "(C) Evaluation", "(D) Data Exploration"], answer: "c2NfYW5zXzA=" },
+                    { question: "What is the primary purpose of the Problem Scoping stage in the AI Project Cycle?", options: ["(A) To train the Al model.", "(B) To collect data from various sources.", "(C) To define the problem and goal of the AI project.", "(D) To evaluate the model's performance."], answer: "c2NfYW5zXzI=" },
+                    { question: "How many stages are there in the AI Project Cycle?", options: ["(A) 4", "(B) 5", "(C) 6", "(D) 7"], answer: "c2NfYW5zXzE=" },
+                    { question: "Which stage of the AI Project Cycle involves converting collected data into visual representations like graphs?", options: ["(A) Data Acquisition", "(B) Data Exploration", "(C) Modelling", "(D) Evaluation"], answer: "c2NfYW5zXzE=" },
+                    { question: "What is the main objective of the Deployment stage in the AI Project Cycle?", options: ["(A) To test the model on new data.", "(B) To select the most efficient model.", "(C) To integrate the AI solution into real-world environments.", "(D) To acquire more data for the project."], answer: "c2NfYW5zXzI=" },
+                    { question: "Al models are broadly categorized into three domains based on what?", options: ["(A) The size of the development team.", "(B) The type of data fed into them.", "(C) The cost of development.", "(D) The amount of time it takes to develop."], answer: "c2NfYW5zXzE=" },
+                    { question: "Which Al domain is related to systems that collect, maintain, and derive meaning from large datasets?", options: ["(A) Computer Vision", "(B) Natural Language Processing", "(C) Statistical Data", "(D) Robotics"], answer: "c2NfYW5zXzI=" },
+                    { question: "Which of the following is an example of an application that uses Statistical Data?", options: ["(A) A surveillance camera system.", "(B) An email spam filter.", "(C) A price comparison website.", "(D) A self-driving car."], answer: "c2NfYW5zXzI=" },
+                    { question: "What does the abbreviation 'CV' stand for in the context of AI domains?", options: ["(A) Central Vision", "(B) Computer View", "(C) Coded Video", "(D) Computer Vision"], answer: "c2NfYW5zXzM=" },
+                    { question: "What is the input for machines in the Computer Vision domain?", options: ["(A) Text and documents.", "(B) Numerical data and tables.", "(C) Photographs, videos, and images from sensors.", "(D) Audio recordings and speech."], answer: "c2NfYW5zXzI=" },
+                    { question: "What is the primary objective of Natural Language Processing (NLP)?", options: ["(A) To teach machines to see and interpret images.", "(B) To enable machines to read, decipher, and understand human language.", "(C) To create algorithms for statistical data analysis.", "(D) To translate digital data into descriptions."], answer: "c2NfYW5zXzE=" },
+                    { question: "An email spam filter is an example of an application in which Al domain?", options: ["(A) Statistical Data", "(B) Computer Vision", "(C) Natural Language Processing", "(D) Robotics"], answer: "c2NfYW5zXzI=" },
+                    { question: "What do frameworks provide in the context of problem-solving?", options: ["(A) Random solutions.", "(B) Step-by-step guidance.", "(C) Legal advice.", "(D) Ethical justifications."], answer: "c2NfYW5zXzE=" },
+                    { question: "What is the main purpose of an Ethical Framework for AI?", options: ["(A) To ensure Al solutions are profitable.", "(B) To make sure Al decisions don't cause unintended harm.", "(C) To speed up the development of AI projects.", "(D) To handle technical bugs in AI algorithms."], answer: "c2NfYW5zXzE=" },
+                    { question: "How are Ethical Frameworks for Al categorized?", options: ["(A) Into legal and illegal frameworks.", "(B) Into sector-based and value-based frameworks.", "(C) Into historical and contemporary frameworks.", "(D) Into theoretical and practical frameworks."], answer: "c2NfYW5zXzE=" },
+                    { question: "Bioethics is an example of which type of ethical framework?", options: ["(A) Rights-based framework.", "(B) Utility-based framework.", "(C) Sector-based framework.", "(D) Virtue-based framework."], answer: "c2NfYW5zXzI=" },
+                    { question: "Which of the following is a core principle of a Rights-based framework?", options: ["(A) Maximizing overall good.", "(B) Prioritizing human rights and dignity.", "(C) Focusing on the character of the decision-maker.", "(D) Avoiding harm at all costs."], answer: "c2NfYW5zXzE=" },
+                    { question: "A framework that evaluates actions based on achieving the greatest benefit and minimizing harm is known as:", options: ["(A) Rights-based framework.", "(B) Utility-based framework.", "(C) Virtue-based framework.", "(D) Sector-based framework."], answer: "c2NfYW5zXzE=" },
+                    { question: "What does a Virtue-based framework primarily focus on?", options: ["(A) The consequences of actions.", "(B) The protection of individual rights.", "(C) The character and intentions of the individuals involved.", "(D) The adherence to legal regulations."], answer: "c2NfYW5zXzI=" },
+                    { question: "Which of the following is NOT a principle of bioethics?", options: ["(A) Respect for Autonomy.", "(B) Do not harm.", "(C) Give justice.", "(D) Maximize profit."], answer: "c2NfYW5zXzM=" },
+                    { question: "What is the ethical principle of 'Non-maleficence'?", options: ["(A) Promoting and maximizing well-being.", "(B) Intentionally causing harm.", "(C) Avoiding causing harm or negative consequences.", "(D) Ensuring fair distribution of benefits."], answer: "c2NfYW5zXzI=" },
+                    { question: "The ethical principle of 'Beneficence' emphasizes what?", options: ["(A) Avoiding harm.", "(B) Promoting and maximizing the well-being of individuals and society.", "(C) The fair distribution of burdens.", "(D) Respecting individual autonomy."], answer: "c2NfYW5zXzE=" },
+                    { question: "In the case study provided, what was the root cause of the AI algorithm's problem?", options: ["(A) The algorithm was trained on biased data.", "(B) The algorithm was not properly deployed.", "(C) The problem was not adequately scoped.", "(D) The model was not efficiently selected."], answer: "c2NfYW5zXzA=" },
+                    { question: "What data was the problematic AI algorithm in the case study trained on?", options: ["(A) Actual physical illness metrics.", "(B) Healthcare expense data.", "(C) Patient satisfaction scores.", "(D) Hospital staffing data."], answer: "c2NfYW5zXzE=" },
+                    { question: "What principle of bioethics addresses the need for users to be aware of how an Al algorithm functions?", options: ["(A) Do not harm.", "(B) Maximum benefit.", "(C) Respect for autonomy.", "(D) Justice."], answer: "c2NfYW5zXzI=" },
+                    { question: "The principle of Justice in bioethics requires that benefits and burdens be distributed in what manner?", options: ["(A) Based on a person's economic status.", "(B) Irrespective of a person's background.", "(C) Based on geographical location.", "(D) Based on the severity of the illness."], answer: "c2NfYW5zXzE=" },
+                    { question: "Which of the following is a prerequisite for the lesson on Ethical Frameworks for AI?", options: ["(A) Advanced knowledge of robotics.", "(B) Basic understanding of ethics and ethics in AI.", "(C) Expertise in software development.", "(D) A background in psychology."], answer: "c2NfYW5zXzE=" },
+                    { question: "What is the purpose of the 'My Goodness' activity mentioned in the document?", options: ["(A) To train a new AI algorithm.", "(B) To collect data on charitable donations.", "(C) To uncover an individual's biases and thought processes in decision-making.", "(D) To teach players about global charities."], answer: "c2NfYW5zXzI=" },
+                    { question: "The document mentions that the AI Project Cycle is a 'cyclical process.' What does this imply?", options: ["(A) The process can be completed in a straight line.", "(B) The process can be repeated and refined.", "(C) The process is only for specific types of projects.", "(D) The process has no clear start or end point."], answer: "c2NfYW5zXzE=" },
+                    { question: "The main objective of Computer Vision is to teach machines to collect information from what?", options: ["(A) Words and sentences.", "(B) Audio waves.", "(C) Pixels.", "(D) Numerical data."], answer: "c2NfYW5zXzI=" },
+                    { question: "Which of the following is a function of an ethical framework?", options: ["(A) It provides a common language for communication.", "(B) It helps to increase profit margins.", "(C) It automates the data acquisition process.", "(D) It simplifies the modelling stage of an AI project."], answer: "c2NfYW5zXzA=" },
+                    { question: "In the context of AI, what does 'bias' refer to?", options: ["(A) A preference for a certain programming language.", "(B) An unintentional leaning that results in unwanted outcomes.", "(C) The speed of an AI algorithm.", "(D) A type of computer virus."], answer: "c2NfYW5zXzE=" },
+                    { question: "Why is the deployment stage of the AI Project Cycle considered crucial?", options: ["(A) Because it is the longest stage.", "(B) Because it ensures successful integration and operation of the AI solution in real-world environments.", "(C) Because it is where data is collected.", "(D) Because it is where the model is built."], answer: "c2NfYW5zXzE=" },
+                    { question: "What is the central idea behind the 'Utility-based' value-based framework?", options: ["(A) To respect individual rights.", "(B) To ensure actions align with virtuous principles.", "(C) To maximize overall good and minimize harm.", "(D) To prioritize human life above all else."], answer: "c2NfYW5zXzI=" },
+                    { question: "A surveillance system that detects suspicious activities and tracks individuals is an example of an application in which AI domain?", options: ["(A) Natural Language Processing.", "(B) Statistical Data.", "(C) Computer Vision.", "(D) Bioethics."], answer: "c2NfYW5zXzI=" },
+                    { question: "What is the relationship between ethics and ethical frameworks as described in the document?", options: ["(A) They are the same thing.", "(B) Ethics are a set of values, while ethical frameworks are step-by-step guides for applying those values.", "(C) Ethical frameworks are only for legal issues, while ethics are for moral issues.", "(D) Ethics are a type of ethical framework."], answer: "c2NfYW5zXzE=" },
+                    { question: "According to the document, what happens if you make a mistake in the card you are making, as described in the analogy for the AI Project Cycle?", options: ["(A) You continue making the card with the mistake.", "(B) You discard it and start remaking it.", "(C) You ask someone for help.", "(D) You use an Al to fix the mistake."], answer: "c2NfYW5zXzE=" },
+                    { question: "The lesson summary mentions a recapitulation of the AI Project Cycle and what else?", options: ["(A) The history of AI.", "(B) The different domains of AI.", "(C) The future of AI.", "(D) The economic impact of AI."], answer: "c2NfYW5zXzE=" },
+                    { question: "The document states that the data you collect for an AI project is often in large quantities. What does this necessitate?", options: ["(A) The need for data deletion.", "(B) The need for visual representation.", "(C) The need for manual data entry.", "(D) The need for more physical storage."], answer: "c2NfYW5zXzE=" },
+                    { question: "What is the purpose of testing selected models and figuring out the most efficient one?", options: ["(A) To acquire more data.", "(B) To prepare for deployment.", "(C) To ensure the project is on budget.", "(D) To select the base for your Al project."], answer: "c2NfYW5zXzM=" },
+                    { question: "What is an example of an NLP application in machine translation?", options: ["(A) Google Translate.", "(B) Siri.", "(C) A self-driving car.", "(D) A medical diagnosis tool."], answer: "c2NfYW5zXzA=" },
+                    { question: "Which principle of bioethics is also known as 'Beneficence'?", options: ["(A) Respect for Autonomy.", "(B) Do not harm.", "(C) Ensure maximum benefit for all.", "(D) Give justice."], answer: "c2NfYW5zXzI=" },
+                    { question: "What is the purpose of a case study at the end of the module?", options: ["(A) To provide additional data for a project.", "(B) To show how to apply ethical frameworks to AI solutions.", "(C) To test students on their knowledge of the AI Project Cycle.", "(D) To introduce a new Al domain."], answer: "c2NfYW5zXzE=" },
+                    { question: "Which of the following is a value-based framework mentioned in the document?", options: ["(A) Bioethics.", "(B) Rights-based.", "(C) Sector-based.", "(D) None of the above."], answer: "c2NfYW5zXzE=" },
+                    { question: "What does the term 'Non-maleficence' refer to in the context of ethics?", options: ["(A) Intentionally causing harm.", "(B) The principle of doing no harm.", "(C) The act of promoting good.", "(D) The fair distribution of resources."], answer: "c2NfYW5zXzE=" },
+                    { question: "Why do we need ethical frameworks for Al, especially since it's used as a decision-making tool?", options: ["(A) To ensure Al is used only for specific tasks.", "(B) To guarantee AI makes morally acceptable recommendations.", "(C) To prove that Al is superior to human decision-making.", "(D) To simplify the process of data acquisition."], answer: "c2NfYW5zXzE=" },
+                    { question: "What is a key characteristic of a sector-based ethical framework?", options: ["(A) It focuses on fundamental ethical principles.", "(B) It is tailored to specific sectors or industries.", "(C) It is concerned with assessing the moral worth of actions.", "(D) It always prioritizes human rights."], answer: "c2NfYW5zXzE=" },
+                    { question: "The lesson on ethical frameworks is a recapitulation of the AI Project Cycle and various domains of AI. What does 'recapitulation' mean in this context?", options: ["(A) A new introduction.", "(B) A brief summary or review.", "(C) An in-depth analysis.", "(D) A complex explanation."], answer: "c2NfYW5zXzE=" },
+                    { question: "What is a key difference between 'Non-maleficence' and 'Beneficence'?", options: ["(A) Non-maleficence is about avoiding harm, while Beneficence is about actively promoting good.", "(B) Non-maleficence is about promoting good, while Beneficence is about avoiding harm.", "(C) Non-maleficence is a principle of justice, while Beneficence is a principle of autonomy.", "(D) They are the same principle with different names."], answer: "c2NfYW5zXzA=" },
+                    { question: "What is a 'framework' in the context of problem-solving?", options: ["(A) A single, definitive solution.", "(B) A structured approach to problem-solving.", "(C) A list of potential problems.", "(D) A type of software."], answer: "c2NfYW5zXzE=" },
+                    { question: "The case study reveals that the AI algorithm was biased against which group?", options: ["(A) Patients from the Western region.", "(B) Patients from a specific ethnic background.", "(C) Patients with less severe conditions.", "(D) Patients who spent more on healthcare."], answer: "c2NfYW5zXzE=" }
+                ]
+            },
+            {
+                title: "SinghClasses.in | Section B",
+                timeSpent: 0,
+                questions: [
+                    { question: "<b>Assertion (A):</b> The Data Exploration stage in the AI Project Cycle involves representing data visually to interpret patterns.<br><br><b>Reason (R):</b> Data collected during the Data Acquisition stage is often in large quantities, making it difficult to analyze without visualization.", options: ["<span style='font-size: 0.92em;'>(A) Both A and R are true, and R is the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(B) Both A and R are true, but R is not the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(C) A is true, but R is false.</span>", "<span style='font-size: 0.92em;'>(D) A is false, but R is true.</span>"], answer: "c2NfYW5zXzA=" },
+                    { question: "<b>Assertion (A):</b> An AI solution for a price comparison website belongs to the Computer Vision (CV) domain.<br><br><b>Reason (R):</b> Statistical Data is used for systems that process and derive meaning from large, numerical datasets.", options: ["<span style='font-size: 0.92em;'>(A) Both A and R are true, and R is the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(B) Both A and R are true, but R is not the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(C) A is true, but R is false.</span>", "<span style='font-size: 0.92em;'>(D) A is false, but R is true.</span>"], answer: "c2NfYW5zXzM=" },
+                    { question: "<b>Assertion (A):</b> Ethical frameworks are important for AI, especially since Al is used as a decision-making tool.<br><br><b>Reason (R):</b> Ethical frameworks provide a structured way to ensure that decisions do not cause unintended harm.", options: ["<span style='font-size: 0.92em;'>(A) Both A and R are true, and R is the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(B) Both A and R are true, but R is not the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(C) A is true, but R is false.</span>", "<span style='font-size: 0.92em;'>(D) A is false, but R is true.</span>"], answer: "c2NfYW5zXzA=" },
+                    { question: "<b>Assertion (A):</b> The principle of 'Justice' in Bioethics is the same as the principle of 'Beneficence.'<br><br><b>Reason (R):</b> The 'Beneficence' principle is concerned with promoting positive outcomes for all stakeholders.", options: ["<span style='font-size: 0.92em;'>(A) Both A and R are true, and R is the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(B) Both A and R are true, but R is not the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(C) A is true, but R is false.</span>", "<span style='font-size: 0.92em;'>(D) A is false, but R is true.</span>"], answer: "c2NfYW5zXzM=" },
+                    { question: "<b>Assertion (A):</b> The Deployment stage is the final step in the AI Project Cycle where the AI solution is released to the public.<br><br><b>Reason (R):</b> The Evaluation stage precedes Deployment to ensure the AI model is performing efficiently before its release.", options: ["<span style='font-size: 0.92em;'>(A) Both A and R are true, and R is the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(B) Both A and R are true, but R is not the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(C) A is true, but R is false.</span>", "<span style='font-size: 0.92em;'>(D) A is false, but R is true.</span>"], answer: "c2NfYW5zXzE=" },
+                    { question: "<b>Assertion (A):</b> A Rights-based ethical framework is an example of a sector-based framework.<br><br><b>Reason (R):</b> Bioethics is a sector-based ethical framework that is tailored to a specific industry.", options: ["<span style='font-size: 0.92em;'>(A) Both A and R are true, and R is the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(B) Both A and R are true, but R is not the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(C) A is true, but R is false.</span>", "<span style='font-size: 0.92em;'>(D) A is false, but R is true.</span>"], answer: "c2NfYW5zXzM=" },
+                    { question: "<b>Assertion (A):</b> The AI Project Cycle is described as a cyclical process.<br><br><b>Reason (R):</b> The cycle can be repeated to refine and improve the AI solution based on new data or feedback.", options: ["<span style='font-size: 0.92em;'>(A) Both A and R are true, and R is the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(B) Both A and R are true, but R is not the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(C) A is true, but R is false.</span>", "<span style='font-size: 0.92em;'>(D) A is false, but R is true.</span>"], answer: "c2NfYW5zXzA=" },
+                    { question: "<b>Assertion (A):</b> The case study provided in the document highlights a violation of the principle of Justice.<br><br><b>Reason (R):</b> The AI algorithm in the case study was trained on biased data, leading to an unfair distribution of healthcare resources.", options: ["<span style='font-size: 0.92em;'>(A) Both A and R are true, and R is the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(B) Both A and R are true, but R is not the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(C) A is true, but R is false.</span>", "<span style='font-size: 0.92em;'>(D) A is false, but R is true.</span>"], answer: "c2NfYW5zXzA=" },
+                    { question: "<b>Assertion (A):</b> Natural Language Processing (NLP) enables a machine to analyze visual information.<br><br><b>Reason (R):</b> NLP is a domain of Al that enables machines to read and understand human language.", options: ["<span style='font-size: 0.92em;'>(A) Both A and R are true, and R is the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(B) Both A and R are true, but R is not the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(C) A is true, but R is false.</span>", "<span style='font-size: 0.92em;'>(D) A is false, but R is true.</span>"], answer: "c2NfYW5zXzM=" },
+                    { question: "<b>Assertion (A):</b> The Data Acquisition stage is the most crucial stage of the AI Project Cycle.<br><br><b>Reason (R):</b> Without data, no Al project can be built.", options: ["<span style='font-size: 0.92em;'>(A) Both A and R are true, and R is the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(B) Both A and R are true, but R is not the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(C) A is true, but R is false.</span>", "<span style='font-size: 0.92em;'>(D) A is false, but R is true.</span>"], answer: "c2NfYW5zXzA=" },
+                    { question: "<b>Assertion (A):</b> The 'Rights-based' ethical framework prioritizes human rights and dignity.<br><br><b>Reason (R):</b> This framework ensures that an AI system's actions do not violate the fundamental rights of individuals.", options: ["<span style='font-size: 0.92em;'>(A) Both A and R are true, and R is the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(B) Both A and R are true, but R is not the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(C) A is true, but R is false.</span>", "<span style='font-size: 0.92em;'>(D) A is false, but R is true.</span>"], answer: "c2NfYW5zXzA=" },
+                    { question: "<b>Assertion (A):</b> The 'My Goodness' activity helps individuals to understand their personal biases.<br><br><b>Reason (R):</b> The activity presents a moral dilemma where a person's decisions are influenced by their own morals and values.", options: ["<span style='font-size: 0.92em;'>(A) Both A and R are true, and R is the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(B) Both A and R are true, but R is not the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(C) A is true, but R is false.</span>", "<span style='font-size: 0.92em;'>(D) A is false, but R is true.</span>"], answer: "c2NfYW5zXzA=" },
+                    { question: "<b>Assertion (A):</b> An email spam filter is an application of Computer Vision.<br><br><b>Reason (R):</b> Computer Vision systems are trained to analyze visual information like images and videos.", options: ["<span style='font-size: 0.92em;'>(A) Both A and R are true, and R is the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(B) Both A and R are true, but R is not the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(C) A is true, but R is false.</span>", "<span style='font-size: 0.92em;'>(D) A is false, but R is true.</span>"], answer: "c2NfYW5zXzM=" },
+                    { question: "<b>Assertion (A):</b> The purpose of the Modelling stage is to test the AI model on new data.<br><br><b>Reason (R):</b> The most efficient model is chosen in the Modelling stage to become the base of the AI project.", options: ["<span style='font-size: 0.92em;'>(A) Both A and R are true, and R is the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(B) Both A and R are true, but R is not the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(C) A is true, but R is false.</span>", "<span style='font-size: 0.92em;'>(D) A is false, but R is true.</span>"], answer: "c2NfYW5zXzM=" },
+                    { question: "<b>Assertion (A):</b> The ethical principle of 'Justice' requires that the benefits and burdens of an Al solution are distributed fairly.<br><br><b>Reason (R):</b> This is a key principle of bioethics that ensures impartiality and fairness, regardless of a person's background.", options: ["<span style='font-size: 0.92em;'>(A) Both A and R are true, and R is the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(B) Both A and R are true, but R is not the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(C) A is true, but R is false.</span>", "<span style='font-size: 0.92em;'>(D) A is false, but R is true.</span>"], answer: "c2NfYW5zXzA=" },
+                    { question: "<b>Assertion (A):</b> A 'Virtue-based' ethical framework focuses on the character and intentions of individuals involved in decision-making.<br><br><b>Reason (R):</b> This framework is concerned with whether actions align with virtuous principles like honesty and integrity.", options: ["<span style='font-size: 0.92em;'>(A) Both A and R are true, and R is the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(B) Both A and R are true, but R is not the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(C) A is true, but R is false.</span>", "<span style='font-size: 0.92em;'>(D) A is false, but R is true.</span>"], answer: "c2NfYW5zXzA=" },
+                    { question: "<b>Assertion (A):</b> Ethical frameworks are only necessary for complex AI projects.<br><br><b>Reason (R):</b> All Al projects, regardless of complexity, have the potential to cause unintended harm.", options: ["<span style='font-size: 0.92em;'>(A) Both A and R are true, and R is the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(B) Both A and R are true, but R is not the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(C) A is true, but R is false.</span>", "<span style='font-size: 0.92em;'>(D) A is false, but R is true.</span>"], answer: "c2NfYW5zXzM=" },
+                    { question: "<b>Assertion (A):</b> The AI Project Cycle is a cyclical process.<br><br><b>Reason (R):</b> The Deployment stage of the AI Project Cycle is the final step.", options: ["<span style='font-size: 0.92em;'>(A) Both A and R are true, and R is the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(B) Both A and R are true, but R is not the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(C) A is true, but R is false.</span>", "<span style='font-size: 0.92em;'>(D) A is false, but R is true.</span>"], answer: "c2NfYW5zXzE=" },
+                    { question: "<b>Assertion (A):</b> A prerequisite for the lesson on ethical frameworks is a basic understanding of ethics in AI.<br><br><b>Reason (R):</b> This foundational knowledge is essential for understanding the need for and application of ethical frameworks.", options: ["<span style='font-size: 0.92em;'>(A) Both A and R are true, and R is the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(B) Both A and R are true, but R is not the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(C) A is true, but R is false.</span>", "<span style='font-size: 0.92em;'>(D) A is false, but R is true.</span>"], answer: "c2NfYW5zXzA=" },
+                    { question: "<b>Assertion (A):</b> The Data Exploration stage follows the Data Acquisition stage.<br><br><b>Reason (R):</b> You must first acquire data before you can analyze and visually represent it.", options: ["<span style='font-size: 0.92em;'>(A) Both A and R are true, and R is the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(B) Both A and R are true, but R is not the correct explanation of A.</span>", "<span style='font-size: 0.92em;'>(C) A is true, but R is false.</span>", "<span style='font-size: 0.92em;'>(D) A is false, but R is true.</span>"], answer: "c2NfYW5zXzA=" }
+                ]
+            }
+        ];
+
+        // ==========================================
+        // State Variables
+        // ==========================================
+        let studentName = "";
+        let currentSectionIndex = 0;
+        let currentQuestion = 0;
+        let timeLeft = 0; 
+        let timerInterval;
+        let isTimerPaused = true;
+        let isExamActive = false; 
+        let securityWarnings = 0;
+
+        let userAnswers = [];
+        let visitedQuestions = [];
+        let lockedAnswers = [];
+
+        // ==========================================
+        // Hamburger Menu Logic
+        // ==========================================
+        function toggleNav() {
+            const navItems = document.getElementById('nav-items');
+            navItems.classList.toggle('active');
+        }
+
+        // ==========================================
+        // Timer Audio Logic
+        // ==========================================
+        let audioCtx;
+        function playTimerBeep() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            oscillator.type = 'square'; 
+            oscillator.frequency.setValueAtTime(600, audioCtx.currentTime); 
+            
+            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime); 
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.1); 
+        }
+
+        // ==========================================
+        // Anti-Cheat & Security
+        // ==========================================
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'F12' || event.keyCode === 123) { event.preventDefault(); }
+            if (event.ctrlKey && event.shiftKey && (event.key === 'I' || event.key === 'i' || event.key === 'J' || event.key === 'j' || event.key === 'C' || event.key === 'c')) {
+                event.preventDefault();
+            }
+            if (event.ctrlKey && (event.key === 'U' || event.key === 'u')) { event.preventDefault(); }
+        });
+
+        window.addEventListener('blur', function() {
+            if (isExamActive && !isTimerPaused) {
+                document.getElementById('cbt-app-container').style.filter = 'blur(10px)';
+                securityWarnings++;
+                applySecurityPenalty();
+            }
+        });
+
+        window.addEventListener('focus', function() {
+            if (isExamActive) { document.getElementById('cbt-app-container').style.filter = 'none'; }
+        });
+
+        document.addEventListener('keyup', function(e) {
+            if (e.key === 'PrintScreen') {
+                navigator.clipboard.writeText(''); 
+                securityWarnings++;
+                applySecurityPenalty();
+            }
+        });
+
+        function applySecurityPenalty() {
+            let penaltyPoints = securityWarnings * 2;
+            document.getElementById('warning-count-display').innerText = `Total Warnings: ${securityWarnings} (Penalty: -${penaltyPoints} Marks)`;
+            document.getElementById('modal-security').style.display = 'flex';
+            isTimerPaused = true; 
+            updatePalette(); 
+        }
+
+        function closeSecurityModal() {
+            document.getElementById('modal-security').style.display = 'none';
+            isTimerPaused = false; 
+        }
+
+        // ==========================================
+        // Initialization & Logic
+        // ==========================================
+        function shuffleExamData() {
+            examSections.forEach(section => {
+                for (let i = section.questions.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [section.questions[i], section.questions[j]] = [section.questions[j], section.questions[i]];
+                }
+            });
+        }
+
+        function loadExamData() {
+            document.getElementById('modal-welcome').style.display = 'flex';
+            document.getElementById('student-name-input').focus();
+        }
+
+        document.getElementById('student-name-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') beginExam();
+        });
+
+        function initTrackingArrays() {
+            userAnswers = examSections.map(sec => new Array(sec.questions.length).fill(null));
+            visitedQuestions = examSections.map(sec => new Array(sec.questions.length).fill(false));
+            lockedAnswers = examSections.map(sec => new Array(sec.questions.length).fill(false));
+        }
+
+        function beginExam() {
+            let nameInput = document.getElementById('student-name-input').value.trim();
+            studentName = nameInput === "" ? "Student" : nameInput;
+            document.getElementById('modal-welcome').style.display = 'none';
+
+            shuffleExamData(); 
+            initTrackingArrays();
+
+            document.getElementById('quiz-screen').style.display = 'block';
+            isExamActive = true; 
+            
+            startSection(0);
+        }
+
+        function startSection(index) {
+            currentSectionIndex = index;
+            currentQuestion = 0;
+            
+            timeLeft = examSections[currentSectionIndex].questions.length * 60;
+            
+            document.getElementById('quiz-header-title').innerText = examSections[currentSectionIndex].title;
+            
+            isTimerPaused = false;
+            startTimer();
+            loadQuestion();
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            const timerBox = document.getElementById('timer-box');
+            const timerText = document.getElementById('time-left');
+            let totalTimeForSection = examSections[currentSectionIndex].questions.length * 60;
+            
+            timerInterval = setInterval(() => {
+                if(isTimerPaused) return;
+                timeLeft--;
+                examSections[currentSectionIndex].timeSpent++; 
+
+                timerBox.classList.remove('warning', 'danger');
+                
+                if (timeLeft <= totalTimeForSection * 0.2) {
+                    timerBox.classList.add('danger');
+                    if (timeLeft <= 10 && timeLeft > 0) {
+                        playTimerBeep();
+                    }
+                } else if (timeLeft <= totalTimeForSection * 0.5) {
+                    timerBox.classList.add('warning');
+                }
+
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                timerText.innerText = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    finishCurrentSection(); 
+                } 
+            }, 1000);
+        }
+
+        function showSectionSubmitModal() {
+            isTimerPaused = true;
+            document.getElementById('modal-submit-section').style.display = 'flex';
+        }
+
+        function closeSectionSubmitModal() {
+            document.getElementById('modal-submit-section').style.display = 'none';
+            isTimerPaused = false;
+        }
+
+        function confirmSectionSubmit() {
+            document.getElementById('modal-submit-section').style.display = 'none';
+            clearInterval(timerInterval);
+            finishCurrentSection();
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}m ${secs}s`;
+        }
+
+        function finishCurrentSection() {
+            isTimerPaused = true; 
+            clearInterval(timerInterval);
+            document.getElementById('quiz-screen').style.display = 'none';
+            
+            let sec = examSections[currentSectionIndex];
+            let score = 0, correct = 0, incorrect = 0, unattempted = 0;
+            let maxScore = sec.questions.length * 5;
+
+            for(let i=0; i < sec.questions.length; i++){
+                if(userAnswers[currentSectionIndex][i] !== null) {
+                    lockedAnswers[currentSectionIndex][i] = true;
+                    if (btoa("sc_ans_" + userAnswers[currentSectionIndex][i]) === sec.questions[i].answer) {
+                        score += 5; correct++;
+                    } else {
+                        score -= 1; incorrect++;
+                    }
+                } else {
+                    unattempted++;
+                }
+            }
+
+            document.getElementById('inter-title').innerText = sec.title + " Submitted";
+            document.getElementById('inter-candidate').innerText = "CANDIDATE: " + studentName.toUpperCase();
+            document.getElementById('inter-score').innerText = score + " / " + maxScore;
+            document.getElementById('inter-stats').innerText = `Correct: ${correct} | Incorrect: ${incorrect} | Unattempted: ${unattempted}`;
+            document.getElementById('inter-time').innerText = "Time Taken: " + formatTime(sec.timeSpent);
+
+            let interBtn = document.getElementById('inter-btn');
+            if (currentSectionIndex < examSections.length - 1) {
+                interBtn.innerText = "Proceed to " + examSections[currentSectionIndex + 1].title;
+                interBtn.onclick = function() {
+                    document.getElementById('inter-screen').style.display = 'none';
+                    document.getElementById('quiz-screen').style.display = 'block';
+                    startSection(currentSectionIndex + 1);
+                };
+            } else {
+                interBtn.innerText = "View Final Results";
+                interBtn.onclick = function() {
+                    document.getElementById('inter-screen').style.display = 'none';
+                    submitExam();
+                };
+            }
+
+            document.getElementById('inter-screen').style.display = 'block';
+        }
+
+        function triggerFade() {
+            const content = document.getElementById('question-content');
+            content.classList.remove('fade-in');
+            void content.offsetWidth; 
+            content.classList.add('fade-in');
+        }
+
+        function loadQuestion() {
+            triggerFade();
+            visitedQuestions[currentSectionIndex][currentQuestion] = true; 
+
+            let activeSection = examSections[currentSectionIndex];
+            let qData = activeSection.questions[currentQuestion];
+            let totalInSection = activeSection.questions.length;
+
+            const progressPercent = totalInSection > 1 ? (currentQuestion / (totalInSection - 1)) * 100 : 100;
+            document.getElementById('exam-progress').style.width = `${progressPercent}%`;
+            document.getElementById('q-number').innerText = `Question ${currentQuestion + 1} OF ${totalInSection}`;
+            document.getElementById('palette-section-title').innerText = "Question Palette";
+            document.getElementById('q-text').innerHTML = `<span style="font-size: 1.25em; font-weight: 800; color: #003366; margin-right: 6px;">Q${currentQuestion + 1}.</span>` + qData.question;
+
+            const optionsList = document.getElementById('q-options');
+            optionsList.innerHTML = ''; 
+            
+            let isQuestionLocked = lockedAnswers[currentSectionIndex][currentQuestion];
+            let correctAnswerIndex = -1;
+
+            if (isQuestionLocked) {
+                for(let i=0; i < qData.options.length; i++) { 
+                    if (btoa("sc_ans_" + i) === qData.answer) correctAnswerIndex = i; 
+                }
+            }
+
+            qData.options.forEach((opt, index) => {
+                let savedAns = userAnswers[currentSectionIndex][currentQuestion];
+                let isChecked = savedAns === index ? "checked" : "";
+                
+                let labelClass = isQuestionLocked 
+                    ? (index === correctAnswerIndex 
+                        ? "correct-answer disabled-label" 
+                        : (savedAns === index ? "wrong-answer disabled-label" : "disabled-label")) 
+                    : (savedAns === index ? "selected" : "");
+                
+                optionsList.innerHTML += `<li><label class="${labelClass}"><input type="radio" name="option" value="${index}" ${isChecked} ${isQuestionLocked ? "disabled" : ""} onclick="saveAnswer(${index})">${opt}</label></li>`;
+            });
+
+            document.getElementById('btn-prev').style.display = currentQuestion === 0 ? "none" : "block";
+            document.getElementById('btn-clear').disabled = userAnswers[currentSectionIndex][currentQuestion] === null || isQuestionLocked;
+
+            if (currentQuestion === totalInSection - 1) {
+                document.getElementById('btn-next').innerText = "Submit Section";
+                document.getElementById('btn-next').onclick = showSectionSubmitModal;
+            } else {
+                document.getElementById('btn-next').innerText = isQuestionLocked ? "Next" : "Save & Next";
+                document.getElementById('btn-next').onclick = nextQuestion;
+            }
+
+            updatePalette();
+        }
+
+        function saveAnswer(index) {
+            if (lockedAnswers[currentSectionIndex][currentQuestion]) return; 
+            userAnswers[currentSectionIndex][currentQuestion] = index;
+            document.getElementById('btn-clear').disabled = false;
+            updatePalette(); 
+        }
+
+        function clearResponse() {
+            if (lockedAnswers[currentSectionIndex][currentQuestion]) return; 
+            userAnswers[currentSectionIndex][currentQuestion] = null;
+            loadQuestion(); 
+        }
+
+        function nextQuestion() {
+            if (userAnswers[currentSectionIndex][currentQuestion] !== null) {
+                lockedAnswers[currentSectionIndex][currentQuestion] = true;
+            }
+            updatePalette();
+            if (currentQuestion < examSections[currentSectionIndex].questions.length - 1) { 
+                currentQuestion++; 
+                loadQuestion(); 
+            }
+        }
+
+        function prevQuestion() { 
+            if (currentQuestion > 0) { 
+                currentQuestion--; 
+                loadQuestion(); 
+            } 
+        }
+
+        function jumpToQuestion(index) { 
+            currentQuestion = index; 
+            loadQuestion(); 
+        }
+
+        function updatePalette() {
+            let activeSection = examSections[currentSectionIndex];
+            const paletteGrid = document.getElementById('palette-grid');
+            paletteGrid.innerHTML = ''; 
+
+            let currentScore = 0, rightAttempted = 0, wrongAttempted = 0;
+
+            for (let i = 0; i < activeSection.questions.length; i++) {
+                if (lockedAnswers[currentSectionIndex][i] && userAnswers[currentSectionIndex][i] !== null) {
+                    if (btoa("sc_ans_" + userAnswers[currentSectionIndex][i]) === activeSection.questions[i].answer) { 
+                        rightAttempted++; currentScore += 5; 
+                    } else { 
+                        wrongAttempted++; currentScore -= 1; 
+                    }
+                }
+
+                let statusClass = visitedQuestions[currentSectionIndex][i] ? (userAnswers[currentSectionIndex][i] !== null ? 'answered' : 'not-answered') : 'unvisited';
+                let isWrong = lockedAnswers[currentSectionIndex][i] && userAnswers[currentSectionIndex][i] !== null && btoa("sc_ans_" + userAnswers[currentSectionIndex][i]) !== activeSection.questions[i].answer;
+                let extraStyle = i === currentQuestion ? 'border: 2px solid #000; transform: scale(1.05);' : '';
+                let crossHtml = isWrong ? `<div style="position: absolute; top: -6px; right: -6px; background: #fff; color: #dc3545; border: 2px solid #dc3545; border-radius: 50%; width: 16px; height: 16px; font-size: 11px; font-weight: 900; display: flex; align-items: center; justify-content: center;">✕</div>` : '';
+
+                paletteGrid.innerHTML += `<div class="palette-btn ${statusClass}" style="${extraStyle}" onclick="jumpToQuestion(${i})">${i + 1}${crossHtml}</div>`;
+            }
+
+            document.getElementById('stat-right').innerText = rightAttempted;
+            document.getElementById('stat-wrong').innerText = wrongAttempted;
+            document.getElementById('stat-score').innerText = currentScore;
+        }
+
+        function submitExam() {
+            clearInterval(timerInterval); 
+            isExamActive = false; 
+
+            document.getElementById('quiz-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+            document.getElementById('final-candidate-name').innerText = "CANDIDATE: " + studentName.toUpperCase();
+
+            let overallScore = 0, overallMax = 0, totalCorrect = 0, totalIncorrect = 0, totalUnattempted = 0, totalTime = 0;
+            const resultsGrid = document.getElementById('section-results-grid');
+            resultsGrid.innerHTML = ''; 
+
+            examSections.forEach((sec, secIdx) => {
+                let score = 0, correct = 0, incorrect = 0, unattempted = 0;
+                let maxScore = sec.questions.length * 5;
+                overallMax += maxScore;
+                totalTime += sec.timeSpent;
+
+                for (let i = 0; i < sec.questions.length; i++) {
+                    if (userAnswers[secIdx][i] === null) {
+                        unattempted++; totalUnattempted++;
+                    } else if (btoa("sc_ans_" + userAnswers[secIdx][i]) === sec.questions[i].answer) {
+                        score += 5; correct++; totalCorrect++;
+                    } else {
+                        score -= 1; incorrect++; totalIncorrect++;
+                    }
+                }
+                overallScore += score;
+
+                let cardHtml = `
+                    <div class="section-result-card">
+                        <div class="src-title">${sec.title}</div>
+                        <div class="src-score">${score} <span>/ ${maxScore}</span></div>
+                        <div class="src-stats">
+                            <div class="src-stat-row"><span>Time:</span> <span style="font-weight:bold; color:#007bff;">${formatTime(sec.timeSpent)}</span></div>
+                            <div class="src-stat-row"><span>Correct:</span> <span style="color:#28a745; font-weight:bold;">${correct}</span></div>
+                            <div class="src-stat-row"><span>Incorrect:</span> <span style="color:#dc3545; font-weight:bold;">${incorrect}</span></div>
+                            <div class="src-stat-row"><span>Unattempted:</span> <span style="font-weight:bold; color:#444;">${unattempted}</span></div>
+                        </div>
+                    </div>
+                `;
+                resultsGrid.innerHTML += cardHtml;
+            });
+
+            let totalPenalty = securityWarnings * 2;
+            overallScore -= totalPenalty;
+            
+            document.getElementById('final-score-display').innerText = `${overallScore} / ${overallMax}`;
+            document.getElementById('final-stats-display').innerText = `Correct: ${totalCorrect} | Incorrect: ${totalIncorrect} | Unattempted: ${totalUnattempted}`;
+            document.getElementById('final-time-display').innerText = `Total Time Taken: ${formatTime(totalTime)}`;
+
+            const securityResultsBox = document.getElementById('final-security-results');
+            if(securityWarnings > 0) {
+                securityResultsBox.style.display = 'block';
+                securityResultsBox.innerHTML = `⚠️ Exam Integrity Warnings: ${securityWarnings}<br><span style="color: #b71c1c; display:block; margin-top: 5px;">Security Penalty Applied: -${totalPenalty} Marks</span>`;
+            }
+        }
+
+        window.onload = loadExamData;
+    </script>
+</body>
+</html>
