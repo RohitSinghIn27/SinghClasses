@@ -1,4 +1,8 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
+  
+  // ==========================================
+  // 1. UTILITIES & DATA INITS
+  // ==========================================
   const yr = document.getElementById('current-year');
   if (yr) yr.textContent = new Date().getFullYear();
 
@@ -10,16 +14,34 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
   });
 
+  // Fallback Copy Function
+  const copyToClipboardFallback = (text) => {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";
+    textArea.style.left = "-999999px";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      document.execCommand('copy');
+      return true;
+    } catch (err) {
+      return false;
+    } finally {
+      textArea.remove();
+    }
+  };
+
   const initShareEngine = (btnId) => {
     document.getElementById(btnId)?.addEventListener('click', async (e) => {
       e.preventDefault();
-      if (navigator.share) {
+      if (navigator.share && window.location.protocol !== 'file:') {
         try { await navigator.share({ title: document.title, url: window.location.href }); } 
         catch (err) { console.log('Error sharing page context:', err); }
       } else {
-        navigator.clipboard.writeText(window.location.href).then(() => {
-          alert('Link copied to clipboard!');
-        });
+        copyToClipboardFallback(window.location.href);
+        alert('Page link copied to clipboard!');
       }
     });
   };
@@ -48,6 +70,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { passive: true });
   }
 
+  // ==========================================
+  // 2. SLIDER ENGINE RE-MAPPED FOR NEW UI
+  // ==========================================
   const slides = document.querySelectorAll('.testimonial-slide');
   const track = document.getElementById('testimonialTrack');
   const dotsContainer = document.getElementById('sliderDots');
@@ -90,6 +115,9 @@ document.addEventListener('DOMContentLoaded', () => {
     startAutoplay();
   }
 
+  // ==========================================
+  // 3. CANVAS DECOR ENGINE
+  // ==========================================
   const initDynamicFabric = (selector, forceLight = false) => {
     const wrapper = document.querySelector(selector);
     if (!wrapper) return;
@@ -180,4 +208,51 @@ document.addEventListener('DOMContentLoaded', () => {
   
   ['.header-container', '.classes-section', '.playlists-section', '.results-section'].forEach(s => initDynamicFabric(s, false));
   initDynamicFabric('.teacher-section', true);
+});
+
+
+document.addEventListener('contextmenu', function(e) {
+    if (e.target.tagName === 'IMG') {
+        e.preventDefault();
+    }
+});
+
+// Listen for screenshot keyboard shortcuts
+window.addEventListener('keyup', function(e) {
+    // 44 is the keycode for the Print Screen key
+    if (e.keyCode == 44) {
+        stopScreenshot();
+    }
+});
+
+window.addEventListener('keydown', function(e) {
+    // Detect Mac shortcuts (Cmd + Shift + 3 or 4) or Windows (Win + Shift + S)
+    if ((e.metaKey || e.ctrlKey) && e.shiftKey && (e.key === '3' || e.key === '4' || e.key === 's' || e.key === 'S')) {
+        stopScreenshot();
+    }
+});
+
+function stopScreenshot() {
+    // Securely blur the main container
+    const mainContent = document.querySelector('.main-content');
+    if (mainContent) {
+        mainContent.style.filter = 'blur(20px)';
+        
+        // Alert the user and restore visibility after they close it
+        alert('Screenshots are disabled on SinghClasses to protect student privacy.');
+        
+        setTimeout(() => {
+            mainContent.style.filter = 'none';
+        }, 1000);
+    }
+}
+
+// Blur the screen if the user clicks away or opens an overlay tool
+window.addEventListener('blur', function() {
+    document.querySelector('.main-content').style.filter = 'blur(30px)';
+});
+
+// Restore clarity when they come back to your website
+window.addEventListener('focus', function() {
+    document.querySelector('.main-content').style.filter = 'none';
 });
