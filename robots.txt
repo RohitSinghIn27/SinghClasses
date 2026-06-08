@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 # Link to your sitemap to help search engines find your pages
-Sitemap: https://your-username.github.io/your-repository-name/sitemap.xml
+Sitemap: https://singhclasses.in/sitemap.xml
