@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,7 +32,7 @@
             font-family: 'Inter', sans-serif;
             background-color: var(--bg);
             display: flex;
-            flex-direction: column; /* Fixed: Forces dashboard card and back button to stack vertically */
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
@@ -243,24 +244,55 @@
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // UI Feedback
             const btn = document.getElementById('submitBtn');
             btn.innerText = "Sending...";
             btn.style.opacity = "0.7";
             btn.disabled = true;
 
-            // Simulate an API call runtime framework execution
-            setTimeout(() => {
+            // Gather standard JSON data payload
+            const payload = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value
+            };
+
+            // CRITICAL: Replace this string with your exact Apps Script URL from Step 2
+            const scriptUrl = "https://script.google.com/macros/s/AKfycbxb85p4susfkHGyY7AtkDp-94xjZJbNQzvHeDDupwUOopysEP8i7cYyscrK9LkGe4Bb/exec";
+            
+            fetch(scriptUrl, {
+                method: "POST",
+                mode: "cors", 
+                headers: {
+                    "Content-Type": "text/plain;charset=utf-8" // Needed to prevent preflight CORS blocks in Apps Script
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(data => {
+                btn.innerText = "Send Message";
+                btn.style.opacity = "1";
+                btn.disabled = false;
+                
+                if(data.status === "success") {
+                    statusMsg.style.display = "block";
+                    statusMsg.style.color = "#10b981";
+                    statusMsg.innerText = "Success! We'll get back to you soon.";
+                    form.reset();
+                } else {
+                    throw new Error(data.message);
+                }
+            })
+            .catch((error) => {
                 btn.innerText = "Send Message";
                 btn.style.opacity = "1";
                 btn.disabled = false;
                 
                 statusMsg.style.display = "block";
-                statusMsg.style.color = "#10b981";
-                statusMsg.innerText = "Success! We'll get back to you soon.";
-                
-                form.reset();
-            }, 1500);
+                statusMsg.style.color = "#ef4444";
+                statusMsg.innerText = "Something went wrong. Please try again.";
+                console.error("Submission Error:", error);
+            });
         });
     </script>
 </body>
