@@ -11,7 +11,7 @@ $('welcome-incorrect-lbl').innerText = `-${MI} Incorrect`;
 const ICON_SUN = `<svg class="sc-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
 const ICON_MOON = `<svg class="sc-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
 const ICON_ALERT = `<svg class="sc-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`;
-
+ 
 const arOpts = [
   "Both A and R are true and R is the correct explanation for A.",
   "Both A and R are true and R is not the correct explanation for A.",
@@ -37,16 +37,14 @@ async function loadQuestionsFromSheet() {
                 year: paper.year || paper.Year || paper.section || paper.Section || "Set",
                 questions: (paper.questions || []).map(q => ({
                     text: q.text || q.Text || q.question || q.Question || "",
+                    tag: q.tag || q.Tag || q.info || q.Info || "",
                     options: Array.isArray(q.options) ? q.options :
                         [q.optiona || q.OptionA || q.option1 || "", q.optionb || q.OptionB || q.option2 || "",
                              q.optionc || q.OptionC || q.option3 || "", q.optiond || q.OptionD || q.option4 || ""],
                     correctIndex: (() => {
                         let v = (q.correctIndex != null ? q.correctIndex : q.correct != null ? q.correct : 0).toString().trim().toLowerCase();
                         if (['a', 'b', 'c', 'd'].includes(v)) return {
-                            'a': 0,
-                            'b': 1,
-                            'c': 2,
-                            'd': 3
+                            'a': 0, 'b': 1, 'c': 2, 'd': 3
                         } [v];
                         const n = parseInt(v);
                         return isNaN(n) ? 0 : (n >= 1 ? n - 1 : n);
@@ -65,6 +63,7 @@ async function loadQuestionsFromSheet() {
                 const sectionLabel = (r['section'] || r['year'] || r['set'] || "Section A").toString().trim();
                 const sectionTitle = (r['sectiontitle'] || r['title'] || r['label'] || sectionLabel).toString().trim();
                 const qText = (r['question'] || r['text'] || r['q'] || "").toString().trim();
+                const qTag = (r['tag'] || r['info'] || r['metadata'] || "").toString().trim();
 
                 if (!qText) return;
 
@@ -94,6 +93,7 @@ async function loadQuestionsFromSheet() {
                 }
                 sectionsMap[sectionLabel].questions.push({
                     text: qText,
+                    tag: qTag,
                     options,
                     correctIndex: ci
                 });
@@ -353,12 +353,13 @@ window.beginExam = () => {
             shuffleArray(mo);
             return {
                 q: q.text,
+                tag: q.tag || "",
                 o: mo.map(o => o.t),
                 a: btoa("sc_ans_" + mo.findIndex(o => o.org === q.correctIndex))
             };
         });
         shuffleArray(sq);
-        sq.forEach(q => { questions.push({ question: q.q, options: q.o, answer: q.a }); qt++; });
+        sq.forEach(q => { questions.push({ question: q.q, options: q.o, answer: q.a, tag: q.tag }); qt++; });
         sections.push({ index: idx, title: p.title, year: p.year, start: st, end: qt, submitted: false, timeSpent: 0 });
     });
 
@@ -423,6 +424,17 @@ window.loadQuestion = () => {
     $('q-number').innerText = `Question ${qy + 1} of ${tot}`;
     $('q-text').innerHTML = `<span style="font-weight:800;color:var(--q-num-color);margin-right:6px;">Q${qy + 1}.</span>` + questions[currentQuestion].question;
 
+    let currentTag = questions[currentQuestion].tag || "";
+    let tagEl = $('q-tag');
+    if (tagEl) {
+        if (currentTag) {
+            tagEl.innerText = currentTag;
+            tagEl.style.display = 'inline-flex';
+        } else {
+            tagEl.style.display = 'none';
+        }
+    }
+
     let ol = $('q-options');
     ol.innerHTML = '';
     let isL = lockedAnswers[currentQuestion] || s.submitted;
@@ -441,7 +453,13 @@ window.loadQuestion = () => {
 
     let kh = $('keyboard-hints');
     if (kh) {
-        kh.style.display = (qy === 1) ? 'flex' : 'none';
+        kh.style.display = 'none';
+    }
+
+    // Toggle Sidebar-configured Hints Box (exclusively displayed at question index 1)
+    let skh = $('sidebar-keyboard-hints');
+    if (skh) {
+        skh.style.display = (qy === 1) ? 'flex' : 'none';
     }
 
     $('btn-prev').disabled = currentQuestion === s.start;
@@ -497,8 +515,13 @@ function updatePalette() {
     if (!g) return;
     g.innerHTML = '';
     let rc = 0, wc = 0, sc = 0;
+    let allAnswered = true;
 
     for (let i = s.start; i < s.end; i++) {
+        if (userAnswers[i] === null) {
+            allAnswered = false;
+        }
+
         if (userAnswers[i] !== null && (lockedAnswers[i] || s.submitted)) {
             if (btoa("sc_ans_" + userAnswers[i]) === questions[i].answer) { rc++; sc += MC; } 
             else { wc++; sc -= MI; }
@@ -516,6 +539,15 @@ function updatePalette() {
         }
 
         g.innerHTML += `<div class="palette-btn ${dsp}${i === currentQuestion ? ' current-question' : ''}${flt ? ' filtered-out' : ''}" onclick="jumpToQuestion(${i})">${(i - s.start) + 1}${iw ? `<div style="position:absolute;top:-3px;right:-3px;background:var(--container-bg);color:var(--color-wrong);border:1px solid var(--color-wrong);border-radius:50%;width:14px;height:14px;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center;z-index:5;">✕</div>` : ''}</div>`;
+    }
+
+    let mainSubmitBtn = $('main-section-submit-btn');
+    if (mainSubmitBtn) {
+        if (allAnswered) {
+            mainSubmitBtn.classList.add('all-answered');
+        } else {
+            mainSubmitBtn.classList.remove('all-answered');
+        }
     }
 
     let statRight = $('stat-right'), statWrong = $('stat-wrong'), statScore = $('stat-score');
@@ -639,6 +671,7 @@ function processSectionSubmission() {
         if ($('mob-val-score')) $('mob-val-score').innerText = `${aS} / ${cM}`;
         if ($('mob-val-percent')) $('mob-val-percent').innerText = `${fP}%`;
         if ($('mob-val-warnings')) $('mob-val-warnings').innerText = securityWarnings;
+        if ($('lbl-dash-warning')) $('lbl-dash-warning').innerText = securityWarnings; // Added to fix desktop quick info panel
         if ($('mob-val-time')) $('mob-val-time').innerText = `${tm}m ${ts}s`;
         
         let ringNode = $('radial-bar-fill-node');
@@ -707,7 +740,6 @@ function executeProgressionAdvance() {
 
 window.goToHome = () => window.location.href = HOME_URL;
 
-// --- Background Animations ---
 function initParticleCanvas(cid, canid, pct, cdist) {
     let c = $(cid), can = $(canid);
     if (!c || !can) return;

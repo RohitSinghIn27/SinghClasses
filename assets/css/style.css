@@ -112,9 +112,9 @@ button {
 }
 
 .section-decor-header h1 {
-    font-size: 1.5rem;
+    font-size: 2rem;
     color: var(--dark-navy);
-    font-weight: 600;
+    font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -335,6 +335,7 @@ body.dark-mode .hero-container {
     font-weight: 400;
     max-width: 520px;
     margin-bottom: 30px;
+    text-align: justify;
 }
 
 .btn {
