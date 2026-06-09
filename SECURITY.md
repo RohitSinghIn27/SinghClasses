@@ -1,21 +1,13 @@
 # Security Policy
 
-## Supported Versions
+This is a static educational website for SinghClasses. We take security seriously.
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
-
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+## Supported Deployments
+Since this website is delivered as a static build, security updates are applied directly to production at https://singhclasses.in. No legacy versions are maintained.
 
 ## Reporting a Vulnerability
+If you discover any security vulnerability (such as an exposed API configuration, cross-site scripting vulnerabilities, or DNS configuration issues), please report it directly via email:
 
-Use this section to tell people how to report a vulnerability.
+📩 beyondsyntaxcode@gmail.com
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+Please provide detailed reproduction steps. We will review your report and respond within 48 hours.

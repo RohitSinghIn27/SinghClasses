@@ -36,10 +36,12 @@ html {
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
-    background: #F8FAFC;
+    font-family: "Poppins", sans-serif;
+    background: var(--bg-light);
     color: var(--text-main);
-    transition: background 0.3s, color 0.3s;
+    transition:
+        background 0.3s,
+        color 0.3s;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -102,7 +104,7 @@ button {
 
 .section-decor-header {
     text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: 25px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -121,7 +123,7 @@ button {
 
 .section-decor-header::before,
 .section-decor-header::after {
-    content: '';
+    content: "";
     height: 2px;
     width: 45px;
     background: var(--border-color);
@@ -151,12 +153,19 @@ button {
     background: var(--nav-teal);
     padding: 12px 20px;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, .1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transition: background 0.3s;
 }
 
 body.dark-mode .header-container {
-    background: #063e3b;
+    background: var(--bg-card);
+}
+
+a:focus-visible,
+button:focus-visible {
+    outline: 2px solid var(--primary-green);
+    outline-offset: 3px;
+    border-radius: 4px;
 }
 
 .logo-brand {
@@ -179,7 +188,7 @@ body.dark-mode .header-container {
     color: #fff;
     line-height: 1.1;
     font-weight: 600;
-    letter-spacing: -.3px;
+    letter-spacing: -0.3px;
 }
 
 .logo-tagline {
@@ -435,7 +444,7 @@ body.dark-mode .hero-stat-strip {
 
 .hero-stat-info-text h4 {
     color: var(--dark-navy);
-    font-size: .9rem;
+    font-size: 0.9rem;
     font-weight: 600;
     letter-spacing: 0.2px;
     margin-bottom: 3px;
@@ -458,6 +467,7 @@ body.dark-mode .hero-stat-strip {
     align-items: center;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
     transition: background 0.3s;
+    margin-top: 8px;
     margin-bottom: 25px;
 }
 
@@ -469,8 +479,8 @@ body.dark-mode .teacher-section {
     background: linear-gradient(135deg, #2dd4bf, #0d9488);
     padding: 5px;
     border-radius: 50%;
-    width: 180px;
-    height: 180px;
+    width: 205px;
+    height: 205px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -479,8 +489,8 @@ body.dark-mode .teacher-section {
 }
 
 .teacher-photo-frame img {
-    width: 170px;
-    height: 170px;
+    width: 200px;
+    height: 200px;
     object-fit: cover;
     border-radius: 50%;
     border: 4px solid #0c1a2e;
@@ -495,7 +505,7 @@ body.dark-mode .teacher-photo-frame img {
 }
 
 .teacher-biography h2 {
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     color: #ffffff;
     font-size: 2.5rem;
     font-weight: 700;
@@ -553,7 +563,8 @@ body.dark-mode .teacher-photo-frame img {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 24px; /* Crisp spatial visual break between containers */
+    gap: 24px;
+    /* Crisp spatial visual break between containers */
 }
 
 /* 1. INDIVIDUAL TOP PROFILE DETAILS BLOCK */
@@ -586,8 +597,8 @@ body.dark-mode .premium-testimonial-card-top {
     background-size: 10px 10px;
     opacity: 0.35;
     pointer-events: none;
-    mask-image: linear-gradient(to right, rgba(0,0,0,1), rgba(0,0,0,0));
-    -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,1), rgba(0,0,0,0));
+    mask-image: linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+    -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
 }
 
 body.dark-mode .fading-dot-matrix {
@@ -606,7 +617,8 @@ body.dark-mode .fading-dot-matrix {
     width: 200px;
     height: 200px;
     border-radius: 50%;
-    border: 4px solid #023c36; /* Dark Green variant frame contour */
+    border: 4px solid #023c36;
+    /* Dark Green variant frame contour */
     overflow: hidden;
     flex-shrink: 0;
 }
@@ -629,7 +641,8 @@ body.dark-mode .student-round-avatar {
 .student-title-display {
     font-size: 2.3rem;
     font-weight: 800;
-    color: #023c36; /* Correct Dark Forest Green Variant styling */
+    color: #023c36;
+    /* Correct Dark Forest Green Variant styling */
     text-transform: uppercase;
     letter-spacing: -0.5px;
     line-height: 1;
@@ -727,19 +740,21 @@ body.dark-mode .item-value-txt {
 
 /* MARKS IN THE SAME DIFFERENT TURQUOISE VARIANT */
 .huge-score-display {
-    font-size: 5.2rem;
+    font-size: 5rem;
     font-weight: 800;
     line-height: 0.95;
-    color: #14b8a6; /* Perfect alternative variant match */
+    color: #14b8a6;
+    /* Perfect alternative variant match */
     letter-spacing: -1px;
+    box-shadow: 30 30 30px rgba(13, 148, 136, 0.3);
 }
 
 .score-subtext-title {
-    font-size: 0.95rem;
-    font-weight: 600;
+    font-size: 1rem;
+    font-weight: 700;
     color: #ffffff;
     margin-top: 12px;
-    letter-spacing: 0.2px;
+    letter-spacing: 0.5px;
 }
 
 .score-bottom-line {
@@ -788,7 +803,7 @@ body.dark-mode .premium-testimonial-card-bottom {
 }
 
 .main-quote-text {
-    font-size: .9rem;
+    font-size: 0.9rem;
     line-height: 1.75;
     color: #334155;
     font-weight: 400;
@@ -804,7 +819,8 @@ body.dark-mode .main-quote-text {
 }
 
 .dark-green-highlight {
-    color: #023c36; /* Smooth matching dark forest highlight format */
+    color: #023c36;
+    /* Smooth matching dark forest highlight format */
     font-weight: 700;
 }
 
@@ -861,7 +877,8 @@ body.dark-mode .slider-arrow-btn {
     left: 0;
     right: 0;
     height: 2px;
-    background: #e2e8f0; /* Perfect continuous linear line matching image style */
+    background: #e2e8f0;
+    /* Perfect continuous linear line matching image style */
     z-index: 1;
 }
 
@@ -885,7 +902,9 @@ body.dark-mode .slider-horizontal-line {
     border: none;
     cursor: pointer;
     padding: 0;
-    transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.35s ease;
+    transition:
+        width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        background-color 0.35s ease;
 }
 
 body.dark-mode .slider-dot {
@@ -894,7 +913,8 @@ body.dark-mode .slider-dot {
 
 .slider-dot.active {
     background: #0d9488;
-    width: 26px; /* Pill stretch variant configuration */
+    width: 26px;
+    /* Pill stretch variant configuration */
     border-radius: 100px;
 }
 
@@ -1026,7 +1046,7 @@ body.dark-mode .playlists-section {
 
 .pl-main-title::before,
 .pl-main-title::after {
-    content: '';
+    content: "";
     height: 2px;
     width: 45px;
     background: var(--border-color);
@@ -1055,7 +1075,7 @@ body.dark-mode .playlists-section {
 
 .pl-group-divider::before,
 .pl-group-divider::after {
-    content: '';
+    content: "";
     flex: 1;
     height: 1px;
     background: var(--border-color);
@@ -1385,12 +1405,15 @@ body.dark-mode .icon-sun {
         gap: 30px;
         text-align: center;
     }
+
     .student-profile-side {
         flex-direction: column;
     }
+
     .green-accent-underline {
         margin: 10px auto 18px auto;
     }
+
     .academic-row-item {
         justify-content: center;
     }
@@ -1400,13 +1423,16 @@ body.dark-mode .icon-sun {
     .premium-testimonial-card-bottom {
         padding: 35px 25px;
     }
+
     .main-quote-text {
         max-width: 100%;
         font-size: 1.05rem;
     }
+
     .giant-quote-mark {
         display: none;
     }
+
     .announcement-bar {
         flex-direction: column;
         text-align: center;
@@ -1440,13 +1466,13 @@ body.dark-mode .icon-sun {
 
 @media print {
     /* Hide all images, testimonials, and avatars when trying to print/save page */
-    img, 
-    .student-round-avatar, 
+    img,
+    .student-round-avatar,
     .premium-testimonial-card-top,
     .teacher-photo-frame {
         display: none !important;
     }
-    
+
     /* Optional: Show a warning text instead */
     body::before {
         content: "Content protected by SinghClasses. Printing is disabled.";

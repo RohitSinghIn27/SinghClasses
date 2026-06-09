@@ -210,6 +210,10 @@ document.addEventListener("DOMContentLoaded", () => {
   initDynamicFabric('.teacher-section', true);
 });
 
+// Add to the slider section:
+track.addEventListener('mouseenter', () => clearInterval(slideInterval));
+track.addEventListener('mouseleave', () => startAutoplay());
+
 
 document.addEventListener('contextmenu', function(e) {
     if (e.target.tagName === 'IMG') {
@@ -217,42 +221,3 @@ document.addEventListener('contextmenu', function(e) {
     }
 });
 
-// Listen for screenshot keyboard shortcuts
-window.addEventListener('keyup', function(e) {
-    // 44 is the keycode for the Print Screen key
-    if (e.keyCode == 44) {
-        stopScreenshot();
-    }
-});
-
-window.addEventListener('keydown', function(e) {
-    // Detect Mac shortcuts (Cmd + Shift + 3 or 4) or Windows (Win + Shift + S)
-    if ((e.metaKey || e.ctrlKey) && e.shiftKey && (e.key === '3' || e.key === '4' || e.key === 's' || e.key === 'S')) {
-        stopScreenshot();
-    }
-});
-
-function stopScreenshot() {
-    // Securely blur the main container
-    const mainContent = document.querySelector('.main-content');
-    if (mainContent) {
-        mainContent.style.filter = 'blur(20px)';
-        
-        // Alert the user and restore visibility after they close it
-        alert('Screenshots are disabled on SinghClasses to protect student privacy.');
-        
-        setTimeout(() => {
-            mainContent.style.filter = 'none';
-        }, 1000);
-    }
-}
-
-// Blur the screen if the user clicks away or opens an overlay tool
-window.addEventListener('blur', function() {
-    document.querySelector('.main-content').style.filter = 'blur(30px)';
-});
-
-// Restore clarity when they come back to your website
-window.addEventListener('focus', function() {
-    document.querySelector('.main-content').style.filter = 'none';
-});

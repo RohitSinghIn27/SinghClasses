@@ -1,21 +1,21 @@
 {
-  "short_name": "SinghClasses",
-  "name": "SinghClasses - CBSE Computer Science Coaching",
-  "icons": [
-    {
-      "src": "icon.png",
-      "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "icon-512.png",
-      "type": "image/png",
-      "sizes": "512x512"
-    }
-  ],
-  "start_url": "/index.html",
-  "background_color": "#ffffff",
-  "theme_color": "#0076ff",
-  "display": "standalone",
-  "orientation": "portrait"
+    "short_name": "SinghClasses",
+    "name": "SinghClasses - CBSE Computer Science Coaching",
+    "icons": [
+        {
+            "src": "assets/images/favicon/favicon.ico",
+            "type": "image/ico",
+            "sizes": "48x48"
+        },
+        {
+            "src": "assets/images/icons/icon-512.png", 
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ],
+    "start_url": "/",
+    "theme_color": "#0f4c4c",
+    "background_color": "#f0fdfa",
+    "display": "standalone",
+    "orientation": "portrait"
 }
