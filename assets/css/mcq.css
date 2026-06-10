@@ -325,6 +325,44 @@ body.dark-mode .sc-widget-container {
     50% { opacity: .5; }
 }
 
+/* Mobile Swipe Guidance Wiggle */
+@keyframes mobileSwipeHint {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-12px); }
+    50% { transform: translateX(12px); }
+    75% { transform: translateX(-6px); }
+    100% { transform: translateX(0); }
+}
+.swipe-hint-animation {
+    animation: mobileSwipeHint 0.7s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* Skeleton Loading Keyframes */
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.skeleton-line {
+    height: 20px;
+    background: linear-gradient(90deg, var(--border-color) 25%, var(--option-hover-bg) 50%, var(--border-color) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite ease-in-out;
+    border-radius: 4px;
+    margin-bottom: 14px;
+    width: 100%;
+}
+.skeleton-line.style-short { width: 65%; }
+
+.skeleton-card {
+    height: 54px;
+    background: linear-gradient(90deg, var(--border-color) 25%, var(--option-hover-bg) 50%, var(--border-color) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite ease-in-out;
+    border-radius: 12px;
+    width: 100%;
+}
+
 /* --- Header --- */
 .sc-top-header {
     display: flex;
@@ -548,10 +586,16 @@ body.dark-mode .sc-widget-container {
 .content { padding: 40px 45px; flex-grow: 1; display: flex; flex-direction: column; }
 .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
 
-.question-number { font-weight: 700; font-size: 1.05em; color: var(--tab-inactive-lbl); text-transform: uppercase; }
+.question-number { 
+    font-weight: 700; 
+    font-size: 0.95rem; 
+    color: var(--text-color); 
+    opacity: 0.8;
+    text-transform: none; 
+}
 .question-text { font-size: 1.3rem; margin-bottom: 20px; line-height: 1.6; color: var(--text-color); font-weight: 500; white-space: pre-wrap; }
 
-/* --- REVISED: Option Cards with Tighter Border Styling and Tapping Comfort --- */
+/* --- Option Cards --- */
 .options { list-style-type: none; padding: 0; margin: 0; }
 .options li { margin-bottom: 16px; }
 
@@ -561,11 +605,11 @@ body.dark-mode .sc-widget-container {
     padding: 14px 20px;
     background: var(--option-bg); 
     border: 1px solid var(--option-border);
-    border-radius: 12px; /* Smoother corner layout */
+    border-radius: 12px; 
     cursor: pointer; 
     font-size: 1.05rem; 
     transition: all 0.25s ease; 
-    min-height: 54px; /* Increased Touch Target Target Area */
+    min-height: 54px; 
     position: relative;
 }
 
@@ -577,12 +621,11 @@ body.dark-mode .sc-widget-container {
 
 .option-letter {
     display: inline-flex; align-items: center; justify-content: center;
-    width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--option-border);
-    margin-right: 15px; font-weight: 800; font-size: .9em; background: var(--app-bg);
+    width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--option-border);
+    margin-right: 15px; font-weight: 700; font-size: .9em; background: var(--app-bg);
     color: var(--text-color); flex-shrink: 0;
 }
 
-/* Option Selected and Status Classes mapped directly from instructions layout blueprint */
 .options label.selected { background: var(--opt-sel-bg); border-color: var(--opt-sel-border); font-weight: 600; color: var(--opt-sel-text); }
 .options label.selected .option-letter { background: var(--opt-sel-letter-bg); color: var(--opt-sel-letter); border-color: var(--opt-sel-border); }
 
@@ -640,12 +683,12 @@ button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
 .btn-next { background: #3b82f6; color: #fff; border-color: #3b82f6; }
 .btn-next.highlight-submit { background: var(--color-correct); border-color: var(--color-correct); }
 
-/* --- REVISED: Submit Section with Progressive Colors Shift Transition Timing --- */
+/* --- Section Submission Button Block --- */
 .btn-submit {
-    background-color: var(--color-danger); /* Start Red configuration state */
+    background-color: var(--color-danger); 
     color: #fff;
     width: 100%;
-    margin-top: auto; 
+    margin-top: 24px !important; 
     border: 2px solid transparent;
     padding: 15px 25px !important; 
     font-size: 1.15rem !important;  
@@ -653,16 +696,17 @@ button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
+    border-radius: 30px !important;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    transition: background-color 1.4s ease-in-out, border-color 1.4s ease-in-out;
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.15);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .btn-submit.all-answered {
-    background-color: #16a34a !important; /* Gradual shift to clean green */
+    background-color: #16a34a !important; 
     border-color: #16a34a !important;
+    box-shadow: 0 4px 15px rgba(22, 163, 74, 0.2);
 }
 
 /* --- Question Tag Capsule Style --- */
@@ -700,7 +744,6 @@ body.dark-mode .q-tag-capsule {
     background: linear-gradient(to bottom, transparent, var(--container-bg)); pointer-events: none;
 }
 
-/* --- REVISED: Outlined Question Palette Nodes tracking Natural Dark Mode Alignment --- */
 .palette-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -730,45 +773,44 @@ body.dark-mode .q-tag-capsule {
 .palette-btn.current-question { border: 2px solid var(--app-bg) !important; box-shadow: 0 0 0 3px var(--primary-accent); z-index: 10; }
 .palette-btn.filtered-out { opacity: .15; pointer-events: none; transform: scale(.9); }
 
-/* Outlined Color Mapping Variables */
-.palette-btn.unvisited { 
+.palette-btn.dsp-unvisited { 
     border: 2px solid #94a3b8; 
     color: #64748b; 
 }
-.palette-btn.not-answered { 
+.palette-btn.dsp-not-answered { 
     border: 2px solid #d97706; 
     background-color: #fef3c7; 
     color: #b45309; 
 }
-body.dark-mode .palette-btn.not-answered {
+body.dark-mode .palette-btn.dsp-not-answered {
     background-color: #451a03;
     color: #fef3c7;
 }
-.palette-btn.answered { 
+.palette-btn.dsp-answered { 
     border: 2px solid #16a34a; 
     background-color: #dcfce7; 
     color: #15803d; 
 }
-body.dark-mode .palette-btn.answered {
+body.dark-mode .palette-btn.dsp-answered {
     background-color: #064e3b;
     color: #a7f3d0;
 }
-.palette-btn.wrong { 
+.palette-btn.dsp-wrong { 
     border: 2px solid #dc3545; 
     background-color: #fce8e6; 
     color: #c5221f; 
 }
-body.dark-mode .palette-btn.wrong {
+body.dark-mode .palette-btn.dsp-wrong {
     background-color: #7f1d1d;
     color: #fca5a5;
 }
 
-/* --- REVISED: Flat-Tinted Mini Stats Blocks (Removed Heavy Outlines) --- */
+/* --- Flat-Tinted Mini Stats Blocks --- */
 .mini-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
 .stat-col-card {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     padding: 12px 6px; border-radius: 12px; height: 80px;
-    border: none !important; /* Zero perimeter footprint lines */
+    border: none !important; 
     box-shadow: none !important;
 }
 .stat-card-lbl { font-size: .85em; color: var(--stat-lbl-color); font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
@@ -820,11 +862,24 @@ body.dark-mode .stat-card-score .stat-card-val { color: #60a5fa !important; }
 }
 
 .modal-topic-title {
-    background-color: #dbeafe; color: #1e40af; padding: 10px 20px;
-    border-radius: 8px; display: inline-flex; align-items: center; justify-content: center;
-    font-weight: 600; margin-bottom: 20px; font-size: 1.1rem;
+    background-color: #f0fdf4; 
+    color: #166534;
+    border: 1px solid #bbf7d0;
+    padding: 8px 18px;
+    border-radius: 50px; 
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
 }
-body.dark-mode .modal-topic-title { background-color: #1e3a8a; color: #bfdbfe; }
+body.dark-mode .modal-topic-title { 
+    background-color: #064e3b; 
+    color: #a7f3d0; 
+    border-color: #047857;
+}
 
 .custom-modal-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -886,7 +941,7 @@ body.dark-mode .modal-topic-title { background-color: #1e3a8a; color: #bfdbfe; }
 }
 .sc-custom-alert.show { opacity: 1; transform: translate(-50%, 0); }
 
-/* --- REVISED: Compact Two-Row Keyboard Sidebar Instruction Overlay Layout --- */
+/* --- Keyboard Hints --- */
 .sidebar-hints-container {
     margin-top: 15px;
     padding: 12px;
@@ -1013,10 +1068,27 @@ kbd {
 .badge-pct-pill { padding: 4px 12px; border-radius: 20px; font-weight: 700; font-size: .84rem; box-shadow: 0 1px 2px rgba(0, 0, 0, .04); }
 
 .rs-signature-footer { text-align: center; font-size: .88rem; font-weight: 700; opacity: .8; padding: 6px 0; border-top: 1px dashed var(--border-color); margin-top: 12px; }
-.dashboard-action-wrapper { display: flex; justify-content: space-between; margin: 4px 0; gap: 16px; flex-wrap: wrap; }
-.dashboard-action-wrapper button { padding: 12px 24px; font-size: .95rem; border-radius: 8px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; }
+
+/* Balanced Action Bar Grid Frame Layout Blueprint Configuration */
+.dashboard-action-wrapper { 
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr); 
+    margin: 20px 0; 
+    gap: 16px; 
+}
+.dashboard-action-wrapper button { 
+    width: 100%;
+    height: 52px;
+    display: inline-flex; 
+    align-items: center; 
+    justify-content: center;
+    font-size: 1rem !important; 
+    font-weight: 700;
+    border-radius: 10px; 
+    transition: all 0.2s;
+}
 .action-outline-btn { background: var(--rs-btn-soft-fill); color: var(--text-color); border: 2px solid var(--border-color); }
-.action-accent-btn { background: var(--primary-color); color: #fff; margin-left: auto; font-size: 1.06rem; padding: 10px; flex-grow: 1; justify-content: center; }
+.action-accent-btn { background: var(--primary-color); color: #fff; justify-content: center; }
 
 .rs-mobile-summary-table {
     display: none; width: 100%; border-collapse: collapse; margin-top: 15px;
@@ -1062,9 +1134,26 @@ body.dark-mode .sc-feature-text h5 { color: #f8fafc; }
 @media (max-width: 768px) {
     body { padding: 10px 4px; }
     .sc-widget-container { padding: 8px; }
-    .content { padding: 20px 24px; }
-    .header { padding: 12px 14px; font-size: 1.05em; }
-    .timer { font-size: 1.05em; padding: 4px 8px; }
+    
+    /* Avoid 3-stacked full-width action rows */
+    .footer { display: flex; flex-direction: column; gap: 10px; padding: 15px 20px; }
+    .footer-left { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
+    .footer button, .btn-next { width: 100%; min-width: 0; padding: 14px 10px !important; }
+
+    /* Shrink large mobile headers */
+    .question-text { font-size: 1.1rem; line-height: 1.5; }
+    
+    /* Safe perimeter offset gap above sticky submit action block */
+    .palette-container { padding-bottom: 85px; }
+
+    /* Timer Pill & Targets Comfort Optimizations */
+    .timer { font-size: 1.3rem; font-weight: 700; }
+    .options label { padding: 14px 16px; min-height: 48px; }
+
+    /* Tactile grid enlargement blueprint */
+    .palette-btn { width: 42px; height: 42px; font-size: 0.98rem; }
+    .palette-grid { gap: 10px; }
+
     .sc-hamburger { display: flex; }
 
     .sc-top-nav {
@@ -1097,12 +1186,16 @@ body.dark-mode .sc-feature-text h5 { color: #f8fafc; }
     .rs-overview-quick-split-row { grid-template-columns: 1fr; display: grid; }
     .matrix-section-container, .rs-card-header-title { display: none !important; }
     .rs-mobile-summary-table { display: table; }
+
+    /* Balanced mobile scorecard rows layout blueprint fallback */
+    .dashboard-action-wrapper { grid-template-columns: 1fr; gap: 12px; margin: 10px 0; }
+    .dashboard-action-wrapper button { height: 48px; }
 }
 
 @media (max-width: 480px) {
+    /* Truncate long horizontal announcements headers text elements */
+    .announcement-bar .announcement-segment > span:not(.announcement-cta) {
+        display: none;
+    }
     .sc-features-grid { grid-template-columns: 1fr; }
-    .footer-left button, .btn-next { flex: 1; font-size: .95em; padding: 10px; }
-    .dashboard-action-wrapper { flex-direction: column; align-items: stretch; }
-    .dashboard-action-wrapper button { justify-content: center; width: 100%; font-size: .9rem; padding: 10px; }
-    .action-accent-btn { margin-left: 0; }
 }
