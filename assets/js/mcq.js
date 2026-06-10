@@ -4,8 +4,6 @@ const $ = id => document.getElementById(id),
     MC = 5,
     MI = 1,
     PW = 2;
-$('welcome-correct-lbl').innerText = `+${MC} Correct`;
-$('welcome-incorrect-lbl').innerText = `-${MI} Incorrect`;
 
 // SVG Icon Definitions to replace emojis
 const ICON_SUN = `<svg class="sc-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
@@ -21,6 +19,7 @@ const arOpts = [
 ];
 
 let listExamPapers = [];
+let isQuestionsLoading = true;
 
 async function loadQuestionsFromSheet() {
     try {
@@ -108,6 +107,7 @@ async function loadQuestionsFromSheet() {
                 "Section | SectionTitle | Question | OptionA | OptionB | OptionC | OptionD | Correct"
             );
         }
+        isQuestionsLoading = false;
 
     } catch (err) {
         console.error("Failed to load questions from sheet:", err);
@@ -180,28 +180,32 @@ if (ym && yc) {
     });
 }
 
-window.onload = async () => {
+window.onload = () => {
     if (localStorage.getItem('theme') === 'dark') {
         document.body.classList.add('dark-mode');
         if ($('header-theme-toggle')) $('header-theme-toggle').innerHTML = `${ICON_SUN} Light Mode`;
     }
 
+    $('welcome-correct-lbl').innerText = `+${MC} Correct`;
+    $('welcome-incorrect-lbl').innerText = `-${MI} Incorrect`;
     $('modal-welcome').style.display = 'flex';
-    $('student-name-input').placeholder = "Loading questions...";
-    const startBtn = document.querySelector('.modal-btn-success');
-    if (startBtn) {
-        startBtn.disabled = true;
-        startBtn.textContent = "Loading...";
-    }
-
-    await loadQuestionsFromSheet();
-
     $('student-name-input').placeholder = "e.g. Rohit Singh | SinghClasses";
-    if (startBtn) {
-        startBtn.disabled = false;
-        startBtn.innerHTML = "Start Mock Test";
-    }
     setTimeout(() => $('student-name-input').focus(), 100);
+
+    // Background pre-fetching
+    loadQuestionsFromSheet();
+
+    // Attach Mobile Swipe Gestures
+    const contentEl = $('question-content');
+    if (contentEl) {
+        let tx = 0;
+        contentEl.addEventListener('touchstart', e => tx = e.touches[0].clientX, { passive: true });
+        contentEl.addEventListener('touchend', e => {
+            const dx = e.changedTouches[0].clientX - tx;
+            if (dx < -50) nextQuestion();
+            if (dx > 50) prevQuestion();
+        }, { passive: true });
+    }
 
     initParticleCanvas('quiz-screen', 'canvasCBT', 12, 90);
     initParticleCanvas('quiz-screen', 'canvasPalette', 6, 70);
@@ -340,10 +344,39 @@ window.buildYearNav = () => {
     });
 };
 
-window.beginExam = () => {
+window.beginExam = async () => {
     let v = $('student-name-input').value.trim();
     studentName = v === "" ? "Candidate" : v;
     $('modal-welcome').style.display = 'none';
+    
+    // Show skeleton layout instantly
+    $('quiz-screen').style.display = 'block';
+    if ($('unified-nav')) $('unified-nav').style.display = 'flex';
+    $('q-text').innerHTML = `<div class="skeleton-line"></div><div class="skeleton-line style-short"></div>`;
+    $('q-options').innerHTML = `
+        <li><div class="skeleton-card"></div></li>
+        <li><div class="skeleton-card"></div></li>
+        <li><div class="skeleton-card"></div></li>
+        <li><div class="skeleton-card"></div></li>
+    `;
+    
+    isExamActive = true;
+
+    // Await async fetch complete if needed
+    if (isQuestionsLoading) {
+        let checks = 0;
+        while (isQuestionsLoading && checks < 100) {
+            await new Promise(r => setTimeout(r, 100));
+            checks++;
+        }
+    }
+
+    if (listExamPapers.length === 0) {
+        alert("Could not pull live questions. Re-loading workspace frame...");
+        location.reload();
+        return;
+    }
+
     questions = []; sections = []; let qt = 0;
 
     listExamPapers.forEach((p, idx) => {
@@ -369,9 +402,7 @@ window.beginExam = () => {
     sectionTimes = sections.map(s => (s.end - s.start) * 60);
 
     currentYearIndex = 0; currentQuestion = sections[0].start;
-    $('quiz-screen').style.display = 'block';
-    $('unified-nav').style.display = 'flex';
-    isExamActive = true; isTimerPaused = false;
+    isTimerPaused = false;
 
     buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion();
 };
@@ -381,13 +412,23 @@ function updateTimerDisplay() {
     let el = $('time-left'), b = $('timer-box');
     if (el) el.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
     if (b) {
-        b.className = sections[currentYearIndex].submitted ?
-            (el && (el.innerText = "Locked"), 'timer') :
-            (t > 0 && t <= 60 ? 'timer danger' : (t > 60 && t <= 120 ? 'timer warning' : 'timer'));
+        if (sections[currentYearIndex].submitted) {
+            if (el) el.innerText = "Locked";
+            b.className = 'timer';
+            b.style.color = '';
+        } else {
+            b.className = (t > 0 && t <= 60 ? 'timer danger' : (t > 60 && t <= 120 ? 'timer warning' : 'timer'));
+            if (t < 30) {
+                b.style.color = 'var(--color-warning)';
+            } else {
+                b.style.color = '';
+            }
+        }
     }
 }
 
 function startTimer() {
+    if (timerInterval) clearInterval(timerInterval);
     timerInterval = setInterval(() => {
         if (isTimerPaused || !isExamActive || sections[currentYearIndex].submitted) return;
         if (sectionTimes[currentYearIndex] > 0) {
@@ -419,6 +460,12 @@ window.loadQuestion = () => {
     let s = sections[currentYearIndex], qy = currentQuestion - s.start, tot = s.end - s.start;
     let pc = tot > 1 ? (qy / (tot - 1)) * 100 : 100;
     
+    // Swipe Guidance Hint Animation for Mobile Devices on Question 1
+    if (window.innerWidth <= 768 && qy === 0 && c) {
+        c.classList.remove('swipe-hint-animation'); void c.offsetWidth;
+        c.classList.add('swipe-hint-animation');
+    }
+
     if ($('section-header-title')) $('section-header-title').innerText = `${s.year}: ${s.title}`;
     $('exam-progress').style.width = `${pc}%`;
     $('q-number').innerText = `Question ${qy + 1} of ${tot}`;
@@ -452,15 +499,10 @@ window.loadQuestion = () => {
     });
 
     let kh = $('keyboard-hints');
-    if (kh) {
-        kh.style.display = 'none';
-    }
+    if (kh) kh.style.display = 'none';
 
-    // Toggle Sidebar-configured Hints Box (exclusively displayed at question index 1)
     let skh = $('sidebar-keyboard-hints');
-    if (skh) {
-        skh.style.display = (qy === 1) ? 'flex' : 'none';
-    }
+    if (skh) skh.style.display = (qy === 1) ? 'flex' : 'none';
 
     $('btn-prev').disabled = currentQuestion === s.start;
     $('btn-clear').disabled = userAnswers[currentQuestion] === null || isL;
@@ -469,8 +511,6 @@ window.loadQuestion = () => {
     nb.classList.remove('highlight-submit');
     if (s.submitted) {
         nb.innerText = "Next Question"; nb.disabled = currentQuestion === s.end - 1; nb.onclick = nextQuestion;
-    } else if (currentQuestion === s.end - 1) {
-        nb.innerText = "Submit Section"; nb.classList.add('highlight-submit'); nb.onclick = showSubmitModal;
     } else {
         nb.innerText = "Save & Next"; nb.onclick = nextQuestion;
     }
@@ -510,6 +550,25 @@ window.filterPalette = t => {
     updatePalette();
 };
 
+function animateCount(el, target) {
+    let current = parseInt(el.innerText) || 0;
+    if (current === target) return;
+    let start = current, duration = 300, startTime = null;
+    
+    function step(timestamp) {
+        if (!startTime) startTime = timestamp;
+        let progress = timestamp - startTime;
+        let val = start + (target - start) * Math.min(progress / duration, 1);
+        el.innerText = Math.round(val);
+        if (progress < duration) {
+            requestAnimationFrame(step);
+        } else {
+            el.innerText = target;
+        }
+    }
+    requestAnimationFrame(step);
+}
+
 function updatePalette() {
     let s = sections[currentYearIndex], g = $('palette-grid');
     if (!g) return;
@@ -518,9 +577,7 @@ function updatePalette() {
     let allAnswered = true;
 
     for (let i = s.start; i < s.end; i++) {
-        if (userAnswers[i] === null) {
-            allAnswered = false;
-        }
+        if (userAnswers[i] === null) allAnswered = false;
 
         if (userAnswers[i] !== null && (lockedAnswers[i] || s.submitted)) {
             if (btoa("sc_ans_" + userAnswers[i]) === questions[i].answer) { rc++; sc += MC; } 
@@ -538,28 +595,21 @@ function updatePalette() {
             else if (currentFilter === 'unvisited' && cls !== 'unvisited') flt = true;
         }
 
-        g.innerHTML += `<div class="palette-btn ${dsp}${i === currentQuestion ? ' current-question' : ''}${flt ? ' filtered-out' : ''}" onclick="jumpToQuestion(${i})">${(i - s.start) + 1}${iw ? `<div style="position:absolute;top:-3px;right:-3px;background:var(--container-bg);color:var(--color-wrong);border:1px solid var(--color-wrong);border-radius:50%;width:14px;height:14px;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center;z-index:5;">✕</div>` : ''}</div>`;
+        g.innerHTML += `<div class="palette-btn dsp-${dsp}${i === currentQuestion ? ' current-question' : ''}${flt ? ' filtered-out' : ''}" onclick="jumpToQuestion(${i})">${(i - s.start) + 1}${iw ? `<div style="position:absolute;top:-3px;right:-3px;background:var(--container-bg);color:var(--color-wrong);border:1px solid var(--color-wrong);border-radius:50%;width:14px;height:14px;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center;z-index:5;">✕</div>` : ''}</div>`;
     }
 
     let mainSubmitBtn = $('main-section-submit-btn');
     if (mainSubmitBtn) {
-        if (allAnswered) {
-            mainSubmitBtn.classList.add('all-answered');
-        } else {
-            mainSubmitBtn.classList.remove('all-answered');
-        }
+        if (allAnswered) mainSubmitBtn.classList.add('all-answered');
+        else mainSubmitBtn.classList.remove('all-answered');
     }
 
     let statRight = $('stat-right'), statWrong = $('stat-wrong'), statScore = $('stat-score');
-    let prevR = statRight.innerText, prevW = statWrong.innerText, prevS = statScore.innerText;
+    let targetScore = sc - (securityWarnings * PW);
     
-    statRight.innerText = rc;
-    statWrong.innerText = wc;
-    statScore.innerText = sc - (securityWarnings * PW);
-
-    if (prevR != rc) { statRight.classList.remove('stat-pop'); void statRight.offsetWidth; statRight.classList.add('stat-pop'); }
-    if (prevW != wc) { statWrong.classList.remove('stat-pop'); void statWrong.offsetWidth; statWrong.classList.add('stat-pop'); }
-    if (prevS != sc - (securityWarnings * PW)) { statScore.classList.remove('stat-pop'); void statScore.offsetWidth; statScore.classList.add('stat-pop'); }
+    if (statRight) animateCount(statRight, rc);
+    if (statWrong) animateCount(statWrong, wc);
+    if (statScore) animateCount(statScore, targetScore);
 }
 
 window.showSubmitModal = () => {
@@ -671,7 +721,7 @@ function processSectionSubmission() {
         if ($('mob-val-score')) $('mob-val-score').innerText = `${aS} / ${cM}`;
         if ($('mob-val-percent')) $('mob-val-percent').innerText = `${fP}%`;
         if ($('mob-val-warnings')) $('mob-val-warnings').innerText = securityWarnings;
-        if ($('lbl-dash-warning')) $('lbl-dash-warning').innerText = securityWarnings; // Added to fix desktop quick info panel
+        if ($('lbl-dash-warning')) $('lbl-dash-warning').innerText = securityWarnings;
         if ($('mob-val-time')) $('mob-val-time').innerText = `${tm}m ${ts}s`;
         
         let ringNode = $('radial-bar-fill-node');
