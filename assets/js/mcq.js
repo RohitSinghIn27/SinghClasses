@@ -35,11 +35,11 @@ async function loadQuestionsFromSheet() {
                 title: paper.title || paper.Title || paper.sectiontitle || paper.SectionTitle || "Section",
                 year: paper.year || paper.Year || paper.section || paper.Section || "Set",
                 questions: (paper.questions || []).map(q => ({
-                    text: q.text || q.Text || q.question || q.Question || "",
-                    tag: q.tag || q.Tag || q.info || q.Info || "",
+                    text: q.text ?? q.Text ?? q.question ?? q.Question ?? "",
+                    tag: q.tag ?? q.Tag ?? q.info ?? q.Info ?? "",
                     options: Array.isArray(q.options) ? q.options :
-                        [q.optiona || q.OptionA || q.option1 || "", q.optionb || q.OptionB || q.option2 || "",
-                             q.optionc || q.OptionC || q.option3 || "", q.optiond || q.OptionD || q.option4 || ""],
+                        [q.optiona ?? q.OptionA ?? q.option1 ?? "", q.optionb ?? q.OptionB ?? q.option2 ?? "",
+                             q.optionc ?? q.OptionC ?? q.option3 ?? "", q.optiond ?? q.OptionD ?? q.option4 ?? ""],
                     correctIndex: (() => {
                         let v = (q.correctIndex != null ? q.correctIndex : q.correct != null ? q.correct : 0).toString().trim().toLowerCase();
                         if (['a', 'b', 'c', 'd'].includes(v)) return {
@@ -48,7 +48,7 @@ async function loadQuestionsFromSheet() {
                         const n = parseInt(v);
                         return isNaN(n) ? 0 : (n >= 1 ? n - 1 : n);
                     })()
-                }))
+                })).filter(q => q.text.toString().trim() !== "")
             }));
         } else {
             const sectionsMap = {};
@@ -56,24 +56,33 @@ async function loadQuestionsFromSheet() {
             raw.forEach(row => {
                 const r = {};
                 Object.keys(row).forEach(k => {
-                    r[k.toLowerCase().trim()] = row[k];
+                    // Strips all spaces and special characters making header mapping bulletproof
+                    let cleanKey = k.toLowerCase().replace(/[^a-z0-9]/g, '');
+                    r[cleanKey] = row[k];
                 });
 
-                const sectionLabel = (r['section'] || r['year'] || r['set'] || "Section A").toString().trim();
-                const sectionTitle = (r['sectiontitle'] || r['title'] || r['label'] || sectionLabel).toString().trim();
-                const qText = (r['question'] || r['text'] || r['q'] || "").toString().trim();
-                const qTag = (r['tag'] || r['info'] || r['metadata'] || "").toString().trim();
+                let rawSec = r['section'] ?? r['year'] ?? r['set'] ?? "Section A";
+                const sectionLabel = rawSec.toString().trim();
+                
+                let rawTitle = r['sectiontitle'] ?? r['title'] ?? r['label'] ?? sectionLabel;
+                const sectionTitle = rawTitle.toString().trim();
+                
+                let rawQ = r['question'] ?? r['questions'] ?? r['questiontext'] ?? r['text'] ?? r['q'] ?? "";
+                const qText = rawQ.toString().trim();
+                
+                let rawTag = r['tag'] ?? r['info'] ?? r['metadata'] ?? "";
+                const qTag = rawTag.toString().trim();
 
-                if (!qText) return;
+                if (!qText) return; 
 
                 const options = [
-                    (r['optiona'] || r['option1'] || r['a'] || "").toString().trim(),
-                    (r['optionb'] || r['option2'] || r['b'] || "").toString().trim(),
-                    (r['optionc'] || r['option3'] || r['c'] || "").toString().trim(),
-                    (r['optiond'] || r['option4'] || r['d'] || "").toString().trim(),
+                    (r['optiona'] ?? r['option1'] ?? r['a'] ?? "").toString().trim(),
+                    (r['optionb'] ?? r['option2'] ?? r['b'] ?? "").toString().trim(),
+                    (r['optionc'] ?? r['option3'] ?? r['c'] ?? "").toString().trim(),
+                    (r['optiond'] ?? r['option4'] ?? r['d'] ?? "").toString().trim(),
                 ].filter(o => o !== "");
 
-                let ciRaw = (r['correct'] || r['correctindex'] || r['answer'] || r['ans'] || "A").toString().trim().toLowerCase();
+                let ciRaw = (r['correct'] ?? r['correctanswer'] ?? r['correctindex'] ?? r['answer'] ?? r['ans'] ?? "A").toString().trim().toLowerCase();
                 let ci;
                 if (['a', 'b', 'c', 'd', 'e'].includes(ciRaw)) {
                     ci = { 'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4 } [ciRaw];
@@ -103,8 +112,8 @@ async function loadQuestionsFromSheet() {
 
         if (listExamPapers.length === 0 || listExamPapers.every(p => p.questions.length === 0)) {
             throw new Error(
-                "No questions found. Check that Row 1 of your sheet has exactly these headers:\n" +
-                "Section | SectionTitle | Question | OptionA | OptionB | OptionC | OptionD | Correct"
+                "No questions found. Check that Row 1 of your sheet has exact headers like:\n" +
+                "Section | Section Title | Question | Option A | Option B | Option C | Option D | Correct Answer"
             );
         }
         isQuestionsLoading = false;
@@ -192,10 +201,8 @@ window.onload = () => {
     $('student-name-input').placeholder = "e.g. Rohit Singh | SinghClasses";
     setTimeout(() => $('student-name-input').focus(), 100);
 
-    // Background pre-fetching
     loadQuestionsFromSheet();
 
-    // Attach Mobile Swipe Gestures
     const contentEl = $('question-content');
     if (contentEl) {
         let tx = 0;
@@ -212,7 +219,6 @@ window.onload = () => {
     initParticleCanvas('bottomSection', 'canvasBottom', 40, 75);
 };
 
-// Security Measures
 ['contextmenu', 'copy', 'cut', 'dragstart'].forEach(ev => document.addEventListener(ev, e => e.preventDefault()));
 
 document.addEventListener('keyup', e => {
@@ -349,7 +355,6 @@ window.beginExam = async () => {
     studentName = v === "" ? "Candidate" : v;
     $('modal-welcome').style.display = 'none';
     
-    // Show skeleton layout instantly
     $('quiz-screen').style.display = 'block';
     if ($('unified-nav')) $('unified-nav').style.display = 'flex';
     $('q-text').innerHTML = `<div class="skeleton-line"></div><div class="skeleton-line style-short"></div>`;
@@ -362,7 +367,6 @@ window.beginExam = async () => {
     
     isExamActive = true;
 
-    // Await async fetch complete if needed
     if (isQuestionsLoading) {
         let checks = 0;
         while (isQuestionsLoading && checks < 100) {
@@ -383,7 +387,7 @@ window.beginExam = async () => {
         let st = qt;
         let sq = p.questions.map(q => {
             let mo = q.options.map((o, i) => ({ t: o, org: i }));
-            shuffleArray(mo);
+            shuffleArray(mo); // Shuffle the individual options
             return {
                 q: q.text,
                 tag: q.tag || "",
@@ -391,7 +395,9 @@ window.beginExam = async () => {
                 a: btoa("sc_ans_" + mo.findIndex(o => o.org === q.correctIndex))
             };
         });
-        shuffleArray(sq);
+        
+        // Removed shuffleArray(sq) from here so questions load in consecutive Google Sheet order
+        
         sq.forEach(q => { questions.push({ question: q.q, options: q.o, answer: q.a, tag: q.tag }); qt++; });
         sections.push({ index: idx, title: p.title, year: p.year, start: st, end: qt, submitted: false, timeSpent: 0 });
     });
@@ -460,7 +466,6 @@ window.loadQuestion = () => {
     let s = sections[currentYearIndex], qy = currentQuestion - s.start, tot = s.end - s.start;
     let pc = tot > 1 ? (qy / (tot - 1)) * 100 : 100;
     
-    // Swipe Guidance Hint Animation for Mobile Devices on Question 1
     if (window.innerWidth <= 768 && qy === 0 && c) {
         c.classList.remove('swipe-hint-animation'); void c.offsetWidth;
         c.classList.add('swipe-hint-animation');
