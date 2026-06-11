@@ -21,6 +21,53 @@ const arOpts = [
 let listExamPapers = [];
 let isQuestionsLoading = true;
 
+// ─────────────────────────────────────────────────────────────
+//  STEP 1 ▸ resolveCorrectText
+//  Converts whatever the sheet stored (letter "C", number "3",
+//  or full option text) into the EXACT TEXT of the correct option.
+//  This text is then used to identify the correct answer after
+//  options have been shuffled, making grading shuffle-proof.
+// ─────────────────────────────────────────────────────────────
+function resolveCorrectText(rawValue, optionsArray) {
+    if (rawValue == null || rawValue === "") return optionsArray[0] || "";
+    let v = rawValue.toString().trim();
+
+    // 1. Exact text match (case-insensitive) — highest priority
+    let textMatch = optionsArray.find(opt =>
+        opt && opt.toString().trim().toLowerCase() === v.toLowerCase()
+    );
+    if (textMatch !== undefined) return textMatch.toString().trim();
+
+    // 2. Letter match  A→0, B→1, C→2, D→3, E→4
+    let letter = v.toLowerCase();
+    if (['a', 'b', 'c', 'd', 'e'].includes(letter)) {
+        let idx = { 'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4 }[letter];
+        if (idx < optionsArray.length) return optionsArray[idx].toString().trim();
+    }
+
+    // 3. Numeric: Apps Script sends correctIndex as 0-based integer (0, 1, 2, 3)
+    //    e.g. correctIndex:2 means the 3rd option — use directly, NOT n-1
+    const n = parseInt(v);
+    if (!isNaN(n) && n >= 0 && n < optionsArray.length) {
+        return optionsArray[n].toString().trim();
+    }
+
+    // Fallback: first option
+    return optionsArray[0] ? optionsArray[0].toString().trim() : "";
+}
+
+// ─────────────────────────────────────────────────────────────
+//  STEP 2 ▸ textToIndex  (used at render time only)
+//  Given the correct answer TEXT and the CURRENT (possibly
+//  shuffled) options array, returns the index of that text.
+// ─────────────────────────────────────────────────────────────
+function textToIndex(correctText, optionsArray) {
+    let idx = optionsArray.findIndex(
+        opt => opt && opt.toString().trim().toLowerCase() === correctText.toLowerCase()
+    );
+    return idx !== -1 ? idx : 0;
+}
+
 async function loadQuestionsFromSheet() {
     try {
         const response = await fetch(SHEET_API_URL);
@@ -31,49 +78,51 @@ async function loadQuestionsFromSheet() {
         }
 
         if (raw[0] && Array.isArray(raw[0].questions)) {
+            // Path 1: API returns structured nested JSON
             listExamPapers = raw.map(paper => ({
                 title: paper.title || paper.Title || paper.sectiontitle || paper.SectionTitle || "Section",
                 year: paper.year || paper.Year || paper.section || paper.Section || "Set",
-                questions: (paper.questions || []).map(q => ({
-                    text: q.text ?? q.Text ?? q.question ?? q.Question ?? "",
-                    tag: q.tag ?? q.Tag ?? q.info ?? q.Info ?? "",
-                    options: Array.isArray(q.options) ? q.options :
-                        [q.optiona ?? q.OptionA ?? q.option1 ?? "", q.optionb ?? q.OptionB ?? q.option2 ?? "",
-                             q.optionc ?? q.OptionC ?? q.option3 ?? "", q.optiond ?? q.OptionD ?? q.option4 ?? ""],
-                    correctIndex: (() => {
-                        let v = (q.correctIndex != null ? q.correctIndex : q.correct != null ? q.correct : 0).toString().trim().toLowerCase();
-                        if (['a', 'b', 'c', 'd'].includes(v)) return {
-                            'a': 0, 'b': 1, 'c': 2, 'd': 3
-                        } [v];
-                        const n = parseInt(v);
-                        return isNaN(n) ? 0 : (n >= 1 ? n - 1 : n);
-                    })()
-                })).filter(q => q.text.toString().trim() !== "")
+                questions: (paper.questions || []).map(q => {
+                    let rawOpts = Array.isArray(q.options) ? q.options :
+                        [q.optiona ?? q.OptionA ?? q.option1 ?? "",
+                         q.optionb ?? q.OptionB ?? q.option2 ?? "",
+                         q.optionc ?? q.OptionC ?? q.option3 ?? "",
+                         q.optiond ?? q.OptionD ?? q.option4 ?? ""];
+                    let cleanOpts = rawOpts.map(o => (o || "").toString().trim());
+                    let rawCorrect = q.correctIndex ?? q.correct ?? q.answer ?? q.ans ?? "A";
+                    return {
+                        text: (q.text ?? q.Text ?? q.question ?? q.Question ?? "").toString().trim(),
+                        tag: (q.tag ?? q.Tag ?? q.info ?? q.Info ?? "").toString().trim(),
+                        options: cleanOpts,
+                        // Store the CORRECT ANSWER TEXT, not an index
+                        correctAnswerText: resolveCorrectText(rawCorrect, cleanOpts)
+                    };
+                }).filter(q => q.text !== "")
             }));
         } else {
+            // Path 2: API returns flat rows
             const sectionsMap = {};
 
             raw.forEach(row => {
                 const r = {};
                 Object.keys(row).forEach(k => {
-                    // Strips all spaces and special characters making header mapping bulletproof
                     let cleanKey = k.toLowerCase().replace(/[^a-z0-9]/g, '');
                     r[cleanKey] = row[k];
                 });
 
                 let rawSec = r['section'] ?? r['year'] ?? r['set'] ?? "Section A";
                 const sectionLabel = rawSec.toString().trim();
-                
+
                 let rawTitle = r['sectiontitle'] ?? r['title'] ?? r['label'] ?? sectionLabel;
                 const sectionTitle = rawTitle.toString().trim();
-                
+
                 let rawQ = r['question'] ?? r['questions'] ?? r['questiontext'] ?? r['text'] ?? r['q'] ?? "";
                 const qText = rawQ.toString().trim();
-                
+
                 let rawTag = r['tag'] ?? r['info'] ?? r['metadata'] ?? "";
                 const qTag = rawTag.toString().trim();
 
-                if (!qText) return; 
+                if (!qText) return;
 
                 const options = [
                     (r['optiona'] ?? r['option1'] ?? r['a'] ?? "").toString().trim(),
@@ -82,29 +131,14 @@ async function loadQuestionsFromSheet() {
                     (r['optiond'] ?? r['option4'] ?? r['d'] ?? "").toString().trim(),
                 ].filter(o => o !== "");
 
-                let ciRaw = (r['correct'] ?? r['correctanswer'] ?? r['correctindex'] ?? r['answer'] ?? r['ans'] ?? "A").toString().trim().toLowerCase();
-                let ci;
-                if (['a', 'b', 'c', 'd', 'e'].includes(ciRaw)) {
-                    ci = { 'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4 } [ciRaw];
-                } else {
-                    ci = parseInt(ciRaw);
-                    if (ci >= 1 && ci <= options.length) ci = ci - 1;
-                }
-                if (isNaN(ci) || ci < 0 || ci >= options.length) ci = 0;
+                let rawCorrect = r['correct'] ?? r['correctanswer'] ?? r['correctindex'] ?? r['answer'] ?? r['ans'] ?? "A";
+                // Store the CORRECT ANSWER TEXT, not an index
+                let correctAnswerText = resolveCorrectText(rawCorrect, options);
 
                 if (!sectionsMap[sectionLabel]) {
-                    sectionsMap[sectionLabel] = {
-                        title: sectionTitle,
-                        year: sectionLabel,
-                        questions: []
-                    };
+                    sectionsMap[sectionLabel] = { title: sectionTitle, year: sectionLabel, questions: [] };
                 }
-                sectionsMap[sectionLabel].questions.push({
-                    text: qText,
-                    tag: qTag,
-                    options,
-                    correctIndex: ci
-                });
+                sectionsMap[sectionLabel].questions.push({ text: qText, tag: qTag, options, correctAnswerText });
             });
 
             listExamPapers = Object.values(sectionsMap);
@@ -123,7 +157,6 @@ async function loadQuestionsFromSheet() {
         alert("Could not load questions.\n\nError: " + err.message);
     }
 }
-
 
 let questions = [], sections = [], studentName = "", currentYearIndex = 0, currentQuestion = 0;
 let userAnswers = [], visitedQuestions = [], lockedAnswers = [], sectionTimes = [];
@@ -149,7 +182,6 @@ window.toggleDarkMode = () => {
     document.body.classList.toggle('dark-mode');
     let isDark = document.body.classList.contains('dark-mode');
     let headerBtn = $('header-theme-toggle');
-    
     if (isDark) {
         if (headerBtn) headerBtn.innerHTML = `${ICON_SUN} Light Mode`;
         localStorage.setItem('theme', 'dark');
@@ -157,7 +189,6 @@ window.toggleDarkMode = () => {
         if (headerBtn) headerBtn.innerHTML = `${ICON_MOON} Dark Mode`;
         localStorage.setItem('theme', 'light');
     }
-    
     if (isExamActive && sections.length > 0) buildYearNav();
 };
 
@@ -247,7 +278,7 @@ document.addEventListener('keydown', e => {
             saveAnswer(parseInt(k) - 1);
         } else if (['a', 'b', 'c', 'd', 'e'].includes(k)) {
             e.preventDefault();
-            saveAnswer({ 'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4 } [k]);
+            saveAnswer({ 'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4 }[k]);
         } else if (k === 'backspace' || k === 'delete') {
             e.preventDefault();
             clearResponse();
@@ -273,7 +304,7 @@ window.addEventListener("beforeunload", e => {
         let s = sections[currentYearIndex], c = 0, ic = 0, l = 0, sc = 0, tot = s.end - s.start;
         for (let i = s.start; i < s.end; i++) {
             if (userAnswers[i] !== null) {
-                if (btoa("sc_ans_" + userAnswers[i]) === questions[i].answer) { c++; sc += MC; } 
+                if (isAnswerCorrect(i)) { c++; sc += MC; }
                 else { ic++; sc -= MI; }
             } else l++;
         }
@@ -350,11 +381,34 @@ window.buildYearNav = () => {
     });
 };
 
+// ─────────────────────────────────────────────────────────────
+//  STEP 3 ▸ isAnswerCorrect
+//  Single source of truth for correctness.
+//  Compares the TEXT of the user's chosen option against the
+//  stored correctAnswerText — fully shuffle-proof.
+// ─────────────────────────────────────────────────────────────
+function isAnswerCorrect(qIdx) {
+    if (userAnswers[qIdx] === null) return false;
+    let q = questions[qIdx];
+    let chosenText = (q.options[userAnswers[qIdx]] || "").toString().trim().toLowerCase();
+    let correctText = (q.correctAnswerText || "").toString().trim().toLowerCase();
+    return chosenText === correctText;
+}
+
+// ─────────────────────────────────────────────────────────────
+//  STEP 4 ▸ getCorrectIndex
+//  Returns the current index of the correct option (for
+//  highlighting the right answer on the review screen).
+// ─────────────────────────────────────────────────────────────
+function getCorrectIndex(qIdx) {
+    return textToIndex(questions[qIdx].correctAnswerText, questions[qIdx].options);
+}
+
 window.beginExam = async () => {
     let v = $('student-name-input').value.trim();
     studentName = v === "" ? "Candidate" : v;
     $('modal-welcome').style.display = 'none';
-    
+
     $('quiz-screen').style.display = 'block';
     if ($('unified-nav')) $('unified-nav').style.display = 'flex';
     $('q-text').innerHTML = `<div class="skeleton-line"></div><div class="skeleton-line style-short"></div>`;
@@ -364,7 +418,7 @@ window.beginExam = async () => {
         <li><div class="skeleton-card"></div></li>
         <li><div class="skeleton-card"></div></li>
     `;
-    
+
     isExamActive = true;
 
     if (isQuestionsLoading) {
@@ -385,30 +439,45 @@ window.beginExam = async () => {
 
     listExamPapers.forEach((p, idx) => {
         let st = qt;
+
+        // ── Build shuffled question objects ──────────────────
+        // correctAnswerText travels with each question object,
+        // so it remains correct regardless of question order.
         let sq = p.questions.map(q => {
-            let mo = q.options.map((o, i) => ({ t: o, org: i }));
-            shuffleArray(mo); // Shuffle the individual options
+            // Shuffle a COPY of the options array
+            let shuffledOptions = [...q.options];
+            shuffleArray(shuffledOptions);
+
+            // correctAnswerText is unchanged by option shuffle —
+            // getCorrectIndex() will locate it dynamically at
+            // render time using textToIndex().
             return {
-                q: q.text,
+                question: q.text,
                 tag: q.tag || "",
-                o: mo.map(o => o.t),
-                a: btoa("sc_ans_" + mo.findIndex(o => o.org === q.correctIndex))
+                options: shuffledOptions,
+                correctAnswerText: q.correctAnswerText   // ← content-based, not index-based
             };
         });
-        
-        // Removed shuffleArray(sq) from here so questions load in consecutive Google Sheet order
-        
-        sq.forEach(q => { questions.push({ question: q.q, options: q.o, answer: q.a, tag: q.tag }); qt++; });
+
+        // Shuffle the questions themselves
+        shuffleArray(sq);
+
+        sq.forEach(q => {
+            questions.push(q);
+            qt++;
+        });
+
         sections.push({ index: idx, title: p.title, year: p.year, start: st, end: qt, submitted: false, timeSpent: 0 });
     });
 
-    userAnswers = new Array(questions.length).fill(null);
+    userAnswers    = new Array(questions.length).fill(null);
     visitedQuestions = new Array(questions.length).fill(false);
-    lockedAnswers = new Array(questions.length).fill(false);
-    sectionTimes = sections.map(s => (s.end - s.start) * 60);
+    lockedAnswers  = new Array(questions.length).fill(false);
+    sectionTimes   = sections.map(s => (s.end - s.start) * 60);
 
-    currentYearIndex = 0; currentQuestion = sections[0].start;
-    isTimerPaused = false;
+    currentYearIndex = 0;
+    currentQuestion  = sections[0].start;
+    isTimerPaused    = false;
 
     buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion();
 };
@@ -424,11 +493,7 @@ function updateTimerDisplay() {
             b.style.color = '';
         } else {
             b.className = (t > 0 && t <= 60 ? 'timer danger' : (t > 60 && t <= 120 ? 'timer warning' : 'timer'));
-            if (t < 30) {
-                b.style.color = 'var(--color-warning)';
-            } else {
-                b.style.color = '';
-            }
+            b.style.color = t < 30 ? 'var(--color-warning)' : '';
         }
     }
 }
@@ -465,7 +530,7 @@ window.loadQuestion = () => {
     visitedQuestions[currentQuestion] = true;
     let s = sections[currentYearIndex], qy = currentQuestion - s.start, tot = s.end - s.start;
     let pc = tot > 1 ? (qy / (tot - 1)) * 100 : 100;
-    
+
     if (window.innerWidth <= 768 && qy === 0 && c) {
         c.classList.remove('swipe-hint-animation'); void c.offsetWidth;
         c.classList.add('swipe-hint-animation');
@@ -479,19 +544,17 @@ window.loadQuestion = () => {
     let currentTag = questions[currentQuestion].tag || "";
     let tagEl = $('q-tag');
     if (tagEl) {
-        if (currentTag) {
-            tagEl.innerText = currentTag;
-            tagEl.style.display = 'inline-flex';
-        } else {
-            tagEl.style.display = 'none';
-        }
+        if (currentTag) { tagEl.innerText = currentTag; tagEl.style.display = 'inline-flex'; }
+        else { tagEl.style.display = 'none'; }
     }
 
     let ol = $('q-options');
     ol.innerHTML = '';
     let isL = lockedAnswers[currentQuestion] || s.submitted;
-    let lt = ['A', 'B', 'C', 'D', 'E'];
-    let ci = parseInt(atob(questions[currentQuestion].answer).replace("sc_ans_", ""));
+    let lt  = ['A', 'B', 'C', 'D', 'E'];
+
+    // ── Use getCorrectIndex() — resolved from CONTENT, not a stored index ──
+    let ci = getCorrectIndex(currentQuestion);
 
     questions[currentQuestion].options.forEach((opt, i) => {
         let cls = "";
@@ -559,17 +622,13 @@ function animateCount(el, target) {
     let current = parseInt(el.innerText) || 0;
     if (current === target) return;
     let start = current, duration = 300, startTime = null;
-    
     function step(timestamp) {
         if (!startTime) startTime = timestamp;
         let progress = timestamp - startTime;
         let val = start + (target - start) * Math.min(progress / duration, 1);
         el.innerText = Math.round(val);
-        if (progress < duration) {
-            requestAnimationFrame(step);
-        } else {
-            el.innerText = target;
-        }
+        if (progress < duration) requestAnimationFrame(step);
+        else el.innerText = target;
     }
     requestAnimationFrame(step);
 }
@@ -585,19 +644,21 @@ function updatePalette() {
         if (userAnswers[i] === null) allAnswered = false;
 
         if (userAnswers[i] !== null && (lockedAnswers[i] || s.submitted)) {
-            if (btoa("sc_ans_" + userAnswers[i]) === questions[i].answer) { rc++; sc += MC; } 
+            // ── Use isAnswerCorrect() — content-based check ──
+            if (isAnswerCorrect(i)) { rc++; sc += MC; }
             else { wc++; sc -= MI; }
         }
 
         let cls = visitedQuestions[i] ? (userAnswers[i] !== null ? 'answered' : 'not-answered') : 'unvisited';
-        let iw = (s.submitted || lockedAnswers[i]) && userAnswers[i] !== null && btoa("sc_ans_" + userAnswers[i]) !== questions[i].answer;
+        // Wrong = answered, locked/submitted, and content doesn't match correct
+        let iw = (s.submitted || lockedAnswers[i]) && userAnswers[i] !== null && !isAnswerCorrect(i);
         let dsp = iw ? 'wrong' : cls;
         let flt = false;
 
         if (currentFilter !== 'all') {
-            if (currentFilter === 'answered' && cls !== 'answered' && dsp !== 'wrong') flt = true;
+            if (currentFilter === 'answered'     && cls !== 'answered'     && dsp !== 'wrong') flt = true;
             else if (currentFilter === 'not-answered' && cls !== 'not-answered') flt = true;
-            else if (currentFilter === 'unvisited' && cls !== 'unvisited') flt = true;
+            else if (currentFilter === 'unvisited'    && cls !== 'unvisited')    flt = true;
         }
 
         g.innerHTML += `<div class="palette-btn dsp-${dsp}${i === currentQuestion ? ' current-question' : ''}${flt ? ' filtered-out' : ''}" onclick="jumpToQuestion(${i})">${(i - s.start) + 1}${iw ? `<div style="position:absolute;top:-3px;right:-3px;background:var(--container-bg);color:var(--color-wrong);border:1px solid var(--color-wrong);border-radius:50%;width:14px;height:14px;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center;z-index:5;">✕</div>` : ''}</div>`;
@@ -611,7 +672,6 @@ function updatePalette() {
 
     let statRight = $('stat-right'), statWrong = $('stat-wrong'), statScore = $('stat-score');
     let targetScore = sc - (securityWarnings * PW);
-    
     if (statRight) animateCount(statRight, rc);
     if (statWrong) animateCount(statWrong, wc);
     if (statScore) animateCount(statScore, targetScore);
@@ -683,8 +743,12 @@ function processSectionSubmission() {
 
             for (let i = s.start; i < s.end; i++) {
                 if (userAnswers[i] !== null) {
-                    if (btoa("sc_ans_" + userAnswers[i]) === questions[i].answer) { sC++; if (s.submitted) { rC++; sS += MC; } } 
-                    else { sI++; if (s.submitted) { rI++; sS -= MI; } }
+                    // ── Content-based correctness check ──
+                    if (isAnswerCorrect(i)) {
+                        sC++; if (s.submitted) { rC++; sS += MC; }
+                    } else {
+                        sI++; if (s.submitted) { rI++; sS -= MI; }
+                    }
                 } else {
                     sL++; if (s.submitted) rL++;
                 }
@@ -693,7 +757,7 @@ function processSectionSubmission() {
             let pR = sM > 0 && sS > 0 ? ((sS / sM) * 100).toFixed(0) : 0;
             if (!s.submitted) pR = 0;
 
-            let pillBg = s.submitted && sS > 0 ? 'var(--badge-pass-bg)' : 'var(--badge-fail-bg)';
+            let pillBg   = s.submitted && sS > 0 ? 'var(--badge-pass-bg)'   : 'var(--badge-fail-bg)';
             let pillText = s.submitted && sS > 0 ? 'var(--badge-pass-text)' : 'var(--badge-fail-text)';
 
             tg.innerHTML += `<tr><td>${s.year} - ${s.title}</td><td>${sM}</td><td>${s.submitted ? sC : '-'}</td><td>${s.submitted ? sI : '-'}</td><td>${sL}</td><td><span class="badge-pct-pill" style="background:${pillBg};color:${pillText};">${s.submitted ? pR : 0}%</span></td><td>${Math.floor(s.timeSpent / 60)}m ${s.timeSpent % 60}s</td></tr>`;
@@ -719,16 +783,16 @@ function processSectionSubmission() {
 
         if ($('lbl-radial-max-1')) $('lbl-radial-max-1').innerText = cM;
         if ($('lbl-radial-max-2')) $('lbl-radial-max-2').innerText = cM;
-        if ($('mob-val-total')) $('mob-val-total').innerText = cM;
-        if ($('mob-val-attempted')) $('mob-val-attempted').innerText = rC + rI;
-        if ($('mob-val-incorrect')) $('mob-val-incorrect').innerText = rI;
-        if ($('mob-val-unattempted')) $('mob-val-unattempted').innerText = rL;
-        if ($('mob-val-score')) $('mob-val-score').innerText = `${aS} / ${cM}`;
-        if ($('mob-val-percent')) $('mob-val-percent').innerText = `${fP}%`;
-        if ($('mob-val-warnings')) $('mob-val-warnings').innerText = securityWarnings;
-        if ($('lbl-dash-warning')) $('lbl-dash-warning').innerText = securityWarnings;
-        if ($('mob-val-time')) $('mob-val-time').innerText = `${tm}m ${ts}s`;
-        
+        if ($('mob-val-total'))      $('mob-val-total').innerText      = cM;
+        if ($('mob-val-attempted'))  $('mob-val-attempted').innerText  = rC + rI;
+        if ($('mob-val-incorrect'))  $('mob-val-incorrect').innerText  = rI;
+        if ($('mob-val-unattempted'))$('mob-val-unattempted').innerText= rL;
+        if ($('mob-val-score'))      $('mob-val-score').innerText      = `${aS} / ${cM}`;
+        if ($('mob-val-percent'))    $('mob-val-percent').innerText    = `${fP}%`;
+        if ($('mob-val-warnings'))   $('mob-val-warnings').innerText   = securityWarnings;
+        if ($('lbl-dash-warning'))   $('lbl-dash-warning').innerText   = securityWarnings;
+        if ($('mob-val-time'))       $('mob-val-time').innerText       = `${tm}m ${ts}s`;
+
         let ringNode = $('radial-bar-fill-node');
         if (ringNode) {
             ringNode.style.strokeDashoffset = 282.74 - (282.74 * fP) / 100;
@@ -787,9 +851,7 @@ function executeProgressionAdvance() {
     } else {
         showToastAlert("Assessment fully complete! Final calculations locked down.");
         let b = $('btn-dashboard-main-trigger');
-        if (b) {
-            b.disabled = true; b.style.opacity = '0.5'; b.innerText = "Evaluation Completed";
-        }
+        if (b) { b.disabled = true; b.style.opacity = '0.5'; b.innerText = "Evaluation Completed"; }
     }
 }
 
