@@ -23,43 +23,31 @@ let isQuestionsLoading = true;
 
 // ─────────────────────────────────────────────────────────────
 //  STEP 1 ▸ resolveCorrectText
-//  Converts whatever the sheet stored (letter "C", number "3",
-//  or full option text) into the EXACT TEXT of the correct option.
-//  This text is then used to identify the correct answer after
-//  options have been shuffled, making grading shuffle-proof.
 // ─────────────────────────────────────────────────────────────
 function resolveCorrectText(rawValue, optionsArray) {
     if (rawValue == null || rawValue === "") return optionsArray[0] || "";
     let v = rawValue.toString().trim();
 
-    // 1. Exact text match (case-insensitive) — highest priority
     let textMatch = optionsArray.find(opt =>
         opt && opt.toString().trim().toLowerCase() === v.toLowerCase()
     );
     if (textMatch !== undefined) return textMatch.toString().trim();
 
-    // 2. Letter match  A→0, B→1, C→2, D→3, E→4
     let letter = v.toLowerCase();
     if (['a', 'b', 'c', 'd', 'e'].includes(letter)) {
         let idx = { 'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4 }[letter];
         if (idx < optionsArray.length) return optionsArray[idx].toString().trim();
     }
 
-    // 3. Numeric: Apps Script sends correctIndex as 0-based integer (0, 1, 2, 3)
-    //    e.g. correctIndex:2 means the 3rd option — use directly, NOT n-1
     const n = parseInt(v);
     if (!isNaN(n) && n >= 0 && n < optionsArray.length) {
         return optionsArray[n].toString().trim();
     }
-
-    // Fallback: first option
     return optionsArray[0] ? optionsArray[0].toString().trim() : "";
 }
 
 // ─────────────────────────────────────────────────────────────
-//  STEP 2 ▸ textToIndex  (used at render time only)
-//  Given the correct answer TEXT and the CURRENT (possibly
-//  shuffled) options array, returns the index of that text.
+//  STEP 2 ▸ textToIndex  
 // ─────────────────────────────────────────────────────────────
 function textToIndex(correctText, optionsArray) {
     let idx = optionsArray.findIndex(
@@ -78,7 +66,6 @@ async function loadQuestionsFromSheet() {
         }
 
         if (raw[0] && Array.isArray(raw[0].questions)) {
-            // Path 1: API returns structured nested JSON
             listExamPapers = raw.map(paper => ({
                 title: paper.title || paper.Title || paper.sectiontitle || paper.SectionTitle || "Section",
                 year: paper.year || paper.Year || paper.section || paper.Section || "Set",
@@ -94,13 +81,11 @@ async function loadQuestionsFromSheet() {
                         text: (q.text ?? q.Text ?? q.question ?? q.Question ?? "").toString().trim(),
                         tag: (q.tag ?? q.Tag ?? q.info ?? q.Info ?? "").toString().trim(),
                         options: cleanOpts,
-                        // Store the CORRECT ANSWER TEXT, not an index
                         correctAnswerText: resolveCorrectText(rawCorrect, cleanOpts)
                     };
                 }).filter(q => q.text !== "")
             }));
         } else {
-            // Path 2: API returns flat rows
             const sectionsMap = {};
 
             raw.forEach(row => {
@@ -132,7 +117,6 @@ async function loadQuestionsFromSheet() {
                 ].filter(o => o !== "");
 
                 let rawCorrect = r['correct'] ?? r['correctanswer'] ?? r['correctindex'] ?? r['answer'] ?? r['ans'] ?? "A";
-                // Store the CORRECT ANSWER TEXT, not an index
                 let correctAnswerText = resolveCorrectText(rawCorrect, options);
 
                 if (!sectionsMap[sectionLabel]) {
@@ -234,14 +218,24 @@ window.onload = () => {
 
     loadQuestionsFromSheet();
 
+    // Adjusted touch logic to consider both horizontal and vertical axis for smoother scrolling
     const contentEl = $('question-content');
     if (contentEl) {
-        let tx = 0;
-        contentEl.addEventListener('touchstart', e => tx = e.touches[0].clientX, { passive: true });
+        let tx = 0, ty = 0;
+        contentEl.addEventListener('touchstart', e => {
+            tx = e.touches[0].clientX;
+            ty = e.touches[0].clientY;
+        }, { passive: true });
+        
         contentEl.addEventListener('touchend', e => {
             const dx = e.changedTouches[0].clientX - tx;
-            if (dx < -50) nextQuestion();
-            if (dx > 50) prevQuestion();
+            const dy = e.changedTouches[0].clientY - ty;
+            
+            // Check if the gesture is predominately horizontal
+            if (Math.abs(dx) > Math.abs(dy) + 30) {
+                if (dx < -40) nextQuestion();
+                if (dx > 40) prevQuestion();
+            }
         }, { passive: true });
     }
 
@@ -383,9 +377,6 @@ window.buildYearNav = () => {
 
 // ─────────────────────────────────────────────────────────────
 //  STEP 3 ▸ isAnswerCorrect
-//  Single source of truth for correctness.
-//  Compares the TEXT of the user's chosen option against the
-//  stored correctAnswerText — fully shuffle-proof.
 // ─────────────────────────────────────────────────────────────
 function isAnswerCorrect(qIdx) {
     if (userAnswers[qIdx] === null) return false;
@@ -397,8 +388,6 @@ function isAnswerCorrect(qIdx) {
 
 // ─────────────────────────────────────────────────────────────
 //  STEP 4 ▸ getCorrectIndex
-//  Returns the current index of the correct option (for
-//  highlighting the right answer on the review screen).
 // ─────────────────────────────────────────────────────────────
 function getCorrectIndex(qIdx) {
     return textToIndex(questions[qIdx].correctAnswerText, questions[qIdx].options);
@@ -440,26 +429,18 @@ window.beginExam = async () => {
     listExamPapers.forEach((p, idx) => {
         let st = qt;
 
-        // ── Build shuffled question objects ──────────────────
-        // correctAnswerText travels with each question object,
-        // so it remains correct regardless of question order.
         let sq = p.questions.map(q => {
-            // Shuffle a COPY of the options array
             let shuffledOptions = [...q.options];
             shuffleArray(shuffledOptions);
 
-            // correctAnswerText is unchanged by option shuffle —
-            // getCorrectIndex() will locate it dynamically at
-            // render time using textToIndex().
             return {
                 question: q.text,
                 tag: q.tag || "",
                 options: shuffledOptions,
-                correctAnswerText: q.correctAnswerText   // ← content-based, not index-based
+                correctAnswerText: q.correctAnswerText 
             };
         });
 
-        // Shuffle the questions themselves
         shuffleArray(sq);
 
         sq.forEach(q => {
@@ -553,7 +534,6 @@ window.loadQuestion = () => {
     let isL = lockedAnswers[currentQuestion] || s.submitted;
     let lt  = ['A', 'B', 'C', 'D', 'E'];
 
-    // ── Use getCorrectIndex() — resolved from CONTENT, not a stored index ──
     let ci = getCorrectIndex(currentQuestion);
 
     questions[currentQuestion].options.forEach((opt, i) => {
@@ -578,9 +558,18 @@ window.loadQuestion = () => {
     let nb = $('btn-next');
     nb.classList.remove('highlight-submit');
     if (s.submitted) {
-        nb.innerText = "Next Question"; nb.disabled = currentQuestion === s.end - 1; nb.onclick = nextQuestion;
+        nb.innerText = "Next Question"; 
+        nb.disabled = currentQuestion === s.end - 1; 
+        nb.onclick = nextQuestion;
     } else {
-        nb.innerText = "Save & Next"; nb.onclick = nextQuestion;
+        if (currentQuestion === s.end - 1) {
+            // Visual Update for the Submit Button configuration on the last question
+            nb.innerText = "Submit Section";
+            nb.classList.add('highlight-submit');
+        } else {
+            nb.innerText = "Save & Next";
+        }
+        nb.onclick = nextQuestion;
     }
     updatePalette();
 };
@@ -600,8 +589,14 @@ window.clearResponse = () => {
 
 window.nextQuestion = () => {
     if (userAnswers[currentQuestion] !== null && !sections[currentYearIndex].submitted) lockedAnswers[currentQuestion] = true;
-    if (currentQuestion < sections[currentYearIndex].end - 1) currentQuestion++;
-    loadQuestion();
+    
+    // Adjusted routing structure to process submission if on last question
+    if (currentQuestion < sections[currentYearIndex].end - 1) {
+        currentQuestion++;
+        loadQuestion();
+    } else if (!sections[currentYearIndex].submitted) {
+        showSubmitModal();
+    }
 };
 
 window.prevQuestion = () => {
@@ -644,13 +639,11 @@ function updatePalette() {
         if (userAnswers[i] === null) allAnswered = false;
 
         if (userAnswers[i] !== null && (lockedAnswers[i] || s.submitted)) {
-            // ── Use isAnswerCorrect() — content-based check ──
             if (isAnswerCorrect(i)) { rc++; sc += MC; }
             else { wc++; sc -= MI; }
         }
 
         let cls = visitedQuestions[i] ? (userAnswers[i] !== null ? 'answered' : 'not-answered') : 'unvisited';
-        // Wrong = answered, locked/submitted, and content doesn't match correct
         let iw = (s.submitted || lockedAnswers[i]) && userAnswers[i] !== null && !isAnswerCorrect(i);
         let dsp = iw ? 'wrong' : cls;
         let flt = false;
@@ -743,7 +736,6 @@ function processSectionSubmission() {
 
             for (let i = s.start; i < s.end; i++) {
                 if (userAnswers[i] !== null) {
-                    // ── Content-based correctness check ──
                     if (isAnswerCorrect(i)) {
                         sC++; if (s.submitted) { rC++; sS += MC; }
                     } else {

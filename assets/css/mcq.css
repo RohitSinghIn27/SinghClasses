@@ -241,8 +241,15 @@ body {
     flex-direction: column;
     align-items: center;
     font-size: 15px;
-    user-select: none;
+    
+    /* Screenshot and text selection prevention */
+    -webkit-touch-callout: none;
     -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    
     transition: all .3s;
     padding: 20px 10px;
 }
@@ -255,6 +262,9 @@ body {
     vertical-align: middle;
     transform-origin: center bottom;
 }
+
+/* Nav Display Variables */
+.nav-short, .btn-text-short { display: none; }
 
 /* --- Progress Bar --- */
 .sc-progress-wrapper {
@@ -1135,8 +1145,15 @@ body.dark-mode .sc-feature-text h5 { color: #f8fafc; }
     body { padding: 10px 4px; }
     .sc-widget-container { padding: 8px; }
     
-    /* Avoid 3-stacked full-width action rows */
-    .footer { display: flex; flex-direction: column; gap: 10px; padding: 15px 20px; }
+    /* Display Setup for Spans toggles */
+    .nav-full, .btn-text-full { display: none; }
+    .nav-short, .btn-text-short { display: inline; }
+    
+    /* Provide margin to prevent HUD floating overlap over options */
+    .content { padding-right: 45px; }
+    
+    /* Footer Flipped Layout logic for Save & Next up top */
+    .footer { display: flex; flex-direction: column-reverse; gap: 10px; padding: 15px 20px; }
     .footer-left { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
     .footer button, .btn-next { width: 100%; min-width: 0; padding: 14px 10px !important; }
 
