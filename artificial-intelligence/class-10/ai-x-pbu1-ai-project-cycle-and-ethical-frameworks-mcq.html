@@ -46,10 +46,10 @@
             </a>
             <nav class="main-navigation" id="nav-menu" aria-label="Primary Navigation">
                 <ul class="nav-links-list">
-                    <li><a class="nav-link" href="../computer-science/index.html">Computer Science</a></li>
-                    <li><a class="nav-link" href="../informatics-practices/index.html">Informatics Practices</a></li>
-                    <li><a class="nav-link" href="../artificial-intelligence/index.html">Artificial Intelligence</a></li>
-                    </ul>
+                    <li><a class="nav-link" href="../computer-science/index.html"><span class="nav-full">Computer Science</span><span class="nav-short">CS</span></a></li>
+                    <li><a class="nav-link" href="../informatics-practices/index.html"><span class="nav-full">Informatics Practices</span><span class="nav-short">IP</span></a></li>
+                    <li><a class="nav-link" href="../artificial-intelligence/index.html"><span class="nav-full">Artificial Intelligence</span><span class="nav-short">AI</span></a></li>
+                </ul>
             </nav>
         </div>
     </header>
@@ -199,12 +199,7 @@
                         <div class="header">
                             <div id="section-header-title"></div>
                             <div class="timer" id="timer-box">
-                                <svg class="sc-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M5 22h14"></path>
-                                    <path d="M5 2h14"></path>
-                                    <path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"></path>
-                                    <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"></path>
-                                </svg>
+                                ⏳
                                 <span id="time-left"></span>
                             </div>
                         </div>
@@ -224,7 +219,7 @@
                         <div class="footer">
                             <div class="footer-left">
                                 <button class="btn-prev" id="btn-prev" onclick="prevQuestion()">Previous</button>
-                                <button class="btn-clear" id="btn-clear" onclick="clearResponse()">Clear Answer</button>
+                                <button class="btn-clear" id="btn-clear" onclick="clearResponse()"><span class="btn-text-full">Clear Answer</span><span class="btn-text-short">Clear</span></button>
                             </div>
                             <button class="btn-next" id="btn-next" onclick="nextQuestion()">Save & Next</button>
                         </div>
