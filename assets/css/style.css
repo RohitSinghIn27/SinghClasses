@@ -115,7 +115,7 @@ button {
     gap: 15px
 }
 
-.section-decor-header h1 {
+.section-decor-header h1, .section-decor-header h2 {
     font-size: 2rem;
     color: var(--dark-navy);
     font-weight: 700;
@@ -207,7 +207,8 @@ button:focus-visible {
     list-style: none;
     display: flex;
     align-items: center;
-    gap: 18px
+    gap: 18px;
+    flex-wrap: wrap;
 }
 
 .nav-link {
@@ -340,6 +341,12 @@ body.dark-mode .hero-container {
     max-width: 520px;
     margin-bottom: 30px;
     text-align: justify
+}
+
+.hero-action-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
 }
 
 .btn {
@@ -1704,6 +1711,10 @@ body.dark-mode #cbse-results-widget .quote-stars-capsule {
         grid-template-columns: 1fr;
         gap: 20px
     }
+
+    .classes-layout-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 @media (max-width:850px) {
@@ -1753,6 +1764,20 @@ body.dark-mode #cbse-results-widget .quote-stars-capsule {
     #cbse-results-widget .quote-mark {
         display: none
     }
+
+    .teacher-section {
+        flex-direction: column;
+        text-align: center;
+        padding: 40px 20px;
+    }
+
+    .teacher-photo-frame {
+        margin: 0 auto;
+    }
+
+    .classes-layout-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width:650px) {
@@ -1789,6 +1814,43 @@ body.dark-mode #cbse-results-widget .quote-stars-capsule {
     #cbse-results-widget .avatar-wrap {
         width: 140px;
         height: 140px;
+    }
+
+    .section-decor-header {
+        gap: 10px;
+    }
+
+    .section-decor-header h1, 
+    .section-decor-header h2 {
+        font-size: 1.5rem;
+        text-align: center;
+        flex-wrap: wrap;
+    }
+
+    .section-decor-header::before,
+    .section-decor-header::after {
+        display: none;
+    }
+
+    .pl-main-title {
+        flex-direction: column;
+        text-align: center;
+        font-size: 1.4rem;
+    }
+
+    .pl-main-title::before,
+    .pl-main-title::after {
+        display: none;
+    }
+
+    .hero-action-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .hero-action-buttons .btn {
+        width: 100%;
+        justify-content: center;
     }
 }
 
