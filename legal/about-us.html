@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>About Us | SinghClasses</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f7f9fc;
+            color: #1a1a1a;
+            display: flex;
+            flex-direction: column;
+            /* Fixed: Prevents the back button from sitting horizontally next to the card */
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .container.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #111;
+        }
+
+        .highlight {
+            color: #2563eb;
+            font-weight: 600;
+        }
+
+        .tagline {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 25px;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: 18px;
+            color: #444;
+        }
+
+        .footer {
+            margin-top: 25px;
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+
+        .btn-home {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 24px;
+            background: #2563eb;
+            color: #fff;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .btn-home:hover {
+            background: #1e4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Main Information Profile Card -->
+    <div class="container" id="card">
+
+        <h1>Welcome to <span class="highlight">SinghClasses.in</span></h1>
+        <div class="tagline">Where logic meets clarity</div>
+
+        <p>
+            I’m <span class="highlight">Rohit Singh</span>, a PGT Computer Science teacher with a decade of experience in the classroom.
+            This platform exists for one reason — to transform complex technological ideas into something students can actually understand.
+        </p>
+
+        <p>
+            My focus lies in <span class="highlight">Python</span>, <span class="highlight">SQL</span>, and
+            <span class="highlight">Artificial Intelligence</span>. Over the years, I’ve built structured learning paths,
+            exam strategies, and simplified explanations that cut through confusion.
+        </p>
+
+        <p>
+            Whether you're preparing for <span class="highlight">CBSE boards</span>, <span class="highlight">CUET UG</span>,
+            teaching others, or simply exploring the world of programming — this space is built to guide you with clarity and precision.
+        </p>
+
+        <div class="footer">
+            Keep learning. Keep building.
+        </div>
+
+    </div>
+
+    <!-- Back to Home Button linked relatively inside your repository folder -->
+    <a href="../index.html" class="btn-home">
+        ← Back to Home Page
+    </a>
+
+    <script>
+        // Safe entrance animation engine triggering on content assembly
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.getElementById("card").classList.add("show");
+            }, 100);
+        });
+    </script>
+
+</body>
+
+</html>

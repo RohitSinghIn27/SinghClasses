@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Disclaimer | SinghClasses</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #f7f9fc;
+      color: #1a1a1a;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      background: #fff;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .container.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+      color: #111;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #777;
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      font-size: 20px;
+      margin-top: 25px;
+      margin-bottom: 10px;
+      color: #2563eb;
+    }
+
+    p {
+      font-size: 15px;
+      line-height: 1.7;
+      color: #444;
+      margin-bottom: 14px;
+    }
+
+    a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .btn-home {
+      display: inline-flex;
+      align-items: center;
+      margin-top: 25px;
+      padding: 12px 24px;
+      background: #2563eb;
+      color: #fff !important;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+      transition: all 0.3s ease;
+    }
+
+    .btn-home:hover {
+      background: #1e4ed8;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
+    }
+
+    .footer {
+      margin-top: 35px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+      font-size: 13px;
+      text-align: center;
+      color: #666;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 25px;
+      }
+
+      h1 {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container" id="disclaimer">
+
+    <h1>Disclaimer</h1>
+    <div class="subtitle">Legal limits, educational scope, and terms of use</div>
+
+    <p>
+      If you require any more information or have any questions about our site's disclaimer, 
+      please feel free to contact us by email at <strong>beyondsyntaxcode@gmail.com</strong>.
+    </p>
+
+    <h2>General Information</h2>
+    <p>
+      All the information on this website — <a href="index.html">www.singhclasses.in</a> — is 
+      published in good faith and for general information and educational purposes only. 
+      SinghClasses.in does not make any warranties about the completeness, reliability, 
+      and accuracy of this information. 
+    </p>
+    <p>
+      Any action you take upon the information you find on this website is strictly at your own risk. 
+      SinghClasses.in will not be liable for any losses and/or damages in connection with the use of our website.
+    </p>
+
+    <h2>External Links</h2>
+    <p>
+      From our website, you can visit other websites by following hyperlinks to such external sites. 
+      While we strive to provide only quality links to useful and ethical websites, we have no control 
+      over the content and nature of these sites. 
+    </p>
+    <p>
+      These links to other websites do not imply a recommendation for all the content found on these sites. 
+      Site owners and content may change without notice and may occur before we have the opportunity to 
+      remove a link which may have gone 'bad'.
+    </p>
+    <p>
+      Please be also aware that when you leave our website, other sites may have different privacy 
+      policies and terms which are beyond our control. Please be sure to check the Privacy Policies of 
+      these sites as well as their "Terms of Service" before engaging in any business or uploading any information.
+    </p>
+
+    <h2>Consent</h2>
+    <p>
+      By using our website, you hereby consent to our disclaimer and agree to its terms.
+    </p>
+
+    <h2>Update</h2>
+    <p>
+      Should we update, amend or make any changes to this document, those changes will be prominently 
+      posted here.
+    </p>
+
+    <a href="../index.html" class="btn-home">
+      &larr; Back to Home Page
+    </a>
+
+    <div class="footer">
+      Last updated — 2026 | SinghClasses.in
+    </div>
+
+  </div>
+
+  <script>
+    // Safe entrance framework initialization script
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        document.getElementById("disclaimer").classList.add("show");
+      }, 100);
+    });
+  </script>
+
+</body>
+</html>

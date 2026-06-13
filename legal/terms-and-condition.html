@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Terms of Use & Disclaimer | SinghClasses</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #f7f9fc;
+      color: #1a1a1a;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      background: #fff;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .container.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+      color: #111;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #777;
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      font-size: 20px;
+      margin-top: 25px;
+      margin-bottom: 10px;
+      color: #2563eb;
+    }
+
+    p {
+      font-size: 15px;
+      line-height: 1.7;
+      color: #444;
+      margin-bottom: 14px;
+    }
+
+    a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .btn-home {
+      display: inline-flex;
+      align-items: center;
+      margin-top: 25px;
+      padding: 12px 24px;
+      background: #2563eb;
+      color: #fff !important;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+      transition: all 0.3s ease;
+    }
+
+    .btn-home:hover {
+      background: #1e4ed8;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
+    }
+
+    .footer {
+      margin-top: 35px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+      font-size: 13px;
+      text-align: center;
+      color: #666;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 25px;
+      }
+
+      h1 {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container" id="terms">
+
+    <h1>Terms of Use &amp; Disclaimer</h1>
+    <div class="subtitle">Clarity before access. Responsibility before use.</div>
+
+    <p>
+      By accessing and using SinghClasses.in 
+      (<a href="index.html">www.singhclasses.in</a>), 
+      you agree to be bound by the terms outlined below.
+    </p>
+
+    <h2>Educational Disclaimer</h2>
+    <p>
+      All content on this site is intended for informational and educational purposes only. 
+      While we aim to provide accurate and updated information related to computer science, 
+      CBSE preparation, CUET UG, and technology, we make no guarantees regarding completeness 
+      or reliability.
+    </p>
+    <p>
+      SinghClasses.in is not liable for any errors, omissions, or outcomes resulting from 
+      the use of this information.
+    </p>
+
+    <h2>Copyright Policy</h2>
+    <p>
+      Unless stated otherwise, all content on this website is the intellectual property of 
+      Rohit Singh. You may not copy, reproduce, or distribute any material without written permission.
+    </p>
+    <p>
+      Resources may be used strictly for personal and non-commercial educational purposes.
+    </p>
+
+    <h2>Governing Law</h2>
+    <p>
+      Any legal matters related to SinghClasses.in shall be governed by the laws of Delhi, India, 
+      without regard to conflict of law principles.
+    </p>
+
+    <h2>Changes to Terms</h2>
+    <p>
+      We reserve the right to update or modify these terms at any time. Continued use of the site 
+      after changes implies your acceptance of the revised terms.
+    </p>
+
+    <a href="../index.html" class="btn-home">
+      ← Back to Home Page
+    </a>
+
+    <div class="footer">
+      Last updated — 2026 | SinghClasses.in
+    </div>
+
+  </div>
+
+  <script>
+    // High-performance structural animation trigger
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        document.getElementById("terms").classList.add("show");
+      }, 100);
+    });
+  </script>
+
+</body>
+</html>
