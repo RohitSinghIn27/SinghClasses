@@ -1207,6 +1207,12 @@ body.dark-mode .sc-feature-text h5 { color: #f8fafc; }
     /* Balanced mobile scorecard rows layout blueprint fallback */
     .dashboard-action-wrapper { grid-template-columns: 1fr; gap: 12px; margin: 10px 0; }
     .dashboard-action-wrapper button { height: 48px; }
+    
+    /* ADD THIS: Hide floating HUD overlay strictly during the exam */
+    body.exam-in-progress .premium-hud-wrapper,
+    body.exam-in-progress .floating-action-hud {
+        display: none !important;
+    }
 }
 
 @media (max-width: 480px) {
