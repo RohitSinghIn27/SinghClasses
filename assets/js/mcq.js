@@ -313,11 +313,9 @@ window.addEventListener("beforeunload", e => {
         p.append("entry.1388315739", l);
         p.append("entry.1858729095", securityWarnings);
         p.append("entry.1240634167", Math.floor(s.timeSpent / 60) + "m " + (s.timeSpent % 60) + "s");
+        
+        // This quietly sends the data in the background during the refresh without a popup
         navigator.sendBeacon(FORM_SAVE_URL, p);
-
-        e.preventDefault();
-        e.returnValue = "Are you sure you want to exit? Progress will be lost.";
-        return e.returnValue;
     }
 });
 
@@ -397,6 +395,9 @@ window.beginExam = async () => {
     let v = $('student-name-input').value.trim();
     studentName = v === "" ? "Candidate" : v;
     $('modal-welcome').style.display = 'none';
+
+    // Adds a flag so CSS knows the test is running (hides floating HUD on mobile)
+    document.body.classList.add('exam-in-progress');
 
     $('quiz-screen').style.display = 'block';
     if ($('unified-nav')) $('unified-nav').style.display = 'flex';
@@ -563,7 +564,6 @@ window.loadQuestion = () => {
         nb.onclick = nextQuestion;
     } else {
         if (currentQuestion === s.end - 1) {
-            // Visual Update for the Submit Button configuration on the last question
             nb.innerText = "Submit Section";
             nb.classList.add('highlight-submit');
         } else {
@@ -590,7 +590,6 @@ window.clearResponse = () => {
 window.nextQuestion = () => {
     if (userAnswers[currentQuestion] !== null && !sections[currentYearIndex].submitted) lockedAnswers[currentQuestion] = true;
     
-    // Adjusted routing structure to process submission if on last question
     if (currentQuestion < sections[currentYearIndex].end - 1) {
         currentQuestion++;
         loadQuestion();
@@ -715,6 +714,9 @@ function processSectionSubmission() {
     let sec = sections[currentYearIndex];
     sec.submitted = true;
     for (let i = sec.start; i < sec.end; i++) lockedAnswers[i] = true;
+
+    // Removes the CSS flag so floating HUD buttons show again on results screen
+    document.body.classList.remove('exam-in-progress');
 
     $('quiz-screen').style.display = 'none';
     $('unified-nav').style.display = 'none';
