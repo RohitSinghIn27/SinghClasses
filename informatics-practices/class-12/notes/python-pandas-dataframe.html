@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Database Concept and SQL | CS & IP | CBSE Class 12 | SinghClasses</title>
-  <meta name="description" content="Master Database Concept and SQL for CBSE Class 12 CS & IP with our easy and simplest notes by Rohit Singh. Access PDFs, one-shot videos, and study materials at SinghClasses.in.">
-  <meta name="keywords" content="Database Concept and SQL, CS & IP, CBSE Class 12 Computer Science, IP SQL notes, easiest SQL notes, Relational Database, Rohit Singh, SinghClasses">
+  <title>Dataframe in Python Pandas | Class 12 IP CBSE | SinghClasses</title>
+  <meta name="description" content="Master Dataframe in Python Pandas for CBSE Class 12 Informatics Practices (IP) with concise and easy notes. Access PDFs, one-shot videos, and study materials at SinghClasses.in.">
+  <meta name="keywords" content="Dataframe in Python Pandas, Class 12 IP, Informatics Practices, CBSE Class 12 Python, Pandas DataFrame notes, Rohit Singh, SinghClasses">
   <meta name="author" content="Rohit Singh">
-  <meta property="og:title" content="Database Concept and SQL | CS & IP | CBSE Class 12 | SinghClasses">
-  <meta property="og:description" content="Master Database Concept and SQL for CBSE Class 12 CS & IP with our easy and simplest notes by Rohit Singh. Access PDFs, one-shot videos, and study materials at SinghClasses.in.">
+  <meta property="og:title" content="Dataframe in Python Pandas | Class 12 IP CBSE | SinghClasses">
+  <meta property="og:description" content="Master Dataframe in Python Pandas for CBSE Class 12 Informatics Practices (IP) with concise and easy notes. Access PDFs, one-shot videos, and study materials at SinghClasses.in.">
   <meta property="og:type" content="article">
   <link rel="icon" href="assets/images/favicon/favicon.ico" type="image/x-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,36 +19,27 @@
   <link rel="stylesheet" href="../../../assets/css/notes.css">
 </head>
 <body>
-  <h1 style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0;">Database Concept and SQL for CBSE Class 12 CS & IP - Easy Notes</h1>
-
+  <h1 style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0;">Dataframe in Python Pandas for CBSE Class 12 IP - Concise Notes</h1>
   <canvas id="ambient-canvas"></canvas>
-
   <header class="unified-workspace-header" role="banner">
     <div class="header-left-group">
       <button class="back-btn" onclick="window.location.href='../../../index.html'" aria-label="Go Back">
-        <svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24" width="18"><polyline points="15 18 9 12 15 6"></polyline></svg>
-        Back
+        <svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24" width="18"><polyline points="15 18 9 12 15 6"></polyline></svg> Back
       </button>
-      <div class="chapter-capsule" id="current-chapter" data-drive-id="17KcpLT2nk4fublq-blnOVHeU1Mji6Wt4" data-yt-link="https://youtu.be/oMVmJxwX5yU">
-        Database Concept and SQL
-      </div>
+      <div class="chapter-capsule" id="current-chapter" data-drive-id="1lyTVLVtrmmIYQuUPls1gG7W9L62AFvKW" data-yt-link="https://youtu.be/PZ90SyPvo0s">Dataframe in Python Pandas</div>
     </div>
     <div class="header-right-group">
       <button class="app-btn app-btn-outline" onclick="downloadPDF()">
-        <svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="15"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg> 
-        Download
+        <svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="15"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg> Download
       </button>
       <button class="app-btn app-btn-yt" id="yt-trigger-btn" onclick="handleYTClick()">
-        <svg fill="currentColor" height="16" viewBox="0 0 24 24" width="16"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.377.55a3.016 3.016 0 0 0-2.122 2.136C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.55 9.376.55 9.376.55s7.505 0 9.377-.55a3.016 3.016 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-        One Shot
+        <svg fill="currentColor" height="16" viewBox="0 0 24 24" width="16"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.377.55a3.016 3.016 0 0 0-2.122 2.136C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.55 9.376.55 9.376.55s7.505 0 9.377-.55a3.016 3.016 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> One Shot
       </button>
       <button class="app-btn" onclick="toggleFullScreen()">
-        <svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="15"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
-        Fullscreen
+        <svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="15"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg> Fullscreen
       </button>
     </div>
   </header>
-
   <main class="main-content">
     <div class="pdf-viewer-container" id="viewer-container">
       <div class="pdf-loading-overlay" id="loading-overlay">
@@ -58,7 +49,6 @@
       <iframe id="pdf-frame" src="" onload="hideLoader()" allowfullscreen="true"></iframe>
     </div>
   </main>
-
   <footer class="unified-workspace-footer">
     <div>© <span id="current-year">2026</span> SinghClasses.in</div>
     <div class="footer-tools">
@@ -70,7 +60,6 @@
       </div>
     </div>
   </footer>
-
   <div id="yt-modal" class="yt-modal-overlay">
     <div class="yt-modal-card">
       <div class="modal-icon-wrapper">
@@ -88,11 +77,7 @@
       </div>
     </div>
   </div>
-
-  <div id="status-toast" class="status-toast">
-    🚧 We are currently preparing this material. Coming soon!
-  </div>
-
+  <div id="status-toast" class="status-toast">🚧 We are currently preparing this material. Coming soon!</div>
   <script src="../../../script.js"></script>
   <script src="../../../assets/js/dashboard.js"></script>
   <script src="../../../assets/js/style.js"></script>
