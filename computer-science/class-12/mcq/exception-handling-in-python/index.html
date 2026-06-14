@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SinghClasses.in - CBT Mock</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            font-size: 16px;
+            /* Disable Text Selection */
+            user-select: none; 
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        #cbt-app-container {
+            width: 100%;
+            padding: 0; 
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        #cbt-app-container * {
+            box-sizing: border-box;
+        }
+
+        .top-nav {
+            background-color: #0a1128;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap; /* Added for mobile responsiveness */
+            text-align: center; /* Added for mobile responsiveness */
+            padding: 12px 0;
+            gap: 20px; 
+            width: 100%;
+            border-bottom: 4px solid #ffcc00; 
+            opacity: 0.35;
+            transition: opacity 0.4s ease, background-color 0.3s ease;
+        }
+
+        .top-nav:hover { opacity: 1; }
+
+        .nav-item {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item:hover { color: #ffcc00; }
+
+        #quiz-screen { width: 100%; }
+
+        .main-wrapper {
+            display: flex;
+            width: 100%;
+            max-width: 1100px;
+            margin: 15px auto; 
+            gap: 15px; 
+            flex-direction: row;
+            padding: 0 10px;
+        }
+
+        .cbt-container {
+            flex: 3;
+            background: #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 2px solid #091413;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            scroll-margin-top: 20px;
+        }
+
+        .palette-container {
+            flex: 1;
+            background: #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 2px solid #091413;
+            border-radius: 8px;
+            padding: 15px; 
+            display: flex;
+            flex-direction: column;
+            min-width: 260px;
+        }
+
+        .header {
+            background: #003366;
+            color: #fff;
+            padding: 15px 20px; 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: 1.2em;
+        }
+
+        .progress-container { width: 100%; height: 4px; background: #e9ecef; }
+        .progress-bar { height: 100%; background: #ffcc00; width: 0%; transition: width 0.4s ease-out; }
+
+        .timer {
+            font-size: 1.25em;
+            font-weight: bold;
+            background: #ffcc00;
+            color: #000;
+            border: 2px solid #1E104E;
+            padding: 5px 12px;
+            border-radius: 4px;
+            transition: all 0.5s ease; 
+        }
+        .timer.warning { background: #fd7e14; color: #fff; box-shadow: 0 0 8px rgba(253, 126, 20, 0.4); }
+        .timer.danger { background: #dc3545; color: #fff; animation: pulse 1.5s infinite cubic-bezier(0.66, 0, 0, 1); }
+
+        @keyframes pulse { to { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); } }
+
+        .content {
+            padding: 25px 30px; 
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-header {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 20px; 
+            flex-wrap: wrap; 
+            gap: 10px; 
+            border-bottom: 1px solid #091413; 
+            padding-bottom: 10px;
+        }
+
+        .fade-in { animation: slideFade 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards; }
+        @keyframes slideFade {
+            from { opacity: 0; transform: translateY(12px) scale(0.99); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .question-number {
+            font-weight: 500;
+            font-size: 1em;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0;
+        }
+
+        .question-text {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: #222;
+            white-space: pre-wrap; 
+        }
+
+        .options { list-style-type: none; padding: 0; margin: 0; }
+        .options li { margin-bottom: 12px; }
+        .options label {
+            display: flex; align-items: center; padding: 14px 18px; background: #fdfdfd;
+            border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            word-break: break-word; font-size: 1.1em; color: #222; transform: translateZ(0); 
+        }
+        .options label:not(.disabled-label):hover { background: #e6f2ff; border-color: #b8daff; box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15); transform: translateY(-1px); }
+        .options label:not(.disabled-label):active { transform: scale(0.98); }
+        .options input { margin-right: 15px; transform: scale(1.2); cursor: pointer; flex-shrink: 0; accent-color: #007bff; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .options input:checked { transform: scale(1.4); }
+
+        .options label.selected { background: #e6f2ff; border-color: #007bff; box-shadow: 0 0 5px rgba(0,123,255,0.3); font-weight: bold; }
+        .options label.disabled-label { cursor: not-allowed; opacity: 0.7; background: #f0f0f0; }
+        
+        .options label.correct-answer { background: #d4edda !important; border-color: #28a745 !important; color: #155724 !important; font-weight: bold; opacity: 1; }
+        .options label.wrong-answer { background: #f8d7da !important; border-color: #dc3545 !important; color: #721c24 !important; text-decoration: line-through; opacity: 0.8; }
+        
+        .footer {
+            background: #f8f9fa; padding: 15px 25px; display: flex; justify-content: space-between;
+            border-top: 1px solid #edf2f7; flex-wrap: wrap; gap: 15px;
+        }
+        .footer-left { display: flex; gap: 12px; flex-wrap: wrap; }
+        button { padding: 12px 20px; font-size: 1.1em; cursor: pointer; border: none; border-radius: 5px; font-weight: bold; transition: all 0.2s; }
+        button:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
+        button:active:not(:disabled) { transform: scale(0.97); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        .btn-prev { background: #6c757d; color: white; border: 2px solid #091413;}
+        .btn-clear { background: #ffcc00; color: #000; border: 2px solid #091413;}
+        .btn-next { background: #007bff; color: white; border: 2px solid #091413; box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2); }
+        .btn-submit { background: #28a745; color: white; width: 100%; margin-top: auto; padding: 14px; box-shadow: 0 2px 4px rgba(40, 167, 69, 0.2); border: 2px solid #091413;}
+        
+        .palette-title { 
+            text-align: center; font-weight: bold; font-size: 1.15em; 
+            margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #edf2f7; color: #333; 
+        }
+
+        .mini-stats { 
+            display: flex; justify-content: space-between; gap: 8px; margin-bottom: 20px; 
+        }
+
+        .stat-col { 
+            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            padding: 10px 4px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.03); 
+            border: 1px solid rgba(0,0,0,0.05); transition: transform 0.2s ease;
+        }
+
+        .stat-col:hover { transform: translateY(-2px); }
+
+        .stat-lbl { 
+            font-size: 0.70em; color: #6c757d; text-transform: uppercase; font-weight: 700; 
+            letter-spacing: 0.5px; margin-bottom: 4px; 
+        }
+
+        .stat-val { font-size: 1.35em; font-weight: 800; }
+
+        .stat-right-col { background-color: #f0fdf4; border-color: #dcfce7; }
+        .stat-right-col .stat-val { color: #16a34a; }
+
+        .stat-wrong-col { background-color: #fef2f2; border-color: #fee2e2; }
+        .stat-wrong-col .stat-val { color: #dc2626; }
+
+        .stat-score-col { background-color: #eff6ff; border-color: #dbeafe; }
+        .stat-score-col .stat-val { color: #2563eb; } 
+
+        .palette-grid { 
+            display: grid; 
+            grid-template-columns: repeat(4, minmax(32px, 1fr)); 
+            gap: 6px; 
+            margin-bottom: 15px; 
+            max-height: 280px; 
+            overflow-y: auto; 
+            padding-right: 5px; 
+            padding-bottom: 5px; 
+        }
+        .palette-grid::-webkit-scrollbar { width: 5px; }
+        .palette-grid::-webkit-scrollbar-thumb { background: #bbb; border-radius: 4px; }
+
+        .palette-btn { 
+            position: relative; 
+            padding: 6px 0; 
+            text-align: center; 
+            border-radius: 4px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            color: #fff; 
+            font-size: 0.95em; 
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        }
+        .palette-btn:hover { opacity: 0.8; transform: translateY(-2px); }
+        .palette-btn:active { transform: scale(0.90); }
+
+        .unvisited { background: #e0e0e0; color: #333; }
+        .not-answered { background: #ffcc00; color: #000; } 
+        .answered { background: #28a745; }
+
+        /* MODAL OVERLAYS & MOBILE CSS */
+        .custom-modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(9, 20, 19, 0.7); display: none;
+            justify-content: center; align-items: center; z-index: 1000;
+            backdrop-filter: blur(3px);
+        }
+        .custom-modal-box {
+            background: #fff; padding: 40px; border-radius: 8px; width: 95%; max-width: 550px;
+            text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 2px solid #091413;
+            animation: slideFade 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+        }
+
+        /* SECURITY MODAL STYLING */
+        .security-box {
+            background-color: #fef0f0; 
+            border: 3px solid #d32f2f;
+        }
+        .security-title {
+            color: #b71c1c; font-size: 2em; font-weight: bold; margin-bottom: 20px;
+        }
+        .security-text {
+            color: #8b0000; font-size: 1.3em; font-weight: 600; margin-bottom: 15px; line-height: 1.4;
+        }
+        .security-subtext {
+            color: #8b0000; font-size: 1.1em; margin-bottom: 10px;
+        }
+        .security-count {
+            color: #8b0000; font-size: 1.1em; margin-bottom: 25px;
+        }
+
+        .modal-title { font-size: 1.6em; color: #003366; font-weight: bold; margin-bottom: 5px; }
+        .modal-subtitle { color: #888; font-size: 0.9em; margin-bottom: 15px; border-bottom: 1px dashed #ccc; padding-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;}
+        .modal-text { font-size: 1.1em; color: #444; margin-bottom: 25px; line-height: 1.6; }
+        
+        .modal-input {
+            width: 85%; padding: 12px; font-size: 1.1em; border: 2px solid #e0e0e0;
+            border-radius: 5px; margin-bottom: 25px; box-sizing: border-box; text-align: center;
+        }
+
+        /* Cleaned up Modal Button CSS for Device Responsiveness */
+        .modal-btn-row { display: flex; flex-direction: column; align-items: center; gap: 15px; width: 100%; }
+        .modal-btn-row.horizontal { flex-direction: row; justify-content: center; }
+        .modal-btn { width: 100%; max-width: 280px; padding: 15px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 1.1em; border: none; color: white; transition: all 0.2s;}
+        .modal-btn:hover { opacity: 0.9; }
+        .modal-btn-success { background: #28a745; }
+        .modal-btn-secondary { background: #6c757d; }
+        .modal-btn-danger { background-color: #d32f2f; }
+        
+        .section-score-display { font-size: 3em; font-weight: 800; color: #333; margin: 15px 0; }
+        .section-stats-bar { 
+            background: #f8f9fa; border: 1px solid #eee; padding: 12px; border-radius: 6px; 
+            margin-bottom: 25px; display: flex; justify-content: center; gap: 10px; font-size: 1rem;
+        }
+
+        #result-screen { 
+            display: none; text-align: center; width: 100%; max-width: 550px; background: #ffffff; 
+            margin: 50px auto; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border: 1px solid #e0e0e0; 
+            border-radius: 8px; padding: 50px 30px; box-sizing: border-box;
+        }
+        .result-title { color: #003366; font-size: 1.8em; font-weight: bold; margin-bottom: 15px; }
+        .result-name {
+            color: #555; font-size: 1.4em; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 1px; margin-bottom: 35px; border-bottom: 2px dashed #e0e0e0;
+            padding-bottom: 10px; display: inline-block;
+        }
+
+        .security-results {
+            background-color: #fef0f0; border: 1px solid #f5c6cb; color: #721c24; 
+            padding: 15px; border-radius: 5px; margin-top: 20px; font-weight: bold;
+        }
+
+        /* Mobile Breakpoint */
+        @media (max-width: 768px) {
+            .main-wrapper { flex-direction: column; padding: 10px; }
+            .palette-container { order: 2; min-width: 100%; }
+            .cbt-container { order: 1; }
+            .modal-input { width: 100%; }
+            
+            /* Force horizontal button rows to stack on mobile */
+            .modal-btn-row.horizontal { flex-direction: column !important; }
+            .modal-btn { max-width: 100%; } /* Allow buttons to expand full width of container */
+        }
+    </style>
+</head>
+<body>
+<div id="cbt-app-container">
+    
+    <nav class="top-nav">
+        <a href="https://www.singhclasses.in/" class="nav-item">Home</a>
+        <a href="https://www.singhclasses.in/p/computer-science-for-class-xi-and-xii.html" class="nav-item">Computer Science</a>
+        <a href="https://www.singhclasses.in/p/informatics-practices-for-class-xi-and.html" class="nav-item">Informatics Practices</a>
+        <a href="https://www.singhclasses.in/p/artificial-intelligence-for-class-ix-to.html" class="nav-item">Artificial Intelligence</a>
+    </nav>
+
+    <!-- Welcome Modal -->
+    <div id="modal-welcome" class="custom-modal-overlay">
+        <div class="custom-modal-box">
+            <div class="modal-title">CBT Mock @ SinghClasses.in</div>
+            <div class="modal-text">Enter your name to begin the exam.</div>
+            <input type="text" id="student-name-input" class="modal-input" placeholder="Candidate Name..." autocomplete="off">
+            <div class="modal-btn-row">
+                <button class="modal-btn modal-btn-success" onclick="beginExam()">Start Test</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Security Alert Modal -->
+    <div id="modal-security" class="custom-modal-overlay">
+        <div class="custom-modal-box security-box">
+            <div class="security-title">Security Warning</div>
+            <div class="security-text">&#9888;&#65039; Tab switching or minimizing is not allowed during the exam.</div>
+            <div class="security-subtext">This incident has been recorded.</div>
+            <div class="security-count" id="warning-count-display">Total Warnings: 1</div>
+            <div class="modal-btn-row">
+                <button class="modal-btn modal-btn-danger" onclick="closeSecurityModal()">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section Result/Transition Modal -->
+    <div id="modal-section" class="custom-modal-overlay">
+        <div class="custom-modal-box">
+            <div class="modal-title" id="section-modal-title">Section 1 Completed!</div>
+            <div class="modal-subtitle" id="section-candidate-name">CANDIDATE NAME: Rohit Singh</div>
+            
+            <div class="section-score-display" id="section-modal-score">0 / 150</div>
+            
+            <div class="section-stats-bar" id="section-stats-bar">
+                Correct: <span style="color:#28a745; font-weight:bold;">0</span> | 
+                Incorrect: <span style="color:#dc3545; font-weight:bold;">0</span> | 
+                Unattempted: <span style="font-weight:bold;">0</span>
+            </div>
+
+            <div class="modal-text">Do you want to proceed to the next section or submit the exam?</div>
+            
+            <div class="modal-btn-row">
+                <button id="btn-proceed-section" class="modal-btn modal-btn-success" onclick="proceedToNextSection()">Proceed to Next Section</button>
+                <button class="modal-btn modal-btn-secondary" onclick="forceSubmitFromSection()">Submit Exam Now</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final Submit Confirm Modal -->
+    <div id="modal-submit" class="custom-modal-overlay">
+        <div class="custom-modal-box">
+            <div class="modal-title">Confirm Submission</div>
+            <div class="modal-text">Submit your overall exam? You cannot change answers after this.</div>
+            <div class="modal-btn-row horizontal">
+                <button class="modal-btn modal-btn-secondary" onclick="closeSubmitModal()">Cancel</button>
+                <button class="modal-btn modal-btn-success" onclick="confirmSubmitExam()">Yes, Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="quiz-screen" style="display: none;">
+        <div class="main-wrapper">
+            <div class="cbt-container">
+                <div class="header">
+                    <div>SinghClasses.in | CBT Mock Series</div>
+                    <div class="timer" id="time-left">00:00</div>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="exam-progress"></div>
+                </div>
+                
+                <div class="content" id="question-content">
+                    <div class="content-header">
+                        <div class="question-number" id="q-number">Loading...</div>
+                    </div>
+                    <div class="question-text" id="q-text">Loading question...</div>
+                    <ul class="options" id="q-options"></ul>
+                </div>
+                
+                <div class="footer">
+                    <div class="footer-left">
+                        <button class="btn-prev" id="btn-prev" onclick="prevQuestion()">Previous</button>
+                        <button class="btn-clear" id="btn-clear" onclick="clearResponse()">Clear Response</button>
+                    </div>
+                    <button class="btn-next" id="btn-next" onclick="nextQuestion()">Save & Next</button>
+                </div>
+            </div>
+
+            <div class="palette-container">
+                <div class="palette-title">Question Palette</div>
+                <div class="mini-stats">
+                    <div class="stat-col stat-right-col">
+                        <span class="stat-lbl">Right</span>
+                        <span class="stat-val" id="stat-right">0</span>
+                    </div>
+                    <div class="stat-col stat-wrong-col">
+                        <span class="stat-lbl">Wrong</span>
+                        <span class="stat-val" id="stat-wrong">0</span>
+                    </div>
+                    <div class="stat-col stat-score-col">
+                        <span class="stat-lbl">Score</span>
+                        <span class="stat-val" id="stat-score">0</span>
+                    </div>
+                </div>
+                <div class="palette-grid" id="palette-grid"></div>
+                <button class="btn-submit" id="btn-submit" onclick="showSubmitModal()">Submit Exam</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="result-screen">
+        <div class="result-title">Exam Submitted Successfully</div>
+        <div class="result-name" id="student-name-display"></div>
+        <div class="result-score" id="final-score-display">0 / 0</div>
+        <div class="result-stats-box" id="stats-box-display"></div>
+        <div id="final-security-results" class="security-results" style="display: none;"></div>
+        <br>
+        <button class="btn-return modal-btn modal-btn-secondary" style="background:#007bff; max-width: 250px;" onclick="window.location.reload()">Return to Home</button>
+    </div>
+
+ <script>
+    let questions = [
+        { question: "What is an exception in Python?", options: ["(A) A rule of the programming language", "(B) A normal condition in the code", "(C) A contradictory or unusual situation that can be encountered unexpectedly while executing a program", "(D) A syntax rule violation"], answer: "c2NfYW5zXzI=" },
+        { question: "Which error is generated when the rules of the programming language are not followed?", options: ["(A) Logical Error", "(B) Run-time Error", "(C) Syntax Error", "(D) Execution Error"], answer: "c2NfYW5zXzI=" },
+        { question: "What is another name for a Syntax Error?", options: ["(A) Parsing error", "(B) Execution error", "(C) Logical error", "(D) Run-time error"], answer: "c2NfYW5zXzA=" },
+        { question: "If a program does not stop execution but produces incorrect output, what type of error has occurred?", options: ["(A) Syntax Error", "(B) Logical Error", "(C) Run-time Error", "(D) Parsing Error"], answer: "c2NfYW5zXzE=" },
+        { question: "Which exception is raised when an operation or function is attempted that is invalid for the specified data type (e.g., adding an integer to a string)?", options: ["(A) ValueError", "(B) TypeError", "(C) AttributeError", "(D) NameError"], answer: "c2NfYW5zXzE=" },
+        { question: "Which exception is raised when a built-in operation receives an argument that has the right type but an inappropriate value?", options: ["(A) ValueError", "(B) TypeError", "(C) IndexError", "(D) KeyError"], answer: "c2NfYW5zXzA=" },
+        { question: "If you try to access aList.append(i) where aList is an integer variable, which exception will be raised?", options: ["(A) ValueError", "(B) TypeError", "(C) AttributeError", "(D) NameError"], answer: "c2NfYW5zXzI=" },
+        { question: "Which exception occurs when a mapping (dictionary) key is not found?", options: ["(A) IndexError", "(B) KeyError", "(C) ValueError", "(D) NameError"], answer: "c2NfYW5zXzE=" },
+        { question: "Trying to access colors[4] in a list of 3 items will raise which exception?", options: ["(A) KeyError", "(B) IndexError", "(C) ValueError", "(D) TypeError"], answer: "c2NfYW5zXzE=" },
+        { question: "Typing Print(4+5) instead of print(4+5) will result in which exception?", options: ["(A) SyntaxError", "(B) NameError", "(C) AttributeError", "(D) ValueError"], answer: "c2NfYW5zXzE=" },
+        { question: "Which exception is raised when the denominator in a division operation is zero?", options: ["(A) ValueError", "(B) ZeroDivisionError", "(C) ArithmeticError", "(D) TypeError"], answer: "c2NfYW5zXzE=" },
+        { question: "Which built-in exception is raised when the end-of-file condition is reached without reading any data by input()?", options: ["(A) IOError", "(B) FileNotFoundError", "(C) EOFError", "(D) ImportError"], answer: "c2NfYW5zXzI=" },
+        { question: "Which statement allows a programmer to forcefully trigger an exception?", options: ["(A) try", "(B) except", "(C) raise", "(D) finally"], answer: "c2NfYW5zXzI=" },
+        { question: "When an exception is raised, what does Python display in addition to the error message to show the sequence of function calls?", options: ["(A) Call Trace", "(B) Stack Traceback", "(C) Error Log", "(D) Debug Tree"], answer: "c2NfYW5zXzE=" },
+        { question: "Which statement is used to test an expression in the program code and throws an error if the expression evaluates to false?", options: ["(A) raise", "(B) test", "(C) check", "(D) assert"], answer: "c2NfYW5zXzM=" },
+        { question: "What specific exception does the assert statement raise if its condition is false?", options: ["(A) ValueError", "(B) AssertionError", "(C) TypeError", "(D) SyntaxError"], answer: "c2NfYW5zXzE=" },
+        { question: "What is the process of creating an exception object and handing it over to the runtime system called?", options: ["(A) Catching an exception", "(B) Forwarding an exception", "(C) Throwing an exception", "(D) Debugging an exception"], answer: "c2NfYW5zXzI=" },
+        { question: "The list of methods searched by the runtime system in reverse order to find an exception handler is known as the:", options: ["(A) Call stack", "(B) Execution queue", "(C) Exception list", "(D) Runtime array"], answer: "c2NfYW5zXzA=" },
+        { question: "Suspicious lines of code that might generate an error are placed inside which block?", options: ["(A) except", "(B) try", "(C) finally", "(D) else"], answer: "c2NfYW5zXzE=" },
+        { question: "The appropriate code to handle an exception is written inside which block?", options: ["(A) try", "(B) except", "(C) else", "(D) catch"], answer: "c2NfYW5zXzE=" },
+        { question: "Can a single try block have multiple except blocks?", options: ["(A) Yes", "(B) No", "(C) Only if they handle the same error", "(D) Only if there is no finally block"], answer: "c2NfYW5zXzA=" },
+        { question: "If no matching except block is found for a raised exception, what happens?", options: ["(A) The program ignores it and continues", "(B) The try block restarts", "(C) The program terminates abruptly", "(D) The finally block is skipped"], answer: "c2NfYW5zXzI=" },
+        { question: "How do you handle an exception without specifying its name (a default handler)?", options: ["(A) except All:", "(B) except Exception:", "(C) except:", "(D) catch:"], answer: "c2NfYW5zXzI=" },
+        { question: "Where must the default except: block be placed if there are multiple except blocks?", options: ["(A) At the beginning", "(B) As the last except clause", "(C) Anywhere", "(D) Before the try block"], answer: "c2NfYW5zXzE=" },
+        { question: "When is the else block executed in a try-except construct?", options: ["(A) Only if an exception occurs", "(B) Only if no exception is raised in the try block", "(C) Always, regardless of exceptions", "(D) Only if the finally block fails"], answer: "c2NfYW5zXzE=" },
+        { question: "Which block is always executed regardless of whether an exception has occurred or not?", options: ["(A) try", "(B) except", "(C) else", "(D) finally"], answer: "c2NfYW5zXzM=" },
+        { question: "What is a common practice for using the finally clause?", options: ["(A) To declare variables", "(B) To close file objects", "(C) To throw an exception", "(D) To accept user input"], answer: "c2NfYW5zXzE=" },
+        { question: "If an exception is not handled by any except clause, when is it re-raised?", options: ["(A) Immediately after the try block", "(B) Before the finally block", "(C) After the execution of the finally block", "(D) It is never re-raised"], answer: "c2NfYW5zXzI=" },
+        { question: "Which built-in exception is raised when the user accidentally hits the Delete or Esc key to interrupt the program?", options: ["(A) SystemExit", "(B) StopIteration", "(C) KeyboardInterrupt", "(D) EOFError"], answer: "c2NfYW5zXzI=" },
+        { question: "Which exception is raised when the requested module definition is not found?", options: ["(A) ModuleNotFoundError", "(B) ImportError", "(C) NameError", "(D) ValueError"], answer: "c2NfYW5zXzE=" },
+        { question: "What is the output of the following code?\ntry:\n    print(10/0)\nexcept ZeroDivisionError:\n    print('Zero')\nfinally:\n    print('Done')", options: ["(A) Zero", "(B) Done", "(C) Zero followed by Done", "(D) Error occurs"], answer: "c2NfYW5zXzI=" },
+        { question: "What happens if an error occurs inside an except block?", options: ["(A) The program ignores it", "(B) It is caught by the else block", "(C) A new exception is thrown and must be handled, otherwise the program terminates", "(D) The finally block resolves it"], answer: "c2NfYW5zXzI=" },
+        { question: "Which of the following statements is TRUE regarding the try block?", options: ["(A) It must have both an except and a finally block.", "(B) It must have at least one except block or a finally block.", "(C) It can exist independently without except or finally.", "(D) It must be followed by an else block."], answer: "c2NfYW5zXzE=" },
+        { question: "In a try-except-else-finally structure, what is the correct sequence of execution if NO error occurs?", options: ["(A) try -> except -> finally", "(B) try -> else -> finally", "(C) try -> finally -> else", "(D) try -> except -> else -> finally"], answer: "c2NfYW5zXzE=" },
+        { question: "Which of the following blocks executes if a return statement is encountered inside the try block?", options: ["(A) else", "(B) except", "(C) finally", "(D) None of the above"], answer: "c2NfYW5zXzI=" },
+        { question: "What is the output of the following code?\ntry:\n    assert 5 > 10\nexcept AssertionError:\n    print('Assertion Failed')", options: ["(A) True", "(B) False", "(C) Assertion Failed", "(D) Compilation Error"], answer: "c2NfYW5zXzI=" },
+        { question: "How can you catch multiple exceptions in a single except block?", options: ["(A) except TypeError, ValueError:", "(B) except (TypeError, ValueError):", "(C) except TypeError or ValueError:", "(D) except: TypeError, ValueError"], answer: "c2NfYW5zXzE=" },
+        { question: "Which exception is the base class for all built-in exceptions in Python?", options: ["(A) BaseException", "(B) Exception", "(C) StandardError", "(D) RootException"], answer: "c2NfYW5zXzA=" },
+        { question: "What will the following code do? raise ValueError('Invalid Data')", options: ["(A) It handles a ValueError.", "(B) It explicitly throws a ValueError with a custom message.", "(C) It checks if a ValueError exists.", "(D) It suppresses a ValueError."], answer: "c2NfYW5zXzE=" },
+        { question: "If a file named 'data.txt' does not exist, which exception is raised by open('data.txt', 'r')?", options: ["(A) IOError", "(B) FileNotFoundError", "(C) ImportWarning", "(D) MissingFileError"], answer: "c2NfYW5zXzE=" },
+        { question: "Consider the code:\ntry:\n    a = [1, 2, 3]\n    print(a[5])\nexcept IndexError:\n    pass\nWhat does the pass statement do here?", options: ["(A) It throws the error to the OS.", "(B) It ignores the exception and continues execution silently.", "(C) It breaks out of the try block.", "(D) It prints a default error message."], answer: "c2NfYW5zXzE=" },
+        { question: "Which built-in exception is raised due to incorrect spacing at the beginning of a line of code?", options: ["(A) SyntaxError", "(B) SpaceError", "(C) IndentationError", "(D) TabError"], answer: "c2NfYW5zXzI=" },
+        { question: "What is the output of the following code?\ndef check():\n    try:\n        return 1\n    finally:\n        return 2\nprint(check())", options: ["(A) 1", "(B) 2", "(C) Syntax Error", "(D) 1 and 2"], answer: "c2NfYW5zXzE=" },
+        { question: "Which type of error occurs when a variable is used before it has been assigned a value?", options: ["(A) ValueError", "(B) NameError", "(C) UnboundLocalError", "(D) ReferenceError"], answer: "c2NfYW5zXzE=" },
+        { question: "What will be the output of int('Hello')?", options: ["(A) NameError", "(B) TypeError", "(C) ValueError", "(D) StringError"], answer: "c2NfYW5zXzI=" },
+        { question: "Which exception is raised when the result of a mathematical calculation is too large to be represented?", options: ["(A) LargeNumberError", "(B) MathError", "(C) OverflowError", "(D) MemoryError"], answer: "c2NfYW5zXzI=" },
+        { question: "Can we define our own custom exceptions in Python?", options: ["(A) No, only built-in exceptions are allowed.", "(B) Yes, by deriving a class from the Exception class.", "(C) Yes, using the custom keyword.", "(D) Yes, but only for logical errors."], answer: "c2NfYW5zXzE=" },
+        { question: "In Python, an exception is a/an ________.", options: ["(A) Object", "(B) Keyword", "(C) Variable", "(D) Operator"], answer: "c2NfYW5zXzA=" },
+        { question: "What is the output of the following snippet?\nx = '10'\ny = 5\ntry:\n    z = x + y\nexcept TypeError:\n    print('Type mismatch')", options: ["(A) 15", "(B) 105", "(C) Type mismatch", "(D) Syntax Error"], answer: "c2NfYW5zXzI=" },
+        { question: "Which is NOT a standard exception in Python?", options: ["(A) NameError", "(B) ZeroDivisionError", "(C) CompileTimeError", "(D) IOError"], answer: "c2NfYW5zXzI=" },
+        { question: "How do you print the default exception message when catching it?", options: ["(A) except ValueError as e: print(e)", "(B) except ValueError: print(msg)", "(C) catch ValueError as v: print(v)", "(D) except ValueError.message:"], answer: "c2NfYW5zXzA=" },
+        { question: "What will happen if an exception occurs in the finally block?", options: ["(A) The program will ignore it.", "(B) It will execute the except block again.", "(C) The exception is propagated to the caller, potentially terminating the program.", "(D) It triggers a FinallyError."], answer: "c2NfYW5zXzI=" },
+        { question: "Does the sys.exc_info() function have a role in exception handling?", options: ["(A) Yes, it returns information about the most recent exception caught.", "(B) No, it is used for system memory tracking.", "(C) Yes, it prevents exceptions from crashing the program.", "(D) No, it is only for file I/O errors."], answer: "c2NfYW5zXzA=" },
+        { question: "Which block is best suited for closing database connections, regardless of whether a query succeeds or fails?", options: ["(A) try", "(B) except", "(C) else", "(D) finally"], answer: "c2NfYW5zXzM=" },
+        { question: "What happens if the raise statement is used without any arguments inside an except block?", options: ["(A) It raises a generic Exception.", "(B) It re-raises the exact exception that was just caught.", "(C) It causes a SyntaxError.", "(D) It stops the program without an error trace."], answer: "c2NfYW5zXzE=" },
+        { question: "A KeyboardInterrupt is a subclass of which base exception class?", options: ["(A) Exception", "(B) StandardError", "(C) BaseException", "(D) OSException"], answer: "c2NfYW5zXzI=" },
+        { question: "What is the output if the user enters the string 'five' for int(input()) wrapped in a try block catching ZeroDivisionError only?", options: ["(A) The program ignores it.", "(B) It prints 'five'.", "(C) The program crashes with a ValueError because it wasn't caught.", "(D) The program raises a TypeError."], answer: "c2NfYW5zXzI=" },
+        { question: "What is the keyword used to throw an exception conditionally based on evaluating a boolean expression?", options: ["(A) throw", "(B) raise", "(C) try", "(D) assert"], answer: "c2NfYW5zXzM=" },
+        { question: "If you want to handle both ValueError and TypeError doing the exact same operation, which approach is most efficient?", options: ["(A) Two separate except blocks with identical code.", "(B) Using except (ValueError, TypeError):", "(C) Nesting try blocks.", "(D) Using an else block."], answer: "c2NfYW5zXzE=" },
+        { question: "Which phase of program execution do exceptions primarily deal with?", options: ["(A) Compilation time", "(B) Linking time", "(C) Run time", "(D) Assembly time"], answer: "c2NfYW5zXzI=" }
+    ];
+   
+
+        let studentName = "";
+        const sectionSize = 30;
+        let currentSection = 0;
+        let sectionStart = 0;
+        let sectionEnd = 0;
+        let currentQuestion = 0;
+        let userAnswers = new Array(questions.length).fill(null);
+        let visitedQuestions = new Array(questions.length).fill(false);
+        let lockedAnswers = new Array(questions.length).fill(false); 
+        let timeLeft = 0; 
+        let timerInterval;
+        let isTimerPaused = true;
+        
+        // Security Tracking Variables
+        let securityWarnings = 0;
+        let isExamActive = false; 
+
+        // ================= SECURITY FEATURES ================= //
+
+        // 1. Disable Right Click
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // 2. Tab Switching Detection
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'hidden' && isExamActive) {
+                securityWarnings++;
+                document.getElementById('warning-count-display').innerText = `Total Warnings: ${securityWarnings}`;
+                document.getElementById('modal-security').style.display = 'flex';
+                isTimerPaused = true; // Pauses timer while warning is open
+            }
+        });
+
+        function closeSecurityModal() {
+            document.getElementById('modal-security').style.display = 'none';
+            isTimerPaused = false; // Resume timer
+        }
+
+        // ===================================================== //
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function loadExamData() {
+            document.getElementById('modal-welcome').style.display = 'flex';
+            document.getElementById('student-name-input').focus();
+        }
+
+        document.getElementById('student-name-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') beginExam();
+        });
+
+        function beginExam() {
+            let nameInput = document.getElementById('student-name-input').value.trim();
+            studentName = nameInput === "" ? "Student" : nameInput;
+            document.getElementById('modal-welcome').style.display = 'none';
+
+            shuffleArray(questions); 
+            timeLeft = questions.length * 60; 
+            
+            sectionStart = 0;
+            sectionEnd = Math.min(sectionSize, questions.length);
+            currentQuestion = sectionStart;
+
+            document.getElementById('quiz-screen').style.display = 'block';
+            isExamActive = true; // Enable security tab tracking
+            isTimerPaused = false;
+            startTimer();
+            loadQuestion();
+        }
+
+        function startTimer() {
+            const timerElement = document.getElementById('time-left');
+            timerInterval = setInterval(() => {
+                if(isTimerPaused) return;
+                timeLeft--;
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                timerElement.innerText = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                if (timeLeft <= 0) submitExam(true); 
+            }, 1000);
+        }
+
+        function triggerFade() {
+            const content = document.getElementById('question-content');
+            content.classList.remove('fade-in');
+            void content.offsetWidth; 
+            content.classList.add('fade-in');
+        }
+
+        function loadQuestion() {
+            triggerFade();
+            visitedQuestions[currentQuestion] = true; 
+            const totalInSection = sectionEnd - sectionStart;
+            const progressPercent = totalInSection > 1 ? ((currentQuestion - sectionStart) / (totalInSection - 1)) * 100 : 100;
+            document.getElementById('exam-progress').style.width = `${progressPercent}%`;
+            document.getElementById('q-number').innerText = `SECTION ${currentSection + 1} | QUESTION ${(currentQuestion - sectionStart) + 1} OF ${totalInSection}`;
+            
+            document.getElementById('q-text').innerHTML = `<span style="font-size: 1.25em; font-weight: 800; color: #003366; margin-right: 6px;">Q${currentQuestion + 1}.</span>` + questions[currentQuestion].question;
+            
+            const optionsList = document.getElementById('q-options');
+            optionsList.innerHTML = ''; 
+            let isQuestionLocked = lockedAnswers[currentQuestion];
+            let correctAnswerIndex = -1;
+            
+            if (isQuestionLocked) {
+                for(let i=0; i<4; i++) { if (btoa("sc_ans_" + i) === questions[currentQuestion].answer) correctAnswerIndex = i; }
+            }
+            
+            questions[currentQuestion].options.forEach((opt, index) => {
+                let isChecked = userAnswers[currentQuestion] === index ? "checked" : "";
+                let labelClass = isQuestionLocked ? (index === correctAnswerIndex ? "correct-answer disabled-label" : (userAnswers[currentQuestion] === index ? "wrong-answer disabled-label" : "disabled-label")) : (userAnswers[currentQuestion] === index ? "selected" : "");
+                optionsList.innerHTML += `<li><label class="${labelClass}"><input type="radio" name="option" value="${index}" ${isChecked} ${isQuestionLocked ? "disabled" : ""} onclick="saveAnswer(${index})">${opt}</label></li>`;
+            });
+
+            document.getElementById('btn-prev').style.display = currentQuestion === sectionStart ? "none" : "block";
+            document.getElementById('btn-clear').disabled = userAnswers[currentQuestion] === null || isQuestionLocked;
+            document.getElementById('btn-next').innerText = currentQuestion === sectionEnd - 1 ? (sectionEnd === questions.length ? "Finish" : "Next Section") : (isQuestionLocked ? "Next" : "Save & Next");
+            updatePalette();
+        }
+
+        function saveAnswer(index) {
+            if (lockedAnswers[currentQuestion]) return; 
+            userAnswers[currentQuestion] = index;
+            document.getElementById('btn-clear').disabled = false;
+            updatePalette(); 
+        }
+
+        function clearResponse() {
+            if (lockedAnswers[currentQuestion]) return; 
+            userAnswers[currentQuestion] = null;
+            loadQuestion(); 
+        }
+
+        function nextQuestion() {
+            if (userAnswers[currentQuestion] !== null) lockedAnswers[currentQuestion] = true;
+            updatePalette();
+            if (currentQuestion < sectionEnd - 1) { currentQuestion++; loadQuestion(); }
+            else { sectionEnd < questions.length ? showSectionTransitionModal() : showSubmitModal(); }
+        }
+
+        function prevQuestion() { if (currentQuestion > sectionStart) { currentQuestion--; loadQuestion(); } }
+
+        function jumpToQuestion(index) { currentQuestion = index; loadQuestion(); }
+
+        function updatePalette() {
+            const paletteGrid = document.getElementById('palette-grid');
+            paletteGrid.innerHTML = ''; 
+            let currentScore = 0, rightAttempted = 0, wrongAttempted = 0;
+
+            for (let i = 0; i < questions.length; i++) {
+                if (lockedAnswers[i] && userAnswers[i] !== null) {
+                    if (btoa("sc_ans_" + userAnswers[i]) === questions[i].answer) { rightAttempted++; currentScore += 5; }
+                    else { wrongAttempted++; currentScore -= 1; }
+                }
+            }
+
+            for (let i = sectionStart; i < sectionEnd; i++) {
+                let statusClass = visitedQuestions[i] ? (userAnswers[i] !== null ? 'answered' : 'not-answered') : 'unvisited';
+                let isWrong = lockedAnswers[i] && userAnswers[i] !== null && btoa("sc_ans_" + userAnswers[i]) !== questions[i].answer;
+                let extraStyle = i === currentQuestion ? 'border: 2px solid #000; transform: scale(1.05);' : '';
+                let crossHtml = isWrong ? `<div style="position: absolute; top: -6px; right: -6px; background: #fff; color: #dc3545; border: 2px solid #dc3545; border-radius: 50%; width: 16px; height: 16px; font-size: 11px; font-weight: 900; display: flex; align-items: center; justify-content: center;">✕</div>` : '';
+
+                paletteGrid.innerHTML += `<div class="palette-btn ${statusClass}" style="${extraStyle}" onclick="jumpToQuestion(${i})">${(i - sectionStart) + 1}${crossHtml}</div>`;
+            }
+            document.getElementById('stat-right').innerText = rightAttempted;
+            document.getElementById('stat-wrong').innerText = wrongAttempted;
+            document.getElementById('stat-score').innerText = currentScore;
+        }
+
+        function showSectionTransitionModal() {
+            isTimerPaused = true;
+            let sScore = 0, sCorrect = 0, sWrong = 0, sUnattempted = 0;
+            for(let i = sectionStart; i < sectionEnd; i++) {
+                if (userAnswers[i] === null) sUnattempted++;
+                else if (btoa("sc_ans_" + userAnswers[i]) === questions[i].answer) { sScore += 5; sCorrect++; }
+                else { sScore -= 1; sWrong++; }
+            }
+
+            document.getElementById('section-modal-title').innerText = `Section ${currentSection + 1} Completed!`;
+            document.getElementById('section-candidate-name').innerText = `CANDIDATE NAME: ${studentName.toUpperCase()}`;
+            document.getElementById('section-modal-score').innerText = `${sScore} / ${(sectionEnd-sectionStart)*5}`;
+            document.getElementById('section-stats-bar').innerHTML = `Correct: <span style="color:#28a745; font-weight:bold;">${sCorrect}</span> | Incorrect: <span style="color:#dc3545; font-weight:bold;">${sWrong}</span> | Unattempted: <span style="font-weight:bold;">${sUnattempted}</span>`;
+            document.getElementById('btn-proceed-section').innerText = `Proceed to Section ${currentSection + 2}`;
+            document.getElementById('modal-section').style.display = 'flex';
+        }
+
+        function proceedToNextSection() {
+            document.getElementById('modal-section').style.display = 'none';
+            currentSection++;
+            sectionStart = currentSection * sectionSize;
+            sectionEnd = Math.min(sectionStart + sectionSize, questions.length);
+            currentQuestion = sectionStart;
+            isTimerPaused = false;
+            loadQuestion();
+        }
+
+        function forceSubmitFromSection() { document.getElementById('modal-section').style.display = 'none'; submitExam(true); }
+
+        function showSubmitModal() { isTimerPaused = true; document.getElementById('modal-submit').style.display = 'flex'; }
+        function closeSubmitModal() { document.getElementById('modal-submit').style.display = 'none'; isTimerPaused = false; }
+        function confirmSubmitExam() { document.getElementById('modal-submit').style.display = 'none'; submitExam(true); }
+
+        function submitExam(isAutoSubmit) {
+            clearInterval(timerInterval); 
+            isExamActive = false; // Turn off security tracker after submit
+            
+            let score = 0, correctCount = 0, incorrectCount = 0, unattemptedCount = 0;
+            for (let i = 0; i < questions.length; i++) {
+                if (userAnswers[i] === null) unattemptedCount++;
+                else if (btoa("sc_ans_" + userAnswers[i]) === questions[i].answer) { score += 5; correctCount++; }
+                else { score -= 1; incorrectCount++; }
+            }
+            document.getElementById('quiz-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+            document.body.style.alignItems = "center"; 
+            document.getElementById('student-name-display').innerText = `Candidate: ${studentName}`;
+            document.getElementById('final-score-display').innerText = `${score} / ${questions.length * 5}`;
+            document.getElementById('stats-box-display').innerHTML = `Correct: <span class="stat-c">${correctCount}</span> | Incorrect: <span class="stat-i">${incorrectCount}</span> | Unattempted: <span class="stat-u">${unattemptedCount}</span>`;
+            
+            // Show total security alerts in results
+            const securityResultsBox = document.getElementById('final-security-results');
+            if(securityWarnings > 0) {
+                securityResultsBox.style.display = 'block';
+                securityResultsBox.innerHTML = `⚠️ Total Exam Integrity Warnings: ${securityWarnings}`;
+            }
+        }
+
+        window.onload = loadExamData;
+    </script>
+</div>
+</body>
+</html>
