@@ -385,7 +385,7 @@ body {
 
     /* 2. Constrain the Chapter Capsule with an ellipsis (...) */
     .chapter-capsule {
-        max-width: 120px; /* Limits width so it doesn't push the buttons off-screen */
+        max-width: 160px; /* Limits width so it doesn't push the buttons off-screen */
         overflow: hidden;
         text-overflow: ellipsis; 
         white-space: nowrap;
