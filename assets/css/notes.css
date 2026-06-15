@@ -374,3 +374,13 @@ body {
     .unified-workspace-footer { flex-direction: column; gap: 1rem; padding: 1rem; }
     .footer-tools { flex-wrap: wrap; justify-content: center; }
 }
+
+@media (max-width: 600px) {
+  .app-btn span { display: none; } /* hide text */
+  .app-btn { padding: 0.4rem 0.6rem; } /* tighter */
+    back-btn .back-text { display: none; }
+}
+
+@media (max-width: 600px) {
+  .
+}
