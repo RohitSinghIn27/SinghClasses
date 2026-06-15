@@ -418,6 +418,9 @@ body.dark-mode .floating-action-hud .icon-moon { display: none; }
 /* ==========================================================================
    MOBILE NAVIGATION OVERRIDE (Single-Line & Text Replacement)
    ========================================================================== */
+/* ==========================================================================
+   MOBILE NAVIGATION OVERRIDE (Single-Line, Text Replacement & Gap Fix)
+   ========================================================================== */
 @media (max-width: 768px) {
     /* 1. Create a single horizontal scrollable line */
     .site-header .header-container {
@@ -426,9 +429,10 @@ body.dark-mode .floating-action-hud .icon-moon { display: none; }
         flex-wrap: nowrap;
         align-items: center;
         overflow-x: auto;
-        -webkit-overflow-scrolling: touch; /* Smooth scrolling for iOS */
-        padding: 10px 15px; 
-        gap: 20px; 
+        -webkit-overflow-scrolling: touch; 
+        /* Reduced left padding (e.g., 8px) to bring the text closer to the edge */
+        padding: 10px 15px 10px 8px; 
+        gap: 15px; /* Reduced gap between logo and links slightly */
     }
 
     /* Hide the scrollbar for a cleaner look */
@@ -439,6 +443,11 @@ body.dark-mode .floating-action-hud .icon-moon { display: none; }
         flex-shrink: 0;
         display: flex;
         align-items: center;
+    }
+
+    /* REMOVE THE GAP: Hide the SVG icon box on mobile so it doesn't take up empty space */
+    .logo-icon-box {
+        display: none !important;
     }
 
     .main-navigation .nav-links-list {
@@ -452,17 +461,15 @@ body.dark-mode .floating-action-hud .icon-moon { display: none; }
     }
 
     /* 2. Text Replacement Magic */
-    /* Hide the original full names by setting font-size to 0 */
     .main-navigation .nav-link {
         font-size: 0 !important; 
         white-space: nowrap;
     }
 
-    /* Restore font size for the injected abbreviations */
     .main-navigation .nav-link::before {
-        font-size: 14px; /* Adjust this to match your desired mobile font size */
+        font-size: 14px; 
         display: inline-block;
-        font-weight: 500; /* Match your menu font weight */
+        font-weight: 500; 
     }
 
     /* Map each list item to its specific abbreviation */
