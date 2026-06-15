@@ -414,3 +414,61 @@ body.dark-mode .floating-action-hud .icon-moon { display: none; }
       height: 48px;
   }
 }
+
+/* ==========================================================================
+   MOBILE NAVIGATION OVERRIDE (Single-Line & Text Replacement)
+   ========================================================================== */
+@media (max-width: 768px) {
+    /* 1. Create a single horizontal scrollable line */
+    .site-header .header-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling for iOS */
+        padding: 10px 15px; 
+        gap: 20px; 
+    }
+
+    /* Hide the scrollbar for a cleaner look */
+    .site-header .header-container::-webkit-scrollbar { display: none; }
+    .site-header .header-container { -ms-overflow-style: none; scrollbar-width: none; }
+
+    .logo-brand {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+    }
+
+    .main-navigation .nav-links-list {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 15px;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* 2. Text Replacement Magic */
+    /* Hide the original full names by setting font-size to 0 */
+    .main-navigation .nav-link {
+        font-size: 0 !important; 
+        white-space: nowrap;
+    }
+
+    /* Restore font size for the injected abbreviations */
+    .main-navigation .nav-link::before {
+        font-size: 14px; /* Adjust this to match your desired mobile font size */
+        display: inline-block;
+        font-weight: 500; /* Match your menu font weight */
+    }
+
+    /* Map each list item to its specific abbreviation */
+    .nav-links-list li:nth-child(1) .nav-link::before { content: "CS"; }
+    .nav-links-list li:nth-child(2) .nav-link::before { content: "IP"; }
+    .nav-links-list li:nth-child(3) .nav-link::before { content: "AI"; }
+    .nav-links-list li:nth-child(4) .nav-link::before { content: "About"; }
+    .nav-links-list li:nth-child(5) .nav-link::before { content: "Contact"; }
+}
