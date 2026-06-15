@@ -18,9 +18,14 @@ body {
     font-family: 'Inter', sans-serif;
     display: flex;
     flex-direction: column;
-    height: 100vh; 
+    
+    /* THE FIX: Use dynamic viewport height */
+    height: 100vh; /* Fallback for older browsers */
+    height: 100dvh; /* Auto-adjusts so footer isn't hidden by mobile UI */
+    
     overflow: hidden; 
-    -webkit-user-select: none; user-select: none; 
+    -webkit-user-select: none; 
+    user-select: none; 
 }
 
 input[type="text"], textarea { -webkit-user-select: auto; user-select: auto; }
@@ -291,5 +296,14 @@ code, .code-snippet {
 
     .header-left-group, .header-right-group, .footer-tools {
         gap: 0.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    /* ... your existing mobile styles ... */
+    
+    .unified-workspace-footer {
+        padding: 0.8rem; /* Gives it a bit more breathing room to tap */
+        justify-content: center; /* Centers the timer and eyes */
     }
 }
