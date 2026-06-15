@@ -1,756 +1,490 @@
-// SHEET_API_URL, FORM_SAVE_URL, and HOME_URL are declared in the HTML file above this script.
+let parsedQuestionBank = {
+    mcqs: [],
+    vsas: [],
+    sas: [],
+    cases: []
+};
 
-const $ = id => document.getElementById(id),
-    MC = 5,
-    MI = 1,
-    PW = 2;
-$('welcome-correct-lbl').innerText = `+${MC} Correct`;
-$('welcome-incorrect-lbl').innerText = `-${MI} Incorrect`;
-
-// SVG Icon Definitions to replace emojis
-const ICON_SUN = `<svg class="sc-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
-const ICON_MOON = `<svg class="sc-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
-const ICON_ALERT = `<svg class="sc-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`;
-
-const arOpts = [
-  "Both A and R are true and R is the correct explanation for A.",
-  "Both A and R are true and R is not the correct explanation for A.",
-  "A is True but R is False.",
-  "A is False but R is True.",
-  "Both A and R are False."
-];
-
-let listExamPapers = [];
-
-async function loadQuestionsFromSheet() {
-    try {
-        const response = await fetch(SHEET_API_URL);
-        const raw = await response.json();
-
-        if (!Array.isArray(raw) || raw.length === 0) {
-            throw new Error("Empty or invalid response from Apps Script.");
-        }
-
-        if (raw[0] && Array.isArray(raw[0].questions)) {
-            listExamPapers = raw.map(paper => ({
-                title: paper.title || paper.Title || paper.sectiontitle || paper.SectionTitle || "Section",
-                year: paper.year || paper.Year || paper.section || paper.Section || "Set",
-                questions: (paper.questions || []).map(q => ({
-                    text: q.text || q.Text || q.question || q.Question || "",
-                    options: Array.isArray(q.options) ? q.options :
-                        [q.optiona || q.OptionA || q.option1 || "", q.optionb || q.OptionB || q.option2 || "",
-                             q.optionc || q.OptionC || q.option3 || "", q.optiond || q.OptionD || q.option4 || ""],
-                    correctIndex: (() => {
-                        let v = (q.correctIndex != null ? q.correctIndex : q.correct != null ? q.correct : 0).toString().trim().toLowerCase();
-                        if (['a', 'b', 'c', 'd'].includes(v)) return {
-                            'a': 0,
-                            'b': 1,
-                            'c': 2,
-                            'd': 3
-                        } [v];
-                        const n = parseInt(v);
-                        return isNaN(n) ? 0 : (n >= 1 ? n - 1 : n);
-                    })()
-                }))
-            }));
-        } else {
-            const sectionsMap = {};
-
-            raw.forEach(row => {
-                const r = {};
-                Object.keys(row).forEach(k => {
-                    r[k.toLowerCase().trim()] = row[k];
-                });
-
-                const sectionLabel = (r['section'] || r['year'] || r['set'] || "Section A").toString().trim();
-                const sectionTitle = (r['sectiontitle'] || r['title'] || r['label'] || sectionLabel).toString().trim();
-                const qText = (r['question'] || r['text'] || r['q'] || "").toString().trim();
-
-                if (!qText) return;
-
-                const options = [
-                    (r['optiona'] || r['option1'] || r['a'] || "").toString().trim(),
-                    (r['optionb'] || r['option2'] || r['b'] || "").toString().trim(),
-                    (r['optionc'] || r['option3'] || r['c'] || "").toString().trim(),
-                    (r['optiond'] || r['option4'] || r['d'] || "").toString().trim(),
-                ].filter(o => o !== "");
-
-                let ciRaw = (r['correct'] || r['correctindex'] || r['answer'] || r['ans'] || "A").toString().trim().toLowerCase();
-                let ci;
-                if (['a', 'b', 'c', 'd', 'e'].includes(ciRaw)) {
-                    ci = { 'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4 } [ciRaw];
-                } else {
-                    ci = parseInt(ciRaw);
-                    if (ci >= 1 && ci <= options.length) ci = ci - 1;
-                }
-                if (isNaN(ci) || ci < 0 || ci >= options.length) ci = 0;
-
-                if (!sectionsMap[sectionLabel]) {
-                    sectionsMap[sectionLabel] = {
-                        title: sectionTitle,
-                        year: sectionLabel,
-                        questions: []
-                    };
-                }
-                sectionsMap[sectionLabel].questions.push({
-                    text: qText,
-                    options,
-                    correctIndex: ci
-                });
-            });
-
-            listExamPapers = Object.values(sectionsMap);
-        }
-
-        if (listExamPapers.length === 0 || listExamPapers.every(p => p.questions.length === 0)) {
-            throw new Error(
-                "No questions found. Check that Row 1 of your sheet has exactly these headers:\n" +
-                "Section | SectionTitle | Question | OptionA | OptionB | OptionC | OptionD | Correct"
-            );
-        }
-
-    } catch (err) {
-        console.error("Failed to load questions from sheet:", err);
-        alert("Could not load questions.\n\nError: " + err.message);
-    }
+// Helper to format backticks to lavender code snippets
+function formatText(text) {
+    if (!text) return '';
+    return text.replace(/`([^`]+)`/g, '<span class="code-snippet">$1</span>');
 }
 
-
-let questions = [], sections = [], studentName = "", currentYearIndex = 0, currentQuestion = 0;
-let userAnswers = [], visitedQuestions = [], lockedAnswers = [], sectionTimes = [];
-let timerInterval, isTimerPaused = true, securityWarnings = 0, isExamActive = false, currentFilter = 'all', globalFormPayload = null;
-
-function shuffleArray(a) {
-    for (let i = a.length - 1; i > 0; i--) {
+// Helper to shuffle arrays randomly
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
+        [array[i], array[j]] = [array[j], array[i]];
     }
+    return array;
 }
 
-function showToastAlert(m) {
-    let t = $('custom-alert-toast'), txt = $('custom-alert-text');
-    if (t && txt) {
-        txt.innerHTML = `${ICON_ALERT} ${m}`;
-        t.classList.add('show');
-        setTimeout(() => t.classList.remove('show'), 4000);
-    }
-}
-
-window.toggleDarkMode = () => {
-    document.body.classList.toggle('dark-mode');
-    let isDark = document.body.classList.contains('dark-mode');
-    let headerBtn = $('header-theme-toggle');
-    
-    if (isDark) {
-        if (headerBtn) headerBtn.innerHTML = `${ICON_SUN} Light Mode`;
-        localStorage.setItem('theme', 'dark');
-    } else {
-        if (headerBtn) headerBtn.innerHTML = `${ICON_MOON} Dark Mode`;
-        localStorage.setItem('theme', 'light');
-    }
-    
-    if (isExamActive && sections.length > 0) buildYearNav();
-};
-
-document.addEventListener('click', e => {
-    let m = $('modal-security');
-    if (m && m.style.display === 'flex') closeSecurityModal();
-});
-
-window.addEventListener('scroll', () => {
-    let bar = $("scProgressBar");
-    let st = document.documentElement.scrollTop || document.body.scrollTop;
-    let sh = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    if (bar) bar.style.width = (sh > 0 ? (st / sh) * 100 : 0) + "%";
-});
-
-const mt = $('scMenuToggle'), mm = $('scMobileMenu');
-if (mt && mm) {
-    mt.addEventListener('click', () => {
-        mm.classList.toggle('show-mobile-menu');
-        mt.innerHTML = mm.classList.contains('show-mobile-menu') ? '✕' : '☰';
-    });
-}
-
-const ym = $('yearMenuToggle'), yc = $('year-nav-container');
-if (ym && yc) {
-    ym.addEventListener('click', () => {
-        yc.classList.toggle('show-year-menu');
-        ym.innerHTML = yc.classList.contains('show-year-menu') ? '✕' : '☰';
-    });
-}
-
-window.onload = async () => {
-    if (localStorage.getItem('theme') === 'dark') {
-        document.body.classList.add('dark-mode');
-        if ($('header-theme-toggle')) $('header-theme-toggle').innerHTML = `${ICON_SUN} Light Mode`;
+// --- 2. DATA FETCHING (AppScript / Excel Integration) ---
+async function loadQuestionsFromSheet() {
+    if (!FETCH_API_URL) {
+        console.error("Missing AppScript URL.");
+        document.getElementById('start-btn').innerText = "Configuration Error";
+        return;
     }
 
-    $('modal-welcome').style.display = 'flex';
-    $('student-name-input').placeholder = "Loading questions...";
-    const startBtn = document.querySelector('.modal-btn-success');
-    if (startBtn) {
-        startBtn.disabled = true;
-        startBtn.textContent = "Loading...";
-    }
+    try {
+        const response = await fetch(FETCH_API_URL);
+        const data = await response.json();
 
-    await loadQuestionsFromSheet();
+        data.forEach(row => {
+            let keys = Object.keys(row);
+            let qTypeKey = keys.find(k => k.toLowerCase().includes('type'));
+            let qTextKey = keys.find(k => k.toLowerCase().includes('question'));
+            let opt1Key = keys.find(k => k.toLowerCase().includes('option_1') || k.toLowerCase().includes('assertion'));
+            let opt2Key = keys.find(k => k.toLowerCase().includes('option_2') || k.toLowerCase().includes('reason'));
+            let opt3Key = keys.find(k => k.toLowerCase().includes('option_3'));
+            let opt4Key = keys.find(k => k.toLowerCase().includes('option_4'));
+            let marksKey = keys.find(k => k.toLowerCase().includes('marks'));
 
-    $('student-name-input').placeholder = "e.g. Rohit Singh | SinghClasses";
-    if (startBtn) {
-        startBtn.disabled = false;
-        startBtn.innerHTML = "Start Mock Test";
-    }
-    setTimeout(() => $('student-name-input').focus(), 100);
+            if (!qTypeKey || !qTextKey) return;
 
-    initParticleCanvas('quiz-screen', 'canvasCBT', 12, 90);
-    initParticleCanvas('quiz-screen', 'canvasPalette', 6, 70);
-    initParticleCanvas('bottomSection', 'canvasBottom', 40, 75);
-};
+            let qType = String(row[qTypeKey] || '').trim().toUpperCase();
+            let qText = formatText(row[qTextKey] || '');
+            let marks = row[marksKey] || '';
 
-// Security Measures
-['contextmenu', 'copy', 'cut', 'dragstart'].forEach(ev => document.addEventListener(ev, e => e.preventDefault()));
-
-document.addEventListener('keyup', e => {
-    if (e.key === 'PrintScreen') {
-        try { navigator.clipboard.writeText(''); } catch (err) {}
-        if (isExamActive && !isTimerPaused) applySecurityPenalty();
-    }
-});
-
-document.addEventListener('keydown', e => {
-    let k = e.key.toLowerCase(), ic = e.ctrlKey || e.metaKey, is = e.shiftKey;
-    if (e.key === 'F12' || e.keyCode === 123 || (ic && is && ['i', 'j', 'c'].includes(k)) || (ic && ['u', 'p', 's', 'r'].includes(k)) || e.key === 'F5') {
-        e.preventDefault();
-        if (isExamActive && !isTimerPaused) applySecurityPenalty();
-        return false;
-    }
-});
-
-document.addEventListener('keydown', e => {
-    if (!isExamActive || isTimerPaused) return;
-    let s = sections[currentYearIndex], k = e.key.toLowerCase(), isl = lockedAnswers[currentQuestion] || s.submitted;
-
-    if (!isl) {
-        if (['1', '2', '3', '4'].includes(k)) {
-            e.preventDefault();
-            saveAnswer(parseInt(k) - 1);
-        } else if (['a', 'b', 'c', 'd', 'e'].includes(k)) {
-            e.preventDefault();
-            saveAnswer({ 'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4 } [k]);
-        } else if (k === 'backspace' || k === 'delete') {
-            e.preventDefault();
-            clearResponse();
-        }
-    }
-    if (k === 'enter') {
-        e.preventDefault();
-        if (!s.submitted && currentQuestion === s.end - 1) showSubmitModal();
-        else if (!s.submitted || currentQuestion < s.end - 1) nextQuestion();
-    }
-});
-
-document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === 'hidden' && isExamActive && !isTimerPaused) applySecurityPenalty();
-});
-
-window.addEventListener("blur", () => {
-    if (isExamActive && !isTimerPaused) applySecurityPenalty();
-});
-
-window.addEventListener("beforeunload", e => {
-    if (isExamActive && !sections[currentYearIndex].submitted) {
-        let s = sections[currentYearIndex], c = 0, ic = 0, l = 0, sc = 0, tot = s.end - s.start;
-        for (let i = s.start; i < s.end; i++) {
-            if (userAnswers[i] !== null) {
-                if (btoa("sc_ans_" + userAnswers[i]) === questions[i].answer) { c++; sc += MC; } 
-                else { ic++; sc -= MI; }
-            } else l++;
-        }
-        sc = Math.max(0, sc - (securityWarnings * PW));
-
-        let p = new URLSearchParams();
-        p.append("entry.784284433", studentName + " (Reload Dropout)");
-        p.append("entry.222087888", s.year + " - " + s.title);
-        p.append("entry.942833858", sc + " / " + (tot * MC));
-        p.append("entry.930216015", c);
-        p.append("entry.323768159", ic);
-        p.append("entry.1388315739", l);
-        p.append("entry.1858729095", securityWarnings);
-        p.append("entry.1240634167", Math.floor(s.timeSpent / 60) + "m " + (s.timeSpent % 60) + "s");
-        navigator.sendBeacon(FORM_SAVE_URL, p);
-
-        e.preventDefault();
-        e.returnValue = "Are you sure you want to exit? Progress will be lost.";
-        return e.returnValue;
-    }
-});
-
-let lastWT = 0;
-
-function applySecurityPenalty() {
-    if (Date.now() - lastWT < 1000) return;
-    lastWT = Date.now();
-    securityWarnings++;
-    $('warning-count-display').innerText = `Total Warnings: ${securityWarnings} (Penalty: -${securityWarnings * PW} Marks)`;
-    $('modal-security').style.display = 'flex';
-    document.querySelector('.sc-widget-container').classList.add('sc-blur-active');
-    isTimerPaused = true;
-    updatePalette();
-}
-
-window.closeSecurityModal = () => {
-    $('modal-security').style.display = 'none';
-    document.querySelector('.sc-widget-container').classList.remove('sc-blur-active');
-    isTimerPaused = false;
-};
-
-$('student-name-input').addEventListener('keypress', e => {
-    if (e.key === 'Enter') beginExam();
-});
-
-window.buildYearNav = () => {
-    let c = $('year-nav-container');
-    if (!c) return;
-    c.innerHTML = '';
-    if ($('current-paper-label') && sections[currentYearIndex]) {
-        $('current-paper-label').innerHTML = `<span>${sections[currentYearIndex].year}</span>${sections[currentYearIndex].title}`;
-    }
-
-    sections.forEach((p, idx) => {
-        let t = document.createElement('div');
-        t.className = `year-tab ${idx === currentYearIndex ? 'active' : ''}`;
-        t.innerHTML = `<span style="font-size:.7em;text-transform:uppercase;color:var(--tab-${idx === currentYearIndex ? 'active' : 'inactive'}-lbl);font-weight:600;">${p.year}</span><span style="font-size:.95em;font-weight:700;color:var(--tab-${idx === currentYearIndex ? 'active' : 'inactive'}-val);">${p.title}</span>`;
-        t.onclick = () => {
-            if (sections[idx].submitted || idx === currentYearIndex) {
-                currentYearIndex = idx;
-                currentQuestion = sections[idx].start;
-                if (c && c.classList.contains('show-year-menu')) {
-                    c.classList.remove('show-year-menu');
-                    if ($('yearMenuToggle')) $('yearMenuToggle').innerHTML = '☰';
+            if (qType === 'MCQ') {
+                parsedQuestionBank.mcqs.push({
+                    q: qText,
+                    type: "mcq",
+                    options: [
+                        formatText(row[opt1Key]),
+                        formatText(row[opt2Key]),
+                        formatText(row[opt3Key]),
+                        formatText(row[opt4Key])
+                    ]
+                });
+            } else if (qType === 'ASSERTION-REASON') {
+                parsedQuestionBank.mcqs.push({
+                    q: "Evaluate the given Assertion and Reason:",
+                    type: "assertion",
+                    assertion: formatText(row[opt1Key] || 'Assertion missing'),
+                    reason: formatText(row[opt2Key] || 'Reason missing')
+                });
+            } else if (qType === 'VSA') {
+                parsedQuestionBank.vsas.push(qText);
+            } else if (qType === 'SA') {
+                parsedQuestionBank.sas.push(qText);
+            } else if (qType === 'CASE STUDY QUESTION') {
+                parsedQuestionBank.cases.push({
+                    context: qText,
+                    subs: []
+                });
+            } else if (qType === 'CASE STUDY SUB PART') {
+                if (parsedQuestionBank.cases.length > 0) {
+                    parsedQuestionBank.cases[parsedQuestionBank.cases.length - 1].subs.push({
+                        text: qText,
+                        marks: marks
+                    });
                 }
-                buildYearNav();
-                updateTimerDisplay();
-                loadQuestion();
-            } else {
-                showToastAlert("Submit the current section to unlock this one");
             }
-        };
-        c.appendChild(t);
-    });
-};
-
-window.beginExam = () => {
-    let v = $('student-name-input').value.trim();
-    studentName = v === "" ? "Candidate" : v;
-    $('modal-welcome').style.display = 'none';
-    questions = []; sections = []; let qt = 0;
-
-    listExamPapers.forEach((p, idx) => {
-        let st = qt;
-        let sq = p.questions.map(q => {
-            let mo = q.options.map((o, i) => ({ t: o, org: i }));
-            shuffleArray(mo);
-            return {
-                q: q.text,
-                o: mo.map(o => o.t),
-                a: btoa("sc_ans_" + mo.findIndex(o => o.org === q.correctIndex))
-            };
         });
-        shuffleArray(sq);
-        sq.forEach(q => { questions.push({ question: q.q, options: q.o, answer: q.a }); qt++; });
-        sections.push({ index: idx, title: p.title, year: p.year, start: st, end: qt, submitted: false, timeSpent: 0 });
+
+        // SHUFFLE AND LIMIT QUESTIONS BASED ON GLOBAL HTML VARIABLES
+        if (typeof LIMIT_MCQ !== 'undefined') parsedQuestionBank.mcqs = shuffleArray(parsedQuestionBank.mcqs).slice(0, LIMIT_MCQ);
+        if (typeof LIMIT_VSA !== 'undefined') parsedQuestionBank.vsas = shuffleArray(parsedQuestionBank.vsas).slice(0, LIMIT_VSA);
+        if (typeof LIMIT_SA !== 'undefined') parsedQuestionBank.sas = shuffleArray(parsedQuestionBank.sas).slice(0, LIMIT_SA);
+        if (typeof LIMIT_CASE !== 'undefined') parsedQuestionBank.cases = shuffleArray(parsedQuestionBank.cases).slice(0, LIMIT_CASE);
+
+
+        if (parsedQuestionBank.mcqs.length === 0 && parsedQuestionBank.vsas.length === 0 && parsedQuestionBank.sas.length === 0 && parsedQuestionBank.cases.length === 0) {
+            document.getElementById('start-btn').innerText = "Data Format Error";
+            document.getElementById('exam-container').innerHTML = '<div style="text-align: center; padding: 50px; color: #DC2626; font-weight: bold;">Error: No questions loaded.</div>';
+            return;
+        }
+
+        const startBtn = document.getElementById('start-btn');
+        startBtn.innerText = "Start Test";
+        startBtn.disabled = false;
+
+    } catch (error) {
+        console.error("Error loading questions from Google Sheets:", error);
+        document.getElementById('start-btn').innerText = "Network Error";
+    }
+}
+
+// --- 3. INITIALIZATION & UI EFFECTS ---
+document.addEventListener("DOMContentLoaded", () => {
+    initCanvasParticles();
+    initTrackingEyes();
+    document.getElementById('modal-container').style.display = 'flex';
+    document.getElementById('start-btn').disabled = true;
+
+    loadQuestionsFromSheet();
+
+    // INTERACTIVE UI HANDLER (Green Options & Blue Sub-Questions)
+    document.getElementById('exam-container').addEventListener('click', function (e) {
+        // Handle MCQ Option Clicks
+        if (e.target.closest('.option-item')) {
+            let clickedOption = e.target.closest('.option-item');
+            let siblings = clickedOption.parentElement.querySelectorAll('.option-item');
+            siblings.forEach(s => s.classList.remove('selected'));
+            clickedOption.classList.add('selected');
+        }
+        // Handle Sub-question Clicks
+        if (e.target.closest('.sub-question')) {
+            let clickedSub = e.target.closest('.sub-question');
+            let siblings = clickedSub.parentElement.querySelectorAll('.sub-question');
+            siblings.forEach(s => s.classList.remove('active'));
+            clickedSub.classList.add('active');
+        }
     });
+});
 
-    userAnswers = new Array(questions.length).fill(null);
-    visitedQuestions = new Array(questions.length).fill(false);
-    lockedAnswers = new Array(questions.length).fill(false);
-    sectionTimes = sections.map(s => (s.end - s.start) * 60);
+function toggleFullScreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => console.error(err));
+    } else {
+        document.exitFullscreen();
+    }
+}
 
-    currentYearIndex = 0; currentQuestion = sections[0].start;
-    $('quiz-screen').style.display = 'block';
-    $('unified-nav').style.display = 'flex';
-    isExamActive = true; isTimerPaused = false;
+// --- 4. EXAM LOGIC & MODALS ---
+let examActive = false;
+let tabSwitchCount = 0;
+let timeLeft = 30 * 60;
+let timerInterval;
 
-    buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion();
-};
+function startExam() {
+    let nameInput = document.getElementById('candidate-name').value.trim();
+    if (!nameInput) {
+        nameInput = "Student";
+    }
+
+    document.getElementById('display-name').innerText = "Candidate: " + nameInput;
+    document.getElementById('start-modal').classList.remove('active-modal');
+    document.getElementById('modal-container').style.display = 'none';
+    document.getElementById('main-app').style.display = 'flex';
+
+    generatePaper();
+    updateTimerDisplay();
+    startTimer();
+    examActive = true;
+}
+
+function openConfirmModal() {
+    if (!examActive) return;
+    document.getElementById('modal-container').style.display = 'flex';
+    document.querySelectorAll('.custom-modal').forEach(m => m.classList.remove('active-modal'));
+    document.getElementById('confirm-modal').classList.add('active-modal');
+}
+
+function closeConfirmModal() {
+    document.getElementById('modal-container').style.display = 'none';
+    document.getElementById('confirm-modal').classList.remove('active-modal');
+}
+
+function closeSecurityModal() {
+    document.getElementById('modal-container').style.display = 'none';
+    document.getElementById('security-modal').classList.remove('active-modal');
+}
+
+// --- 5. EXAM GENERATION ---
+function generatePaper() {
+    let qCounter = 1;
+
+    // NEW: Add General Instructions Block before sections
+    let html = `
+    <div class="exam-section" style="padding-bottom: 0;">
+        <div class="question-block" style="background: #FFFFFF; border-top: 5px solid #1E3A8A; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+            <h3 style="color: #1E3A8A; margin-bottom: 16px; font-weight: 700; text-align: center; font-size: 1.25rem; text-transform: uppercase; letter-spacing: 1.5px;">General Instructions</h3>
+            <ol style="margin-left: 24px; color: #475569; line-height: 1.8; font-size: 0.95rem; font-weight: 500;">
+                <li>This question paper comprises four sections: <strong>A, B, C, and D</strong>.</li>
+                <li><strong>Section A</strong> consists of Objective Type / Assertion-Reason questions carrying 1 mark each.</li>
+                <li><strong>Section B</strong> consists of Very Short Answer questions carrying 2 marks each.</li>
+                <li><strong>Section C</strong> consists of Short Answer questions carrying 3 marks each.</li>
+                <li><strong>Section D</strong> consists of Case-Based questions.</li>
+                <li>All questions are compulsory. Read the scenarios carefully before answering.</li>
+                <li>There is no negative marking for incorrect answers.</li>
+            </ol>
+        </div>
+    </div>`;
+
+    // Section A (Objective)
+    if (parsedQuestionBank.mcqs.length > 0) {
+        html += `<div id="sec-a" class="exam-section">
+            <div class="section-header"><span class="section-title-text">Section A: Objective Type</span></div>`;
+
+        parsedQuestionBank.mcqs.forEach(q => {
+            if (q.type === "mcq") {
+                html += `<div class="question-block"><div class="question-header"><div class="q-num">Q${qCounter}.</div><div class="q-text">${q.q}</div><div class="q-marks">[1]</div></div>
+                    <ul class="options-list">
+                        <li class="option-item">a) ${q.options[0]}</li><li class="option-item">b) ${q.options[1]}</li>
+                        <li class="option-item">c) ${q.options[2]}</li><li class="option-item">d) ${q.options[3]}</li>
+                    </ul></div>`;
+            } else {
+                html += `<div class="question-block"><div class="question-header"><div class="q-num">Q${qCounter}.</div><div class="q-text">${q.q}</div><div class="q-marks">[1]</div></div>
+                    <div class="assertion-box"><strong>Assertion (A):</strong> ${q.assertion}<br><br><strong>Reason (R):</strong> ${q.reason}</div></div>`;
+            }
+            qCounter++;
+        });
+        html += `</div>`;
+    }
+
+    // Section B (VSA)
+    if (parsedQuestionBank.vsas.length > 0) {
+        html += `<div id="sec-b" class="exam-section"><div class="section-header"><span class="section-title-text">Section B: Very Short Answer</span></div>`;
+        parsedQuestionBank.vsas.forEach(q => {
+            html += `<div class="question-block"><div class="question-header"><div class="q-num">Q${qCounter}.</div><div class="q-text">${q}</div><div class="q-marks">[2]</div></div></div>`;
+            qCounter++;
+        });
+        html += `</div>`;
+    }
+
+    // Section C (SA)
+    if (parsedQuestionBank.sas.length > 0) {
+        html += `<div id="sec-c" class="exam-section"><div class="section-header"><span class="section-title-text">Section C: Short Answer</span></div>`;
+        parsedQuestionBank.sas.forEach(q => {
+            html += `<div class="question-block"><div class="question-header"><div class="q-num">Q${qCounter}.</div><div class="q-text">${q}</div><div class="q-marks">[3]</div></div></div>`;
+            qCounter++;
+        });
+        html += `</div>`;
+    }
+
+    // Section D (Case Based)
+    if (parsedQuestionBank.cases.length > 0) {
+        html += `<div id="sec-d" class="exam-section"><div class="section-header"><span class="section-title-text">Section D: Case-Based</span></div>`;
+        parsedQuestionBank.cases.forEach(cs => {
+            html += `<div class="question-block"><div class="question-header"><div class="q-num">Q${qCounter}.</div><div class="q-text">Read the scenario:</div><div class="q-marks"></div></div>
+                <div class="assertion-box" style="margin-left:0;">${cs.context}</div><div class="sub-questions">`;
+            cs.subs.forEach(sub => {
+                html += `<div class="sub-question"><div style="flex:1">${sub.text}</div><div class="q-marks">[${sub.marks}]</div></div>`;
+            });
+            html += `</div></div>`;
+            qCounter++;
+        });
+        html += `</div>`;
+    }
+
+    document.getElementById('exam-container').innerHTML = html;
+}
+
+// --- 6. TIMER & SUBMISSION ---
+const motivationEl = document.getElementById('motivation-text');
 
 function updateTimerDisplay() {
-    let t = sectionTimes[currentYearIndex], m = Math.floor(t / 60), s = t % 60;
-    let el = $('time-left'), b = $('timer-box');
-    if (el) el.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
-    if (b) {
-        b.className = sections[currentYearIndex].submitted ?
-            (el && (el.innerText = "Locked"), 'timer') :
-            (t > 0 && t <= 60 ? 'timer danger' : (t > 60 && t <= 120 ? 'timer warning' : 'timer'));
-    }
+    let m = Math.floor(timeLeft / 60);
+    let s = timeLeft % 60;
+    document.getElementById('study-timer').innerText = (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
+
+    if (timeLeft === 25 * 60) motivationEl.textContent = "Great focus! 🧠";
+    else if (timeLeft === 15 * 60) motivationEl.textContent = "Halfway there! ⚡";
+    else if (timeLeft === 5 * 60) motivationEl.textContent = "5 Mins left! Wrap up! ⚠️";
+    else if (timeLeft <= 60) motivationEl.textContent = "Final minute! 🚨";
 }
 
 function startTimer() {
     timerInterval = setInterval(() => {
-        if (isTimerPaused || !isExamActive || sections[currentYearIndex].submitted) return;
-        if (sectionTimes[currentYearIndex] > 0) {
-            sectionTimes[currentYearIndex]--;
-            sections[currentYearIndex].timeSpent++;
+        if (timeLeft > 0) {
+            timeLeft--;
+            updateTimerDisplay();
+        } else {
+            clearInterval(timerInterval);
+            clearInterval(timerInterval);
+            alert("Time is Up! Your test is being auto-submitted.");
+            processSubmission();
         }
-        updateTimerDisplay();
-        if (sectionTimes[currentYearIndex] <= 0) autoLockAndSubmitSection();
     }, 1000);
 }
 
-function autoLockAndSubmitSection() {
-    isTimerPaused = true;
-    let m = $('modal-timeout');
-    if (m) m.style.display = 'flex';
-    setTimeout(() => {
-        if (m) m.style.display = 'none';
-        processSectionSubmission();
-    }, 2000);
-}
+function processSubmission() {
+    clearInterval(timerInterval);
+    examActive = false; 
+    closeConfirmModal();
 
-window.loadQuestion = () => {
-    let c = $('question-content');
-    if (c) {
-        c.classList.remove('fade-in'); void c.offsetWidth; c.classList.add('fade-in');
+    // 1. Calculate time
+    let totalSecondsTaken = (30 * 60) - timeLeft;
+    let m = Math.floor(totalSecondsTaken / 60);
+    let s = totalSecondsTaken % 60;
+    let timeTakenStr = (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
+
+    // 2. Data
+    let studentName = document.getElementById('candidate-name').value.trim() || "Student";
+    let feedback = document.getElementById('student-feedback').value.trim() || "-";
+
+    const payload = {
+        "Timestamp": new Date().toISOString(),
+        "Student Name": studentName,
+        "Proctoring": "Active",
+        "WarningsActive": tabSwitchCount.toString(),
+        "Time Taken": timeTakenStr,
+        "Doubt and Feedback": feedback
+    };
+
+    const formData = new FormData();
+    for (let key in payload) {
+        formData.append(key, payload[key]);
     }
 
-    visitedQuestions[currentQuestion] = true;
-    let s = sections[currentYearIndex], qy = currentQuestion - s.start, tot = s.end - s.start;
-    let pc = tot > 1 ? (qy / (tot - 1)) * 100 : 100;
+    fetch(SUBMIT_API_URL, {
+        method: "POST",
+        body: formData,
+        mode: "no-cors" 
+    })
+    .then(() => console.log("Test data pushed."))
+    .catch(error => console.error("Error submitting test:", error));
+
+    // 3. UI Update: Hide the main exam app
+    document.getElementById('main-app').style.display = 'none';
     
-    if ($('section-header-title')) $('section-header-title').innerText = `${s.year}: ${s.title}`;
-    $('exam-progress').style.width = `${pc}%`;
-    $('q-number').innerText = `Question ${qy + 1} of ${tot}`;
-    $('q-text').innerHTML = `<span style="font-weight:800;color:var(--q-num-color);margin-right:6px;">Q${qy + 1}.</span>` + questions[currentQuestion].question;
+    // 4. Show success screen
+    let successScreen = document.getElementById('success-screen');
+    successScreen.style.display = 'flex';
+    successScreen.innerHTML = ''; // Clear previous content
 
-    let ol = $('q-options');
-    ol.innerHTML = '';
-    let isL = lockedAnswers[currentQuestion] || s.submitted;
-    let lt = ['A', 'B', 'C', 'D', 'E'];
-    let ci = parseInt(atob(questions[currentQuestion].answer).replace("sc_ans_", ""));
-
-    questions[currentQuestion].options.forEach((opt, i) => {
-        let cls = "";
-        if (isL && userAnswers[currentQuestion] !== null) {
-            cls = "disabled-label" + (i === ci ? " correct-answer" : (userAnswers[currentQuestion] === i ? " wrong-answer" : ""));
-        } else if (userAnswers[currentQuestion] === i) {
-            cls = "selected";
-        }
-        ol.innerHTML += `<li><label class="${cls}"><input type="radio" name="option" value="${i}" ${userAnswers[currentQuestion] === i ? "checked" : ""} ${isL ? "disabled" : ""} onclick="saveAnswer(${i})"><span class="option-letter">${lt[i]}</span><span class="option-text">${opt}</span></label></li>`;
-    });
-
-    let kh = $('keyboard-hints');
-    if (kh) {
-        kh.style.display = (qy === 1) ? 'flex' : 'none';
-    }
-
-    $('btn-prev').disabled = currentQuestion === s.start;
-    $('btn-clear').disabled = userAnswers[currentQuestion] === null || isL;
-
-    let nb = $('btn-next');
-    nb.classList.remove('highlight-submit');
-    if (s.submitted) {
-        nb.innerText = "Next Question"; nb.disabled = currentQuestion === s.end - 1; nb.onclick = nextQuestion;
-    } else if (currentQuestion === s.end - 1) {
-        nb.innerText = "Submit Section"; nb.classList.add('highlight-submit'); nb.onclick = showSubmitModal;
-    } else {
-        nb.innerText = "Save & Next"; nb.onclick = nextQuestion;
-    }
-    updatePalette();
-};
-
-window.saveAnswer = i => {
-    if (lockedAnswers[currentQuestion] || sections[currentYearIndex].submitted) return;
-    userAnswers[currentQuestion] = i;
-    $('btn-clear').disabled = false;
-    loadQuestion();
-};
-
-window.clearResponse = () => {
-    if (lockedAnswers[currentQuestion] || sections[currentYearIndex].submitted) return;
-    userAnswers[currentQuestion] = null;
-    loadQuestion();
-};
-
-window.nextQuestion = () => {
-    if (userAnswers[currentQuestion] !== null && !sections[currentYearIndex].submitted) lockedAnswers[currentQuestion] = true;
-    if (currentQuestion < sections[currentYearIndex].end - 1) currentQuestion++;
-    loadQuestion();
-};
-
-window.prevQuestion = () => {
-    if (currentQuestion > sections[currentYearIndex].start) currentQuestion--;
-    loadQuestion();
-};
-
-window.jumpToQuestion = i => { currentQuestion = i; loadQuestion(); };
-
-window.filterPalette = t => {
-    currentFilter = t;
-    document.querySelectorAll('.interactive-legend .legend-item').forEach(e => e.classList.remove('active-filter'));
-    $('filter-' + t).classList.add('active-filter');
-    updatePalette();
-};
-
-function updatePalette() {
-    let s = sections[currentYearIndex], g = $('palette-grid');
-    if (!g) return;
-    g.innerHTML = '';
-    let rc = 0, wc = 0, sc = 0;
-
-    for (let i = s.start; i < s.end; i++) {
-        if (userAnswers[i] !== null && (lockedAnswers[i] || s.submitted)) {
-            if (btoa("sc_ans_" + userAnswers[i]) === questions[i].answer) { rc++; sc += MC; } 
-            else { wc++; sc -= MI; }
-        }
-
-        let cls = visitedQuestions[i] ? (userAnswers[i] !== null ? 'answered' : 'not-answered') : 'unvisited';
-        let iw = (s.submitted || lockedAnswers[i]) && userAnswers[i] !== null && btoa("sc_ans_" + userAnswers[i]) !== questions[i].answer;
-        let dsp = iw ? 'wrong' : cls;
-        let flt = false;
-
-        if (currentFilter !== 'all') {
-            if (currentFilter === 'answered' && cls !== 'answered' && dsp !== 'wrong') flt = true;
-            else if (currentFilter === 'not-answered' && cls !== 'not-answered') flt = true;
-            else if (currentFilter === 'unvisited' && cls !== 'unvisited') flt = true;
-        }
-
-        g.innerHTML += `<div class="palette-btn ${dsp}${i === currentQuestion ? ' current-question' : ''}${flt ? ' filtered-out' : ''}" onclick="jumpToQuestion(${i})">${(i - s.start) + 1}${iw ? `<div style="position:absolute;top:-3px;right:-3px;background:var(--container-bg);color:var(--color-wrong);border:1px solid var(--color-wrong);border-radius:50%;width:14px;height:14px;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center;z-index:5;">✕</div>` : ''}</div>`;
-    }
-
-    let statRight = $('stat-right'), statWrong = $('stat-wrong'), statScore = $('stat-score');
-    let prevR = statRight.innerText, prevW = statWrong.innerText, prevS = statScore.innerText;
+    // 5. Build Review Container INSIDE the frame
+    let reviewContainer = document.createElement('div');
+    reviewContainer.className = 'test-scroll-container';
+    reviewContainer.style.marginTop = '20px';
+    reviewContainer.style.marginBottom = '40px';
+    reviewContainer.style.pointerEvents = 'none'; 
+    reviewContainer.style.textAlign = 'left';
     
-    statRight.innerText = rc;
-    statWrong.innerText = wc;
-    statScore.innerText = sc - (securityWarnings * PW);
+    // Header for review
+    let reviewTitle = document.createElement('h2');
+    reviewTitle.innerText = "Question Bank";
+    reviewTitle.style.textAlign = 'center';
+    reviewTitle.style.padding = '20px';
+    reviewTitle.style.color = '#1E3A8A';
+    reviewTitle.style.borderBottom = '2px dashed #CBD5E1';
+    reviewContainer.appendChild(reviewTitle);
 
-    if (prevR != rc) { statRight.classList.remove('stat-pop'); void statRight.offsetWidth; statRight.classList.add('stat-pop'); }
-    if (prevW != wc) { statWrong.classList.remove('stat-pop'); void statWrong.offsetWidth; statWrong.classList.add('stat-pop'); }
-    if (prevS != sc - (securityWarnings * PW)) { statScore.classList.remove('stat-pop'); void statScore.offsetWidth; statScore.classList.add('stat-pop'); }
-}
-
-window.showSubmitModal = () => {
-    if (userAnswers[currentQuestion] !== null && !sections[currentYearIndex].submitted) lockedAnswers[currentQuestion] = true;
-    let u = 0;
-    for (let i = sections[currentYearIndex].start; i < sections[currentYearIndex].end; i++) {
-        if (!visitedQuestions[i]) u++;
+    // CLONE THE EXAM CONTAINER
+    // We clone the inner structure of the exam, stripping out the instructions
+    let originalExam = document.getElementById('exam-container');
+    let examClone = originalExam.cloneNode(true);
+    
+    // Remove the first child if it's the instruction block
+    if (examClone.firstElementChild && examClone.firstElementChild.querySelector('h3')) {
+        examClone.firstElementChild.remove();
     }
-    if (u > 0) showToastAlert(`${u} Question(s) still pending pls check`);
-    if ($('submit-modal-text')) $('submit-modal-text').innerText = `Are you sure you want to submit your responses for ${sections[currentYearIndex].year}?`;
-    isTimerPaused = true;
-    $('modal-submit').style.display = 'flex';
-};
+    
+    reviewContainer.appendChild(examClone);
+    
+    // Add "Return Home" button
+    let homeBtn = document.createElement('button');
+    homeBtn.className = 'm-btn m-btn-primary';
+    homeBtn.style.margin = '20px auto';
+    homeBtn.style.width = '200px';
+    homeBtn.innerText = 'Return Home';
+    homeBtn.onclick = () => window.location.href = HOME_URL;
+    
+    successScreen.appendChild(reviewContainer);
+    successScreen.appendChild(homeBtn);
+}
+// --- 7. STRICT SECURITY ---
+document.addEventListener('contextmenu', e => e.preventDefault());
 
-window.closeSubmitModal = () => {
-    $('modal-submit').style.display = 'none';
-    isTimerPaused = false;
-};
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden && examActive) {
+        tabSwitchCount++;
+        document.querySelectorAll('.custom-modal').forEach(m => m.classList.remove('active-modal'));
+        document.getElementById('warning-count-display').innerText = `Total Warnings: ${tabSwitchCount}`;
+        document.getElementById('modal-container').style.display = 'flex';
+        document.getElementById('security-modal').classList.add('active-modal');
+    }
+});
 
-window.confirmSubmitExam = () => {
-    $('modal-submit').style.display = 'none';
-    isTimerPaused = false;
-    processSectionSubmission();
-};
+// --- 8. TRACKING EYES & CANVAS (Premium Effect) ---
+function initTrackingEyes() {
+    const eyeContainers = document.querySelectorAll('.tracking-eyes-container');
+    eyeContainers.forEach(container => {
+        const eyes = container.querySelectorAll('.eye-ball');
+        const pupils = container.querySelectorAll('.pupil');
 
-window.downloadScorecardAsImage = () => {
-    let f = $('capture-scorecard-frame');
-    if (!f) return;
-    showToastAlert("Compiling high-resolution scorecard canvas frame...");
-    html2canvas(f, {
-        useCORS: true,
-        scale: 2,
-        backgroundColor: document.body.classList.contains('dark-mode') ? '#121212' : '#f4f6f9'
-    }).then(c => {
-        let a = document.createElement('a');
-        a.download = `${studentName}_Scorecard_${sections[currentYearIndex].year.replace(/\s+/g, '_')}.png`;
-        a.href = c.toDataURL('image/png');
-        a.click();
-        showToastAlert("Scorecard image compiled and saved successfully!");
-    }).catch(err => showToastAlert("Image rendering error. Please re-attempt."));
-};
-
-function processSectionSubmission() {
-    if (!lockedAnswers[currentQuestion] && userAnswers[currentQuestion] !== null) lockedAnswers[currentQuestion] = true;
-    let sec = sections[currentYearIndex];
-    sec.submitted = true;
-    for (let i = sec.start; i < sec.end; i++) lockedAnswers[i] = true;
-
-    $('quiz-screen').style.display = 'none';
-    $('unified-nav').style.display = 'none';
-    $('sc-global-footer-banner').style.display = 'none';
-    $('result-screen').style.display = 'block';
-
-    $('rs-dynamic-greeting').innerText = `Great effort ${studentName.split(" | ")[0].split(" ")[0]}`;
-    $('lbl-dash-name').innerText = studentName;
-    $('lbl-dash-date-node').innerText = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-    $('lbl-dash-time-node').innerText = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-
-    let rC = 0, rI = 0, rL = 0, aS = 0, cM = 0, cT = 0, pQ = 0, tg = $('table-body-matrix-target');
-    if (tg) {
-        tg.innerHTML = '';
-        sections.forEach(s => {
-            if (s.index > currentYearIndex) return;
-            let sC = 0, sI = 0, sL = 0, sS = 0, sT = s.end - s.start, sM = sT * MC;
-            cM += sM; cT += s.timeSpent; pQ += sT;
-
-            for (let i = s.start; i < s.end; i++) {
-                if (userAnswers[i] !== null) {
-                    if (btoa("sc_ans_" + userAnswers[i]) === questions[i].answer) { sC++; if (s.submitted) { rC++; sS += MC; } } 
-                    else { sI++; if (s.submitted) { rI++; sS -= MI; } }
-                } else {
-                    sL++; if (s.submitted) rL++;
-                }
-            }
-            if (!s.submitted) sL = sT; else aS += sS;
-            let pR = sM > 0 && sS > 0 ? ((sS / sM) * 100).toFixed(0) : 0;
-            if (!s.submitted) pR = 0;
-
-            let pillBg = s.submitted && sS > 0 ? 'var(--badge-pass-bg)' : 'var(--badge-fail-bg)';
-            let pillText = s.submitted && sS > 0 ? 'var(--badge-pass-text)' : 'var(--badge-fail-text)';
-
-            tg.innerHTML += `<tr><td>${s.year} - ${s.title}</td><td>${sM}</td><td>${s.submitted ? sC : '-'}</td><td>${s.submitted ? sI : '-'}</td><td>${sL}</td><td><span class="badge-pct-pill" style="background:${pillBg};color:${pillText};">${s.submitted ? pR : 0}%</span></td><td>${Math.floor(s.timeSpent / 60)}m ${s.timeSpent % 60}s</td></tr>`;
+        document.addEventListener('mousemove', (e) => {
+            eyes.forEach((eye, index) => {
+                const pupil = pupils[index];
+                if (!pupil) return;
+                const rect = eye.getBoundingClientRect();
+                const cx = rect.left + rect.width / 2;
+                const cy = rect.top + rect.height / 2;
+                const dx = e.clientX - cx;
+                const dy = e.clientY - cy;
+                const angle = Math.atan2(dy, dx);
+                const maxRadius = (rect.width / 2) - (pupil.offsetWidth / 2) - 1.5;
+                const distance = Math.min(Math.hypot(dx, dy) / 10, maxRadius);
+                pupil.style.transform = `translate(calc(-50% + ${Math.cos(angle) * distance}px), calc(-50% + ${Math.sin(angle) * distance}px))`;
+            });
         });
 
-        aS = Math.max(0, aS - (securityWarnings * PW));
-        let fP = cM > 0 ? Math.round((aS / cM) * 100) : 0;
+        const blink = () => {
+            eyes.forEach(eye => {
+                eye.style.transform = 'scaleY(0.06)';
+                setTimeout(() => eye.style.transform = 'scaleY(1)', 110);
+            });
+        };
 
-        $('lbl-dash-max-marks').innerText = cM;
-        $('lbl-dash-obtained-marks').innerText = aS;
-        $('lbl-dash-attempted').innerText = `${rC + rI}`;
-        $('lbl-dash-incorrect').innerText = `${rI}`;
-        $('lbl-dash-unattempted').innerText = `${rL}`;
-
-        let tm = Math.floor(cT / 60), ts = cT % 60;
-        $('lbl-dash-time').innerText = `${tm}m ${ts}s`;
-
-        $('lbl-radial-score-pct').innerText = `${fP}%`;
-        $('lbl-radial-obtained-val').innerText = aS;
-        $('lbl-radial-obtained-pct').innerText = `${fP}%`;
-        $('lbl-radial-rem-val').innerText = cM - aS;
-        $('lbl-radial-rem-pct').innerText = `${100 - fP}%`;
-
-        if ($('lbl-radial-max-1')) $('lbl-radial-max-1').innerText = cM;
-        if ($('lbl-radial-max-2')) $('lbl-radial-max-2').innerText = cM;
-        if ($('mob-val-total')) $('mob-val-total').innerText = cM;
-        if ($('mob-val-attempted')) $('mob-val-attempted').innerText = rC + rI;
-        if ($('mob-val-incorrect')) $('mob-val-incorrect').innerText = rI;
-        if ($('mob-val-unattempted')) $('mob-val-unattempted').innerText = rL;
-        if ($('mob-val-score')) $('mob-val-score').innerText = `${aS} / ${cM}`;
-        if ($('mob-val-percent')) $('mob-val-percent').innerText = `${fP}%`;
-        if ($('mob-val-warnings')) $('mob-val-warnings').innerText = securityWarnings;
-        if ($('mob-val-time')) $('mob-val-time').innerText = `${tm}m ${ts}s`;
-        
-        let ringNode = $('radial-bar-fill-node');
-        if (ringNode) {
-            ringNode.style.strokeDashoffset = 282.74 - (282.74 * fP) / 100;
-            let ringColor = fP >= 70 ? 'var(--color-correct)' : (fP >= 40 ? 'var(--color-warning)' : 'var(--color-danger)');
-            ringNode.style.stroke = ringColor;
-        }
-
-        tg.innerHTML += `<tr class="total-sum-row"><td>Cumulative Total</td><td>${cM}</td><td>${rC}</td><td>${rI}</td><td>${rL}</td><td><span class="badge-pct-pill" style="background:var(--badge-total-bg);color:var(--badge-total-text);">${fP}%</span></td><td>${tm}m ${ts}s</td></tr>`;
-
-        globalFormPayload = new URLSearchParams();
-        globalFormPayload.append("entry.784284433", studentName);
-        globalFormPayload.append("entry.222087888", sec.year + " - " + sec.title);
-        globalFormPayload.append("entry.942833858", aS + " / " + cM);
-        globalFormPayload.append("entry.930216015", rC);
-        globalFormPayload.append("entry.323768159", rI);
-        globalFormPayload.append("entry.1388315739", rL);
-        globalFormPayload.append("entry.1858729095", securityWarnings);
-        globalFormPayload.append("entry.1240634167", tm + "m " + ts + "s");
-    }
-
-    let b = $('btn-dashboard-main-trigger');
-    if (b) {
-        b.disabled = false;
-        b.style.opacity = '1';
-        b.innerHTML = currentYearIndex === sections.length - 1 ? `Finish Exam Evaluation` : `Proceed to Next Section`;
-    }
-}
-
-window.handleSectionProgression = () => {
-    let b = $('btn-dashboard-main-trigger');
-    if (!b || b.disabled) return;
-    b.disabled = true;
-    b.innerHTML = `💾 Auto-Saving Results...`;
-
-    fetch(FORM_SAVE_URL, {
-        method: "POST", mode: "no-cors",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: globalFormPayload ? globalFormPayload.toString() : ""
-    }).then(() => {
-        showToastAlert("Please wait while we save your result");
-        executeProgressionAdvance();
-    }).catch(() => {
-        executeProgressionAdvance();
+        const scheduleBlink = () => {
+            setTimeout(() => {
+                blink();
+                scheduleBlink();
+            }, 3000 + Math.random() * 4000);
+        };
+        scheduleBlink();
     });
-};
-
-function executeProgressionAdvance() {
-    if (currentYearIndex + 1 < sections.length) {
-        currentYearIndex++;
-        currentQuestion = sections[currentYearIndex].start;
-        $('result-screen').style.display = 'none';
-        $('quiz-screen').style.display = 'block';
-        $('unified-nav').style.display = 'flex';
-        $('sc-global-footer-banner').style.display = 'block';
-        buildYearNav(); updateTimerDisplay(); loadQuestion();
-    } else {
-        showToastAlert("Assessment fully complete! Final calculations locked down.");
-        let b = $('btn-dashboard-main-trigger');
-        if (b) {
-            b.disabled = true; b.style.opacity = '0.5'; b.innerText = "Evaluation Completed";
-        }
-    }
 }
 
-window.goToHome = () => window.location.href = HOME_URL;
+function initCanvasParticles() {
+    const canvas = document.getElementById('ambient-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height, particles = [];
 
-// --- Background Animations ---
-function initParticleCanvas(cid, canid, pct, cdist) {
-    let c = $(cid), can = $(canid);
-    if (!c || !can) return;
-    let ctx = can.getContext('2d'), w, h, pa = [];
+    function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
 
-    let res = () => { w = c.offsetWidth; h = c.offsetHeight; can.width = w; can.height = h; };
-    new ResizeObserver(res).observe(c); res();
-
-    class P {
-        constructor() {
-            this.x = Math.random() * w; this.y = Math.random() * h;
-            this.vx = (Math.random() - .5) * .8; this.vy = (Math.random() - .5) * .8;
-            this.r = 1.5;
-        }
-        update() {
-            this.x += this.vx; this.y += this.vy;
-            if (this.x < 0 || this.x > w) this.vx *= -1;
-            if (this.y < 0 || this.y > h) this.vy *= -1;
-        }
-        draw() {
-            ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-            let particleColor = getComputedStyle(document.body).getPropertyValue('--canvas-particle-color').trim() || 'rgba(21,104,69,0.4)';
-            ctx.fillStyle = particleColor; ctx.fill();
-        }
+    // Premium Constellation Effect: Smaller, slower, and more dots
+    for (let i = 0; i < 60; i++) {
+        particles.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            vx: (Math.random() - 0.5) * 0.05,
+            vy: (Math.random() - 0.5) * 0.05,
+            r: Math.random() * 1.2 + 0.5
+        });
     }
 
-    for (let i = 0; i < pct; i++) pa.push(new P());
+    function draw() {
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+        ctx.lineWidth = 1;
 
-    let anim = () => {
-        ctx.clearRect(0, 0, w, h);
-        for (let i = 0; i < pa.length; i++) {
-            pa[i].update(); pa[i].draw();
-            for (let j = i + 1; j < pa.length; j++) {
-                let d = Math.hypot(pa[i].x - pa[j].x, pa[i].y - pa[j].y);
-                if (d < cdist) {
-                    ctx.beginPath(); ctx.moveTo(pa[i].x, pa[i].y); ctx.lineTo(pa[j].x, pa[j].y);
-                    let isDark = document.body.classList.contains('dark-mode');
-                    ctx.strokeStyle = isDark ? `rgba(74,222,128,${.25 - (d / cdist) * .25})` : `rgba(21,104,69,${.25 - (d / cdist) * .25})`;
-                    ctx.lineWidth = 1; ctx.stroke();
+        for (let i = 0; i < particles.length; i++) {
+            let p = particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            if (p.x < 0) p.x = width;
+            if (p.x > width) p.x = 0;
+            if (p.y < 0) p.y = height;
+            if (p.y > height) p.y = 0;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Draw connecting lines if particles are close
+            for (let j = i + 1; j < particles.length; j++) {
+                let p2 = particles[j];
+                let dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+                if (dist < 100) {
+                    ctx.beginPath();
+                    ctx.moveTo(p.x, p.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
                 }
             }
         }
-        requestAnimationFrame(anim);
-    };
-    anim();
+        requestAnimationFrame(draw);
+    }
+    draw();
 }
