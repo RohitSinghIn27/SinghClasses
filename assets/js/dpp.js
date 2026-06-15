@@ -85,12 +85,11 @@ async function loadQuestionsFromSheet() {
             }
         });
 
-        // SHUFFLE AND LIMIT QUESTIONS BASED ON GLOBAL HTML VARIABLES
+        // SHUFFLE AND LIMIT QUESTIONS
         if (typeof LIMIT_MCQ !== 'undefined') parsedQuestionBank.mcqs = shuffleArray(parsedQuestionBank.mcqs).slice(0, LIMIT_MCQ);
         if (typeof LIMIT_VSA !== 'undefined') parsedQuestionBank.vsas = shuffleArray(parsedQuestionBank.vsas).slice(0, LIMIT_VSA);
         if (typeof LIMIT_SA !== 'undefined') parsedQuestionBank.sas = shuffleArray(parsedQuestionBank.sas).slice(0, LIMIT_SA);
         if (typeof LIMIT_CASE !== 'undefined') parsedQuestionBank.cases = shuffleArray(parsedQuestionBank.cases).slice(0, LIMIT_CASE);
-
 
         if (parsedQuestionBank.mcqs.length === 0 && parsedQuestionBank.vsas.length === 0 && parsedQuestionBank.sas.length === 0 && parsedQuestionBank.cases.length === 0) {
             document.getElementById('start-btn').innerText = "Data Format Error";
@@ -117,16 +116,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     loadQuestionsFromSheet();
 
-    // INTERACTIVE UI HANDLER (Green Options & Blue Sub-Questions)
+    // INTERACTIVE UI HANDLER
     document.getElementById('exam-container').addEventListener('click', function (e) {
-        // Handle MCQ Option Clicks
         if (e.target.closest('.option-item')) {
             let clickedOption = e.target.closest('.option-item');
             let siblings = clickedOption.parentElement.querySelectorAll('.option-item');
             siblings.forEach(s => s.classList.remove('selected'));
             clickedOption.classList.add('selected');
         }
-        // Handle Sub-question Clicks
         if (e.target.closest('.sub-question')) {
             let clickedSub = e.target.closest('.sub-question');
             let siblings = clickedSub.parentElement.querySelectorAll('.sub-question');
@@ -156,7 +153,6 @@ function startExam() {
         nameInput = "Student";
     }
 
-    document.getElementById('display-name').innerText = "Candidate: " + nameInput;
     document.getElementById('start-modal').classList.remove('active-modal');
     document.getElementById('modal-container').style.display = 'none';
     document.getElementById('main-app').style.display = 'flex';
@@ -188,7 +184,6 @@ function closeSecurityModal() {
 function generatePaper() {
     let qCounter = 1;
 
-    // NEW: Add General Instructions Block before sections
     let html = `
     <div class="exam-section" style="padding-bottom: 0;">
         <div class="question-block" style="background: #FFFFFF; border-top: 5px solid #1E3A8A; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
@@ -205,7 +200,6 @@ function generatePaper() {
         </div>
     </div>`;
 
-    // Section A (Objective)
     if (parsedQuestionBank.mcqs.length > 0) {
         html += `<div id="sec-a" class="exam-section">
             <div class="section-header"><span class="section-title-text">Section A: Objective Type</span></div>`;
@@ -226,7 +220,6 @@ function generatePaper() {
         html += `</div>`;
     }
 
-    // Section B (VSA)
     if (parsedQuestionBank.vsas.length > 0) {
         html += `<div id="sec-b" class="exam-section"><div class="section-header"><span class="section-title-text">Section B: Very Short Answer</span></div>`;
         parsedQuestionBank.vsas.forEach(q => {
@@ -236,7 +229,6 @@ function generatePaper() {
         html += `</div>`;
     }
 
-    // Section C (SA)
     if (parsedQuestionBank.sas.length > 0) {
         html += `<div id="sec-c" class="exam-section"><div class="section-header"><span class="section-title-text">Section C: Short Answer</span></div>`;
         parsedQuestionBank.sas.forEach(q => {
@@ -246,7 +238,6 @@ function generatePaper() {
         html += `</div>`;
     }
 
-    // Section D (Case Based)
     if (parsedQuestionBank.cases.length > 0) {
         html += `<div id="sec-d" class="exam-section"><div class="section-header"><span class="section-title-text">Section D: Case-Based</span></div>`;
         parsedQuestionBank.cases.forEach(cs => {
@@ -285,7 +276,6 @@ function startTimer() {
             updateTimerDisplay();
         } else {
             clearInterval(timerInterval);
-            clearInterval(timerInterval);
             alert("Time is Up! Your test is being auto-submitted.");
             processSubmission();
         }
@@ -297,13 +287,11 @@ function processSubmission() {
     examActive = false; 
     closeConfirmModal();
 
-    // 1. Calculate time
     let totalSecondsTaken = (30 * 60) - timeLeft;
     let m = Math.floor(totalSecondsTaken / 60);
     let s = totalSecondsTaken % 60;
     let timeTakenStr = (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
 
-    // 2. Data
     let studentName = document.getElementById('candidate-name').value.trim() || "Student";
     let feedback = document.getElementById('student-feedback').value.trim() || "-";
 
@@ -329,15 +317,26 @@ function processSubmission() {
     .then(() => console.log("Test data pushed."))
     .catch(error => console.error("Error submitting test:", error));
 
-    // 3. UI Update: Hide the main exam app
-    document.getElementById('main-app').style.display = 'none';
+    // UI Update: Hide Exam Wrap but keep header/footer
+    document.getElementById('exam-scroll-wrap').style.display = 'none';
     
-    // 4. Show success screen
+    // Hide Submit Button
+    const submitBtn = document.getElementById('submit-test-btn');
+    if (submitBtn) submitBtn.style.display = 'none';
+
+    // Update Footer Timer manually
+    document.getElementById('study-timer').innerText = "Done";
+    document.getElementById('motivation-text').innerText = "Test Complete! 🎉";
+    document.getElementById('motivation-text').style.color = "var(--success)";
+    
+    // Show success screen 
     let successScreen = document.getElementById('success-screen');
     successScreen.style.display = 'flex';
-    successScreen.innerHTML = ''; // Clear previous content
 
-    // 5. Build Review Container INSIDE the frame
+    // Build the review wrap
+    let reviewWrap = document.getElementById('review-wrap');
+    reviewWrap.innerHTML = ''; 
+
     let reviewContainer = document.createElement('div');
     reviewContainer.className = 'test-scroll-container';
     reviewContainer.style.marginTop = '20px';
@@ -345,7 +344,6 @@ function processSubmission() {
     reviewContainer.style.pointerEvents = 'none'; 
     reviewContainer.style.textAlign = 'left';
     
-    // Header for review
     let reviewTitle = document.createElement('h2');
     reviewTitle.innerText = "Question Bank";
     reviewTitle.style.textAlign = 'center';
@@ -354,19 +352,16 @@ function processSubmission() {
     reviewTitle.style.borderBottom = '2px dashed #CBD5E1';
     reviewContainer.appendChild(reviewTitle);
 
-    // CLONE THE EXAM CONTAINER
-    // We clone the inner structure of the exam, stripping out the instructions
     let originalExam = document.getElementById('exam-container');
     let examClone = originalExam.cloneNode(true);
     
-    // Remove the first child if it's the instruction block
     if (examClone.firstElementChild && examClone.firstElementChild.querySelector('h3')) {
         examClone.firstElementChild.remove();
     }
     
     reviewContainer.appendChild(examClone);
     
-    // Add "Return Home" button
+    // Add "Return Home" button at the bottom of the review
     let homeBtn = document.createElement('button');
     homeBtn.className = 'm-btn m-btn-primary';
     homeBtn.style.margin = '20px auto';
@@ -374,9 +369,10 @@ function processSubmission() {
     homeBtn.innerText = 'Return Home';
     homeBtn.onclick = () => window.location.href = HOME_URL;
     
-    successScreen.appendChild(reviewContainer);
-    successScreen.appendChild(homeBtn);
+    reviewWrap.appendChild(reviewContainer);
+    reviewWrap.appendChild(homeBtn);
 }
+
 // --- 7. STRICT SECURITY ---
 document.addEventListener('contextmenu', e => e.preventDefault());
 
@@ -442,7 +438,6 @@ function initCanvasParticles() {
     window.addEventListener('resize', resize);
     resize();
 
-    // Premium Constellation Effect: Smaller, slower, and more dots
     for (let i = 0; i < 60; i++) {
         particles.push({
             x: Math.random() * width,
@@ -472,7 +467,6 @@ function initCanvasParticles() {
             ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
             ctx.fill();
 
-            // Draw connecting lines if particles are close
             for (let j = i + 1; j < particles.length; j++) {
                 let p2 = particles[j];
                 let dist = Math.hypot(p.x - p2.x, p.y - p2.y);
