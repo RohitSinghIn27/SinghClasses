@@ -82,7 +82,12 @@ function updateTimer() {
     const hrs = Math.floor(studySeconds / 3600).toString().padStart(2, '0');
     const mins = Math.floor((studySeconds % 3600) / 60).toString().padStart(2, '0');
     const secs = (studySeconds % 60).toString().padStart(2, '0');
-    document.getElementById('study-timer').textContent = `${hrs}:${mins}:${secs}`;
+    const timeString = `${hrs}:${mins}:${secs}`;
+    
+    // UPDATED: Syncs the time to both the header and footer elements
+    document.querySelectorAll('.timer-sync').forEach(el => {
+        el.textContent = timeString;
+    });
 
     if (studySeconds === 60) { motivationEl.textContent = "Warming up! 🔥"; }
     else if (studySeconds === 300) { motivationEl.textContent = "Great focus! 🧠"; }
