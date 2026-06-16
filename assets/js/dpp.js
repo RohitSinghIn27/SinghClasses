@@ -3,7 +3,7 @@ let parsedQuestionBank = {
     vsas: [],
     sas: [],
     cases: []
-};
+}; 
 
 // Helper to format backticks to lavender code snippets
 function formatText(text) {
@@ -19,7 +19,7 @@ function shuffleArray(array) {
     }
     return array;
 }
-
+ 
 // --- 2. DATA FETCHING (AppScript / Excel Integration) ---
 async function loadQuestionsFromSheet() {
     if (!FETCH_API_URL) {
@@ -32,15 +32,22 @@ async function loadQuestionsFromSheet() {
         const response = await fetch(FETCH_API_URL);
         const data = await response.json();
 
+        // Helper to strip spaces and underscores for foolproof matching
+        const cleanKey = (key) => String(key).toLowerCase().replace(/[^a-z0-9]/g, '');
+
         data.forEach(row => {
             let keys = Object.keys(row);
-            let qTypeKey = keys.find(k => k.toLowerCase().includes('type'));
-            let qTextKey = keys.find(k => k.toLowerCase().includes('question'));
-            let opt1Key = keys.find(k => k.toLowerCase().includes('option_1') || k.toLowerCase().includes('assertion'));
-            let opt2Key = keys.find(k => k.toLowerCase().includes('option_2') || k.toLowerCase().includes('reason'));
-            let opt3Key = keys.find(k => k.toLowerCase().includes('option_3'));
-            let opt4Key = keys.find(k => k.toLowerCase().includes('option_4'));
-            let marksKey = keys.find(k => k.toLowerCase().includes('marks'));
+            
+            // Foolproof Key Matching
+            let qTypeKey = keys.find(k => cleanKey(k).includes('type'));
+            let qTextKey = keys.find(k => cleanKey(k).includes('question'));
+            
+            let opt1Key = keys.find(k => cleanKey(k).includes('optiona') || cleanKey(k).includes('assertion'));
+            let opt2Key = keys.find(k => cleanKey(k).includes('optionb') || cleanKey(k).includes('reason'));
+            let opt3Key = keys.find(k => cleanKey(k).includes('optionc'));
+            let opt4Key = keys.find(k => cleanKey(k).includes('optiond'));
+            
+            let marksKey = keys.find(k => cleanKey(k) === 'marks' || cleanKey(k).includes('marks'));
 
             if (!qTypeKey || !qTextKey) return;
 
@@ -52,6 +59,7 @@ async function loadQuestionsFromSheet() {
                 parsedQuestionBank.mcqs.push({
                     q: qText,
                     type: "mcq",
+                    marks: marks,
                     options: [
                         formatText(row[opt1Key]),
                         formatText(row[opt2Key]),
@@ -59,23 +67,24 @@ async function loadQuestionsFromSheet() {
                         formatText(row[opt4Key])
                     ]
                 });
-            } else if (qType === 'ASSERTION-REASON') {
+            } else if (qType === 'ASSERTION-REASON' || qType === 'ASSERTION REASON') {
                 parsedQuestionBank.mcqs.push({
                     q: "Evaluate the given Assertion and Reason:",
                     type: "assertion",
+                    marks: marks,
                     assertion: formatText(row[opt1Key] || 'Assertion missing'),
                     reason: formatText(row[opt2Key] || 'Reason missing')
                 });
             } else if (qType === 'VSA') {
-                parsedQuestionBank.vsas.push(qText);
+                parsedQuestionBank.vsas.push({ q: qText, marks: marks });
             } else if (qType === 'SA') {
-                parsedQuestionBank.sas.push(qText);
-            } else if (qType === 'CASE STUDY QUESTION') {
+                parsedQuestionBank.sas.push({ q: qText, marks: marks });
+            } else if (qType === 'CASE STUDY QUESTION' || qType === 'CASE STUDY') {
                 parsedQuestionBank.cases.push({
                     context: qText,
                     subs: []
                 });
-            } else if (qType === 'CASE STUDY SUB PART') {
+            } else if (qType === 'CASE STUDY SUB PART' || qType === 'SUB PART') {
                 if (parsedQuestionBank.cases.length > 0) {
                     parsedQuestionBank.cases[parsedQuestionBank.cases.length - 1].subs.push({
                         text: qText,
@@ -106,31 +115,13 @@ async function loadQuestionsFromSheet() {
         document.getElementById('start-btn').innerText = "Network Error";
     }
 }
-
 // --- 3. INITIALIZATION & UI EFFECTS ---
 document.addEventListener("DOMContentLoaded", () => {
-    initCanvasParticles();
     initTrackingEyes();
     document.getElementById('modal-container').style.display = 'flex';
     document.getElementById('start-btn').disabled = true;
 
     loadQuestionsFromSheet();
-
-    // INTERACTIVE UI HANDLER
-    document.getElementById('exam-container').addEventListener('click', function (e) {
-        if (e.target.closest('.option-item')) {
-            let clickedOption = e.target.closest('.option-item');
-            let siblings = clickedOption.parentElement.querySelectorAll('.option-item');
-            siblings.forEach(s => s.classList.remove('selected'));
-            clickedOption.classList.add('selected');
-        }
-        if (e.target.closest('.sub-question')) {
-            let clickedSub = e.target.closest('.sub-question');
-            let siblings = clickedSub.parentElement.querySelectorAll('.sub-question');
-            siblings.forEach(s => s.classList.remove('active'));
-            clickedSub.classList.add('active');
-        }
-    });
 });
 
 function toggleFullScreen() {
@@ -203,13 +194,13 @@ function generatePaper() {
 
     let html = `
     <div class="exam-section" style="padding-bottom: 0;">
-        <div class="question-block" style="background: #FFFFFF; border-top: 5px solid #1E3A8A; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-            <h3 style="color: #1E3A8A; margin-bottom: 16px; font-weight: 700; text-align: center; font-size: 1.25rem; text-transform: uppercase; letter-spacing: 1.5px;">General Instructions</h3>
-            <ol style="margin-left: 24px; color: #475569; line-height: 1.8; font-size: 0.95rem; font-weight: 500;">
+        <div class="question-block" style="margin-bottom: 1.5rem;">
+            <h3 style="color: var(--primary-blue); margin-bottom: 16px; font-weight: 800; text-align: center; font-size: 1.4rem; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 2px solid var(--bond-border); padding-bottom: 8px;">General Instructions</h3>
+            <ol style="margin-left: 24px; color: #334155; line-height: 1.8; font-size: 0.95rem; font-weight: 600;">
                 <li>This question paper comprises four sections: <strong>A, B, C, and D</strong>.</li>
-                <li><strong>Section A</strong> consists of Objective Type / Assertion-Reason questions carrying 1 mark each.</li>
-                <li><strong>Section B</strong> consists of Very Short Answer questions carrying 2 marks each.</li>
-                <li><strong>Section C</strong> consists of Short Answer questions carrying 3 marks each.</li>
+                <li><strong>Section A</strong> consists of Objective Type / Assertion-Reason questions.</li>
+                <li><strong>Section B</strong> consists of Very Short Answer questions.</li>
+                <li><strong>Section C</strong> consists of Short Answer questions.</li>
                 <li><strong>Section D</strong> consists of Case-Based questions.</li>
                 <li>All questions are compulsory. Read the scenarios carefully before answering.</li>
                 <li>There is no negative marking for incorrect answers.</li>
@@ -222,14 +213,15 @@ function generatePaper() {
             <div class="section-header"><span class="section-title-text">Section A: Objective Type</span></div>`;
 
         parsedQuestionBank.mcqs.forEach(q => {
+            let mks = q.marks ? `[${q.marks}]` : '';
             if (q.type === "mcq") {
-                html += `<div class="question-block"><div class="question-header"><div class="q-num">Q${qCounter}.</div><div class="q-text">${q.q}</div><div class="q-marks">[1]</div></div>
+                html += `<div class="question-block"><div class="question-header"><div class="q-num">Q${qCounter}.</div><div class="q-text">${q.q}</div><div class="q-marks">${mks}</div></div>
                     <ul class="options-list">
-                        <li class="option-item">a) ${q.options[0]}</li><li class="option-item">b) ${q.options[1]}</li>
-                        <li class="option-item">c) ${q.options[2]}</li><li class="option-item">d) ${q.options[3]}</li>
+                        <li class="option-item">A) ${q.options[0]}</li><li class="option-item">B) ${q.options[1]}</li>
+                        <li class="option-item">C) ${q.options[2]}</li><li class="option-item">D) ${q.options[3]}</li>
                     </ul></div>`;
             } else {
-                html += `<div class="question-block"><div class="question-header"><div class="q-num">Q${qCounter}.</div><div class="q-text">${q.q}</div><div class="q-marks">[1]</div></div>
+                html += `<div class="question-block"><div class="question-header"><div class="q-num">Q${qCounter}.</div><div class="q-text">${q.q}</div><div class="q-marks">${mks}</div></div>
                     <div class="assertion-box"><strong>Assertion (A):</strong> ${q.assertion}<br><br><strong>Reason (R):</strong> ${q.reason}</div></div>`;
             }
             qCounter++;
@@ -240,7 +232,8 @@ function generatePaper() {
     if (parsedQuestionBank.vsas.length > 0) {
         html += `<div id="sec-b" class="exam-section"><div class="section-header"><span class="section-title-text">Section B: Very Short Answer</span></div>`;
         parsedQuestionBank.vsas.forEach(q => {
-            html += `<div class="question-block"><div class="question-header"><div class="q-num">Q${qCounter}.</div><div class="q-text">${q}</div><div class="q-marks">[2]</div></div></div>`;
+            let mks = q.marks ? `[${q.marks}]` : '';
+            html += `<div class="question-block"><div class="question-header"><div class="q-num">Q${qCounter}.</div><div class="q-text">${q.q}</div><div class="q-marks">${mks}</div></div></div>`;
             qCounter++;
         });
         html += `</div>`;
@@ -249,7 +242,8 @@ function generatePaper() {
     if (parsedQuestionBank.sas.length > 0) {
         html += `<div id="sec-c" class="exam-section"><div class="section-header"><span class="section-title-text">Section C: Short Answer</span></div>`;
         parsedQuestionBank.sas.forEach(q => {
-            html += `<div class="question-block"><div class="question-header"><div class="q-num">Q${qCounter}.</div><div class="q-text">${q}</div><div class="q-marks">[3]</div></div></div>`;
+            let mks = q.marks ? `[${q.marks}]` : '';
+            html += `<div class="question-block"><div class="question-header"><div class="q-num">Q${qCounter}.</div><div class="q-text">${q.q}</div><div class="q-marks">${mks}</div></div></div>`;
             qCounter++;
         });
         html += `</div>`;
@@ -261,7 +255,8 @@ function generatePaper() {
             html += `<div class="question-block"><div class="question-header"><div class="q-num">Q${qCounter}.</div><div class="q-text">Read the scenario:</div><div class="q-marks"></div></div>
                 <div class="assertion-box" style="margin-left:0;">${cs.context}</div><div class="sub-questions">`;
             cs.subs.forEach(sub => {
-                html += `<div class="sub-question"><div style="flex:1">${sub.text}</div><div class="q-marks">[${sub.marks}]</div></div>`;
+                let mks = sub.marks ? `[${sub.marks}]` : '';
+                html += `<div class="sub-question"><div style="flex:1">${sub.text}</div><div class="q-marks">${mks}</div></div>`;
             });
             html += `</div></div>`;
             qCounter++;
@@ -278,7 +273,10 @@ const motivationEl = document.getElementById('motivation-text');
 function updateTimerDisplay() {
     let m = Math.floor(timeLeft / 60);
     let s = timeLeft % 60;
-    document.getElementById('study-timer').innerText = (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
+    let finalStr = (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
+    
+    document.getElementById('study-timer').innerText = finalStr;
+    document.getElementById('dynamic-mobile-header').setAttribute('data-time-val', finalStr);
 
     if (timeLeft === 25 * 60) motivationEl.textContent = "Great focus! 🧠";
     else if (timeLeft === 15 * 60) motivationEl.textContent = "Halfway there! ⚡";
@@ -334,23 +332,19 @@ function processSubmission() {
     .then(() => console.log("Test data pushed."))
     .catch(error => console.error("Error submitting test:", error));
 
-    // UI Update: Hide Exam Wrap but keep header/footer
+    // UI Update: Hide specific items
     document.getElementById('exam-scroll-wrap').style.display = 'none';
-    
-    // Hide Submit Button
     const submitBtn = document.getElementById('submit-test-btn');
     if (submitBtn) submitBtn.style.display = 'none';
 
-    // Update Footer Timer manually
     document.getElementById('study-timer').innerText = "Done";
-    document.getElementById('motivation-text').innerText = "Test Complete! 🎉";
-    document.getElementById('motivation-text').style.color = "var(--success)";
+    document.getElementById('dynamic-mobile-header').setAttribute('data-time-val', 'Done');
+    document.getElementById('motivation-text').innerText = "";
     
-    // Show success screen 
+    // Bypass Thank You Message - Show Question Bank directly
     let successScreen = document.getElementById('success-screen');
     successScreen.style.display = 'flex';
 
-    // Build the review wrap
     let reviewWrap = document.getElementById('review-wrap');
     reviewWrap.innerHTML = ''; 
 
@@ -358,15 +352,14 @@ function processSubmission() {
     reviewContainer.className = 'test-scroll-container';
     reviewContainer.style.marginTop = '20px';
     reviewContainer.style.marginBottom = '40px';
-    reviewContainer.style.pointerEvents = 'none'; 
     reviewContainer.style.textAlign = 'left';
     
     let reviewTitle = document.createElement('h2');
-    reviewTitle.innerText = "Question Bank";
+    reviewTitle.innerText = "Question Bank Review";
     reviewTitle.style.textAlign = 'center';
     reviewTitle.style.padding = '20px';
-    reviewTitle.style.color = '#1E3A8A';
-    reviewTitle.style.borderBottom = '2px dashed #CBD5E1';
+    reviewTitle.style.color = 'var(--primary-blue)';
+    reviewTitle.style.borderBottom = '2px dashed var(--bond-border)';
     reviewContainer.appendChild(reviewTitle);
 
     let originalExam = document.getElementById('exam-container');
@@ -378,7 +371,6 @@ function processSubmission() {
     
     reviewContainer.appendChild(examClone);
     
-    // Add "Return Home" button at the bottom of the review
     let homeBtn = document.createElement('button');
     homeBtn.className = 'm-btn m-btn-primary';
     homeBtn.style.margin = '20px auto';
@@ -403,7 +395,7 @@ document.addEventListener('visibilitychange', () => {
     }
 });
 
-// --- 8. TRACKING EYES & CANVAS (Premium Effect) ---
+// --- 8. TRACKING EYES ENGINE ---
 function initTrackingEyes() {
     const eyeContainers = document.querySelectorAll('.tracking-eyes-container');
     eyeContainers.forEach(container => {
@@ -441,61 +433,4 @@ function initTrackingEyes() {
         };
         scheduleBlink();
     });
-}
-
-function initCanvasParticles() {
-    const canvas = document.getElementById('ambient-canvas');
-    const ctx = canvas.getContext('2d');
-    let width, height, particles = [];
-
-    function resize() {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    for (let i = 0; i < 60; i++) {
-        particles.push({
-            x: Math.random() * width,
-            y: Math.random() * height,
-            vx: (Math.random() - 0.5) * 0.05,
-            vy: (Math.random() - 0.5) * 0.05,
-            r: Math.random() * 1.2 + 0.5
-        });
-    }
-
-    function draw() {
-        ctx.clearRect(0, 0, width, height);
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
-        ctx.lineWidth = 1;
-
-        for (let i = 0; i < particles.length; i++) {
-            let p = particles[i];
-            p.x += p.vx;
-            p.y += p.vy;
-            if (p.x < 0) p.x = width;
-            if (p.x > width) p.x = 0;
-            if (p.y < 0) p.y = height;
-            if (p.y > height) p.y = 0;
-
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctx.fill();
-
-            for (let j = i + 1; j < particles.length; j++) {
-                let p2 = particles[j];
-                let dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-                if (dist < 100) {
-                    ctx.beginPath();
-                    ctx.moveTo(p.x, p.y);
-                    ctx.lineTo(p2.x, p2.y);
-                    ctx.stroke();
-                }
-            }
-        }
-        requestAnimationFrame(draw);
-    }
-    draw();
 }
