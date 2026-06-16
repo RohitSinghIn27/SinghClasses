@@ -84,7 +84,7 @@ function updateTimer() {
     const secs = (studySeconds % 60).toString().padStart(2, '0');
     const timeString = `${hrs}:${mins}:${secs}`;
     
-    // UPDATED: Syncs the time to both the header and footer elements
+    // Syncs the time to both the header and footer elements
     document.querySelectorAll('.timer-sync').forEach(el => {
         el.textContent = timeString;
     });
@@ -157,12 +157,11 @@ function initCanvasParticles() {
     window.addEventListener('resize', resize);
     resize();
 
-    // Very small quantity for premium subtle look
     for(let i = 0; i < 25; i++) {
         particles.push({
             x: Math.random() * width,
             y: Math.random() * height,
-            vx: (Math.random() - 0.5) * 0.4, // Slow motion
+            vx: (Math.random() - 0.5) * 0.4, 
             vy: (Math.random() - 0.5) * 0.4,
             r: Math.random() * 1.5 + 0.5
         });
@@ -170,13 +169,12 @@ function initCanvasParticles() {
 
     function draw() {
         ctx.clearRect(0, 0, width, height);
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.4)'; // Subtle white dots
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.4)'; 
         
         particles.forEach(p => {
             p.x += p.vx; 
             p.y += p.vy;
             
-            // Wrap around screen
             if(p.x < 0) p.x = width; 
             if(p.x > width) p.x = 0;
             if(p.y < 0) p.y = height; 

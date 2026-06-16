@@ -180,6 +180,23 @@ function closeSecurityModal() {
     document.getElementById('security-modal').classList.remove('active-modal');
 }
 
+// --- YOUTUBE CUSTOM MODAL LOGIC ---
+function openYTModal() {
+    document.getElementById('modal-container').style.display = 'flex';
+    document.querySelectorAll('.custom-modal').forEach(m => m.classList.remove('active-modal'));
+    document.getElementById('yt-confirm-modal').classList.add('active-modal');
+}
+
+function closeYTModal() {
+    document.getElementById('modal-container').style.display = 'none';
+    document.getElementById('yt-confirm-modal').classList.remove('active-modal');
+}
+
+function proceedToYouTube() {
+    closeYTModal();
+    window.open('https://youtu.be/IZyZDC7Q3iw', '_blank');
+}
+
 // --- 5. EXAM GENERATION ---
 function generatePaper() {
     let qCounter = 1;

@@ -269,17 +269,40 @@ code, .code-snippet {
     .options-list {
         margin-left: 15px;
     }
-    .unified-workspace-header, .unified-workspace-footer {
+    .unified-workspace-header {
         padding: 0.5rem;
         gap: 0.5rem;
     }
+
+    /* Fixed mobile footer layout */
+    .unified-workspace-footer {
+        padding: 10px 0.5rem;
+        height: auto; 
+        flex-direction: column-reverse; /* Stacks text below tools */
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .footer-tools {
+        width: 100%;
+        justify-content: center; 
+        gap: 0.5rem;
+    }
     
-    /* Hiding Text Elements for Mobile */
-    .btn-text, .hide-mobile {
+    /* Reveal copyright text centrally on mobile */
+    .unified-workspace-footer > .hide-mobile {
+        display: block !important;
+        font-size: 11px;
+        color: var(--text-muted);
+        text-align: center;
+    }
+
+    /* Hide specific non-essential text elements */
+    .btn-text, .motivation-text.hide-mobile {
         display: none !important;
     }
 
-    /* Making Buttons Square for Icons */
+    /* Square icon buttons */
     .app-btn, .back-btn {
         padding: 0.6rem;
         width: 40px;
@@ -289,21 +312,11 @@ code, .code-snippet {
         align-items: center;
     }
     
-    /* Remove gaps since there's no text */
     .app-btn svg, .back-btn svg {
         margin: 0;
     }
 
-    .header-left-group, .header-right-group, .footer-tools {
+    .header-left-group, .header-right-group {
         gap: 0.5rem;
-    }
-}
-
-@media (max-width: 768px) {
-    /* ... your existing mobile styles ... */
-    
-    .unified-workspace-footer {
-        padding: 0.8rem; /* Gives it a bit more breathing room to tap */
-        justify-content: center; /* Centers the timer and eyes */
     }
 }

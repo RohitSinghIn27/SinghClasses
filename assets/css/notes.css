@@ -126,7 +126,7 @@ body {
     font-family: 'Poppins', sans-serif;
     font-size: 0.9rem;
     font-weight: 500;
-    white-space: nowrap; /* Forces expansion, no trimming */
+    white-space: nowrap; 
     display: flex;
     align-items: center;
 }
@@ -156,12 +156,11 @@ body {
 
 /* YOUTUBE ONE SHOT BUTTON */
 .app-btn-yt {
-    background-color: #DC2626; /* Deep Red */
+    background-color: #DC2626; 
     color: #ffffff;
 }
 .app-btn-yt:hover { background-color: #B91C1C; }
 
-/* MILD STATE for empty YouTube links */
 .app-btn-yt.mild {
     background-color: var(--panel-bg);
     border: 1px solid var(--border-color);
@@ -174,7 +173,7 @@ body {
     transform: none;
 }
 
-/* HIDDEN BY DEFAULT: Mobile header components */
+/* HIDDEN BY DEFAULT ON DESKTOP */
 .mobile-header-tools {
     display: none;
 }
@@ -187,7 +186,7 @@ body {
     width: 100%;
     margin: 0;
     padding: 0;
-    z-index: 10; /* Above ambient canvas */
+    z-index: 10; 
 }
 
 .pdf-viewer-container {
@@ -240,7 +239,6 @@ body {
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
 }
 
-/* Right side footer alignment */
 .footer-tools {
     display: flex;
     align-items: center;
@@ -344,13 +342,12 @@ body {
 .m-btn-solid { background: #DC2626; border: 1px solid #DC2626; color: #ffffff; }
 .m-btn-solid:hover { background: #B91C1C; }
 
-/* TOAST NOTIFICATION FOR "COMING SOON" */
 .status-toast {
     position: fixed;
     bottom: 80px; 
     left: 50%;
     transform: translateX(-50%) translateY(20px);
-    background-color: #F59E0B; /* Amber Alert Color */
+    background-color: #F59E0B; 
     color: #ffffff;
     padding: 0.8rem 1.5rem;
     border-radius: 50px;
@@ -374,40 +371,30 @@ body {
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-/* TABLET ADJUSTMENTS */
+/* TABLET & MOBILE ADJUSTMENTS (Under 850px) */
 @media (max-width: 850px) {
-    .unified-workspace-footer { flex-direction: row; padding: 0.5rem 0.8rem; gap: 0.5rem; }
-    .unified-workspace-footer > div:first-child { font-size: 0.75rem; line-height: 1.3; max-width: 100px; }
-    .footer-tools { flex-wrap: nowrap; gap: 0.6rem; }
-    .motivation-text { font-size: 0.75rem; line-height: 1.2; text-align: center; max-width: 50px; color: #4ADE80; margin-right: 0; white-space: normal; }
-    .timer-display { font-size: 0.9rem; padding: 0.2rem 0.5rem; }
-    .tracking-eyes-container { --eye-size: 16px; }
-}
-
-/* STRICT MOBILE ADJUSTMENTS (Matches Screenshot) */
-@media (max-width: 600px) {
-    /* 1. HIDE FOOTER COMPLETELY ON MOBILE */
+    /* 1. HIDE DESKTOP FOOTER */
     .unified-workspace-footer { 
         display: none !important; 
     }
 
     /* 2. RESTRUCTURE HEADER FOR MOBILE */
     .unified-workspace-header {
-        padding: 0.5rem 0.6rem;
+        padding: 0.6rem 0.8rem;
         gap: 0.5rem;
-        background-color: #051024; /* Deep, dark navy from the screenshot */
+        background-color: #051024; 
         border-bottom: none;
     }
 
     /* Hide text & fullscreen elements to save space */
     .chapter-capsule { display: none !important; }
-    .header-right-group .app-btn:last-child { display: none !important; } /* Hides Fullscreen button */
+    .header-right-group .app-btn:last-child { display: none !important; } 
 
     .header-left-group { gap: 0.4rem; }
     
     .header-right-group {
         gap: 0.4rem;
-        justify-content: flex-start; /* Aligns tools directly next to the back button */
+        justify-content: flex-start; 
         flex-grow: 0;
     }
 
@@ -421,7 +408,7 @@ body {
         gap: 0; 
         justify-content: center;
         align-items: center;
-        background-color: rgba(255, 255, 255, 0.08); /* Matches the translucent squares */
+        background-color: rgba(255, 255, 255, 0.08); 
         border: 1px solid rgba(255, 255, 255, 0.1);
     }
     
@@ -435,16 +422,16 @@ body {
 
     /* 3. SHOW AND POSITION MOBILE HEADER TOOLS */
     .mobile-header-tools {
-        display: flex;
+        display: flex !important; 
         align-items: center;
         gap: 0.8rem;
-        margin-left: auto; /* Pushes Timer and Eyes to the far right */
+        margin-left: auto; 
     }
 
     .mobile-header-tools .timer-display {
         font-size: 0.85rem;
         padding: 0.25rem 0.6rem;
-        background-color: rgba(255, 255, 255, 0.08); /* Dark pill background */
+        background-color: rgba(255, 255, 255, 0.08); 
         border: none;
         border-radius: 6px;
     }
