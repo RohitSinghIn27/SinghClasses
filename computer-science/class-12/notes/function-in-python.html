@@ -7,9 +7,6 @@
   <meta name="description" content="Master Functions in Python for CBSE Class 12 Computer Science with expert coaching by Rohit Singh. Access PDF notes, one-shot video lectures, and study materials at SinghClasses.in.">
   <meta name="keywords" content="Function in Python, Class 12 Computer Science CBSE, Python Functions, Rohit Singh, SinghClasses, CBSE CS Notes, Python Programming">
   <meta name="author" content="Rohit Singh">
-  <meta property="og:title" content="Function in Python | Class 12 Computer Science CBSE | SinghClasses">
-  <meta property="og:description" content="Master Functions in Python for CBSE Class 12 Computer Science with expert coaching by Rohit Singh. Access PDF notes, one-shot video lectures, and study materials at SinghClasses.in.">
-  <meta property="og:type" content="article">
   
   <link rel="icon" href="assets/images/favicon/favicon.ico" type="image/x-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,7 +16,6 @@
   <link rel="stylesheet" href="../../../assets/css/style.css">
   <link rel="stylesheet" href="../../../assets/css/dashboard.css">
   <link rel="stylesheet" href="../../../assets/css/notes.css">
-
 </head>
 <body>
 
@@ -28,22 +24,19 @@
   <header class="unified-workspace-header" role="banner">
     
     <div class="header-left-group">
-        <button class="back-btn" onclick="window.location.href='../../../index.html'" aria-label="Go Back">
+        <button class="back-btn" onclick="history.back()" aria-label="Go Back">
             <svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24" width="18"><polyline points="15 18 9 12 15 6"></polyline></svg>
             Back
         </button>
-     <div class="chapter-capsule" 
+        <div class="chapter-capsule" 
              id="current-chapter" 
              data-drive-id="14ycSzPcKX20mBGdY9kdfNp31fp6LNSYW"
              data-yt-link="https://youtu.be/e3XOibcemx8">
             Function in Python
         </div>
-   
     </div>
 
     <div class="header-right-group">
-
-   
         <button class="app-btn app-btn-outline" onclick="downloadPDF()">
             <svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="15"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg> 
             Download
@@ -54,10 +47,16 @@
             One Shot
         </button>
 
-        <button class="app-btn" onclick="toggleFullScreen()">
+        <button class="app-btn hide-on-mobile" onclick="toggleFullScreen()">
             <svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="15"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
             Fullscreen
         </button>
+
+        <div class="timer-display timer-sync mobile-timer">00:00:00</div>
+        <div class="tracking-eyes-container mobile-eyes">
+            <div class="eye-ball"><div class="pupil"></div></div>
+            <div class="eye-ball"><div class="pupil"></div></div>
+        </div>
     </div>
 
   </header>
@@ -78,9 +77,9 @@
       <div class="footer-tools">
           <span id="motivation-text" class="motivation-text">Best of luck!</span>
           
-          <div class="timer-display" id="study-timer">00:00:00</div>
+          <div class="timer-display timer-sync" id="study-timer">00:00:00</div>
           
-          <div class="tracking-eyes-container">
+          <div class="tracking-eyes-container desktop-eyes">
               <div class="eye-ball"><div class="pupil"></div></div>
               <div class="eye-ball"><div class="pupil"></div></div>
           </div>
@@ -95,12 +94,8 @@
           <h2>Want to watch this video?</h2>
           <p>Choose an option below to continue to the One Shot lecture.</p>
           <div class="modal-actions">
-              <button class="m-btn m-btn-outline" onclick="closeYTModal()">
-                  <svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="18"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Stay
-              </button>
-              <button class="m-btn m-btn-solid" onclick="proceedToYT()">
-                  <svg fill="currentColor" height="18" viewBox="0 0 24 24" width="18"><path d="M8 5v14l11-7z"/></svg> Watch
-              </button>
+              <button class="m-btn m-btn-outline" onclick="closeYTModal()">Stay</button>
+              <button class="m-btn m-btn-solid" onclick="proceedToYT()">Watch</button>
           </div>
       </div>
   </div>
@@ -110,9 +105,8 @@
   </div>
 
   <script src="../../../script.js"></script>
-
   <script src="../../../assets/js/dashboard.js"></script>
   <script src="../../../assets/js/style.js"></script>
-    <script src="../../../assets/js/notes.js"></script>
+  <script src="../../../assets/js/notes.js"></script>
 </body>
 </html>
