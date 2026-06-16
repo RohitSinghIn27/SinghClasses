@@ -1,29 +1,29 @@
-// SHEET_API_URL, FORM_SAVE_URL, and HOME_URL are declared in the HTML file above this script.
+/**
+ * Interactive CBT Test Engine Module Workspace
+ * Powered by centralized configuration elements located within HTML markup definitions.
+ */
 
-const $ = id => document.getElementById(id),
-    MC = 5,
-    MI = 1,
-    PW = 2;
+const $ = id => document.getElementById(id);
+
+// Dynamically unpack variables mapping directly back to window context targets
+const getCorrectMarks = () => window.CBT_CONFIG?.MARKS_CORRECT ?? 5;
+const getIncorrectMarks = () => window.CBT_CONFIG?.MARKS_INCORRECT ?? 1;
+const getPenaltyMarks = () => window.CBT_CONFIG?.PENALTY_WARNING ?? 2;
+const getSheetApiUrl = () => window.CBT_CONFIG?.SHEET_API_URL ?? "";
+const getFormSaveUrl = () => window.CBT_CONFIG?.FORM_SAVE_URL ?? "";
+const getHomeUrl = () => window.CBT_CONFIG?.HOME_URL ?? "https://www.singhclasses.in/";
+const getYoutubeUrl = () => window.CBT_CONFIG?.YOUTUBE_URL ?? "https://www.youtube.com/@SinghClasses";
 
 // SVG Icon Definitions to replace emojis
-const ICON_SUN = `<svg class="sc-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
-const ICON_MOON = `<svg class="sc-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
 const ICON_ALERT = `<svg class="sc-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`;
  
-const arOpts = [
-  "Both A and R are true and R is the correct explanation for A.",
-  "Both A and R are true and R is not the correct explanation for A.",
-  "A is True but R is False.",
-  "A is False but R is True.",
-  "Both A and R are False."
-];
-
 let listExamPapers = [];
 let isQuestionsLoading = true;
+let questions = [], sections = [], studentName = "", currentYearIndex = 0, currentQuestion = 0;
+let userAnswers = [], visitedQuestions = [], lockedAnswers = [], sectionTimes = [];
+let timerInterval, isTimerPaused = true, securityWarnings = 0, isExamActive = false, currentFilter = 'all', globalFormPayload = null;
+let activeResourceUrl = "";
 
-// ─────────────────────────────────────────────────────────────
-//  STEP 1 ▸ resolveCorrectText
-// ─────────────────────────────────────────────────────────────
 function resolveCorrectText(rawValue, optionsArray) {
     if (rawValue == null || rawValue === "") return optionsArray[0] || "";
     let v = rawValue.toString().trim();
@@ -46,9 +46,6 @@ function resolveCorrectText(rawValue, optionsArray) {
     return optionsArray[0] ? optionsArray[0].toString().trim() : "";
 }
 
-// ─────────────────────────────────────────────────────────────
-//  STEP 2 ▸ textToIndex  
-// ─────────────────────────────────────────────────────────────
 function textToIndex(correctText, optionsArray) {
     let idx = optionsArray.findIndex(
         opt => opt && opt.toString().trim().toLowerCase() === correctText.toLowerCase()
@@ -58,7 +55,10 @@ function textToIndex(correctText, optionsArray) {
 
 async function loadQuestionsFromSheet() {
     try {
-        const response = await fetch(SHEET_API_URL);
+        const url = getSheetApiUrl();
+        if(!url) throw new Error("Google Apps Script Endpoint URL destination string not initialized.");
+        
+        const response = await fetch(url);
         const raw = await response.json();
 
         if (!Array.isArray(raw) || raw.length === 0) {
@@ -142,10 +142,6 @@ async function loadQuestionsFromSheet() {
     }
 }
 
-let questions = [], sections = [], studentName = "", currentYearIndex = 0, currentQuestion = 0;
-let userAnswers = [], visitedQuestions = [], lockedAnswers = [], sectionTimes = [];
-let timerInterval, isTimerPaused = true, securityWarnings = 0, isExamActive = false, currentFilter = 'all', globalFormPayload = null;
-
 function shuffleArray(a) {
     for (let i = a.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -162,18 +158,62 @@ function showToastAlert(m) {
     }
 }
 
-window.toggleDarkMode = () => {
-    document.body.classList.toggle('dark-mode');
-    let isDark = document.body.classList.contains('dark-mode');
-    let headerBtn = $('header-theme-toggle');
-    if (isDark) {
-        if (headerBtn) headerBtn.innerHTML = `${ICON_SUN} Light Mode`;
-        localStorage.setItem('theme', 'dark');
-    } else {
-        if (headerBtn) headerBtn.innerHTML = `${ICON_MOON} Dark Mode`;
-        localStorage.setItem('theme', 'light');
+function triggerVerifyModal(type) {
+    const modal = document.getElementById('verify-resource-modal');
+    const icon = document.getElementById('verify-card-icon');
+    const heading = document.getElementById('verify-modal-heading');
+    const text = document.getElementById('verify-modal-text');
+    const actionBtn = document.getElementById('verify-proceed-action-btn');
+    const driveId = document.getElementById('current-chapter').getAttribute('data-drive-id');
+    
+    modal.style.display = 'flex';
+    
+    if (type === 'pdf') {
+        activeResourceUrl = `https://drive.google.com/file/d/${driveId}/preview`;
+        icon.className = "verify-modal-icon pdf-style";
+        icon.innerHTML = `<svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line></svg>`;
+        heading.innerText = "Open Chapter Study Material?";
+        text.innerText = "You are going to view the embedded revision lecture notes inside your student drive space.";
+        actionBtn.className = "v-btn v-btn-pdf";
+        actionBtn.innerText = "Open Notes";
+    } else if (type === 'yt') {
+        activeResourceUrl = getYoutubeUrl();
+        icon.className = "verify-modal-icon yt-style";
+        icon.innerHTML = `<svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.377.55a3.016 3.016 0 0 0-2.122 2.136C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.55 9.376.55 9.376.55s7.505 0 9.377-.55a3.016 3.016 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`;
+        heading.innerText = "Watch the Video Lesson?";
+        text.innerText = "Choose to continue onward if you are ready to launch the One Shot educational lecture window streams.";
+        actionBtn.className = "v-btn v-btn-yt";
+        actionBtn.innerText = "Watch Video";
     }
-    if (isExamActive && sections.length > 0) buildYearNav();
+    
+    actionBtn.onclick = () => {
+        window.open(activeResourceUrl, '_blank');
+        closeVerifyModal();
+    };
+}
+
+function closeVerifyModal() {
+    document.getElementById('verify-resource-modal').style.display = 'none';
+}
+
+function toggleFullScreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+            console.error(`Error attempting to enable fullscreen mode: ${err.message}`);
+        });
+    } else {
+        document.exitFullscreen();
+    }
+}
+
+function goToHome() {
+    window.location.href = getHomeUrl();
+}
+
+window.closeSecurityModal = () => {
+    $('modal-security').style.display = 'none';
+    document.querySelector('.sc-widget-container').classList.remove('sc-blur-active');
+    isTimerPaused = false;
 };
 
 document.addEventListener('click', e => {
@@ -188,37 +228,25 @@ window.addEventListener('scroll', () => {
     if (bar) bar.style.width = (sh > 0 ? (st / sh) * 100 : 0) + "%";
 });
 
-const mt = $('scMenuToggle'), mm = $('scMobileMenu');
-if (mt && mm) {
-    mt.addEventListener('click', () => {
-        mm.classList.toggle('show-mobile-menu');
-        mt.innerHTML = mm.classList.contains('show-mobile-menu') ? '✕' : '☰';
-    });
-}
-
+// Setup Menu UI listeners
 const ym = $('yearMenuToggle'), yc = $('year-nav-container');
 if (ym && yc) {
-    ym.addEventListener('click', () => {
+    ym.addEventListener('click', (e) => {
+        e.stopPropagation();
         yc.classList.toggle('show-year-menu');
         ym.innerHTML = yc.classList.contains('show-year-menu') ? '✕' : '☰';
     });
 }
 
 window.onload = () => {
-    if (localStorage.getItem('theme') === 'dark') {
-        document.body.classList.add('dark-mode');
-        if ($('header-theme-toggle')) $('header-theme-toggle').innerHTML = `${ICON_SUN} Light Mode`;
-    }
-
-    $('welcome-correct-lbl').innerText = `+${MC} Correct`;
-    $('welcome-incorrect-lbl').innerText = `-${MI} Incorrect`;
+    $('welcome-correct-lbl').innerText = `+${getCorrectMarks()} Correct`;
+    $('welcome-incorrect-lbl').innerText = `-${getIncorrectMarks()} Incorrect`;
     $('modal-welcome').style.display = 'flex';
     $('student-name-input').placeholder = "e.g. Rohit Singh | SinghClasses";
     setTimeout(() => $('student-name-input').focus(), 100);
 
     loadQuestionsFromSheet();
 
-    // Adjusted touch logic to consider both horizontal and vertical axis for smoother scrolling
     const contentEl = $('question-content');
     if (contentEl) {
         let tx = 0, ty = 0;
@@ -231,7 +259,6 @@ window.onload = () => {
             const dx = e.changedTouches[0].clientX - tx;
             const dy = e.changedTouches[0].clientY - ty;
             
-            // Check if the gesture is predominately horizontal
             if (Math.abs(dx) > Math.abs(dy) + 30) {
                 if (dx < -40) nextQuestion();
                 if (dx > 40) prevQuestion();
@@ -241,7 +268,6 @@ window.onload = () => {
 
     initParticleCanvas('quiz-screen', 'canvasCBT', 12, 90);
     initParticleCanvas('quiz-screen', 'canvasPalette', 6, 70);
-    initParticleCanvas('bottomSection', 'canvasBottom', 40, 75);
 };
 
 ['contextmenu', 'copy', 'cut', 'dragstart'].forEach(ev => document.addEventListener(ev, e => e.preventDefault()));
@@ -298,45 +324,37 @@ window.addEventListener("beforeunload", e => {
         let s = sections[currentYearIndex], c = 0, ic = 0, l = 0, sc = 0, tot = s.end - s.start;
         for (let i = s.start; i < s.end; i++) {
             if (userAnswers[i] !== null) {
-                if (isAnswerCorrect(i)) { c++; sc += MC; }
-                else { ic++; sc -= MI; }
+                if (isAnswerCorrect(i)) { c++; sc += getCorrectMarks(); }
+                else { ic++; sc -= getIncorrectMarks(); }
             } else l++;
         }
-        sc = Math.max(0, sc - (securityWarnings * PW));
+        sc = Math.max(0, sc - (securityWarnings * getPenaltyMarks()));
 
         let p = new URLSearchParams();
         p.append("entry.784284433", studentName + " (Reload Dropout)");
         p.append("entry.222087888", s.year + " - " + s.title);
-        p.append("entry.942833858", sc + " / " + (tot * MC));
+        p.append("entry.942833858", sc + " / " + (tot * getCorrectMarks()));
         p.append("entry.930216015", c);
         p.append("entry.323768159", ic);
         p.append("entry.1388315739", l);
         p.append("entry.1858729095", securityWarnings);
         p.append("entry.1240634167", Math.floor(s.timeSpent / 60) + "m " + (s.timeSpent % 60) + "s");
         
-        // This quietly sends the data in the background during the refresh without a popup
-        navigator.sendBeacon(FORM_SAVE_URL, p);
+        navigator.sendBeacon(getFormSaveUrl(), p);
     }
 });
 
 let lastWT = 0;
-
 function applySecurityPenalty() {
     if (Date.now() - lastWT < 1000) return;
     lastWT = Date.now();
     securityWarnings++;
-    $('warning-count-display').innerText = `Total Warnings: ${securityWarnings} (Penalty: -${securityWarnings * PW} Marks)`;
+    $('warning-count-display').innerText = `Total Warnings: ${securityWarnings} (Penalty: -${securityWarnings * getPenaltyMarks()} Marks)`;
     $('modal-security').style.display = 'flex';
     document.querySelector('.sc-widget-container').classList.add('sc-blur-active');
     isTimerPaused = true;
     updatePalette();
 }
-
-window.closeSecurityModal = () => {
-    $('modal-security').style.display = 'none';
-    document.querySelector('.sc-widget-container').classList.remove('sc-blur-active');
-    isTimerPaused = false;
-};
 
 $('student-name-input').addEventListener('keypress', e => {
     if (e.key === 'Enter') beginExam();
@@ -373,9 +391,6 @@ window.buildYearNav = () => {
     });
 };
 
-// ─────────────────────────────────────────────────────────────
-//  STEP 3 ▸ isAnswerCorrect
-// ─────────────────────────────────────────────────────────────
 function isAnswerCorrect(qIdx) {
     if (userAnswers[qIdx] === null) return false;
     let q = questions[qIdx];
@@ -384,9 +399,6 @@ function isAnswerCorrect(qIdx) {
     return chosenText === correctText;
 }
 
-// ─────────────────────────────────────────────────────────────
-//  STEP 4 ▸ getCorrectIndex
-// ─────────────────────────────────────────────────────────────
 function getCorrectIndex(qIdx) {
     return textToIndex(questions[qIdx].correctAnswerText, questions[qIdx].options);
 }
@@ -396,7 +408,6 @@ window.beginExam = async () => {
     studentName = v === "" ? "Candidate" : v;
     $('modal-welcome').style.display = 'none';
 
-    // Adds a flag so CSS knows the test is running (hides floating HUD on mobile)
     document.body.classList.add('exam-in-progress');
 
     $('quiz-screen').style.display = 'block';
@@ -466,18 +477,31 @@ window.beginExam = async () => {
 
 function updateTimerDisplay() {
     let t = sectionTimes[currentYearIndex], m = Math.floor(t / 60), s = t % 60;
-    let el = $('time-left'), b = $('timer-box');
-    if (el) el.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
-    if (b) {
-        if (sections[currentYearIndex].submitted) {
-            if (el) el.innerText = "Locked";
-            b.className = 'timer';
-            b.style.color = '';
-        } else {
-            b.className = (t > 0 && t <= 60 ? 'timer danger' : (t > 60 && t <= 120 ? 'timer warning' : 'timer'));
-            b.style.color = t < 30 ? 'var(--color-warning)' : '';
-        }
+    let timeStr = `${m}:${s < 10 ? '0' : ''}${s}`;
+    
+    let elDesktop = $('time-left'), elMobile = $('time-left-mobile');
+    if (elDesktop) elDesktop.innerText = timeStr;
+    if (elMobile) elMobile.innerText = timeStr;
+
+    let bDesktop = $('timer-box'), bMobile = $('timer-box-mobile');
+    let targetClass = 'timer';
+    let targetStyleColor = '';
+
+    if (sections[currentYearIndex].submitted) {
+        if (elDesktop) elDesktop.innerText = "Locked";
+        if (elMobile) elMobile.innerText = "Locked";
+    } else {
+        if (t > 0 && t <= 60) targetClass = 'timer danger';
+        else if (t > 60 && t <= 120) targetClass = 'timer warning';
+        if (t < 30) targetStyleColor = 'var(--color-warning)';
     }
+
+    [bDesktop, bMobile].forEach(b => {
+        if (b) {
+            b.className = targetClass;
+            b.style.color = sections[currentYearIndex].submitted ? '' : targetStyleColor;
+        }
+    });
 }
 
 function startTimer() {
@@ -638,8 +662,8 @@ function updatePalette() {
         if (userAnswers[i] === null) allAnswered = false;
 
         if (userAnswers[i] !== null && (lockedAnswers[i] || s.submitted)) {
-            if (isAnswerCorrect(i)) { rc++; sc += MC; }
-            else { wc++; sc -= MI; }
+            if (isAnswerCorrect(i)) { rc++; sc += getCorrectMarks(); }
+            else { wc++; sc -= getIncorrectMarks(); }
         }
 
         let cls = visitedQuestions[i] ? (userAnswers[i] !== null ? 'answered' : 'not-answered') : 'unvisited';
@@ -663,7 +687,7 @@ function updatePalette() {
     }
 
     let statRight = $('stat-right'), statWrong = $('stat-wrong'), statScore = $('stat-score');
-    let targetScore = sc - (securityWarnings * PW);
+    let targetScore = sc - (securityWarnings * getPenaltyMarks());
     if (statRight) animateCount(statRight, rc);
     if (statWrong) animateCount(statWrong, wc);
     if (statScore) animateCount(statScore, targetScore);
@@ -715,12 +739,11 @@ function processSectionSubmission() {
     sec.submitted = true;
     for (let i = sec.start; i < sec.end; i++) lockedAnswers[i] = true;
 
-    // Removes the CSS flag so floating HUD buttons show again on results screen
     document.body.classList.remove('exam-in-progress');
 
     $('quiz-screen').style.display = 'none';
     $('unified-nav').style.display = 'none';
-    $('sc-global-footer-banner').style.display = 'none';
+    if ($('sc-global-footer-banner')) $('sc-global-footer-banner').style.display = 'none';
     $('result-screen').style.display = 'block';
 
     $('rs-dynamic-greeting').innerText = `Great effort ${studentName.split(" | ")[0].split(" ")[0]}`;
@@ -733,15 +756,15 @@ function processSectionSubmission() {
         tg.innerHTML = '';
         sections.forEach(s => {
             if (s.index > currentYearIndex) return;
-            let sC = 0, sI = 0, sL = 0, sS = 0, sT = s.end - s.start, sM = sT * MC;
+            let sC = 0, sI = 0, sL = 0, sS = 0, sT = s.end - s.start, sM = sT * getCorrectMarks();
             cM += sM; cT += s.timeSpent; pQ += sT;
 
             for (let i = s.start; i < s.end; i++) {
                 if (userAnswers[i] !== null) {
                     if (isAnswerCorrect(i)) {
-                        sC++; if (s.submitted) { rC++; sS += MC; }
+                        sC++; if (s.submitted) { rC++; sS += getCorrectMarks(); }
                     } else {
-                        sI++; if (s.submitted) { rI++; sS -= MI; }
+                        sI++; if (s.submitted) { rI++; sS -= getIncorrectMarks(); }
                     }
                 } else {
                     sL++; if (s.submitted) rL++;
@@ -757,7 +780,7 @@ function processSectionSubmission() {
             tg.innerHTML += `<tr><td>${s.year} - ${s.title}</td><td>${sM}</td><td>${s.submitted ? sC : '-'}</td><td>${s.submitted ? sI : '-'}</td><td>${sL}</td><td><span class="badge-pct-pill" style="background:${pillBg};color:${pillText};">${s.submitted ? pR : 0}%</span></td><td>${Math.floor(s.timeSpent / 60)}m ${s.timeSpent % 60}s</td></tr>`;
         });
 
-        aS = Math.max(0, aS - (securityWarnings * PW));
+        aS = Math.max(0, aS - (securityWarnings * getPenaltyMarks()));
         let fP = cM > 0 ? Math.round((aS / cM) * 100) : 0;
 
         $('lbl-dash-max-marks').innerText = cM;
@@ -821,7 +844,7 @@ window.handleSectionProgression = () => {
     b.disabled = true;
     b.innerHTML = `💾 Auto-Saving Results...`;
 
-    fetch(FORM_SAVE_URL, {
+    fetch(getFormSaveUrl(), {
         method: "POST", mode: "no-cors",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: globalFormPayload ? globalFormPayload.toString() : ""
@@ -840,7 +863,7 @@ function executeProgressionAdvance() {
         $('result-screen').style.display = 'none';
         $('quiz-screen').style.display = 'block';
         $('unified-nav').style.display = 'flex';
-        $('sc-global-footer-banner').style.display = 'block';
+        if ($('sc-global-footer-banner')) $('sc-global-footer-banner').style.display = 'block';
         buildYearNav(); updateTimerDisplay(); loadQuestion();
     } else {
         showToastAlert("Assessment fully complete! Final calculations locked down.");
@@ -848,8 +871,6 @@ function executeProgressionAdvance() {
         if (b) { b.disabled = true; b.style.opacity = '0.5'; b.innerText = "Evaluation Completed"; }
     }
 }
-
-window.goToHome = () => window.location.href = HOME_URL;
 
 function initParticleCanvas(cid, canid, pct, cdist) {
     let c = $(cid), can = $(canid);
@@ -897,3 +918,40 @@ function initParticleCanvas(cid, canid, pct, cdist) {
     };
     anim();
 }
+
+// Bi-directional Tracking Eyes Coordinates Engine Initialization Modules
+document.addEventListener("DOMContentLoaded", () => {
+    const eyes = document.querySelectorAll('.desktop-eyes .eye-ball');
+    const pupils = document.querySelectorAll('.desktop-eyes .pupil');
+
+    document.addEventListener('mousemove', (e) => {
+        eyes.forEach((eye, index) => {
+            const pupil = pupils[index];
+            if (!pupil) return;
+
+            const rect = eye.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            
+            const dx = e.clientX - cx;
+            const dy = e.clientY - cy;
+            const angle = Math.atan2(dy, dx);
+            
+            const maxRadius = (rect.width / 2) - (pupil.offsetWidth / 2) - 1.5;
+            const distance = Math.min(Math.hypot(dx, dy) / 10, maxRadius);
+            
+            pupil.style.transform = `translate(calc(-50% + ${Math.cos(angle) * distance}px), calc(-50% + ${Math.sin(angle) * distance}px))`;
+        });
+    });
+
+    const scheduleBlink = () => {
+        setTimeout(() => {
+            eyes.forEach(eye => {
+                eye.style.transform = 'scaleY(0.06)';
+                setTimeout(() => { eye.style.transform = 'scaleY(1)'; }, 110);
+            });
+            scheduleBlink();
+        }, 3000 + Math.random() * 4000);
+    };
+    scheduleBlink();
+});
