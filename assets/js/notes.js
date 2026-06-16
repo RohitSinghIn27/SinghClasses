@@ -160,7 +160,7 @@ function initCanvasParticles() {
             r: Math.random() * 1.5 + 0.5
         });
     }
-
+ 
     function draw() {
         ctx.clearRect(0, 0, width, height);
         ctx.fillStyle = 'rgba(255, 255, 255, 0.4)'; 

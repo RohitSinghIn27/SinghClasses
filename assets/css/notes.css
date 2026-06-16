@@ -111,7 +111,17 @@ body {
 /* MODALS & TOASTS */
 .yt-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(15, 23, 42, 0.85); backdrop-filter: blur(5px); z-index: 2000; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; }
 .yt-modal-overlay.active { opacity: 1; visibility: visible; }
-.yt-modal-card { background-color: #ffffff; border-radius: 16px; padding: 2.5rem 2rem; width: 90%; max-width: 400px; text-align: center; transform: translateY(20px); transition: transform 0.3s ease; }
+.yt-modal-card { 
+    background-color: #ffffff; 
+    color: #0f172a; /* FIXED: Added dark text color for visibility */
+    border-radius: 16px; 
+    padding: 2.5rem 2rem; 
+    width: 90%; 
+    max-width: 400px; 
+    text-align: center; 
+    transform: translateY(20px); 
+    transition: transform 0.3s ease; 
+}
 .yt-modal-overlay.active .yt-modal-card { transform: translateY(0); }
 .modal-icon-wrapper { width: 80px; height: 80px; background-color: #FEF2F2; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 1.5rem auto; position: relative; }
 .modal-icon-wrapper svg { width: 36px; height: 36px; color: #DC2626; fill: #DC2626; }
