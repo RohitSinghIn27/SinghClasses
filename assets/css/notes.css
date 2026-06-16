@@ -1,0 +1,444 @@
+/* Premium Slate & Royal Blue Theme variables */
+:root {
+    --app-bg: #0F172A; 
+    --panel-bg: #1E293B; 
+    --primary-blue: #2563EB; 
+    --primary-blue-hover: #1D4ED8; 
+    --border-color: #334155;
+    --text-main: #F8FAFC;
+    --text-muted: #94A3B8;
+    --shadow-elevation: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* APP FRAME LAYOUT */
+body {
+    background-color: var(--app-bg);
+    margin: 0;
+    padding: 0;
+    color: var(--text-main);
+    display: flex;
+    flex-direction: column;
+    height: 100vh; 
+    overflow: hidden; 
+}
+
+/* PREMIUM AMBIENT BACKGROUND CANVAS */
+#ambient-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* UNIFIED PREMIUM HEADER (Frosted Glass Effect) */
+.unified-workspace-header {
+    background-color: rgba(15, 23, 42, 0.85); 
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 0.6rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap; 
+    gap: 1.5rem;
+    box-shadow: var(--shadow-elevation);
+    z-index: 100;
+    flex-shrink: 0;
+    overflow-x: auto; 
+    scrollbar-width: none; 
+}
+.unified-workspace-header::-webkit-scrollbar { display: none; }
+
+/* Left Side: Back Button & Logo */
+.header-left-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0; 
+}
+
+.back-btn {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 0.4rem 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.back-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+.mini-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: var(--text-main);
+    padding-left: 1rem;
+    border-left: 1px solid var(--border-color);
+    white-space: nowrap;
+}
+
+.mini-logo svg {
+    width: 24px;
+    height: 24px;
+    color: var(--primary-blue);
+}
+
+.mini-logo-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+}
+
+/* Right Side: PDF Controls & Capsule */
+.header-right-group {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-shrink: 0;
+    justify-content: flex-end;
+    flex-grow: 1;
+}
+
+/* Un-trimmed Chapter Capsule */
+.chapter-capsule {
+    padding: 0.4rem 1.2rem;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background-color: var(--panel-bg);
+    color: var(--text-main);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    white-space: nowrap; /* Forces expansion, no trimming */
+    display: flex;
+    align-items: center;
+}
+
+.app-btn {
+    background-color: var(--primary-blue);
+    color: #ffffff;
+    border: none;
+    padding: 0.4rem 1.1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.app-btn:hover { background-color: var(--primary-blue-hover); transform: translateY(-1px); }
+
+.app-btn-outline { background-color: transparent; color: var(--text-main); border: 1px solid var(--border-color); }
+.app-btn-outline:hover { background-color: var(--panel-bg); border-color: var(--primary-blue); color: var(--primary-blue); }
+
+/* YOUTUBE ONE SHOT BUTTON */
+.app-btn-yt {
+    background-color: #DC2626; /* Deep Red */
+    color: #ffffff;
+}
+.app-btn-yt:hover { background-color: #B91C1C; }
+
+/* MILD STATE for empty YouTube links */
+.app-btn-yt.mild {
+    background-color: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    opacity: 0.7;
+}
+.app-btn-yt.mild:hover {
+    background-color: var(--border-color);
+    color: var(--text-main);
+    transform: none;
+}
+
+/* MAIN CONTENT */
+.main-content {
+    background-color: #000000;
+    flex-grow: 1;
+    position: relative;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    z-index: 10; /* Above ambient canvas */
+}
+
+.pdf-viewer-container {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.pdf-viewer-container iframe { width: 100%; height: 100%; border: none; }
+
+/* PREMIUM LOADING ANIMATION OVERLAY */
+.pdf-loading-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: var(--app-bg);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.loading-spinner-ring {
+    width: 60px; height: 60px;
+    border: 5px solid var(--border-color);
+    border-top: 5px solid var(--primary-blue);
+    border-radius: 50%;
+    animation: spin 1s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
+}
+
+.loading-text { font-family: 'Poppins', sans-serif; font-weight: 500; color: var(--text-main); letter-spacing: 1px; animation: pulse 1.5s infinite; }
+
+/* SLEEK OVERLAPPING BOTTOM BAR FOOTER */
+.unified-workspace-footer {
+    background-color: rgba(15, 23, 42, 0.85); 
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 0.6rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    flex-shrink: 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Right side footer alignment */
+.footer-tools {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+}
+
+.motivation-text {
+    color: var(--text-main);;
+    font-weight: 500;
+    margin-right: 0.5rem;
+    transition: opacity 0.3s ease;
+}
+
+.timer-display {
+    font-family: 'Poppins', monospace;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--text-main);
+    letter-spacing: 1px;
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 0.2rem 0.8rem;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* TRACKING EYES COMPONENT IN FOOTER */
+.tracking-eyes-container {
+    --eye-size: 20px; 
+    --pupil-size: calc(var(--eye-size) * 0.4);
+    --border-width: calc(var(--eye-size) * 0.07);
+    --eye-gap: calc(var(--eye-size) * 0.25);
+    display: inline-flex;
+    gap: var(--eye-gap);
+}
+
+.eye-ball {
+    width: var(--eye-size); height: var(--eye-size);
+    background: #ffffff; border-radius: 50%;
+    border: var(--border-width) solid var(--app-bg);
+    position: relative; overflow: hidden;
+}
+
+.eye-ball::before {
+    content: ''; position: absolute; top: 10%; left: 12%;
+    width: 25%; height: 12%; background: rgba(255, 255, 255, 0.8);
+    border-radius: 50%; z-index: 2;
+}
+
+.pupil {
+    width: var(--pupil-size); height: var(--pupil-size);
+    background: var(--app-bg); border-radius: 50%;
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%); will-change: transform;
+}
+
+/* YOUTUBE CONFIRMATION MODAL */
+.yt-modal-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(5px);
+    z-index: 2000;
+    display: flex; justify-content: center; align-items: center;
+    opacity: 0; visibility: hidden; transition: all 0.3s ease;
+}
+.yt-modal-overlay.active { opacity: 1; visibility: visible; }
+
+.yt-modal-card {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 2.5rem 2rem;
+    width: 90%; max-width: 400px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    transform: translateY(20px); transition: transform 0.3s ease;
+}
+.yt-modal-overlay.active .yt-modal-card { transform: translateY(0); }
+
+.modal-icon-wrapper {
+    width: 80px; height: 80px;
+    background-color: #FEF2F2;
+    border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    margin: 0 auto 1.5rem auto; position: relative;
+}
+.modal-icon-wrapper::before, .modal-icon-wrapper::after {
+    content: ''; position: absolute; border-radius: 50%; border: 1px solid #FCA5A5;
+}
+.modal-icon-wrapper::before { width: 100px; height: 100px; }
+.modal-icon-wrapper::after { width: 120px; height: 120px; opacity: 0.5; }
+.modal-icon-wrapper svg { width: 36px; height: 36px; color: #DC2626; fill: #DC2626; }
+
+.yt-modal-card h2 { margin: 0 0 0.5rem 0; color: #0F172A; font-family: 'Poppins', sans-serif; font-size: 1.4rem; font-weight: 700; }
+.yt-modal-card p { margin: 0 0 2rem 0; color: #64748B; font-family: 'Poppins', sans-serif; font-size: 0.95rem; }
+
+.modal-actions { display: flex; gap: 1rem; justify-content: center; }
+.m-btn {
+    flex: 1; padding: 0.8rem 1rem; border-radius: 8px; font-weight: 600; font-family: 'Poppins', sans-serif; font-size: 1rem; cursor: pointer; transition: all 0.2s ease; display: flex; justify-content: center; align-items: center; gap: 0.5rem;
+}
+.m-btn-outline { background: transparent; border: 1px solid #CBD5E1; color: #334155; }
+.m-btn-outline:hover { background: #F8FAFC; border-color: #94A3B8; }
+.m-btn-solid { background: #DC2626; border: 1px solid #DC2626; color: #ffffff; }
+.m-btn-solid:hover { background: #B91C1C; }
+
+/* TOAST NOTIFICATION FOR "COMING SOON" */
+.status-toast {
+    position: fixed;
+    bottom: 80px; 
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background-color: #F59E0B; /* Amber Alert Color */
+    color: #ffffff;
+    padding: 0.8rem 1.5rem;
+    border-radius: 50px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 3000;
+    pointer-events: none;
+    white-space: nowrap;
+}
+.status-toast.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+/* Mobile & Tablet adjustments */
+@media (max-width: 850px) {
+    /* Keep footer horizontal and tighten padding */
+    .unified-workspace-footer { 
+        flex-direction: row; 
+        padding: 0.5rem 0.8rem; 
+        gap: 0.5rem;
+    }
+    
+    /* Force copyright text to stack on two lines */
+    .unified-workspace-footer > div:first-child {
+        font-size: 0.75rem;
+        line-height: 1.3;
+        max-width: 100px; 
+    }
+
+    /* Prevent tools from wrapping to a new line */
+    .footer-tools { 
+        flex-wrap: nowrap; 
+        gap: 0.6rem; 
+    }
+
+    /* Force motivation text to wrap and add the green color */
+    .motivation-text {
+        font-size: 0.75rem;
+        line-height: 1.2;
+        text-align: center;
+        max-width: 50px; /* Forces "Best of \n luck!" */
+        color: #4ADE80; /* Matches the green in your target image */
+        margin-right: 0;
+        white-space: normal;
+    }
+
+    /* Scale down the timer slightly */
+    .timer-display {
+        font-size: 0.9rem;
+        padding: 0.2rem 0.5rem;
+    }
+
+    /* Scale down the tracking eyes slightly so everything fits */
+    .tracking-eyes-container {
+        --eye-size: 16px; 
+    }
+}
+
+@media (max-width: 600px) {
+    /* 1. Hide raw text without touching HTML using font-size: 0 */
+    .app-btn, .back-btn { 
+        font-size: 0; /* Makes the text disappear */
+        padding: 0.5rem 0.6rem; /* Creates a clean square/icon button */
+        gap: 0; /* Removes the space where the text used to be */
+        justify-content: center;
+    }
+
+    /* 2. Constrain the Chapter Capsule with an ellipsis (...) */
+    .chapter-capsule {
+        max-width: 160px; /* Limits width so it doesn't push the buttons off-screen */
+        overflow: hidden;
+        text-overflow: ellipsis; 
+        white-space: nowrap;
+        padding: 0.4rem 0.6rem;
+    }
+
+    /* 3. Tighten up header spacing to maximize screen real estate */
+    .unified-workspace-header {
+        padding: 0.5rem 0.6rem;
+        gap: 0.5rem;
+    }
+
+    .header-left-group, .header-right-group {
+        gap: 0.4rem;
+    }
+}
