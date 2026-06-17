@@ -25,9 +25,9 @@
     <link rel="stylesheet" href="../../../assets/css/style.css" />
     <link rel="stylesheet" href="../../../assets/css/dashboard.css" />
     <link rel="stylesheet" href="../../../assets/css/syllabus.css" />
-    <link rel="stylesheet" href="../../../assets/css/mcq.css" />
+    <link rel="stylesheet" href="../../../assets/css/mcq.css" />   
 
-<script>
+    <script>
         window.CBT_CONFIG = {
             MARKS_CORRECT: 5,
             MARKS_INCORRECT: 1,
@@ -100,10 +100,32 @@
                 <div class="year-nav-bar" id="year-nav-container"></div>
                 
                 <div class="nav-right-hud hide-on-mobile">
+                    <div class="filter-slider-wrapper">
+                        <div class="filter-slider-heading" onclick="toggleFilterSlider()">
+                            <span>🔍 Question Filter</span>
+                            <span class="slider-toggle-indicator">▼</span>
+                        </div>
+                        <div class="interactive-legend" id="hud-filter-slider-content">
+                            <div class="legend-item active-filter" onclick="filterPalette('all'); event.stopPropagation();" id="filter-all">
+                                <div class="legend-box" style="background:var(--primary-accent);border:none;"></div> All Questions
+                            </div>
+                            <div class="legend-item" onclick="filterPalette('answered'); event.stopPropagation();" id="filter-answered">
+                                <div class="legend-box answered"></div> Answered
+                            </div>
+                            <div class="legend-item" onclick="filterPalette('not-answered'); event.stopPropagation();" id="filter-not-answered">
+                                <div class="legend-box not-answered"></div> Un-Answered
+                            </div>
+                            <div class="legend-item" onclick="filterPalette('unvisited'); event.stopPropagation();" id="filter-unvisited">
+                                <div class="legend-box unvisited"></div> Un-Visited
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="timer" id="timer-box">
                         ⏳
                         <span id="time-left"></span>
                     </div>
+                    
                     <div class="tracking-eyes-container desktop-eyes">
                         <div class="eye-ball"><div class="pupil"></div></div>
                         <div class="eye-ball"><div class="pupil"></div></div>
@@ -140,8 +162,7 @@
                     </div>
                     
                     <div class="input-group">
-                        <label for="student-name-input" class="input-label">Student Details (Name | School)</label>
-                        <input type="text" id="student-name-input" class="modal-input" placeholder="e.g. Rohit Singh | SinghClasses" autocomplete="off" />
+                        <input type="text" id="student-name-input" class="modal-input" placeholder="Student Details (Name || School)" autocomplete="off" />
                         <div class="modal-btn-row">
                             <button class="modal-btn modal-btn-success" onclick="beginExam()">Start Mock Test</button>
                         </div>
@@ -190,6 +211,13 @@
                 </div>
             </div>
 
+            <div id="quiz-loading-overlay" style="display: none; flex-direction: column; align-items: center; justify-content: center; padding: 40px; text-align: center; min-height: 350px;">
+                <div class="fetch-spinner"></div>
+                <div style="margin-top: 20px; font-size: var(--text-base); font-weight: 700; color: var(--stat-lbl-color); letter-spacing: var(--tracking-wide);">
+                    Please wait till we load the questions
+                </div>
+            </div>
+
             <div id="quiz-screen" style="display:none;">
                 <div class="main-wrapper">
                     <div class="cbt-container">
@@ -205,14 +233,14 @@
                             <div class="question-text" id="q-text"></div>
                             <ul class="options" id="q-options"></ul>
                             
-                            <div id="keyboard-hints" class="keyboard-hints-container" style="display:none;"></div>
-                        </div>
-                        <div class="footer">
-                            <div class="footer-left">
-                                <button class="btn-prev" id="btn-prev" onclick="prevQuestion()">Previous</button>
-                                <button class="btn-clear" id="btn-clear" onclick="clearResponse()"><span class="btn-text-full">Clear Answer</span><span class="btn-text-short">Clear</span></button>
+                            <div id="sidebar-keyboard-hints" class="sidebar-hints-container inline-shortcuts-style" style="display:none;">
+                                <span class="shortcut-label">Keyboard Shortcuts:</span>
+                                <div class="sidebar-hints-row">
+                                    <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd> / <kbd>A</kbd><kbd>B</kbd><kbd>C</kbd><kbd>D</kbd> Select · <kbd>⌫</kbd> Clear · <kbd>↵</kbd> Next
+                                </div>
                             </div>
-                            <button class="btn-next" id="btn-next" onclick="nextQuestion()">Save & Next</button>
+
+                            <div id="keyboard-hints" class="keyboard-hints-container" style="display:none;"></div>
                         </div>
                     </div>
 
@@ -227,33 +255,40 @@
                         <div class="palette-grid-wrapper">
                             <div class="palette-grid" id="palette-grid"></div>
                         </div>
-                        <div class="palette-filter-wrapper">
-                            <div class="filter-header-title">Filter Questions</div>
-                            <div class="interactive-legend">
-                                <div class="legend-item active-filter" onclick="filterPalette('all')" id="filter-all">
-                                    <div class="legend-box" style="background:var(--primary-accent);border:none;"></div> All MCQs
-                                </div>
-                                <div class="legend-item" onclick="filterPalette('answered')" id="filter-answered">
-                                    <div class="legend-box answered"></div> Answered
-                                </div>
-                                <div class="legend-item" onclick="filterPalette('not-answered')" id="filter-not-answered">
-                                    <div class="legend-box not-answered"></div> Unattempted
-                                </div>
-                                <div class="legend-item" onclick="filterPalette('unvisited')" id="filter-unvisited">
-                                    <div class="legend-box unvisited"></div> Not Visited
-                                </div>
+                        
+                        <div class="sidebar-actions-control-matrix">
+                            <div class="matrix-row-primary">
+                                <button class="btn-next" id="btn-next" onclick="nextQuestion()">
+                                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                                    SAVE & NEXT
+                                </button>
                             </div>
                             
-                            <div id="sidebar-keyboard-hints" class="sidebar-hints-container" style="display:none;">
-                                <div class="sidebar-hints-row">
-                                    <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd> or <kbd>A</kbd> <kbd>B</kbd> <kbd>C</kbd> <kbd>D</kbd> to select
-                                </div>
-                                <div class="sidebar-hints-row">
-                                    <kbd>⌫</kbd> to clear  ·  <kbd>↵</kbd> to go next
-                                </div>
+                            <div class="matrix-row-secondary">
+                                <button class="btn-prev" id="btn-prev" onclick="prevQuestion()">
+                                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                                    PREVIOUS
+                                </button>
+                                <button class="btn-clear" id="btn-clear" onclick="clearResponse()">
+                                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                                    CLEAR
+                                </button>
+                            </div>
+                            
+                            <div class="matrix-divider"></div>
+                            
+                            <button class="btn-submit" id="main-section-submit-btn" onclick="showSubmitModal()">
+                                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                                SUBMIT THIS SECTION
+                            </button>
+
+                            <div class="submit-warning-notice">
+                                <svg class="warning-shield-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                </svg>
+                                <span>You can't return after submission.</span>
                             </div>
                         </div>
-                        <button class="btn-submit" id="main-section-submit-btn" onclick="showSubmitModal()">Submit this Section</button>
                     </div>
                 </div>
             </div>
