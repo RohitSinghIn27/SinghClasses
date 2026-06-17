@@ -2,24 +2,19 @@
    1. VARIABLES, THEMING & CORE DESIGN TOKENS
    ========================================================================== */
 :root {
-    /* Premium Typography Design System */
     --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
-    
-    --text-xs: 0.75rem;     /* 12px - Metadata, badges, sub-labels */
-    --text-sm: 0.875rem;    /* 14px - System controls, regular grid indicators */
-    --text-base: 1rem;      /* 16px - Base layout reading text, interactive labels */
-    --text-lg: 1.125rem;    /* 18px - Question statements, modal parameters */
-    --text-xl: 1.25rem;     /* 20px - Section headings, major callouts */
-    --text-2xl: 1.625rem;    /* 26px - Numerical performance metrics */
-     
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.125rem;
+    --text-xl: 1.25rem;
+    --text-2xl: 1.625rem;
     --tracking-tighter: -0.03em;
     --tracking-tight: -0.015em;
     --tracking-normal: 0em;
     --tracking-wide: 0.025em;
     --tracking-wider: 0.05em;
-
-    /* Brand & Base Layout Foundations */
     --bg-color: #f8fafc;
     --app-bg: #ffffff;
     --text-color: #0f172a;
@@ -27,19 +22,13 @@
     --container-bg: #ffffff;
     --border-color: #e2e8f0;
     --footer-bg: #ffffff;
-
-    /* Primary Identity Accent Maps */
     --primary-color: #166534;
     --primary-accent: #2563eb;
     --accent-yellow: #eab308; 
-
-    /* System Feedback Channels */
     --color-correct: #16a34a;
     --color-wrong: #dc2626;
     --color-warning: #d97706;
     --color-danger: #e11d48;
-
-    /* Interface Header Navigation Ecosystem */
     --header-bg: #0f172a;
     --header-text: #ffffff;
     --top-header-bg: var(--primary-color);
@@ -49,8 +38,6 @@
     --tab-active-val: var(--accent-yellow);
     --tab-inactive-val: #e2e8f0;
     --q-num-color: #1e3a8a;
-
-    /* Interactive Multiple Choice Option Matrices */
     --option-bg: #f8fafc;
     --option-border: #cbd5e1;
     --option-hover-bg: #f1f5f9;
@@ -69,32 +56,22 @@
     --opt-wrg-text: #991b1b;
     --opt-wrg-letter: #ffffff;
     --opt-wrg-letter-bg: #ef4444;
-
-    /* Component Controllers & Modifiers */
     --btn-prev-bg: #64748b; 
     --btn-clear-bg: #f59e0b;
     --btn-clear-text: #0f172a;
     --btn-clear-border: #f59e0b;
-
-    /* Status Tracking Systems */
     --palette-unvisited: #94a3b8;
     --palette-unvisited-text: #ffffff;
     --stat-lbl-color: #475569;
-
-    /* Security Overlay & Interstitials */
     --modal-bg: #ffffff;
     --modal-text: #334155;
     --modal-input-bg: #ffffff;
     --timer-bg: #f1f5f9;
     --timer-text: #1e293b;
-
-    /* Core Evaluation Architecture Metrics */
     --rs-bg-outer: #f1f5f9;
     --rs-bg-card: #ffffff;
     --rs-bg-alt-card: #f8fafc;
     --rs-btn-soft-fill: #f1f5f9;
-
-    /* Metrics Summary Layout Nodes */
     --rs-card-blue-bg: #eff6ff;
     --rs-card-blue-border: #bfdbfe;
     --rs-card-blue-text: #1e40af;
@@ -110,8 +87,6 @@
     --rs-card-amber-bg: #fffbeb;
     --rs-card-amber-border: #fef3c7;
     --rs-card-amber-text: #92400e;
-
-    /* Comprehensive Summary Data Layout Cells */
     --table-header-bg: #1e3a8a;
     --table-sum-row-bg: #f8fafc;
     --badge-pass-bg: #dcfce7;
@@ -120,13 +95,10 @@
     --badge-fail-text: #b91c1c;
     --badge-total-bg: #dbeafe;
     --badge-total-text: #1d4ed8;
-
-    /* Visual Background Accents */
     --canvas-particle-color: rgba(22, 101, 52, 0.12);
 }
 
 body.dark-mode {
-    /* Brand & Base Layout Foundations */
     --bg-color: #0b0f19;
     --app-bg: #111827;
     --text-color: #f3f4f6;
@@ -134,19 +106,13 @@ body.dark-mode {
     --container-bg: #1f2937;
     --border-color: #374151;
     --footer-bg: #030712;
-
-    /* Primary Identity Accent Maps */
     --primary-color: #064e3b;
     --primary-accent: #60a5fa;
     --accent-yellow: #f59e0b;
-
-    /* System Feedback Channels */
     --color-correct: #10b981;
     --color-wrong: #f43f5e;
     --color-warning: #f59e0b;
     --color-danger: #f43f5e;
-
-    /* Interface Header Navigation Ecosystem */
     --header-bg: #030712;
     --header-text: #f3f4f6;
     --top-header-bg: var(--primary-color);
@@ -156,8 +122,6 @@ body.dark-mode {
     --tab-active-val: var(--accent-yellow);
     --tab-inactive-val: #4b5563;
     --q-num-color: #60a5fa;
-
-    /* Interactive Multiple Choice Option Matrices */
     --option-bg: #1f2937;
     --option-border: #4b5563;
     --option-hover-bg: #2d3748;
@@ -176,32 +140,22 @@ body.dark-mode {
     --opt-wrg-text: #fff1f2;
     --opt-wrg-letter: #111827;
     --opt-wrg-letter-bg: #f43f5e;
-
-    /* Component Controllers & Modifiers */
     --btn-prev-bg: #4b5563;
     --btn-clear-bg: #d97706;
     --btn-clear-text: #ffffff;
     --btn-clear-border: #d97706;
-
-    /* Status Tracking Systems */
     --palette-unvisited: #4b5563;
     --palette-unvisited-text: #ffffff;
     --stat-lbl-color: #9ca3af;
-
-    /* Security Overlay & Interstitials */
     --modal-bg: #111827;
     --modal-text: #e5e7eb;
     --modal-input-bg: #1f2937;
     --timer-bg: #1f2937;
     --timer-text: #f9fafb;
-
-    /* Core Evaluation Architecture Metrics */
     --rs-bg-outer: #030712;
     --rs-bg-card: #111827;
     --rs-bg-alt-card: #1f2937;
     --rs-btn-soft-fill: #374151;
-
-    /* Metrics Summary Layout Nodes */
     --rs-card-blue-bg: #1e3a8a;
     --rs-card-blue-border: #2563eb;
     --rs-card-blue-text: #93c5fd;
@@ -217,8 +171,6 @@ body.dark-mode {
     --rs-card-amber-bg: #78350f;
     --rs-card-amber-border: #b45309;
     --rs-card-amber-text: #fef3c7;
-
-    /* Comprehensive Summary Data Layout Cells */
     --table-header-bg: #1e3a8a;
     --table-sum-row-bg: #1f2937;
     --badge-pass-bg: #064e3b;
@@ -227,8 +179,6 @@ body.dark-mode {
     --badge-fail-text: #f87171;
     --badge-total-bg: #1e3a8a;
     --badge-total-text: #60a5fa;
-
-    /* Visual Background Accents */
     --canvas-particle-color: rgba(52, 211, 153, 0.15);
 }
 
@@ -262,13 +212,11 @@ body {
     padding: 16px 16px 80px 16px;
 }
 
-/* Base Headings Polish */
 h1, h2, h3, h4, h5, h6 {
     letter-spacing: var(--tracking-tight);
     color: var(--text-color);
 }
 
-/* Optimized Monospace Snippets for technical text strings (SQL, Code Elements) */
 code, pre, kbd, .option-monospace {
     font-family: var(--font-mono) !important;
     font-size: 0.9em;
@@ -660,7 +608,7 @@ body.dark-mode .pupil { background: #f8fafc; }
     display: flex;
     flex-direction: column;
     position: relative;
-    align-self: flex-start; /* Collapses empty trailing gap perfectly */
+    align-self: flex-start;
 }
 
 .sc-column-bg {
@@ -692,7 +640,6 @@ body.dark-mode .pupil { background: #f8fafc; }
 
 .question-number { font-size: var(--text-sm) !important; font-weight: 700 !important; color: var(--stat-lbl-color); text-transform: uppercase; letter-spacing: var(--tracking-wide); flex-shrink: 0; }
 
-/* Increased Question Font Size (Desktop Core Rules) */
 .question-text { 
     font-size: 1.125rem !important; 
     margin-bottom: 14px; 
@@ -735,7 +682,6 @@ body.dark-mode .pupil { background: #f8fafc; }
 .options { list-style-type: none; padding: 0; margin: 0; }
 .options li { margin-bottom: 8px; }
 
-/* Increased Options Font Size (Desktop Core Rules) */
 .options label {
     display: flex; align-items: center; padding: 8px 14px;
     background: var(--option-bg); border: 1px solid var(--option-border);
@@ -904,7 +850,7 @@ body.dark-mode .q-tag-capsule { background: #2c2100; color: #ffda6a; border-colo
     height: auto; 
     overflow-y: auto; 
     padding: 4px; 
-    justify-items: center;
+    justify-items: center; 
 }
 .palette-btn { position: relative; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 6px; font-family: var(--font-mono); font-weight: 700; cursor: pointer; transition: all 0.15s ease; background-color: transparent; font-size: var(--text-sm); box-sizing: border-box; }
 .palette-btn.current-question { border: 2px solid var(--app-bg) !important; box-shadow: 0 0 0 2px var(--primary-accent); z-index: 10; }
@@ -1203,7 +1149,6 @@ kbd { background: var(--app-bg); border: 1px solid var(--option-border); border-
     .main-wrapper { flex-direction: column; gap: 16px; }
     .cbt-container, .palette-container { flex: none; width: 100%; }
     
-    /* REQ 1: Flex Re-ordering to push buttons above Palette Grid on Mobile */
     .palette-container {
         display: flex !important;
         flex-direction: column !important;
@@ -1230,56 +1175,75 @@ kbd { background: var(--app-bg); border: 1px solid var(--option-border); border-
     .unified-workspace-header { padding: 8px 12px; gap: 8px; background-color: #030712; border-bottom: none; }
     .chapter-capsule, .hide-on-mobile, .nav-right-hud { display: none !important; }
     
-    /* REQ 3: Reposition Filter Panel into Top Header on Mobile viewport layouts */
+    .unified-nav {
+        flex-direction: column !important;
+        position: relative !important;
+    }
+    
     .unified-nav .nav-right-hud {
         display: flex !important;
-        position: static !important;
+        position: relative !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 8px 12px !important;
+        background: #1e293b !important;
+        border-radius: 0 0 6px 6px !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+        margin: 0 !important;
     }
+
     .unified-nav .nav-right-hud .timer,
     .unified-nav .nav-right-hud .desktop-eyes {
         display: none !important;
     }
+
     .filter-slider-wrapper {
-        position: absolute !important;
-        top: -50px !important; 
-        right: 16px !important;
-        z-index: 6000 !important;
-        background: rgba(255, 255, 255, 0.08) !important;
-        border: 1px solid rgba(255, 255, 255, 0.15) !important;
-        border-radius: 6px !important;
-        width: 36px !important;
-        height: 36px !important;
-        padding: 0 !important;
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-    }
-    .filter-slider-heading {
-        justify-content: center !important;
-        align-items: center !important;
+        position: relative !important;
+        top: auto !important;
+        right: auto !important;
         width: 100% !important;
-        height: 100% !important;
+        height: 36px !important;
+        background: rgba(255, 255, 255, 0.04) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 6px !important;
+        padding: 0 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
     }
+
+    .filter-slider-heading {
+        width: 100% !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+    }
+
     .filter-slider-heading span:first-child {
-        font-size: 0 !important;
+        font-size: var(--text-xs) !important;
+        color: #e2e8f0 !important;
     }
+    
     .filter-slider-heading span:first-child::before {
-        content: "☰" !important; 
-        font-size: 18px !important;
-        color: #ffffff !important;
-        display: block !important;
+        content: "🔍 " !important;
     }
+
     .slider-toggle-indicator {
-        display: none !important;
+        display: inline-block !important;
+        font-size: 10px !important;
+        color: var(--accent-yellow) !important;
     }
+
     .filter-slider-wrapper .interactive-legend {
-        top: calc(100% + 6px) !important;
+        top: calc(100% + 4px) !important;
         right: 0 !important;
-        left: auto !important;
+        left: 0 !important;
+        width: 100% !important;
         flex-direction: column !important;
-        width: 150px !important;
+        gap: 6px !important;
         background: #0f172a !important;
-        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.5) !important;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4) !important;
+        box-sizing: border-box !important;
     }
 
     .mobile-timer-wrapper { display: flex; align-items: center; margin-left: auto; padding-right: 4px; }
@@ -1292,7 +1256,6 @@ kbd { background: var(--app-bg); border: 1px solid var(--option-border); border-
     .app-btn svg, .back-btn svg { width: 16px; height: 16px; }
     .app-btn-yt { background-color: #dc2626 !important; border: none; }
     
-    /* REQ 2: Slightly Increased Mobile Question Text Font Size */
     .question-text { font-size: 1.05rem !important; }
     .q-tag-capsule { font-size: var(--text-xs) !important; padding: 2px 8px !important; }
 }
@@ -1308,11 +1271,9 @@ kbd { background: var(--app-bg); border: 1px solid var(--option-border); border-
     .content-header { flex-direction: column; align-items: flex-start; gap: 6px; }
     .content-header .inline-shortcuts-style { max-width: 100%; width: 100%; }
 
-    /* REQ 2: Slightly Increased Mobile Question Text Font Size */
     .question-text { font-size: 1.05rem !important; line-height: 1.45 !important; }
     .palette-container { padding-bottom: 80px; }
 
-    /* REQ 2: Slightly Increased Mobile Options Text Font Size */
     .options label { padding: 6px 10px; min-height: 34px; font-size: 0.875rem !important; }
 
     .palette-btn { width: 30px; height: 30px; font-size: var(--text-sm); }
