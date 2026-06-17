@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>NTA UGC NET Computer Science Study Material & Mock Tests | SinghClasses</title>
+  <meta name="description" content="Access free comprehensive study material for NTA UGC NET Computer Science (Paper 2). Detailed unit-wise video lectures, revision notes, solved previous year questions (PYQs), and interactive mock tests designed by experts." />
+  <meta name="keywords" content="NTA UGC NET Computer Science, UGC NET CS Study Material, UGC NET Computer Science Notes, Discrete Mathematics PYQs, Computer Science Mock Test, Singh Classes NET preparation" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://www.singhclasses.in/p/nta-ugc-net-computer-science.html" />
+  
+  <meta property="og:title" content="NTA UGC NET Computer Science Study Material & Mock Tests" />
+  <meta property="og:description" content="Boost your score with free unit-wise videos, notes, solved PYQs, and comprehensive mock tests for UGC NET Computer Science." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.singhclasses.in/p/nta-ugc-net-computer-science.html" />
+
+  <style>
+    :root {
+      /* Card Section Colors */
+      --bg-light-blue: #eff6ff;
+      --bg-light-yellow: #fefce8;
+      --bg-light-orange: #fff7ed;
+      --heading-navy: #0f172a;
+      --btn-blue-text: #2563eb;
+      --btn-blue-hover: #3b82f6;
+      --btn-yellow-text: #ca8a04;
+      --btn-yellow-hover: #eab308;
+      --btn-orange-text: #ea580c;
+      --btn-orange-hover: #f97316;
+      --btn-mcq-text: #9C27B0;
+      --bg-light-purple: #f3e8f5;
+      --btn-pyq-text: #E91E63;
+      --bg-light-pink: #fce4ec;
+      --btn-dpp-text: #009688;
+      --bg-light-teal: #e0f2f1;
+
+      /* Blended Bottom Section Colors */
+      --blend-dark-green: #1A531A; 
+      --blend-ivory: #FDFCF0;      
+      --blend-light-bg: #F2F9F3;   
+      --blend-text-main: #2D3748;  
+      --blend-text-accent: #0B2F0B;
+    }
+
+    body {
+      background-color: #f0fdf4; 
+      margin: 0;
+      padding: 20px 10px;
+      font-family: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    /* --- PROGRESS BAR --- */
+    .sc-progress-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 4px; z-index: 5000; }
+    .sc-progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #176643, #4ade80, #176643); transition: width .15s ease-out; box-shadow: 0 0 10px rgba(74, 222, 128, 0.5); }
+
+    .sc-widget-container {
+      color: #1e293b;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 12px;
+      box-sizing: border-box;
+      line-height: 1.3;
+      position: relative;
+      background: #fcfcfc;
+      border: 1px solid rgba(23, 102, 67, 0.4);
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(23, 102, 67, 0.15), 0 8px 30px rgba(23, 102, 67, 0.08);
+      transition: box-shadow 0.3s ease;
+    }
+    
+    .sc-widget-container * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* --- EMOJI HOVER ANIMATION --- */
+    .sc-emoji {
+      display: inline-block;
+      transform-origin: center bottom;
+    }
+    
+    @keyframes sc-emoji-bounce {
+      0% { transform: scale(1) translateY(0); }
+      30% { transform: scale(1.2) translateY(-3px) rotate(-10deg); }
+      60% { transform: scale(1.2) translateY(-3px) rotate(10deg); }
+      100% { transform: scale(1) translateY(0) rotate(0deg); }
+    }
+
+    .sc-feature-item:hover .sc-emoji,
+    .sc-cta-content:hover .sc-emoji,
+    .sc-cta-btn:hover .sc-emoji,
+    .sc-marquee a:not(.sc-locked):hover .sc-emoji,
+    .sc-card-links a:not(.sc-locked):hover .sc-emoji {
+      animation: sc-emoji-bounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    /* --- 1. TOP HEADER LOGO & LINKS --- */
+    .sc-top-header {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 10px; position: relative; background: #176643; padding: 12px 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(23, 102, 67, 0.2); z-index: 50;
+    }
+
+    .sc-logo-area { display: flex; align-items: center; gap: 10px; }
+    .sc-logo-icon { border: 2px solid #ffffff; color: #ffffff; font-weight: 700; font-size: 14px; padding: 4px 8px; border-radius: 6px; border-bottom-width: 3px; display: flex; align-items: center; justify-content: center; }
+    .sc-logo-text { display: flex; flex-direction: column; }
+    .sc-logo-text strong { font-size: 16px; color: #ffffff; line-height: 1.1; letter-spacing: -0.3px; }
+    .sc-logo-text span { font-size: 11px; color: #a7f3d0; font-weight: 500; }
+    
+    .sc-top-nav { display: flex; gap: 10px; font-size: 14.5px; font-weight: 600; align-items: center; overflow-x: auto; margin-left: auto; }
+    .sc-top-nav::-webkit-scrollbar { display: none; }
+    .sc-top-nav a { color: #dcfce7; text-decoration: none; white-space: nowrap; transition: 0.2s; padding: 6px 10px; border-radius: 6px;}
+    .sc-top-nav a:hover, .sc-top-nav a.active { background: rgba(255, 255, 255, 0.15); color: #ffffff; }
+
+    .sc-header-controls { display: flex; align-items: center; gap: 10px; }
+    .sc-hamburger { display: none; width: 32px; height: 32px; background: #0f4c32; color: #ffffff; border-radius: 6px; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; transition: background 0.2s; border: 1px solid #155738; }
+
+    /* --- HERO CONTENT --- */
+    .sc-hero-grid { margin-bottom: 40px; padding: 0 15px; }
+    .sc-hero-content { display: flex; justify-content: space-between; align-items: center; gap: 40px; flex-wrap: wrap; }
+    .sc-hero-left { max-width: 700px; }
+    .sc-hero-left h1 { font-size: 34px; font-weight: 800; color: #0f4c32; line-height: 1.25; margin-bottom: 15px; letter-spacing: -0.5px; }
+    .sc-hero-left h1 span { color: #16a34a; display: inline-block; margin-top: 4px; }
+    .sc-hero-left p { font-size: 15px; color: #475569; line-height: 1.6; }
+    .sc-score-sticker {
+      background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
+      color: #ffffff; padding: 16px 28px; border-radius: 20px; text-align: center;
+      box-shadow: 0 10px 25px rgba(21, 128, 61, 0.2); transform: rotate(4deg);
+      border: 3px solid #ffffff; outline: 2px solid #16a34a;
+      display: inline-block; white-space: nowrap; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .sc-score-sticker:hover { transform: rotate(0deg) scale(1.08); box-shadow: 0 15px 30px rgba(21, 128, 61, 0.3); }
+    .sc-sticker-tag { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: #dcfce7; display: block; margin-bottom: 2px; }
+    .sc-sticker-number { font-size: 36px; font-weight: 900; line-height: 1; letter-spacing: -1px; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); }
+    .sc-sticker-sub { font-size: 11px; font-weight: 600; color: #bbf7d0; display: block; margin-top: 4px; }
+
+    /* --- 2. STACKED LAYOUT --- */        
+    .sc-main-grid { display: flex; flex-direction: column; gap: 30px; margin-bottom: 20px; }
+    .sc-column { width: 100%; padding: 0 15px 20px 15px; border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.04); position: relative; transition: box-shadow 0.3s ease; }
+    .sc-column:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.06); }
+    .sc-column-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: inherit; overflow: hidden; z-index: 0; pointer-events: none; opacity: 0.4; }
+
+    .sc-column-a { background-color: var(--bg-light-blue); border: 2px solid #dbeafe; }
+    .sc-column-b { background-color: var(--bg-light-yellow); border: 2px solid #fef08a; }
+    .sc-column-c { background-color: var(--bg-light-orange); border: 2px solid #fed7aa; }
+
+    .sc-section-title { font-size: 14px; letter-spacing: 0.5px; font-weight: 800; text-transform: uppercase; color: var(--heading-navy); text-align: center; background: #ffffff; padding: 6px 22px; border-radius: 50px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06); width: fit-content; margin: -18px auto 20px auto; position: relative; z-index: 2; }
+    .sc-column-a .sc-section-title { border: 2px solid #93c5fd; }
+    .sc-column-b .sc-section-title { border: 2px solid #facc15; }
+    .sc-column-c .sc-section-title { border: 2px solid #fdba74; }
+
+    .sc-cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; position: relative; z-index: 2; }
+
+    .sc-custom-card { background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.02), 0 8px 12px rgba(0,0,0,0.03); padding: 12px; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; }
+    .sc-custom-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.08); border-color: #cbd5e1; }
+    .sc-custom-card h4 { font-size: 14px; font-weight: 700; margin: 8px 0 12px; color: var(--heading-navy); text-align: center; flex-grow: 1; display: flex; align-items: center; justify-content: center; }
+
+    .sc-unit-badge { display: flex; justify-content: space-between; align-items: center; padding: 3px 6px 3px 8px; font-size: 10.5px; font-weight: 700; background: #fff5eb; border-radius: 6px; color: #9a3412; width: 100%; margin-bottom: 8px; }
+    .sc-unit-badge span:nth-child(2) { position: relative; overflow: hidden; padding: 3px 8px; border-radius: 5px; color: #7c2d12; font-weight: 800; background: linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.4) 100%); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.9); box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.9), 0 2px 4px rgba(0,0,0,0.05); text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7); z-index: 1; }
+
+    .sc-custom-card .sc-card-links { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-top: auto; }
+    .sc-custom-card .sc-card-links a { text-align: center; padding: 5px 3px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 10.5px; border: 1px solid transparent; transition: all 0.25s ease; display: flex; justify-content: center; align-items: center; gap: 3px; white-space: nowrap; }
+
+    .sc-btn-oneshot { background-color: var(--bg-light-blue); color: var(--btn-blue-text); border-color: #dbeafe; }
+    .sc-btn-notes { background-color: var(--bg-light-yellow); color: var(--btn-yellow-text); border-color: #fef08a; }
+    .sc-btn-pyq { background-color: var(--bg-light-pink); color: var(--btn-pyq-text); border-color: #fce4ec; }
+    .sc-btn-mcq { background-color: var(--bg-light-teal); color: var(--btn-dpp-text); border-color: #e0f2f1; }
+
+    .sc-custom-card .sc-card-links a:hover { color: #fff !important; border-color: transparent; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    .sc-card-links a.sc-btn-oneshot:hover { background: var(--btn-blue-hover); }
+    .sc-card-links a.sc-btn-notes:hover { background: var(--btn-yellow-hover); }
+    .sc-card-links a.sc-btn-pyq:hover { background: #f06292; }
+    .sc-card-links a.sc-btn-mcq:hover { background: #26a69a; }
+
+    /* --- LOCKED LINKS OVERRIDE --- */
+    .sc-card-links a.sc-locked, .sc-cta-box a.sc-locked {
+      background-color: #f1f5f9 !important; color: #94a3b8 !important; border-color: #e2e8f0 !important;
+      cursor: not-allowed; box-shadow: none !important; transform: none !important;
+    }
+
+    /* --- MARQUEE & CTA SECTION --- */
+    .sc-single-box { background: #ffffff; border: 1.5px solid #bbf7d0; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 18px rgba(23, 102, 67, 0.06); margin-top: 10px; margin-bottom: 20px; position: relative; z-index: 5; }
+    .sc-marquee { white-space: nowrap; overflow: hidden; background: #f0fdf4; border-bottom: 1px solid #bbf7d0; }
+    .sc-marquee span { display: inline-block; padding: 12px 0; animation: marquee-scroll 22s linear infinite; font-size: 13.5px; font-weight: 700; color: #166534; }
+    .sc-marquee:hover span { animation-play-state: paused; } 
+    .sc-marquee span a { color: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
+    @keyframes marquee-scroll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+    .sc-cta-box { text-align: center; padding: 15px; }
+    .sc-cta-box a { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; padding: 10px 25px; border-radius: 999px; font-weight: 700; font-size: 14px; color: #064e3b; background: #dcfce7; border: 1px solid #86efac; transition: all 0.2s ease; }
+    .sc-cta-box a:hover { background: #bbf7d0; color: #022c22; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(22, 101, 52, 0.1); }
+
+    /* --- 3. BOTTOM SECTION --- */
+    .sc-bottom-blended-wrapper { border-radius: 16px; overflow: hidden; border: 1px solid rgba(26, 83, 26, 0.1); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); }
+    .sc-top-cta { background: var(--blend-dark-green); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .sc-cta-content { display: flex; align-items: center; gap: 14px; }
+    .sc-cta-icon { background: #ffffff; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); }
+    .sc-cta-text h4 { color: var(--blend-ivory); font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+    .sc-cta-text p { color: rgba(253, 252, 240, 0.75); font-size: 13px; }
+    .sc-cta-btn { background: #0B2F0B; color: var(--blend-ivory); text-decoration: none; padding: 8px 20px; border-radius: 30px; font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px; transition: background 0.3s ease, transform 0.2s ease; box-shadow: 0 4px 12px rgba(11, 47, 11, 0.3); }
+    .sc-cta-btn:hover { background: #072007; transform: translateY(-2px); color: white;}
+    .sc-middle-section { background: linear-gradient(180deg, #E6F4EB 0%, var(--blend-light-bg) 40%, #ffffff 100%); padding: 24px 20px 20px; text-align: center; position: relative; }
+    .sc-network-bg { position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.03; background-image: radial-gradient(var(--blend-dark-green) 1px, transparent 1px); background-size: 30px 30px; pointer-events: none; z-index: 1; }
+    .sc-wisdom-text { position: relative; z-index: 2; font-size: 30px; font-weight: 800; color: var(--blend-text-main); line-height: 1.2; margin-bottom: 24px; letter-spacing: -0.5px; }
+    .sc-wisdom-text span { color: var(--blend-dark-green); }
+    .sc-features-grid { position: relative; z-index: 2; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; border-top: 1px solid rgba(26, 83, 26, 0.08); padding-top: 20px; }
+    .sc-feature-item { display: flex; align-items: flex-start; text-align: left; gap: 10px; padding: 6px; border-radius: 8px; transition: background 0.3s ease; }
+    .sc-feature-item:hover { background: rgba(26, 83, 26, 0.04); }
+    .sc-feature-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+    .sc-feature-text h5 { color: var(--blend-text-accent); font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+    .sc-feature-text p { color: #64748b; font-size: 12px; line-height: 1.3; }
+    .sc-bottom-footer { background: var(--blend-dark-green); padding: 12px 20px; text-align: center; color: var(--blend-ivory); font-size: 13px; font-weight: 500; border-top: 1px solid rgba(255,255,255,0.1); margin: 0; }
+
+    /* --- 4. FLOATING ACTIONS --- */
+    .sc-floating-actions { position: fixed; bottom: 24px; right: 24px; display: flex; flex-direction: column; gap: 12px; z-index: 100; }
+    .sc-fab { width: 48px; height: 48px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.12); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .sc-fab:hover { transform: translateY(-4px) scale(1.05); box-shadow: 0 8px 20px rgba(0,0,0,0.18); }
+    .sc-fab:active { transform: scale(0.95); }
+    .sc-fab svg { width: 22px; height: 22px; transition: transform 0.4s ease; }
+    .sc-fab-share { background: #ffffff; color: #156845; }
+    .sc-fab-scroll { background: #156845; color: #ffffff; }
+    .sc-fab-scroll.sc-point-down svg { transform: rotate(180deg); }
+
+    /* --- TOAST NOTIFICATION --- */
+    .sc-toast {
+      visibility: hidden; min-width: 250px; background-color: #0f4c32; 
+      color: #ffffff; text-align: center; border-radius: 30px; padding: 12px 24px;
+      position: fixed; z-index: 6000; left: 50%; bottom: 20px;
+      transform: translateX(-50%); font-size: 14px; font-weight: 600;
+      box-shadow: 0 10px 25px rgba(15, 76, 50, 0.4); opacity: 0;
+      transition: opacity 0.3s ease, bottom 0.3s ease, visibility 0.3s ease;
+    }
+    .sc-toast.show { visibility: visible; opacity: 1; bottom: 40px; }
+
+    /* --- ANIMATED YOUTUBE CONFIRMATION MODAL --- */
+    .sc-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; z-index: 9999; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+    .sc-modal-overlay.show { opacity: 1; visibility: visible; }
+    .sc-modal-card { background: #ffffff; border-radius: 20px; padding: 40px 24px 30px; width: 90%; max-width: 440px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.25); transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .sc-modal-overlay.show .sc-modal-card { transform: scale(1); }
+    .sc-modal-icon-wrapper { position: relative; margin: 0 auto 24px; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; }
+    .sc-modal-icon-bg { position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 3px solid #fee2e2; background: #fff5f5; animation: sc-pulse-ring 2s infinite ease-out; }
+    .sc-modal-play-btn { z-index: 2; color: #dc2626; font-size: 32px; animation: sc-pulse-icon 2s infinite ease-out; }
+    .sc-modal-particle { position: absolute; font-size: 10px; color: #ef4444; animation: sc-float-particle 3s infinite ease-in-out; }
+    .sc-modal-particle:nth-child(2) { top: -10px; left: 10px; animation-delay: 0.2s; }
+    .sc-modal-particle:nth-child(3) { top: 20px; right: -15px; animation-delay: 0.5s; font-size: 8px;}
+    .sc-modal-particle:nth-child(4) { bottom: -5px; left: 0px; animation-delay: 0.8s; }
+    .sc-modal-particle:nth-child(5) { bottom: 10px; right: 5px; animation-delay: 1.1s; }
+
+    @keyframes sc-pulse-ring { 0% { transform: scale(0.85); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); } 70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(220, 38, 38, 0); } 100% { transform: scale(0.85); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); } }
+    @keyframes sc-pulse-icon { 0% { transform: scale(1); } 35% { transform: scale(1.15); } 70% { transform: scale(1); } 100% { transform: scale(1); } }
+    @keyframes sc-float-particle { 0%, 100% { transform: translateY(0); opacity: 0.5; } 50% { transform: translateY(-8px); opacity: 1; } }
+
+    .sc-modal-card h2 { font-size: 24px; color: #111827; margin-bottom: 8px; font-weight: 800; }
+    .sc-modal-card p { font-size: 15px; color: #6b7280; margin-bottom: 30px; font-weight: 500;}
+    .sc-modal-actions { display: flex; gap: 16px; }
+    .sc-modal-btn { flex: 1; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 16px; cursor: pointer; transition: all 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
+    .sc-btn-stay { background: #ffffff; border: 1px solid #d1d5db; color: #374151; }
+    .sc-btn-stay:hover { background: #f9fafb; border-color: #9ca3af; }
+    .sc-btn-watch { background: #dc2626; border: 1px solid #dc2626; color: #ffffff; }
+    .sc-btn-watch:hover { background: #b91c1c; border-color: #b91c1c; }
+
+    /* --- 5. RESPONSIVE --- */
+    @media (max-width: 992px) {
+      .sc-cards-grid { grid-template-columns: repeat(2, 1fr); } 
+      .sc-hero-content { flex-direction: column; text-align: center; gap: 30px; }
+      .sc-score-sticker { transform: rotate(0deg); }
+      .sc-hamburger { display: flex !important; }
+      .sc-top-nav { position: absolute; top: 64px; left: 10px; right: 10px; background: #176643 !important; flex-direction: column; align-items: flex-start; gap: 8px; padding: 16px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important; border: 1px solid #0f4c32 !important; z-index: 9999 !important; display: flex !important; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease; }
+      .sc-top-nav.show-mobile-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+      .sc-top-nav a { width: 100%; padding: 10px 0 !important; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; font-size: 15px !important; }
+      .sc-top-nav a:last-child { border-bottom: none !important; }
+      .sc-features-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+      .sc-wisdom-text { font-size: 26px; }
+    }
+    @media (max-width: 600px) {
+      .sc-cards-grid { grid-template-columns: 1fr; } 
+      .sc-top-header { padding: 12px 16px !important; margin-bottom: 25px !important; }
+      .sc-floating-actions { bottom: 16px; right: 16px; }
+      .sc-top-cta { flex-direction: column; text-align: center; }
+      .sc-cta-content { flex-direction: column; gap: 12px; }
+      .sc-features-grid { grid-template-columns: 1fr; gap: 20px; }
+      .sc-feature-item { align-items: center; text-align: center; flex-direction: column; }
+      .sc-feature-icon { margin-top: 0; }
+      .sc-wisdom-text { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sc-progress-wrapper"><div class="sc-progress-fill" id="scProgressBar"></div></div>
+
+  <div id="scVideoModal" class="sc-modal-overlay">
+    <div class="sc-modal-card">
+      <div class="sc-modal-icon-wrapper">
+        <div class="sc-modal-icon-bg"></div>
+        <div class="sc-modal-particle">✦</div>
+        <div class="sc-modal-particle">▲</div>
+        <div class="sc-modal-particle">●</div>
+        <div class="sc-modal-particle">✦</div>
+        <div class="sc-modal-play-btn">▶</div>
+      </div>
+      <h2>Want to watch this video?</h2>
+      <p>Choose an option below to continue.</p>
+      <div class="sc-modal-actions">
+        <button id="scModalStay" class="sc-modal-btn sc-btn-stay">
+          <span style="color:#dc2626; font-size:18px">◷</span> Stay
+        </button>
+        <button id="scModalWatch" class="sc-modal-btn sc-btn-watch">
+          ▶ Watch
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sc-widget-container">
+    
+    <div id="scToast" class="sc-toast">🚀 This material is coming soon! Stay tuned.</div>
+
+    <div class="sc-top-header">
+      <div class="sc-logo-area">
+        <div class="sc-logo-icon">&lt;/&gt;</div>
+        <div class="sc-logo-text">
+          <strong>SinghClasses.in</strong>
+          <span>Higher Education for 2026-27</span>
+        </div>
+      </div>
+      <div class="sc-top-nav" id="scMobileMenu">
+        <a href="https://www.singhclasses.in/">Home</a>
+        <a href="#">BCA</a>
+        <a href="#">MCA</a>
+        <a href="#">DSSSB</a>
+        <a href="https://www.singhclasses.in/p/ugc-net-computer-science-paper-ii.html">UGC NET</a>
+      </div>
+      <div class="sc-header-controls">
+        <div class="sc-hamburger" id="scMenuToggle">☰</div>
+      </div>
+    </div>
+
+    <section class="sc-hero-grid" style="margin-top: 20px; padding: 0 20px;">
+        <div class="sc-hero-content">
+            <div class="sc-hero-left">
+                <h1>NTA UGC NET 🏆 <br><span>Computer Science Paper II</span></h1>
+               <p align="justify">
+Prepare systematically with curriculum-aligned, high-quality study
+materials.<br> Access video lectures, structured summaries, solved
+previous-year papers,<br> and real-time interactive mock tests for all 10 modules.
+</p>
+            </div>
+            <div class="sc-hero-right">
+                <div class="sc-score-sticker">
+                    <span class="sc-sticker-tag">Target Score</span>
+                    <div class="sc-sticker-number">200/200</div>
+                    <span class="sc-sticker-sub">Perfect Paper-II Goal</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="sc-main-grid">
+        
+        <div class="sc-column sc-column-a" id="colA">
+            <div class="sc-column-bg"><canvas id="canvasA" class="sc-canvas-bg"></canvas></div>
+            <h3 class="sc-section-title">Section A &bull; Modules 01 to 04</h3>
+            <div class="sc-cards-grid">
+                
+                <div class="sc-custom-card">
+                    <div class="sc-unit-badge"><span>Unit 01</span><span>UGC NET</span></div>
+                    <h4>Discrete Mathematics</h4>
+                    <div class="sc-card-links">
+                        <a href="#" class="sc-btn-oneshot"><span class="sc-emoji">🎥</span> Videos</a>
+                        <a href="#" class="sc-btn-notes"><span class="sc-emoji">📒</span> Notes</a>
+                        <a href="#" class="sc-btn-pyq"><span class="sc-emoji">🎯</span> PYQs</a>
+                        <a href="#" class="sc-btn-mcq"><span class="sc-emoji">⏱️</span> Mock</a>
+                    </div>
+                </div>
+              
+                 <div class="sc-custom-card">
+                    <div class="sc-unit-badge"><span>Unit 02</span><span>UGC NET</span></div>
+                    <h4>Programming &amp; Graphics</h4>
+                    <div class="sc-card-links">
+                        <a href="#" class="sc-btn-oneshot"><span class="sc-emoji">🎥</span> Videos</a>
+                        <a href="#" class="sc-btn-notes"><span class="sc-emoji">📒</span> Notes</a>
+                        <a href="#" class="sc-btn-pyq"><span class="sc-emoji">🎯</span> PYQs</a>
+                        <a href="#" class="sc-btn-mcq"><span class="sc-emoji">⏱️</span> Mock</a>
+                    </div>
+                </div>
+
+                 <div class="sc-custom-card">
+                    <div class="sc-unit-badge"><span>Unit 03</span><span>UGC NET</span></div>
+                    <h4>Database Management</h4>
+                    <div class="sc-card-links">
+                        <a href="#" class="sc-btn-oneshot"><span class="sc-emoji">🎥</span> Videos</a>
+                        <a href="#" class="sc-btn-notes"><span class="sc-emoji">📒</span> Notes</a>
+                        <a href="#" class="sc-btn-pyq"><span class="sc-emoji">🎯</span> PYQs</a>
+                        <a href="#" class="sc-btn-mcq"><span class="sc-emoji">⏱️</span> Mock</a>
+                    </div>
+                </div>
+
+                <div class="sc-custom-card">
+                    <div class="sc-unit-badge"><span>Unit 04</span><span>UGC NET</span></div>
+                    <h4>System Software &amp; OS</h4>
+                    <div class="sc-card-links">
+                        <a href="#" class="sc-btn-oneshot"><span class="sc-emoji">🎥</span> Videos</a>
+                        <a href="#" class="sc-btn-notes"><span class="sc-emoji">📒</span> Notes</a>
+                        <a href="#" class="sc-btn-pyq"><span class="sc-emoji">🎯</span> PYQs</a>
+                        <a href="#" class="sc-btn-mcq"><span class="sc-emoji">⏱️</span> Mock</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sc-column sc-column-b" id="colB">
+            <div class="sc-column-bg"><canvas id="canvasB" class="sc-canvas-bg"></canvas></div>
+            <h3 class="sc-section-title">Section B &bull; Modules 05 to 07</h3>
+            <div class="sc-cards-grid">
+                
+                <div class="sc-custom-card">
+                    <div class="sc-unit-badge"><span>Unit 05</span><span>UGC NET</span></div>
+                    <h4>Software Engineering</h4>
+                    <div class="sc-card-links">
+                        <a href="#" class="sc-btn-oneshot"><span class="sc-emoji">🎥</span> Videos</a>
+                        <a href="#" class="sc-btn-notes"><span class="sc-emoji">📒</span> Notes</a>
+                        <a href="#" class="sc-btn-pyq"><span class="sc-emoji">🎯</span> PYQs</a>
+                        <a href="#" class="sc-btn-mcq"><span class="sc-emoji">⏱️</span> Mock</a>
+                    </div>
+                </div>
+
+                <div class="sc-custom-card">
+                    <div class="sc-unit-badge"><span>Unit 06</span><span>UGC NET</span></div>
+                    <h4>Data Structures &amp; Algorithms</h4>
+                    <div class="sc-card-links">
+                        <a href="#" class="sc-btn-oneshot"><span class="sc-emoji">🎥</span> Videos</a>
+                        <a href="#" class="sc-btn-notes"><span class="sc-emoji">📒</span> Notes</a>
+                        <a href="#" class="sc-btn-pyq"><span class="sc-emoji">🎯</span> PYQs</a>
+                        <a href="#" class="sc-btn-mcq"><span class="sc-emoji">⏱️</span> Mock</a>
+                    </div>
+                </div>
+
+                <div class="sc-custom-card">
+                    <div class="sc-unit-badge"><span>Unit 07</span><span>UGC NET</span></div>
+                    <h4>TOC and Compilers</h4>
+                    <div class="sc-card-links">
+                        <a href="#" class="sc-btn-oneshot"><span class="sc-emoji">🎥</span> Videos</a>
+                        <a href="#" class="sc-btn-notes"><span class="sc-emoji">📒</span> Notes</a>
+                        <a href="#" class="sc-btn-pyq"><span class="sc-emoji">🎯</span> PYQs</a>
+                        <a href="#" class="sc-btn-mcq"><span class="sc-emoji">⏱️</span> Mock</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sc-column sc-column-c" id="colC">
+            <div class="sc-column-bg"><canvas id="canvasC" class="sc-canvas-bg"></canvas></div>
+            <h3 class="sc-section-title">Section C &bull; Modules 08 to 10</h3>
+            <div class="sc-cards-grid">
+                
+                <div class="sc-custom-card">
+                    <div class="sc-unit-badge"><span>Unit 08</span><span>UGC NET</span></div>
+                    <h4>Data Communication</h4>
+                    <div class="sc-card-links">
+                        <a href="#" class="sc-btn-oneshot"><span class="sc-emoji">🎥</span> Videos</a>
+                        <a href="#" class="sc-btn-notes"><span class="sc-emoji">📒</span> Notes</a>
+                        <a href="#" class="sc-btn-pyq"><span class="sc-emoji">🎯</span> PYQs</a>
+                        <a href="#" class="sc-btn-mcq"><span class="sc-emoji">⏱️</span> Mock</a>
+                    </div>
+                </div>
+
+                <div class="sc-custom-card">
+                    <div class="sc-unit-badge"><span>Unit 09</span><span>UGC NET</span></div>
+                    <h4>Artificial Intelligence</h4>
+                    <div class="sc-card-links">
+                        <a href="#" class="sc-btn-oneshot"><span class="sc-emoji">🎥</span> Videos</a>
+                        <a href="#" class="sc-btn-notes"><span class="sc-emoji">📒</span> Notes</a>
+                        <a href="https://www.singhclasses.in/2026/05/ugc-net-artificial-intelligence-ai-unit.html" class="sc-btn-pyq" target="_blank"><span class="sc-emoji">🎯</span> PYQs</a>
+                        <a href="#" class="sc-btn-mcq"><span class="sc-emoji">⏱️</span> Mock</a>
+                    </div>
+                </div>
+
+                <div class="sc-custom-card">
+                    <div class="sc-unit-badge"><span>Unit 10</span><span>UGC NET</span></div>
+                    <h4>Computer Architecture</h4>
+                    <div class="sc-card-links">
+                        <a href="#" class="sc-btn-oneshot"><span class="sc-emoji">🎥</span> Videos</a>
+                        <a href="#" class="sc-btn-notes"><span class="sc-emoji">📒</span> Notes</a>
+                        <a href="#" class="sc-btn-pyq"><span class="sc-emoji">🎯</span> PYQs</a>
+                        <a href="#" class="sc-btn-mcq"><span class="sc-emoji">⏱️</span> Mock</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div> 
+
+    <div class="sc-single-box">
+        <div class="sc-marquee">
+            <span>
+                <a href="https://www.youtube.com/channel/UCQpNeGvzbBLsRLnNX7ga8FQ?sub_confirmation=1" target="_blank">
+                    <span class="sc-emoji">🚀</span> New batch starting soon! <span class="sc-emoji">📢</span> Prepare for NTA UGC NET Computer Science with Rohit Sir.
+                </a>
+            </span>
+        </div>
+        <div class="sc-cta-box">
+            <a href="#" target="_blank">
+                <span class="sc-emoji">📝</span> Daily Practice Problems
+            </a>
+        </div>
+    </div>
+
+    <div class="sc-bottom-blended-wrapper">
+      <div class="sc-top-cta">
+        <div class="sc-cta-content">
+          <div class="sc-cta-icon"><span class="sc-emoji">🏆</span></div>
+          <div class="sc-cta-text">
+            <h4>Stay Consistent. Stay Ahead.</h4>
+            <p>Cover every unit, practice PYQs and take mocks to ace UGC NET.</p>
+          </div>
+        </div>
+        <a href="#" target="_blank" class="sc-cta-btn">
+          <span class="sc-emoji">🎯</span> Take Mock Test
+        </a>
+      </div>
+
+      <div class="sc-middle-section" id="bottomSection">
+        <div class="sc-column-bg" style="opacity: 0.6;"><canvas id="canvasBottom" class="sc-canvas-bg"></canvas></div>
+        <div class="sc-network-bg"></div>
+        
+        <div class="sc-wisdom-text">
+          Alone we learn.<br>
+          Together we build <span>wisdom.</span>
+        </div>
+
+        <div class="sc-features-grid">
+          <div class="sc-feature-item">
+            <div class="sc-feature-icon"><span class="sc-emoji">🎯</span></div>
+            <div class="sc-feature-text">
+              <h5>Exam Focused</h5>
+              <p>Concepts that matter</p>
+            </div>
+          </div>
+          
+          <div class="sc-feature-item">
+            <div class="sc-feature-icon"><span class="sc-emoji">💡</span></div>
+            <div class="sc-feature-text">
+              <h5>Concept Clarity</h5>
+              <p>Understand with ease</p>
+            </div>
+          </div>
+          
+          <div class="sc-feature-item">
+            <div class="sc-feature-icon"><span class="sc-emoji">🔔</span></div>
+            <div class="sc-feature-text">
+              <h5>Regular Updates</h5>
+              <p>Stay ahead always</p>
+            </div>
+          </div>
+          
+          <div class="sc-feature-item">
+            <div class="sc-feature-icon"><span class="sc-emoji">🎓</span></div>
+            <div class="sc-feature-text">
+              <h5>NET Oriented</h5>
+              <p>Your success, our mission</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sc-bottom-footer">
+        &copy; SinghClasses.in | Designed with ❤️ by Rohit Sir
+      </div>
+    </div>
+
+    <div class="sc-floating-actions">
+      <button id="scShareBtn" class="sc-fab sc-fab-share" aria-label="Share Page" title="Share Page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="18" cy="5" r="3"></circle>
+          <circle cx="6" cy="12" r="3"></circle>
+          <circle cx="18" cy="19" r="3"></circle>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+        </svg>
+      </button>
+      <button id="scScrollToggleBtn" class="sc-fab sc-fab-scroll sc-point-down" aria-label="Scroll Toggle" title="Scroll Top/Bottom">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 15l-6-6-6 6" />
+        </svg>
+      </button>
+    </div>
+
+  </div> 
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      
+      // --- Scroll Progress Bar Logic ---
+      window.addEventListener('scroll', function(){
+          const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+          const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+          const scrollPercent = (scrollTop / scrollHeight) * 100;
+          document.getElementById("scProgressBar").style.width = scrollPercent + "%";
+      });
+
+      // --- COMING SOON TOAST & LOCK LOGIC (plus Video Modal Integration) ---
+      const allLinks = document.querySelectorAll('.sc-widget-container a');
+      const toast = document.getElementById('scToast');
+      const videoModal = document.getElementById('scVideoModal');
+      const btnStay = document.getElementById('scModalStay');
+      const btnWatch = document.getElementById('scModalWatch');
+      
+      let toastTimeout;
+      let currentVideoUrl = '';
+
+      allLinks.forEach(link => {
+          const href = link.getAttribute('href');
+          
+          // 1. Locking logic for empty or hashtag links
+          if (!href || href === '#' || href.trim() === '') {
+              link.classList.add('sc-locked');
+              const emojiSpan = link.querySelector('.sc-emoji');
+              if (emojiSpan) emojiSpan.textContent = '🔒';
+
+              link.addEventListener('click', function(e) {
+                  e.preventDefault(); 
+                  toast.classList.add('show');
+                  clearTimeout(toastTimeout);
+                  toastTimeout = setTimeout(() => { toast.classList.remove('show'); }, 3000);
+              });
+          } 
+          // 2. YouTube Modal interception logic (excluding subscribe links)
+          else if ((href.includes('youtu.be') || href.includes('youtube.com')) && !href.includes('sub_confirmation')) {
+              link.addEventListener('click', function(e) {
+                  e.preventDefault(); 
+                  currentVideoUrl = href; 
+                  videoModal.classList.add('show'); 
+              });
+          }
+      });
+
+      // Modal action listeners
+      if (btnStay) {
+        btnStay.addEventListener('click', () => {
+            videoModal.classList.remove('show');
+            currentVideoUrl = '';
+        });
+      }
+
+      if (btnWatch) {
+        btnWatch.addEventListener('click', () => {
+            if (currentVideoUrl) {
+                window.open(currentVideoUrl, '_blank');
+                videoModal.classList.remove('show');
+                currentVideoUrl = '';
+            }
+        });
+      }
+
+      // --- Mobile Menu Toggle ---
+      const menuToggle = document.getElementById('scMenuToggle');
+      const mobileMenu = document.getElementById('scMobileMenu');
+      if (menuToggle && mobileMenu) {
+        menuToggle.addEventListener('click', function() {
+          mobileMenu.classList.toggle('show-mobile-menu');
+          menuToggle.innerHTML = mobileMenu.classList.contains('show-mobile-menu') ? '✕' : '☰';
+        });
+      }
+
+      // --- Floating Actions Logic ---
+      const shareBtn = document.getElementById('scShareBtn');
+      const scrollBtn = document.getElementById('scScrollToggleBtn');
+
+      if (shareBtn) {
+        shareBtn.addEventListener('click', async () => {
+          if (navigator.share) {
+            try { await navigator.share({ title: document.title, url: window.location.href }); } 
+            catch (err) { console.log('Error sharing:', err); }
+          } else {
+            navigator.clipboard.writeText(window.location.href).then(() => { alert('Link copied to clipboard!'); });
+          }
+        });
+      }
+
+      if (scrollBtn) {
+        const checkScroll = () => {
+          if (window.scrollY > 150) scrollBtn.classList.remove('sc-point-down');
+          else scrollBtn.classList.add('sc-point-down');
+        };
+
+        window.addEventListener('scroll', checkScroll);
+        checkScroll(); 
+
+        scrollBtn.addEventListener('click', () => {
+          if (window.scrollY > 150) window.scrollTo({ top: 0, behavior: 'smooth' });
+          else window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        });
+      }
+
+      // --- Reusable Particle Canvas Function ---
+      function initParticleCanvas(containerId, canvasId, particleCount, connectionDistance) {
+        const container = document.getElementById(containerId);
+        const canvas = document.getElementById(canvasId);
+        if (!container || !canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+        let mouse = { x: null, y: null };
+
+        function resizeCanvas() {
+          width = container.offsetWidth;
+          height = container.offsetHeight;
+          canvas.width = width;
+          canvas.height = height;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        container.addEventListener('mousemove', function(e) {
+          const rect = container.getBoundingClientRect();
+          mouse.x = e.clientX - rect.left;
+          mouse.y = e.clientY - rect.top;
+        });
+        container.addEventListener('mouseleave', function() {
+          mouse.x = null;
+          mouse.y = null;
+        });
+
+        class Particle {
+          constructor() {
+            this.x = Math.random() * width;
+            this.y = Math.random() * height;
+            this.vx = (Math.random() - 0.5) * 0.8; 
+            this.vy = (Math.random() - 0.5) * 0.8; 
+            this.radius = 1.5;
+          }
+          update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            if (this.x < 0 || this.x > width) this.vx *= -1;
+            if (this.y < 0 || this.y > height) this.vy *= -1;
+          }
+          draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(21, 104, 69, 0.4)';
+            ctx.fill();
+          }
+        }
+
+        for (let i = 0; i < particleCount; i++) {
+          particles.push(new Particle());
+        }
+
+        function animate() {
+          ctx.clearRect(0, 0, width, height);
+          for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            particles[i].draw();
+            
+            for (let j = i + 1; j < particles.length; j++) {
+              let dx = particles[i].x - particles[j].x;
+              let dy = particles[i].y - particles[j].y;
+              let dist = Math.sqrt(dx * dx + dy * dy);
+              if (dist < connectionDistance) {
+                ctx.beginPath();
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(particles[j].x, particles[j].y);
+                ctx.strokeStyle = `rgba(21, 104, 69, ${0.25 - (dist/connectionDistance) * 0.25})`;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+              }
+            }
+            
+            if (mouse.x !== null && mouse.y !== null) {
+              let dx = particles[i].x - mouse.x;
+              let dy = particles[i].y - mouse.y;
+              let dist = Math.sqrt(dx * dx + dy * dy);
+              if (dist < 100) {
+                ctx.beginPath();
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(mouse.x, mouse.y);
+                ctx.strokeStyle = `rgba(21, 104, 69, ${0.35 - (dist/100) * 0.35})`;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+              }
+            }
+          }
+          requestAnimationFrame(animate);
+        }
+        animate();
+      }
+
+      initParticleCanvas('colA', 'canvasA', 35, 60);
+      initParticleCanvas('colB', 'canvasB', 35, 60);
+      initParticleCanvas('colC', 'canvasC', 35, 60);
+      initParticleCanvas('bottomSection', 'canvasBottom', 40, 75);
+    });
+  </script>
+</body>
+</html>

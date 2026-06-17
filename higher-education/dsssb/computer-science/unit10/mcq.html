@@ -1,0 +1,1659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SinghClasses.in - UGC NET AI Mock</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* CBT Theme Variables */
+            --bg-color: #f0f2f5;
+            --app-bg: #ffffff;
+            --text-color: #222;
+            --nav-bg: #0a1128;
+            --container-bg: #fff;
+            --border-color: #cccccc;
+            --header-bg: #003366;
+            --header-text: #fff;
+            --option-bg: #fdfdfd;
+            --option-border: #e2e8f0;
+            --option-hover-bg: #e6f2ff;
+            --palette-unvisited: #9e9e9e;
+            --palette-unvisited-text: #fff;
+            --modal-bg: #fff;
+            --modal-text: #444;
+            --input-bg: #fff;
+            
+            /* UGC NET layout additions */
+            --tab-active-lbl: #b45309;
+            --tab-inactive-lbl: #94a3b8;
+            --tab-active-val: #ffcc00;
+            --tab-inactive-val: #e2e8f0;
+            --q-prefix-color: #003366;
+            --footer-bg: #f8f9fa;
+
+            /* Bottom Section Branding Colors */
+            --blend-dark-green: #1A531A; 
+            --blend-ivory: #FDFCF0;      
+            --blend-light-bg: #F2F9F3;   
+            --blend-text-main: #2D3748;  
+            --blend-text-accent: #0B2F0B;
+
+            /* Dynamic text variable */
+            --stat-lbl-color: #555555;
+            --timer-bg: #f1f5f9;
+            --timer-text: #334155;
+        }
+
+        body.dark-mode {
+            --bg-color: #121212;
+            --app-bg: #1a1a1a;
+            --text-color: #e4e6eb;
+            --nav-bg: #000000;
+            --container-bg: #242526;
+            --border-color: #444444;
+            --header-bg: #181818;
+            --header-text: #e4e6eb;
+            --option-bg: #3a3b3c;
+            --option-border: #555555;
+            --option-hover-bg: #4e4f50;
+            --palette-unvisited: #6b7280;
+            --palette-unvisited-text: #fff;
+            --modal-bg: #242526;
+            --modal-text: #e4e6eb;
+            --input-bg: #1a1a1a;
+            
+            --tab-active-lbl: #f59e0b;
+            --tab-inactive-lbl: #64748b;
+            --tab-active-val: #ffcc00;
+            --tab-inactive-val: #94a3b8;
+            --q-prefix-color: #60a5fa;
+            --footer-bg: #1e1e1e;
+
+            /* Dynamic text variable */
+            --stat-lbl-color: #a2aab8;
+            --timer-bg: #334155;
+            --timer-text: #f8fafc;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 16px; 
+            user-select: none;
+            -webkit-user-select: none;
+            transition: background-color 0.3s, color 0.3s;
+            padding: 20px 10px;
+        }
+
+        /* --- PROGRESS BAR --- */
+        .sc-progress-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 4px; z-index: 5000; }
+        .sc-progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #176643, #4ade80, #176643); transition: width .15s ease-out; box-shadow: 0 0 10px rgba(74, 222, 128, 0.5); }
+
+        /* --- MAIN WIDGET CONTAINER --- */
+        .sc-widget-container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 12px;
+            box-sizing: border-box;
+            line-height: 1.4;
+            position: relative;
+            background: var(--app-bg);
+            border: 1px solid rgba(23, 102, 67, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(23, 102, 67, 0.1), 0 8px 30px rgba(23, 102, 67, 0.05);
+            transition: box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+        }
+        body.dark-mode .sc-widget-container { border: 1px solid var(--border-color); box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); }
+        .sc-widget-container * { box-sizing: border-box; }
+
+        /* --- EMOJI HOVER ANIMATION --- */
+        .sc-emoji { display: inline-block; transform-origin: center bottom; }
+        @keyframes sc-emoji-bounce {
+            0% { transform: scale(1) translateY(0); }
+            30% { transform: scale(1.2) translateY(-3px) rotate(-10deg); }
+            60% { transform: scale(1.2) translateY(-3px) rotate(10deg); }
+            100% { transform: scale(1) translateY(0) rotate(0deg); }
+        }
+        .theme-btn:hover .sc-emoji, .security-text:hover .sc-emoji, .modal-btn:hover .sc-emoji, .sc-cta-btn:hover .sc-emoji, .sc-feature-item:hover .sc-emoji {
+            animation: sc-emoji-bounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        /* --- TOP HEADER LOGO & LINKS --- */
+        .sc-top-header {
+            display: flex !important; justify-content: space-between !important; align-items: center !important;
+            margin-bottom: 15px !important; flex-wrap: wrap !important; gap: 10px !important;
+            position: relative !important; background: #176643 !important; padding: 12px 20px !important;
+            border-radius: 12px !important; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important; z-index: 50;
+        }
+        body.dark-mode .sc-top-header { background: #064e3b !important; }
+
+        .sc-logo-area { display: flex !important; align-items: center !important; gap: 10px !important; }
+        .sc-logo-icon {
+            border: 2px solid #ffffff !important; color: #ffffff !important; font-weight: 700 !important;
+            font-size: 14px !important; padding: 4px 8px !important; border-radius: 6px !important;
+            border-bottom-width: 3px !important; display: flex !important; align-items: center !important; justify-content: center !important;
+        }
+        .sc-logo-text { display: flex !important; flex-direction: column !important; }
+        .sc-logo-text strong { font-size: 16px !important; color: #ffffff !important; line-height: 1.1 !important; letter-spacing: -0.3px !important; font-weight: 700; }
+        .sc-logo-text span { font-size: 11px !important; color: #a7f3d0 !important; font-weight: 500 !important; }
+        
+        .sc-top-nav { display: flex; gap: 18px; font-size: 1rem; font-weight: 600; align-items: center; overflow-x: auto; margin-left: auto !important; }
+        .sc-top-nav::-webkit-scrollbar { display: none; }
+        .sc-top-nav a { color: #dcfce7 !important; text-decoration: none !important; white-space: nowrap !important; transition: 0.2s !important; padding: 4px 8px; border-radius: 6px;}
+        .sc-top-nav a:hover, .sc-top-nav a.active { background: rgba(255, 255, 255, 0.15); color: #ffffff !important; }
+
+        .sc-header-controls { display: flex; align-items: center; gap: 10px; }
+        .sc-hamburger { display: none; width: 32px; height: 32px; background: rgba(0,0,0,0.2) !important; color: #ffffff !important; border-radius: 6px; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; transition: background 0.2s; border: 1px solid rgba(255,255,255,0.2) !important; }
+
+        .theme-btn {
+            background: transparent; border: 1px solid #dcfce7; color: #dcfce7; padding: 6px 14px;
+            border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 0.9em; transition: all 0.2s;
+            display: flex; align-items: center; gap: 5px;
+        }
+        .theme-btn:hover { background: #dcfce7; color: #176643; }
+
+        /* --- CBT APP NAVIGATION --- */
+        .unified-nav {
+            background-color: var(--nav-bg); display: flex; align-items: stretch; border-bottom: 4px solid #ffcc00; 
+            z-index: 40; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: background-color 0.3s; border-radius: 8px; margin-bottom: 15px;
+            position: relative;
+        }
+
+        /* Mobile specific year nav header */
+        .year-nav-mobile-header { display: none; }
+        .current-paper-label { color: #ffcc00; font-weight: 700; font-size: 1.1em; display: flex; flex-direction: column; line-height: 1.2; }
+        .current-paper-label span { font-size: 0.65em; color: #94a3b8; text-transform: uppercase; font-weight: 600; }
+
+        .main-links { display: flex; align-items: center; gap: 20px; flex-shrink: 0; border-right: 1px solid var(--border-color); padding: 0 25px; }
+        .nav-item { color: #cbd5e1; text-decoration: none; font-size: 1rem; font-weight: 600; transition: color 0.3s ease; }
+        .nav-item:hover { color: #ffcc00; }
+
+        .year-nav-bar {
+            display: flex; overflow-x: auto; white-space: nowrap; scrollbar-width: none; flex-grow: 1; align-items: stretch; -webkit-overflow-scrolling: touch;
+        }
+        .year-nav-bar::-webkit-scrollbar { display: none; }
+        .year-tab {
+            padding: 12px 24px; cursor: pointer; transition: all 0.2s ease; text-align: center; line-height: 1.3; display: flex; flex-direction: column; justify-content: center;
+        }
+        .year-tab:hover { background: rgba(255, 255, 255, 0.05); }
+        .year-tab.active { background-color: rgba(255, 255, 255, 0.1); }
+
+        /* --- CBT LAYOUT --- */
+        #quiz-screen { width: 100%; }
+        .main-wrapper { display: flex; width: 100%; max-width: 1100px; margin: 0 auto 20px auto; gap: 20px; flex-direction: row; padding: 0 5px; }
+
+        .cbt-container {
+            flex: 3; background: var(--container-bg); box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden;
+            display: flex; flex-direction: column; position: relative; scroll-margin-top: 20px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .palette-container {
+            flex: 1; background: var(--container-bg); box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            border: 1px solid var(--border-color); border-radius: 8px; padding: 15px;
+            display: flex; flex-direction: column; min-width: 280px; height: fit-content;
+            transition: background-color 0.3s, border-color 0.3s; position: relative; overflow: hidden;
+        }
+
+        /* Particle Background Layer */
+        .sc-column-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.35; }
+        .cbt-container > :not(.sc-column-bg), .palette-container > :not(.sc-column-bg) { position: relative; z-index: 1; }
+
+        /* Header & Timer */
+        .header {
+            background: var(--header-bg); color: var(--header-text); padding: 15px 20px; display: flex; justify-content: space-between;
+            align-items: center; font-weight: 700; font-size: 1.2em; transition: background-color 0.3s, color 0.3s;
+        }
+        .progress-container { width: 100%; height: 4px; background: #e9ecef; }
+        body.dark-mode .progress-container { background: #334155; }
+        .progress-bar { height: 100%; background: #007bff; width: 0%; transition: width 0.4s ease-out; }
+
+        @keyframes pulseText {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .timer {
+            font-size: 1.25em; font-weight: 700; background: var(--timer-bg); color: var(--timer-text); 
+            border: 1px solid var(--option-border);
+            padding: 5px 12px; border-radius: 8px; display: flex; align-items: center; gap: 5px;
+            transition: color 0.3s;
+        }
+        .timer.warning { color: #f59e0b; } 
+        .timer.danger { color: #ef4444; animation: pulseText 1.5s infinite; } 
+
+        /* Content */
+        .content { padding: 25px 30px; flex-grow: 1; display: flex; flex-direction: column; }
+        .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        .fade-in { animation: slideFade 0.3s forwards; }
+        @keyframes slideFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .question-number { font-weight: 600; font-size: 0.95em; color: #64748b; text-transform: uppercase; }
+        body.dark-mode .question-number { color: #94a3b8; }
+        
+        /* Adjusted Question Font Size */
+        .question-text { font-size: 1.05rem; margin-bottom: 20px; line-height: 1.6; color: var(--text-color); white-space: pre-wrap; text-align: justify; }
+
+        /* Options Styling */
+        .options { list-style-type: none; padding: 0; margin: 0; }
+        .options li { margin-bottom: 12px; }
+        
+        .options label {
+            display: flex; align-items: center; padding: 12px 16px; background: var(--option-bg);
+            border: 1px solid var(--option-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;
+            /* Adjusted Option Font Size */
+            font-size: 0.98rem; 
+            color: var(--text-color);
+        }
+        .options label:not(.disabled-label):hover { background: var(--option-hover-bg); border-color: #b8daff; }
+        body.dark-mode .options label:not(.disabled-label):hover { border-color: #63b3ed; }
+        
+        .options input { display: none; }
+        
+        .option-letter {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 28px; height: 28px; border-radius: 50%;
+            border: 1px solid var(--option-border);
+            margin-right: 15px; font-weight: 700; font-size: 0.9em;
+            background: var(--app-bg); color: var(--text-color);
+            transition: all 0.2s; flex-shrink: 0;
+        }
+
+        .options label.selected { background: #e6f2ff; border-color: #007bff; font-weight: 600; }
+        .options label.selected .option-letter { background: #007bff; color: white; border-color: #007bff; }
+        body.dark-mode .options label.selected { background: #2a4365; border-color: #63b3ed; color: #fff; }
+        body.dark-mode .options label.selected .option-letter { background: #63b3ed; color: #1a1a1a; border-color: #63b3ed; }
+
+        .options label.disabled-label { cursor: not-allowed; opacity: 0.7; background: #f0f0f0; }
+        body.dark-mode .options label.disabled-label { background: #2d3748; border-color: #4a5568; opacity: 0.5; }
+        
+        .options label.correct-answer { background: #d4edda !important; border-color: #28a745 !important; color: #155724 !important; font-weight: 700; opacity: 1; }
+        body.dark-mode .options label.correct-answer { background: #1c4532 !important; border-color: #48bb78 !important; color: #68d391 !important; }
+        .options label.wrong-answer { background: #f8d7da !important; border-color: #dc3545 !important; color: #721c24 !important; text-decoration: line-through; opacity: 0.8; }
+        body.dark-mode .options label.wrong-answer { background: #742a2a !important; border-color: #f56565 !important; color: #fc8181 !important; }
+
+        /* Footer Buttons */
+        .footer { background: var(--footer-bg); padding: 15px 25px; display: flex; justify-content: space-between; border-top: 1px solid var(--option-border); flex-wrap: wrap; gap: 15px; transition: background-color 0.3s; }
+        .footer-left { display: flex; gap: 12px; flex-wrap: wrap; }
+        button { padding: 12px 20px; font-size: 1.1em; cursor: pointer; border: none; border-radius: 8px; font-weight: 600; transition: all 0.2s; font-family: 'Inter', sans-serif; }
+        button:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn-prev { background: #6c757d; color: white; border: 1px solid rgba(0,0,0,0.1); }
+        .btn-clear { background: #ffcc00; color: #000; border: 1px solid rgba(0,0,0,0.1); }
+        .btn-next { background: #007bff; color: white; border: 1px solid rgba(0,0,0,0.1); }
+        .btn-submit { background: #28a745; color: white; width: 100%; margin-top: 15px; padding: 14px; border: 1px solid rgba(0,0,0,0.1); border-radius: 8px;}
+
+        /* Palette & Stats Box Alignment & Enhancements */
+        .palette-title { text-align: center; font-weight: 700; font-size: 1.15em; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--option-border); color: var(--text-color); }
+        
+        .mini-stats { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 10px; 
+            margin-bottom: 20px; 
+        }
+        .stat-col { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 12px 6px; 
+            border-radius: 8px; 
+            border: 1px solid #444444; 
+            background-color: var(--option-bg);
+            transition: background-color 0.3s; 
+            height: 75px;
+        }
+        body.dark-mode .stat-col { border-color: #666666; }
+        /* Using CSS variable for stat-lbl color */
+        .stat-lbl { font-size: 0.75em; color: var(--stat-lbl-color); text-transform: uppercase; font-weight: 700; margin-bottom: 4px; letter-spacing: 0.5px; }
+        
+        .stat-val { font-size: 1.4em; font-weight: 800; }
+
+        .stat-right-col { background-color: #eecfcf; border-color: #444444; } 
+        .stat-right-col { background-color: #f0fdf4; border-color: #16a34a; } .stat-right-col .stat-val { color: #16a34a; }
+        body.dark-mode .stat-right-col { background-color: rgba(22, 163, 74, 0.15); border-color: #34d399; } body.dark-mode .stat-right-col .stat-val { color: #34d399; }
+        
+        .stat-wrong-col { background-color: #fef2f2; border-color: #dc2626; } .stat-wrong-col .stat-val { color: #dc2626; }
+        body.dark-mode .stat-wrong-col { background-color: rgba(220, 38, 38, 0.15); border-color: #fca5a5; } body.dark-mode .stat-wrong-col .stat-val { color: #fca5a5; }
+        
+        .stat-score-col { background-color: #eff6ff; border-color: #2563eb; } .stat-score-col .stat-val { color: #2563eb; }
+        body.dark-mode .stat-score-col { background-color: rgba(37, 99, 235, 0.15); border-color: #93c5fd; } body.dark-mode .stat-score-col .stat-val { color: #93c5fd; }
+
+        .palette-grid-wrapper {
+            position: relative;
+        }
+        .palette-grid-wrapper::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 35px;
+            background: linear-gradient(to bottom, transparent, var(--container-bg));
+            pointer-events: none;
+            border-radius: 0 0 8px 8px;
+        }
+
+   .palette-grid { 
+            display: grid; 
+            grid-template-columns: repeat(5, 1fr); 
+            gap: 10px; 
+            margin-bottom: 5px; 
+            /* Show exactly 2 rows (10 questions) before scrolling */
+            max-height: 109px; /* Changed from 155px */
+            overflow-y: auto; 
+            padding-right: 5px; 
+            padding-top: 5px; 
+            padding-left: 5px; 
+            padding-bottom: 20px; 
+            justify-items: center; 
+        }
+        
+        .palette-btn { 
+            position: relative; 
+            display: flex; align-items: center; justify-content: center; 
+            width: 36px; height: 36px;
+            border-radius: 50%; 
+            font-weight: 700; cursor: pointer; font-size: 1rem; 
+            transition: all 0.2s; border: 1px solid rgba(0,0,0,0.1); 
+        }
+        .palette-btn:hover { opacity: 0.8; }
+        .palette-btn.current-question { 
+            border: 2px solid #fff; 
+            box-shadow: 0 0 0 3px #007bff; 
+            z-index: 10; 
+        }
+        body.dark-mode .palette-btn.current-question { 
+            border: 2px solid #1a1a1a; 
+            box-shadow: 0 0 0 3px #60a5fa; 
+        }
+        
+        /* Filtered Out Palette Class */
+        .palette-btn.filtered-out { opacity: 0.15; pointer-events: none; transform: scale(0.9); border-color: rgba(0,0,0,0.1); }
+        body.dark-mode .palette-btn.filtered-out { border-color: rgba(255,255,255,0.2); }
+
+        /* Palette Color States */
+        .unvisited { background: var(--palette-unvisited); color: var(--palette-unvisited-text); }
+        .not-answered { background: #ffbf00; color: #000; }
+        .answered { background: #28a745; color: #fff; }
+        .wrong { background: #dc3545; color: #fff; }
+        
+        body.dark-mode .not-answered { background: #d97706; }
+        body.dark-mode .answered { background: #059669; }
+        body.dark-mode .wrong { background: #b91c1c; }
+
+        /* Modals */
+        .custom-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(9, 20, 19, 0.95); display: none; justify-content: center; align-items: center; z-index: 6000; backdrop-filter: blur(5px); overflow-y: auto; }
+        .custom-modal-box { background: var(--modal-bg); color: var(--modal-text); padding: 30px; border-radius: 8px; width: 95%; max-width: 550px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 1px solid var(--border-color); animation: slideFade 0.3s forwards; margin: 20px auto; text-align: center; transition: background-color 0.3s, border-color 0.3s, color 0.3s; }
+        
+        .instructions-container { text-align: left; margin-bottom: 20px; }
+        .instructions-container h3 { color: var(--q-prefix-color); border-bottom: 1px solid var(--option-border); padding-bottom: 5px; margin-top: 0; font-size: 1.1em; }
+        .instructions-list { line-height: 1.5; color: var(--modal-text); padding-left: 20px; font-size: 0.95em; margin-bottom: 10px; }
+        
+        .palette-legend { display: flex; flex-wrap: wrap; gap: 15px; background: var(--option-bg); padding: 10px 15px; border-radius: 8px; border: 1px solid var(--option-border); align-items: center; justify-content: center; }
+        
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.85em; color: var(--text-color); font-weight: 600; cursor: default; }
+        .legend-box { width: 12px; height: 12px; border-radius: 50%; display: inline-block; border: 1px solid rgba(0,0,0,0.1); }
+        
+        /* Interactive Filter Layout Changes */
+        .filter-header-title { 
+            font-size: 0.95em !important; 
+            font-weight: 700 !important; 
+            text-align: center; 
+            margin-top: 5px;
+            margin-bottom: 15px !important; 
+            color: var(--text-color); 
+            text-transform: uppercase; 
+            letter-spacing: 0.8px; 
+        }
+        .interactive-legend { 
+            flex-direction: column !important; 
+            align-items: flex-start !important; 
+            gap: 6px !important; 
+            padding: 12px 16px !important; 
+        }
+        .interactive-legend .legend-item { 
+            cursor: pointer; 
+            transition: all 0.2s; 
+            padding: 8px 12px; 
+            border-radius: 6px; 
+            border: 1px solid transparent; 
+            width: 100%;
+            font-size: 0.95em !important;
+        }
+        .interactive-legend .legend-item:hover { background: rgba(0,0,0,0.05); }
+        body.dark-mode .interactive-legend .legend-item:hover { background: rgba(255,255,255,0.05); }
+        .interactive-legend .legend-item.active-filter { background: rgba(0, 123, 255, 0.1); border-color: rgba(0, 123, 255, 0.3); }
+        body.dark-mode .interactive-legend .legend-item.active-filter { background: rgba(96, 165, 250, 0.15); border-color: rgba(96, 165, 250, 0.3); }
+
+        .input-group { display: flex; flex-direction: column; align-items: center; margin-top: 15px; }
+        .modal-input { background: var(--input-bg); color: var(--text-color); width: 85%; padding: 12px; font-size: 1.1em; border: 2px solid var(--option-border); border-radius: 8px; margin-bottom: 15px; text-align: center; font-family: 'Inter', sans-serif; }
+        .modal-input:focus { outline: none; border-color: #007bff; box-shadow: 0 0 5px rgba(0,123,255,0.3); }
+
+        .security-box { background-color: #fef0f0; border: 3px solid #d32f2f; }
+        body.dark-mode .security-box { background-color: #450a0a; border-color: #991b1b; }
+        .security-title { color: #b71c1c; font-size: 2em; font-weight: 700; margin-bottom: 20px; }
+        body.dark-mode .security-title { color: #fca5a5; }
+        .security-text { color: #8b0000; font-size: 1.3em; font-weight: 600; margin-bottom: 15px; line-height: 1.4; }
+        body.dark-mode .security-text { color: #fecaca; }
+
+        .modal-title { font-size: 1.8em; color: var(--q-prefix-color); font-weight: 700; margin-bottom: 15px; }
+        
+        .modal-btn { width: 100%; padding: 15px; border-radius: 8px; font-weight: 700; font-size: 1.1em; color: white; cursor: pointer; border: none; font-family: 'Inter', sans-serif;}
+        .modal-btn-success { background: #28a745; } .modal-btn-secondary { background: #6c757d; } .modal-btn-danger { background-color: #d32f2f; }
+        
+        .modal-btn-row { display: flex; gap: 15px; width: 100%; margin-top: 15px; justify-content: center; }
+        .modal-btn-row .modal-btn { flex: 1; }
+
+        /* Updated Result Screen v2 */
+        #result-screen { display: none; width: 100%; max-width: 650px; background: var(--modal-bg); color: var(--modal-text); margin: 40px auto; box-shadow: 0 6px 20px rgba(0,0,0,0.08); border: 1px solid var(--border-color); border-radius: 12px; padding: 30px; box-sizing: border-box; transition: background-color 0.3s, color 0.3s; }
+        .result-header { text-align: center; margin-bottom: 20px; border-bottom: 1px dashed var(--option-border); padding-bottom: 15px; }
+        .result-title { color: var(--q-prefix-color); font-size: 1.8em; font-weight: 800; margin-bottom: 8px; }
+        .result-name { color: var(--text-color); font-size: 1em; font-weight: 600; text-transform: uppercase; }
+        
+        /* Fixed Invisible Text / Recreated Image Layout */
+        .sc-score-wrapper { display: flex; flex-direction: column; align-items: center; padding: 20px 0 35px 0; border-bottom: 1px solid var(--option-border); margin-bottom: 25px; }
+        .sc-score-header { font-size: 0.9em; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; text-align: center; }
+        body.dark-mode .sc-score-header { color: #cbd5e1; }
+        .sc-score-massive { font-size: clamp(3rem, 12vw, 5.5rem); font-weight: 800; color: #387F14; line-height: 1; text-align: center; margin-bottom: 10px; }
+        body.dark-mode .sc-score-massive { color: #4ade80; }
+        .sc-score-outof { font-size: 1.15em; color: #555; text-align: center; margin-bottom: 25px; }
+        body.dark-mode .sc-score-outof { color: #cbd5e1; }
+        .sc-score-badge { display: inline-flex; align-items: center; gap: 6px; background: #F6F5ED; padding: 6px 16px; border-radius: 20px; font-weight: 600; font-size: 0.95em; color: #444; margin: 0 auto; }
+        body.dark-mode .sc-score-badge { background: #2a2a2a; color: #e2e8f0; }
+        .sc-score-badge svg { width: 14px; height: 14px; }
+
+        /* New Detailed Stats Area */
+        .sc-detailed-stats { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 30px; }
+        .sc-stat-pill { background: var(--option-bg); border: 1px solid var(--option-border); padding: 12px 18px; border-radius: 8px; font-size: 0.95em; font-weight: 600; display: flex; align-items: center; gap: 8px; flex: 1; min-width: 120px; justify-content: center; }
+        
+        body.dark-mode .sc-detailed-stats .sc-stat-pill:nth-child(1) { background: #064e3b; border-color: #047857; color: #34d399; }
+        body.dark-mode .sc-detailed-stats .sc-stat-pill:nth-child(2) { background: #7f1d1d; border-color: #b91c1c; color: #f87171; }
+        body.dark-mode .sc-detailed-stats .sc-stat-pill:nth-child(3) { background: #0c4a6e; border-color: #0369a1; color: #38bdf8; }
+        body.dark-mode .sc-detailed-stats .sc-stat-pill:nth-child(4) { background: #713f12; border-color: #a16207; color: #facc15; }
+
+        /* Section Results */
+        .section-results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+        .section-result-card { background: var(--option-bg); border: 1px solid var(--option-border); border-radius: 8px; padding: 15px; border-top: 4px solid #007bff; }
+        .src-title { font-size: 0.9em; font-weight: 800; color: var(--text-color); margin-bottom: 10px; border-bottom: 1px solid var(--option-border); padding-bottom: 10px; text-align: center; }
+        .src-score { font-size: 1.8em; font-weight: 800; color: #007bff; text-align: center; }
+        body.dark-mode .src-score { color: #60a5fa; }
+        
+        /* --- BRANDING / BOTTOM BANNER --- */
+        .sc-bottom-blended-wrapper { border-radius: 16px; overflow: hidden; border: 1px solid rgba(26, 83, 26, 0.1); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); margin-top: 20px; }
+        .sc-top-cta { background: var(--blend-dark-green); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+        .sc-cta-content { display: flex; align-items: center; gap: 14px; }
+        .sc-cta-icon { background: #ffffff; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); }
+        .sc-cta-text h4 { color: var(--blend-ivory); font-size: 16px; font-weight: 700; margin-bottom: 2px; margin-top:0; }
+        .sc-cta-text p { color: rgba(253, 252, 240, 0.75); font-size: 13px; margin:0;}
+        .sc-cta-btn { background: #0B2F0B; color: var(--blend-ivory); text-decoration: none; padding: 8px 20px; border-radius: 30px; font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px; transition: background 0.3s ease, transform 0.2s ease; box-shadow: 0 4px 12px rgba(11, 47, 11, 0.3); }
+        .sc-cta-btn:hover { background: #072007; transform: translateY(-2px); color: white;}
+
+        .sc-middle-section { background: linear-gradient(180deg, #E6F4EB 0%, var(--blend-light-bg) 40%, #ffffff 100%); padding: 24px 20px 20px; text-align: center; position: relative; }
+        body.dark-mode .sc-middle-section { background: linear-gradient(180deg, #0f4c32 0%, #064e3b 40%, #022c22 100%); }
+        .sc-network-bg { position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.03; background-image: radial-gradient(var(--blend-dark-green) 1px, transparent 1px); background-size: 30px 30px; pointer-events: none; z-index: 1; }
+        
+        .sc-wisdom-text { position: relative; z-index: 2; font-size: 30px; font-weight: 800; color: var(--blend-text-main); line-height: 1.2; margin-bottom: 24px; letter-spacing: -0.5px; }
+        body.dark-mode .sc-wisdom-text { color: #e2e8f0; }
+        .sc-wisdom-text span { color: var(--blend-dark-green); }
+        body.dark-mode .sc-wisdom-text span { color: #6ee7b7; }
+
+        .sc-features-grid { position: relative; z-index: 2; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; border-top: 1px solid rgba(26, 83, 26, 0.08); padding-top: 20px; }
+        .sc-features-grid * { box-sizing: border-box; }
+        .sc-feature-item { display: flex; align-items: flex-start; text-align: left; gap: 10px; padding: 6px; border-radius: 8px; transition: background 0.3s ease; }
+        .sc-feature-item:hover { background: rgba(26, 83, 26, 0.04); }
+        body.dark-mode .sc-feature-item:hover { background: rgba(255, 255, 255, 0.05); }
+        .sc-feature-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+        .sc-feature-text h5 { color: var(--blend-text-accent); font-size: 14px; font-weight: 700; margin-top: 0; margin-bottom: 2px; }
+        body.dark-mode .sc-feature-text h5 { color: #f8fafc; }
+        .sc-feature-text p { color: #64748b; font-size: 12px; line-height: 1.3; margin:0; }
+        body.dark-mode .sc-feature-text p { color: #cbd5e1; }
+
+        .sc-bottom-footer { background: var(--blend-dark-green); padding: 12px 20px; text-align: center; color: var(--blend-ivory); font-size: 13px; font-weight: 500; border-top: 1px solid rgba(255,255,255,0.1); margin: 0; }
+
+        /* --- FLOATING ACTIONS --- */
+        .sc-floating-actions { position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; gap: 16px; z-index: 100; }
+        .sc-fab { width: 60px; height: 60px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 6px 16px rgba(0,0,0,0.2); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .sc-fab:hover { transform: translateY(-4px) scale(1.05); box-shadow: 0 10px 25px rgba(0,0,0,0.25); }
+        .sc-fab:active { transform: scale(0.95); }
+        .sc-fab svg { width: 28px; height: 28px; transition: transform 0.4s ease; }
+        .sc-fab-share { background: #ffffff; color: #156845; }
+        .sc-fab-scroll { background: #156845; color: #ffffff; }
+        .sc-fab-scroll.sc-point-down svg { transform: rotate(180deg); }
+
+        @media (max-width: 768px) {
+            .sc-top-header { padding: 12px 15px !important; }
+            .sc-hamburger { display: flex !important; }
+            .sc-top-nav {
+                position: absolute;
+                top: 100%; 
+                left: 10px;
+                right: 10px;
+                margin-top: 10px;
+                background: var(--nav-bg) !important;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+                padding: 16px;
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+                border: 1px solid rgba(255,255,255,0.1) !important;
+                z-index: 9999 !important;
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-10px);
+                transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+            }
+            body.dark-mode .sc-top-nav { background: #064e3b !important; }
+            .sc-top-nav.show-mobile-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+            .sc-top-nav a { width: 100%; padding: 12px 15px !important; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; font-size: 15px !important; box-sizing: border-box; }
+            .sc-top-nav a:last-child { border-bottom: none !important; }
+            
+            .unified-nav { flex-direction: column; }
+            .year-nav-mobile-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; width: 100%; box-sizing: border-box; cursor: pointer; }
+            .year-nav-bar { 
+                position: absolute; top: 100%; left: 0; right: 0; background: var(--nav-bg); 
+                flex-direction: column; padding: 10px; border-radius: 0 0 12px 12px;
+                box-shadow: 0 15px 30px rgba(0,0,0,0.3); z-index: 101; 
+                opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease; 
+                border: 1px solid rgba(255,255,255,0.1); border-top: none;
+            }
+            .year-nav-bar.show-year-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+            .year-tab { width: 100%; text-align: left; padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); align-items: flex-start; box-sizing: border-box; }
+            .year-tab:last-child { border-bottom: none; }
+
+            .main-links { gap: 12px; padding-right: 12px; }
+            .nav-item { font-size: 0.85rem; }
+            .main-wrapper { flex-direction: column; }
+            .palette-container { order: 2; width: 100%; border-radius: 0 0 8px 8px; border-top: none; }
+            .cbt-container { order: 1; border-radius: 8px 8px 0 0; }
+            .modal-input { width: 100%; }
+            .section-results-grid { grid-template-columns: 1fr; }
+            .sc-top-cta { flex-direction: column; text-align: center; }
+            .sc-cta-content { flex-direction: column; gap: 12px; }
+            .sc-features-grid { grid-template-columns: 1fr; gap: 20px; }
+            .sc-feature-item { align-items: center; text-align: center; flex-direction: column; }
+            .sc-feature-icon { margin-top: 0; }
+            .sc-wisdom-text { font-size: 22px; }
+            .sc-floating-actions { bottom: 16px; right: 16px; }
+            .modal-btn-row { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sc-progress-wrapper"><div class="sc-progress-fill" id="scProgressBar"></div></div>
+
+    <div class="sc-widget-container">
+        <div class="sc-top-header">
+            <div class="sc-logo-area">
+                <div class="sc-logo-icon">&lt;/&gt;</div>
+                <div class="sc-logo-text">
+                    <strong>SinghClasses.in</strong>
+                    <span>CBSE Educational Portal</span>
+                </div>
+            </div>
+            <div class="sc-top-nav" id="scMobileMenu">
+                <a href="https://www.singhclasses.in/">Home</a>
+                <a href="https://www.singhclasses.in/p/computer-science-for-class-xi-and-xii.html">Computer Science</a>
+                <a href="https://www.singhclasses.in/p/informatics-practices-for-class-xi-and.html">Informatics Practices</a>
+                <a href="https://www.singhclasses.in/p/artificial-intelligence-for-class-ix-to.html">AI</a>
+            </div>
+            <div class="sc-header-controls">
+                <button id="theme-toggle" class="theme-btn" onclick="toggleDarkMode()"><span class="sc-emoji">🌙</span> Dark Mode</button>
+                <div class="sc-hamburger" id="scMenuToggle">☰</div>
+            </div>
+        </div>
+
+        <div class="unified-nav" id="unified-nav" style="display:none;">
+            <div class="year-nav-mobile-header" id="year-nav-mobile-header">
+                <div class="current-paper-label" id="current-paper-label"><span>2024</span>December</div>
+                <div class="sc-hamburger" id="yearMenuToggle">☰</div>
+            </div>
+            <div class="year-nav-bar" id="year-nav-container"></div>
+        </div>
+
+        <div id="modal-welcome" class="custom-modal-overlay">
+            <div class="custom-modal-box">
+                <div class="modal-title">CBT Mock Test - UGC NET AI</div>
+                <div class="instructions-container">
+                    <h3>📌 General Instructions:</h3>
+                    <ul class="instructions-list">
+                        <li><strong>Time:</strong> 1 min per question per paper after that Auto-submit.</li>
+                        <li>
+                            <strong>Security:</strong> Any unfair practices = 
+                            <span style="color:#dc3545; font-weight:bold;">-2 Marks</span>.
+                        </li>
+                        <li>
+                            <strong>Marking Scheme:</strong>
+                            <span style="color:#28a745; font-weight:600;">+5 Correct</span> |
+                            <span style="color:#dc3545; font-weight:600;">-1 Incorrect</span> |
+                            <span style="color:#6c757d; font-weight:600;">0 Unattempted</span>
+                        </li>
+                    </ul>
+                    <div class="palette-legend">
+                        <div style="font-weight: bold; color: var(--q-prefix-color); font-size: 0.8em;">Status:</div>
+                        <div class="legend-item"><div class="legend-box unvisited"></div> Not Visited</div>
+                        <div class="legend-item"><div class="legend-box not-answered"></div> Not Answered</div>
+                        <div class="legend-item"><div class="legend-box answered"></div> Answered</div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="student-name-input" class="modal-input" placeholder="Enter your Name to Begin" autocomplete="off">
+                    <div class="modal-btn-row">
+                        <button class="modal-btn modal-btn-success" onclick="beginExam()">I am ready to begin <span class="sc-emoji">🚀</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-security" class="custom-modal-overlay">
+            <div class="custom-modal-box security-box">
+                <div class="security-title">Security Warning</div>
+                <div class="security-text">
+                    <span class="sc-emoji">⚠️</span> Tab switching and screenshots are not allowed during the exam.
+                </div>
+                <div class="security-subtext">This incident has been recorded silently.</div>
+                <div id="warning-count-display" style="color: #8b0000; font-size: 1.1em; margin-bottom: 25px;">Total Warnings: 1 (Penalty: -2 Marks)</div>
+                <div class="modal-btn-row">
+                    <button class="modal-btn modal-btn-danger" onclick="closeSecurityModal()">Continue</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-submit" class="custom-modal-overlay">
+            <div class="custom-modal-box">
+                <div class="modal-title">Confirm Submission</div>
+                <p style="color:var(--text-color); margin-bottom: 20px; font-size: 1.1em;">Submit your overall exam? You cannot change answers after this.</p>
+                <div class="modal-btn-row">
+                    <button class="modal-btn modal-btn-secondary" onclick="closeSubmitModal()">Cancel</button>
+                    <button class="modal-btn modal-btn-success" onclick="confirmSubmitExam()">Yes, Submit</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="quiz-screen" style="display: none;">
+            <div class="main-wrapper">
+                <div class="cbt-container">
+                    <div class="sc-column-bg"><canvas id="canvasCBT"></canvas></div>
+
+                    <div class="header">
+                        <div>UGC NET AI Mock Test</div>
+                        <div class="timer" id="timer-box"><span class="sc-emoji">⏳</span> <span id="time-left">00:00</span></div>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="exam-progress"></div>
+                    </div>
+                    
+                    <div class="content" id="question-content">
+                        <div class="content-header">
+                            <div class="question-number" id="q-number">Loading...</div>
+                        </div>
+                        <div class="question-text" id="q-text">Loading question...</div>
+                        <ul class="options" id="q-options"></ul>
+                    </div>
+                    
+                    <div class="footer">
+                        <div class="footer-left">
+                            <button class="btn-prev" id="btn-prev" onclick="prevQuestion()">Previous</button>
+                            <button class="btn-clear" id="btn-clear" onclick="clearResponse()">Clear Response</button>
+                        </div>
+                        <button class="btn-next" id="btn-next" onclick="nextQuestion()">Save & Next</button>
+                    </div>
+                </div>
+
+                <div class="palette-container">
+                    <div class="sc-column-bg"><canvas id="canvasPalette"></canvas></div>
+
+                    <div class="palette-title" id="palette-section-title">Question Palette</div>
+                    <div class="mini-stats">
+                        <div class="stat-col stat-right-col">
+                            <span class="stat-lbl">Right</span>
+                            <span class="stat-val" id="stat-right">0</span>
+                        </div>
+                        <div class="stat-col stat-wrong-col">
+                            <span class="stat-lbl">Wrong</span>
+                            <span class="stat-val" id="stat-wrong">0</span>
+                        </div>
+                        <div class="stat-col stat-score-col">
+                            <span class="stat-lbl">Score</span>
+                            <span class="stat-val" id="stat-score">0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="palette-grid-wrapper">
+                        <div class="palette-grid" id="palette-grid"></div>
+                    </div>
+                    
+                    <button class="btn-submit" onclick="showSubmitModal()">Submit Exam</button>
+
+                    <div class="palette-filter-wrapper" style="margin-top: 20px; border-top: 1px dashed var(--option-border); padding-top: 15px;">
+                        
+                        <div class="filter-header-title">Filter Questions</div>
+<div class="palette-legend interactive-legend" style="padding: 5px; justify-content: center; gap: 8px;">
+    <div class="legend-item active-filter" onclick="filterPalette('all')" id="filter-all">
+        <div class="legend-box" style="background:#007bff; border:none;"></div> All
+    </div>
+    <div class="legend-item" onclick="filterPalette('answered')" id="filter-answered">
+        <div class="legend-box answered"></div> Answered
+    </div>
+    <div class="legend-item" onclick="filterPalette('not-answered')" id="filter-not-answered">
+        <div class="legend-box not-answered"></div> Unattempted
+    </div>
+    <div class="legend-item" onclick="filterPalette('unvisited')" id="filter-unvisited">
+        <div class="legend-box unvisited"></div> Not Visited
+    </div>
+</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="result-screen">
+            <div class="result-header">
+                <div class="result-title"><span class="sc-emoji">🎉</span> Exam Submitted Successfully</div>
+                <div class="result-name" id="student-name-display"></div>
+            </div>
+            
+            <div class="sc-score-wrapper">
+                <div class="sc-score-header">OVERALL SCORE</div>
+                <div class="sc-score-massive" id="final-score-value">0</div>
+                <div class="sc-score-outof" id="final-score-outof">out of 0 marks</div>
+                <div class="sc-score-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="5" x2="5" y2="19"></line><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle>
+                    </svg>
+                    <span id="final-score-percent">0% · Rank-ready</span>
+                </div>
+            </div>
+
+            <div class="sc-detailed-stats">
+                <div class="sc-stat-pill" style="color: #15803d; border-color: #bbf7d0; background: #f0fdf4;">
+                    <span class="sc-emoji">✅</span> Correct: <span id="stat-correct-count" style="margin-left: 4px;">0</span>
+                </div>
+                <div class="sc-stat-pill" style="color: #b91c1c; border-color: #fecaca; background: #fef2f2;">
+                    <span class="sc-emoji">❌</span> Incorrect: <span id="stat-incorrect-count" style="margin-left: 4px;">0</span>
+                </div>
+                <div class="sc-stat-pill" style="color: #0369a1; border-color: #bae6fd; background: #f0f9ff;">
+                    <span class="sc-emoji">⏱️</span> Time: <span id="stat-time-taken" style="margin-left: 4px;">0m 0s</span>
+                </div>
+                <div class="sc-stat-pill" style="color: #a16207; border-color: #fef08a; background: #fefce8;">
+                    <span class="sc-emoji">⚠️</span> Warnings: <span id="stat-warning-count" style="margin-left: 4px;">0</span>
+                </div>
+            </div>
+
+            <div style="font-weight:700; color:var(--q-prefix-color); text-transform:uppercase; text-align:center; margin-bottom:15px;">Paper-wise Breakdown</div>
+            <div class="section-results-grid" id="section-results-grid"></div>
+            
+            <button style="background:#007bff; color:#fff; width:100%; padding:15px; border-radius:8px; font-weight:700; border:none; cursor:pointer;" onclick="window.location.reload()">Return to Home</button>
+        </div>
+
+        <div class="sc-bottom-blended-wrapper">
+            <div class="sc-top-cta">
+                <div class="sc-cta-content">
+                    <div class="sc-cta-icon"><span class="sc-emoji">📢</span></div>
+                    <div class="sc-cta-text">
+                        <h4>Learn Faster with My OneShot YouTube Classes</h4>
+                        <p>Free lectures. Exam-focused. No fluff.</p>
+                    </div>
+                </div>
+                <a href="https://www.youtube.com/channel/UCQpNeGvzbBLsRLnNX7ga8FQ?sub_confirmation=1" target="_blank" class="sc-cta-btn">
+                    <span class="sc-emoji">🔔</span> Subscribe Now
+                </a>
+            </div>
+
+            <div class="sc-middle-section" id="bottomSection">
+                <div class="sc-column-bg" style="opacity: 0.6;"><canvas id="canvasBottom"></canvas></div>
+                <div class="sc-network-bg"></div>
+                
+                <div class="sc-wisdom-text">
+                    Alone we learn.<br>
+                    Together we build <span>wisdom.</span>
+                </div>
+
+                <div class="sc-features-grid">
+                    <div class="sc-feature-item">
+                        <div class="sc-feature-icon"><span class="sc-emoji">🎯</span></div>
+                        <div class="sc-feature-text">
+                            <h5>Exam Focused</h5>
+                            <p>Concepts that matter</p>
+                        </div>
+                    </div>
+                    
+                    <div class="sc-feature-item">
+                        <div class="sc-feature-icon"><span class="sc-emoji">💡</span></div>
+                        <div class="sc-feature-text">
+                            <h5>Concept Clarity</h5>
+                            <p>Understand with ease</p>
+                        </div>
+                    </div>
+                    
+                    <div class="sc-feature-item">
+                        <div class="sc-feature-icon"><span class="sc-emoji">🔔</span></div>
+                        <div class="sc-feature-text">
+                            <h5>Regular Updates</h5>
+                            <p>Stay ahead always</p>
+                        </div>
+                    </div>
+                    
+                    <div class="sc-feature-item">
+                        <div class="sc-feature-icon"><span class="sc-emoji">🎓</span></div>
+                        <div class="sc-feature-text">
+                            <h5>CBSE Oriented</h5>
+                            <p>Your success, our mission</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sc-bottom-footer">
+                &copy; SinghClasses.in | Designed with ❤️ by Rohit Sir
+            </div>
+        </div>
+
+        <div class="sc-floating-actions">
+            <button id="scShareBtn" class="sc-fab sc-fab-share" aria-label="Share Page" title="Share Page">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="18" cy="5" r="3"></circle>
+                    <circle cx="6" cy="12" r="3"></circle>
+                    <circle cx="18" cy="19" r="3"></circle>
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                </svg>
+            </button>
+            <button id="scScrollToggleBtn" class="sc-fab sc-fab-scroll sc-point-down" aria-label="Scroll Toggle" title="Scroll Top/Bottom">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 15l-6-6-6 6" />
+                </svg>
+            </button>
+        </div>
+
+    </div> 
+
+<script>
+    // --- TEMPLATE LOGIC ---
+    window.addEventListener('scroll', function(){
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrollPercent = (scrollTop / scrollHeight) * 100;
+        document.getElementById("scProgressBar").style.width = scrollPercent + "%";
+    });
+
+    const menuToggle = document.getElementById('scMenuToggle');
+    const mobileMenu = document.getElementById('scMobileMenu');
+    if (menuToggle && mobileMenu) {
+        menuToggle.addEventListener('click', function() {
+            mobileMenu.classList.toggle('show-mobile-menu');
+            menuToggle.innerHTML = mobileMenu.classList.contains('show-mobile-menu') ? '✕' : '☰';
+        });
+    }
+
+    // --- YEAR NAV HAMBURGER LOGIC ---
+    const yearMenuToggle = document.getElementById('yearMenuToggle');
+    const yearMobileHeader = document.getElementById('year-nav-mobile-header');
+    const yearNavBar = document.getElementById('year-nav-container');
+
+    if (yearMenuToggle && yearMobileHeader && yearNavBar) {
+        yearMobileHeader.addEventListener('click', function() {
+            yearNavBar.classList.toggle('show-year-menu');
+            yearMenuToggle.innerHTML = yearNavBar.classList.contains('show-year-menu') ? '✕' : '☰';
+        });
+    }
+
+    const shareBtn = document.getElementById('scShareBtn');
+    const scrollBtn = document.getElementById('scScrollToggleBtn');
+
+    if (shareBtn) {
+        shareBtn.addEventListener('click', async () => {
+            if (navigator.share) {
+                try { await navigator.share({ title: document.title, url: window.location.href }); } catch (err) {}
+            } else {
+                navigator.clipboard.writeText(window.location.href).then(() => { alert('Link copied to clipboard!'); });
+            }
+        });
+    }
+
+    if (scrollBtn) {
+        const checkScroll = () => {
+            if (window.scrollY > 150) { scrollBtn.classList.remove('sc-point-down'); } 
+            else { scrollBtn.classList.add('sc-point-down'); }
+        };
+        window.addEventListener('scroll', checkScroll);
+        checkScroll(); 
+
+        scrollBtn.addEventListener('click', () => {
+            if (window.scrollY > 150) { window.scrollTo({ top: 0, behavior: 'smooth' }); } 
+            else { window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); }
+        });
+    }
+
+    // --- PARTICLE BACKGROUND LOGIC ---
+    function initParticleCanvas(containerId, canvasId, particleCount, connectionDistance) {
+        const container = document.getElementById(containerId);
+        const canvas = document.getElementById(canvasId);
+        if (!container || !canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+        let mouse = { x: null, y: null };
+
+        function resizeCanvas() {
+            width = container.offsetWidth;
+            height = container.offsetHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+        
+        const resizeObserver = new ResizeObserver(() => { resizeCanvas(); });
+        resizeObserver.observe(container);
+        resizeCanvas();
+
+        container.addEventListener('mousemove', function(e) {
+            const rect = container.getBoundingClientRect();
+            mouse.x = e.clientX - rect.left;
+            mouse.y = e.clientY - rect.top;
+        });
+        container.addEventListener('mouseleave', function() {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.8; 
+                this.vy = (Math.random() - 0.5) * 0.8; 
+                this.radius = 1.5;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(21, 104, 69, 0.4)';
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                
+                for (let j = i + 1; j < particles.length; j++) {
+                    let dx = particles[i].x - particles[j].x;
+                    let dy = particles[i].y - particles[j].y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < connectionDistance) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(21, 104, 69, ${0.25 - (dist/connectionDistance) * 0.25})`;
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                    }
+                }
+                
+                if (mouse.x !== null && mouse.y !== null) {
+                    let dx = particles[i].x - mouse.x;
+                    let dy = particles[i].y - mouse.y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 100) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(mouse.x, mouse.y);
+                        ctx.strokeStyle = `rgba(21, 104, 69, ${0.35 - (dist/100) * 0.35})`;
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
+    }
+
+
+    // --- UPGRADED JSON DATA STRUCTURE ---
+    const examPapers = [
+        {
+            title: "December",
+            year: 2024,
+            questions: [
+                { id: 1, text: "Which of the following is not a component of the classic Planning definition?", options: ["Init", "Domain", "Actions", "Goal"], correctIndex: 1 },
+                { id: 2, text: "The mathematical notation to describe logical entailment or a sentence α entails another sentence β is:", options: ["α |= β", "α ⊢ β", "β |= α", "β ⊢ α"], correctIndex: 1 },
+                { id: 3, text: "Which one of the following is not related to the feed-forward networks on the Backpropagation Algorithm?", options: ["Boolean function", "Continuous function", "Arbitrary function", "Greedy function"], correctIndex: 3 },
+                { id: 4, text: "The kind of symbols for basic syntactic elements of first-order logic is A. Constant B. Domain C. Predicate D. Temporal E. Function", options: ["A, B, D only", "A, B, C only", "A, C, E only", "C, D only"], correctIndex: 2 },
+                { id: 5, text: "_________ organized into following four categories namely, Thinking Humanly, Thinking Rationally, Acting Humanly, Acting Rationally", options: ["Machine Learning", "Deep Learning", "Artificial Intelligence", "Neural Network"], correctIndex: 2 },
+                { id: 6, text: "Which of the following are correct for the neural network?", options: ["A and B only", "A, B and C only", "A and C only", "A and B only"], correctIndex: 1 },
+                { id: 7, text: "What is the correct sequence of steps used in knowledge base designing?", options: ["A, B, C, D", "D, C, B, A", "B, D, A, C", "B, A, C, D"], correctIndex: 1 },
+                { id: 8, text: "Match List I with List II.", options: ["A-II, B-I, C-II, D-IV", "A-II, B-IV, C-I, D-II", "A-I, B-III, C-IV, D-I", "A-IV, B-I, C-II, D-III"], correctIndex: 2 }
+            ]
+        },
+        {
+            title: "June (Re)",
+            year: 2024,
+            questions: [
+                { id: 1, text: "Match List-I with List-II.", options: ["A-II, B-IV, C-III, D-I", "A-IV, B-III, C-II, D-I", "A-II, B-I, C-IV, D-III", "A-III, B-IV, C-II, D-I"], correctIndex: 2 },
+                { id: 2, text: "Arrange the following steps in proper sequence involved in a Genetic Algorithm.", options: ["A, B, C, D, E", "E, A, B, D, C", "B, E, A, C, D", "A, C, B, D, E"], correctIndex: 2 },
+                { id: 3, text: "Arrange the following steps in a proper sequence for the process of training a neural network.", options: ["A, D, B, C, E", "D, B, A, C, E", "A, B, D, C, E", "E, C, B, D, A"], correctIndex: 0 },
+                { id: 4, text: "Match List-I with List-II.", options: ["A-I, B-II, C-IV, D-III", "A-II, B-III, C-I, D-IV", "A-III, B-I, C-IV, D-II", "A-II, B-IV, C-III, D-I"], correctIndex: 2 },
+                { id: 5, text: "What is the role of Back Propagation Algorithm?", options: ["To reduce speed of data", "To store network data", "To add different layers", "To reduce network performance"], correctIndex: 0 },
+                { id: 6, text: "What is the role of weights in an ANN?", options: ["To store data", "To adjust and improve network performance", "To control the speed", "To secure the network"], correctIndex: 1 },
+                { id: 7, text: "Which of the following is/are the application area(s) of ANN?", options: ["A and B only", "B and C only", "A, B and C", "A, B, C and D"], correctIndex: 3 },
+                { id: 8, text: "Artificial Neural Networks (ANN) are inspired by:", options: ["Quantum mechanics", "Human brain’s neural network", "Computer Hardware architecture", "Genetic algorithm"], correctIndex: 1 },
+                { id: 9, text: "Which of the following layers may be more than one in number?", options: ["Input layer", "Hidden layer", "Output layer", "Physical layer"], correctIndex: 1 }
+            ]
+        },
+        {
+            title: "June 🚫",
+            year: 2024,
+            questions: [
+                { id: 1, text: "What is a perceptron in ANN?", options: ["A double-layer auto-associative neural network.", "A neural network that contains feedback.", "An auto-associative neural network.", "A single-layer feed-forward neural network with pre-processing."], correctIndex: 3 },
+                { id: 2, text: "Arrange the following examples of Artificial Intelligence (AI) in the order of decreasing complexity.", options: ["A, B, C, D", "D, A, C", "D, C, B, A", "B, C, A, D"], correctIndex: 2 },
+                { id: 3, text: "Which figure is correct?", options: ["Figure (2) is the two point crossover of figure (1)", "Figure (2) is one point crossover of figure (1)", "Figure (2) is N point crossover of figure (1)", "Figure (2) is uniform crossover of figure (1)"], correctIndex: 1 },
+                { id: 4, text: "For the fuzzy set A = {(x,0.2), (x,0.7), (x,0.4)} the complement of A would be represented as:", options: ["{(x,0.4), (x,0.3), (x,0.1)}", "{(x,0.3), (x,0.7), (x,0.4)}", "{(x,0.7), (x,0.3), (x,0.6)}", "{(x,0.2), (x,0.8), (x,0.1)}"], correctIndex: 2 },
+                { id: 5, text: "Back propagation is a learning technique that adjusts weights in the neural network by propagating weight changes:", options: ["Forward from source to hidden nodes", "Backward from sink to source", "Forward from source to sink", "Backward from sink to hidden nodes"], correctIndex: 1 },
+                { id: 6, text: "The Cardinality of a fuzzy set is:", options: ["0", "finite", "infinite", "not known"], correctIndex: 1 },
+                { id: 7, text: "The parameter Actual count is used in the Genetic Algorithm (GA) for:", options: ["Crossover", "Mutation", "Selecting population", "Encoding the Genetic Algorithm"], correctIndex: 2 },
+                { id: 8, text: "Which of the following structures of knowledge representation are the most purely syntactic?", options: ["A and B only", "B and C only", "B and D only", "C and D only"], correctIndex: 1 },
+                { id: 9, text: "In the Genetic Algorithm’s cross-over operation, a mask is used in:", options: ["Three parent crossover", "Two point crossover", "Uniform crossover", "N point crossover"], correctIndex: 2 },
+                { id: 10, text: "For the fuzzy sets A={(x,0.3),(x,0.7),(x,0.4)} and B={(x,0.5),(x,0.2),(x,0.3)} then A ∩ B would be:", options: ["{(x,0.3),(x,0.7),(x,0.4)}", "{(x,0.5),(x,0.2),(x,0.5)}", "{(x,0.5),(x,0.7),(x,0.5)}", "{(x,0.3),(x,0.2),(x,0.4)}"], correctIndex: 3 },
+                { id: 11, text: "Which of the following genetic algorithm operations is computationally most expensive?", options: ["Convergence testing", "Selection", "Initialisation of sub-population for mating", "Reproduction to produce next generation"], correctIndex: 3 }
+            ]
+        },
+        {
+            title: "December",
+            year: 2023,
+            questions: [
+                { id: 1, text: "What is the generic structure of a Multi-Agent System (MAS)?", options: ["Single-agent with multiple objectives", "Multiagents with single objectives and communication abilities", "Multiagent with two objectives", "A point of a fuzzy set A is a point at which μ(x)=0.5"], correctIndex: 2 },
+                { id: 2, text: "A point of a fuzzy set A is a point at which μ(x)=0.5", options: ["Core", "Support", "Crossover", "α-cut"], correctIndex: 2 },
+                { id: 3, text: "In a genetic algorithm optimization problem, the fitness function is defined as f(x)=x²−4x+4.", options: ["2.25", "6.25", "0.0", "6.25"], correctIndex: 2 },
+                { id: 4, text: "What is the output of the output layer when the given input values are passed through neural network?", options: ["[0.62, 0.68]", "[0.72, 0.78]", "[0.82, 0.88]", "[0.92, 0.98]"], correctIndex: 0 },
+                { id: 5, text: "Which of the following are commonly used parsing techniques in NLP for syntactic analysis?", options: ["A, C, D, E only", "B, C, D, E only", "A, B, C, E only", "A and B only"], correctIndex: 2 },
+                { id: 6, text: "In the context of Alpha Beta pruning in game trees which statements are correct?", options: ["A, C, D only", "B, C, D only", "A, B, D only", "A, B, C only"], correctIndex: 2 },
+                { id: 7, text: "Match List-I with List-II.", options: ["A-II, B-IV, C-I, D-III", "A-II, B-III, C-I, D-IV", "A-III, B-I, C-IV, D-II", "A-II, B-IV, C-III, D-I"], correctIndex: 0 },
+                { id: 8, text: "Match List-I with List-II.", options: ["A-II, B-I, C-IV, D-II", "A-II, B-I, C-IV, D-III", "A-II, B-IV, C-I, D-III", "A-I, B-III, C-II, D-I"], correctIndex: 0 },
+                { id: 9, text: "Arrange the following encoding strategies used in Genetic Algorithms.", options: ["D, B, A, C", "B, D, A, C", "C, D, A, B", "B, C, A, D"], correctIndex: 2 },
+                { id: 10, text: "Arrange the following steps in the correct sequence for applying K-means clustering.", options: ["D, A, B, C, E", "A, B, C, D, E", "C, B, A, D, E", "D, C, A, B, E"], correctIndex: 0 },
+                { id: 2, text: "A point of a fuzzy set A is a point at which μ(x)=0.5", options: ["Core", "Support", "Crossover", "α-cut"], correctIndex: 2 },
+                { id: 3, text: "In a genetic algorithm optimization problem, the fitness function is defined as f(x)=x²−4x+4.", options: ["2.25", "6.25", "0.0", "6.25"], correctIndex: 2 },
+                { id: 4, text: "What is the output of the output layer when the given input values are passed through neural network?", options: ["[0.62, 0.68]", "[0.72, 0.78]", "[0.82, 0.88]", "[0.92, 0.98]"], correctIndex: 0 },
+                { id: 5, text: "Which of the following are commonly used parsing techniques in NLP for syntactic analysis?", options: ["A, C, D, E only", "B, C, D, E only", "A, B, C, E only", "A and B only"], correctIndex: 2 },
+                { id: 6, text: "In the context of Alpha Beta pruning in game trees which statements are correct?", options: ["A, C, D only", "B, C, D only", "A, B, D only", "A, B, C only"], correctIndex: 2 },
+                { id: 7, text: "Match List-I with List-II.", options: ["A-II, B-IV, C-I, D-III", "A-II, B-III, C-I, D-IV", "A-III, B-I, C-IV, D-II", "A-II, B-IV, C-III, D-I"], correctIndex: 0 },
+                { id: 8, text: "Match List-I with List-II.", options: ["A-II, B-I, C-IV, D-II", "A-II, B-I, C-IV, D-III", "A-II, B-IV, C-I, D-III", "A-I, B-III, C-II, D-I"], correctIndex: 0 },
+                { id: 9, text: "Arrange the following encoding strategies used in Genetic Algorithms.", options: ["D, B, A, C", "B, D, A, C", "C, D, A, B", "B, C, A, D"], correctIndex: 2 },
+                { id: 10, text: "Arrange the following steps in the correct sequence for applying K-means clustering.", options: ["D, A, B, C, E", "A, B, C, D, E", "C, B, A, D, E", "D, C, A, B, E"], correctIndex: 0 },
+                { id: 2, text: "A point of a fuzzy set A is a point at which μ(x)=0.5", options: ["Core", "Support", "Crossover", "α-cut"], correctIndex: 2 },
+                { id: 3, text: "In a genetic algorithm optimization problem, the fitness function is defined as f(x)=x²−4x+4.", options: ["2.25", "6.25", "0.0", "6.25"], correctIndex: 2 },
+                { id: 4, text: "What is the output of the output layer when the given input values are passed through neural network?", options: ["[0.62, 0.68]", "[0.72, 0.78]", "[0.82, 0.88]", "[0.92, 0.98]"], correctIndex: 0 },
+                { id: 5, text: "Which of the following are commonly used parsing techniques in NLP for syntactic analysis?", options: ["A, C, D, E only", "B, C, D, E only", "A, B, C, E only", "A and B only"], correctIndex: 2 },
+                { id: 6, text: "In the context of Alpha Beta pruning in game trees which statements are correct?", options: ["A, C, D only", "B, C, D only", "A, B, D only", "A, B, C only"], correctIndex: 2 },
+                { id: 7, text: "Match List-I with List-II.", options: ["A-II, B-IV, C-I, D-III", "A-II, B-III, C-I, D-IV", "A-III, B-I, C-IV, D-II", "A-II, B-IV, C-III, D-I"], correctIndex: 0 },
+                { id: 8, text: "Match List-I with List-II.", options: ["A-II, B-I, C-IV, D-II", "A-II, B-I, C-IV, D-III", "A-II, B-IV, C-I, D-III", "A-I, B-III, C-II, D-I"], correctIndex: 0 },
+                { id: 9, text: "Arrange the following encoding strategies used in Genetic Algorithms.", options: ["D, B, A, C", "B, D, A, C", "C, D, A, B", "B, C, A, D"], correctIndex: 2 },
+                { id: 10, text: "Arrange the following steps in the correct sequence for applying K-means clustering.", options: ["D, A, B, C, E", "A, B, C, D, E", "C, B, A, D, E", "D, C, A, B, E"], correctIndex: 0 },
+                { id: 2, text: "A point of a fuzzy set A is a point at which μ(x)=0.5", options: ["Core", "Support", "Crossover", "α-cut"], correctIndex: 2 },
+                { id: 3, text: "In a genetic algorithm optimization problem, the fitness function is defined as f(x)=x²−4x+4.", options: ["2.25", "6.25", "0.0", "6.25"], correctIndex: 2 },
+                { id: 4, text: "What is the output of the output layer when the given input values are passed through neural network?", options: ["[0.62, 0.68]", "[0.72, 0.78]", "[0.82, 0.88]", "[0.92, 0.98]"], correctIndex: 0 },
+                { id: 5, text: "Which of the following are commonly used parsing techniques in NLP for syntactic analysis?", options: ["A, C, D, E only", "B, C, D, E only", "A, B, C, E only", "A and B only"], correctIndex: 2 },
+                { id: 6, text: "In the context of Alpha Beta pruning in game trees which statements are correct?", options: ["A, C, D only", "B, C, D only", "A, B, D only", "A, B, C only"], correctIndex: 2 },
+                { id: 7, text: "Match List-I with List-II.", options: ["A-II, B-IV, C-I, D-III", "A-II, B-III, C-I, D-IV", "A-III, B-I, C-IV, D-II", "A-II, B-IV, C-III, D-I"], correctIndex: 0 },
+                { id: 8, text: "Match List-I with List-II.", options: ["A-II, B-I, C-IV, D-II", "A-II, B-I, C-IV, D-III", "A-II, B-IV, C-I, D-III", "A-I, B-III, C-II, D-I"], correctIndex: 0 },
+                { id: 9, text: "Arrange the following encoding strategies used in Genetic Algorithms.", options: ["D, B, A, C", "B, D, A, C", "C, D, A, B", "B, C, A, D"], correctIndex: 2 },
+                { id: 10, text: "Arrange the following steps in the correct sequence for applying K-means clustering.", options: ["D, A, B, C, E", "A, B, C, D, E", "C, B, A, D, E", "D, C, A, B, E"], correctIndex: 0 },
+                { id: 2, text: "A point of a fuzzy set A is a point at which μ(x)=0.5", options: ["Core", "Support", "Crossover", "α-cut"], correctIndex: 2 },
+                { id: 3, text: "In a genetic algorithm optimization problem, the fitness function is defined as f(x)=x²−4x+4.", options: ["2.25", "6.25", "0.0", "6.25"], correctIndex: 2 },
+                { id: 4, text: "What is the output of the output layer when the given input values are passed through neural network?", options: ["[0.62, 0.68]", "[0.72, 0.78]", "[0.82, 0.88]", "[0.92, 0.98]"], correctIndex: 0 },
+                { id: 5, text: "Which of the following are commonly used parsing techniques in NLP for syntactic analysis?", options: ["A, C, D, E only", "B, C, D, E only", "A, B, C, E only", "A and B only"], correctIndex: 2 },
+                { id: 6, text: "In the context of Alpha Beta pruning in game trees which statements are correct?", options: ["A, C, D only", "B, C, D only", "A, B, D only", "A, B, C only"], correctIndex: 2 },
+                { id: 7, text: "Match List-I with List-II.", options: ["A-II, B-IV, C-I, D-III", "A-II, B-III, C-I, D-IV", "A-III, B-I, C-IV, D-II", "A-II, B-IV, C-III, D-I"], correctIndex: 0 },
+                { id: 8, text: "Match List-I with List-II.", options: ["A-II, B-I, C-IV, D-II", "A-II, B-I, C-IV, D-III", "A-II, B-IV, C-I, D-III", "A-I, B-III, C-II, D-I"], correctIndex: 0 },
+                { id: 9, text: "Arrange the following encoding strategies used in Genetic Algorithms.", options: ["D, B, A, C", "B, D, A, C", "C, D, A, B", "B, C, A, D"], correctIndex: 2 },
+                { id: 10, text: "Arrange the following steps in the correct sequence for applying K-means clustering.", options: ["D, A, B, C, E", "A, B, C, D, E", "C, B, A, D, E", "D, C, A, B, E"], correctIndex: 0 },
+                { id: 2, text: "A point of a fuzzy set A is a point at which μ(x)=0.5", options: ["Core", "Support", "Crossover", "α-cut"], correctIndex: 2 },
+                { id: 3, text: "In a genetic algorithm optimization problem, the fitness function is defined as f(x)=x²−4x+4.", options: ["2.25", "6.25", "0.0", "6.25"], correctIndex: 2 },
+                { id: 4, text: "What is the output of the output layer when the given input values are passed through neural network?", options: ["[0.62, 0.68]", "[0.72, 0.78]", "[0.82, 0.88]", "[0.92, 0.98]"], correctIndex: 0 },
+                { id: 5, text: "Which of the following are commonly used parsing techniques in NLP for syntactic analysis?", options: ["A, C, D, E only", "B, C, D, E only", "A, B, C, E only", "A and B only"], correctIndex: 2 },
+                { id: 6, text: "In the context of Alpha Beta pruning in game trees which statements are correct?", options: ["A, C, D only", "B, C, D only", "A, B, D only", "A, B, C only"], correctIndex: 2 },
+                { id: 7, text: "Match List-I with List-II.", options: ["A-II, B-IV, C-I, D-III", "A-II, B-III, C-I, D-IV", "A-III, B-I, C-IV, D-II", "A-II, B-IV, C-III, D-I"], correctIndex: 0 },
+                { id: 8, text: "Match List-I with List-II.", options: ["A-II, B-I, C-IV, D-II", "A-II, B-I, C-IV, D-III", "A-II, B-IV, C-I, D-III", "A-I, B-III, C-II, D-I"], correctIndex: 0 },
+                { id: 9, text: "Arrange the following encoding strategies used in Genetic Algorithms.", options: ["D, B, A, C", "B, D, A, C", "C, D, A, B", "B, C, A, D"], correctIndex: 2 },
+                { id: 10, text: "Arrange the following steps in the correct sequence for applying K-means clustering.", options: ["D, A, B, C, E", "A, B, C, D, E", "C, B, A, D, E", "D, C, A, B, E"], correctIndex: 0 },
+                { id: 2, text: "A point of a fuzzy set A is a point at which μ(x)=0.5", options: ["Core", "Support", "Crossover", "α-cut"], correctIndex: 2 },
+                { id: 3, text: "In a genetic algorithm optimization problem, the fitness function is defined as f(x)=x²−4x+4.", options: ["2.25", "6.25", "0.0", "6.25"], correctIndex: 2 },
+                { id: 4, text: "What is the output of the output layer when the given input values are passed through neural network?", options: ["[0.62, 0.68]", "[0.72, 0.78]", "[0.82, 0.88]", "[0.92, 0.98]"], correctIndex: 0 },
+                { id: 5, text: "Which of the following are commonly used parsing techniques in NLP for syntactic analysis?", options: ["A, C, D, E only", "B, C, D, E only", "A, B, C, E only", "A and B only"], correctIndex: 2 },
+                { id: 6, text: "In the context of Alpha Beta pruning in game trees which statements are correct?", options: ["A, C, D only", "B, C, D only", "A, B, D only", "A, B, C only"], correctIndex: 2 },
+                { id: 7, text: "Match List-I with List-II.", options: ["A-II, B-IV, C-I, D-III", "A-II, B-III, C-I, D-IV", "A-III, B-I, C-IV, D-II", "A-II, B-IV, C-III, D-I"], correctIndex: 0 },
+                { id: 8, text: "Match List-I with List-II.", options: ["A-II, B-I, C-IV, D-II", "A-II, B-I, C-IV, D-III", "A-II, B-IV, C-I, D-III", "A-I, B-III, C-II, D-I"], correctIndex: 0 },
+                { id: 9, text: "Arrange the following encoding strategies used in Genetic Algorithms.", options: ["D, B, A, C", "B, D, A, C", "C, D, A, B", "B, C, A, D"], correctIndex: 2 },
+                { id: 10, text: "Arrange the following steps in the correct sequence for applying K-means clustering.", options: ["D, A, B, C, E", "A, B, C, D, E", "C, B, A, D, E", "D, C, A, B, E"], correctIndex: 0 },
+                { id: 2, text: "A point of a fuzzy set A is a point at which μ(x)=0.5", options: ["Core", "Support", "Crossover", "α-cut"], correctIndex: 2 },
+                { id: 3, text: "In a genetic algorithm optimization problem, the fitness function is defined as f(x)=x²−4x+4.", options: ["2.25", "6.25", "0.0", "6.25"], correctIndex: 2 },
+                { id: 4, text: "What is the output of the output layer when the given input values are passed through neural network?", options: ["[0.62, 0.68]", "[0.72, 0.78]", "[0.82, 0.88]", "[0.92, 0.98]"], correctIndex: 0 },
+                { id: 5, text: "Which of the following are commonly used parsing techniques in NLP for syntactic analysis?", options: ["A, C, D, E only", "B, C, D, E only", "A, B, C, E only", "A and B only"], correctIndex: 2 },
+                { id: 6, text: "In the context of Alpha Beta pruning in game trees which statements are correct?", options: ["A, C, D only", "B, C, D only", "A, B, D only", "A, B, C only"], correctIndex: 2 },
+                { id: 7, text: "Match List-I with List-II.", options: ["A-II, B-IV, C-I, D-III", "A-II, B-III, C-I, D-IV", "A-III, B-I, C-IV, D-II", "A-II, B-IV, C-III, D-I"], correctIndex: 0 },
+                { id: 8, text: "Match List-I with List-II.", options: ["A-II, B-I, C-IV, D-II", "A-II, B-I, C-IV, D-III", "A-II, B-IV, C-I, D-III", "A-I, B-III, C-II, D-I"], correctIndex: 0 },
+                { id: 9, text: "Arrange the following encoding strategies used in Genetic Algorithms.", options: ["D, B, A, C", "B, D, A, C", "C, D, A, B", "B, C, A, D"], correctIndex: 2 },
+                { id: 10, text: "Arrange the following steps in the correct sequence for applying K-means clustering.", options: ["D, A, B, C, E", "A, B, C, D, E", "C, B, A, D, E", "D, C, A, B, E"], correctIndex: 0 },
+                { id: 2, text: "A point of a fuzzy set A is a point at which μ(x)=0.5", options: ["Core", "Support", "Crossover", "α-cut"], correctIndex: 2 },
+                { id: 3, text: "In a genetic algorithm optimization problem, the fitness function is defined as f(x)=x²−4x+4.", options: ["2.25", "6.25", "0.0", "6.25"], correctIndex: 2 },
+                { id: 4, text: "What is the output of the output layer when the given input values are passed through neural network?", options: ["[0.62, 0.68]", "[0.72, 0.78]", "[0.82, 0.88]", "[0.92, 0.98]"], correctIndex: 0 },
+                { id: 5, text: "Which of the following are commonly used parsing techniques in NLP for syntactic analysis?", options: ["A, C, D, E only", "B, C, D, E only", "A, B, C, E only", "A and B only"], correctIndex: 2 },
+                { id: 6, text: "In the context of Alpha Beta pruning in game trees which statements are correct?", options: ["A, C, D only", "B, C, D only", "A, B, D only", "A, B, C only"], correctIndex: 2 },
+                { id: 7, text: "Match List-I with List-II.", options: ["A-II, B-IV, C-I, D-III", "A-II, B-III, C-I, D-IV", "A-III, B-I, C-IV, D-II", "A-II, B-IV, C-III, D-I"], correctIndex: 0 },
+                { id: 8, text: "Match List-I with List-II.", options: ["A-II, B-I, C-IV, D-II", "A-II, B-I, C-IV, D-III", "A-II, B-IV, C-I, D-III", "A-I, B-III, C-II, D-I"], correctIndex: 0 },
+                { id: 9, text: "Arrange the following encoding strategies used in Genetic Algorithms.", options: ["D, B, A, C", "B, D, A, C", "C, D, A, B", "B, C, A, D"], correctIndex: 2 },
+                { id: 10, text: "Arrange the following steps in the correct sequence for applying K-means clustering.", options: ["D, A, B, C, E", "A, B, C, D, E", "C, B, A, D, E", "D, C, A, B, E"], correctIndex: 0 },
+                { id: 2, text: "A point of a fuzzy set A is a point at which μ(x)=0.5", options: ["Core", "Support", "Crossover", "α-cut"], correctIndex: 2 },
+                { id: 3, text: "In a genetic algorithm optimization problem, the fitness function is defined as f(x)=x²−4x+4.", options: ["2.25", "6.25", "0.0", "6.25"], correctIndex: 2 },
+                { id: 4, text: "What is the output of the output layer when the given input values are passed through neural network?", options: ["[0.62, 0.68]", "[0.72, 0.78]", "[0.82, 0.88]", "[0.92, 0.98]"], correctIndex: 0 },
+                { id: 5, text: "Which of the following are commonly used parsing techniques in NLP for syntactic analysis?", options: ["A, C, D, E only", "B, C, D, E only", "A, B, C, E only", "A and B only"], correctIndex: 2 },
+                { id: 6, text: "In the context of Alpha Beta pruning in game trees which statements are correct?", options: ["A, C, D only", "B, C, D only", "A, B, D only", "A, B, C only"], correctIndex: 2 },
+                { id: 7, text: "Match List-I with List-II.", options: ["A-II, B-IV, C-I, D-III", "A-II, B-III, C-I, D-IV", "A-III, B-I, C-IV, D-II", "A-II, B-IV, C-III, D-I"], correctIndex: 0 },
+                { id: 8, text: "Match List-I with List-II.", options: ["A-II, B-I, C-IV, D-II", "A-II, B-I, C-IV, D-III", "A-II, B-IV, C-I, D-III", "A-I, B-III, C-II, D-I"], correctIndex: 0 },
+                { id: 9, text: "Arrange the following encoding strategies used in Genetic Algorithms.", options: ["D, B, A, C", "B, D, A, C", "C, D, A, B", "B, C, A, D"], correctIndex: 2 },
+                { id: 10, text: "Arrange the following steps in the correct sequence for applying K-means clustering.", options: ["D, A, B, C, E", "A, B, C, D, E", "C, B, A, D, E", "D, C, A, B, E"], correctIndex: 0 },
+                { id: 2, text: "A point of a fuzzy set A is a point at which μ(x)=0.5", options: ["Core", "Support", "Crossover", "α-cut"], correctIndex: 2 },
+                { id: 3, text: "In a genetic algorithm optimization problem, the fitness function is defined as f(x)=x²−4x+4.", options: ["2.25", "6.25", "0.0", "6.25"], correctIndex: 2 },
+                { id: 4, text: "What is the output of the output layer when the given input values are passed through neural network?", options: ["[0.62, 0.68]", "[0.72, 0.78]", "[0.82, 0.88]", "[0.92, 0.98]"], correctIndex: 0 },
+                { id: 5, text: "Which of the following are commonly used parsing techniques in NLP for syntactic analysis?", options: ["A, C, D, E only", "B, C, D, E only", "A, B, C, E only", "A and B only"], correctIndex: 2 },
+                { id: 6, text: "In the context of Alpha Beta pruning in game trees which statements are correct?", options: ["A, C, D only", "B, C, D only", "A, B, D only", "A, B, C only"], correctIndex: 2 },
+                { id: 7, text: "Match List-I with List-II.", options: ["A-II, B-IV, C-I, D-III", "A-II, B-III, C-I, D-IV", "A-III, B-I, C-IV, D-II", "A-II, B-IV, C-III, D-I"], correctIndex: 0 },
+                { id: 8, text: "Match List-I with List-II.", options: ["A-II, B-I, C-IV, D-II", "A-II, B-I, C-IV, D-III", "A-II, B-IV, C-I, D-III", "A-I, B-III, C-II, D-I"], correctIndex: 0 },
+                { id: 9, text: "Arrange the following encoding strategies used in Genetic Algorithms.", options: ["D, B, A, C", "B, D, A, C", "C, D, A, B", "B, C, A, D"], correctIndex: 2 },
+                { id: 10, text: "Arrange the following steps in the correct sequence for applying K-means clustering.", options: ["D, A, B, C, E", "A, B, C, D, E", "C, B, A, D, E", "D, C, A, B, E"], correctIndex: 0 }
+            ]
+        }
+    ];
+
+    let questions = [];
+    let sections = [];
+    let qIndexTracker = 0;
+
+    examPapers.forEach((paper, index) => {
+        let secStart = qIndexTracker;
+        
+        paper.questions.forEach(qObj => {
+            questions.push({
+                question: qObj.text,
+                options: qObj.options,
+                answer: btoa("sc_ans_" + qObj.correctIndex)
+            });
+            qIndexTracker++;
+        });
+
+        sections.push({
+            index: index,
+            title: paper.title,
+            year: paper.year,
+            start: secStart,
+            end: qIndexTracker
+        });
+    });
+
+    let studentName = "";
+    let currentYearIndex = 0;
+    let currentQuestion = 0;
+
+    let userAnswers = new Array(questions.length).fill(null);
+    let visitedQuestions = new Array(questions.length).fill(false);
+    let lockedAnswers = new Array(questions.length).fill(false); 
+    
+    let sectionTimes = []; 
+    let timerInterval;
+    let isTimerPaused = true;
+    let securityWarnings = 0;
+    let isExamActive = false;
+    let currentFilter = 'all'; 
+
+    // --- DARK MODE LOGIC ---
+    window.toggleDarkMode = function() {
+        document.body.classList.toggle('dark-mode');
+        const btn = document.getElementById('theme-toggle');
+        if (document.body.classList.contains('dark-mode')) {
+            btn.innerHTML = '<span class="sc-emoji">☀️</span> Light Mode';
+            localStorage.setItem('theme', 'dark');
+        } else {
+            btn.innerHTML = '<span class="sc-emoji">🌙</span> Dark Mode';
+            localStorage.setItem('theme', 'light');
+        }
+        if(isExamActive) buildYearNav();
+    };
+
+    window.onload = function() {
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+            const btn = document.getElementById('theme-toggle');
+            if(btn) btn.innerHTML = '<span class="sc-emoji">☀️</span> Light Mode';
+        }
+        
+        const welcomeModal = document.getElementById('modal-welcome');
+        if (welcomeModal) welcomeModal.style.display = 'flex';
+        setTimeout(() => {
+            const nameInput = document.getElementById('student-name-input');
+            if (nameInput) nameInput.focus();
+        }, 100);
+
+        initParticleCanvas('quiz-screen', 'canvasCBT', 35, 60);
+        initParticleCanvas('quiz-screen', 'canvasPalette', 15, 45);
+        initParticleCanvas('bottomSection', 'canvasBottom', 40, 75);
+    };
+
+    // --- SECURITY MECHANISM ---
+    document.addEventListener('contextmenu', event => event.preventDefault());
+
+    document.addEventListener('keyup', function(e) {
+        if (e.key === 'PrintScreen') {
+            try { let p = navigator.clipboard.writeText(''); if(p) p.catch(() => {}); } catch(err) {}
+            if (isExamActive && !isTimerPaused) { securityWarnings++; applySecurityPenalty(); }
+        }
+    });
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'F12' || event.keyCode === 123) { event.preventDefault(); }
+        if (event.ctrlKey && event.shiftKey && (event.key === 'I' || event.key === 'i' || event.key === 'J' || event.key === 'j' || event.key === 'C' || event.key === 'c')) { event.preventDefault(); }
+        if (event.ctrlKey && (event.key === 'U' || event.key === 'u')) { event.preventDefault(); }
+    });
+
+    document.addEventListener("visibilitychange", function() {
+        if (document.visibilityState === 'hidden' && isExamActive && !isTimerPaused) {
+            document.querySelector('.sc-widget-container').style.filter = 'blur(10px)';
+            securityWarnings++; applySecurityPenalty();
+        }
+    });
+
+    window.addEventListener('blur', function() {
+        if (isExamActive && !isTimerPaused && document.visibilityState !== 'hidden') {
+            document.querySelector('.sc-widget-container').style.filter = 'blur(10px)';
+            securityWarnings++; applySecurityPenalty();
+        }
+    });
+
+    window.addEventListener('focus', function() {
+        if (isExamActive) { document.querySelector('.sc-widget-container').style.filter = 'none'; }
+    });
+
+    function applySecurityPenalty() {
+        let penaltyPoints = securityWarnings * 2;
+        document.getElementById('warning-count-display').innerText = `Total Warnings: ${securityWarnings} (Penalty: -${penaltyPoints} Marks)`;
+        document.getElementById('modal-security').style.display = 'flex';
+        isTimerPaused = true; updatePalette(); 
+    }
+
+    window.closeSecurityModal = function() {
+        document.getElementById('modal-security').style.display = 'none';
+        isTimerPaused = false; 
+    }
+
+    document.getElementById('student-name-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') beginExam();
+    });
+
+    window.buildYearNav = function() {
+        const container = document.getElementById('year-nav-container');
+        container.innerHTML = '';
+        
+        const currentPaperLabel = document.getElementById('current-paper-label');
+        if (currentPaperLabel && sections[currentYearIndex]) {
+            currentPaperLabel.innerHTML = `<span>${sections[currentYearIndex].year}</span>${sections[currentYearIndex].title}`;
+        }
+        
+        sections.forEach((paper, index) => {
+            const tab = document.createElement('div');
+            tab.className = `year-tab ${index === currentYearIndex ? 'active' : ''}`;
+            
+            let lblColor = index === currentYearIndex ? 'var(--tab-active-lbl)' : 'var(--tab-inactive-lbl)';
+            let valColor = index === currentYearIndex ? 'var(--tab-active-val)' : 'var(--tab-inactive-val)';
+            
+            tab.innerHTML = `<span style="font-size: 0.7em; text-transform: uppercase; color: ${lblColor}; font-weight: 600;">${paper.year}</span>
+                             <span style="font-size: 1.05em; font-weight: 700; color: ${valColor};">${paper.title}</span>`;
+            tab.onclick = () => jumpToYear(index);
+            container.appendChild(tab);
+        });
+    }
+
+    function jumpToYear(idx) {
+        if (lockedAnswers[currentQuestion] === false && userAnswers[currentQuestion] !== null) { lockedAnswers[currentQuestion] = true; }
+        
+        if(yearNavBar && yearNavBar.classList.contains('show-year-menu')) {
+            yearNavBar.classList.remove('show-year-menu');
+            yearMenuToggle.innerHTML = '☰';
+        }
+
+        currentYearIndex = idx; currentQuestion = sections[currentYearIndex].start;
+        buildYearNav(); updateTimerDisplay(); loadQuestion();
+    }
+
+    window.beginExam = function() {
+        let nameInput = document.getElementById('student-name-input').value.trim();
+        studentName = nameInput === "" ? "Student" : nameInput;
+        document.getElementById('modal-welcome').style.display = 'none';
+
+        sectionTimes = sections.map(sec => (sec.end - sec.start) * 60);
+        currentYearIndex = 0; currentQuestion = sections[0].start;
+
+        document.getElementById('quiz-screen').style.display = 'block';
+        document.getElementById('unified-nav').style.display = 'flex';
+        
+        isExamActive = true; isTimerPaused = false;
+
+        buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion();
+    }
+
+    function updateTimerDisplay() {
+        let t = sectionTimes[currentYearIndex];
+        let minutes = Math.floor(t / 60); 
+        let seconds = t % 60;
+        const timerElement = document.getElementById('time-left');
+        const timerBox = document.getElementById('timer-box');
+        
+        timerElement.innerText = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        
+        if (t > 0 && t <= 60) {
+            timerBox.className = 'timer danger'; 
+        } else if (t > 60 && t <= 120) {
+            timerBox.className = 'timer warning'; 
+        } else {
+            timerBox.className = 'timer'; 
+        }
+    }
+
+    function startTimer() {
+        timerInterval = setInterval(() => {
+            if (isTimerPaused) return;
+            if (sectionTimes[currentYearIndex] > 0) sectionTimes[currentYearIndex]--;
+            updateTimerDisplay();
+            
+            let t = sectionTimes[currentYearIndex];
+
+            if (t <= 0) {
+                for (let i = sections[currentYearIndex].start; i < sections[currentYearIndex].end; i++) { lockedAnswers[i] = true; }
+                updatePalette(); loadQuestion(); 
+                
+                let nextSec = currentYearIndex + 1;
+                while (nextSec < sections.length && sectionTimes[nextSec] <= 0) { nextSec++; }
+                
+                if (nextSec < sections.length) { jumpToYear(nextSec); } 
+                else { submitExam(); }
+            }
+        }, 1000);
+    }
+
+    function triggerFade() {
+        const content = document.getElementById('question-content');
+        content.classList.remove('fade-in'); void content.offsetWidth; content.classList.add('fade-in');
+    }
+
+    window.loadQuestion = function() {
+        triggerFade(); visitedQuestions[currentQuestion] = true; 
+
+        let activeSec = sections[currentYearIndex];
+        const qIndexInYear = currentQuestion - activeSec.start;
+        const totalInYear = activeSec.end - activeSec.start;
+
+        const progressPercent = totalInYear > 1 ? (qIndexInYear / (totalInYear - 1)) * 100 : 100;
+        document.getElementById('exam-progress').style.width = `${progressPercent}%`;
+        document.getElementById('q-number').innerText = `${activeSec.title} | Question ${qIndexInYear + 1} OF ${totalInYear}`;
+        
+        let prefixColor = document.body.classList.contains('dark-mode') ? '#60a5fa' : '#003366';
+        
+        document.getElementById('q-text').innerHTML = `<span style="font-size: 1.1em; font-weight: 800; color: ${prefixColor}; margin-right: 6px;">Q${qIndexInYear + 1}.</span>` + questions[currentQuestion].question;
+
+        const optionsList = document.getElementById('q-options');
+        optionsList.innerHTML = ''; 
+        
+        let isQuestionLocked = lockedAnswers[currentQuestion] || sectionTimes[currentYearIndex] <= 0;
+        let correctAnswerIndex = -1;
+
+        if (isQuestionLocked) {
+            for (let i = 0; i < 4; i++) {
+                if (btoa("sc_ans_" + i) === questions[currentQuestion].answer) { correctAnswerIndex = i; }
+            }
+        }
+
+        let letters = ['A', 'B', 'C', 'D'];
+        questions[currentQuestion].options.forEach((opt, index) => {
+            let isChecked = userAnswers[currentQuestion] === index ? "checked" : "";
+            let labelClass = "";
+            
+            if (isQuestionLocked) {
+                if (index === correctAnswerIndex) { labelClass = "correct-answer disabled-label"; } 
+                else if (userAnswers[currentQuestion] === index) { labelClass = "wrong-answer disabled-label"; } 
+                else { labelClass = "disabled-label"; }
+            } else {
+                if (userAnswers[currentQuestion] === index) { labelClass = "selected"; }
+            }
+            
+            optionsList.innerHTML += `<li>
+                <label class="${labelClass}">
+                    <input type="radio" name="option" value="${index}" ${isChecked} ${isQuestionLocked ? "disabled" : ""} onclick="saveAnswer(${index})">
+                    <span class="option-letter">${letters[index]}</span>
+                    <span class="option-text">${opt}</span>
+                </label>
+            </li>`;
+        });
+
+        document.getElementById('btn-prev').disabled = currentQuestion === 0;
+        document.getElementById('btn-clear').disabled = userAnswers[currentQuestion] === null || isQuestionLocked;
+
+        if (currentQuestion === questions.length - 1) {
+            document.getElementById('btn-next').innerText = "Finish Exam";
+            document.getElementById('btn-next').onclick = showSubmitModal;
+        } else {
+            document.getElementById('btn-next').innerText = isQuestionLocked ? "Next" : "Save & Next";
+            document.getElementById('btn-next').onclick = nextQuestion;
+        }
+
+        updatePalette();
+    }
+
+    window.saveAnswer = function(index) {
+        if (lockedAnswers[currentQuestion] || sectionTimes[currentYearIndex] <= 0) return; 
+        userAnswers[currentQuestion] = index;
+        document.getElementById('btn-clear').disabled = false;
+        updatePalette(); 
+    }
+
+    window.clearResponse = function() {
+        if (lockedAnswers[currentQuestion] || sectionTimes[currentYearIndex] <= 0) return; 
+        userAnswers[currentQuestion] = null; loadQuestion(); 
+    }
+
+    window.nextQuestion = function() {
+        if (userAnswers[currentQuestion] !== null) { lockedAnswers[currentQuestion] = true; }
+        updatePalette();
+
+        if (currentQuestion < questions.length - 1) { 
+            currentQuestion++; 
+            if (currentQuestion >= sections[currentYearIndex].end) {
+                currentYearIndex++; buildYearNav(); updateTimerDisplay(); 
+            }
+            loadQuestion(); 
+        } else {
+            showSubmitModal();
+        }
+    }
+
+    window.prevQuestion = function() { 
+        if (currentQuestion > 0) { 
+            currentQuestion--; 
+            if (currentQuestion < sections[currentYearIndex].start) {
+                currentYearIndex--; buildYearNav(); updateTimerDisplay();
+            }
+            loadQuestion(); 
+        } 
+    }
+
+    window.jumpToQuestion = function(index) {
+        currentQuestion = index; loadQuestion();
+    }
+    
+    window.filterPalette = function(type) {
+        currentFilter = type;
+        document.querySelectorAll('.interactive-legend .legend-item').forEach(el => el.classList.remove('active-filter'));
+        document.getElementById('filter-' + type).classList.add('active-filter');
+        updatePalette();
+    }
+
+    function updatePalette() {
+        let activeSec = sections[currentYearIndex];
+        const paletteGrid = document.getElementById('palette-grid');
+        paletteGrid.innerHTML = ''; 
+
+        let currentScore = 0, rightAttempted = 0, wrongAttempted = 0;
+
+        for (let i = activeSec.start; i < activeSec.end; i++) {
+            if (lockedAnswers[i] && userAnswers[i] !== null) {
+                if (btoa("sc_ans_" + userAnswers[i]) === questions[i].answer) {
+                    rightAttempted++; currentScore += 5;
+                } else {
+                    wrongAttempted++; currentScore -= 1;
+                }
+            }
+        }
+
+        currentScore -= (securityWarnings * 2);
+
+        for (let i = activeSec.start; i < activeSec.end; i++) {
+            let statusClass = visitedQuestions[i] ? (userAnswers[i] !== null ? 'answered' : 'not-answered') : 'unvisited';
+            let isWrong = lockedAnswers[i] && userAnswers[i] !== null && btoa("sc_ans_" + userAnswers[i]) !== questions[i].answer;
+            
+            let displayStatus = statusClass;
+            if (isWrong) {
+                displayStatus = 'wrong';
+            }
+
+            let isFilteredOut = false;
+            if (currentFilter !== 'all') {
+                if (currentFilter === 'answered' && statusClass !== 'answered' && displayStatus !== 'wrong') isFilteredOut = true;
+                if (currentFilter === 'not-answered' && statusClass !== 'not-answered') isFilteredOut = true;
+                if (currentFilter === 'unvisited' && statusClass !== 'unvisited') isFilteredOut = true;
+            }
+            
+            let filteredClass = isFilteredOut ? ' filtered-out' : '';
+            let isCurrentClass = i === currentQuestion ? ' current-question' : '';
+            
+            let crossHtml = isWrong ? `<div style="position: absolute; top: -3px; right: -3px; background: #fff; color: #dc3545; border: 1px solid #dc3545; border-radius: 50%; width: 14px; height: 14px; font-size: 10px; font-weight: 900; display: flex; align-items: center; justify-content: center; z-index: 5;">✕</div>` : '';
+            let displayNum = (i - activeSec.start) + 1;
+            
+            paletteGrid.innerHTML += `<div class="palette-btn ${displayStatus}${isCurrentClass}${filteredClass}" onclick="jumpToQuestion(${i})">${displayNum}${crossHtml}</div>`;
+        }
+        
+        document.getElementById('stat-right').innerText = rightAttempted;
+        document.getElementById('stat-wrong').innerText = wrongAttempted;
+        document.getElementById('stat-score').innerText = currentScore;
+    }
+
+    window.showSubmitModal = function() {
+        isTimerPaused = true; document.getElementById('modal-submit').style.display = 'flex';
+    }
+
+    window.closeSubmitModal = function() {
+        document.getElementById('modal-submit').style.display = 'none'; isTimerPaused = false;
+    }
+
+    window.confirmSubmitExam = function() {
+        document.getElementById('modal-submit').style.display = 'none'; submitExam();
+    }
+
+    function submitExam() {
+        clearInterval(timerInterval); isExamActive = false; 
+
+        document.getElementById('quiz-screen').style.display = 'none';
+        document.getElementById('unified-nav').style.display = 'none'; 
+        document.getElementById('result-screen').style.display = 'block';
+        document.getElementById('student-name-display').innerText = studentName;
+
+        let overallScore = 0;
+        let totalRight = 0;
+        let totalWrong = 0;
+        let overallMax = questions.length * 5;
+
+        let totalTimeAllocated = sections.reduce((acc, sec) => acc + ((sec.end - sec.start) * 60), 0);
+        let timeRemaining = sectionTimes.reduce((acc, time) => acc + (time > 0 ? time : 0), 0);
+        let timeTakenSeconds = totalTimeAllocated - timeRemaining;
+        let ttMin = Math.floor(timeTakenSeconds / 60);
+        let ttSec = timeTakenSeconds % 60;
+
+        const resultsGrid = document.getElementById('section-results-grid');
+        resultsGrid.innerHTML = ''; 
+
+        sections.forEach(sec => {
+            let secScore = 0;
+            let secRight = 0, secWrong = 0, secUnattempted = 0;
+
+            for (let i = sec.start; i < sec.end; i++) {
+                if (userAnswers[i] !== null) {
+                    if (btoa("sc_ans_" + userAnswers[i]) === questions[i].answer) { 
+                        secScore += 5; 
+                        totalRight++;
+                        secRight++;
+                    } 
+                    else { 
+                        secScore -= 1; 
+                        totalWrong++;
+                        secWrong++;
+                    }
+                } else {
+                    secUnattempted++;
+                }
+            }
+            overallScore += secScore;
+            resultsGrid.innerHTML += `
+                <div class="section-result-card">
+                    <div class="src-title">${sec.title}</div>
+                    <div class="src-score">${secScore}</div>
+                    <div style="display: flex; justify-content: center; gap: 12px; margin-top: 12px; font-size: 0.9em; font-weight: 600;">
+                        <span style="color: #16a34a;" title="Correct"><span class="sc-emoji">✅</span> ${secRight}</span>
+                        <span style="color: #dc2626;" title="Incorrect"><span class="sc-emoji">❌</span> ${secWrong}</span>
+                        <span style="color: #64748b;" title="Unattempted"><span class="sc-emoji">⚪</span> ${secUnattempted}</span>
+                    </div>
+                </div>
+            `;
+        });
+
+        let totalPenalty = securityWarnings * 2;
+        overallScore -= totalPenalty;
+        
+        let percentage = ((overallScore / overallMax) * 100).toFixed(1);
+        let displayPercent = percentage >= 0 ? percentage : 0;
+
+        document.getElementById('final-score-value').innerText = overallScore;
+        document.getElementById('final-score-outof').innerText = `out of ${overallMax} marks`;
+        document.getElementById('final-score-percent').innerText = `${parseFloat(displayPercent).toFixed(1)}% · Rank-ready`;
+
+        document.getElementById('stat-correct-count').innerText = totalRight;
+        document.getElementById('stat-incorrect-count').innerText = totalWrong;
+        document.getElementById('stat-time-taken').innerText = `${ttMin}m ${ttSec}s`;
+        document.getElementById('stat-warning-count').innerText = securityWarnings;
+    }
+</script>
+</body>
+</html>
