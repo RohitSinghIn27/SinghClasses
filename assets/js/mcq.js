@@ -5,7 +5,6 @@
 
 const $ = id => document.getElementById(id);
 
-// Dynamically unpack variables mapping directly back to window context targets
 const getCorrectMarks = () => window.CBT_CONFIG?.MARKS_CORRECT ?? 5;
 const getIncorrectMarks = () => window.CBT_CONFIG?.MARKS_INCORRECT ?? 1;
 const getPenaltyMarks = () => window.CBT_CONFIG?.PENALTY_WARNING ?? 2;
@@ -14,7 +13,6 @@ const getFormSaveUrl = () => window.CBT_CONFIG?.FORM_SAVE_URL ?? "";
 const getHomeUrl = () => window.CBT_CONFIG?.HOME_URL ?? "https://www.singhclasses.in/";
 const getYoutubeUrl = () => window.CBT_CONFIG?.YOUTUBE_URL ?? "https://www.youtube.com/@SinghClasses";
 
-// SVG Icon Definitions to replace emojis
 const ICON_ALERT = `<svg class="sc-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`;
  
 let listExamPapers = [];
@@ -23,6 +21,20 @@ let questions = [], sections = [], studentName = "", currentYearIndex = 0, curre
 let userAnswers = [], visitedQuestions = [], lockedAnswers = [], sectionTimes = [];
 let timerInterval, isTimerPaused = true, securityWarnings = 0, isExamActive = false, currentFilter = 'all', globalFormPayload = null;
 let activeResourceUrl = "";
+
+function toggleFilterSlider() {
+    const wrapper = document.querySelector('.filter-slider-wrapper');
+    if (wrapper) {
+        wrapper.classList.toggle('active');
+    }
+}
+
+document.addEventListener('click', (e) => {
+    const wrapper = document.querySelector('.filter-slider-wrapper');
+    if (wrapper && !wrapper.contains(e.target)) {
+        wrapper.classList.remove('active');
+    }
+});
 
 function resolveCorrectText(rawValue, optionsArray) {
     if (rawValue == null || rawValue === "") return optionsArray[0] || "";
@@ -129,10 +141,7 @@ async function loadQuestionsFromSheet() {
         }
 
         if (listExamPapers.length === 0 || listExamPapers.every(p => p.questions.length === 0)) {
-            throw new Error(
-                "No questions found. Check that Row 1 of your sheet has exact headers like:\n" +
-                "Section | Section Title | Question | Option A | Option B | Option C | Option D | Correct Answer"
-            );
+            throw new Error("No questions found.");
         }
         isQuestionsLoading = false;
 
@@ -228,7 +237,6 @@ window.addEventListener('scroll', () => {
     if (bar) bar.style.width = (sh > 0 ? (st / sh) * 100 : 0) + "%";
 });
 
-// Setup Menu UI listeners
 const ym = $('yearMenuToggle'), yc = $('year-nav-container');
 if (ym && yc) {
     ym.addEventListener('click', (e) => {
@@ -242,7 +250,7 @@ window.onload = () => {
     $('welcome-correct-lbl').innerText = `+${getCorrectMarks()} Correct`;
     $('welcome-incorrect-lbl').innerText = `-${getIncorrectMarks()} Incorrect`;
     $('modal-welcome').style.display = 'flex';
-    $('student-name-input').placeholder = "e.g. Rohit Singh | SinghClasses";
+    $('student-name-input').placeholder = "e.g. Enter Your Name | School Name";
     setTimeout(() => $('student-name-input').focus(), 100);
 
     loadQuestionsFromSheet();
@@ -408,20 +416,14 @@ window.beginExam = async () => {
     studentName = v === "" ? "Candidate" : v;
     $('modal-welcome').style.display = 'none';
 
+    // Show the custom fetching spinner layout immediately
+    const loadingOverlay = $('quiz-loading-overlay');
+    if (loadingOverlay) loadingOverlay.style.display = 'flex';
+
     document.body.classList.add('exam-in-progress');
-
-    $('quiz-screen').style.display = 'block';
-    if ($('unified-nav')) $('unified-nav').style.display = 'flex';
-    $('q-text').innerHTML = `<div class="skeleton-line"></div><div class="skeleton-line style-short"></div>`;
-    $('q-options').innerHTML = `
-        <li><div class="skeleton-card"></div></li>
-        <li><div class="skeleton-card"></div></li>
-        <li><div class="skeleton-card"></div></li>
-        <li><div class="skeleton-card"></div></li>
-    `;
-
     isExamActive = true;
 
+    // Await live Google Sheets fetch resolution loops safely
     if (isQuestionsLoading) {
         let checks = 0;
         while (isQuestionsLoading && checks < 100) {
@@ -429,6 +431,9 @@ window.beginExam = async () => {
             checks++;
         }
     }
+
+    // Hide fetching overlay spinner safely once loading parameters clear
+    if (loadingOverlay) loadingOverlay.style.display = 'none';
 
     if (listExamPapers.length === 0) {
         alert("Could not pull live questions. Re-loading workspace frame...");
@@ -471,6 +476,10 @@ window.beginExam = async () => {
     currentYearIndex = 0;
     currentQuestion  = sections[0].start;
     isTimerPaused    = false;
+
+    // Reveal final system views safely
+    $('quiz-screen').style.display = 'block';
+    if ($('unified-nav')) $('unified-nav').style.display = 'flex';
 
     buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion();
 };
@@ -583,15 +592,15 @@ window.loadQuestion = () => {
     let nb = $('btn-next');
     nb.classList.remove('highlight-submit');
     if (s.submitted) {
-        nb.innerText = "Next Question"; 
+        nb.innerHTML = `<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> NEXT QUESTION`; 
         nb.disabled = currentQuestion === s.end - 1; 
         nb.onclick = nextQuestion;
     } else {
         if (currentQuestion === s.end - 1) {
-            nb.innerText = "Submit Section";
+            nb.innerHTML = `<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg> SUBMIT SECTION`;
             nb.classList.add('highlight-submit');
         } else {
-            nb.innerText = "Save & Next";
+            nb.innerHTML = `<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg> SAVE & NEXT`;
         }
         nb.onclick = nextQuestion;
     }
@@ -631,7 +640,7 @@ window.jumpToQuestion = i => { currentQuestion = i; loadQuestion(); };
 
 window.filterPalette = t => {
     currentFilter = t;
-    document.querySelectorAll('.interactive-legend .legend-item').forEach(e => e.classList.remove('active-filter'));
+    document.querySelectorAll('.filter-slider-wrapper .legend-item').forEach(e => e.classList.remove('active-filter'));
     $('filter-' + t).classList.add('active-filter');
     updatePalette();
 };
@@ -919,7 +928,6 @@ function initParticleCanvas(cid, canid, pct, cdist) {
     anim();
 }
 
-// Bi-directional Tracking Eyes Coordinates Engine Initialization Modules
 document.addEventListener("DOMContentLoaded", () => {
     const eyes = document.querySelectorAll('.desktop-eyes .eye-ball');
     const pupils = document.querySelectorAll('.desktop-eyes .pupil');
