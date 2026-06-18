@@ -88,9 +88,18 @@ body {
 
 /* FOOTER */
 .unified-workspace-footer {
-    background-color: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); border-top: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 0.6rem 1.5rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; flex-shrink: 0;
-    font-size: 0.85rem; color: var(--text-muted); box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+    background-color: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 0.6rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    flex-shrink: 0;
+    font-size: 0.85rem;
+    color: #ffffff;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
 }
 .footer-tools { display: flex; align-items: center; gap: 1.2rem; }
 .motivation-text { color: var(--text-main); font-weight: 500; margin-right: 0.5rem; transition: opacity 0.3s ease; }
