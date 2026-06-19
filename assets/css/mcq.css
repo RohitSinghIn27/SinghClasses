@@ -710,11 +710,11 @@ body.dark-mode .pupil { background: #f8fafc; }
 .options label.selected .option-letter { background: var(--opt-sel-letter-bg); color: var(--opt-sel-letter); border-color: var(--opt-sel-border); }
 
 .options label.correct-answer { background: var(--opt-cor-bg); border-color: var(--opt-cor-border); color: var(--opt-cor-text); font-weight: 700; padding-right: 45px; }
-.options label.correct-answer .option-letter { background: var(--opt-cor-letter-bg); color: var(--opt-cor-letter); border-color: var(--opt-cor-border); }
+.options label.correct-answer .option-letter { background: var(--opt-cor-letter-bg); color: var(--opt-cor-letter); border-color: var(--opt-sel-border); }
 .options label.correct-answer::after { content: '✓'; position: absolute; right: 18px; font-size: var(--text-lg); font-weight: 800; color: var(--color-correct); }
 
 .options label.wrong-answer { background: var(--opt-wrg-bg); border-color: var(--opt-wrg-border); color: var(--opt-wrg-text); padding-right: 45px; }
-.options label.wrong-answer .option-letter { background: var(--opt-wrg-letter-bg); color: var(--opt-wrg-letter); border-color: var(--opt-wrg-border); }
+.options label.wrong-answer .option-letter { background: var(--opt-wrg-letter-bg); color: var(--opt-wrg-letter); border-color: var(--opt-sel-border); }
 .options label.wrong-answer::after { content: '✕'; position: absolute; right: 18px; font-size: var(--text-base); font-weight: 800; color: var(--color-wrong); }
 
 .q-tag-capsule {
@@ -1125,6 +1125,29 @@ kbd { background: var(--app-bg); border: 1px solid var(--option-border); border-
 .rs-mobile-summary-table th { background: var(--table-sum-row-bg); font-weight: 700; text-transform: uppercase; font-size: var(--text-xs); letter-spacing: var(--tracking-wider); color: var(--stat-lbl-color); }
 .rs-mobile-summary-table td:last-child { font-family: var(--font-mono); font-weight: 700; text-align: right; }
 
+/* Global Additions for Core Requirements */
+@keyframes subtlePulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.025); }
+    100% { transform: scale(1); }
+}
+
+#btn-dashboard-main-trigger {
+    animation: subtlePulse 2.0s infinite ease-in-out;
+}
+
+.action-outline-btn[onclick*="download"] {
+    background-color: #f1f5f9 !important;
+    color: #0f172a !important;
+    border-color: #cbd5e1 !important;
+}
+
+body.dark-mode .action-outline-btn[onclick*="download"] {
+    background-color: #374151 !important;
+    color: #f3f4f6 !important;
+    border-color: #4b5563 !important;
+}
+
 
 /* ==========================================================================
    12. PERMANENT SYSTEM BOUNDARY FOOTER
@@ -1293,14 +1316,18 @@ kbd { background: var(--app-bg); border: 1px solid var(--option-border); border-
     .rs-banner-left-brand { flex-direction: column; gap: 6px; }
     .rs-banner-timestamp-box { display: flex; flex-direction: row; align-items: center; gap: 16px; padding: 8px 14px; border-radius: 6px; }
 
-    .rs-stats-grid { grid-template-columns: 1fr 1fr; }
-    .rs-stats-grid .rs-quad-stat-item:last-child { grid-column: span 2; }
+    /* Hiding the first two highlighted elements on Mobile view */
+    .rs-stats-grid { display: none !important; }
     .rs-overview-quick-split-row { grid-template-columns: 1fr; display: grid; }
+    .rs-overview-quick-split-row > .rs-panel-card:first-child { display: none !important; }
+    
     .matrix-section-container, .rs-card-header-title { display: none !important; }
     .rs-mobile-summary-table { display: table; }
 
-    .dashboard-action-wrapper { grid-template-columns: 1fr; gap: 10px; margin: 8px 0; }
+    /* Button section ordering to move 'Proceed' to the very top */
+    .dashboard-action-wrapper { grid-template-columns: 1fr; gap: 10px; margin: 8px 0; display: grid; }
     .dashboard-action-wrapper button { height: 40px; }
+    #btn-dashboard-main-trigger { order: -1 !important; }
 
     .fixed-site-footer { flex-direction: column; gap: 6px; text-align: center; padding: 12px; }
     .fixed-site-footer .footer-right-links a { margin: 0 8px; }
@@ -1339,4 +1366,5 @@ button,
                 background-color 0.15s ease, 
                 box-shadow 0.15s ease,
                 border-color 0.15s ease !important;
+}
 }
