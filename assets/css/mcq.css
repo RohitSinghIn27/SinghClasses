@@ -1311,23 +1311,28 @@ body.dark-mode .action-outline-btn[onclick*="download"] {
 
     .custom-modal-box { padding: 20px 16px; }
     .target-result-outer-container { padding: 6px; gap: 10px; }
-    .rs-panel-card { padding: 14px; border-radius: 8px; }
+    
+    /* Order elements inside scorecard frame relative to top-level layout */
+    .rs-panel-card { padding: 14px; border-radius: 8px; order: 1 !important; }
     .rs-top-summary-banner { flex-direction: column; text-align: center; gap: 10px; }
     .rs-banner-left-brand { flex-direction: column; gap: 6px; }
     .rs-banner-timestamp-box { display: flex; flex-direction: row; align-items: center; gap: 16px; padding: 8px 14px; border-radius: 6px; }
 
-    /* Hiding the first two highlighted elements on Mobile view */
+    /* Hiding the requested upper circular/metric score elements on Mobile view */
     .rs-stats-grid { display: none !important; }
-    .rs-overview-quick-split-row { grid-template-columns: 1fr; display: grid; }
+    .rs-overview-quick-split-row { grid-template-columns: 1fr; display: grid; order: 2 !important; }
     .rs-overview-quick-split-row > .rs-panel-card:first-child { display: none !important; }
     
     .matrix-section-container, .rs-card-header-title { display: none !important; }
     .rs-mobile-summary-table { display: table; }
 
-    /* Button section ordering to move 'Proceed' to the very top */
-    .dashboard-action-wrapper { grid-template-columns: 1fr; gap: 10px; margin: 8px 0; display: grid; }
+    /* Exposing layout variables to break the Proceed button out to the absolute top view */
+    .dashboard-action-wrapper { display: contents !important; }
     .dashboard-action-wrapper button { height: 40px; }
-    #btn-dashboard-main-trigger { order: -1 !important; }
+    
+    /* Positioning layout definitions */
+    #btn-dashboard-main-trigger { order: -5 !important; margin: 4px 0 12px 0 !important; }
+    .action-outline-btn { order: 3 !important; margin: 4px 0 !important; }
 
     .fixed-site-footer { flex-direction: column; gap: 6px; text-align: center; padding: 12px; }
     .fixed-site-footer .footer-right-links a { margin: 0 8px; }
@@ -1366,5 +1371,4 @@ button,
                 background-color 0.15s ease, 
                 box-shadow 0.15s ease,
                 border-color 0.15s ease !important;
-}
 }
