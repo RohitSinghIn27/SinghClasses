@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Getting Started with Python MCQs | Class 11 CS & IP CBSE</title>
+
+    <meta name="description" content="Prepare for CBSE Class 11 Computer Science and Informatics Practices with our interactive Getting Started with Python MCQs. Practice mock tests covering Python basics, tokens, variables, and data types." />
+    <meta name="keywords" content="Getting Started with Python MCQs, Class 11 Computer Science Python MCQs, Class 11 Informatics Practices Python questions, CBSE Class 11 Python basics, Python tokens keywords identifiers MCQs, SinghClasses Mock Test, Python interactive script mode test" />
+    <meta name="author" content="Rohit Singh" />
+    <meta name="robots" content="index, follow" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Getting Started with Python MCQs - Interactive CBT Mock Test" />
+    <meta property="og:description" content="Master the basics of Python for CBSE Class 11 CS & IP! Take our interactive CBT mock test featuring topic-wise MCQs, tokens, and syntax questions." />
+    <meta property="og:site_name" content="SinghClasses" />
+
+    <link rel="icon" href="../../../assets/images/favicon/favicon.ico" type="image/x-icon" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <link rel="stylesheet" href="../../../assets/css/style.css" />
+    <link rel="stylesheet" href="../../../assets/css/dashboard.css" />
+    <link rel="stylesheet" href="../../../assets/css/syllabus.css" />
+    <link rel="stylesheet" href="../../../assets/css/mcq.css" />
+
+    <script>
+        window.CBT_CONFIG = {
+            MARKS_CORRECT: 5,
+            MARKS_INCORRECT: 1,
+            PENALTY_WARNING: 2,
+
+            SHEET_API_URL: "https://script.google.com/macros/s/AKfycbwzrTqZ47Prcf5XRRwL24lsJfx7uhr7ELSxdbgE-LsvpnYLVG8aAnAS3yVbNn_qdDg1/exec",
+            FORM_SAVE_URL: "https://docs.google.com/forms/d/e/1FAIpQLSdnW69EYJ2DElon7vZEF_Pcuz7tN_cOQ5CqTOjOPSeMTg-4sw/formResponse",
+            HOME_URL: "https://www.singhclasses.in/",
+            YOUTUBE_URL: "https://youtu.be/n65gTCOeWbQ",
+            NOTES_URL: "https://singhclasses.in/informatics-practices/class-11/notes/getting-started-with-python.html"
+        };
+    </script>
+</head>
+
+<body>
+
+    <header class="unified-workspace-header" role="banner">
+        <div class="header-left-group">
+            <button class="back-btn" onclick="goToHome()" aria-label="Go Back">
+                <svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24" width="18">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                Back
+            </button>
+            <div class="chapter-capsule" id="current-chapter" data-drive-id="14ycSzPcKX20mBGdY9kdfNp31fp6LNSYW">
+                Getting Started with Python
+            </div>
+
+            <button class="app-btn app-btn-outline" onclick="window.open(window.CBT_CONFIG.NOTES_URL, '_blank')">
+                <svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="15">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                Notes
+            </button>
+
+            <button class="app-btn app-btn-yt" id="yt-trigger-btn" onclick="triggerVerifyModal('yt')">
+                <svg fill="currentColor" height="16" viewBox="0 0 24 24" width="16">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.377.55a3.016 3.016 0 0 0-2.122 2.136C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.55 9.376.55 9.376.55s7.505 0 9.377-.55a3.016 3.016 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                </svg>
+                One Shot
+            </button>
+        </div>
+
+        <div class="header-right-group">
+            <button class="app-btn hide-on-mobile" onclick="toggleFullScreen()">
+                <svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="15">
+                    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+                </svg>
+                Fullscreen
+            </button>
+        </div>
+    </header>
+
+    <main class="main-content container-inner">
+        <h1 style="display:none;">Getting Started with Python MCQs Class 11</h1>
+
+        <div class="sc-widget-container">
+
+            <div id="custom-alert-toast" class="sc-custom-alert">
+                <span id="custom-alert-text">Please complete all sections before saving progress.</span>
+            </div>
+            <div class="sc-progress-wrapper">
+                <div class="sc-progress-fill" id="scProgressBar"></div>
+            </div>
+
+            <div class="unified-nav" id="unified-nav" style="display:none;">
+                <div class="year-nav-mobile-header" id="year-nav-mobile-header">
+                    <div class="current-paper-label" id="current-paper-label"><span>Section</span>A</div>
+
+                    <div class="mobile-timer-wrapper">
+                        <div class="timer" id="timer-box-mobile">
+                            ⏳ <span id="time-left-mobile">00:00</span>
+                        </div>
+                    </div>
+
+                    <div class="sc-hamburger" id="yearMenuToggle">☰</div>
+                </div>
+                <div class="year-nav-bar" id="year-nav-container"></div>
+
+                <div class="nav-right-hud hide-on-mobile">
+                    <div class="filter-slider-wrapper">
+                        <div class="filter-slider-heading" onclick="toggleFilterSlider()">
+                            <span>🔍 Question Filter</span>
+                            <span class="slider-toggle-indicator">▼</span>
+                        </div>
+                        <div class="interactive-legend" id="hud-filter-slider-content">
+                            <div class="legend-item active-filter" onclick="filterPalette('all'); event.stopPropagation();" id="filter-all">
+                                <div class="legend-box" style="background:var(--primary-accent);border:none;"></div> All Questions
+                            </div>
+                            <div class="legend-item" onclick="filterPalette('answered'); event.stopPropagation();" id="filter-answered">
+                                <div class="legend-box answered"></div> Answered
+                            </div>
+                            <div class="legend-item" onclick="filterPalette('not-answered'); event.stopPropagation();" id="filter-not-answered">
+                                <div class="legend-box not-answered"></div> Un-Answered
+                            </div>
+                            <div class="legend-item" onclick="filterPalette('unvisited'); event.stopPropagation();" id="filter-unvisited">
+                                <div class="legend-box unvisited"></div> Un-Visited
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timer" id="timer-box">
+                        ⏳
+                        <span id="time-left"></span>
+                    </div>
+
+                    <div class="tracking-eyes-container desktop-eyes">
+                        <div class="eye-ball">
+                            <div class="pupil"></div>
+                        </div>
+                        <div class="eye-ball">
+                            <div class="pupil"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="modal-welcome" class="custom-modal-overlay">
+                <div class="custom-modal-box">
+                    <div class="modal-topic-title" id="welcome-topic-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sc-svg-icon" style="margin-right:8px;">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg> Getting Started with Python
+                    </div>
+                    <div class="instructions-container">
+                        <ul class="instructions-list">
+                            <li><strong>Time Limit:</strong> 1 Minute for each Question</li>
+                            <li>Open configurations or window toggles may record an alert event.</li>
+                            <li><strong>Marking Scheme:</strong> <span id="welcome-correct-lbl" style="color:var(--color-correct);font-weight:600;"></span> | <span id="welcome-incorrect-lbl" style="color:var(--color-wrong);font-weight:600;"></span> | <span style="color:var(--stat-lbl-color);font-weight:600;">0 Unattempted</span></li>
+                        </ul>
+                        <div class="palette-legend">
+                            <div style="font-weight:bold;color:var(--q-num-color);font-size:0.8em;">📍 Status:</div>
+                            <div class="legend-item">
+                                <div class="legend-box unvisited"></div>Not Visited
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-box not-answered"></div>Unattempted
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-box answered"></div>Answered
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <input type="text" id="student-name-input" class="modal-input" placeholder="Student Details (Name || School)" autocomplete="off" />
+                        <div class="modal-btn-row">
+                            <button class="modal-btn modal-btn-success" onclick="beginExam()">Start Mock Test</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="modal-security" class="custom-modal-overlay">
+                <div class="custom-modal-box security-box">
+                    <div class="security-title" style="font-size:1.6rem;font-weight:800;color:var(--q-num-color);margin-bottom:15px;">Security Warning</div>
+                    <div class="security-text" style="display:flex;align-items:center;justify-content:center;gap:6px;">
+                        <svg class="sc-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                        Unfair means will result in penalty
+                    </div>
+                    <div id="warning-count-display" style="color:var(--color-danger);font-size:1.1em;margin-bottom:25px;margin-top:10px;font-weight:700;"></div>
+                    <div class="modal-btn-row">
+                        <button class="modal-btn modal-btn-danger" onclick="closeSecurityModal()">Continue Exam</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="modal-submit" class="custom-modal-overlay">
+                <div class="custom-modal-box">
+                    <div id="submit-modal-text" style="color:var(--text-color);margin-bottom:20px;font-size:1.1em;"></div>
+                    <div class="modal-btn-row">
+                        <button class="modal-btn modal-btn-secondary" onclick="closeSubmitModal()">Cancel</button>
+                        <button class="modal-btn modal-btn-success" onclick="confirmSubmitExam()">Yes, Submit</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="modal-timeout" class="custom-modal-overlay">
+                <div class="custom-modal-box" style="border:3px solid var(--color-danger);">
+                    <div class="modal-title" style="color:var(--color-danger);display:flex;align-items:center;justify-content:center;gap:8px;">
+                        <svg class="sc-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        Time's Up!
+                    </div>
+                    <div style="font-size:1.25em;font-weight:700;margin:20px 0;">Section timer expired! Saving responses safely...</div>
+                </div>
+            </div>
+
+            <div id="quiz-loading-overlay" style="display: none; flex-direction: column; align-items: center; justify-content: center; padding: 40px; text-align: center; min-height: 350px;">
+                <div class="fetch-spinner"></div>
+                <div style="margin-top: 20px; font-size: var(--text-base); font-weight: 700; color: var(--stat-lbl-color); letter-spacing: var(--tracking-wide);">
+                    Please wait till we load the questions
+                </div>
+            </div>
+
+            <div id="quiz-screen" style="display:none;">
+                <div class="main-wrapper">
+                    <div class="cbt-container">
+                        <div class="sc-column-bg"><canvas id="canvasCBT"></canvas></div>
+                        <div class="progress-container">
+                            <div class="progress-bar" id="exam-progress"></div>
+                        </div>
+                        <div class="content" id="question-content">
+                            <div class="content-header">
+                                <div class="question-number" id="q-number"></div>
+                                <div id="q-tag" class="q-tag-capsule" style="display: none;"></div>
+                            </div>
+                            <div class="question-text" id="q-text"></div>
+                            <ul class="options" id="q-options"></ul>
+
+                            <div id="sidebar-keyboard-hints" class="sidebar-hints-container inline-shortcuts-style" style="display:none;">
+                                <span class="shortcut-label">Keyboard Shortcuts:</span>
+                                <div class="sidebar-hints-row">
+                                    <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd> / <kbd>A</kbd><kbd>B</kbd><kbd>C</kbd><kbd>D</kbd> Select · <kbd>⌫</kbd> Clear · <kbd>↵</kbd> Next
+                                </div>
+                            </div>
+
+                            <div id="keyboard-hints" class="keyboard-hints-container" style="display:none;"></div>
+                        </div>
+                    </div>
+
+                    <div class="palette-container">
+                        <div class="sc-column-bg"><canvas id="canvasPalette"></canvas></div>
+                        <div class="palette-title" id="palette-section-title">Question Palette</div>
+                        <div class="mini-stats">
+                            <div class="stat-col-card stat-card-right"><span class="stat-card-lbl">Right</span><span class="stat-card-val" id="stat-right">0</span></div>
+                            <div class="stat-col-card stat-card-wrong"><span class="stat-card-lbl">Wrong</span><span class="stat-card-val" id="stat-wrong">0</span></div>
+                            <div class="stat-col-card stat-card-score"><span class="stat-card-lbl">Score</span><span class="stat-card-val" id="stat-score">0</span></div>
+                        </div>
+                        <div class="palette-grid-wrapper">
+                            <div class="palette-grid" id="palette-grid"></div>
+                        </div>
+
+                        <div class="sidebar-actions-control-matrix">
+                            <div class="matrix-row-primary">
+                                <button class="btn-next" id="btn-next" onclick="nextQuestion()">
+                                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                                        <polyline points="7 3 7 8 15 8"></polyline>
+                                    </svg>
+                                    SAVE & NEXT
+                                </button>
+                            </div>
+
+                            <div class="matrix-row-secondary">
+                                <button class="btn-prev" id="btn-prev" onclick="prevQuestion()">
+                                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                                        <polyline points="12 19 5 12 12 5"></polyline>
+                                    </svg>
+                                    PREVIOUS
+                                </button>
+                                <button class="btn-clear" id="btn-clear" onclick="clearResponse()">
+                                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                                    </svg>
+                                    CLEAR
+                                </button>
+                            </div>
+
+                            <div class="matrix-divider"></div>
+
+                            <button class="btn-submit" id="main-section-submit-btn" onclick="showSubmitModal()">
+                                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                </svg>
+                                SUBMIT THIS SECTION
+                            </button>
+
+                            <div class="submit-warning-notice">
+                                <svg class="warning-shield-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                </svg>
+                                <span>You can't return after submission.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="result-screen">
+                <div id="capture-scorecard-frame" class="target-result-outer-container">
+                    <div class="rs-panel-card">
+                        <div class="rs-top-summary-banner">
+                            <div class="rs-banner-left-brand">
+                                <div class="rs-trophy-circle-badge">
+                                    <svg class="sc-svg-icon" style="width: 32px; height: 32px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                                        <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                                        <path d="M4 22h16"></path>
+                                        <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                                        <path d="M14 14.66V17c0 .55'.47.98'.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                                        <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                                    </svg>
+                                </div>
+                                <div class="rs-banner-message-block">
+                                    <h2 id="rs-dynamic-greeting"></h2>
+                                </div>
+                            </div>
+                            <div class="rs-banner-timestamp-box">
+                                <div><svg class="sc-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                                    </svg> <span id="lbl-dash-date-node"></span></div>
+                                <div><svg class="sc-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <polyline points="12 6 12 12 16 14"></polyline>
+                                    </svg> <span id="lbl-dash-time-node"></span></div>
+                            </div>
+                        </div>
+                        <table class="rs-mobile-summary-table">
+                            <thead>
+                                <tr>
+                                    <th>Your Report Card</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Maximum Marks</td>
+                                    td id="mob-val-total">0</td>
+                                </tr>
+                                <tr>
+                                    <td>Attempted</td>
+                                    <td id="mob-val-attempted">0</td>
+                                </tr>
+                                <tr>
+                                    <td>Incorrect</td>
+                                    <td id="mob-val-incorrect">0</td>
+                                </tr>
+                                <tr>
+                                    <td>Unattempted</td>
+                                    <td id="mob-val-unattempted">0</td>
+                                </tr>
+                                <tr>
+                                    <td>Score</td>
+                                    <td id="mob-val-score">0 / 0</td>
+                                </tr>
+                                <tr>
+                                    <td>Percentage</td>
+                                    <td id="mob-val-percent">0%</td>
+                                </tr>
+                                <tr>
+                                    <td>Warnings</td>
+                                    <td id="mob-val-warnings" style="color:var(--color-danger);">0</td>
+                                </tr>
+                                <tr>
+                                    <td>Time Taken</td>
+                                    <td id="mob-val-time">0m 0s</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="rs-stats-grid">
+                        <div class="rs-quad-stat-item rs-card-blue">
+                            <div class="rs-quad-icon-wrap"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    <polyline points="10 9 9 9 8 9"></polyline>
+                                </svg></div>
+                            <div class="rs-quad-info-stack"><span class="rs-quad-lbl">Max Score</span><span class="rs-quad-val" id="lbl-dash-max-marks">0</span></div>
+                        </div>
+                        <div class="rs-quad-stat-item rs-card-purple">
+                            <div class="rs-quad-icon-wrap"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                </svg></div>
+                            <div class="rs-quad-info-stack"><span class="rs-quad-lbl">Obtained Marks</span><span class="rs-quad-val" id="lbl-dash-obtained-marks">0</span></div>
+                        </div>
+                        <div class="rs-quad-stat-item rs-card-green">
+                            <div class="rs-quad-icon-wrap"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <polyline points="9 11 12 14 22 4"></polyline>
+                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                                </svg></div>
+                            <div class="rs-quad-info-stack"><span class="rs-quad-lbl">Attempted</span><span class="rs-quad-val" id="lbl-dash-attempted">0</span></div>
+                        </div>
+                        <div class="rs-quad-stat-item rs-card-red">
+                            <div class="rs-quad-icon-wrap"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg></div>
+                            <div class="rs-quad-info-stack"><span class="rs-quad-lbl">Incorrect</span><span class="rs-quad-val" id="lbl-dash-incorrect">0</span></div>
+                        </div>
+                        <div class="rs-quad-stat-item rs-card-amber">
+                            <div class="rs-quad-icon-wrap"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                </svg></div>
+                            <div class="rs-quad-info-stack"><span class="rs-quad-lbl">Unattempted</span><span class="rs-quad-val" id="lbl-dash-unattempted">0</span></div>
+                        </div>
+                    </div>
+
+                    <div class="rs-overview-quick-split-row">
+                        <div class="rs-panel-card rs-variant-shade">
+                            <div class="rs-card-header-title">
+                                <svg class="sc-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                                </svg>
+                                Visualization
+                            </div>
+                            <div class="rs-radial-flex-wrapper">
+                                <div class="rs-svg-radial-container">
+                                    <svg class="target-svg-ring" viewBox="0 0 110 110">
+                                        <circle class="target-ring-bg" cx="55" cy="55" r="45"></circle>
+                                        <circle class="target-ring-fill" id="radial-bar-fill-node" cx="55" cy="55" r="45"></circle>
+                                    </svg>
+                                    <div class="target-circle-center-text">
+                                        <span class="target-circle-pct" id="lbl-radial-score-pct">0%</span>
+                                    </div>
+                                </div>
+                                <div class="rs-radial-legend-stack">
+                                    <div class="rs-legend-row-item">
+                                        <div class="rs-legend-lbl-side"><span class="rs-legend-color-dot" style="background-color:var(--color-correct);"></span><span>Obtained Marks</span></div>
+                                        <span class="rs-legend-val-side" id="lbl-radial-obtained-pct">0%</span>
+                                    </div>
+                                    <div style="font-size:0.78rem;font-weight:700;color:var(--stat-lbl-color);margin-top:-6px;padding-left:17px;"><span id="lbl-radial-obtained-val">0</span> / <span id="lbl-radial-max-1">120</span></div>
+                                    <div class="rs-legend-row-item" style="margin-top:4px;">
+                                        <div class="rs-legend-lbl-side"><span class="rs-legend-color-dot" style="background-color:var(--primary-accent);"></span><span>Remaining Marks</span></div>
+                                        <span class="rs-legend-val-side" id="lbl-radial-rem-pct">100%</span>
+                                    </div>
+                                    <div style="font-size:0.78rem;font-weight:700;color:var(--stat-lbl-color);margin-top:-6px;padding-left:17px;"><span id="lbl-radial-rem-val">120</span> / <span id="lbl-radial-max-2">120</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rs-panel-card rs-variant-shade">
+                            <div class="rs-card-header-title">
+                                <svg class="sc-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                </svg>
+                                Quick Info
+                            </div>
+                            <div class="rs-quick-info-table-list">
+                                <div class="rs-quick-row-entry">
+                                    <div class="rs-quick-key-side">
+                                        <svg class="sc-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                            <circle cx="12" cy="7" r="4"></circle>
+                                        </svg>
+                                        Student Name
+                                    </div>
+                                    <div class="rs-quick-value-side" id="lbl-dash-name"></div>
+                                </div>
+                                <div class="rs-quick-row-entry">
+                                    <div class="rs-quick-key-side">
+                                        <svg class="sc-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <polyline points="12 6 12 12 16 14"></polyline>
+                                        </svg>
+                                        Time Taken
+                                    </div>
+                                    <div class="rs-quick-value-side" id="lbl-dash-time"></div>
+                                </div>
+                                <div class="rs-quick-row-entry">
+                                    <div class="rs-quick-key-side" style="color:var(--color-danger);">
+                                        <svg class="sc-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                        </svg>
+                                        Warnings Logged
+                                    </div>
+                                    <div class="rs-quick-value-side" id="lbl-dash-warning" style="color:var(--color-danger);">0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-action-wrapper">
+                        <button class="action-outline-btn" onclick="goToHome()">
+                            <svg class="sc-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg> Back to Home
+                        </button>
+                        <button class="action-outline-btn" onclick="downloadScorecardAsImage()">
+                            <svg class="sc-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg> Download this Result
+                        </button>
+                        <button class="action-accent-btn" id="btn-dashboard-main-trigger" onclick="handleSectionProgression()">Proceed to Next Section</button>
+                    </div>
+
+                    <div class="rs-panel-card matrix-section-container">
+                        <div class="rs-card-header-title">
+                            <svg class="sc-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <circle cx="12" cy="12" r="6"></circle>
+                                <circle cx="12" cy="12" r="2"></circle>
+                            </svg>
+                            Section Wise Summary
+                        </div>
+                        <div class="table-responsive-box">
+                            <table class="summary-matrix-table">
+                                <thead>
+                                    <tr>
+                                        <th>Section</th>
+                                        <th>MM</th>
+                                        <th>Correct</th>
+                                        <th>Incorrect</th>
+                                        <th>Unattempted</th>
+                                        <th>Obtained Marks</th>
+                                        <th>Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-body-matrix-target"></tbody>
+                            </table>
+                        </div>
+                        <div class="rs-signature-footer">Designed with ❤️ by Rohit Singh | 🌐 www.SinghClasses.in</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div id="verify-resource-modal" class="verify-modal-overlay">
+        <div class="verify-modal-card">
+            <div id="verify-card-icon" class="verify-modal-icon"></div>
+            <h2 id="verify-modal-heading">Heading</h2>
+            <p id="verify-modal-text">Description Text</p>
+            <div class="verify-actions">
+                <button class="v-btn v-btn-outline" onclick="closeVerifyModal()">Stay Here</button>
+                <button id="verify-proceed-action-btn" class="v-btn">Open Link</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="fixed-site-footer">
+        <div class="footer-left-text">
+            © 2026 SinghClasses.in | Designed with ❤️ by Rohit Singh
+        </div>
+        <div class="footer-right-links">
+            <a href="../../../legal/contact-us.html">Any Queries? Contact Us</a>
+        </div>
+    </footer>
+
+    <script src="../../../assets/js/dashboard.js"></script>
+    <script src="../../../assets/js/script.js"></script>
+    <script src="../../../assets/js/syllabus.js"></script>
+    <script src="../../../assets/js/mcq.js"></script>
+
+</body>
+
+</html>
