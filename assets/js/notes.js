@@ -4,6 +4,8 @@ const loadingOverlay = document.getElementById('loading-overlay');
 const ytBtn = document.getElementById('yt-trigger-btn');
 const ytModal = document.getElementById('yt-modal');
 const toast = document.getElementById('status-toast');
+let studySeconds = 0;
+const motivationEl = document.getElementById('motivation-text');
 
 document.addEventListener("DOMContentLoaded", () => {
     loadSelectedPDF(); 
@@ -31,9 +33,7 @@ function downloadPDF() {
 
 function toggleFullScreen() {
     if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(err => {
-            console.error(`Error attempting to enable fullscreen mode: ${err.message}`);
-        });
+        document.documentElement.requestFullscreen().catch(err => console.error(`Error: ${err.message}`));
     } else {
         document.exitFullscreen();
     }
@@ -41,14 +41,12 @@ function toggleFullScreen() {
 
 function checkYTLinkState() {
     const ytLink = chapterElement.getAttribute('data-yt-link').trim();
-    if (!ytLink) {
-        ytBtn.classList.add('mild');
-    }
+    if (!ytLink || ytLink === '#') ytBtn.classList.add('mild');
 }
 
 function handleYTClick() {
     const ytLink = chapterElement.getAttribute('data-yt-link').trim();
-    if (ytLink) {
+    if (ytLink && ytLink !== '#') {
         ytModal.classList.add('active'); 
     } else {
         showToast(); 
@@ -68,9 +66,6 @@ function showToast() {
     setTimeout(() => { toast.classList.remove('show'); }, 3500);
 }
 
-let studySeconds = 0;
-const motivationEl = document.getElementById('motivation-text');
-
 function updateTimer() {
     studySeconds++;
     const hrs = Math.floor(studySeconds / 3600).toString().padStart(2, '0');
@@ -78,25 +73,22 @@ function updateTimer() {
     const secs = (studySeconds % 60).toString().padStart(2, '0');
     const timeString = `${hrs}:${mins}:${secs}`;
     
-    document.querySelectorAll('.timer-sync').forEach(el => {
-        el.textContent = timeString;
-    });
+    document.querySelectorAll('.timer-sync').forEach(el => el.textContent = timeString);
 
     if (motivationEl) {
-        if (studySeconds === 60) { motivationEl.textContent = "Warming up! 🔥"; }
-        else if (studySeconds === 300) { motivationEl.textContent = "Great focus! 🧠"; }
-        else if (studySeconds === 600) { motivationEl.textContent = "10 minutes in! ⭐"; }
-        else if (studySeconds === 1200) { motivationEl.textContent = "20 mins! Keep going! 💪"; }
-        else if (studySeconds === 1800) { motivationEl.textContent = "Half an hour! You're crushing it! ⚡"; }
-        else if (studySeconds === 2700) { motivationEl.textContent = "45 mins! Almost an hour! 🎯"; }
-        else if (studySeconds === 3600) { motivationEl.textContent = "1 Hour! Remember to stretch! 🧘‍♂️"; }
+        if (studySeconds === 60) motivationEl.textContent = "Warming up! 🔥";
+        else if (studySeconds === 300) motivationEl.textContent = "Great focus! 🧠";
+        else if (studySeconds === 600) motivationEl.textContent = "10 minutes in! ⭐";
+        else if (studySeconds === 1200) motivationEl.textContent = "20 mins! Keep going! 💪";
+        else if (studySeconds === 1800) motivationEl.textContent = "Half an hour! You're crushing it! ⚡";
+        else if (studySeconds === 2700) motivationEl.textContent = "45 mins! Almost an hour! 🎯";
+        else if (studySeconds === 3600) motivationEl.textContent = "1 Hour! Remember to stretch! 🧘‍♂️";
     }
 }
 setInterval(updateTimer, 1000);
 
 function initTrackingEyes() {
-    const eyeContainers = document.querySelectorAll('.tracking-eyes-container');
-    eyeContainers.forEach(container => {
+    document.querySelectorAll('.tracking-eyes-container').forEach(container => {
         const eyes = container.querySelectorAll('.eye-ball');
         const pupils = container.querySelectorAll('.pupil');
 
@@ -104,18 +96,14 @@ function initTrackingEyes() {
             eyes.forEach((eye, index) => {
                 const pupil = pupils[index];
                 if (!pupil) return;
-
                 const rect = eye.getBoundingClientRect();
                 const cx = rect.left + rect.width / 2;
                 const cy = rect.top + rect.height / 2;
-                
                 const dx = e.clientX - cx;
                 const dy = e.clientY - cy;
                 const angle = Math.atan2(dy, dx);
-                
                 const maxRadius = (rect.width / 2) - (pupil.offsetWidth / 2) - 1.5;
                 const distance = Math.min(Math.hypot(dx, dy) / 10, maxRadius);
-                
                 pupil.style.transform = `translate(calc(-50% + ${Math.cos(angle) * distance}px), calc(-50% + ${Math.sin(angle) * distance}px))`;
             });
         });
@@ -128,10 +116,7 @@ function initTrackingEyes() {
         };
 
         const scheduleBlink = () => {
-            setTimeout(() => {
-                blink();
-                scheduleBlink();
-            }, 3000 + Math.random() * 4000);
+            setTimeout(() => { blink(); scheduleBlink(); }, 3000 + Math.random() * 4000);
         };
         scheduleBlink();
     });
@@ -141,8 +126,7 @@ function initCanvasParticles() {
     const canvas = document.getElementById('ambient-canvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    let width, height;
-    let particles = [];
+    let width, height, particles = [];
 
     function resize() {
         width = canvas.width = window.innerWidth;
@@ -164,19 +148,13 @@ function initCanvasParticles() {
     function draw() {
         ctx.clearRect(0, 0, width, height);
         ctx.fillStyle = 'rgba(255, 255, 255, 0.4)'; 
-        
         particles.forEach(p => {
-            p.x += p.vx; 
-            p.y += p.vy;
-            
+            p.x += p.vx; p.y += p.vy;
             if(p.x < 0) p.x = width; 
             if(p.x > width) p.x = 0;
             if(p.y < 0) p.y = height; 
             if(p.y > height) p.y = 0;
-            
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
         });
         requestAnimationFrame(draw);
     }
