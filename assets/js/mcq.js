@@ -93,6 +93,7 @@ async function loadQuestionsFromSheet() {
                         text: (q.text ?? q.Text ?? q.question ?? q.Question ?? "").toString().trim(),
                         tag: (q.tag ?? q.Tag ?? q.info ?? q.Info ?? "").toString().trim(),
                         options: cleanOpts,
+                        image: (q.image ?? q.Image ?? q.imageurl ?? "").toString().trim(),
                         correctAnswerText: resolveCorrectText(rawCorrect, cleanOpts)
                     };
                 }).filter(q => q.text !== "")
@@ -119,6 +120,9 @@ async function loadQuestionsFromSheet() {
                 let rawTag = r['tag'] ?? r['info'] ?? r['metadata'] ?? "";
                 const qTag = rawTag.toString().trim();
 
+                let rawImg = r['image'] ?? r['imageurl'] ?? r['img'] ?? ""; 
+                const qImg = rawImg.toString().trim();
+
                 if (!qText) return;
 
                 const options = [
@@ -134,7 +138,7 @@ async function loadQuestionsFromSheet() {
                 if (!sectionsMap[sectionLabel]) {
                     sectionsMap[sectionLabel] = { title: sectionTitle, year: sectionLabel, questions: [] };
                 }
-                sectionsMap[sectionLabel].questions.push({ text: qText, tag: qTag, options, correctAnswerText });
+                sectionsMap[sectionLabel].questions.push({ text: qText, tag: qTag, options, correctAnswerText, image: qImg });
             });
 
             listExamPapers = Object.values(sectionsMap);
@@ -416,14 +420,12 @@ window.beginExam = async () => {
     studentName = v === "" ? "Candidate" : v;
     $('modal-welcome').style.display = 'none';
 
-    // Show the custom fetching spinner layout immediately
     const loadingOverlay = $('quiz-loading-overlay');
     if (loadingOverlay) loadingOverlay.style.display = 'flex';
 
     document.body.classList.add('exam-in-progress');
     isExamActive = true;
 
-    // Await live Google Sheets fetch resolution loops safely
     if (isQuestionsLoading) {
         let checks = 0;
         while (isQuestionsLoading && checks < 100) {
@@ -432,7 +434,6 @@ window.beginExam = async () => {
         }
     }
 
-    // Hide fetching overlay spinner safely once loading parameters clear
     if (loadingOverlay) loadingOverlay.style.display = 'none';
 
     if (listExamPapers.length === 0) {
@@ -454,6 +455,7 @@ window.beginExam = async () => {
                 question: q.text,
                 tag: q.tag || "",
                 options: shuffledOptions,
+                image: q.image || "",
                 correctAnswerText: q.correctAnswerText 
             };
         });
@@ -477,7 +479,6 @@ window.beginExam = async () => {
     currentQuestion  = sections[0].start;
     isTimerPaused    = false;
 
-    // Reveal final system views safely
     $('quiz-screen').style.display = 'block';
     if ($('unified-nav')) $('unified-nav').style.display = 'flex';
 
@@ -554,7 +555,14 @@ window.loadQuestion = () => {
     if ($('section-header-title')) $('section-header-title').innerText = `${s.year}: ${s.title}`;
     $('exam-progress').style.width = `${pc}%`;
     $('q-number').innerText = `Question ${qy + 1} of ${tot}`;
-    $('q-text').innerHTML = `<span style="font-weight:800;color:var(--q-num-color);margin-right:6px;">Q${qy + 1}.</span>` + questions[currentQuestion].question;
+
+    let baseQuestionText = `<span style="font-weight:800;color:var(--q-num-color);margin-right:6px;">Q${qy + 1}.</span>` + questions[currentQuestion].question;
+    
+    // 💡 UPDATED LEFT-ALIGNED FLEX CONTAINER AND COMPACT MARGIN WRAPPERS:
+ if (questions[currentQuestion].image) {
+     baseQuestionText += `<div class="question-image-wrap" style="margin: 0 0 12px 0; text-align: left; max-width: 100%; display: flex; justify-content: flex-start; align-items: center;"><img src="${questions[currentQuestion].image}" alt="Question Associated Media asset" style="max-width: 100%; max-height: 220px; width: auto; height: auto; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 4px 10px rgba(0,0,0,0.05); object-fit: contain; display: block;"></div>`;
+ }
+    $('q-text').innerHTML = baseQuestionText;
 
     let currentTag = questions[currentQuestion].tag || "";
     let tagEl = $('q-tag');
