@@ -14,7 +14,7 @@ const getHomeUrl = () => window.CBT_CONFIG?.HOME_URL ?? "https://www.singhclasse
 const getYoutubeUrl = () => window.CBT_CONFIG?.YOUTUBE_URL ?? "https://www.youtube.com/@SinghClasses";
 
 const ICON_ALERT = `<svg class="sc-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`;
- 
+
 let listExamPapers = [];
 let isQuestionsLoading = true;
 let questions = [], sections = [], studentName = "", currentYearIndex = 0, currentQuestion = 0;
@@ -24,44 +24,55 @@ let activeResourceUrl = "";
 
 function toggleFilterSlider() {
     const wrapper = document.querySelector('.filter-slider-wrapper');
-    if (wrapper) {
-        wrapper.classList.toggle('active');
-    }
+    if (wrapper) wrapper.classList.toggle('active');
 }
 
 document.addEventListener('click', (e) => {
     const wrapper = document.querySelector('.filter-slider-wrapper');
-    if (wrapper && !wrapper.contains(e.target)) {
-        wrapper.classList.remove('active');
-    }
+    if (wrapper && !wrapper.contains(e.target)) wrapper.classList.remove('active');
 });
+
+function escapeHTML(str) {
+    if (str == null) return "";
+    return str.toString()
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;")
+        .replace(/\n/g, "<br>");
+}
+
+function getVerbatim(obj, keys, fallback = "") {
+    for (let key of keys) {
+        if (obj[key] !== undefined && obj[key] !== null) {
+            return obj[key];
+        }
+    }
+    return fallback;
+}
 
 function resolveCorrectText(rawValue, optionsArray) {
     if (rawValue == null || rawValue === "") return optionsArray[0] || "";
     let v = rawValue.toString().trim();
-
-    let textMatch = optionsArray.find(opt =>
-        opt && opt.toString().trim().toLowerCase() === v.toLowerCase()
-    );
-    if (textMatch !== undefined) return textMatch.toString().trim();
+    let textMatch = optionsArray.find(opt => opt !== null && opt !== undefined && opt.toString().trim().toLowerCase() === v.toLowerCase());
+    if (textMatch !== undefined) return textMatch.toString();
 
     let letter = v.toLowerCase();
     if (['a', 'b', 'c', 'd', 'e'].includes(letter)) {
         let idx = { 'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4 }[letter];
-        if (idx < optionsArray.length) return optionsArray[idx].toString().trim();
+        if (idx < optionsArray.length) return optionsArray[idx].toString();
     }
 
     const n = parseInt(v);
     if (!isNaN(n) && n >= 0 && n < optionsArray.length) {
-        return optionsArray[n].toString().trim();
+        return optionsArray[n].toString();
     }
-    return optionsArray[0] ? optionsArray[0].toString().trim() : "";
+    return optionsArray[0] ? optionsArray[0].toString() : "";
 }
 
 function textToIndex(correctText, optionsArray) {
-    let idx = optionsArray.findIndex(
-        opt => opt && opt.toString().trim().toLowerCase() === correctText.toLowerCase()
-    );
+    let idx = optionsArray.findIndex(opt => opt !== null && opt !== undefined && opt.toString().trim().toLowerCase() === correctText.toLowerCase());
     return idx !== -1 ? idx : 0;
 }
 
@@ -79,28 +90,28 @@ async function loadQuestionsFromSheet() {
 
         if (raw[0] && Array.isArray(raw[0].questions)) {
             listExamPapers = raw.map(paper => ({
-                title: paper.title || paper.Title || paper.sectiontitle || paper.SectionTitle || "Section",
-                year: paper.year || paper.Year || paper.section || paper.Section || "Set",
+                title: getVerbatim(paper, ['title', 'Title', 'sectiontitle', 'SectionTitle'], "Section"),
+                year: getVerbatim(paper, ['year', 'Year', 'section', 'Section'], "Set"),
                 questions: (paper.questions || []).map(q => {
-                    let rawOpts = Array.isArray(q.options) ? q.options :
-                        [q.optiona ?? q.OptionA ?? q.option1 ?? "",
-                         q.optionb ?? q.OptionB ?? q.option2 ?? "",
-                         q.optionc ?? q.OptionC ?? q.option3 ?? "",
-                         q.optiond ?? q.OptionD ?? q.option4 ?? ""];
-                    let cleanOpts = rawOpts.map(o => (o || "").toString().trim());
-                    let rawCorrect = q.correctIndex ?? q.correct ?? q.answer ?? q.ans ?? "A";
+                    let rawOpts = Array.isArray(q.options) ? q.options : [
+                        getVerbatim(q, ['optiona', 'OptionA', 'option1', '0'], ""),
+                        getVerbatim(q, ['optionb', 'OptionB', 'option2', '1'], ""),
+                        getVerbatim(q, ['optionc', 'OptionC', 'option3', '2'], ""),
+                        getVerbatim(q, ['optiond', 'OptionD', 'option4', '3'], "")
+                    ];
+                    let cleanOpts = rawOpts.map(o => (o !== null && o !== undefined ? o : "").toString());
+                    let rawCorrect = getVerbatim(q, ['correctIndex', 'correct', 'answer', 'ans', '4'], "A");
                     return {
-                        text: (q.text ?? q.Text ?? q.question ?? q.Question ?? "").toString().trim(),
-                        tag: (q.tag ?? q.Tag ?? q.info ?? q.Info ?? "").toString().trim(),
+                        text: getVerbatim(q, ['text', 'Text', 'question', 'Question'], "").toString(),
+                        tag: getVerbatim(q, ['tag', 'Tag', 'info', 'Info'], "").toString(),
                         options: cleanOpts,
-                        image: (q.image ?? q.Image ?? q.imageurl ?? "").toString().trim(),
+                        image: getVerbatim(q, ['image', 'Image', 'imageurl'], "").toString(),
                         correctAnswerText: resolveCorrectText(rawCorrect, cleanOpts)
                     };
                 }).filter(q => q.text !== "")
             }));
         } else {
             const sectionsMap = {};
-
             raw.forEach(row => {
                 const r = {};
                 Object.keys(row).forEach(k => {
@@ -108,39 +119,30 @@ async function loadQuestionsFromSheet() {
                     r[cleanKey] = row[k];
                 });
 
-                let rawSec = r['section'] ?? r['year'] ?? r['set'] ?? "Section A";
-                const sectionLabel = rawSec.toString().trim();
+                let sectionLabel = getVerbatim(r, ['section', 'year', 'set'], "Section A").toString().trim();
+                let sectionTitle = getVerbatim(r, ['sectiontitle', 'title', 'label'], sectionLabel).toString().trim();
+                let qText = getVerbatim(r, ['question', 'questions', 'questiontext', 'text', 'q'], null);
+                
+                if (qText === null || qText === "") return;
 
-                let rawTitle = r['sectiontitle'] ?? r['title'] ?? r['label'] ?? sectionLabel;
-                const sectionTitle = rawTitle.toString().trim();
-
-                let rawQ = r['question'] ?? r['questions'] ?? r['questiontext'] ?? r['text'] ?? r['q'] ?? "";
-                const qText = rawQ.toString().trim();
-
-                let rawTag = r['tag'] ?? r['info'] ?? r['metadata'] ?? "";
-                const qTag = rawTag.toString().trim();
-
-                let rawImg = r['image'] ?? r['imageurl'] ?? r['img'] ?? ""; 
-                const qImg = rawImg.toString().trim();
-
-                if (!qText) return;
+                let qTag = getVerbatim(r, ['tag', 'info', 'metadata'], "").toString();
+                let qImg = getVerbatim(r, ['image', 'imageurl', 'img'], "").toString();
 
                 const options = [
-                    (r['optiona'] ?? r['option1'] ?? r['a'] ?? "").toString().trim(),
-                    (r['optionb'] ?? r['option2'] ?? r['b'] ?? "").toString().trim(),
-                    (r['optionc'] ?? r['option3'] ?? r['c'] ?? "").toString().trim(),
-                    (r['optiond'] ?? r['option4'] ?? r['d'] ?? "").toString().trim(),
-                ].filter(o => o !== "");
+                    getVerbatim(r, ['optiona', 'option1', 'a'], ""),
+                    getVerbatim(r, ['optionb', 'option2', 'b'], ""),
+                    getVerbatim(r, ['optionc', 'option3', 'c'], ""),
+                    getVerbatim(r, ['optiond', 'option4', 'd'], "")
+                ].map(o => o.toString());
 
-                let rawCorrect = r['correct'] ?? r['correctanswer'] ?? r['correctindex'] ?? r['answer'] ?? r['ans'] ?? "A";
+                let rawCorrect = getVerbatim(r, ['correct', 'correctanswer', 'correctindex', 'answer', 'ans'], "A");
                 let correctAnswerText = resolveCorrectText(rawCorrect, options);
 
                 if (!sectionsMap[sectionLabel]) {
                     sectionsMap[sectionLabel] = { title: sectionTitle, year: sectionLabel, questions: [] };
                 }
-                sectionsMap[sectionLabel].questions.push({ text: qText, tag: qTag, options, correctAnswerText, image: qImg });
+                sectionsMap[sectionLabel].questions.push({ text: qText.toString(), tag: qTag, options, correctAnswerText, image: qImg });
             });
-
             listExamPapers = Object.values(sectionsMap);
         }
 
@@ -148,7 +150,6 @@ async function loadQuestionsFromSheet() {
             throw new Error("No questions found.");
         }
         isQuestionsLoading = false;
-
     } catch (err) {
         console.error("Failed to load questions from sheet:", err);
         alert("Could not load questions.\n\nError: " + err.message);
@@ -270,7 +271,6 @@ window.onload = () => {
         contentEl.addEventListener('touchend', e => {
             const dx = e.changedTouches[0].clientX - tx;
             const dy = e.changedTouches[0].clientY - ty;
-            
             if (Math.abs(dx) > Math.abs(dy) + 30) {
                 if (dx < -40) nextQuestion();
                 if (dx > 40) prevQuestion();
@@ -377,7 +377,7 @@ window.buildYearNav = () => {
     if (!c) return;
     c.innerHTML = '';
     if ($('current-paper-label') && sections[currentYearIndex]) {
-        $('current-paper-label').innerHTML = `<span>${sections[currentYearIndex].year}</span>${sections[currentYearIndex].title}`;
+        $('current-paper-label').innerHTML = `<span>${sections[currentYearIndex].year}</span>${sections[sections[currentYearIndex].index].title}`;
     }
 
     sections.forEach((p, idx) => {
@@ -406,8 +406,8 @@ window.buildYearNav = () => {
 function isAnswerCorrect(qIdx) {
     if (userAnswers[qIdx] === null) return false;
     let q = questions[qIdx];
-    let chosenText = (q.options[userAnswers[qIdx]] || "").toString().trim().toLowerCase();
-    let correctText = (q.correctAnswerText || "").toString().trim().toLowerCase();
+    let chosenText = (q.options[userAnswers[qIdx]] ?? "").toString().trim().toLowerCase();
+    let correctText = (q.correctAnswerText ?? "").toString().trim().toLowerCase();
     return chosenText === correctText;
 }
 
@@ -446,22 +446,19 @@ window.beginExam = async () => {
 
     listExamPapers.forEach((p, idx) => {
         let st = qt;
-
         let sq = p.questions.map(q => {
             let shuffledOptions = [...q.options];
             shuffleArray(shuffledOptions);
-
             return {
                 question: q.text,
-                tag: q.tag || "",
+                tag: q.tag ?? "",
                 options: shuffledOptions,
-                image: q.image || "",
+                image: q.image ?? "",
                 correctAnswerText: q.correctAnswerText 
             };
         });
 
         shuffleArray(sq);
-
         sq.forEach(q => {
             questions.push(q);
             qt++;
@@ -470,10 +467,10 @@ window.beginExam = async () => {
         sections.push({ index: idx, title: p.title, year: p.year, start: st, end: qt, submitted: false, timeSpent: 0 });
     });
 
-    userAnswers    = new Array(questions.length).fill(null);
+    userAnswers      = new Array(questions.length).fill(null);
     visitedQuestions = new Array(questions.length).fill(false);
-    lockedAnswers  = new Array(questions.length).fill(false);
-    sectionTimes   = sections.map(s => (s.end - s.start) * 60);
+    lockedAnswers    = new Array(questions.length).fill(false);
+    sectionTimes     = sections.map(s => (s.end - s.start) * 60);
 
     currentYearIndex = 0;
     currentQuestion  = sections[0].start;
@@ -556,15 +553,14 @@ window.loadQuestion = () => {
     $('exam-progress').style.width = `${pc}%`;
     $('q-number').innerText = `Question ${qy + 1} of ${tot}`;
 
-    let baseQuestionText = `<span style="font-weight:800;color:var(--q-num-color);margin-right:6px;">Q${qy + 1}.</span>` + questions[currentQuestion].question;
+    let baseQuestionText = `<span style="font-weight:800;color:var(--q-num-color);margin-right:6px;">Q${qy + 1}.</span>` + escapeHTML(questions[currentQuestion].question);
     
-    // 💡 UPDATED LEFT-ALIGNED FLEX CONTAINER AND COMPACT MARGIN WRAPPERS:
- if (questions[currentQuestion].image) {
-     baseQuestionText += `<div class="question-image-wrap" style="margin: 0 0 12px 0; text-align: left; max-width: 100%; display: flex; justify-content: flex-start; align-items: center;"><img src="${questions[currentQuestion].image}" alt="Question Associated Media asset" style="max-width: 100%; max-height: 220px; width: auto; height: auto; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 4px 10px rgba(0,0,0,0.05); object-fit: contain; display: block;"></div>`;
- }
+    if (questions[currentQuestion].image) {
+        baseQuestionText += `<div class="question-image-wrap" style="margin: 0 0 12px 0; text-align: left; max-width: 100%; display: flex; justify-content: flex-start; align-items: center;"><img src="${questions[currentQuestion].image}" alt="Question Associated Media asset" style="max-width: 100%; max-height: 220px; width: auto; height: auto; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 4px 10px rgba(0,0,0,0.05); object-fit: contain; display: block;"></div>`;
+    }
     $('q-text').innerHTML = baseQuestionText;
 
-    let currentTag = questions[currentQuestion].tag || "";
+    let currentTag = questions[currentQuestion].tag ?? "";
     let tagEl = $('q-tag');
     if (tagEl) {
         if (currentTag) { tagEl.innerText = currentTag; tagEl.style.display = 'inline-flex'; }
@@ -575,7 +571,6 @@ window.loadQuestion = () => {
     ol.innerHTML = '';
     let isL = lockedAnswers[currentQuestion] || s.submitted;
     let lt  = ['A', 'B', 'C', 'D', 'E'];
-
     let ci = getCorrectIndex(currentQuestion);
 
     questions[currentQuestion].options.forEach((opt, i) => {
@@ -585,7 +580,7 @@ window.loadQuestion = () => {
         } else if (userAnswers[currentQuestion] === i) {
             cls = "selected";
         }
-        ol.innerHTML += `<li><label class="${cls}"><input type="radio" name="option" value="${i}" ${userAnswers[currentQuestion] === i ? "checked" : ""} ${isL ? "disabled" : ""} onclick="saveAnswer(${i})"><span class="option-letter">${lt[i]}</span><span class="option-text">${opt}</span></label></li>`;
+        ol.innerHTML += `<li><label class="${cls}"><input type="radio" name="option" value="${i}" ${userAnswers[currentQuestion] === i ? "checked" : ""} ${isL ? "disabled" : ""} onclick="saveAnswer(${i})"><span class="option-letter">${lt[i]}</span><span class="option-text">${escapeHTML(opt)}</span></label></li>`;
     });
 
     let kh = $('keyboard-hints');
@@ -630,7 +625,6 @@ window.clearResponse = () => {
 
 window.nextQuestion = () => {
     if (userAnswers[currentQuestion] !== null && !sections[currentYearIndex].submitted) lockedAnswers[currentQuestion] = true;
-    
     if (currentQuestion < sections[currentYearIndex].end - 1) {
         currentQuestion++;
         loadQuestion();
@@ -736,7 +730,7 @@ window.confirmSubmitExam = () => {
 window.downloadScorecardAsImage = () => {
     let f = $('capture-scorecard-frame');
     if (!f) return;
-    showToastAlert("Compiling high-resolution scorecard canvas frame...");
+    showToastAlert("Compiling scorecard frame...");
     html2canvas(f, {
         useCORS: true,
         scale: 2,
@@ -746,7 +740,7 @@ window.downloadScorecardAsImage = () => {
         a.download = `${studentName}_Scorecard_${sections[currentYearIndex].year.replace(/\s+/g, '_')}.png`;
         a.href = c.toDataURL('image/png');
         a.click();
-        showToastAlert("Scorecard image compiled and saved successfully!");
+        showToastAlert("Scorecard image compiled successfully!");
     }).catch(err => showToastAlert("Image rendering error. Please re-attempt."));
 };
 
@@ -830,8 +824,7 @@ function processSectionSubmission() {
         let ringNode = $('radial-bar-fill-node');
         if (ringNode) {
             ringNode.style.strokeDashoffset = 282.74 - (282.74 * fP) / 100;
-            let ringColor = fP >= 70 ? 'var(--color-correct)' : (fP >= 40 ? 'var(--color-warning)' : 'var(--color-danger)');
-            ringNode.style.stroke = ringColor;
+            ringNode.style.stroke = fP >= 70 ? 'var(--color-correct)' : (fP >= 40 ? 'var(--color-warning)' : 'var(--color-danger)');
         }
 
         tg.innerHTML += `<tr class="total-sum-row"><td>Cumulative Total</td><td>${cM}</td><td>${rC}</td><td>${rI}</td><td>${rL}</td><td><span class="badge-pct-pill" style="background:var(--badge-total-bg);color:var(--badge-total-text);">${fP}%</span></td><td>${tm}m ${ts}s</td></tr>`;
@@ -910,8 +903,8 @@ function initParticleCanvas(cid, canid, pct, cdist) {
         }
         draw() {
             ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-            let particleColor = getComputedStyle(document.body).getPropertyValue('--canvas-particle-color').trim() || 'rgba(21,104,69,0.4)';
-            ctx.fillStyle = particleColor; ctx.fill();
+            ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--canvas-particle-color').trim() || 'rgba(21,104,69,0.4)';
+            ctx.fill();
         }
     }
 
@@ -925,8 +918,7 @@ function initParticleCanvas(cid, canid, pct, cdist) {
                 let d = Math.hypot(pa[i].x - pa[j].x, pa[i].y - pa[j].y);
                 if (d < cdist) {
                     ctx.beginPath(); ctx.moveTo(pa[i].x, pa[i].y); ctx.lineTo(pa[j].x, pa[j].y);
-                    let isDark = document.body.classList.contains('dark-mode');
-                    ctx.strokeStyle = isDark ? `rgba(74,222,128,${.25 - (d / cdist) * .25})` : `rgba(21,104,69,${.25 - (d / cdist) * .25})`;
+                    ctx.strokeStyle = document.body.classList.contains('dark-mode') ? `rgba(74,222,128,${.25 - (d / cdist) * .25})` : `rgba(21,104,69,${.25 - (d / cdist) * .25})`;
                     ctx.lineWidth = 1; ctx.stroke();
                 }
             }
