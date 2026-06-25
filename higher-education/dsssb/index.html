@@ -247,7 +247,6 @@
     }
     .chapter-card.expanded { grid-column: 1 / -1; }
     
-    /* NEW STACKED ROW BREAKDOWN TO COMPLY WITH FOOTER ACTIONS STRIP (Screenshot 2026-06-25 100227_2.jpg) */
     .chapter-row { display: flex; flex-direction: column; align-items: stretch; cursor: pointer; }
     .chapter-card-top-content { display: flex; align-items: flex-start; justify-content: space-between; padding: 20px; gap: 16px; }
     .chapter-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.05); }
@@ -293,7 +292,7 @@
     .chapter-info { flex: 1; min-width: 0; }
     
     .chapter-meta { font-size: 11px; font-weight: 600; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); }
-    .chapter-name { font-size: 15px; font-weight: 700; color: var(--dark-bar); line-height: 1.35; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+    .chapter-name { font-size: 15px; font-weight: 700; color: #333333; line-height: 1.35; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
     .chevron-icon { width: 14px; height: 14px; color: #94a3b8; transition: transform 0.2s; flex-shrink: 0; }
     .chapter-card.expanded .chevron-icon { transform: rotate(180deg); color: var(--primary); }
 
@@ -306,35 +305,37 @@
     .badge-item svg { width: 12px; height: 12px; flex-shrink: 0; }
 
     /* Drawers */
-    .subtopics-drawer { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.2s ease-out; overflow: hidden; background: rgba(0, 0, 0, 0.02); }
+    .subtopics-drawer { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.2s ease-out; background: rgba(0, 0, 0, 0.02); }
     .chapter-card.expanded .subtopics-drawer { grid-template-rows: 1fr; }
-    .drawer-inner { min-height: 0; padding: 20px; border-top: 1px solid rgba(0, 0, 0, 0.05); }
-    .drawer-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 0.5px; }
     
+    .subtopics-container {
+  gap: 8px; /* Reduce this value (e.g., from 16px or 1rem down to 8px) */
+}
+    
+    .drawer-inner { 
+      min-height: 0; 
+      overflow: hidden; 
+      padding: 0 20px; 
+      opacity: 0; 
+      visibility: hidden; 
+      transition: all 0.2s ease-out; 
+      border-top: 1px solid transparent; 
+    }
+    .chapter-card.expanded .drawer-inner { 
+      padding: 20px; 
+      opacity: 1; 
+      visibility: visible; 
+      border-top-color: rgba(0, 0, 0, 0.05); 
+    }
+    
+    .drawer-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 0.5px; }
     .subtopics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
-    .subtopic-item-card { background: var(--surface); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 10px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .subtopic-item-card { background: var(--surface); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 10px; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px;}
     .subtopic-meta-box { display: flex; flex-direction: column; gap: 2px; }
     .subtopic-ch-tag { font-size: 10px; font-weight: 700; color: var(--primary); text-transform: uppercase; }
     .subtopic-label-text { font-size: 13px; color: var(--text-main); font-weight: 600; line-height: 1.3; }
     .btn-subtopic-mock { background: var(--bg-main); border: 1px solid var(--border-color); color: var(--text-main); padding: 5px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
     .btn-subtopic-mock:hover { background: var(--primary); color: #ffffff; border-color: var(--primary); }
-
-    /* REPOSITIONED ACTION BUTTONS CONTAINER TO MATCH THE STRIP LAYOUT AS PER REQUESTED IN CAPTURE (Screenshot 2026-06-25 100227_2.jpg) */
-    .chapter-actions { 
-      display: flex; 
-      flex-direction: row; 
-      gap: 12px; 
-      padding: 12px 20px; 
-      background: rgba(0, 0, 0, 0.03); 
-      border-top: 1px solid rgba(0, 0, 0, 0.05); 
-      min-width: 100%;
-    }
-    .btn-action { width: auto; padding: 8px 24px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; border: 1px solid transparent; transition: all 0.2s ease; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; }
-    .btn-notes { background: #fcfcfd; color: var(--text-main); border-color: var(--border-color); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-    .btn-notes:hover { background: #f1f5f9; border-color: #cbd5e1; }
-    .btn-mock-item { background: #fcfcfd; color: var(--text-main); border-color: var(--border-color); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-    .btn-mock-item:hover { background: #f1f5f9; border-color: #cbd5e1; }
-    .btn-action.locked { background: rgba(0,0,0,0.04) !important; color: #94a3b8 !important; border-color: transparent !important; cursor: not-allowed; box-shadow: none !important; }
 
     /* ── ADAPTIVE SURFACE YOUTUBE BANNER STRIP ── */
     .sc-subscribe-banner {
@@ -403,6 +404,10 @@
       .chapter-list { grid-template-columns: 1fr; }
       .search-filter-container { flex-direction: column; }
       .btn-utility { padding: 12px; justify-content: center; }
+      .search-input { 
+    width: 100%; /* Expands the search bar to fill the container on mobile */
+    max-width: 100%;
+  }
       .site-premium-footer { flex-direction: column; text-align: center; }
     }
   </style>
@@ -429,7 +434,6 @@
     </div>
   </div>
 
-  <!-- Search Utility Row -->
   <div class="search-filter-container">
     <div class="search-wrapper">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -445,7 +449,6 @@
     </button>
   </div>
 
-  <!-- ── PAPER 1 CONTAINER ── -->
   <div id="paper-1-content">
     <div class="page-header">
       <div class="header-main-row">
@@ -462,7 +465,6 @@
       <div class="section-label">Quantitative &amp; Logical Evaluation</div>
       <div class="chapter-list">
 
-        <!-- Subject 1: Mathematics -->
         <div class="chapter-card card-math">
           <div class="chapter-row">
             <div class="chapter-card-top-content" onclick="toggleCardDrawer(this)">
@@ -484,15 +486,9 @@
                 </div>
               </div>
             </div>
-            <!-- Actions Moved inside Lower Horizontal Strip (Image 2) -->
-            <div class="chapter-actions">
-              <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
-            </div>
           </div>
           <div class="subtopics-drawer">
             <div class="drawer-inner">
-              <div class="drawer-title">Curriculum Topics Covered (Mathematics)</div>
               <div class="subtopics-grid">
                 <div class="subtopic-item-card"><div class="subtopic-meta-box"><span class="subtopic-ch-tag">CH-01</span><span class="subtopic-label-text">Profit and loss</span></div><button class="btn-subtopic-mock" onclick="handleSystemClick(event)">Mock</button></div>
                 <div class="subtopic-item-card"><div class="subtopic-meta-box"><span class="subtopic-ch-tag">CH-02</span><span class="subtopic-label-text">Simple interest</span></div><button class="btn-subtopic-mock" onclick="handleSystemClick(event)">Mock</button></div>
@@ -521,7 +517,6 @@
           </div>
         </div>
 
-        <!-- Subject 2: Reasoning -->
         <div class="chapter-card card-reasoning">
           <div class="chapter-row">
             <div class="chapter-card-top-content" onclick="toggleCardDrawer(this)">
@@ -543,14 +538,9 @@
                 </div>
               </div>
             </div>
-            <div class="chapter-actions">
-              <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
-            </div>
           </div>
           <div class="subtopics-drawer">
             <div class="drawer-inner">
-              <div class="drawer-title">Curriculum Topics Covered (Reasoning)</div>
               <div class="subtopics-grid">
                 <div class="subtopic-item-card"><div class="subtopic-meta-box"><span class="subtopic-ch-tag">CH-01</span><span class="subtopic-label-text">CUBE</span></div><button class="btn-subtopic-mock" onclick="handleSystemClick(event)">Mock</button></div>
                 <div class="subtopic-item-card"><div class="subtopic-meta-box"><span class="subtopic-ch-tag">CH-02</span><span class="subtopic-label-text">CLOCK</span></div><button class="btn-subtopic-mock" onclick="handleSystemClick(event)">Mock</button></div>
@@ -587,7 +577,6 @@
       <div class="section-label">Language Competency &amp; Global Awareness</div>
       <div class="chapter-list">
 
-        <!-- Subject 3: English -->
         <div class="chapter-card card-english">
           <div class="chapter-row">
             <div class="chapter-card-top-content" onclick="toggleCardDrawer(this)">
@@ -609,14 +598,9 @@
                 </div>
               </div>
             </div>
-            <div class="chapter-actions">
-              <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
-            </div>
           </div>
           <div class="subtopics-drawer">
             <div class="drawer-inner">
-              <div class="drawer-title">Curriculum Topics Covered (English)</div>
               <div class="subtopics-grid">
                 <div class="subtopic-item-card"><div class="subtopic-meta-box"><span class="subtopic-ch-tag">CH-01</span><span class="subtopic-label-text">Tenses</span></div><button class="btn-subtopic-mock" onclick="handleSystemClick(event)">Mock</button></div>
                 <div class="subtopic-item-card"><div class="subtopic-meta-box"><span class="subtopic-ch-tag">CH-02</span><span class="subtopic-label-text">Practice of Tenses</span></div><button class="btn-subtopic-mock" onclick="handleSystemClick(event)">Mock</button></div>
@@ -655,7 +639,6 @@
           </div>
         </div>
 
-        <!-- Subject 4: Hindi -->
         <div class="chapter-card card-hindi">
           <div class="chapter-row">
             <div class="chapter-card-top-content" onclick="toggleCardDrawer(this)">
@@ -677,14 +660,9 @@
                 </div>
               </div>
             </div>
-            <div class="chapter-actions">
-              <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
-            </div>
           </div>
           <div class="subtopics-drawer">
             <div class="drawer-inner">
-              <div class="drawer-title">Curriculum Topics Covered (हिंदी पाठ्यक्रम)</div>
               <div class="subtopics-grid">
                 <div class="subtopic-item-card"><div class="subtopic-meta-box"><span class="subtopic-ch-tag">CH-01</span><span class="subtopic-label-text">तत्सम - तद्भव, देशज...</span></div><button class="btn-subtopic-mock" onclick="handleSystemClick(event)">Mock Test</button></div>
                 <div class="subtopic-item-card"><div class="subtopic-meta-box"><span class="subtopic-ch-tag">CH-02</span><span class="subtopic-label-text">उपसर्ग - प्रत्यय</span></div><button class="btn-subtopic-mock" onclick="handleSystemClick(event)">Mock Test</button></div>
@@ -708,7 +686,6 @@
           </div>
         </div>
 
-        <!-- Subject 5: General Awareness -->
         <div class="chapter-card card-ga">
           <div class="chapter-row">
             <div class="chapter-card-top-content" onclick="toggleCardDrawer(this)">
@@ -730,14 +707,9 @@
                 </div>
               </div>
             </div>
-            <div class="chapter-actions">
-              <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
-            </div>
           </div>
           <div class="subtopics-drawer">
             <div class="drawer-inner">
-              <div class="drawer-title">Curriculum Topics Covered</div>
               <div class="subtopics-grid">
                 <div class="subtopic-item-card"><div class="subtopic-meta-box"><span class="subtopic-ch-tag">CH-01</span><span class="subtopic-label-text">Indian Polity &amp; Constitution</span></div><button class="btn-subtopic-mock" onclick="handleSystemClick(event)">Mock</button></div>
                 <div class="subtopic-item-card"><div class="subtopic-meta-box"><span class="subtopic-ch-tag">CH-02</span><span class="subtopic-label-text">Current Affairs Tracks</span></div><button class="btn-subtopic-mock" onclick="handleSystemClick(event)">Mock</button></div>
@@ -751,7 +723,6 @@
   </div>
 
 
-  <!-- ── PAPER 2 CONTAINER ── -->
   <div id="paper-2-content" style="display:none;">
     <div class="page-header">
       <div class="header-main-row">
@@ -769,7 +740,6 @@
       </div>
     </div>
 
-    <!-- Section A Modules -->
     <div id="section-A">
       <div class="section-label">Modules 01 – 06 (Core Computing Base)</div>
       <div class="chapter-list">
@@ -795,14 +765,9 @@
                 </div>
               </div>
             </div>
-            <div class="chapter-actions">
-              <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
-            </div>
           </div>
           <div class="subtopics-drawer">
             <div class="drawer-inner">
-              <div class="drawer-title">Curriculum Topics Covered</div>
               <div class="subtopics-grid">
                 <div class="subtopic-item-card"><div class="subtopic-meta-box"><span class="subtopic-ch-tag">M1-CH1</span><span class="subtopic-label-text">OSI &amp; TCP/IP Models</span></div><button class="btn-subtopic-mock" onclick="handleSystemClick(event)">Mock</button></div>
                 <div class="subtopic-item-card"><div class="subtopic-meta-box"><span class="subtopic-ch-tag">M1-CH2</span><span class="subtopic-label-text">IP Subnetting &amp; Routing</span></div><button class="btn-subtopic-mock" onclick="handleSystemClick(event)">Mock</button></div>
@@ -832,14 +797,9 @@
                 </div>
               </div>
             </div>
-            <div class="chapter-actions">
-              <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
-            </div>
           </div>
           <div class="subtopics-drawer">
             <div class="drawer-inner">
-              <div class="drawer-title">Curriculum Topics Covered</div>
               <div class="subtopics-grid">
                 <div class="subtopic-item-card"><div class="subtopic-meta-box"><span class="subtopic-ch-tag">M2-CH1</span><span class="subtopic-label-text">Logic Gates &amp; K-Maps</span></div><button class="btn-subtopic-mock" onclick="handleSystemClick(event)">Mock</button></div>
               </div>
@@ -868,14 +828,9 @@
                 </div>
               </div>
             </div>
-            <div class="chapter-actions">
-              <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
-            </div>
           </div>
           <div class="subtopics-drawer">
             <div class="drawer-inner">
-              <div class="drawer-title">Curriculum Topics Covered</div>
               <div class="subtopics-grid">
                 <div class="subtopic-item-card"><div class="subtopic-meta-box"><span class="subtopic-ch-tag">M3-CH1</span><span class="subtopic-label-text">CPU Architecture &amp; Execution</span></div><button class="btn-subtopic-mock" onclick="handleSystemClick(event)">Mock</button></div>
               </div>
@@ -904,14 +859,9 @@
                 </div>
               </div>
             </div>
-            <div class="chapter-actions">
-              <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
-            </div>
           </div>
           <div class="subtopics-drawer">
             <div class="drawer-inner">
-              <div class="drawer-title">Curriculum Topics Covered</div>
               <div class="subtopics-grid">
                 <div class="subtopic-item-card"><div class="subtopic-meta-box"><span class="subtopic-ch-tag">M4-CH1</span><span class="subtopic-label-text">Scheduling &amp; Page Faults</span></div><button class="btn-subtopic-mock" onclick="handleSystemClick(event)">Mock</button></div>
               </div>
@@ -940,14 +890,9 @@
                 </div>
               </div>
             </div>
-            <div class="chapter-actions">
-              <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
-            </div>
           </div>
           <div class="subtopics-drawer">
             <div class="drawer-inner">
-              <div class="drawer-title">Curriculum Topics Covered</div>
               <div class="subtopics-grid">
                 <div class="subtopic-item-card"><div class="subtopic-meta-box"><span class="subtopic-ch-tag">M5-CH1</span><span class="subtopic-label-text">Relational Algebra &amp; SQL</span></div><button class="btn-subtopic-mock" onclick="handleSystemClick(event)">Mock</button></div>
               </div>
@@ -976,14 +921,9 @@
                 </div>
               </div>
             </div>
-            <div class="chapter-actions">
-              <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
-            </div>
           </div>
           <div class="subtopics-drawer">
             <div class="drawer-inner">
-              <div class="drawer-title">Curriculum Topics Covered</div>
               <div class="subtopics-grid">
                 <div class="subtopic-item-card"><div class="subtopic-meta-box"><span class="subtopic-ch-tag">M6-CH1</span><span class="subtopic-label-text">Structures, Tuples &amp; Dictionaries</span></div><button class="btn-subtopic-mock" onclick="handleSystemClick(event)">Mock</button></div>
               </div>
@@ -994,7 +934,6 @@
       </div>
     </div>
 
-    <!-- Section B Modules -->
     <div id="section-B" style="display:none;">
       <div class="section-label">Modules 07 – 12 (Engineering &amp; Frameworks)</div>
       <div class="chapter-list">
@@ -1020,14 +959,9 @@
                 </div>
               </div>
             </div>
-            <div class="chapter-actions">
-              <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
-            </div>
           </div>
           <div class="subtopics-drawer">
             <div class="drawer-inner">
-              <div class="drawer-title">Curriculum Topics Covered</div>
               <div class="subtopics-grid">
                 <div class="subtopic-item-card"><div class="subtopic-meta-box"><span class="subtopic-ch-tag">M7-CH1</span><span class="subtopic-label-text">HTML, CSS Layouts &amp; JavaScript</span></div><button class="btn-subtopic-mock" onclick="handleSystemClick(event)">Mock</button></div>
               </div>
@@ -1056,14 +990,9 @@
                 </div>
               </div>
             </div>
-            <div class="chapter-actions">
-              <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
-            </div>
           </div>
           <div class="subtopics-drawer">
             <div class="drawer-inner">
-              <div class="drawer-title">Curriculum Topics Covered</div>
               <div class="subtopics-grid">
                 <div class="subtopic-item-card"><div class="subtopic-meta-box"><span class="subtopic-ch-tag">M8-CH1</span><span class="subtopic-label-text">AI, Machine Learning Basics</span></div><button class="btn-subtopic-mock" onclick="handleSystemClick(event)">Mock</button></div>
               </div>
@@ -1092,14 +1021,9 @@
                 </div>
               </div>
             </div>
-            <div class="chapter-actions">
-              <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
-            </div>
           </div>
           <div class="subtopics-drawer">
             <div class="drawer-inner">
-              <div class="drawer-title">Curriculum Topics Covered</div>
               <div class="subtopics-grid">
                 <div class="subtopic-item-card"><div class="subtopic-meta-box"><span class="subtopic-ch-tag">M9-CH1</span><span class="subtopic-label-text">SDLC Paradigms &amp; Agile</span></div><button class="btn-subtopic-mock" onclick="handleSystemClick(event)">Mock</button></div>
               </div>
@@ -1128,14 +1052,9 @@
                 </div>
               </div>
             </div>
-            <div class="chapter-actions">
-              <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
-            </div>
           </div>
           <div class="subtopics-drawer">
             <div class="drawer-inner">
-              <div class="drawer-title">Curriculum Topics Covered</div>
               <div class="subtopics-grid">
                 <div class="subtopic-item-card"><div class="subtopic-meta-box"><span class="subtopic-ch-tag">M10-CH1</span><span class="subtopic-label-text">Stacks, Queues &amp; Linked Lists</span></div><button class="btn-subtopic-mock" onclick="handleSystemClick(event)">Mock</button></div>
               </div>
@@ -1164,14 +1083,9 @@
                 </div>
               </div>
             </div>
-            <div class="chapter-actions">
-              <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
-            </div>
           </div>
           <div class="subtopics-drawer">
             <div class="drawer-inner">
-              <div class="drawer-title">Curriculum Topics Covered</div>
               <div class="subtopics-grid">
                 <div class="subtopic-item-card"><div class="subtopic-meta-box"><span class="subtopic-ch-tag">M11-CH1</span><span class="subtopic-label-text">CS Pedagogy &amp; Lab Management</span></div><button class="btn-subtopic-mock" onclick="handleSystemClick(event)">Mock</button></div>
               </div>
@@ -1200,14 +1114,9 @@
                 </div>
               </div>
             </div>
-            <div class="chapter-actions">
-              <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
-            </div>
           </div>
           <div class="subtopics-drawer">
             <div class="drawer-inner">
-              <div class="drawer-title">Curriculum Topics Covered</div>
               <div class="subtopics-grid">
                 <div class="subtopic-item-card"><div class="subtopic-meta-box"><span class="subtopic-ch-tag">M12-CH1</span><span class="subtopic-label-text">Transformations &amp; Conversions</span></div><button class="btn-subtopic-mock" onclick="handleSystemClick(event)">Mock</button></div>
               </div>
@@ -1218,7 +1127,6 @@
       </div>
     </div>
 
-    <!-- Section C Modules -->
     <div id="section-C" style="display:none;">
       <div class="section-label">Modules 13 – 18 (Applied Allied Sciences)</div>
       <div class="chapter-list">
@@ -1242,14 +1150,9 @@
                 </div>
               </div>
             </div>
-            <div class="chapter-actions">
-              <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
-            </div>
           </div>
           <div class="subtopics-drawer">
             <div class="drawer-inner">
-              <div class="drawer-title">Curriculum Topics Covered</div>
               <div class="subtopics-grid">
                 <div class="subtopic-item-card"><div class="subtopic-meta-box"><span class="subtopic-ch-tag">M13-CH1</span><span class="subtopic-label-text">Electronics &amp; Physical Principles</span></div><button class="btn-subtopic-mock" onclick="handleSystemClick(event)">Mock</button></div>
               </div>
@@ -1275,14 +1178,9 @@
                 </div>
               </div>
             </div>
-            <div class="chapter-actions">
-              <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
-            </div>
           </div>
           <div class="subtopics-drawer">
             <div class="drawer-inner">
-              <div class="drawer-title">Curriculum Topics Covered</div>
               <div class="subtopics-grid">
                 <div class="subtopic-item-card"><div class="subtopic-meta-box"><span class="subtopic-ch-tag">M14-CH1</span><span class="subtopic-label-text">Subjective Analytical Evaluation</span></div><button class="btn-subtopic-mock" onclick="handleSystemClick(event)">Mock</button></div>
               </div>
@@ -1311,14 +1209,9 @@
                 </div>
               </div>
             </div>
-            <div class="chapter-actions">
-              <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
-            </div>
           </div>
           <div class="subtopics-drawer">
             <div class="drawer-inner">
-              <div class="drawer-title">Curriculum Topics Covered</div>
               <div class="subtopics-grid">
                 <div class="subtopic-item-card"><div class="subtopic-meta-box"><span class="subtopic-ch-tag">M15-CH1</span><span class="subtopic-label-text">Asymptotic Notation &amp; Analysis</span></div><button class="btn-subtopic-mock" onclick="handleSystemClick(event)">Mock</button></div>
               </div>
@@ -1347,14 +1240,9 @@
                 </div>
               </div>
             </div>
-            <div class="chapter-actions">
-              <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
-            </div>
           </div>
           <div class="subtopics-drawer">
             <div class="drawer-inner">
-              <div class="drawer-title">Curriculum Topics Covered</div>
               <div class="subtopics-grid">
                 <div class="subtopic-item-card"><div class="subtopic-meta-box"><span class="subtopic-ch-tag">M16-CH1</span><span class="subtopic-label-text">Probability &amp; Variance Analytics</span></div><button class="btn-subtopic-mock" onclick="handleSystemClick(event)">Mock</button></div>
               </div>
@@ -1383,14 +1271,9 @@
                 </div>
               </div>
             </div>
-            <div class="chapter-actions">
-              <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
-            </div>
           </div>
           <div class="subtopics-drawer">
             <div class="drawer-inner">
-              <div class="drawer-title">Curriculum Topics Covered</div>
               <div class="subtopics-grid">
                 <div class="subtopic-item-card"><div class="subtopic-meta-box"><span class="subtopic-ch-tag">M17-CH1</span><span class="subtopic-label-text">Numerical Finite Differences</span></div><button class="btn-subtopic-mock" onclick="handleSystemClick(event)">Mock</button></div>
               </div>
@@ -1419,14 +1302,9 @@
                 </div>
               </div>
             </div>
-            <div class="chapter-actions">
-              <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
-            </div>
           </div>
           <div class="subtopics-drawer">
             <div class="drawer-inner">
-              <div class="drawer-title">Curriculum Topics Covered</div>
               <div class="subtopics-grid">
                 <div class="subtopic-item-card"><div class="subtopic-meta-box"><span class="subtopic-ch-tag">M18-CH1</span><span class="subtopic-label-text">Matrices, Sets &amp; Relations</span></div><button class="btn-subtopic-mock" onclick="handleSystemClick(event)">Mock</button></div>
               </div>
@@ -1490,7 +1368,17 @@
 
   function toggleCardDrawer(topContentElement) {
     const card = topContentElement.closest('.chapter-card');
-    card.classList.toggle('expanded');
+    const wasExpanded = card.classList.contains('expanded');
+    
+    // Auto-close any currently opened cards
+    document.querySelectorAll('.chapter-card.expanded').forEach(c => {
+      c.classList.remove('expanded');
+    });
+
+    // If the clicked card wasn't already expanded, open it
+    if (!wasExpanded) {
+      card.classList.add('expanded');
+    }
   }
 
   function switchPaper(paperNum, btn) {
