@@ -1,409 +1,411 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>DSSSB TGT Computer Science Premium Portal | Paper 1 &amp; Paper 2 - SinghClasses</title>
-
-<meta name="description" content="Access premium study material for DSSSB TGT Computer Science. Master Paper 1 (General Ability) and Paper 2 Section B (Technical Core) with integrated chapter notes and live mock tests." />
-<meta name="keywords" content="DSSSB TGT Computer Science, DSSSB TGT CS Syllabus, Paper 1 General Ability, Data Structures, Operating Systems, DBMS, Python, Rohit Singh, SinghClasses" />
-<meta name="robots" content="index, follow" />
-<meta name="author" content="SinghClasses" />
-<link rel="canonical" href="https://www.singhclasses.in/dsssb-tgt-cs" />
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    background: #f8fafc;
-    font-family: "Poppins", "Segoe UI", system-ui, sans-serif;
-    padding: 20px 12px 0px;
-    color: #1e293b;
-  }
-
-  .page-wrap {
-    max-width: 1060px;
-    margin: 0 auto;
-    background: #ffffff;
-    border-radius: 16px;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.04);
-    overflow: hidden;
-  }
-
-  /* ── TOP HEADER ── */
-  .top-bar {
-    background: #0f172a;
-    padding: 18px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
-    border-bottom: 3px solid #4f46e5;
-  }
-  .logo-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-  .logo-text strong { display: block; font-size: 19px; color: #fff; letter-spacing: 0.5px; font-weight: 700; }
-
-  .top-nav { display: flex; gap: 8px; }
-  .top-nav a {
-    color: #94a3b8;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 600;
-    padding: 6px 12px;
-    border-radius: 6px;
-    transition: all 0.2s;
-  }
-  .top-nav a:hover { background: rgba(255,255,255,0.08); color: #fff; }
-
-  /* ── CENTRED MASTER SWITCH ── */
-  .paper-toggle-container {
-    background: #f1f5f9;
-    padding: 20px 24px;
-    border-bottom: 1px solid #e2e8f0;
-    display: flex;
-    justify-content: center;
-  }
-  .paper-tabs {
-    display: flex;
-    background: #e2e8f0;
-    padding: 4px;
-    border-radius: 12px;
-    width: 100%;
-    max-width: 540px;
-  }
-  .paper-tabs button {
-    flex: 1;
-    background: none;
-    border: none;
-    padding: 12px 18px;
-    font-size: 14px;
-    font-weight: 700;
-    color: #475569;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .paper-tabs button.active {
-    background: #ffffff;
-    color: #4f46e5;
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
-  }
-
-  /* ── PAGE HEADER & TYPOGRAPHY SCALE ── */
-  .page-header {
-    padding: 28px 24px 20px;
-    border-bottom: 1px solid #f1f5f9;
-  }
-  .header-main-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-  .page-title {
-    font-size: 24px;
-    font-weight: 800;
-    color: #0f172a;
-    line-height: 1.2;
-    flex: 1;
-    min-width: 280px;
-  }
-  .page-title span { color: #4f46e5; display: block; font-size: 15px; margin-top: 4px; font-weight: 600; }
-
-  /* ── PILL STYLE SECTION TABS ── */
-  .section-tabs {
-    display: flex;
-    background: #f1f5f9;
-    border: 1px solid #cbd5e1;
-    border-radius: 10px;
-    padding: 4px;
-    flex-shrink: 0;
-  }
-  .section-tabs button {
-    background: none;
-    border: none;
-    padding: 8px 22px;
-    font-size: 13.5px;
-    font-weight: 700;
-    color: #475569;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    white-space: nowrap;
-  }
-  .section-tabs button.active {
-    background: #4f46e5;
-    color: #ffffff;
-    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.2);
-  }
-
-  /* ── SECTION LABEL ── */
-  .section-label {
-    margin: 24px 24px 16px;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #64748b;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .section-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: #e2e8f0;
-  }
-
-  /* ── CHAPTER CARD MECHANICS (TWO COLUMNS) ── */
-  .chapter-list {
-    padding: 0 24px;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
-  }
-  .chapter-card {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 14px;
-    overflow: hidden;
-    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s;
-  }
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   
-  /* Expanded cards break out of the grid column to give subtopics full breathing room */
-  .chapter-card.expanded {
-    grid-column: 1 / -1;
-  }
+  <title>DSSSB TGT CS Portal | SinghClasses</title>
+  <meta name="description" content="Interactive CBT mock tests, high-yield notes, and chapter-wise PYQs for DSSSB TGT Computer Science." />
+  <meta name="keywords" content="DSSSB TGT Computer Science, Paper 1, Paper 2, Python, SQL, CBT Mock Test, SinghClasses" />
+  <meta name="author" content="SinghClasses" />
+  <link rel="canonical" href="https://www.singhclasses.in/dsssb-tgt-cs" />
 
-  .chapter-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 22px;
-    gap: 20px;
-    cursor: pointer;
-  }
+  <meta property="og:title" content="DSSSB TGT CS Portal | SinghClasses" />
+  <meta property="og:description" content="Interactive CBT mock tests, high-yield notes, and chapter-wise PYQs for DSSSB TGT Computer Science." />
+  <meta property="og:url" content="https://www.singhclasses.in/dsssb-tgt-cs" />
+  <meta property="og:type" content="website" />
 
-  .chapter-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 24px -8px rgba(15, 23, 42, 0.08);
-  }
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  /* Subject Color Boundaries (Paper 1) */
-  .card-math { border-left: 5px solid #10b981; }
-  .card-math .chapter-icon { color: #10b981; background: #ecfdf5; }
-  
-  .card-reasoning { border-left: 5px solid #f59e0b; }
-  .card-reasoning .chapter-icon { color: #f59e0b; background: #fffbeb; }
-  
-  .card-english { border-left: 5px solid #ec4899; }
-  .card-english .chapter-icon { color: #ec4899; background: #fdf2f8; }
-  
-  .card-hindi { border-left: 5px solid #8b5cf6; }
-  .card-hindi .chapter-icon { color: #8b5cf6; background: #f5f3ff; }
-  
-  .card-ga { border-left: 5px solid #06b6d4; }
-  .card-ga .chapter-icon { color: #06b6d4; background: #ecfeff; }
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* Unique Module Colors (Paper 2) */
-  .card-m1 { border-left: 5px solid #4f46e5; } .card-m1 .chapter-icon { color: #4f46e5; background: #eef2ff; }
-  .card-m2 { border-left: 5px solid #3b82f6; } .card-m2 .chapter-icon { color: #3b82f6; background: #eff6ff; }
-  .card-m3 { border-left: 5px solid #059669; } .card-m3 .chapter-icon { color: #059669; background: #ecfdf5; }
-  .card-m4 { border-left: 5px solid #ea580c; } .card-m4 .chapter-icon { color: #ea580c; background: #fff7ed; }
-  .card-m5 { border-left: 5px solid #7c3aed; } .card-m5 .chapter-icon { color: #7c3aed; background: #f5f3ff; }
-  .card-m6 { border-left: 5px solid #d97706; } .card-m6 .chapter-icon { color: #d97706; background: #fffbeb; }
-  .card-m7 { border-left: 5px solid #0d9488; } .card-m7 .chapter-icon { color: #0d9488; background: #f0fdfa; }
-  .card-m8 { border-left: 5px solid #e11d48; } .card-m8 .chapter-icon { color: #e11d48; background: #fff1f2; }
-  .card-m9 { border-left: 5px solid #475569; } .card-m9 .chapter-icon { color: #475569; background: #f8fafc; }
-  .card-m10 { border-left: 5px solid #dc2626; } .card-m10 .chapter-icon { color: #dc2626; background: #fef2f2; }
-  .card-m11 { border-left: 5px solid #6d28d9; } .card-m11 .chapter-icon { color: #6d28d9; background: #f5f3ff; }
-  .card-m12 { border-left: 5px solid #c026d3; } .card-m12 .chapter-icon { color: #c026d3; background: #fdf4ff; }
-  .card-m13 { border-left: 5px solid #0284c7; } .card-m13 .chapter-icon { color: #0284c7; background: #f0f9ff; }
-  .card-m14 { border-left: 5px solid #db2777; } .card-m14 .chapter-icon { color: #db2777; background: #fdf2f8; }
-  .card-m15 { border-left: 5px solid #65a30d; } .card-m15 .chapter-icon { color: #65a30d; background: #f7fee7; }
-  .card-m16 { border-left: 5px solid #0ea5e9; } .card-m16 .chapter-icon { color: #0ea5e9; background: #f0f9ff; }
-  .card-m17 { border-left: 5px solid #f59e0b; } .card-m17 .chapter-icon { color: #f59e0b; background: #fffbeb; }
-  .card-m18 { border-left: 5px solid #4c1d95; } .card-m18 .chapter-icon { color: #4c1d95; background: #f5f3ff; }
-
-  .chapter-left-group { display: flex; gap: 14px; flex: 1; align-items: flex-start; min-width: 0; }
-  .chapter-icon { display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 10px; flex-shrink: 0; }
-  .chapter-icon svg { width: 22px; height: 22px; }
-  .chapter-info { flex: 1; min-width: 0; }
-  
-  /* Core Typography Re-scaling */
-  .chapter-meta { font-size: 12px; font-weight: 600; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; }
-  .chapter-name { font-size: 15px; font-weight: 700; color: #0f172a; line-height: 1.35; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
-  
-  /* Semantic Accessible Chevron Icon */
-  .chevron-icon { width: 14px; height: 14px; color: #94a3b8; transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1); flex-shrink: 0; }
-  .chapter-card.expanded .chevron-icon { transform: rotate(180deg); color: #4f46e5; }
-
-  .chapter-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
-  .badge-item { display: inline-flex; align-items: center; gap: 4px; border: 1px solid #e2e8f0; border-radius: 6px; padding: 3px 6px; font-size: 10.5px; color: #475569; background: #f8fafc; font-weight: 600; }
-
-  /* ── CSS GRID EXPANSION MECHANICS ── */
-  .subtopics-drawer {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden;
-    background: #f8fafc;
-  }
-  .chapter-card.expanded .subtopics-drawer {
-    grid-template-rows: 1fr;
-  }
-  .drawer-inner {
-    min-height: 0;
-    padding: 24px;
-    border-top: 1px solid #e2e8f0;
-  }
-  .drawer-title { font-size: 12px; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 16px; letter-spacing: 0.5px; }
-  
-  .subtopics-grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
-    gap: 14px; 
-  }
-  .subtopic-item-card {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    padding: 12px 16px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    transition: border-color 0.2s;
-  }
-  .subtopic-item-card:hover { border-color: #cbd5e1; }
-  .subtopic-meta-box { display: flex; flex-direction: column; gap: 2px; }
-  .subtopic-ch-tag { font-size: 10px; font-weight: 700; color: #4f46e5; text-transform: uppercase; }
-  .subtopic-label-text { font-size: 13.5px; color: #1e293b; font-weight: 600; line-height: 1.3; }
-  .btn-subtopic-mock {
-    background: #f1f5f9;
-    border: 1px solid #e2e8f0;
-    color: #475569;
-    padding: 5px 12px;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-    white-space: nowrap;
-  }
-  .btn-subtopic-mock:hover { background: #4f46e5; color: #ffffff; border-color: #4f46e5; }
-
-  /* Desktop View Actions */
-  .chapter-actions { display: flex; flex-direction: column; gap: 6px; padding-left: 16px; border-left: 1px solid #e2e8f0; min-width: 120px; }
-  .btn-action { width: 100%; padding: 8px 12px; border-radius: 6px; font-size: 12.5px; font-weight: 700; cursor: pointer; border: 1px solid transparent; transition: all 0.2s ease; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; }
-  .btn-notes { background: #4f46e5; color: #fff; border-color: #4f46e5; }
-  .btn-notes:hover { background: #3730a3; border-color: #3730a3; }
-  .btn-mock-item { background: #fff; color: #475569; border-color: #cbd5e1; }
-  .btn-mock-item:hover { border-color: #4f46e5; color: #4f46e5; }
-  .btn-action.locked { background: #f1f5f9 !important; color: #94a3b8 !important; border-color: #e2e8f0 !important; cursor: not-allowed; }
-
-  /* ── YOUTUBE SUBSCRIBE BANNER ── */
-  .sc-subscribe-banner {
-    margin: 28px 24px;
-    background: #0f172a;
-    border-radius: 14px;
-    padding: 24px 28px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    flex-wrap: wrap;
-    border-left: 5px solid #4f46e5;
-  }
-  .sc-sub-left { display: flex; align-items: center; gap: 16px; }
-  .sc-sub-icon-wrap { background: rgba(79, 70, 229, 0.15); color: #4f46e5; width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .sc-sub-text h4 { font-size: 16px; font-weight: 700; color: #ffffff; margin-bottom: 2px; }
-  .sc-sub-text p { font-size: 13px; color: #94a3b8; font-weight: 400; }
-  
-  .sc-sub-btn {
-    background: #4f46e5;
-    color: #ffffff;
-    text-decoration: none;
-    padding: 11px 24px;
-    border-radius: 8px;
-    font-size: 13.5px;
-    font-weight: 700;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: background 0.2s;
-    border: none;
-    cursor: pointer;
-    white-space: nowrap;
-  }
-  .sc-sub-btn:hover { background: #3730a3; }
-
-  /* ── FOOTER ── */
-  .site-premium-footer {
-    background: #0f172a;
-    padding: 20px 32px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 16px;
-    border-top: 1px solid #1e293b;
-    margin-top: 32px;
-  }
-  .footer-copyright { font-size: 13.5px; color: #94a3b8; font-weight: 400; }
-  .footer-heart { color: #ef4444; display: inline-block; font-size: 14px; }
-  .footer-nav-lanes { display: flex; gap: 24px; }
-  .footer-nav-lanes a { font-size: 13.5px; color: #94a3b8; text-decoration: none; font-weight: 400; transition: color 0.2s; }
-  .footer-nav-lanes a:hover { color: #ffffff; }
-
-  /* ── TOAST MECHANICS ── */
-  .toast {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    background: #0f172a;
-    color: #fff;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    opacity: 0;
-    pointer-events: none;
-    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-    z-index: 9999;
-    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3);
-    border: 1px solid #334155;
-  }
-  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-  /* Media Breakpoints */
-  @media (max-width: 768px) {
-    .chapter-list {
-      grid-template-columns: 1fr;
+    :root {
+      --bg-main: #f8fafc;
+      --surface: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --primary: #4f46e5;
+      --primary-hover: #3730a3;
+      --dark-bar: #0f172a;
     }
-    .chapter-row { flex-direction: column; align-items: stretch; padding: 18px; gap: 14px; }
-    .chapter-actions { width: 100%; flex-direction: row; padding-left: 0; border-left: none; margin-top: 4px; }
-    .btn-action { flex: 1; }
-    .site-premium-footer { flex-direction: column; text-align: center; padding: 24px; }
-    .footer-nav-lanes { justify-content: center; gap: 16px; }
-  }
 
-  @media (max-width: 600px) {
-    .header-main-row { flex-direction: column; align-items: flex-start; }
-    .top-nav { display: none; }
-    .sc-subscribe-banner { flex-direction: column; align-items: stretch; }
-    .sc-sub-btn { justify-content: center; }
-  }
-</style>
+    body {
+      background: var(--bg-main);
+      font-family: "Poppins", "Segoe UI", system-ui, sans-serif;
+      padding: 20px 12px 0px;
+      color: var(--text-main);
+    }
+
+    .page-wrap {
+      max-width: 1060px;
+      margin: 0 auto;
+      background: var(--surface);
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.04);
+      overflow: hidden;
+    }
+
+    /* ── TOP HEADER ── */
+    .top-bar {
+      background: var(--dark-bar);
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      border-bottom: 3px solid var(--primary);
+    }
+    .logo-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-text strong { display: block; font-size: 19px; color: #fff; letter-spacing: 0.5px; font-weight: 700; }
+
+    .top-nav { display: flex; gap: 8px; }
+    .top-nav a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .top-nav a:hover { background: rgba(255,255,255,0.08); color: #fff; }
+
+    /* ── OUTLINED TOGGLE BUTTONS ── */
+    .paper-toggle-container {
+      background: var(--surface);
+      padding: 24px 24px 12px;
+      display: flex;
+      justify-content: center;
+    }
+    .paper-tabs {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+      max-width: 540px;
+    }
+    .paper-tabs button {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border-color);
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 10px;
+      transition: all 0.2s ease;
+    }
+    .paper-tabs button:hover {
+      border-color: var(--text-muted);
+      color: var(--text-main);
+    }
+    .paper-tabs button.active {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: #f5f3ff;
+      box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.1);
+    }
+
+    /* ── SEARCH & FILTER ARCHITECTURE ── */
+    .search-filter-container {
+      padding: 12px 24px 20px;
+      display: flex;
+      gap: 12px;
+    }
+    .search-wrapper {
+      position: relative;
+      flex: 1;
+    }
+    .search-wrapper svg {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      width: 18px;
+      height: 18px;
+    }
+    .search-input {
+      width: 100%;
+      padding: 12px 16px 12px 42px;
+      font-family: inherit;
+      font-size: 14px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-main);
+      border-radius: 10px;
+      color: var(--text-main);
+      outline: none;
+      transition: all 0.2s;
+    }
+    .search-input:focus {
+      border-color: var(--primary);
+      background: var(--surface);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+    .btn-utility {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-main);
+      border: 1px solid var(--border-color);
+      padding: 0 18px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-utility:hover { background: var(--border-color); }
+
+    /* ── PAGE HEADER & TYPOGRAPHY ── */
+    .page-header {
+      padding: 16px 24px 16px;
+      border-bottom: 1px solid var(--bg-main);
+    }
+    .header-main-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .page-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--dark-bar);
+      line-height: 1.2;
+      flex: 1;
+      min-width: 280px;
+    }
+    .page-title span { color: var(--primary); display: block; font-size: 14px; margin-top: 4px; font-weight: 600; }
+
+    .section-tabs {
+      display: flex;
+      background: var(--bg-main);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 4px;
+      flex-shrink: 0;
+    }
+    .section-tabs button {
+      background: none;
+      border: none;
+      padding: 8px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .section-tabs button.active {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      margin: 20px 24px 16px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border-color);
+    }
+
+    /* ── CHAPTER CARD MECHANICS ── */
+    .chapter-list {
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .chapter-card {
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      background: var(--surface);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .chapter-card.expanded { grid-column: 1 / -1; }
+    
+    /* NEW STACKED ROW BREAKDOWN TO COMPLY WITH FOOTER ACTIONS STRIP (Screenshot 2026-06-25 100227_2.jpg) */
+    .chapter-row { display: flex; flex-direction: column; align-items: stretch; cursor: pointer; }
+    .chapter-card-top-content { display: flex; align-items: flex-start; justify-content: space-between; padding: 20px; gap: 16px; }
+    .chapter-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.05); }
+
+    /* ── PREMIUM LIGHT BACKGROUND CARD TINTS ── */
+    .card-math { background: #f0fdf4; border-color: #bbf7d0; }
+    .card-math .chapter-icon { color: #10b981; background: #e6fbf0; }
+    
+    .card-reasoning { background: #fffdf5; border-color: #fde68a; }
+    .card-reasoning .chapter-icon { color: #f59e0b; background: #fff9e6; }
+    
+    .card-english { background: #fff5f9; border-color: #fbcfe8; }
+    .card-english .chapter-icon { color: #ec4899; background: #ffe4f0; }
+    
+    .card-hindi { background: #f9f8ff; border-color: #ddd6fe; }
+    .card-hindi .chapter-icon { color: #8b5cf6; background: #ede9fe; }
+    
+    .card-ga { background: #f0fdfa; border-color: #99f6e4; }
+    .card-ga .chapter-icon { color: #06b6d4; background: #ccfbf1; }
+
+    /* Technical Modules Premium Light Systems */
+    .card-m1, .card-m7, .card-m13 { background: #f5f7ff; border-color: #c7d2fe; }
+    .card-m1 .chapter-icon, .card-m7 .chapter-icon, .card-m13 .chapter-icon { color: #4f46e5; background: #e0e7ff; }
+
+    .card-m2, .card-m8, .card-m14 { background: #f0f7ff; border-color: #bfdbfe; }
+    .card-m2 .chapter-icon, .card-m8 .chapter-icon, .card-m14 .chapter-icon { color: #3b82f6; background: #dbeafe; }
+
+    .card-m3, .card-m9, .card-m15 { background: #f2fdf9; border-color: #a7f3d0; }
+    .card-m3 .chapter-icon, .card-m9 .chapter-icon, .card-m15 .chapter-icon { color: #059669; background: #d1fae5; }
+
+    .card-m4, .card-m10, .card-m16 { background: #fff8f5; border-color: #ffedd5; }
+    .card-m4 .chapter-icon, .card-m10 .chapter-icon, .card-m16 .chapter-icon { color: #ea580c; background: #ffebd5; }
+
+    .card-m5, .card-m11, .card-m17 { background: #faf5ff; border-color: #e9d5ff; }
+    .card-m5 .chapter-icon, .card-m11 .chapter-icon, .card-m17 .chapter-icon { color: #7c3aed; background: #f3e8ff; }
+
+    .card-m6, .card-m12, .card-m18 { background: #fffbeb; border-color: #fde68a; }
+    .card-m6 .chapter-icon, .card-m12 .chapter-icon, .card-m18 .chapter-icon { color: #d97706; background: #fef3c7; }
+
+    .chapter-left-group { display: flex; gap: 14px; flex: 1; align-items: flex-start; min-width: 0; }
+    .chapter-icon { display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 10px; flex-shrink: 0; }
+    .chapter-icon svg { width: 22px; height: 22px; }
+    .chapter-info { flex: 1; min-width: 0; }
+    
+    .chapter-meta { font-size: 11px; font-weight: 600; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); }
+    .chapter-name { font-size: 15px; font-weight: 700; color: var(--dark-bar); line-height: 1.35; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+    .chevron-icon { width: 14px; height: 14px; color: #94a3b8; transition: transform 0.2s; flex-shrink: 0; }
+    .chapter-card.expanded .chevron-icon { transform: rotate(180deg); color: var(--primary); }
+
+    /* STATUS TYPE BADGES */
+    .chapter-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+    .badge-item { display: inline-flex; align-items: center; gap: 4px; border-radius: 6px; padding: 3px 8px; font-size: 11px; font-weight: 600; border: 1px solid rgba(0,0,0,0.05); }
+    .badge-videos { background: rgba(30, 64, 175, 0.06); color: #1d4ed8; }
+    .badge-pyqs { background: rgba(21, 128, 61, 0.06); color: #15803d; }
+    .badge-practice { background: rgba(180, 83, 9, 0.06); color: #b45309; }
+    .badge-item svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+    /* Drawers */
+    .subtopics-drawer { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.2s ease-out; overflow: hidden; background: rgba(0, 0, 0, 0.02); }
+    .chapter-card.expanded .subtopics-drawer { grid-template-rows: 1fr; }
+    .drawer-inner { min-height: 0; padding: 20px; border-top: 1px solid rgba(0, 0, 0, 0.05); }
+    .drawer-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 0.5px; }
+    
+    .subtopics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+    .subtopic-item-card { background: var(--surface); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 10px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .subtopic-meta-box { display: flex; flex-direction: column; gap: 2px; }
+    .subtopic-ch-tag { font-size: 10px; font-weight: 700; color: var(--primary); text-transform: uppercase; }
+    .subtopic-label-text { font-size: 13px; color: var(--text-main); font-weight: 600; line-height: 1.3; }
+    .btn-subtopic-mock { background: var(--bg-main); border: 1px solid var(--border-color); color: var(--text-main); padding: 5px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+    .btn-subtopic-mock:hover { background: var(--primary); color: #ffffff; border-color: var(--primary); }
+
+    /* REPOSITIONED ACTION BUTTONS CONTAINER TO MATCH THE STRIP LAYOUT AS PER REQUESTED IN CAPTURE (Screenshot 2026-06-25 100227_2.jpg) */
+    .chapter-actions { 
+      display: flex; 
+      flex-direction: row; 
+      gap: 12px; 
+      padding: 12px 20px; 
+      background: rgba(0, 0, 0, 0.03); 
+      border-top: 1px solid rgba(0, 0, 0, 0.05); 
+      min-width: 100%;
+    }
+    .btn-action { width: auto; padding: 8px 24px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; border: 1px solid transparent; transition: all 0.2s ease; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; }
+    .btn-notes { background: #fcfcfd; color: var(--text-main); border-color: var(--border-color); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    .btn-notes:hover { background: #f1f5f9; border-color: #cbd5e1; }
+    .btn-mock-item { background: #fcfcfd; color: var(--text-main); border-color: var(--border-color); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    .btn-mock-item:hover { background: #f1f5f9; border-color: #cbd5e1; }
+    .btn-action.locked { background: rgba(0,0,0,0.04) !important; color: #94a3b8 !important; border-color: transparent !important; cursor: not-allowed; box-shadow: none !important; }
+
+    /* ── ADAPTIVE SURFACE YOUTUBE BANNER STRIP ── */
+    .sc-subscribe-banner {
+      margin: 24px;
+      background: var(--bg-main);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .sc-sub-left { display: flex; align-items: center; gap: 14px; }
+    .sc-sub-icon-wrap { background: #fee2e2; color: #dc2626; width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sc-sub-icon-wrap svg { width: 22px; height: 22px; }
+    .sc-sub-text h4 { font-size: 15px; font-weight: 700; color: var(--dark-bar); margin-bottom: 2px; }
+    .sc-sub-text p { font-size: 13px; color: var(--text-muted); font-weight: 400; }
+    
+    .sc-sub-btn {
+      background: var(--surface);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .sc-sub-btn:hover {
+      background: var(--dark-bar);
+      color: #ffffff;
+      border-color: var(--dark-bar);
+    }
+
+    /* ── FOOTER ── */
+    .site-premium-footer {
+      background: var(--dark-bar);
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      border-top: 1px solid #1e293b;
+      margin-top: 24px;
+    }
+    .footer-copyright { font-size: 13px; color: #94a3b8; }
+    .footer-heart { color: #ef4444; }
+    .footer-nav-lanes { display: flex; gap: 20px; }
+    .footer-nav-lanes a { font-size: 13px; color: #94a3b8; text-decoration: none; }
+    .footer-nav-lanes a:hover { color: #ffffff; }
+
+    /* Toast Mechanics */
+    .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--dark-bar); color: #fff; padding: 12px 24px; border-radius: 8px; font-size: 13px; font-weight: 600; opacity: 0; pointer-events: none; transition: all 0.2s ease; z-index: 9999; border: 1px solid #334155; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 768px) {
+      .chapter-list { grid-template-columns: 1fr; }
+      .search-filter-container { flex-direction: column; }
+      .btn-utility { padding: 12px; justify-content: center; }
+      .site-premium-footer { flex-direction: column; text-align: center; }
+    }
+  </style>
 </head>
 <body>
 
@@ -411,9 +413,7 @@
 
   <div class="top-bar">
     <a class="logo-wrap" href="#">
-      <div class="logo-text">
-        <strong>SinghClasses.in</strong>
-      </div>
+      <div class="logo-text"><strong>SinghClasses.in</strong></div>
     </a>
     <nav class="top-nav">
       <a href="#" style="color:#fff; background: rgba(255,255,255,0.1)">DSSSB TGT</a>
@@ -424,12 +424,28 @@
 
   <div class="paper-toggle-container">
     <div class="paper-tabs" id="paperTabs">
-      <button class="active" onclick="switchPaper('1', this)">Paper 1 (Common Paper)</button>
-      <button onclick="switchPaper('2', this)">Paper 2 (Computer Science)</button>
+      <button class="active" onclick="switchPaper('1', this)">Paper 1 — Aptitude</button>
+      <button onclick="switchPaper('2', this)">Paper 2 — CS</button>
     </div>
   </div>
 
-  <!-- PAPER 1 CONTENT -->
+  <!-- Search Utility Row -->
+  <div class="search-filter-container">
+    <div class="search-wrapper">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input type="text" class="search-input" id="moduleSearch" placeholder="Search modules, topics..." onkeyup="filterModules()"/>
+    </div>
+    <button class="btn-utility">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+      Filter
+    </button>
+    <button class="btn-utility">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="21" x2="18" y2="14"></line><line x1="12" y1="21" x2="12" y2="10"></line><line x1="6" y1="21" x2="6" y2="6"></line><line x1="2" y1="21" x2="2" y2="14"></line></svg>
+      Sort
+    </button>
+  </div>
+
+  <!-- ── PAPER 1 CONTAINER ── -->
   <div id="paper-1-content">
     <div class="page-header">
       <div class="header-main-row">
@@ -442,33 +458,36 @@
       </div>
     </div>
 
-    <!-- Section A: Aptitude -->
     <div id="p1-aptitude">
       <div class="section-label">Quantitative &amp; Logical Evaluation</div>
       <div class="chapter-list">
 
+        <!-- Subject 1: Mathematics -->
         <div class="chapter-card card-math">
-          <div class="chapter-row" onclick="toggleCardDrawer(this)">
-            <div class="chapter-left-group">
-              <div class="chapter-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="9"></line><line x1="12" y1="6" x2="12" y2="12"></line><line x1="9" y1="16" x2="15" y2="16"></line></svg>
-              </div>
-              <div class="chapter-info">
-                <div class="chapter-meta">Subject 01</div>
-                <h2 class="chapter-name">
-                  Arithmetical &amp; Numerical Ability
-                  <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </h2>
-                <div class="chapter-badges">
-                  <span class="badge-item">342 Videos</span>
-                  <span class="badge-item">613 PYQs</span>
-                  <span class="badge-item">3568 Practice Qs</span>
+          <div class="chapter-row">
+            <div class="chapter-card-top-content" onclick="toggleCardDrawer(this)">
+              <div class="chapter-left-group">
+                <div class="chapter-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="9"></line><line x1="12" y1="6" x2="12" y2="12"></line><line x1="9" y1="16" x2="15" y2="16"></line></svg>
+                </div>
+                <div class="chapter-info">
+                  <div class="chapter-meta">Subject 01</div>
+                  <h2 class="chapter-name">
+                    Arithmetical &amp; Numerical Ability
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </h2>
+                  <div class="chapter-badges">
+                    <span class="badge-item badge-videos"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>342 videos</span>
+                    <span class="badge-item badge-pyqs"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>613 PYQs</span>
+                    <span class="badge-item badge-practice"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>3568 questions</span>
+                  </div>
                 </div>
               </div>
             </div>
+            <!-- Actions Moved inside Lower Horizontal Strip (Image 2) -->
             <div class="chapter-actions">
               <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock</button>
+              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
             </div>
           </div>
           <div class="subtopics-drawer">
@@ -502,28 +521,31 @@
           </div>
         </div>
 
+        <!-- Subject 2: Reasoning -->
         <div class="chapter-card card-reasoning">
-          <div class="chapter-row" onclick="toggleCardDrawer(this)">
-            <div class="chapter-left-group">
-              <div class="chapter-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"></path></svg>
-              </div>
-              <div class="chapter-info">
-                <div class="chapter-meta">Subject 02</div>
-                <h2 class="chapter-name">
-                  General Intelligence &amp; Reasoning Ability
-                  <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </h2>
-                <div class="chapter-badges">
-                  <span class="badge-item">136 Videos</span>
-                  <span class="badge-item">600 PYQs</span>
-                  <span class="badge-item">2095 Practice Qs</span>
+          <div class="chapter-row">
+            <div class="chapter-card-top-content" onclick="toggleCardDrawer(this)">
+              <div class="chapter-left-group">
+                <div class="chapter-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"></path></svg>
+                </div>
+                <div class="chapter-info">
+                  <div class="chapter-meta">Subject 02</div>
+                  <h2 class="chapter-name">
+                    General Intelligence &amp; Reasoning Ability
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </h2>
+                  <div class="chapter-badges">
+                    <span class="badge-item badge-videos"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>136 videos</span>
+                    <span class="badge-item badge-pyqs"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>600 PYQs</span>
+                    <span class="badge-item badge-practice"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>2095 questions</span>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="chapter-actions">
               <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock</button>
+              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
             </div>
           </div>
           <div class="subtopics-drawer">
@@ -561,33 +583,35 @@
       </div>
     </div>
 
-    <!-- Section B: Languages & GA -->
     <div id="p1-languages">
       <div class="section-label">Language Competency &amp; Global Awareness</div>
       <div class="chapter-list">
 
+        <!-- Subject 3: English -->
         <div class="chapter-card card-english">
-          <div class="chapter-row" onclick="toggleCardDrawer(this)">
-            <div class="chapter-left-group">
-              <div class="chapter-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5A2.5 2.5 0 0 0 6.5 22H20M4 19.5V3.5A2.5 2.5 0 0 1 6.5 1M20 17V1"></path></svg>
-              </div>
-              <div class="chapter-info">
-                <div class="chapter-meta">Subject 03</div>
-                <h2 class="chapter-name">
-                  English Language &amp; Comprehension
-                  <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </h2>
-                <div class="chapter-badges">
-                  <span class="badge-item">88 Videos</span>
-                  <span class="badge-item">756 PYQs</span>
-                  <span class="badge-item">3723 Practice Qs</span>
+          <div class="chapter-row">
+            <div class="chapter-card-top-content" onclick="toggleCardDrawer(this)">
+              <div class="chapter-left-group">
+                <div class="chapter-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5A2.5 2.5 0 0 0 6.5 22H20M4 19.5V3.5A2.5 2.5 0 0 1 6.5 1M20 17V1"></path></svg>
+                </div>
+                <div class="chapter-info">
+                  <div class="chapter-meta">Subject 03</div>
+                  <h2 class="chapter-name">
+                    English Language &amp; Comprehension
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </h2>
+                  <div class="chapter-badges">
+                    <span class="badge-item badge-videos"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>88 videos</span>
+                    <span class="badge-item badge-pyqs"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>756 PYQs</span>
+                    <span class="badge-item badge-practice"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>3723 questions</span>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="chapter-actions">
               <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock</button>
+              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
             </div>
           </div>
           <div class="subtopics-drawer">
@@ -631,28 +655,31 @@
           </div>
         </div>
 
+        <!-- Subject 4: Hindi -->
         <div class="chapter-card card-hindi">
-          <div class="chapter-row" onclick="toggleCardDrawer(this)">
-            <div class="chapter-left-group">
-              <div class="chapter-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M3 20v-8a9 9 0 0 1 18 0v8M12 4v16"/></svg>
-              </div>
-              <div class="chapter-info">
-                <div class="chapter-meta">Subject 04</div>
-                <h2 class="chapter-name">
-                  Hindi Language &amp; Comprehension
-                  <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </h2>
-                <div class="chapter-badges">
-                  <span class="badge-item">10 Videos</span>
-                  <span class="badge-item">439 PYQs</span>
-                  <span class="badge-item">72 Practice Qs</span>
+          <div class="chapter-row">
+            <div class="chapter-card-top-content" onclick="toggleCardDrawer(this)">
+              <div class="chapter-left-group">
+                <div class="chapter-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M3 20v-8a9 9 0 0 1 18 0v8M12 4v16"/></svg>
+                </div>
+                <div class="chapter-info">
+                  <div class="chapter-meta">Subject 04</div>
+                  <h2 class="chapter-name">
+                    Hindi Language &amp; Comprehension
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </h2>
+                  <div class="chapter-badges">
+                    <span class="badge-item badge-videos"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>10 videos</span>
+                    <span class="badge-item badge-pyqs"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>439 PYQs</span>
+                    <span class="badge-item badge-practice"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>72 questions</span>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="chapter-actions">
               <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock</button>
+              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
             </div>
           </div>
           <div class="subtopics-drawer">
@@ -681,28 +708,31 @@
           </div>
         </div>
 
+        <!-- Subject 5: General Awareness -->
         <div class="chapter-card card-ga">
-          <div class="chapter-row" onclick="toggleCardDrawer(this)">
-            <div class="chapter-left-group">
-              <div class="chapter-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-              </div>
-              <div class="chapter-info">
-                <div class="chapter-meta">Subject 05</div>
-                <h2 class="chapter-name">
-                  General Awareness
-                  <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </h2>
-                <div class="chapter-badges">
-                  <span class="badge-item">690 Videos</span>
-                  <span class="badge-item">976 PYQs</span>
-                  <span class="badge-item">1079 Practice Qs</span>
+          <div class="chapter-row">
+            <div class="chapter-card-top-content" onclick="toggleCardDrawer(this)">
+              <div class="chapter-left-group">
+                <div class="chapter-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                </div>
+                <div class="chapter-info">
+                  <div class="chapter-meta">Subject 05</div>
+                  <h2 class="chapter-name">
+                    General Awareness
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </h2>
+                  <div class="chapter-badges">
+                    <span class="badge-item badge-videos"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>690 videos</span>
+                    <span class="badge-item badge-pyqs"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>976 PYQs</span>
+                    <span class="badge-item badge-practice"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>1079 questions</span>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="chapter-actions">
               <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock</button>
+              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
             </div>
           </div>
           <div class="subtopics-drawer">
@@ -720,7 +750,8 @@
     </div>
   </div>
 
-  <!-- PAPER 2 CS CONTENT -->
+
+  <!-- ── PAPER 2 CONTAINER ── -->
   <div id="paper-2-content" style="display:none;">
     <div class="page-header">
       <div class="header-main-row">
@@ -731,40 +762,42 @@
           </h1>
         </div>
         <div class="section-tabs" id="sectionTabs">
-          <button class="active" data-section="A" onclick="switchSection('A', this)">Modules 01-06</button>
-          <button data-section="B" onclick="switchSection('B', this)">Modules 07-12</button>
-          <button data-section="C" onclick="switchSection('C', this)">Modules 13-18</button>
+          <button class="active" onclick="switchSection('A', this)">Modules 01-06</button>
+          <button onclick="switchSection('B', this)">Modules 07-12</button>
+          <button onclick="switchSection('C', this)">Modules 13-18</button>
         </div>
       </div>
     </div>
 
-    <!-- Section A: Modules 01 - 06 -->
+    <!-- Section A Modules -->
     <div id="section-A">
       <div class="section-label">Modules 01 – 06 (Core Computing Base)</div>
       <div class="chapter-list">
         
         <div class="chapter-card card-m1">
-          <div class="chapter-row" onclick="toggleCardDrawer(this)">
-            <div class="chapter-left-group">
-              <div class="chapter-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="16" width="6" height="6" rx="1"></rect><rect x="2" y="16" width="6" height="6" rx="1"></rect><rect x="9" y="2" width="6" height="6" rx="1"></rect><path d="M12 8v4M5 16v-2a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2M12 12h0"></path></svg>
-              </div>
-              <div class="chapter-info">
-                <div class="chapter-meta">Module 01</div>
-                <h2 class="chapter-name">
-                  Computer Networks, TCP/IP &amp; Security
-                  <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </h2>
-                <div class="chapter-badges">
-                  <span class="badge-item">90 Videos</span>
-                  <span class="badge-item">259 PYQs</span>
-                  <span class="badge-item">510 Practice Qs</span>
+          <div class="chapter-row">
+            <div class="chapter-card-top-content" onclick="toggleCardDrawer(this)">
+              <div class="chapter-left-group">
+                <div class="chapter-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="16" y="16" width="6" height="6" rx="1"></rect><rect x="2" y="16" width="6" height="6" rx="1"></rect><rect x="9" y="2" width="6" height="6" rx="1"></rect><path d="M12 8v4M5 16v-2a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2"></path></svg>
+                </div>
+                <div class="chapter-info">
+                  <div class="chapter-meta">Module 01</div>
+                  <h2 class="chapter-name">
+                    Computer Networks, TCP/IP &amp; Security
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </h2>
+                  <div class="chapter-badges">
+                    <span class="badge-item badge-videos"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>90 videos</span>
+                    <span class="badge-item badge-pyqs"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>259 PYQs</span>
+                    <span class="badge-item badge-practice"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>510 questions</span>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="chapter-actions">
               <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock</button>
+              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
             </div>
           </div>
           <div class="subtopics-drawer">
@@ -779,27 +812,29 @@
         </div>
 
         <div class="chapter-card card-m2">
-          <div class="chapter-row" onclick="toggleCardDrawer(this)">
-            <div class="chapter-left-group">
-              <div class="chapter-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"></rect><line x1="9" y1="2" x2="9" y2="4"></line><line x1="15" y1="2" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="22"></line><line x1="15" y1="20" x2="15" y2="22"></line><line x1="2" y1="9" x2="4" y2="9"></line><line x1="2" y1="15" x2="4" y2="15"></line><line x1="20" y1="9" x2="22" y2="9"></line><line x1="20" y1="15" x2="22" y2="15"></line></svg>
-              </div>
-              <div class="chapter-info">
-                <div class="chapter-meta">Module 02</div>
-                <h2 class="chapter-name">
-                  Digital Electronics / Boolean Logic
-                  <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </h2>
-                <div class="chapter-badges">
-                  <span class="badge-item">147 Videos</span>
-                  <span class="badge-item">295 PYQs</span>
-                  <span class="badge-item">565 Practice Qs</span>
+          <div class="chapter-row">
+            <div class="chapter-card-top-content" onclick="toggleCardDrawer(this)">
+              <div class="chapter-left-group">
+                <div class="chapter-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"></rect><line x1="9" y1="2" x2="9" y2="4"></line><line x1="15" y1="2" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="22"></line><line x1="15" y1="20" x2="15" y2="22"></line><line x1="2" y1="9" x2="4" y2="9"></line><line x1="2" y1="15" x2="4" y2="15"></line></svg>
+                </div>
+                <div class="chapter-info">
+                  <div class="chapter-meta">Module 02</div>
+                  <h2 class="chapter-name">
+                    Digital Electronics / Boolean Logic
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </h2>
+                  <div class="chapter-badges">
+                    <span class="badge-item badge-videos"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>147 videos</span>
+                    <span class="badge-item badge-pyqs"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>295 PYQs</span>
+                    <span class="badge-item badge-practice"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>565 questions</span>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="chapter-actions">
               <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock</button>
+              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
             </div>
           </div>
           <div class="subtopics-drawer">
@@ -813,27 +848,29 @@
         </div>
 
         <div class="chapter-card card-m3">
-          <div class="chapter-row" onclick="toggleCardDrawer(this)">
-            <div class="chapter-left-group">
-              <div class="chapter-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-              </div>
-              <div class="chapter-info">
-                <div class="chapter-meta">Module 03</div>
-                <h2 class="chapter-name">
-                  Computer Fundamentals &amp; IT
-                  <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </h2>
-                <div class="chapter-badges">
-                  <span class="badge-item">107 Videos</span>
-                  <span class="badge-item">233 PYQs</span>
-                  <span class="badge-item">433 Practice Qs</span>
+          <div class="chapter-row">
+            <div class="chapter-card-top-content" onclick="toggleCardDrawer(this)">
+              <div class="chapter-left-group">
+                <div class="chapter-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                </div>
+                <div class="chapter-info">
+                  <div class="chapter-meta">Module 03</div>
+                  <h2 class="chapter-name">
+                    Computer Fundamentals &amp; IT
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </h2>
+                  <div class="chapter-badges">
+                    <span class="badge-item badge-videos"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>107 videos</span>
+                    <span class="badge-item badge-pyqs"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>233 PYQs</span>
+                    <span class="badge-item badge-practice"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>433 questions</span>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="chapter-actions">
               <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock</button>
+              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
             </div>
           </div>
           <div class="subtopics-drawer">
@@ -847,27 +884,29 @@
         </div>
 
         <div class="chapter-card card-m4">
-          <div class="chapter-row" onclick="toggleCardDrawer(this)">
-            <div class="chapter-left-group">
-              <div class="chapter-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-              </div>
-              <div class="chapter-info">
-                <div class="chapter-meta">Module 04</div>
-                <h2 class="chapter-name">
-                  Operating System
-                  <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </h2>
-                <div class="chapter-badges">
-                  <span class="badge-item">151 Videos</span>
-                  <span class="badge-item">225 PYQs</span>
-                  <span class="badge-item">916 Practice Qs</span>
+          <div class="chapter-row">
+            <div class="chapter-card-top-content" onclick="toggleCardDrawer(this)">
+              <div class="chapter-left-group">
+                <div class="chapter-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                </div>
+                <div class="chapter-info">
+                  <div class="chapter-meta">Module 04</div>
+                  <h2 class="chapter-name">
+                    Operating System
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </h2>
+                  <div class="chapter-badges">
+                    <span class="badge-item badge-videos"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>151 videos</span>
+                    <span class="badge-item badge-pyqs"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>225 PYQs</span>
+                    <span class="badge-item badge-practice"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>916 questions</span>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="chapter-actions">
               <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock</button>
+              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
             </div>
           </div>
           <div class="subtopics-drawer">
@@ -881,27 +920,29 @@
         </div>
 
         <div class="chapter-card card-m5">
-          <div class="chapter-row" onclick="toggleCardDrawer(this)">
-            <div class="chapter-left-group">
-              <div class="chapter-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"></path></svg>
-              </div>
-              <div class="chapter-info">
-                <div class="chapter-meta">Module 05</div>
-                <h2 class="chapter-name">
-                  Data Base Management System
-                  <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </h2>
-                <div class="chapter-badges">
-                  <span class="badge-item">126 Videos</span>
-                  <span class="badge-item">297 PYQs</span>
-                  <span class="badge-item">659 Practice Qs</span>
+          <div class="chapter-row">
+            <div class="chapter-card-top-content" onclick="toggleCardDrawer(this)">
+              <div class="chapter-left-group">
+                <div class="chapter-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"></path></svg>
+                </div>
+                <div class="chapter-info">
+                  <div class="chapter-meta">Module 05</div>
+                  <h2 class="chapter-name">
+                    Data Base Management System
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </h2>
+                  <div class="chapter-badges">
+                    <span class="badge-item badge-videos"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>126 videos</span>
+                    <span class="badge-item badge-pyqs"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>297 PYQs</span>
+                    <span class="badge-item badge-practice"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>659 questions</span>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="chapter-actions">
               <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock</button>
+              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
             </div>
           </div>
           <div class="subtopics-drawer">
@@ -915,27 +956,29 @@
         </div>
 
         <div class="chapter-card card-m6">
-          <div class="chapter-row" onclick="toggleCardDrawer(this)">
-            <div class="chapter-left-group">
-              <div class="chapter-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
-              </div>
-              <div class="chapter-info">
-                <div class="chapter-meta">Module 06</div>
-                <h2 class="chapter-name">
-                  Python Language
-                  <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </h2>
-                <div class="chapter-badges">
-                  <span class="badge-item">229 Videos</span>
-                  <span class="badge-item">253 PYQs</span>
-                  <span class="badge-item">83 Practice Qs</span>
+          <div class="chapter-row">
+            <div class="chapter-card-top-content" onclick="toggleCardDrawer(this)">
+              <div class="chapter-left-group">
+                <div class="chapter-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                </div>
+                <div class="chapter-info">
+                  <div class="chapter-meta">Module 06</div>
+                  <h2 class="chapter-name">
+                    Python Language
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </h2>
+                  <div class="chapter-badges">
+                    <span class="badge-item badge-videos"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>229 videos</span>
+                    <span class="badge-item badge-pyqs"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>253 PYQs</span>
+                    <span class="badge-item badge-practice"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>83 questions</span>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="chapter-actions">
               <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock</button>
+              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
             </div>
           </div>
           <div class="subtopics-drawer">
@@ -951,33 +994,35 @@
       </div>
     </div>
 
-    <!-- Section B: Modules 07 - 12 -->
+    <!-- Section B Modules -->
     <div id="section-B" style="display:none;">
       <div class="section-label">Modules 07 – 12 (Engineering &amp; Frameworks)</div>
       <div class="chapter-list">
 
         <div class="chapter-card card-m7">
-          <div class="chapter-row" onclick="toggleCardDrawer(this)">
-            <div class="chapter-left-group">
-              <div class="chapter-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20M2 12h20"/></svg>
-              </div>
-              <div class="chapter-info">
-                <div class="chapter-meta">Module 07</div>
-                <h2 class="chapter-name">
-                  Internet &amp; Web Technologies
-                  <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </h2>
-                <div class="chapter-badges">
-                  <span class="badge-item">116 Videos</span>
-                  <span class="badge-item">160 PYQs</span>
-                  <span class="badge-item">267 Practice Qs</span>
+          <div class="chapter-row">
+            <div class="chapter-card-top-content" onclick="toggleCardDrawer(this)">
+              <div class="chapter-left-group">
+                <div class="chapter-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20"></path></svg>
+                </div>
+                <div class="chapter-info">
+                  <div class="chapter-meta">Module 07</div>
+                  <h2 class="chapter-name">
+                    Internet &amp; Web Technologies
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </h2>
+                  <div class="chapter-badges">
+                    <span class="badge-item badge-videos"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>116 videos</span>
+                    <span class="badge-item badge-pyqs"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>160 PYQs</span>
+                    <span class="badge-item badge-practice"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>267 questions</span>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="chapter-actions">
               <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock</button>
+              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
             </div>
           </div>
           <div class="subtopics-drawer">
@@ -991,27 +1036,29 @@
         </div>
 
         <div class="chapter-card card-m8">
-          <div class="chapter-row" onclick="toggleCardDrawer(this)">
-            <div class="chapter-left-group">
-              <div class="chapter-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-              </div>
-              <div class="chapter-info">
-                <div class="chapter-meta">Module 08</div>
-                <h2 class="chapter-name">
-                  Emerging Trends
-                  <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </h2>
-                <div class="chapter-badges">
-                  <span class="badge-item">12 Videos</span>
-                  <span class="badge-item">15 PYQs</span>
-                  <span class="badge-item">98 Practice Qs</span>
+          <div class="chapter-row">
+            <div class="chapter-card-top-content" onclick="toggleCardDrawer(this)">
+              <div class="chapter-left-group">
+                <div class="chapter-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4"></path></svg>
+                </div>
+                <div class="chapter-info">
+                  <div class="chapter-meta">Module 08</div>
+                  <h2 class="chapter-name">
+                    Emerging Trends
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </h2>
+                  <div class="chapter-badges">
+                    <span class="badge-item badge-videos"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>12 videos</span>
+                    <span class="badge-item badge-pyqs"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>15 PYQs</span>
+                    <span class="badge-item badge-practice"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>98 questions</span>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="chapter-actions">
               <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock</button>
+              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
             </div>
           </div>
           <div class="subtopics-drawer">
@@ -1025,27 +1072,29 @@
         </div>
 
         <div class="chapter-card card-m9">
-          <div class="chapter-row" onclick="toggleCardDrawer(this)">
-            <div class="chapter-left-group">
-              <div class="chapter-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-              </div>
-              <div class="chapter-info">
-                <div class="chapter-meta">Module 09</div>
-                <h2 class="chapter-name">
-                  Software Engineering
-                  <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </h2>
-                <div class="chapter-badges">
-                  <span class="badge-item">74 Videos</span>
-                  <span class="badge-item">73 PYQs</span>
-                  <span class="badge-item">484 Practice Qs</span>
+          <div class="chapter-row">
+            <div class="chapter-card-top-content" onclick="toggleCardDrawer(this)">
+              <div class="chapter-left-group">
+                <div class="chapter-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                </div>
+                <div class="chapter-info">
+                  <div class="chapter-meta">Module 09</div>
+                  <h2 class="chapter-name">
+                    Software Engineering
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </h2>
+                  <div class="chapter-badges">
+                    <span class="badge-item badge-videos"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>74 videos</span>
+                    <span class="badge-item badge-pyqs"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>73 PYQs</span>
+                    <span class="badge-item badge-practice"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>484 questions</span>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="chapter-actions">
               <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock</button>
+              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
             </div>
           </div>
           <div class="subtopics-drawer">
@@ -1059,27 +1108,29 @@
         </div>
 
         <div class="chapter-card card-m10">
-          <div class="chapter-row" onclick="toggleCardDrawer(this)">
-            <div class="chapter-left-group">
-              <div class="chapter-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="3" x2="6" y2="15"></line><circle cx="18" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><path d="M18 9a9 9 0 0 1-9 9"></path></svg>
-              </div>
-              <div class="chapter-info">
-                <div class="chapter-meta">Module 10</div>
-                <h2 class="chapter-name">
-                  Programming, Data Structures &amp; OOP
-                  <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </h2>
-                <div class="chapter-badges">
-                  <span class="badge-item">274 Videos</span>
-                  <span class="badge-item">458 PYQs</span>
-                  <span class="badge-item">1547 Practice Qs</span>
+          <div class="chapter-row">
+            <div class="chapter-card-top-content" onclick="toggleCardDrawer(this)">
+              <div class="chapter-left-group">
+                <div class="chapter-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="3" x2="6" y2="15"></line><circle cx="18" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><path d="M18 9a9 9 0 0 1-9 9"></path></svg>
+                </div>
+                <div class="chapter-info">
+                  <div class="chapter-meta">Module 10</div>
+                  <h2 class="chapter-name">
+                    Programming, Data Structures &amp; OOP
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </h2>
+                  <div class="chapter-badges">
+                    <span class="badge-item badge-videos"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>274 videos</span>
+                    <span class="badge-item badge-pyqs"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>458 PYQs</span>
+                    <span class="badge-item badge-practice"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>1547 questions</span>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="chapter-actions">
               <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock</button>
+              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
             </div>
           </div>
           <div class="subtopics-drawer">
@@ -1093,27 +1144,29 @@
         </div>
 
         <div class="chapter-card card-m11">
-          <div class="chapter-row" onclick="toggleCardDrawer(this)">
-            <div class="chapter-left-group">
-              <div class="chapter-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5zM6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/></svg>
-              </div>
-              <div class="chapter-info">
-                <div class="chapter-meta">Module 11</div>
-                <h2 class="chapter-name">
-                  Teaching Methodology
-                  <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </h2>
-                <div class="chapter-badges">
-                  <span class="badge-item">200 Videos</span>
-                  <span class="badge-item">771 PYQs</span>
-                  <span class="badge-item">438 Practice Qs</span>
+          <div class="chapter-row">
+            <div class="chapter-card-top-content" onclick="toggleCardDrawer(this)">
+              <div class="chapter-left-group">
+                <div class="chapter-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5zM6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/></svg>
+                </div>
+                <div class="chapter-info">
+                  <div class="chapter-meta">Module 11</div>
+                  <h2 class="chapter-name">
+                    Teaching Methodology
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </h2>
+                  <div class="chapter-badges">
+                    <span class="badge-item badge-videos"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>200 videos</span>
+                    <span class="badge-item badge-pyqs"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>771 PYQs</span>
+                    <span class="badge-item badge-practice"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>438 questions</span>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="chapter-actions">
               <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock</button>
+              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
             </div>
           </div>
           <div class="subtopics-drawer">
@@ -1127,27 +1180,29 @@
         </div>
 
         <div class="chapter-card card-m12">
-          <div class="chapter-row" onclick="toggleCardDrawer(this)">
-            <div class="chapter-left-group">
-              <div class="chapter-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"></path><path d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z"></path></svg>
-              </div>
-              <div class="chapter-info">
-                <div class="chapter-meta">Module 12</div>
-                <h2 class="chapter-name">
-                  Computer Graphics &amp; Multimedia
-                  <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </h2>
-                <div class="chapter-badges">
-                  <span class="badge-item">99 Videos</span>
-                  <span class="badge-item">52 PYQs</span>
-                  <span class="badge-item">140 Practice Qs</span>
+          <div class="chapter-row">
+            <div class="chapter-card-top-content" onclick="toggleCardDrawer(this)">
+              <div class="chapter-left-group">
+                <div class="chapter-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"></path><path d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z"></path></svg>
+                </div>
+                <div class="chapter-info">
+                  <div class="chapter-meta">Module 12</div>
+                  <h2 class="chapter-name">
+                    Computer Graphics &amp; Multimedia
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </h2>
+                  <div class="chapter-badges">
+                    <span class="badge-item badge-videos"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>99 videos</span>
+                    <span class="badge-item badge-pyqs"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>52 PYQs</span>
+                    <span class="badge-item badge-practice"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>140 questions</span>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="chapter-actions">
               <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock</button>
+              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
             </div>
           </div>
           <div class="subtopics-drawer">
@@ -1163,33 +1218,33 @@
       </div>
     </div>
 
-    <!-- Section C: Modules 13 - 18 -->
+    <!-- Section C Modules -->
     <div id="section-C" style="display:none;">
       <div class="section-label">Modules 13 – 18 (Applied Allied Sciences)</div>
       <div class="chapter-list">
 
         <div class="chapter-card card-m13">
-          <div class="chapter-row" onclick="toggleCardDrawer(this)">
-            <div class="chapter-left-group">
+          <div class="chapter-row">
+            <div class="chapter-card-top-content" onclick="toggleCardDrawer(this)">
               <div class="chapter-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v4M12 18v4"></path></svg>
               </div>
               <div class="chapter-info">
                 <div class="chapter-meta">Module 13</div>
                 <h2 class="chapter-name">
                   Basis of Physics
-                  <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </h2>
                 <div class="chapter-badges">
-                  <span class="badge-item">56 Videos</span>
-                  <span class="badge-item">68 PYQs</span>
-                  <span class="badge-item">31 Practice Qs</span>
+                  <span class="badge-item badge-videos"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>56 videos</span>
+                  <span class="badge-item badge-pyqs"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>68 PYQs</span>
+                  <span class="badge-item badge-practice"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>31 questions</span>
                 </div>
               </div>
             </div>
             <div class="chapter-actions">
               <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock</button>
+              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
             </div>
           </div>
           <div class="subtopics-drawer">
@@ -1203,26 +1258,26 @@
         </div>
 
         <div class="chapter-card card-m14">
-          <div class="chapter-row" onclick="toggleCardDrawer(this)">
-            <div class="chapter-left-group">
+          <div class="chapter-row">
+            <div class="chapter-card-top-content" onclick="toggleCardDrawer(this)">
               <div class="chapter-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>
               </div>
               <div class="chapter-info">
                 <div class="chapter-meta">Module 14</div>
                 <h2 class="chapter-name">
                   Part-II (Descriptive)
-                  <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </h2>
                 <div class="chapter-badges">
-                  <span class="badge-item">1 Videos</span>
-                  <span class="badge-item">1 Practice Questions</span>
+                  <span class="badge-item badge-videos"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>1 videos</span>
+                  <span class="badge-item badge-practice"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>1 questions</span>
                 </div>
               </div>
             </div>
             <div class="chapter-actions">
               <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock</button>
+              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
             </div>
           </div>
           <div class="subtopics-drawer">
@@ -1236,27 +1291,29 @@
         </div>
 
         <div class="chapter-card card-m15">
-          <div class="chapter-row" onclick="toggleCardDrawer(this)">
-            <div class="chapter-left-group">
-              <div class="chapter-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-              </div>
-              <div class="chapter-info">
-                <div class="chapter-meta">Module 15</div>
-                <h2 class="chapter-name">
-                  Design &amp; Analysis of Algorithms
-                  <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </h2>
-                <div class="chapter-badges">
-                  <span class="badge-item">111 Videos</span>
-                  <span class="badge-item">77 PYQs</span>
-                  <span class="badge-item">546 Practice Qs</span>
+          <div class="chapter-row">
+            <div class="chapter-card-top-content" onclick="toggleCardDrawer(this)">
+              <div class="chapter-left-group">
+                <div class="chapter-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                </div>
+                <div class="chapter-info">
+                  <div class="chapter-meta">Module 15</div>
+                  <h2 class="chapter-name">
+                    Design &amp; Analysis of Algorithms
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </h2>
+                  <div class="chapter-badges">
+                    <span class="badge-item badge-videos"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>111 videos</span>
+                    <span class="badge-item badge-pyqs"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>77 PYQs</span>
+                    <span class="badge-item badge-practice"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>546 questions</span>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="chapter-actions">
               <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock</button>
+              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
             </div>
           </div>
           <div class="subtopics-drawer">
@@ -1270,27 +1327,29 @@
         </div>
 
         <div class="chapter-card card-m16">
-          <div class="chapter-row" onclick="toggleCardDrawer(this)">
-            <div class="chapter-left-group">
-              <div class="chapter-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-              </div>
-              <div class="chapter-info">
-                <div class="chapter-meta">Module 16</div>
-                <h2 class="chapter-name">
-                  Statistical Techniques
-                  <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </h2>
-                <div class="chapter-badges">
-                  <span class="badge-item">14 Videos</span>
-                  <span class="badge-item">41 PYQs</span>
-                  <span class="badge-item">159 Practice Qs</span>
+          <div class="chapter-row">
+            <div class="chapter-card-top-content" onclick="toggleCardDrawer(this)">
+              <div class="chapter-left-group">
+                <div class="chapter-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                </div>
+                <div class="chapter-info">
+                  <div class="chapter-meta">Module 16</div>
+                  <h2 class="chapter-name">
+                    Statistical Techniques
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </h2>
+                  <div class="chapter-badges">
+                    <span class="badge-item badge-videos"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>14 videos</span>
+                    <span class="badge-item badge-pyqs"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>41 PYQs</span>
+                    <span class="badge-item badge-practice"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>159 questions</span>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="chapter-actions">
               <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock</button>
+              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
             </div>
           </div>
           <div class="subtopics-drawer">
@@ -1304,27 +1363,29 @@
         </div>
 
         <div class="chapter-card card-m17">
-          <div class="chapter-row" onclick="toggleCardDrawer(this)">
-            <div class="chapter-left-group">
-              <div class="chapter-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
-              </div>
-              <div class="chapter-info">
-                <div class="chapter-meta">Module 17</div>
-                <h2 class="chapter-name">
-                  Interpolation - DI
-                  <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </h2>
-                <div class="chapter-badges">
-                  <span class="badge-item">10 Videos</span>
-                  <span class="badge-item">42 PYQs</span>
-                  <span class="badge-item">36 Practice Qs</span>
+          <div class="chapter-row">
+            <div class="chapter-card-top-content" onclick="toggleCardDrawer(this)">
+              <div class="chapter-left-group">
+                <div class="chapter-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+                </div>
+                <div class="chapter-info">
+                  <div class="chapter-meta">Module 17</div>
+                  <h2 class="chapter-name">
+                    Interpolation - DI
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </h2>
+                  <div class="chapter-badges">
+                    <span class="badge-item badge-videos"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>10 videos</span>
+                    <span class="badge-item badge-pyqs"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>42 PYQs</span>
+                    <span class="badge-item badge-practice"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>36 questions</span>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="chapter-actions">
               <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock</button>
+              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
             </div>
           </div>
           <div class="subtopics-drawer">
@@ -1338,27 +1399,29 @@
         </div>
 
         <div class="chapter-card card-m18">
-          <div class="chapter-row" onclick="toggleCardDrawer(this)">
-            <div class="chapter-left-group">
-              <div class="chapter-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19L11 5L14 11L20 3"></path></svg>
-              </div>
-              <div class="chapter-info">
-                <div class="chapter-meta">Module 18</div>
-                <h2 class="chapter-name">
-                  Mathematics - I, II, III, IV
-                  <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </h2>
-                <div class="chapter-badges">
-                  <span class="badge-item">284 Videos</span>
-                  <span class="badge-item">108 PYQs</span>
-                  <span class="badge-item">582 Practice Qs</span>
+          <div class="chapter-row">
+            <div class="chapter-card-top-content" onclick="toggleCardDrawer(this)">
+              <div class="chapter-left-group">
+                <div class="chapter-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19L11 5L14 11L20 3"></path></svg>
+                </div>
+                <div class="chapter-info">
+                  <div class="chapter-meta">Module 18</div>
+                  <h2 class="chapter-name">
+                    Mathematics - I, II, III, IV
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </h2>
+                  <div class="chapter-badges">
+                    <span class="badge-item badge-videos"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>284 videos</span>
+                    <span class="badge-item badge-pyqs"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>108 PYQs</span>
+                    <span class="badge-item badge-practice"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>582 questions</span>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="chapter-actions">
               <button class="btn-action btn-notes" onclick="handleSystemClick(event)">Notes</button>
-              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock</button>
+              <button class="btn-action btn-mock-item locked" onclick="handleSystemClick(event)">Mock test</button>
             </div>
           </div>
           <div class="subtopics-drawer">
@@ -1378,22 +1441,18 @@
   <div class="sc-subscribe-banner">
     <div class="sc-sub-left">
       <div class="sc-sub-icon-wrap">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="22" height="22">
-          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path>
+          <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
         </svg>
       </div>
       <div class="sc-sub-text">
-        <h4>Learn Faster with My OneShot YouTube Classes</h4>
-        <p>Free comprehensive lectures. Exam-focused curriculum blueprints. No fluff.</p>
+        <h4>Free YouTube lectures by Rohit Singh</h4>
+        <p>Exam-focused, no fluff — subscribe for free.</p>
       </div>
     </div>
     <a href="https://www.youtube.com/channel/UCQpNeGvzbBLsRLnNX7ga8FQ?sub_confirmation=1" target="_blank" class="sc-sub-btn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16">
-        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-      </svg>
-      Subscribe Now
+      Subscribe
     </a>
   </div>
 
@@ -1429,8 +1488,8 @@
     showToast('Coming soon. Thank you for your patience! 🚀');
   }
 
-  function toggleCardDrawer(rowElement) {
-    const card = rowElement.closest('.chapter-card');
+  function toggleCardDrawer(topContentElement) {
+    const card = topContentElement.closest('.chapter-card');
     card.classList.toggle('expanded');
   }
 
@@ -1452,10 +1511,55 @@
 
   function switchSection(sec, btn) {
     ['A','B','C'].forEach(s => {
-      document.getElementById('section-' + s).style.display = s === sec ? '' : 'none';
+      const el = document.getElementById('section-' + s);
+      if(el) el.style.display = s === sec ? '' : 'none';
     });
     document.querySelectorAll('#sectionTabs button').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
+  }
+
+  /* ── FILTER ARCHITECTURE: ISOLATES ONLY THE SEARCHED SUBTOPICS ── */
+  function filterModules() {
+    const query = document.getElementById('moduleSearch').value.toLowerCase().trim();
+    const cards = document.querySelectorAll('.chapter-card');
+    
+    cards.forEach(card => {
+      const chapterName = card.querySelector('.chapter-name').textContent.toLowerCase();
+      const subtopics = card.querySelectorAll('.subtopic-item-card');
+      
+      if (query === '') {
+        card.style.display = '';
+        card.classList.remove('expanded');
+        subtopics.forEach(sub => sub.style.display = '');
+        return;
+      }
+      
+      let chapterMatches = chapterName.includes(query);
+      let matchingSubtopicsCount = 0;
+      
+      subtopics.forEach(sub => {
+        const subText = sub.querySelector('.subtopic-label-text').textContent.toLowerCase();
+        if (subText.includes(query)) {
+          sub.style.display = 'flex';
+          matchingSubtopicsCount++;
+        } else {
+          sub.style.display = 'none';
+        }
+      });
+      
+      if (chapterMatches || matchingSubtopicsCount > 0) {
+        card.style.display = '';
+        if (matchingSubtopicsCount > 0) {
+          card.classList.add('expanded');
+        } else if (chapterMatches && matchingSubtopicsCount === 0) {
+          // If the parent chapter text matches but query doesn't match single subtopics, show all subtopics of this chapter
+          subtopics.forEach(sub => sub.style.display = 'flex');
+        }
+      } else {
+        card.style.display = 'none';
+        card.classList.remove('expanded');
+      }
+    });
   }
 </script>
 
