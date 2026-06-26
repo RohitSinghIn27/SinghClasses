@@ -19,6 +19,7 @@
 </head>
 <body>
     <div class="page-wrap">
+        <!-- Top Navigation Bar -->
         <div class="top-bar">
             <a class="logo-wrap" href="#">
                 <svg class="logo-icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -28,68 +29,49 @@
                 <div class="logo-text">SinghClasses<span>.in</span></div>
             </a>
             <nav class="top-nav">
-                <a href="#" class="nav-pill">DSSSB Computer Science</a>
+                <a href="#" class="nav-pill">DSSSB CS</a>
                 <a href="#">About Us</a>
                 <a href="#">Contact Us</a>
             </nav>
         </div>
+
+        <!-- Dashboard Split Hero Section (Matched to image_cb2285.jpg) -->
         <div class="dashboard-hero">
+            <!-- Left Side Title Block -->
             <div class="hero-left-main">
-                <div class="hero-app-icon">🎓</div>
                 <div class="hero-title-details">
-                    <div class="dsssb-badge">★ FREE ONLINE MODE ★</div>
-                    <h1 class="main-title">DSSSB Computer <span class="blue-text">Science<span class="yellow-stroke"></span></span></h1>
-                    <p class="main-tagline">Access free objective-based CBT mock tests, chapter-wise MCQs, and exam-oriented video lectures.</p>
+                    <div class="dsssb-badge">★ DSSSB ★</div>
+                    <h1 class="main-title">Computer <span class="blue-text">Science</span></h1>
+                    <p class="hero-tagline">Smart Practice. Better Preparation. Brighter Future.</p>
                 </div>
             </div>
-            <div class="hero-stats-box">
-                <div class="stat-column">
-                    <div class="stat-graphic-box stat-icon-green">📺</div>
-                    <div class="stat-num-text" data-suffix="+">1500</div>
-                    <div class="stat-lbl">Free Videos</div>
+
+            <!-- Right Side Distinct Quadrant Grid Module -->
+            <div class="hero-right-quad-card">
+                <div class="quad-item q-top-left">
+                    <div class="quad-icon-circle bg-blue-tint">🛡️</div>
+                    <span class="quad-title">100% Free Mode</span>
+                    <div class="quad-accent-bar bar-blue"></div>
                 </div>
-                <div class="stat-column">
-                    <div class="stat-graphic-box stat-icon-red">🎯</div>
-                    <div class="stat-num-text" data-suffix="+">3500</div>
-                    <div class="stat-lbl">Objective MCQs</div>
+                <div class="quad-item q-top-right">
+                    <div class="quad-icon-circle bg-purple-tint">🎯</div>
+                    <span class="quad-title">Objective Questions</span>
+                    <div class="quad-accent-bar bar-purple"></div>
                 </div>
-                <div class="stat-column">
-                    <div class="stat-graphic-box stat-icon-yellow">⏳</div>
-                    <div class="stat-num-text" data-suffix="+">150</div>
-                    <div class="stat-lbl">Free Mocks</div>
+                <div class="quad-item q-bottom-left">
+                    <div class="quad-icon-circle bg-yellow-tint">📊</div>
+                    <span class="quad-title">CBT Mock Tests</span>
+                    <div class="quad-accent-bar bar-orange"></div>
                 </div>
-            </div>
-        </div>
-        <div class="bottom-feature-strip">
-            <div class="feature-strip-item">
-                <div class="feature-strip-icon icon-bg-green">🛡️</div>
-                <div class="feature-strip-text">
-                    <span class="feature-strip-title">100% Free Mode</span>
-                    <span class="feature-strip-sub">Syllabus-Aligned Material</span>
-                </div>
-            </div>
-            <div class="feature-strip-item">
-                <div class="feature-strip-icon icon-bg-purple">🎯</div>
-                <div class="feature-strip-text">
-                    <span class="feature-strip-title">Objective-Based Questions</span>
-                    <span class="feature-strip-sub">Topic-Wise MCQs &amp; PYQs</span>
-                </div>
-            </div>
-            <div class="feature-strip-item">
-                <div class="feature-strip-icon icon-bg-yellow">📊</div>
-                <div class="feature-strip-text">
-                    <span class="feature-strip-title">CBT Mock Tests</span>
-                    <span class="feature-strip-sub">Real-Time Performance Tracking</span>
-                </div>
-            </div>
-            <div class="feature-strip-item">
-                <div class="feature-strip-icon icon-bg-red">⭐</div>
-                <div class="feature-strip-text">
-                    <span class="feature-strip-title">Video Lectures</span>
-                    <span class="feature-strip-sub">Learn from Expert Faculty</span>
+                <div class="quad-item q-bottom-right">
+                    <div class="quad-icon-circle bg-pink-tint">⭐</div>
+                    <span class="quad-title">Video Lectures</span>
+                    <div class="quad-accent-bar bar-pink"></div>
                 </div>
             </div>
         </div>
+
+        <!-- Paper Selector Container -->
         <div class="paper-cards-container">
             <button class="paper-card-btn active" id="card-p1" onclick="switchPaper('1', this)">
                 <div class="card-core-layout">
@@ -112,12 +94,16 @@
                 <div class="card-action-trigger green-variant">➔</div>
             </button>
         </div>
+
+        <!-- Search Feature -->
         <div class="search-dashboard-section">
             <div class="search-input-wrapper">
                 <span class="search-icon-emoji">🔍</span>
                 <input type="text" class="search-bar-input" id="moduleSearch" placeholder="Search objective topics, video chapters, or questions..." onkeyup="filterModules()" />
             </div>
         </div>
+
+        <!-- Core Modules Content Sections -->
         <div id="paper-1-content">
             <div id="p1-general-awareness">
                 <div class="section-label" style="margin: 10px 44px 16px;">General Awareness Evaluation (Objective Type)</div>
@@ -164,6 +150,7 @@
                     </div>
                 </div>
             </div>
+
             <div id="p1-aptitude">
                 <div class="section-label" style="margin: 24px 44px 16px;">Quantitative &amp; Logical Evaluation (Objective Type)</div>
                 <div class="chapter-list">
@@ -266,6 +253,7 @@
                     </div>
                 </div>
             </div>
+
             <div id="p1-languages">
                 <div class="section-label" style="margin: 24px 44px 16px;">Language Competency Evaluation (Objective MCQs)</div>
                 <div class="chapter-list">
@@ -360,6 +348,7 @@
                 </div>
             </div>
         </div>
+
         <div id="paper-2-content" style="display:none;">
             <div id="section-A">
                 <div class="section-header-container">
@@ -536,6 +525,7 @@
                     </div>
                 </div>
             </div>
+
             <div id="section-B" style="display:none;">
                 <div class="section-header-container">
                     <div class="section-label">Modules B (Medium Weightage CS)</div>
@@ -710,6 +700,7 @@
                     </div>
                 </div>
             </div>
+
             <div id="section-C" style="display:none;">
                 <div class="section-header-container">
                     <div class="section-label">Module C (Low Weightage CS)</div>
@@ -777,6 +768,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- Premium Dark YouTube CTA Module -->
         <div class="sc-subscribe-banner">
             <div class="sc-sub-left">
                 <div class="sc-sub-icon-wrap">📺</div>
@@ -787,6 +780,8 @@
             </div>
             <a href="https://www.youtube.com/channel/UCQpNeGvzbBLsRLnNX7ga8FQ?sub_confirmation=1" target="_blank" class="sc-sub-btn">Subscribe Free</a>
         </div>
+
+        <!-- Page Footer -->
         <footer class="site-premium-footer" role="contentinfo">
             <div class="footer-copyright">
                 &copy; 2026 SinghClasses.in | Designed with <span class="footer-heart">❤️</span> by Rohit Singh
