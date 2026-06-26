@@ -6,6 +6,7 @@ let toastTimer;
  */
 function showToast(msg) {
   const t = document.getElementById('toast');
+  if (!t) return;
   t.innerHTML = msg;
   t.classList.add('show');
   clearTimeout(toastTimer);
@@ -28,6 +29,8 @@ function handleSystemClick(event) {
  */
 function toggleCardDrawer(topContentElement) {
   const card = topContentElement.closest('.chapter-card');
+  if (!card) return;
+  
   const wasExpanded = card.classList.contains('expanded');
   
   document.querySelectorAll('.chapter-card.expanded').forEach(c => {
@@ -48,16 +51,21 @@ function switchPaper(paperNum, cardElement) {
   const p1 = document.getElementById('paper-1-content');
   const p2 = document.getElementById('paper-2-content');
   
-  if (paperNum === '1') {
-    p1.style.display = 'block';
-    p2.style.display = 'none';
-  } else {
-    p1.style.display = 'none';
-    p2.style.display = 'block';
+  if (p1 && p2) {
+    if (paperNum === '1') {
+      p1.style.display = 'block';
+      p2.style.display = 'none';
+    } else {
+      p1.style.display = 'none';
+      p2.style.display = 'block';
+    }
   }
   
   document.querySelectorAll('.paper-card-btn').forEach(b => b.classList.remove('active'));
-  cardElement.classList.add('active');
+  
+  if (cardElement) {
+    cardElement.classList.add('active');
+  }
 }
 
 /**
@@ -66,26 +74,37 @@ function switchPaper(paperNum, cardElement) {
  * @param {HTMLElement} btn 
  */
 function switchSection(sec, btn) {
-  ['A','B','C'].forEach(s => {
+  ['A', 'B', 'C'].forEach(s => {
     const el = document.getElementById('section-' + s);
-    if(el) el.style.display = s === sec ? '' : 'none';
+    if(el) {
+        el.style.display = s === sec ? '' : 'none';
+    }
   });
   
   document.querySelectorAll('.section-tabs button').forEach(b => {
     b.classList.remove('active');
   });
-  btn.classList.add('active');
+  
+  if (btn) {
+    btn.classList.add('active');
+  }
 }
 
 /**
  * Search and content matching parsing filtering algorithms 
  */
 function filterModules() {
-  const query = document.getElementById('moduleSearch').value.toLowerCase().trim();
+  const searchInput = document.getElementById('moduleSearch');
+  if (!searchInput) return;
+
+  const query = searchInput.value.toLowerCase().trim();
   const cards = document.querySelectorAll('.chapter-card');
   
   cards.forEach(card => {
-    const chapterName = card.querySelector('.chapter-name').textContent.toLowerCase();
+    const chapterNameEl = card.querySelector('.chapter-name');
+    if (!chapterNameEl) return;
+    
+    const chapterName = chapterNameEl.textContent.toLowerCase();
     const subtopics = card.querySelectorAll('.subtopic-item-card');
     
     if (query === '') {
@@ -95,11 +114,14 @@ function filterModules() {
       return;
     }
     
-    let chapterMatches = chapterName.includes(query);
+    const chapterMatches = chapterName.includes(query);
     let matchingSubtopicsCount = 0;
     
     subtopics.forEach(sub => {
-      const subText = sub.querySelector('.subtopic-label-text').textContent.toLowerCase();
+      const labelEl = sub.querySelector('.subtopic-label-text');
+      if (!labelEl) return;
+
+      const subText = labelEl.textContent.toLowerCase();
       if (subText.includes(query)) {
         sub.style.display = 'flex';
         matchingSubtopicsCount++;
@@ -137,6 +159,8 @@ function countUp(el, target) {
 }
 
 // Initial system activation configuration hooks
-document.querySelectorAll('.stat-num-text').forEach(el =>
-  countUp(el, parseInt(el.textContent.replace(/\D/g, '')))
-);
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll('.stat-num-text').forEach(el =>
+      countUp(el, parseInt(el.textContent.replace(/\D/g, '')))
+    );
+});
