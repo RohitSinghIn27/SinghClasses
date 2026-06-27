@@ -23,6 +23,8 @@ function handleSystemClick(event) {
   showToast('Coming soon. Thank you for your patience! 🚀');
 }
 
+const loadedCards = new Set();
+
 /**
  * Handles drawer mechanics for modular items evaluation tracking
  * @param {HTMLElement} topContentElement 
@@ -34,11 +36,31 @@ function toggleCardDrawer(topContentElement) {
   const wasExpanded = card.classList.contains('expanded');
   
   document.querySelectorAll('.chapter-card.expanded').forEach(c => {
-    c.classList.remove('expanded');
+    if (c !== card) c.classList.remove('expanded');
   });
 
   if (!wasExpanded) {
     card.classList.add('expanded');
+    
+    // Trigger 2-second fetching animation on first load
+    if (!loadedCards.has(card)) {
+        const drawer = card.querySelector('.subtopics-drawer');
+        
+        const loader = document.createElement('div');
+        loader.className = 'drawer-loader';
+        loader.innerHTML = `<div class="spinner"></div><span>Fetching subtopics...</span>`;
+        
+        drawer.appendChild(loader);
+        drawer.classList.add('loading');
+        
+        setTimeout(() => {
+            drawer.classList.remove('loading');
+            loader.remove(); 
+            loadedCards.add(card);
+        }, 2000);
+    }
+  } else {
+      card.classList.remove('expanded');
   }
 }
 
@@ -109,7 +131,7 @@ function filterModules() {
     
     if (query === '') {
       card.style.display = '';
-      card.classList.remove('expanded');
+      // Deliberately preserving expanded state instead of collapsing all
       subtopics.forEach(sub => sub.style.display = 'flex');
       return;
     }
@@ -163,4 +185,26 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('.stat-num-text').forEach(el =>
       countUp(el, parseInt(el.textContent.replace(/\D/g, '')))
     );
+
+    // Setup Debounced Search and Clear functionality
+    let filterTimeout;
+    const searchInput = document.getElementById('moduleSearch');
+    const clearBtn = document.getElementById('clearSearchBtn');
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', () => {
+            clearBtn.style.display = searchInput.value.length > 0 ? 'flex' : 'none';
+            clearTimeout(filterTimeout);
+            filterTimeout = setTimeout(filterModules, 150); // 150ms Debounce
+        });
+    }
+    
+    if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            clearBtn.style.display = 'none';
+            filterModules(); // Reset UI immediately
+            searchInput.focus();
+        });
+    }
 });
