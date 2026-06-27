@@ -65,7 +65,7 @@ function toggleCardDrawer(topContentElement) {
 }
 
 /**
- * Paper dynamic navigation state switcher
+ * Paper dynamic navigation switcher leveraging standard attribute manipulation
  * @param {string} paperNum 
  * @param {HTMLElement} cardElement 
  */
@@ -75,23 +75,27 @@ function switchPaper(paperNum, cardElement) {
   
   if (p1 && p2) {
     if (paperNum === '1') {
-      p1.style.display = 'block';
-      p2.style.display = 'none';
+      p1.setAttribute('data-active', 'true');
+      p2.setAttribute('data-active', 'false');
     } else {
-      p1.style.display = 'none';
-      p2.style.display = 'block';
+      p1.setAttribute('data-active', 'false');
+      p2.setAttribute('data-active', 'true');
     }
+    sessionStorage.setItem('activePaper', paperNum);
   }
   
   document.querySelectorAll('.paper-card-btn').forEach(b => b.classList.remove('active'));
   
   if (cardElement) {
     cardElement.classList.add('active');
+  } else {
+    const backupButton = document.getElementById('card-p' + paperNum);
+    if (backupButton) backupButton.classList.add('active');
   }
 }
 
 /**
- * Section sub-navigation engine inside modules selection layouts
+ * Section sub-navigation engine inside modules selection layouts with storage tracking
  * @param {string} sec 
  * @param {HTMLElement} btn 
  */
@@ -102,6 +106,7 @@ function switchSection(sec, btn) {
         el.style.display = s === sec ? '' : 'none';
     }
   });
+  sessionStorage.setItem('activeSection', sec);
   
   document.querySelectorAll('.section-tabs button').forEach(b => {
     b.classList.remove('active');
@@ -109,6 +114,12 @@ function switchSection(sec, btn) {
   
   if (btn) {
     btn.classList.add('active');
+  } else {
+    document.querySelectorAll('.section-tabs button').forEach(b => {
+      if (b.getAttribute('onclick') && b.getAttribute('onclick').includes(`'${sec}'`)) {
+        b.classList.add('active');
+      }
+    });
   }
 }
 
@@ -131,7 +142,6 @@ function filterModules() {
     
     if (query === '') {
       card.style.display = '';
-      // Deliberately preserving expanded state instead of collapsing all
       subtopics.forEach(sub => sub.style.display = 'flex');
       return;
     }
@@ -182,9 +192,30 @@ function countUp(el, target) {
 
 // Initial system activation configuration hooks
 document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll('.stat-num-text').forEach(el =>
-      countUp(el, parseInt(el.textContent.replace(/\D/g, '')))
-    );
+    // Session-gated counter restricts repeat cycles for single students
+    const statsAlreadyCounted = sessionStorage.getItem('statsCounted');
+    
+    document.querySelectorAll('.stat-num-text').forEach(el => {
+      const targetValue = parseInt(el.textContent.replace(/\D/g, ''));
+      if (statsAlreadyCounted) {
+        el.textContent = targetValue.toLocaleString() + (el.dataset.suffix || '');
+      } else {
+        countUp(el, targetValue);
+      }
+    });
+
+    if (!statsAlreadyCounted) {
+      sessionStorage.setItem('statsCounted', 'true');
+    }
+
+    // Restore user context paper states seamlessly on refresh
+    const activePaperSelection = sessionStorage.getItem('activePaper') || '1';
+    switchPaper(activePaperSelection, document.getElementById('card-p' + activePaperSelection));
+
+    const activeSectionSelection = sessionStorage.getItem('activeSection');
+    if (activeSectionSelection) {
+      switchSection(activeSectionSelection, null);
+    }
 
     // Setup Debounced Search and Clear functionality
     let filterTimeout;
@@ -195,7 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
         searchInput.addEventListener('input', () => {
             clearBtn.style.display = searchInput.value.length > 0 ? 'flex' : 'none';
             clearTimeout(filterTimeout);
-            filterTimeout = setTimeout(filterModules, 150); // 150ms Debounce
+            filterTimeout = setTimeout(filterModules, 150); 
         });
     }
     
@@ -203,7 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
         clearBtn.addEventListener('click', () => {
             searchInput.value = '';
             clearBtn.style.display = 'none';
-            filterModules(); // Reset UI immediately
+            filterModules(); 
             searchInput.focus();
         });
     }
