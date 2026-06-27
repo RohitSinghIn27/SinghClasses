@@ -39,43 +39,88 @@
         <section class="hero-wrapper" aria-label="Welcome Introduction">
             <div class="layout-container">
                 <div class="hero-container">
+                    <div class="hero-blob hero-blob-1"></div>
+                    <div class="hero-blob hero-blob-2"></div>
+
                     <div class="hero-left-content">
                         <div class="hero-pill-badge">
-                            <span class="inline-svg-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                            </span>
+                            <span class="filled-teal-dot"></span>
                             DSSSB Computer Science 2026
                         </div>
                         <h1>Master the Concepts of <span class="text-green">Computer Science</span></h1>
-                        <p class="hero-description">Exam-oriented preparation designed to help you crack the DSSSB Computer Science exam through structured video lectures, PYQs, CBT mocks, smart notes, and topic-wise practice.</p>
-       
+                        <p class="hero-description">Exam-oriented, structured preparation designed to help you confidently master advanced concepts and crack the DSSSB Computer Science exam.</p>
+                        
+                        <div class="hero-actions-row">
+                            <button class="btn-hero-primary" onclick="handleSystemClick(event)">Start preparing</button>
+                            <button class="btn-hero-ghost" onclick="handleSystemClick(event)">View syllabus</button>
+                        </div>
+
+                        <div class="hero-social-proof">
+                            <div class="avatar-stack">
+                                <span class="avatar av-1">RS</span>
+                                <span class="avatar av-2">AK</span>
+                                <span class="avatar av-3">PM</span>
+                                <span class="avatar av-4">SV</span>
+                            </div>
+                            <p class="social-proof-text">Trusted by <strong>12,000+ students</strong> across India</p>
+                        </div>
                     </div>
+
                     <div class="hero-right-stats">
                         <div class="hero-stat-strip">
                             <div class="hero-stat-item">
                                 <div class="hero-stat-left-group">
-                                    <div class="hero-stat-icon-box icon-teal-bg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg></div>
+                                    <div class="hero-stat-icon-box icon-teal-bg">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                                        </svg>
+                                    </div>
                                     <div class="hero-stat-info-text">
-                                        <h4>10+ Yrs. of Teaching Excellence</h4>
-                                         </div>
+                                        <h4>Teaching excellence</h4>
+                                        <p>10+ years of expertise</p>
+                                    </div>
                                 </div>
+                                <span class="stat-pill pill-teal">Expert</span>
                             </div>
+
                             <div class="hero-stat-item">
                                 <div class="hero-stat-left-group">
-                                    <div class="hero-stat-icon-box icon-amber-bg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg></div>
+                                    <div class="hero-stat-icon-box icon-amber-bg">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <circle cx="12" cy="12" r="6"></circle>
+                                            <circle cx="12" cy="12" r="2"></circle>
+                                        </svg>
+                                    </div>
                                     <div class="hero-stat-info-text">
-                                        <h4>Latest DSSSB Syllabus Coverage</h4>
-                                      </div>
+                                        <h4>Latest DSSSB syllabus</h4>
+                                        <p>All 14 subjects · Updated 2026</p>
+                                    </div>
                                 </div>
+                                <span class="stat-pill pill-amber">Updated</span>
                             </div>
+
                             <div class="hero-stat-item">
                                 <div class="hero-stat-left-group">
-                                    <div class="hero-stat-icon-box icon-blue-bg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></div>
+                                    <div class="hero-stat-icon-box icon-blue-bg">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                                        </svg>
+                                    </div>
                                     <div class="hero-stat-info-text">
-                                        <h4>PYQs + CBT Mock Tests</h4>
-                                      </div>
+                                        <h4>PYQs and CBT mock tests</h4>
+                                        <p>500+ questions · Full-length</p>
+                                    </div>
                                 </div>
+                                <span class="stat-pill pill-blue">500+</span>
                             </div>
+                        </div>
+
+                        <div class="hero-stat-footer">
+                            <span>Free access to sample lectures <a href="#" onclick="handleSystemClick(event)">Explore free &rarr;</a></span>
                         </div>
                     </div>
                 </div>
@@ -90,7 +135,7 @@
                             <span class="search-icon-svg">
                                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                             </span>
-                            <input type="text" class="search-bar-input" id="moduleSearch" placeholder="Search any topics or chapters" />
+                            <input type="text" class="search-bar-input" id="moduleSearch" placeholder="Search subjects, topics, or PYQs..." />
                             <button id="clearSearchBtn" class="clear-search-btn" aria-label="Clear search" style="display:none;">&times;</button>
                         </div>
                     </div>
@@ -99,7 +144,7 @@
                         <button class="paper-card-btn active" id="card-p1" onclick="switchPaper('1', this)">
                             <div class="card-core-layout">
                                 <div class="card-visual-frame icon-blue">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
                                 </div>
                                 <div class="card-text-stack">
                                     <span class="card-main-header">Paper 1</span>
@@ -111,7 +156,7 @@
                         <button class="paper-card-btn" id="card-p2" onclick="switchPaper('2', this)">
                             <div class="card-core-layout">
                                 <div class="card-visual-frame icon-green">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
                                 </div>
                                 <div class="card-text-stack">
                                     <span class="card-main-header">Paper 2</span>
@@ -125,7 +170,7 @@
             </div>
         </section>
         
-        <section id="paper-1-content" aria-label="Paper 1 Content View">
+        <section id="paper-1-content" data-active="true" aria-label="Paper 1 Content View">
             <div class="layout-container">
                 <div class="visual-section-wrapper merged-wrapper">
                     <div class="section-header-container">
@@ -142,14 +187,17 @@
                                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
                                         </div>
                                         <div class="chapter-info">
-                                            <div class="subject-label">Subject 1</div>
+                                            <span class="subject-tag">Subject 1</span>
                                             <h3 class="chapter-name">General Awareness Master Module</h3>
                                             <div class="chapter-badges">
-                                                <span class="badge-text text-blue">21 videos</span><span class="badge-sep">·</span>
-                                                <span class="badge-text text-orange">21 PYQs</span><span class="badge-sep">·</span>
-                                                <span class="badge-text text-green">21 mocks</span>
+                                                <span class="badge-text text-blue">▶ 21 videos</span><span class="badge-sep">·</span>
+                                                <span class="badge-text text-orange">📄 21 PYQs</span><span class="badge-sep">·</span>
+                                                <span class="badge-text text-green">✓ 21 mocks</span>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="chapter-chevron">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                                     </div>
                                 </div>
                             </div>
@@ -171,14 +219,17 @@
                                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="12" y1="8" x2="12" y2="16"/></svg>
                                         </div>
                                         <div class="chapter-info">
-                                            <div class="subject-label">Subject 2</div>
+                                            <span class="subject-tag">Subject 2</span>
                                             <h3 class="chapter-name">Arithmetical &amp; Numerical Ability</h3>
                                             <div class="chapter-badges">
-                                                <span class="badge-text text-blue">22 videos</span><span class="badge-sep">·</span>
-                                                <span class="badge-text text-orange">22 PYQs</span><span class="badge-sep">·</span>
-                                                <span class="badge-text text-green">22 mocks</span>
+                                                <span class="badge-text text-blue">▶ 22 videos</span><span class="badge-sep">·</span>
+                                                <span class="badge-text text-orange">📄 22 PYQs</span><span class="badge-sep">·</span>
+                                                <span class="badge-text text-green">✓ 22 mocks</span>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="chapter-chevron">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                                     </div>
                                 </div>
                             </div>
@@ -220,14 +271,17 @@
                                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                                         </div>
                                         <div class="chapter-info">
-                                            <div class="subject-label">Subject 3</div>
+                                            <span class="subject-tag">Subject 3</span>
                                             <h3 class="chapter-name">Reasoning Ability</h3>
                                             <div class="chapter-badges">
-                                                <span class="badge-text text-blue">23 videos</span><span class="badge-sep">·</span>
-                                                <span class="badge-text text-orange">23 PYQs</span><span class="badge-sep">·</span>
-                                                <span class="badge-text text-green">23 mocks</span>
+                                                <span class="badge-text text-blue">▶ 23 videos</span><span class="badge-sep">·</span>
+                                                <span class="badge-text text-orange">📄 23 PYQs</span><span class="badge-sep">·</span>
+                                                <span class="badge-text text-green">✓ 23 mocks</span>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="chapter-chevron">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                                     </div>
                                 </div>
                             </div>
@@ -270,14 +324,17 @@
                                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>
                                         </div>
                                         <div class="chapter-info">
-                                            <div class="subject-label">Subject 4</div>
+                                            <span class="subject-tag">Subject 4</span>
                                             <h3 class="chapter-name">English Language &amp; Comprehension</h3>
                                             <div class="chapter-badges">
-                                                <span class="badge-text text-blue">19 videos</span><span class="badge-sep">·</span>
-                                                <span class="badge-text text-orange">19 PYQs</span><span class="badge-sep">·</span>
-                                                <span class="badge-text text-green">19 mocks</span>
+                                                <span class="badge-text text-blue">▶ 19 videos</span><span class="badge-sep">·</span>
+                                                <span class="badge-text text-orange">📄 19 PYQs</span><span class="badge-sep">·</span>
+                                                <span class="badge-text text-green">✓ 19 mocks</span>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="chapter-chevron">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                                     </div>
                                 </div>
                             </div>
@@ -316,14 +373,17 @@
                                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
                                         </div>
                                         <div class="chapter-info">
-                                            <div class="subject-label">Subject 5</div>
+                                            <span class="subject-tag">Subject 5</span>
                                             <h3 class="chapter-name">Hindi Language &amp; Comprehension</h3>
                                             <div class="chapter-badges">
-                                                <span class="badge-text text-blue">17 videos</span><span class="badge-sep">·</span>
-                                                <span class="badge-text text-orange">17 PYQs</span><span class="badge-sep">·</span>
-                                                <span class="badge-text text-green">17 mocks</span>
+                                                <span class="badge-text text-blue">▶ 17 videos</span><span class="badge-sep">·</span>
+                                                <span class="badge-text text-orange">📄 17 PYQs</span><span class="badge-sep">·</span>
+                                                <span class="badge-text text-green">✓ 17 mocks</span>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="chapter-chevron">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                                     </div>
                                 </div>
                             </div>
@@ -357,7 +417,7 @@
             </div>
         </section>
         
-        <section id="paper-2-content" style="display:none;" aria-label="Paper 2 Content View">
+        <section id="paper-2-content" data-active="false" aria-label="Paper 2 Content View">
             <div class="layout-container">
                 <div class="visual-section-wrapper merged-wrapper">
                     <div id="section-A" class="content-block">
@@ -378,14 +438,17 @@
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="14" width="8" height="6" rx="2"/><rect x="14" y="14" width="8" height="6" rx="2"/><path d="M6 14V9a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v5"/><circle cx="12" cy="4" r="2"/></svg>
                                             </div>
                                             <div class="chapter-info">
-                                                <div class="subject-label">Subject 1</div>
+                                                <span class="subject-tag">Subject 1</span>
                                                 <h3 class="chapter-name">Computer Networks, TCP/IP &amp; Security</h3>
                                                 <div class="chapter-badges">
-                                                    <span class="badge-text text-blue">90 videos</span><span class="badge-sep">·</span>
-                                                    <span class="badge-text text-orange">259 PYQs</span><span class="badge-sep">·</span>
-                                                    <span class="badge-text text-green">510 MCQs</span>
+                                                    <span class="badge-text text-blue">▶ 90 videos</span><span class="badge-sep">·</span>
+                                                    <span class="badge-text text-orange">📄 259 PYQs</span><span class="badge-sep">·</span>
+                                                    <span class="badge-text text-green">✓ 510 MCQs</span>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="chapter-chevron">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                                         </div>
                                     </div>
                                 </div>
@@ -406,14 +469,17 @@
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/><path d="M9 1V4M15 1V4M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg>
                                             </div>
                                             <div class="chapter-info">
-                                                <div class="subject-label">Subject 2</div>
+                                                <span class="subject-tag">Subject 2</span>
                                                 <h3 class="chapter-name">Digital Electronics / Boolean Logic</h3>
                                                 <div class="chapter-badges">
-                                                    <span class="badge-text text-blue">147 videos</span><span class="badge-sep">·</span>
-                                                    <span class="badge-text text-orange">295 PYQs</span><span class="badge-sep">·</span>
-                                                    <span class="badge-text text-green">565 MCQs</span>
+                                                    <span class="badge-text text-blue">▶ 147 videos</span><span class="badge-sep">·</span>
+                                                    <span class="badge-text text-orange">📄 295 PYQs</span><span class="badge-sep">·</span>
+                                                    <span class="badge-text text-green">✓ 565 MCQs</span>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="chapter-chevron">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                                         </div>
                                     </div>
                                 </div>
@@ -433,14 +499,17 @@
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
                                             </div>
                                             <div class="chapter-info">
-                                                <div class="subject-label">Subject 3</div>
+                                                <span class="subject-tag">Subject 3</span>
                                                 <h3 class="chapter-name">Computer Fundamentals &amp; IT</h3>
                                                 <div class="chapter-badges">
-                                                    <span class="badge-text text-blue">107 videos</span><span class="badge-sep">·</span>
-                                                    <span class="badge-text text-orange">233 PYQs</span><span class="badge-sep">·</span>
-                                                    <span class="badge-text text-green">433 MCQs</span>
+                                                    <span class="badge-text text-blue">▶ 107 videos</span><span class="badge-sep">·</span>
+                                                    <span class="badge-text text-orange">📄 233 PYQs</span><span class="badge-sep">·</span>
+                                                    <span class="badge-text text-green">✓ 433 MCQs</span>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="chapter-chevron">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                                         </div>
                                     </div>
                                 </div>
@@ -460,14 +529,17 @@
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
                                             </div>
                                             <div class="chapter-info">
-                                                <div class="subject-label">Subject 4</div>
+                                                <span class="subject-tag">Subject 4</span>
                                                 <h3 class="chapter-name">Operating System</h3>
                                                 <div class="chapter-badges">
-                                                    <span class="badge-text text-blue">151 videos</span><span class="badge-sep">·</span>
-                                                    <span class="badge-text text-orange">225 PYQs</span><span class="badge-sep">·</span>
-                                                    <span class="badge-text text-green">916 MCQs</span>
+                                                    <span class="badge-text text-blue">▶ 151 videos</span><span class="badge-sep">·</span>
+                                                    <span class="badge-text text-orange">📄 225 PYQs</span><span class="badge-sep">·</span>
+                                                    <span class="badge-text text-green">✓ 916 MCQs</span>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="chapter-chevron">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                                         </div>
                                     </div>
                                 </div>
@@ -487,14 +559,17 @@
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
                                             </div>
                                             <div class="chapter-info">
-                                                <div class="subject-label">Subject 5</div>
+                                                <span class="subject-tag">Subject 5</span>
                                                 <h3 class="chapter-name">Data Base Management System</h3>
                                                 <div class="chapter-badges">
-                                                    <span class="badge-text text-blue">126 videos</span><span class="badge-sep">·</span>
-                                                    <span class="badge-text text-orange">297 PYQs</span><span class="badge-sep">·</span>
-                                                    <span class="badge-text text-green">659 MCQs</span>
+                                                    <span class="badge-text text-blue">▶ 126 videos</span><span class="badge-sep">·</span>
+                                                    <span class="badge-text text-orange">📄 297 PYQs</span><span class="badge-sep">·</span>
+                                                    <span class="badge-text text-green">✓ 659 MCQs</span>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="chapter-chevron">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                                         </div>
                                     </div>
                                 </div>
@@ -514,14 +589,17 @@
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M10 13l2 2 4-4"/></svg>
                                             </div>
                                             <div class="chapter-info">
-                                                <div class="subject-label">Subject 6</div>
+                                                <span class="subject-tag">Subject 6</span>
                                                 <h3 class="chapter-name">Python Language</h3>
                                                 <div class="chapter-badges">
-                                                    <span class="badge-text text-blue">229 videos</span><span class="badge-sep">·</span>
-                                                    <span class="badge-text text-orange">253 PYQs</span><span class="badge-sep">·</span>
-                                                    <span class="badge-text text-green">83 MCQs</span>
+                                                    <span class="badge-text text-blue">▶ 229 videos</span><span class="badge-sep">·</span>
+                                                    <span class="badge-text text-orange">📄 253 PYQs</span><span class="badge-sep">·</span>
+                                                    <span class="badge-text text-green">✓ 83 MCQs</span>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="chapter-chevron">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                                         </div>
                                     </div>
                                 </div>
@@ -554,14 +632,17 @@
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
                                             </div>
                                             <div class="chapter-info">
-                                                <div class="subject-label">Subject 7</div>
+                                                <span class="subject-tag">Subject 7</span>
                                                 <h3 class="chapter-name">Internet &amp; Web Technologies</h3>
                                                 <div class="chapter-badges">
-                                                    <span class="badge-text text-blue">116 videos</span><span class="badge-sep">·</span>
-                                                    <span class="badge-text text-orange">160 PYQs</span><span class="badge-sep">·</span>
-                                                    <span class="badge-text text-green">267 MCQs</span>
+                                                    <span class="badge-text text-blue">▶ 116 videos</span><span class="badge-sep">·</span>
+                                                    <span class="badge-text text-orange">📄 160 PYQs</span><span class="badge-sep">·</span>
+                                                    <span class="badge-text text-green">✓ 267 MCQs</span>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="chapter-chevron">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                                         </div>
                                     </div>
                                 </div>
@@ -581,14 +662,17 @@
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4M8 16h8"/></svg>
                                             </div>
                                             <div class="chapter-info">
-                                                <div class="subject-label">Subject 8</div>
+                                                <span class="subject-tag">Subject 8</span>
                                                 <h3 class="chapter-name">Emerging Trends</h3>
                                                 <div class="chapter-badges">
-                                                    <span class="badge-text text-blue">12 videos</span><span class="badge-sep">·</span>
-                                                    <span class="badge-text text-orange">15 PYQs</span><span class="badge-sep">·</span>
-                                                    <span class="badge-text text-green">98 MCQs</span>
+                                                    <span class="badge-text text-blue">▶ 12 videos</span><span class="badge-sep">·</span>
+                                                    <span class="badge-text text-orange">📄 15 PYQs</span><span class="badge-sep">·</span>
+                                                    <span class="badge-text text-green">✓ 98 MCQs</span>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="chapter-chevron">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                                         </div>
                                     </div>
                                 </div>
@@ -608,14 +692,17 @@
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M6 9v6M18 15v-1a3 3 0 0 0-3-3H9"/></svg>
                                             </div>
                                             <div class="chapter-info">
-                                                <div class="subject-label">Subject 9</div>
+                                                <span class="subject-tag">Subject 9</span>
                                                 <h3 class="chapter-name">Software Engineering</h3>
                                                 <div class="chapter-badges">
-                                                    <span class="badge-text text-blue">74 videos</span><span class="badge-sep">·</span>
-                                                    <span class="badge-text text-orange">73 PYQs</span><span class="badge-sep">·</span>
-                                                    <span class="badge-text text-green">484 MCQs</span>
+                                                    <span class="badge-text text-blue">▶ 74 videos</span><span class="badge-sep">·</span>
+                                                    <span class="badge-text text-orange">📄 73 PYQs</span><span class="badge-sep">·</span>
+                                                    <span class="badge-text text-green">✓ 484 MCQs</span>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="chapter-chevron">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                                         </div>
                                     </div>
                                 </div>
@@ -635,14 +722,17 @@
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
                                             </div>
                                             <div class="chapter-info">
-                                                <div class="subject-label">Subject 10</div>
+                                                <span class="subject-tag">Subject 10</span>
                                                 <h3 class="chapter-name">Programming, Data Structures &amp; OOP</h3>
                                                 <div class="chapter-badges">
-                                                    <span class="badge-text text-blue">274 videos</span><span class="badge-sep">·</span>
-                                                    <span class="badge-text text-orange">458 PYQs</span><span class="badge-sep">·</span>
-                                                    <span class="badge-text text-green">1547 MCQs</span>
+                                                    <span class="badge-text text-blue">▶ 274 videos</span><span class="badge-sep">·</span>
+                                                    <span class="badge-text text-orange">📄 458 PYQs</span><span class="badge-sep">·</span>
+                                                    <span class="badge-text text-green">✓ 1547 MCQs</span>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="chapter-chevron">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                                         </div>
                                     </div>
                                 </div>
@@ -662,14 +752,17 @@
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
                                             </div>
                                             <div class="chapter-info">
-                                                <div class="subject-label">Subject 11</div>
+                                                <span class="subject-tag">Subject 11</span>
                                                 <h3 class="chapter-name">Teaching Methodology</h3>
                                                 <div class="chapter-badges">
-                                                    <span class="badge-text text-blue">200 videos</span><span class="badge-sep">·</span>
-                                                    <span class="badge-text text-orange">771 PYQs</span><span class="badge-sep">·</span>
-                                                    <span class="badge-text text-green">438 MCQs</span>
+                                                    <span class="badge-text text-blue">▶ 200 videos</span><span class="badge-sep">·</span>
+                                                    <span class="badge-text text-orange">📄 771 PYQs</span><span class="badge-sep">·</span>
+                                                    <span class="badge-text text-green">✓ 438 MCQs</span>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="chapter-chevron">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                                         </div>
                                     </div>
                                 </div>
@@ -689,14 +782,17 @@
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
                                             </div>
                                             <div class="chapter-info">
-                                                <div class="subject-label">Subject 12</div>
+                                                <span class="subject-tag">Subject 12</span>
                                                 <h3 class="chapter-name">Computer Graphics &amp; Multimedia</h3>
                                                 <div class="chapter-badges">
-                                                    <span class="badge-text text-blue">99 videos</span><span class="badge-sep">·</span>
-                                                    <span class="badge-text text-orange">52 PYQs</span><span class="badge-sep">·</span>
-                                                    <span class="badge-text text-green">140 MCQs</span>
+                                                    <span class="badge-text text-blue">▶ 99 videos</span><span class="badge-sep">·</span>
+                                                    <span class="badge-text text-orange">📄 52 PYQs</span><span class="badge-sep">·</span>
+                                                    <span class="badge-text text-green">✓ 140 MCQs</span>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="chapter-chevron">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                                         </div>
                                     </div>
                                 </div>
@@ -709,6 +805,19 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <div id="section-B" class="content-block" style="display:none;">
+                        <div class="section-header-container">
+                            <h2 class="section-label">Modules B (Medium Weightage CS)</h2>
+                            <div class="section-tabs">
+                                <button onclick="switchSection('A', this)">Module A (40–50%)</button>
+                                <button class="active" onclick="switchSection('B', this)">Module B (30–35%)</button>
+                                <button onclick="switchSection('C', this)">Module C (15–25%)</button>
+                            </div>
+                        </div>
+                        <div class="chapter-list">
+                            </div>
                     </div>
 
                     <div id="section-C" class="content-block" style="display:none;">
@@ -729,14 +838,17 @@
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(45 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-45 12 12)"/></svg>
                                             </div>
                                             <div class="chapter-info">
-                                                <div class="subject-label">Subject 13</div>
+                                                <span class="subject-tag">Subject 13</span>
                                                 <h3 class="chapter-name">Basis of Physics</h3>
                                                 <div class="chapter-badges">
-                                                    <span class="badge-text text-blue">56 videos</span><span class="badge-sep">·</span>
-                                                    <span class="badge-text text-orange">68 PYQs</span><span class="badge-sep">·</span>
-                                                    <span class="badge-text text-green">31 MCQs</span>
+                                                    <span class="badge-text text-blue">▶ 56 videos</span><span class="badge-sep">·</span>
+                                                    <span class="badge-text text-orange">📄 68 PYQs</span><span class="badge-sep">·</span>
+                                                    <span class="badge-text text-green">✓ 31 MCQs</span>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="chapter-chevron">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                                         </div>
                                     </div>
                                 </div>
@@ -756,14 +868,17 @@
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="6" rx="1"/><rect x="2" y="16" width="8" height="6" rx="1"/><rect x="14" y="16" width="8" height="6" rx="1"/><path d="M12 8v4M8 12H4v4M16 12h4v4"/></svg>
                                             </div>
                                             <div class="chapter-info">
-                                                <div class="subject-label">Subject 14</div>
+                                                <span class="subject-tag">Subject 14</span>
                                                 <h3 class="chapter-name">Design &amp; Analysis of Algorithms</h3>
                                                 <div class="chapter-badges">
-                                                    <span class="badge-text text-blue">111 videos</span><span class="badge-sep">·</span>
-                                                    <span class="badge-text text-orange">77 PYQs</span><span class="badge-sep">·</span>
-                                                    <span class="badge-text text-green">546 MCQs</span>
+                                                    <span class="badge-text text-blue">▶ 111 videos</span><span class="badge-sep">·</span>
+                                                    <span class="badge-text text-orange">📄 77 PYQs</span><span class="badge-sep">·</span>
+                                                    <span class="badge-text text-green">✓ 546 MCQs</span>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="chapter-chevron">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                                         </div>
                                     </div>
                                 </div>
