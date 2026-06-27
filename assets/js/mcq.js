@@ -291,6 +291,38 @@ document.addEventListener('keyup', e => {
     }
 });
 
+
+// --- Secret Double-Space Timer Toggle ---
+let lastSpacePressTime = 0;
+
+document.addEventListener('keydown', (e) => {
+    // Only allow the trick if the exam is currently active and not yet submitted
+    if (!isExamActive || (sections[currentYearIndex] && sections[currentYearIndex].submitted)) return;
+
+    if (e.code === 'Space') {
+        e.preventDefault(); // Prevent the spacebar from scrolling the page down
+
+        const currentTime = Date.now();
+        const timeDifference = currentTime - lastSpacePressTime;
+
+        // Check if the spacebar was pressed twice within 400 milliseconds
+        if (timeDifference > 0 && timeDifference < 400) {
+            
+            // Toggle the timer state
+            isTimerPaused = !isTimerPaused;
+          
+            
+            // Reset the tracker to prevent a triple-press from triggering it again immediately
+            lastSpacePressTime = 0; 
+        } else {
+            // First press: store the timestamp
+            lastSpacePressTime = currentTime;
+        }
+    }
+});
+// ----------------------------------------
+
+
 document.addEventListener('keydown', e => {
     let k = e.key.toLowerCase(), ic = e.ctrlKey || e.metaKey, is = e.shiftKey;
     if (e.key === 'F12' || e.keyCode === 123 || (ic && is && ['i', 'j', 'c'].includes(k)) || (ic && ['u', 'p', 's', 'r'].includes(k)) || e.key === 'F5') {
