@@ -100,27 +100,23 @@ function switchPaper(paperNum, cardElement) {
  * @param {HTMLElement} btn 
  */
 function switchSection(sec, btn) {
-  ['A', 'B', 'C'].forEach(s => {
+  // Array updated to include 'D' and 'E' to support the newly added sections in the HTML
+  ['A', 'B', 'C', 'D', 'E'].forEach(s => {
     const el = document.getElementById('section-' + s);
     if(el) {
         el.style.display = s === sec ? '' : 'none';
     }
   });
+  
   sessionStorage.setItem('activeSection', sec);
   
+  // Sync all tabs across the UI so they update correctly regardless of which section is currently active
   document.querySelectorAll('.section-tabs button').forEach(b => {
     b.classList.remove('active');
+    if (b.getAttribute('onclick') && b.getAttribute('onclick').includes(`'${sec}'`)) {
+      b.classList.add('active');
+    }
   });
-  
-  if (btn) {
-    btn.classList.add('active');
-  } else {
-    document.querySelectorAll('.section-tabs button').forEach(b => {
-      if (b.getAttribute('onclick') && b.getAttribute('onclick').includes(`'${sec}'`)) {
-        b.classList.add('active');
-      }
-    });
-  }
 }
 
 /**
