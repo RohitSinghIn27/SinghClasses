@@ -1,967 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SinghClasses Yearly Planner & Analytics - Enhanced</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        :root {
-            --primary: #2563eb; --secondary: #f59e0b; --success: #10b981; --danger: #ef4444;
-            --bg-light: #f8fafc; --bg-white: #ffffff;
-            --text-primary: #1e293b; --text-secondary: #475569;
-            --border-color: #cbd5e1; --radius: 6px;
-            --shadow: 0 1px 2px rgba(0,0,0,0.05);
-            
-            /* Category Colors */
-            --school-bg: #dbeafe; --school-border: #0284c7; --school-text: #0c4a6e;
-            --tuition-bg: #fef3c7; --tuition-border: #d97706; --tuition-text: #78350f;
-            --study-bg: #dcfce7; --study-border: #059669; --study-text: #14532d;
-        }
-
-        body.dark-mode {
-            --primary: #3b82f6; --bg-light: #0f172a; --bg-white: #1e293b;
-            --text-primary: #f1f5f9; --text-secondary: #94a3b8; --border-color: #334155;
-            background: #020617;
-            
-            /* Dark Mode Category Colors */
-            --school-bg: #1e3a8a; --school-border: #3b82f6; --school-text: #93c5fd;
-            --tuition-bg: #78350f; --tuition-border: #fbbf24; --tuition-text: #fcd34d;
-            --study-bg: #064e3b; --study-border: #34d399; --study-text: #6ee7b7;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #e2e8f0; min-height: 100vh; padding: 15px;
-            color: var(--text-primary); transition: background 0.2s ease;
-            font-size: 13px;
-        }
-
-        .container { max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
-
-        .panel {
-            background: var(--bg-white); border-radius: var(--radius);
-            padding: 15px; box-shadow: var(--shadow); border: 1px solid var(--border-color);
-        }
-
-        /* Category Badge Styles */
-        .badge-school { background: var(--school-bg); color: var(--school-text); border: 1px solid var(--school-border); }
-        .badge-tuition { background: var(--tuition-bg); color: var(--tuition-text); border: 1px solid var(--tuition-border); }
-        .badge-study { background: var(--study-bg); color: var(--study-text); border: 1px solid var(--study-border); }
-
-        /* Task Row Colors */
-        tr.task-school { background: rgba(3, 102, 214, 0.05); }
-        tr.task-tuition { background: rgba(217, 119, 6, 0.05); }
-        tr.task-study { background: rgba(5, 150, 105, 0.05); }
-
-        .category-label {
-            padding: 4px 8px; border-radius: 3px; font-size: 10px; font-weight: 700;
-            text-transform: uppercase; display: inline-block; width: 100%; text-align: center;
-        }
-
-        .category-label.School { background: var(--school-bg); color: var(--school-text); border: 1px solid var(--school-border); }
-        .category-label.Tuition { background: var(--tuition-bg); color: var(--tuition-text); border: 1px solid var(--tuition-border); }
-        .category-label.Study { background: var(--study-bg); color: var(--study-text); border: 1px solid var(--study-border); }
-
-        /* Navigation Tabs */
-        .tab-navigation {
-            display: flex; gap: 5px; border-bottom: 2px solid var(--border-color);
-            padding-bottom: 0; background: var(--bg-white);
-        }
-
-        .tab-btn {
-            padding: 12px 20px; border: none; background: transparent;
-            color: var(--text-secondary); cursor: pointer; font-weight: 600;
-            font-size: 13px; transition: all 0.2s; border-bottom: 3px solid transparent;
-            margin-bottom: -2px;
-        }
-
-        .tab-btn:hover { color: var(--primary); }
-        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
-
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-
-        /* Top Action Bar */
-        .action-bar { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; flex-wrap: wrap; gap: 15px; }
-        .brand-title { font-size: 16px; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 10px; }
-        
-        .tools { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-        .date-display { 
-            padding: 8px 15px; background: var(--bg-light); border-radius: var(--radius); 
-            border: 1px solid var(--border-color); color: var(--text-primary);
-            font-weight: 600; font-size: 14px; text-align: center; min-width: 220px;
-        }
-        .btn {
-            background: var(--bg-light); border: 1px solid var(--border-color);
-            padding: 6px 12px; border-radius: 4px; cursor: pointer;
-            color: var(--text-primary); font-weight: 600; font-size: 12px; transition: all 0.2s;
-        }
-        .btn:hover { border-color: var(--primary); background: var(--primary); color: white; }
-
-        /* View Selector */
-        .view-selector {
-            display: flex; gap: 2px; background: var(--bg-light); padding: 4px;
-            border-radius: var(--radius); border: 1px solid var(--border-color);
-        }
-        .view-btn {
-            padding: 6px 12px; border: none; background: transparent;
-            font-weight: 600; font-size: 12px; cursor: pointer; border-radius: 4px;
-            color: var(--text-secondary); transition: all 0.2s;
-        }
-        .view-btn:hover { color: var(--primary); }
-        .view-btn.active { background: var(--bg-white); color: var(--primary); box-shadow: var(--shadow); border: 1px solid var(--border-color); }
-
-        /* Day Selector */
-        .day-selector { display: flex; gap: 4px; flex-wrap: wrap; }
-        .day-button {
-            padding: 6px 12px; height: auto; border: 1px solid var(--border-color); border-radius: 4px;
-            background: var(--bg-white); font-weight: 600; font-size: 12px; cursor: pointer; 
-            color: var(--text-primary); min-width: 45px; transition: all 0.2s; text-align: center;
-            position: relative;
-        }
-        .day-button:hover { background: var(--bg-light); border-color: var(--primary); }
-        .day-button.active { background: var(--primary); border-color: var(--primary); color: white; }
-        .day-button.today { border-color: var(--success); border-width: 2px; }
-        .day-button.today.active { background: var(--success); border-color: var(--success); }
-
-        /* Header Stats */
-        .header { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
-        .stats-wrapper { display: flex; gap: 10px; flex-wrap: wrap; }
-        .stat-badge { 
-            padding: 8px 14px; border-radius: 4px; font-weight: 700; font-size: 11px; text-transform: uppercase;
-            display: flex; align-items: center; gap: 5px; border: 1px solid var(--border-color);
-        }
-        .badge-completion { background: rgba(34, 197, 94, 0.1); color: #16a34a; }
-
-        .progress-wrapper { display: flex; align-items: center; gap: 10px; width: 220px; }
-        .progress-wrapper span { font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; white-space: nowrap; }
-        progress { flex: 1; height: 6px; border-radius: 3px; overflow: hidden; appearance: none; }
-        progress::-webkit-progress-bar { background-color: var(--border-color); }
-        progress::-webkit-progress-value { background-color: var(--success); transition: width 0.3s; }
-
-        /* Schedule Tables */
-        .schedule-split { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        
-        .schedule-container { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
-        .shift-title {
-            padding: 12px 15px; background: var(--bg-light); border-bottom: 2px solid var(--border-color);
-            font-size: 13px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-
-        .schedule-table { width: 100%; border-collapse: collapse; text-align: left; table-layout: fixed; }
-        .schedule-table th { padding: 8px 10px; font-weight: 600; font-size: 11px; text-transform: uppercase; color: var(--text-secondary); border-bottom: 2px solid var(--border-color); background: var(--bg-light); }
-        .schedule-table td { padding: 6px 8px; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
-        .schedule-table tr:hover { background: rgba(0,0,0,0.02); }
-        body.dark-mode .schedule-table tr:hover { background: rgba(255,255,255,0.02); }
-        
-        .col-check { width: 30px; text-align: center; }
-        .col-time { width: 145px; } 
-        .col-hrs { width: 55px; text-align: center; }
-        .col-cat { width: 90px; text-align: center; }
-        .col-task { width: auto; }
-        .col-notes { width: 22%; }
-
-        .checkbox-cell input { width: 14px; height: 14px; cursor: pointer; accent-color: var(--success); margin-top: 3px; }
-        
-        .time-cell input, .hrs-cell input { width: 100%; border: none; background: transparent; font-family: inherit; font-weight: 600; color: var(--text-secondary); font-size: 12px; outline: none; }
-        .hrs-cell input { font-weight: 700; color: var(--primary); text-align: center; border: 1px solid transparent; border-radius: 3px; padding: 2px; }
-        .hrs-cell input:focus { border-color: var(--border-color); background: var(--bg-light); }
-
-        .task-cell input { width: 100%; border: 1px solid transparent; padding: 4px; border-radius: 3px; font-family: inherit; font-size: 13px; background: transparent; color: var(--text-primary); font-weight: 500; }
-        .task-cell input:focus { border-color: var(--primary); background: var(--bg-light); outline: none; }
-        
-        .notes-cell textarea { width: 100%; border: 1px solid transparent; padding: 4px; border-radius: 3px; font-family: inherit; font-size: 12px; height: 26px; background: transparent; color: var(--text-primary); resize: none; overflow: hidden; white-space: nowrap; }
-        .notes-cell textarea:focus { border-color: var(--primary); background: var(--bg-light); outline: none; height: auto; position: absolute; z-index: 10; min-height: 50px; width: 180px; box-shadow: var(--shadow); white-space: normal; }
-
-        .add-row-btn {
-            width: 100%; padding: 8px; border: none; background: var(--bg-light); 
-            cursor: pointer; color: var(--primary); font-weight: 600; font-size: 12px;
-            transition: background 0.2s; text-align: center;
-        }
-        .add-row-btn:hover { background: #e2e8f0; }
-        body.dark-mode .add-row-btn:hover { background: #334155; }
-
-        /* Compact Timetable Styles */
-        .timetable-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 12px; margin-bottom: 15px;
-        }
-
-        .timetable-card {
-            border: 2px solid var(--border-color); border-radius: var(--radius);
-            overflow: hidden; display: flex; flex-direction: column;
-        }
-
-        .timetable-header {
-            padding: 10px 12px; background: var(--bg-light); border-bottom: 2px solid var(--border-color);
-            font-weight: 700; font-size: 12px; color: var(--text-primary);
-            display: flex; justify-content: space-between; align-items: center;
-            gap: 8px;
-        }
-
-        .timetable-header button {
-            padding: 3px 8px; font-size: 10px; border: none; border-radius: 3px;
-            background: var(--primary); color: white; cursor: pointer; font-weight: 600;
-        }
-
-        .timetable-body {
-            display: flex; flex-direction: column; gap: 0; padding: 0;
-            flex: 1;
-        }
-
-        .time-slot {
-            padding: 8px 10px; border-bottom: 1px solid var(--border-color);
-            display: flex; flex-direction: column; gap: 4px;
-            background: var(--bg-white); transition: background 0.2s;
-        }
-
-        .time-slot:hover { background: var(--bg-light); }
-        .time-slot.edit-mode { background: var(--bg-light); }
-
-        .slot-time { font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; }
-        .slot-content { font-size: 11px; font-weight: 500; color: var(--text-primary); line-height: 1.3; }
-        
-        .timetable-input { 
-            width: 100%; padding: 6px; border: 1px solid var(--border-color); 
-            border-radius: 3px; font-size: 11px; color: var(--text-primary); 
-            background: var(--bg-white); font-family: inherit; resize: none; min-height: 40px; 
-        }
-
-        .slot-actions { display: flex; gap: 4px; margin-top: 4px; }
-        .slot-actions button { flex: 1; padding: 4px 6px; font-size: 10px; border: none; border-radius: 3px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
-        .slot-add-btn { background: var(--success); color: white; }
-        .slot-add-btn:hover { background: #059669; }
-        .slot-delete-btn { background: var(--danger); color: white; }
-        .slot-delete-btn:hover { background: #dc2626; }
-
-        .edit-mode-toggle {
-            padding: 3px 8px; font-size: 10px; background: var(--primary);
-            color: white; border: none; border-radius: 3px; cursor: pointer;
-            font-weight: 600; margin-left: auto;
-        }
-        .edit-mode-toggle.active { background: var(--success); }
-
-        /* FIXED: Compact Charts & Modals */
-        .charts-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* slightly narrower to fit better */
-            gap: 15px; 
-            margin-bottom: 15px; 
-        }
-        .chart-container { 
-            background: var(--bg-white); 
-            border-radius: var(--radius); 
-            padding: 12px; /* reduced padding */
-            border: 1px solid var(--border-color); 
-        }
-        .chart-title { 
-            font-size: 13px; 
-            font-weight: 700; 
-            color: var(--text-primary); 
-            margin-bottom: 10px; 
-            text-align: center;
-        }
-        /* NEW WRAPPER: This absolutely stops Chart.js from stretching */
-        .chart-wrapper {
-            position: relative;
-            height: 220px; /* Fixed compact height */
-            width: 100%;
-        }
-
-        .stats-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
-            gap: 12px; 
-            margin-bottom: 15px; 
-        }
-        .stat-card { 
-            background: var(--bg-light); 
-            border-radius: var(--radius); 
-            padding: 10px; 
-            border: 1px solid var(--border-color); 
-            text-align: center; 
-        }
-        .stat-value { 
-            font-size: 18px; 
-            font-weight: 700; 
-            color: var(--primary); 
-            margin: 4px 0; 
-        }
-        .stat-label { 
-            font-size: 10px; 
-            color: var(--text-secondary); 
-            text-transform: uppercase; 
-            font-weight: 700; 
-        }
-
-        @media (max-width: 1000px) { 
-            .schedule-split { grid-template-columns: 1fr; }
-            .timetable-grid { grid-template-columns: 1fr; }
-            .charts-grid { grid-template-columns: 1fr; }
-        }
-    </style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planner & Analytics</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}:root{--primary:#2563eb;--secondary:#f59e0b;--success:#10b981;--danger:#ef4444;--bg-light:#f8fafc;--bg-white:#ffffff;--text-primary:#1e293b;--text-secondary:#475569;--border-color:#cbd5e1;--radius:6px;--shadow:0 1px 2px rgba(0,0,0,0.05)}body.dark-mode{--primary:#3b82f6;--bg-light:#0f172a;--bg-white:#1e293b;--text-primary:#f1f5f9;--text-secondary:#94a3b8;--border-color:#334155;background:#020617}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#e2e8f0;min-height:100vh;padding:15px;color:var(--text-primary);transition:background 0.2s;font-size:13px}.container{max-width:1400px;margin:0 auto;display:flex;flex-direction:column;gap:12px}.panel{background:var(--bg-white);border-radius:var(--radius);padding:15px;box-shadow:var(--shadow);border:1px solid var(--border-color)}.badge-school{background:#dbeafe;color:#0c4a6e;border:1px solid #0284c7}.badge-tuition{background:#fef3c7;color:#78350f;border:1px solid #d97706}.badge-study{background:#dcfce7;color:#14532d;border:1px solid #059669}tr.task-school{background:rgba(3,102,214,0.05)}tr.task-tuition{background:rgba(217,119,6,0.05)}tr.task-study{background:rgba(5,150,105,0.05)}.category-label{padding:4px 8px;border-radius:3px;font-size:10px;font-weight:700;text-transform:uppercase;display:inline-block;width:100%;text-align:center}.category-label.School{background:#dbeafe;color:#0c4a6e;border:1px solid #0284c7}.category-label.Tuition{background:#fef3c7;color:#78350f;border:1px solid #d97706}.category-label.Study{background:#dcfce7;color:#14532d;border:1px solid #059669}.tab-navigation{display:flex;gap:5px;border-bottom:2px solid var(--border-color);padding-bottom:0;background:var(--bg-white)}.tab-btn{padding:12px 20px;border:none;background:transparent;color:var(--text-secondary);cursor:pointer;font-weight:600;font-size:13px;transition:all 0.2s;border-bottom:3px solid transparent;margin-bottom:-2px}.tab-btn:hover{color:var(--primary)}.tab-btn.active{color:var(--primary);border-bottom-color:var(--primary)}.tab-content{display:none}.tab-content.active{display:block}.action-bar{display:flex;justify-content:space-between;align-items:center;padding:10px 15px;flex-wrap:wrap;gap:15px}.brand-title{font-size:16px;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:10px}.tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.date-display{padding:8px 15px;background:var(--bg-light);border-radius:var(--radius);border:1px solid var(--border-color);color:var(--text-primary);font-weight:600;font-size:14px;text-align:center;min-width:220px}.btn{background:var(--bg-light);border:1px solid var(--border-color);padding:6px 12px;border-radius:4px;cursor:pointer;color:var(--text-primary);font-weight:600;font-size:12px;transition:all 0.2s}.btn:hover{border-color:var(--primary);background:var(--primary);color:white}.day-selector{display:flex;gap:4px;flex-wrap:wrap}.day-button{padding:6px 12px;height:auto;border:1px solid var(--border-color);border-radius:4px;background:var(--bg-white);font-weight:600;font-size:12px;cursor:pointer;color:var(--text-primary);min-width:45px;transition:all 0.2s;text-align:center}.day-button:hover{background:var(--bg-light);border-color:var(--primary)}.day-button.active{background:var(--primary);border-color:var(--primary);color:white}.day-button.today{border-color:var(--success);border-width:2px}.day-button.today.active{background:var(--success)}.header{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}.stats-wrapper{display:flex;gap:10px;flex-wrap:wrap}.stat-badge{padding:8px 14px;border-radius:4px;font-weight:700;font-size:11px;text-transform:uppercase;display:flex;align-items:center;gap:5px;border:1px solid var(--border-color)}.badge-completion{background:rgba(34,197,94,0.1);color:#16a34a}.progress-wrapper{display:flex;align-items:center;gap:10px;width:220px}.progress-wrapper span{font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;white-space:nowrap}progress{flex:1;height:6px;border-radius:3px;overflow:hidden;appearance:none}progress::-webkit-progress-bar{background-color:var(--border-color)}progress::-webkit-progress-value{background-color:var(--success);transition:width 0.3s}.schedule-wrapper{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:15px}.schedule-container{background:var(--bg-white);border-radius:var(--radius);padding:0;overflow:hidden;border:1px solid var(--border-color)}.shift-title{padding:12px 15px;background:var(--bg-light);border-bottom:2px solid var(--border-color);font-size:13px;font-weight:700;color:var(--text-secondary);text-transform:uppercase}.schedule-table{width:100%;border-collapse:collapse;text-align:left}.schedule-table th{padding:8px 10px;font-weight:600;font-size:11px;text-transform:uppercase;color:var(--text-secondary);border-bottom:2px solid var(--border-color);background:var(--bg-light)}.schedule-table td{padding:8px 10px;border-bottom:1px solid var(--border-color);vertical-align:middle}.schedule-table tr:hover{background:rgba(0,0,0,0.02)}body.dark-mode .schedule-table tr:hover{background:rgba(255,255,255,0.02)}.col-check{width:5%;text-align:center}.col-time{width:28%;}.col-hrs{width:12%;text-align:center}.col-cat{width:18%;text-align:center}.col-task{flex:1}.checkbox-cell input{width:14px;height:14px;cursor:pointer;accent-color:var(--success)}.time-cell input,.hrs-cell input{width:100%;border:none;background:transparent;font-family:inherit;font-weight:600;color:var(--text-secondary);font-size:12px;outline:none;padding:2px}.hrs-cell input{font-weight:700;color:var(--primary);text-align:center;border:1px solid transparent;border-radius:3px}.hrs-cell input:focus{border-color:var(--border-color);background:var(--bg-light)}.task-cell input{width:100%;border:1px solid transparent;padding:4px;border-radius:3px;font-family:inherit;font-size:13px;background:transparent;color:var(--text-primary);font-weight:500}.task-cell input:focus{border-color:var(--primary);background:var(--bg-light);outline:none}.add-row-btn{width:100%;padding:8px;border:none;background:var(--bg-light);cursor:pointer;color:var(--primary);font-weight:600;font-size:12px;transition:background 0.2s}.add-row-btn:hover{background:#e2e8f0}body.dark-mode .add-row-btn:hover{background:#334155}.timetable-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-bottom:15px}.timetable-card{border:2px solid var(--border-color);border-radius:var(--radius);overflow:hidden}.timetable-header{padding:10px 12px;background:var(--bg-light);border-bottom:2px solid var(--border-color);font-weight:700;font-size:12px;color:var(--text-primary);display:flex;justify-content:space-between;align-items:center}.timetable-header button{padding:3px 8px;font-size:10px;border:none;border-radius:3px;background:var(--primary);color:white;cursor:pointer;font-weight:600}.timetable-body{display:flex;flex-direction:column;gap:0}.time-slot{padding:8px 10px;border-bottom:1px solid var(--border-color);background:var(--bg-white);transition:background 0.2s}.time-slot:hover{background:var(--bg-light)}.time-slot.edit-mode{background:var(--bg-light)}.slot-time{font-size:10px;font-weight:700;color:var(--text-secondary);text-transform:uppercase}.slot-content{font-size:11px;font-weight:500;color:var(--text-primary);line-height:1.3}.timetable-input{width:100%;padding:6px;border:1px solid var(--border-color);border-radius:3px;font-size:11px;color:var(--text-primary);background:var(--bg-white);font-family:inherit;resize:none;min-height:40px}.slot-actions{display:flex;gap:4px;margin-top:4px}.slot-actions button{flex:1;padding:4px 6px;font-size:10px;border:none;border-radius:3px;cursor:pointer;font-weight:600;transition:all 0.2s}.slot-add-btn{background:var(--success);color:white}.slot-add-btn:hover{background:#059669}.slot-delete-btn{background:var(--danger);color:white}.slot-delete-btn:hover{background:#dc2626}.edit-mode-toggle{padding:3px 8px;font-size:10px;background:var(--primary);color:white;border:none;border-radius:3px;cursor:pointer;font-weight:600}.edit-mode-toggle.active{background:var(--success)}.charts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:15px;margin-bottom:15px}.chart-container{background:var(--bg-white);border-radius:var(--radius);padding:12px;border:1px solid var(--border-color)}.chart-title{font-size:13px;font-weight:700;color:var(--text-primary);margin-bottom:10px;text-align:center}.chart-wrapper{position:relative;height:220px;width:100%}.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:15px}.stat-card{background:var(--bg-light);border-radius:var(--radius);padding:10px;border:1px solid var(--border-color);text-align:center}.stat-value{font-size:18px;font-weight:700;color:var(--primary);margin:4px 0}.stat-label{font-size:10px;color:var(--text-secondary);text-transform:uppercase;font-weight:700}@media(max-width:1000px){.schedule-wrapper{grid-template-columns:1fr}.timetable-grid{grid-template-columns:1fr}.charts-grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-
 <div class="container">
-    <div class="panel action-bar">
-        <div class="brand-title">📚Planner & Analytics</div>
-        <div class="date-display" id="currentDateDisplay"></div>
-        <div class="tools">
-            <button class="btn" onclick="exportData()">📥 Export</button>
-            <button class="btn" onclick="toggleTheme()">🌙 Theme</button>
-        </div>
-    </div>
-
-    <div class="panel" style="padding: 0; border: none; box-shadow: none;">
-        <div class="tab-navigation">
-            <button class="tab-btn active" onclick="switchTab('planner')">📅 Planner</button>
-            <button class="tab-btn" onclick="switchTab('timetables')">⏰ Timetables</button>
-            <button class="tab-btn" onclick="switchTab('analytics')">📊 Analytics</button>
-        </div>
-    </div>
-
-    <div id="planner" class="tab-content active">
-        <div class="panel" style="padding: 12px 15px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
-                <div>
-                    <div style="font-weight: 700; font-size: 12px; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 10px;">📅 Select Timeline</div>
-                    <div class="day-selector" id="daySelector"></div>
-                    <div style="font-size: 11px; color: var(--text-secondary); margin-top: 8px;">💡 Green border = Today</div>
-                </div>
-                <div>
-                    <div class="view-selector">
-                        <button class="view-btn active" onclick="toggleView(this)">Day</button>
-                        <button class="view-btn" onclick="toggleView(this)">Week</button>
-                        <button class="view-btn" onclick="toggleView(this)">Month</button>
-                        <button class="view-btn" onclick="toggleView(this)">Year</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="panel header">
-            <div class="stats-wrapper">
-                <div class="stat-badge badge-school">🏫 School: <span id="totalSchool">0</span>h</div>
-                <div class="stat-badge badge-tuition">👨‍🏫 Tuition: <span id="totalTuition">0</span>h</div>
-                <div class="stat-badge badge-study">📖 Study: <span id="totalStudy">0</span>h</div>
-                <div class="stat-badge badge-completion">✅ Completed: <span id="completedCount">0</span>/<span id="totalCount">0</span></div>
-            </div>
-            <div class="progress-wrapper">
-                <span>Progress</span>
-                <progress id="progressBar" value="0" max="100"></progress>
-                <span id="progressText">0%</span>
-            </div>
-        </div>
-
-        <div class="schedule-split">
-            <div class="panel schedule-container">
-                <div class="shift-title"><span>🏫 School Classes</span></div>
-                <table class="schedule-table">
-                    <thead>
-                        <tr><th class="col-check">✓</th><th class="col-time">Time</th><th class="col-hrs">Hrs</th><th class="col-cat">Category</th><th class="col-task">Task</th><th class="col-notes">Notes</th></tr>
-                    </thead>
-                    <tbody id="schoolBody"></tbody>
-                </table>
-                <button class="add-row-btn" onclick="addRow('school')">+ Add Row</button>
-            </div>
-
-            <div class="panel schedule-container">
-                <div class="shift-title"><span>👨‍🏫 Tuition & Study</span></div>
-                <table class="schedule-table">
-                    <thead>
-                        <tr><th class="col-check">✓</th><th class="col-time">Time</th><th class="col-hrs">Hrs</th><th class="col-cat">Category</th><th class="col-task">Task</th><th class="col-notes">Notes</th></tr>
-                    </thead>
-                    <tbody id="tuitionStudyBody"></tbody>
-                </table>
-                <button class="add-row-btn" onclick="addRow('tuition_study')">+ Add Row</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="timetables" class="tab-content">
-        <div class="panel">
-            <div style="margin-bottom: 20px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <h3 style="color: var(--text-primary); font-size: 14px;">🏫 School Timetable (Format: 08:40 AM-09:15 AM Class)</h3>
-                </div>
-                <div class="timetable-grid" id="schoolTimetable"></div>
-            </div>
-            <div style="margin-bottom: 20px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <h3 style="color: var(--text-primary); font-size: 14px;">👨‍🏫 Tuition Schedule (Format: 04:00 PM-05:15 PM Class)</h3>
-                </div>
-                <div class="timetable-grid" id="tuitionTimetable"></div>
-            </div>
-            <div>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <h3 style="color: var(--text-primary); font-size: 14px;">📖 Daily Study Plan (Format: 10:00 PM-11:30 PM Topic)</h3>
-                </div>
-                <div class="timetable-grid" id="studyTimetable"></div>
-            </div>
-        </div>
-    </div>
-
-    <div id="analytics" class="tab-content">
-        <div class="panel">
-            <div class="stats-grid" id="statsGrid"></div>
-            <div class="charts-grid">
-                <div class="chart-container">
-                    <div class="chart-title">📊 Category Breakdown (Hours)</div>
-                    <div class="chart-wrapper"><canvas id="categoryChart"></canvas></div>
-                </div>
-                <div class="chart-container">
-                    <div class="chart-title">📈 Category Completion Rate</div>
-                    <div class="chart-wrapper"><canvas id="completionChart"></canvas></div>
-                </div>
-                <div class="chart-container">
-                    <div class="chart-title">📅 Daily Hours Trend</div>
-                    <div class="chart-wrapper"><canvas id="trendChart"></canvas></div>
-                </div>
-                <div class="chart-container">
-                    <div class="chart-title">✅ Daily Completion Trend</div>
-                    <div class="chart-wrapper"><canvas id="completionTrendChart"></canvas></div>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="panel action-bar">
+<div class="brand-title">📚 Planner</div>
+<div class="date-display" id="currentDateDisplay"></div>
+<div class="tools">
+<button class="btn" onclick="exportData()">📥 Export</button>
+<button class="btn" onclick="toggleTheme()">🌙 Theme</button>
 </div>
-
+</div>
+<div class="panel" style="padding:0;border:none;box-shadow:none">
+<div class="tab-navigation">
+<button class="tab-btn active" onclick="switchTab('planner')">📅 Planner</button>
+<button class="tab-btn" onclick="switchTab('timetables')">⏰ Timetables</button>
+<button class="tab-btn" onclick="switchTab('analytics')">📊 Analytics</button>
+</div>
+</div>
+<div id="planner" class="tab-content active">
+<div class="panel" style="padding:12px 15px">
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px">
+<div>
+<div style="font-weight:700;font-size:12px;color:var(--text-secondary);text-transform:uppercase;margin-bottom:10px">📅 Select Timeline</div>
+<div class="day-selector" id="daySelector"></div>
+<div style="font-size:11px;color:var(--text-secondary);margin-top:8px">💡 Green border = Today</div>
+</div>
+</div>
+</div>
+<div class="panel header">
+<div class="stats-wrapper">
+<div class="stat-badge badge-school">🏫 School: <span id="totalSchool">0</span>h</div>
+<div class="stat-badge badge-tuition">👨‍🏫 Tuition: <span id="totalTuition">0</span>h</div>
+<div class="stat-badge badge-study">📖 Study: <span id="totalStudy">0</span>h</div>
+<div class="stat-badge badge-completion">✅ Completed: <span id="completedCount">0</span>/<span id="totalCount">0</span></div>
+</div>
+<div class="progress-wrapper">
+<span>Progress</span>
+<progress id="progressBar" value="0" max="100"></progress>
+<span id="progressText">0%</span>
+</div>
+</div>
+<div class="schedule-wrapper">
+<div class="schedule-container">
+<div class="shift-title">🏫 School Classes</div>
+<table class="schedule-table">
+<thead><tr><th class="col-check">✓</th><th class="col-time">Time</th><th class="col-hrs">Hrs</th><th class="col-cat">Category</th><th class="col-task">Task</th></tr></thead>
+<tbody id="schoolBody"></tbody>
+</table>
+<button class="add-row-btn" onclick="addRow('school')">+ Add Row</button>
+</div>
+<div class="schedule-container">
+<div class="shift-title">👨‍🏫 Tuition & Study</div>
+<table class="schedule-table">
+<thead><tr><th class="col-check">✓</th><th class="col-time">Time</th><th class="col-hrs">Hrs</th><th class="col-cat">Category</th><th class="col-task">Task</th></tr></thead>
+<tbody id="tuitionStudyBody"></tbody>
+</table>
+<button class="add-row-btn" onclick="addRow('tuition_study')">+ Add Row</button>
+</div>
+</div>
+</div>
+<div id="timetables" class="tab-content">
+<div class="panel">
+<div style="margin-bottom:20px">
+<h3 style="color:var(--text-primary);font-size:14px;margin-bottom:12px">🏫 School Timetable</h3>
+<div class="timetable-grid" id="schoolTimetable"></div>
+</div>
+<div style="margin-bottom:20px">
+<h3 style="color:var(--text-primary);font-size:14px;margin-bottom:12px">👨‍🏫 Tuition Schedule</h3>
+<div class="timetable-grid" id="tuitionTimetable"></div>
+</div>
+<div>
+<h3 style="color:var(--text-primary);font-size:14px;margin-bottom:12px">📖 Daily Study Plan</h3>
+<div class="timetable-grid" id="studyTimetable"></div>
+</div>
+</div>
+</div>
+<div id="analytics" class="tab-content">
+<div class="panel">
+<div class="stats-grid" id="statsGrid"></div>
+<div class="charts-grid">
+<div class="chart-container"><div class="chart-title">📊 Category Breakdown (Hours)</div><div class="chart-wrapper"><canvas id="categoryChart"></canvas></div></div>
+<div class="chart-container"><div class="chart-title">📈 Category Completion Rate</div><div class="chart-wrapper"><canvas id="completionChart"></canvas></div></div>
+<div class="chart-container"><div class="chart-title">📅 Daily Hours Trend</div><div class="chart-wrapper"><canvas id="trendChart"></canvas></div></div>
+<div class="chart-container"><div class="chart-title">✅ Daily Completion Trend</div><div class="chart-wrapper"><canvas id="completionTrendChart"></canvas></div></div>
+</div>
+</div>
+</div>
+</div>
 <script>
-    const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    
-    let currentDate = new Date();
-    let currentDay = DAYS[currentDate.getDay() === 0 ? 6 : currentDate.getDay() - 1];
-    let todayDay = currentDay;
-    let yearlyData = {};
-    let charts = {};
-    let editMode = { school: false, tuition: false, study: false };
-
-    let schoolTimetable = {
-        'Mon': ['08:40 AM-09:15 AM XI C', '09:25 AM-10:00 AM XI C', '10:35 AM-11:10 AM XIII C', '11:40 AM-12:20 PM XII C', '12:20 PM-12:55 PM XI D', '12:55 PM-01:30 PM XIII D', '01:30 PM-02:00 PM XIII D'],
-        'Tue': ['08:40 AM-09:15 AM XI C', '09:25 AM-10:00 AM XI C', '10:35 AM-11:10 AM XII C', '11:40 AM-12:20 PM XII C', '12:20 PM-12:55 PM XI D', '12:55 PM-01:30 PM XIII D', '01:30 PM-02:00 PM XIII D'],
-        'Wed': ['08:40 AM-09:15 AM XI C', '09:25 AM-10:00 AM X C', '10:35 AM-11:10 AM XII C', '11:40 AM-12:20 PM XI D', '12:20 PM-12:55 PM XI D', '12:55 PM-01:30 PM XIII D', '01:30 PM-02:00 PM IX C'],
-        'Thu': ['08:40 AM-09:15 AM XI C', '09:25 AM-10:00 AM X C', '10:35 AM-11:10 AM XII C', '11:40 AM-12:20 PM XI D', '12:55 PM-01:30 PM XIII D', '01:30 PM-02:00 PM X B'],
-        'Fri': ['08:40 AM-09:15 AM XI C', '09:25 AM-10:00 AM X B', '10:35 AM-11:10 AM XII C', '11:40 AM-12:20 PM XI D', '12:20 PM-12:55 PM X C', '12:55 PM-01:30 PM XIII D', '01:30 PM-02:00 PM IX C'],
-        'Sat': ['08:40 AM-09:15 AM XI C', '09:25 AM-10:00 AM X B', '10:35 AM-11:10 AM XII C', '11:40 AM-12:20 PM XI D', '12:20 PM-12:55 PM XI D', '12:55 PM-01:30 PM XIII D', '01:30 PM-02:00 PM IX C'],
-        'Sun': []
-    };
-
-    let tuitionSchedule = {
-        'Mon': ['04:00 PM-05:10 PM XII IP Sant Ngr', '05:10 PM-06:20 PM XII IP SICS', '07:15 PM-08:30 PM XII CS Sant Ngr'],
-        'Tue': ['04:00 PM-05:30 PM XI IP/CS Sant Ngr', '05:30 PM-06:20 PM XI AI SICS', '06:20 PM-07:30 PM XI IP/CS SICS'],
-        'Wed': ['04:00 PM-05:10 PM XII IP Sant Ngr', '05:10 PM-06:20 PM XII IP SICS', '07:15 PM-08:30 PM XII CS Sant Ngr'],
-        'Thu': ['04:00 PM-05:30 PM XI IP/CS Sant Ngr', '05:30 PM-06:20 PM XI AI SICS', '06:20 PM-07:30 PM XI IP/CS SICS'],
-        'Fri': ['04:00 PM-05:10 PM XII IP Sant Ngr', '05:10 PM-06:20 PM XII IP SICS', '07:15 PM-08:30 PM XII CS Sant Ngr'],
-        'Sat': ['04:00 PM-05:30 PM XI IP/CS Sant Ngr', '05:30 PM-06:20 PM XI AI SICS', '06:20 PM-07:30 PM XI IP/CS SICS'],
-        'Sun': []
-    };
-
-    let studySchedule = {
-        'Mon': ['10:00 PM-11:30 PM Mathematics'],
-        'Tue': ['10:00 PM-11:30 PM English'],
-        'Wed': ['10:00 PM-11:30 PM Reasoning'],
-        'Thu': ['10:00 PM-11:30 PM Hindi'],
-        'Fri': ['10:00 PM-11:30 PM Computer Science'],
-        'Sat': ['10:00 PM-11:30 PM Computer Science'],
-        'Sun': ['10:00 PM-11:30 PM CS + Teaching Aptitude']
-    };
-
-    function initializeData() {
-        const year = new Date().getFullYear();
-        yearlyData[year] = {};
-        DAYS.forEach(day => {
-            yearlyData[year][day] = { school: [], tuition_study: [] };
-        });
-    }
-
-    function extractTimeAndCalculateHrs(text) {
-        const timeRangeRegex = /(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)\s*-\s*(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)/i;
-        const match = text.match(timeRangeRegex);
-        
-        if (match) {
-            let startStr = match[1].trim();
-            let endStr = match[2].trim();
-            
-            function parseTimeToHours(tStr, fallbackModifier) {
-                let cleanStr = tStr.toUpperCase().replace(/\s+/g, '');
-                let modifier = cleanStr.includes('PM') ? 'PM' : (cleanStr.includes('AM') ? 'AM' : fallbackModifier);
-                let timePart = cleanStr.replace('AM', '').replace('PM', '');
-                
-                let [hours, minutes] = timePart.split(':').map(Number);
-                if (modifier === 'PM' && hours !== 12) hours += 12;
-                if (modifier === 'AM' && hours === 12) hours = 0;
-                
-                return hours + (minutes / 60);
-            }
-
-            let endModifier = endStr.toUpperCase().includes('PM') ? 'PM' : 'AM';
-            let startHrs = parseTimeToHours(startStr, endModifier);
-            let endHrs = parseTimeToHours(endStr, endModifier);
-            
-            if (endHrs < startHrs) endHrs += 24;
-            let duration = endHrs - startHrs;
-            
-            return {
-                timeStr: `${startStr} - ${endStr}`,
-                hrs: parseFloat(duration.toFixed(2)),
-                cleanTask: text.replace(match[0], '').replace(/[()]/g, '').trim()
-            };
-        }
-        return null;
-    }
-
-    function getScheduleObj(type) {
-        if (type === 'school') return schoolTimetable;
-        if (type === 'tuition') return tuitionSchedule;
-        return studySchedule;
-    }
-
-    function loadState() {
-        const saved = localStorage.getItem('singhYearlyPlanner2026_v4');
-        const savedTimetables = localStorage.getItem('singhTimetables2026_v4');
-        
-        if (saved) {
-            yearlyData = JSON.parse(saved);
-        } else {
-            initializeData();
-        }
-
-        if (savedTimetables) {
-            const tt = JSON.parse(savedTimetables);
-            schoolTimetable = tt.school || schoolTimetable;
-            tuitionSchedule = tt.tuition || tuitionSchedule;
-            studySchedule = tt.study || studySchedule;
-        }
-
-        document.body.classList.toggle('dark-mode', localStorage.getItem('plannerTheme') === 'dark');
-        
-        syncTasksFromTimetable(currentDay);
-        selectDay(currentDay);
-        renderTimetables();
-    }
-
-    function saveState() {
-        const year = new Date().getFullYear();
-        if (!yearlyData[year]) initializeData();
-        localStorage.setItem('singhYearlyPlanner2026_v4', JSON.stringify(yearlyData));
-    }
-
-    function saveTimetables() {
-        localStorage.setItem('singhTimetables2026_v4', JSON.stringify({
-            school: schoolTimetable,
-            tuition: tuitionSchedule,
-            study: studySchedule
-        }));
-    }
-
-    function mergeTaskLists(generatedTasks, existingTasks) {
-        let merged = generatedTasks.map(genT => {
-            let match = existingTasks.find(exT => exT.task === genT.task && exT.cat === genT.cat);
-            if (match) {
-                return { ...genT, completed: match.completed, notes: match.notes };
-            }
-            return genT;
-        });
-
-        existingTasks.forEach(exT => {
-            let match = generatedTasks.find(genT => genT.task === exT.task && genT.cat === exT.cat);
-            if (!match) {
-                merged.push(exT);
-            }
-        });
-        return merged;
-    }
-
-    function syncTasksFromTimetable(day, forceSync = false) {
-        const year = new Date().getFullYear();
-        if (!yearlyData[year]) initializeData();
-
-        let schoolTasks = [];
-        let tuitionStudyTasks = [];
-
-        (schoolTimetable[day] || []).forEach(cls => {
-            if (!cls.trim()) return;
-            const parsed = extractTimeAndCalculateHrs(cls);
-            if (parsed) {
-                schoolTasks.push({ time: parsed.timeStr, hrs: parsed.hrs, cat: 'School', task: parsed.cleanTask, notes: '', completed: false });
-            } else {
-                schoolTasks.push({ time: '', hrs: 0.5, cat: 'School', task: cls.trim(), notes: '', completed: false });
-            }
-        });
-
-        (tuitionSchedule[day] || []).forEach(tuition => {
-            if (!tuition.trim()) return;
-            const parsed = extractTimeAndCalculateHrs(tuition);
-            if (parsed) {
-                tuitionStudyTasks.push({ time: parsed.timeStr, hrs: parsed.hrs, cat: 'Tuition', task: parsed.cleanTask, notes: '', completed: false });
-            } else {
-                tuitionStudyTasks.push({ time: '', hrs: 1, cat: 'Tuition', task: tuition.trim(), notes: '', completed: false });
-            }
-        });
-
-        (studySchedule[day] || []).forEach(study => {
-            if (!study.trim()) return;
-            const parsed = extractTimeAndCalculateHrs(study);
-            if (parsed) {
-                tuitionStudyTasks.push({ time: parsed.timeStr, hrs: parsed.hrs, cat: 'Study', task: parsed.cleanTask, notes: '', completed: false });
-            } else {
-                tuitionStudyTasks.push({ time: '', hrs: 1.5, cat: 'Study', task: study.trim(), notes: '', completed: false });
-            }
-        });
-
-        const dayData = yearlyData[year][day];
-
-        if (!dayData.school || dayData.school.length === 0 || forceSync) {
-            dayData.school = forceSync && dayData.school ? mergeTaskLists(schoolTasks, dayData.school) : schoolTasks;
-        }
-
-        if (!dayData.tuition_study || dayData.tuition_study.length === 0 || forceSync) {
-            dayData.tuition_study = forceSync && dayData.tuition_study ? mergeTaskLists(tuitionStudyTasks, dayData.tuition_study) : tuitionStudyTasks;
-        }
-
-        saveState();
-    }
-
-    function switchTab(tabName) {
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-        document.getElementById(tabName).classList.add('active');
-        event.target.classList.add('active');
-        if (tabName === 'analytics') setTimeout(() => updateAnalytics(), 100);
-        if (tabName === 'timetables') renderTimetables();
-    }
-
-    function toggleView(btn) {
-        document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    }
-
-    function renderTimetables() {
-        const renderGrid = (type, data) => DAYS.map(day => `
-            <div class="timetable-card">
-                <div class="timetable-header">
-                    <span>${day}</span>
-                    <button class="edit-mode-toggle ${editMode[type] ? 'active' : ''}" onclick="toggleEditMode('${type}')">
-                        ${editMode[type] ? '💾 Save' : '✏️ Edit'}
-                    </button>
-                </div>
-                <div class="timetable-body">
-                    ${renderDaySlots(type, day, data)}
-                </div>
-            </div>`).join('');
-
-        document.getElementById('schoolTimetable').innerHTML = renderGrid('school', schoolTimetable);
-        document.getElementById('tuitionTimetable').innerHTML = renderGrid('tuition', tuitionSchedule);
-        document.getElementById('studyTimetable').innerHTML = renderGrid('study', studySchedule);
-    }
-
-    function renderDaySlots(type, day, dataObj) {
-        let html = (dataObj[day] || []).map((item, idx) => editMode[type] ? `
-            <div class="time-slot edit-mode">
-                <textarea class="timetable-input ${type}-slot-${day}">${item}</textarea>
-                <div class="slot-actions"><button class="slot-delete-btn" onclick="deleteSlot('${type}','${day}',${idx})">Delete</button></div>
-            </div>` : `<div class="time-slot"><div class="slot-content">${item || '<i>Empty</i>'}</div></div>`
-        ).join('');
-        if (editMode[type]) html += `<div class="time-slot"><button class="slot-add-btn" onclick="addNewSlot('${type}','${day}')">+ Add Slot</button></div>`;
-        return html;
-    }
-
-    function toggleEditMode(type) {
-        editMode[type] = !editMode[type];
-        if (!editMode[type]) saveAllTimetableChanges(type);
-        renderTimetables();
-    }
-
-    function addNewSlot(type, day) {
-        getScheduleObj(type)[day].push('');
-        renderTimetables();
-    }
-
-    function deleteSlot(type, day, idx) {
-        getScheduleObj(type)[day].splice(idx, 1);
-        renderTimetables();
-    }
-
-    function saveAllTimetableChanges(type) {
-        const dataObj = getScheduleObj(type);
-        DAYS.forEach(day => {
-            const slots = [];
-            document.querySelectorAll(`.${type}-slot-${day}`).forEach(el => {
-                if (el.value.trim()) slots.push(el.value.trim());
-            });
-            dataObj[day] = slots;
-        });
-        saveTimetables();
-        syncTasksFromTimetable(currentDay, true);
-        selectDay(currentDay);
-    }
-
-    function selectDay(day) {
-        currentDay = day;
-        syncTasksFromTimetable(day);
-        renderTables();
-        calculateWeeklyStats();
-        updateProgress();
-    }
-
-    function renderDaySelector() {
-        const selector = document.getElementById('daySelector');
-        selector.innerHTML = DAYS.map(day => `
-            <button class="day-button ${day === currentDay ? 'active' : ''} ${day === todayDay ? 'today' : ''}" onclick="selectDay('${day}')">${day}</button>
-        `).join('');
-    }
-
-    function renderTables() {
-        renderDaySelector();
-        const year = new Date().getFullYear();
-        if (!yearlyData[year]) initializeData();
-        const dayData = yearlyData[year][currentDay] || { school: [], tuition_study: [] };
-        
-        ['school', 'tuition_study'].forEach(section => {
-            const tbody = document.getElementById(section === 'school' ? 'schoolBody' : 'tuitionStudyBody');
-            tbody.innerHTML = '';
-            
-            dayData[section].forEach((item, idx) => {
-                const row = document.createElement('tr');
-                row.className = `task-${item.cat.toLowerCase()}`;
-                row.innerHTML = `
-                    <td class="col-check checkbox-cell"><input type="checkbox" ${item.completed ? 'checked' : ''} onchange="updateCheckbox(${idx}, '${section}')"></td>
-                    <td class="col-time time-cell"><input value="${item.time}" onchange="updateTask(${idx}, 'time', this.value, '${section}')"></td>
-                    <td class="col-hrs hrs-cell"><input type="number" step="0.1" value="${item.hrs}" onchange="updateTask(${idx}, 'hrs', this.value, '${section}')"></td>
-                    <td class="col-cat cat-cell"><span class="category-label ${item.cat}">${item.cat}</span></td>
-                    <td class="col-task task-cell"><input value="${item.task}" onchange="updateTask(${idx}, 'task', this.value, '${section}')"></td>
-                    <td class="col-notes notes-cell"><textarea onchange="updateTask(${idx}, 'notes', this.value, '${section}')">${item.notes}</textarea></td>
-                `;
-                tbody.appendChild(row);
-            });
-        });
-    }
-
-    function addRow(section) {
-        const newTask = {
-            time: '12:00 PM - 01:00 PM',
-            hrs: 1,
-            cat: section === 'school' ? 'School' : 'Study',
-            task: '',
-            notes: '',
-            completed: false
-        };
-        const year = new Date().getFullYear();
-        yearlyData[year][currentDay][section].push(newTask);
-        saveState();
-        renderTables();
-        calculateWeeklyStats();
-        updateProgress();
-    }
-
-    function updateTask(idx, field, value, section) {
-        if (field === 'hrs') value = parseFloat(value) || 0;
-        const year = new Date().getFullYear();
-        yearlyData[year][currentDay][section][idx][field] = value;
-        saveState();
-        calculateWeeklyStats();
-        renderTables();
-    }
-
-    function updateCheckbox(idx, section) {
-        const year = new Date().getFullYear();
-        yearlyData[year][currentDay][section][idx].completed = !yearlyData[year][currentDay][section][idx].completed;
-        saveState();
-        updateProgress();
-        calculateWeeklyStats();
-    }
-
-    function calculateWeeklyStats() {
-        const totals = { school: 0, tuition: 0, study: 0 };
-        const year = new Date().getFullYear();
-        const dayData = yearlyData[year][currentDay] || { school: [], tuition_study: [] };
-        
-        [...dayData.school, ...dayData.tuition_study].forEach(item => {
-            if (item.cat === 'School') totals.school += parseFloat(item.hrs) || 0;
-            if (item.cat === 'Tuition') totals.tuition += parseFloat(item.hrs) || 0;
-            if (item.cat === 'Study') totals.study += parseFloat(item.hrs) || 0;
-        });
-
-        document.getElementById('totalSchool').textContent = totals.school.toFixed(1);
-        document.getElementById('totalTuition').textContent = totals.tuition.toFixed(1);
-        document.getElementById('totalStudy').textContent = totals.study.toFixed(1);
-    }
-
-    function updateProgress() {
-        const cbs = document.querySelectorAll('.checkbox-cell input');
-        if (!cbs.length) {
-            document.getElementById('progressBar').value = 0;
-            document.getElementById('progressText').textContent = '0%';
-            document.getElementById('completedCount').textContent = '0';
-            document.getElementById('totalCount').textContent = '0';
-            return;
-        }
-        const checked = Array.from(cbs).filter(cb => cb.checked).length;
-        const p = Math.round((checked / cbs.length) * 100);
-        document.getElementById('progressBar').value = p;
-        document.getElementById('progressText').textContent = `${p}%`;
-        document.getElementById('completedCount').textContent = checked;
-        document.getElementById('totalCount').textContent = cbs.length;
-    }
-
-    function calculateAnalyticsStats(year) {
-        const stats = { hours: 0, completed: 0, total: 0 };
-        DAYS.forEach(day => {
-            const data = yearlyData[year][day] || { school: [], tuition_study: [] };
-            [...data.school, ...data.tuition_study].forEach(t => {
-                stats.hours += parseFloat(t.hrs) || 0;
-                if (t.completed) stats.completed++;
-                stats.total++;
-            });
-        });
-        return stats;
-    }
-
-    function updateAnalytics() {
-        const year = new Date().getFullYear();
-        const stats = calculateAnalyticsStats(year);
-        const grid = document.getElementById('statsGrid');
-        const compRate = stats.total > 0 ? ((stats.completed / stats.total) * 100).toFixed(1) : 0;
-
-        grid.innerHTML = `
-            <div class="stat-card"><div class="stat-label">Total Weekly Hours</div><div class="stat-value">${stats.hours.toFixed(1)}</div></div>
-            <div class="stat-card"><div class="stat-label">Tasks Completed</div><div class="stat-value">${stats.completed}/${stats.total}</div></div>
-            <div class="stat-card"><div class="stat-label">Completion Rate</div><div class="stat-value" style="color:${compRate>70?'#10b981':compRate>40?'#f59e0b':'#ef4444'};">${compRate}%</div></div>
-        `;
-
-        renderCharts(year);
-    }
-
-    function renderCharts(year) {
-        let catHours = { School: 0, Tuition: 0, Study: 0 };
-        let catTotal = { School: 0, Tuition: 0, Study: 0 };
-        let catComp = { School: 0, Tuition: 0, Study: 0 };
-        let dailyHours = [];
-        let dailyComp = [];
-
-        DAYS.forEach(day => {
-            let dHours = 0;
-            let dComp = 0;
-            let dTotal = 0;
-            const data = yearlyData[year][day] || { school: [], tuition_study: [] };
-            
-            [...data.school, ...data.tuition_study].forEach(t => {
-                let h = parseFloat(t.hrs) || 0;
-                catHours[t.cat] += h;
-                catTotal[t.cat]++;
-                if (t.completed) {
-                    catComp[t.cat]++;
-                    dComp++;
-                }
-                dHours += h;
-                dTotal++;
-            });
-            dailyHours.push(dHours);
-            dailyComp.push(dTotal > 0 ? (dComp / dTotal) * 100 : 0);
-        });
-
-        const isDark = document.body.classList.contains('dark-mode');
-        const textColor = isDark ? '#f1f5f9' : '#1e293b';
-        const gridColor = isDark ? '#334155' : '#e2e8f0';
-
-        Chart.defaults.color = textColor;
-        Chart.defaults.scale.grid.color = gridColor;
-
-        if(charts.category) charts.category.destroy();
-        charts.category = new Chart(document.getElementById('categoryChart'), {
-            type: 'doughnut',
-            data: {
-                labels: ['School', 'Tuition', 'Study'],
-                datasets: [{
-                    data: [catHours.School, catHours.Tuition, catHours.Study],
-                    backgroundColor: ['#3b82f6', '#f59e0b', '#10b981'],
-                    borderWidth: 0
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false }
-        });
-
-        let schoolCompRate = catTotal.School > 0 ? (catComp.School / catTotal.School) * 100 : 0;
-        let tuitionCompRate = catTotal.Tuition > 0 ? (catComp.Tuition / catTotal.Tuition) * 100 : 0;
-        let studyCompRate = catTotal.Study > 0 ? (catComp.Study / catTotal.Study) * 100 : 0;
-
-        if(charts.completion) charts.completion.destroy();
-        charts.completion = new Chart(document.getElementById('completionChart'), {
-            type: 'bar',
-            data: {
-                labels: ['School', 'Tuition', 'Study'],
-                datasets: [{
-                    label: 'Completion %',
-                    data: [schoolCompRate, tuitionCompRate, studyCompRate],
-                    backgroundColor: ['#3b82f6', '#f59e0b', '#10b981'],
-                    borderRadius: 4
-                }]
-            },
-            options: { 
-                responsive: true, maintainAspectRatio: false,
-                scales: { y: { beginAtZero: true, max: 100 } }
-            }
-        });
-
-        if(charts.trend) charts.trend.destroy();
-        charts.trend = new Chart(document.getElementById('trendChart'), {
-            type: 'line',
-            data: {
-                labels: DAYS,
-                datasets: [{
-                    label: 'Total Hours',
-                    data: dailyHours,
-                    borderColor: '#2563eb',
-                    backgroundColor: 'rgba(37, 99, 235, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
-        });
-
-        if(charts.compTrend) charts.compTrend.destroy();
-        charts.compTrend = new Chart(document.getElementById('completionTrendChart'), {
-            type: 'line',
-            data: {
-                labels: DAYS,
-                datasets: [{
-                    label: 'Completion %',
-                    data: dailyComp,
-                    borderColor: '#10b981',
-                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100 } } }
-        });
-    }
-
-    function toggleTheme() {
-        document.body.classList.toggle('dark-mode');
-        localStorage.setItem('plannerTheme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-        if(document.getElementById('analytics').classList.contains('active')) {
-            updateAnalytics(); 
-        }
-    }
-
-    function updateCurrentDate() {
-        const now = new Date();
-        const dateString = now.toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-        document.getElementById('currentDateDisplay').innerHTML = `📅 ${dateString}`;
-    }
-
-    window.addEventListener('load', () => {
-        loadState();
-        updateCurrentDate();
-        setInterval(updateCurrentDate, 60000);
-    });
+const DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+let currentDate=new Date(),currentDay=DAYS[currentDate.getDay()===0?6:currentDate.getDay()-1],todayDay=currentDay,yearlyData={},charts={},editMode={school:false,tuition:false,study:false};
+let schoolTimetable={'Mon':['08:40 AM-09:15 AM XI C','09:25 AM-10:00 AM XI C','10:35 AM-11:10 AM XIII C','11:40 AM-12:20 PM XII C','12:20 PM-12:55 PM XI D','12:55 PM-01:30 PM XIII D','01:30 PM-02:00 PM XIII D'],'Tue':['08:40 AM-09:15 AM XI C','09:25 AM-10:00 AM XI C','10:35 AM-11:10 AM XII C','11:40 AM-12:20 PM XII C','12:20 PM-12:55 PM XI D','12:55 PM-01:30 PM XIII D','01:30 PM-02:00 PM XIII D'],'Wed':['08:40 AM-09:15 AM XI C','09:25 AM-10:00 AM X C','10:35 AM-11:10 AM XII C','11:40 AM-12:20 PM XI D','12:20 PM-12:55 PM XI D','12:55 PM-01:30 PM XIII D','01:30 PM-02:00 PM IX C'],'Thu':['08:40 AM-09:15 AM XI C','09:25 AM-10:00 AM X C','10:35 AM-11:10 AM XII C','11:40 AM-12:20 PM XI D','12:55 PM-01:30 PM XIII D','01:30 PM-02:00 PM X B'],'Fri':['08:40 AM-09:15 AM XI C','09:25 AM-10:00 AM X B','10:35 AM-11:10 AM XII C','11:40 AM-12:20 PM XI D','12:20 PM-12:55 PM X C','12:55 PM-01:30 PM XIII D','01:30 PM-02:00 PM IX C'],'Sat':['08:40 AM-09:15 AM XI C','09:25 AM-10:00 AM X B','10:35 AM-11:10 AM XII C','11:40 AM-12:20 PM XI D','12:20 PM-12:55 PM XI D','12:55 PM-01:30 PM XIII D','01:30 PM-02:00 PM IX C'],'Sun':[]};
+let tuitionSchedule={'Mon':['04:00 PM-05:10 PM XII IP Sant Ngr','05:10 PM-06:20 PM XII IP SICS','07:15 PM-08:30 PM XII CS Sant Ngr'],'Tue':['04:00 PM-05:30 PM XI IP/CS Sant Ngr','05:30 PM-06:20 PM XI AI SICS','06:20 PM-07:30 PM XI IP/CS SICS'],'Wed':['04:00 PM-05:10 PM XII IP Sant Ngr','05:10 PM-06:20 PM XII IP SICS','07:15 PM-08:30 PM XII CS Sant Ngr'],'Thu':['04:00 PM-05:30 PM XI IP/CS Sant Ngr','05:30 PM-06:20 PM XI AI SICS','06:20 PM-07:30 PM XI IP/CS SICS'],'Fri':['04:00 PM-05:10 PM XII IP Sant Ngr','05:10 PM-06:20 PM XII IP SICS','07:15 PM-08:30 PM XII CS Sant Ngr'],'Sat':['04:00 PM-05:30 PM XI IP/CS Sant Ngr','05:30 PM-06:20 PM XI AI SICS','06:20 PM-07:30 PM XI IP/CS SICS'],'Sun':[]};
+let studySchedule={'Mon':['10:00 PM-11:30 PM Mathematics'],'Tue':['10:00 PM-11:30 PM English'],'Wed':['10:00 PM-11:30 PM Reasoning'],'Thu':['10:00 PM-11:30 PM Hindi'],'Fri':['10:00 PM-11:30 PM Computer Science'],'Sat':['10:00 PM-11:30 PM Computer Science'],'Sun':['10:00 PM-11:30 PM CS + Teaching Aptitude']};
+function initializeData(){const y=new Date().getFullYear();yearlyData[y]={};DAYS.forEach(d=>{yearlyData[y][d]={school:[],tuition_study:[]}})}
+function extractTimeAndCalculateHrs(text){const regex=/(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)\s*-\s*(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)/i,match=text.match(regex);if(match){let s=match[1].trim(),e=match[2].trim();function parseTime(t,m){let c=t.toUpperCase().replace(/\s+/g,''),mod=c.includes('PM')?'PM':(c.includes('AM')?'AM':m),p=c.replace('AM','').replace('PM',''),[h,min]=p.split(':').map(Number);if(mod==='PM'&&h!==12)h+=12;if(mod==='AM'&&h===12)h=0;return h+(min/60)}let emod=e.toUpperCase().includes('PM')?'PM':'AM',sh=parseTime(s,emod),eh=parseTime(e,emod);if(eh<sh)eh+=24;let dur=eh-sh;return{timeStr:`${s} - ${e}`,hrs:parseFloat(dur.toFixed(2)),cleanTask:text.replace(match[0],'').replace(/[()]/g,'').trim()}}return null}
+function getScheduleObj(type){return type==='school'?schoolTimetable:type==='tuition'?tuitionSchedule:studySchedule}
+function loadState(){const saved=localStorage.getItem('singhYearlyPlanner2026_v4'),savedTT=localStorage.getItem('singhTimetables2026_v4');if(saved){yearlyData=JSON.parse(saved)}else{initializeData()}if(savedTT){const tt=JSON.parse(savedTT);schoolTimetable=tt.school||schoolTimetable;tuitionSchedule=tt.tuition||tuitionSchedule;studySchedule=tt.study||studySchedule}document.body.classList.toggle('dark-mode',localStorage.getItem('plannerTheme')==='dark');syncTasksFromTimetable(currentDay);selectDay(currentDay);renderTimetables()}
+function saveState(){const y=new Date().getFullYear();if(!yearlyData[y])initializeData();localStorage.setItem('singhYearlyPlanner2026_v4',JSON.stringify(yearlyData))}
+function saveTimetables(){localStorage.setItem('singhTimetables2026_v4',JSON.stringify({school:schoolTimetable,tuition:tuitionSchedule,study:studySchedule}))}
+function mergeTaskLists(g,e){let m=g.map(gt=>{let match=e.find(et=>et.task===gt.task&&et.cat===gt.cat);return match?{...gt,completed:match.completed}:gt});e.forEach(et=>{let match=g.find(gt=>gt.task===et.task&&gt.cat===et.cat);if(!match)m.push(et)});return m}
+function syncTasksFromTimetable(day,forceSync=false){const y=new Date().getFullYear();if(!yearlyData[y])initializeData();let schoolTasks=[],tuitionStudyTasks=[];(schoolTimetable[day]||[]).forEach(cls=>{if(!cls.trim())return;const parsed=extractTimeAndCalculateHrs(cls);if(parsed){schoolTasks.push({time:parsed.timeStr,hrs:parsed.hrs,cat:'School',task:parsed.cleanTask,completed:false})}else{schoolTasks.push({time:'',hrs:0.5,cat:'School',task:cls.trim(),completed:false})}});(tuitionSchedule[day]||[]).forEach(tuition=>{if(!tuition.trim())return;const parsed=extractTimeAndCalculateHrs(tuition);if(parsed){tuitionStudyTasks.push({time:parsed.timeStr,hrs:parsed.hrs,cat:'Tuition',task:parsed.cleanTask,completed:false})}else{tuitionStudyTasks.push({time:'',hrs:1,cat:'Tuition',task:tuition.trim(),completed:false})}});(studySchedule[day]||[]).forEach(study=>{if(!study.trim())return;const parsed=extractTimeAndCalculateHrs(study);if(parsed){tuitionStudyTasks.push({time:parsed.timeStr,hrs:parsed.hrs,cat:'Study',task:parsed.cleanTask,completed:false})}else{tuitionStudyTasks.push({time:'',hrs:1.5,cat:'Study',task:study.trim(),completed:false})}});const dayData=yearlyData[y][day];if(!dayData.school||dayData.school.length===0||forceSync){dayData.school=forceSync&&dayData.school?mergeTaskLists(schoolTasks,dayData.school):schoolTasks}if(!dayData.tuition_study||dayData.tuition_study.length===0||forceSync){dayData.tuition_study=forceSync&&dayData.tuition_study?mergeTaskLists(tuitionStudyTasks,dayData.tuition_study):tuitionStudyTasks}saveState()}
+function switchTab(tabName){document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(el=>el.classList.remove('active'));document.getElementById(tabName).classList.add('active');event.target.classList.add('active');if(tabName==='analytics')setTimeout(()=>updateAnalytics(),100);if(tabName==='timetables')renderTimetables()}
+function renderTimetables(){const renderGrid=(type,data)=>DAYS.map(day=>`<div class="timetable-card"><div class="timetable-header"><span>${day}</span><button class="edit-mode-toggle ${editMode[type]?'active':''}" onclick="toggleEditMode('${type}')">${editMode[type]?'💾 Save':'✏️ Edit'}</button></div><div class="timetable-body">${renderDaySlots(type,day,data)}</div></div>`).join('');document.getElementById('schoolTimetable').innerHTML=renderGrid('school',schoolTimetable);document.getElementById('tuitionTimetable').innerHTML=renderGrid('tuition',tuitionSchedule);document.getElementById('studyTimetable').innerHTML=renderGrid('study',studySchedule)}
+function renderDaySlots(type,day,dataObj){let html=(dataObj[day]||[]).map((item,idx)=>editMode[type]?`<div class="time-slot edit-mode"><textarea class="timetable-input ${type}-slot-${day}">${item}</textarea><div class="slot-actions"><button class="slot-delete-btn" onclick="deleteSlot('${type}','${day}',${idx})">Delete</button></div></div>`:`<div class="time-slot"><div class="slot-content">${item||'<i>Empty</i>'}</div></div>`).join('');if(editMode[type])html+=`<div class="time-slot"><button class="slot-add-btn" onclick="addNewSlot('${type}','${day}')">+ Add Slot</button></div>`;return html}
+function toggleEditMode(type){editMode[type]=!editMode[type];if(!editMode[type])saveAllTimetableChanges(type);renderTimetables()}
+function addNewSlot(type,day){getScheduleObj(type)[day].push('');renderTimetables()}
+function deleteSlot(type,day,idx){getScheduleObj(type)[day].splice(idx,1);renderTimetables()}
+function saveAllTimetableChanges(type){const dataObj=getScheduleObj(type);DAYS.forEach(day=>{const slots=[];document.querySelectorAll(`.${type}-slot-${day}`).forEach(el=>{if(el.value.trim())slots.push(el.value.trim())});dataObj[day]=slots});saveTimetables();syncTasksFromTimetable(currentDay,true);selectDay(currentDay)}
+function selectDay(day){currentDay=day;syncTasksFromTimetable(day);renderTables();calculateWeeklyStats();updateProgress()}
+function renderDaySelector(){const selector=document.getElementById('daySelector');selector.innerHTML=DAYS.map(day=>`<button class="day-button ${day===currentDay?'active':''} ${day===todayDay?'today':''}" onclick="selectDay('${day}')">${day}</button>`).join('')}
+function renderTables(){renderDaySelector();const y=new Date().getFullYear();if(!yearlyData[y])initializeData();const dayData=yearlyData[y][currentDay]||{school:[],tuition_study:[]};['school','tuition_study'].forEach(section=>{const tbody=document.getElementById(section==='school'?'schoolBody':'tuitionStudyBody');tbody.innerHTML='';dayData[section].forEach((item,idx)=>{const row=document.createElement('tr');row.className=`task-${item.cat.toLowerCase()}`;row.innerHTML=`<td class="col-check checkbox-cell"><input type="checkbox" ${item.completed?'checked':''} onchange="updateCheckbox(${idx},'${section}')"></td><td class="col-time time-cell"><input value="${item.time}" onchange="updateTask(${idx},'time',this.value,'${section}')"></td><td class="col-hrs hrs-cell"><input type="number" step="0.1" value="${item.hrs}" onchange="updateTask(${idx},'hrs',this.value,'${section}')"></td><td class="col-cat cat-cell"><span class="category-label ${item.cat}">${item.cat}</span></td><td class="col-task task-cell"><input value="${item.task}" onchange="updateTask(${idx},'task',this.value,'${section}')"></td>`;tbody.appendChild(row)})})}
+function addRow(section){const newTask={time:'12:00 PM - 01:00 PM',hrs:1,cat:section==='school'?'School':'Study',task:'',completed:false};const y=new Date().getFullYear();yearlyData[y][currentDay][section].push(newTask);saveState();renderTables();calculateWeeklyStats();updateProgress()}
+function updateTask(idx,field,value,section){if(field==='hrs')value=parseFloat(value)||0;const y=new Date().getFullYear();yearlyData[y][currentDay][section][idx][field]=value;saveState();calculateWeeklyStats();renderTables()}
+function updateCheckbox(idx,section){const y=new Date().getFullYear();yearlyData[y][currentDay][section][idx].completed=!yearlyData[y][currentDay][section][idx].completed;saveState();updateProgress();calculateWeeklyStats()}
+function calculateWeeklyStats(){const totals={school:0,tuition:0,study:0},y=new Date().getFullYear(),dayData=yearlyData[y][currentDay]||{school:[],tuition_study:[]};[...dayData.school,...dayData.tuition_study].forEach(item=>{if(item.cat==='School')totals.school+=parseFloat(item.hrs)||0;if(item.cat==='Tuition')totals.tuition+=parseFloat(item.hrs)||0;if(item.cat==='Study')totals.study+=parseFloat(item.hrs)||0});document.getElementById('totalSchool').textContent=totals.school.toFixed(1);document.getElementById('totalTuition').textContent=totals.tuition.toFixed(1);document.getElementById('totalStudy').textContent=totals.study.toFixed(1)}
+function updateProgress(){const cbs=document.querySelectorAll('.checkbox-cell input');if(!cbs.length){document.getElementById('progressBar').value=0;document.getElementById('progressText').textContent='0%';document.getElementById('completedCount').textContent='0';document.getElementById('totalCount').textContent='0';return}const checked=Array.from(cbs).filter(cb=>cb.checked).length,p=Math.round((checked/cbs.length)*100);document.getElementById('progressBar').value=p;document.getElementById('progressText').textContent=`${p}%`;document.getElementById('completedCount').textContent=checked;document.getElementById('totalCount').textContent=cbs.length}
+function calculateAnalyticsStats(y){const stats={hours:0,completed:0,total:0};DAYS.forEach(day=>{const data=yearlyData[y][day]||{school:[],tuition_study:[]};[...data.school,...data.tuition_study].forEach(t=>{stats.hours+=parseFloat(t.hrs)||0;if(t.completed)stats.completed++;stats.total++})});return stats}
+function updateAnalytics(){const y=new Date().getFullYear(),stats=calculateAnalyticsStats(y),grid=document.getElementById('statsGrid'),compRate=stats.total>0?((stats.completed/stats.total)*100).toFixed(1):0;grid.innerHTML=`<div class="stat-card"><div class="stat-label">Total Weekly Hours</div><div class="stat-value">${stats.hours.toFixed(1)}</div></div><div class="stat-card"><div class="stat-label">Tasks Completed</div><div class="stat-value">${stats.completed}/${stats.total}</div></div><div class="stat-card"><div class="stat-label">Completion Rate</div><div class="stat-value" style="color:${compRate>70?'#10b981':compRate>40?'#f59e0b':'#ef4444'}">${compRate}%</div></div>`;renderCharts(y)}
+function renderCharts(y){let catHours={School:0,Tuition:0,Study:0},catTotal={School:0,Tuition:0,Study:0},catComp={School:0,Tuition:0,Study:0},dailyHours=[],dailyComp=[];DAYS.forEach(day=>{let dHours=0,dComp=0,dTotal=0;const data=yearlyData[y][day]||{school:[],tuition_study:[]};[...data.school,...data.tuition_study].forEach(t=>{let h=parseFloat(t.hrs)||0;catHours[t.cat]+=h;catTotal[t.cat]++;if(t.completed){catComp[t.cat]++;dComp++}dHours+=h;dTotal++});dailyHours.push(dHours);dailyComp.push(dTotal>0?(dComp/dTotal)*100:0)});const isDark=document.body.classList.contains('dark-mode'),textColor=isDark?'#f1f5f9':'#1e293b',gridColor=isDark?'#334155':'#e2e8f0';Chart.defaults.color=textColor;Chart.defaults.scale.grid.color=gridColor;if(charts.category)charts.category.destroy();charts.category=new Chart(document.getElementById('categoryChart'),{type:'doughnut',data:{labels:['School','Tuition','Study'],datasets:[{data:[catHours.School,catHours.Tuition,catHours.Study],backgroundColor:['#3b82f6','#f59e0b','#10b981'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false}});let schoolCompRate=catTotal.School>0?(catComp.School/catTotal.School)*100:0,tuitionCompRate=catTotal.Tuition>0?(catComp.Tuition/catTotal.Tuition)*100:0,studyCompRate=catTotal.Study>0?(catComp.Study/catTotal.Study)*100:0;if(charts.completion)charts.completion.destroy();charts.completion=new Chart(document.getElementById('completionChart'),{type:'bar',data:{labels:['School','Tuition','Study'],datasets:[{label:'Completion %',data:[schoolCompRate,tuitionCompRate,studyCompRate],backgroundColor:['#3b82f6','#f59e0b','#10b981'],borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true,max:100}}}});if(charts.trend)charts.trend.destroy();charts.trend=new Chart(document.getElementById('trendChart'),{type:'line',data:{labels:DAYS,datasets:[{label:'Total Hours',data:dailyHours,borderColor:'#2563eb',backgroundColor:'rgba(37,99,235,0.1)',tension:0.4,fill:true}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true}}}});if(charts.compTrend)charts.compTrend.destroy();charts.compTrend=new Chart(document.getElementById('completionTrendChart'),{type:'line',data:{labels:DAYS,datasets:[{label:'Completion %',data:dailyComp,borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.1)',tension:0.4,fill:true}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true,max:100}}}})}
+function toggleTheme(){document.body.classList.toggle('dark-mode');localStorage.setItem('plannerTheme',document.body.classList.contains('dark-mode')?'dark':'light');if(document.getElementById('analytics').classList.contains('active')){updateAnalytics()}}
+function updateCurrentDate(){const now=new Date(),dateString=now.toLocaleDateString('en-US',{weekday:'short',year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});document.getElementById('currentDateDisplay').innerHTML=`📅 ${dateString}`}
+function exportData(){const year=new Date().getFullYear(),data={year,timestamp:new Date().toISOString(),schedule:yearlyData[year]},json=JSON.stringify(data,null,2),blob=new Blob([json],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`singh_schedule_${year}.json`;a.click();URL.revokeObjectURL(url)}
+window.addEventListener('load',()=>{loadState();updateCurrentDate();setInterval(updateCurrentDate,60000)});
 </script>
 </body>
 </html>
