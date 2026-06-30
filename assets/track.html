@@ -79,23 +79,9 @@ tr.task-study { background: rgba(139, 92, 246, 0.03); }
     white-space: nowrap;
 }
 
-.category-label.School { 
-    background: var(--c-blue); 
-    color: white;
-    border: none;
-}
-
-.category-label.Tuition { 
-    background: var(--c-amber); 
-    color: white;
-    border: none;
-}
-
-.category-label.Study { 
-    background: var(--c-purple); 
-    color: white;
-    border: none;
-}
+.category-label.School { background: var(--c-blue); color: white; border: none; }
+.category-label.Tuition { background: var(--c-amber); color: white; border: none; }
+.category-label.Study { background: var(--c-purple); color: white; border: none; }
 
 /* Header Navigation */
 .merged-header { 
@@ -176,194 +162,166 @@ tr.task-study { background: rgba(139, 92, 246, 0.03); }
     opacity: 1;
 }
 
-/* Premium Dashboard UI */
+/* ==========================================
+   UPDATED DASHBOARD UI (MATCHING IMAGE 2) 
+   ========================================== */
 .merged-dashboard {
     display: flex;
     flex-wrap: wrap;
-    gap: 30px;
-    padding: 24px 28px !important;
-    align-items: center;
-    background: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.02), 0 4px 10px -5px rgba(0, 0, 0, 0.01);
-    border: 1px solid #f1f5f9;
+    gap: 16px;
+    padding: 0 !important;
+    background: transparent;
+    border: none;
+    box-shadow: none;
     margin-bottom: 24px;
+    align-items: stretch;
 }
 
-.timeline-section {
+.timeline-container {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
     flex: 0 0 auto;
 }
 
-.timeline-header {
-    font-weight: 800;
-    font-size: var(--font-xs);
-    color: #64748b;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 16px;
+.timeline-header-row {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 8px;
+    gap: 30px;
 }
 
-.timeline-actions {
-    margin-top: 14px;
+.timeline-title {
+    font-weight: 800;
+    font-size: 13px;
+    color: #0f172a;
     display: flex;
     align-items: center;
     gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .reset-btn {
-    background: #f1f5f9;
-    color: #64748b;
+    background: #ffffff;
+    color: #0f172a;
     border: 1px solid #e2e8f0;
-    padding: 8px 12px;
+    padding: 6px 12px;
     border-radius: 6px;
-    font-size: var(--font-xs);
-    font-weight: 700;
+    font-size: 11px;
+    font-weight: 800;
     cursor: pointer;
     transition: all 0.2s;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .reset-btn:hover {
-    background: #fee2e2;
-    color: #ef4444;
-    border-color: #fca5a5;
+    background: #f8fafc;
+    border-color: #cbd5e1;
 }
 
-/* Compact Timeline Grid Layout */
+/* Day Selector */
 .day-selector {
-    display: grid;
-    grid-template-columns: repeat(4, 68px);
+    display: flex;
     gap: 8px;
 }
 
 .day-button {
-    padding: 10px 0;
+    padding: 10px 16px;
     border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    background: #f8fafc;
+    border-radius: 8px;
+    background: #ffffff;
     font-weight: 700;
-    font-size: var(--font-sm);
+    font-size: 13px;
     cursor: pointer;
-    color: #475569;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    text-align: center;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.01);
+    color: #0f172a;
+    transition: all 0.2s;
 }
 
 .day-button:hover {
-    background: #ffffff;
+    background: #f8fafc;
     border-color: #cbd5e1;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
-.day-button:not(:nth-child(7)).active {
+.day-button.active {
     background: var(--primary);
     border-color: var(--primary);
     color: white;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
-    transform: translateY(-1px);
 }
 
-.day-button:not(:nth-child(7)).today {
-    border: 2px solid var(--success);
+.day-button.today {
+    border: 2px solid var(--border-color); /* Kept subtle */
 }
 
-/* Premium Sunday Button */
+/* Sunday Button Override */
 .day-button:nth-child(7) {
-    grid-column: 4;
-    grid-row: 1 / span 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    background: linear-gradient(135deg, #10b981, #059669);
+    background: var(--success);
     color: white;
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    border: 1px solid var(--success);
+    grid-column: auto;
+    grid-row: auto;
+    display: block;
+    box-shadow: none;
 }
 
 .day-button:nth-child(7)::before {
-    content: '📅';
-    font-size: 16px;
-    margin-bottom: 2px;
+    content: none;
 }
 
-/* Divider */
-.divider {
-    width: 1px;
-    height: 90px;
-    background: #f1f5f9;
-    margin: 0 10px;
-}
-
-/* Premium Compact Stats Grid */
+/* Stats Container */
 .stats-section {
     flex: 1;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 12px;
+    display: flex;
+    gap: 16px;
     min-width: 300px;
 }
 
 .stat-card-new {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding: 16px 12px;
-    border-radius: 12px;
-    gap: 10px;
-    background: #ffffff;
-    border: 1px solid #f1f5f9;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-    position: relative;
-    overflow: hidden;
-    text-align: center;
-}
-
-/* Subtle Background Tint */
-.school-card { background: linear-gradient(to right, #eff6ff88, #ffffff); border-color: #bfdbfe; }
-.tuition-card { background: linear-gradient(to right, #fffbeb88, #ffffff); border-color: #fcd34d; }
-.study-card { background: linear-gradient(to right, #f5f3ff88, #ffffff); border-color: #ddd6fe; }
-.completed-card { background: linear-gradient(to right, #ecfdf588, #ffffff); border-color: #a7f3d0; }
-
-.stat-icon-wrapper {
-    width: 40px;
-    height: 40px;
-    display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    padding: 24px 16px;
+    border-radius: 12px;
+    gap: 12px;
+    background: #ffffff;
 }
 
-.stat-info {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
+/* Exact borders matching Image 2 */
+.school-card { border: 1px solid #bfdbfe; }
+.tuition-card { border: 1px solid #fde047; }
+.study-card { border: 1px solid #ddd6fe; }
+.completed-card { border: 1px solid #a7f3d0; }
 
 .stat-label-new {
-    font-size: var(--font-xs);
+    font-size: 13px;
     font-weight: 800;
-    color: #64748b;
+    color: #0f172a;
     letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
 
 .stat-val-new {
-    font-size: 18px;
+    font-size: 30px;
     font-weight: 800;
 }
 
-.school-card .stat-val-new { color: var(--c-blue); }
-.tuition-card .stat-val-new { color: var(--c-amber); }
-.study-card .stat-val-new { color: var(--c-purple); }
-.completed-card .stat-val-new { color: var(--success); }
+/* Solid Values */
+.school-card .stat-val-new { color: #2563eb; }
+.tuition-card .stat-val-new { color: #f59e0b; }
+.study-card .stat-val-new { color: #8b5cf6; }
+.completed-card .stat-val-new { color: #10b981; }
+/* ========================================== */
 
 /* Tables and Timetables */
 .schedule-wrapper { 
@@ -802,15 +760,15 @@ tr.task-study { background: rgba(139, 92, 246, 0.03); }
     .merged-dashboard { 
         flex-direction: column; 
         align-items: stretch; 
-        padding: 20px !important;
-    }
-    
-    .divider { 
-        display: none;
+        padding: 0 !important;
     }
     
     .stats-section { 
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        flex-wrap: wrap;
+    }
+
+    .stat-card-new {
+        min-width: calc(50% - 8px);
     }
     
     .schedule-wrapper { 
@@ -823,13 +781,6 @@ tr.task-study { background: rgba(139, 92, 246, 0.03); }
     
     .timetable-grid { 
         grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 900px) {
-    .day-selector { 
-        grid-template-columns: repeat(4, 1fr);
-        width: 100%;
     }
 }
 
@@ -870,52 +821,38 @@ tr.task-study { background: rgba(139, 92, 246, 0.03); }
         border-top: 1px solid var(--border-color);
     }
     
-    .merged-dashboard {
-        flex-direction: column;
-        gap: 20px;
-        padding: 16px !important;
+    .timeline-container {
+        padding: 16px;
     }
-    
-    .timeline-section {
-        width: 100%;
+
+    .timeline-header-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
     }
     
     .day-selector {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 6px;
+        flex-wrap: wrap;
     }
     
     .day-button {
-        padding: 8px 0;
+        flex: 1;
+        min-width: 40px;
+        text-align: center;
+        padding: 10px 0;
         font-size: var(--font-xs);
     }
     
-    .day-button:nth-child(7) {
-        grid-column: auto;
-        grid-row: auto;
-    }
-    
-    .stats-section {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-    }
-    
     .stat-card-new {
-        padding: 12px 8px;
-    }
-    
-    .stat-icon-wrapper {
-        width: 32px;
-        height: 32px;
-        font-size: 20px;
+        padding: 16px 12px;
     }
     
     .stat-label-new {
-        font-size: 10px;
+        font-size: 11px;
     }
     
     .stat-val-new {
-        font-size: 16px;
+        font-size: 24px;
     }
     
     .schedule-wrapper {
@@ -946,20 +883,6 @@ tr.task-study { background: rgba(139, 92, 246, 0.03); }
         width: 48px;
         height: 48px;
         font-size: 24px;
-    }
-    
-    .timetable-grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
-    }
-    
-    .charts-grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
-    }
-    
-    .chart-wrapper {
-        height: 200px;
     }
 }
 
@@ -995,53 +918,45 @@ textarea:focus-visible {
 
     <div id="planner" class="tab-content active" role="tabpanel" aria-labelledby="planner">
         
+        <!-- TARGET UPDATE: DASHBOARD UI RESTRUCTURED -->
         <div class="merged-dashboard">
-            <div class="timeline-section">
-                <div class="timeline-header">📅 SELECT TIMELINE</div>
-                <div class="day-selector" id="daySelector" role="group" aria-label="Select day of week"></div>
-                <div class="timeline-actions">
-                    <button onclick="resetData()" class="reset-btn" aria-label="Reset all planner data">🔄 Reset Data</button>
+            <div class="timeline-container">
+                <div class="timeline-header-row">
+                    <div class="timeline-title">
+                        <span style="color: #2563eb; font-size: 16px;">📅</span> SELECT TIMELINE
+                    </div>
+                    <button onclick="resetData()" class="reset-btn" aria-label="Reset all planner data">
+                        <span style="color: #2563eb; font-size: 14px;">🔄</span> RESET DATA
+                    </button>
                 </div>
+                <div class="day-selector" id="daySelector" role="group" aria-label="Select day of week"></div>
             </div>
-
-            <div class="divider" aria-hidden="true"></div>
 
             <div class="stats-section" aria-live="polite" aria-label="Daily statistics">
                 <div class="stat-card-new school-card">
-                    <div class="stat-icon-wrapper">🏫</div>
-                    <div class="stat-info">
-                        <span class="stat-label-new">SCHOOL</span>
-                        <span class="stat-val-new"><span id="totalSchool">0.0</span> H</span>
-                    </div>
+                    <span class="stat-label-new">SCHOOL</span>
+                    <span class="stat-val-new"><span id="totalSchool">0.0</span> H</span>
                 </div>
                 <div class="stat-card-new tuition-card">
-                    <div class="stat-icon-wrapper">👨‍🏫</div>
-                    <div class="stat-info">
-                        <span class="stat-label-new">TUITION</span>
-                        <span class="stat-val-new"><span id="totalTuition">0.0</span> H</span>
-                    </div>
+                    <span class="stat-label-new">TUITION</span>
+                    <span class="stat-val-new"><span id="totalTuition">0.0</span> H</span>
                 </div>
                 <div class="stat-card-new study-card">
-                    <div class="stat-icon-wrapper">📖</div>
-                    <div class="stat-info">
-                        <span class="stat-label-new">STUDY</span>
-                        <span class="stat-val-new"><span id="totalStudy">0.0</span> H</span>
-                    </div>
+                    <span class="stat-label-new">STUDY</span>
+                    <span class="stat-val-new"><span id="totalStudy">0.0</span> H</span>
                 </div>
                 <div class="stat-card-new completed-card">
-                    <div class="stat-icon-wrapper">✅</div>
-                    <div class="stat-info">
-                        <span class="stat-label-new">COMPLETED</span>
-                        <span class="stat-val-new"><span id="completedCount">0</span> / <span id="totalCount">0</span></span>
-                    </div>
+                    <span class="stat-label-new">COMPLETED</span>
+                    <span class="stat-val-new"><span id="completedCount">0</span> / <span id="totalCount">0</span></span>
                 </div>
             </div>
-
+            
             <div style="display: none;">
                 <progress id="progressBar" value="0" max="100"></progress>
                 <span id="progressText">0%</span>
             </div>
         </div>
+        <!-- END TARGET UPDATE -->
 
         <div class="schedule-wrapper">
             <div class="schedule-container">
