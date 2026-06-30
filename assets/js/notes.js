@@ -73,7 +73,11 @@ function updateTimer() {
     const secs = (studySeconds % 60).toString().padStart(2, '0');
     const timeString = `${hrs}:${mins}:${secs}`;
     
-    document.querySelectorAll('.timer-sync').forEach(el => el.textContent = timeString);
+    // FIXED: Target the specific ID from your HTML
+    const timerElement = document.getElementById('study-timer');
+    if (timerElement) {
+        timerElement.textContent = timeString;
+    }
 
     if (motivationEl) {
         if (studySeconds === 60) motivationEl.textContent = "Warming up! 🔥";
