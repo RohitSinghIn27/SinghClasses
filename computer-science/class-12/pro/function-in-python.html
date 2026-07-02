@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Function in Python | Class 12 Computer Science CBSE | SinghClasses</title>
+  <meta name="description" content="Master Functions in Python for CBSE Class 12 Computer Science with expert coaching by Rohit Singh. Access PDF notes, one-shot video lectures, and study materials at SinghClasses.in.">
+  <meta name="keywords" content="Function in Python, Class 12 Computer Science CBSE, Python Functions, Rohit Singh, SinghClasses, CBSE CS Notes, Python Programming">
+  <meta name="author" content="Rohit Singh">
+  
+  <link rel="icon" href="assets/images/favicon/favicon.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../../assets/css/style.css">
+  <link rel="stylesheet" href="../../../assets/css/dashboard.css">
+  <link rel="stylesheet" href="../../../assets/css/notes.css">
+</head>
+<body>
+
+  <canvas id="ambient-canvas"></canvas>
+
+  <header class="unified-workspace-header" role="banner">
+    
+    <div class="header-left-group">
+   <button class="back-btn" onclick="window.location.href='../../../index.html'" aria-label="Go Back">
+        <svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24" width="18"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        Back
+      </button>
+        <div class="chapter-capsule" 
+             id="current-chapter" 
+             data-drive-id="11m16PQLC7baML75F-U-ohA42d--Iu31J"
+             data-yt-link="https://youtu.be/e3XOibcemx8">
+            Function in Python
+        </div>
+    </div>
+
+    <div class="header-right-group">
+        <button class="app-btn app-btn-outline" onclick="downloadPDF()">
+            <svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="15"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg> 
+            Download
+        </button>
+
+        <button class="app-btn app-btn-yt" id="yt-trigger-btn" onclick="handleYTClick()">
+            <svg fill="currentColor" height="16" viewBox="0 0 24 24" width="16"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.377.55a3.016 3.016 0 0 0-2.122 2.136C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.55 9.376.55 9.376.55s7.505 0 9.377-.55a3.016 3.016 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            One Shot
+        </button>
+
+        <button class="app-btn hide-on-mobile" onclick="toggleFullScreen()">
+            <svg fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="15"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+            Fullscreen
+        </button>
+
+        <div class="timer-display timer-sync mobile-timer">00:00:00</div>
+        <div class="tracking-eyes-container mobile-eyes">
+            <div class="eye-ball"><div class="pupil"></div></div>
+            <div class="eye-ball"><div class="pupil"></div></div>
+        </div>
+    </div>
+
+  </header>
+
+  <main class="main-content">
+    <div class="pdf-viewer-container" id="viewer-container">
+        <div class="pdf-loading-overlay" id="loading-overlay">
+            <div class="loading-spinner-ring"></div>
+            <div class="loading-text">Fetching Document...</div>
+        </div>
+        <iframe id="pdf-frame" src="" onload="hideLoader()" allowfullscreen="true"></iframe>
+    </div>
+  </main>
+
+  <footer class="unified-workspace-footer">
+      <div>© <span id="current-year">2026</span> SinghClasses.in</div>
+      
+      <div class="footer-tools">
+          <span id="motivation-text" class="motivation-text">Best of luck!</span>
+          
+          <div class="timer-display timer-sync" id="study-timer">00:00:00</div>
+          
+          <div class="tracking-eyes-container desktop-eyes">
+              <div class="eye-ball"><div class="pupil"></div></div>
+              <div class="eye-ball"><div class="pupil"></div></div>
+          </div>
+      </div>
+  </footer>
+
+  <div id="yt-modal" class="yt-modal-overlay">
+      <div class="yt-modal-card">
+          <div class="modal-icon-wrapper">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <h2>Want to watch this video?</h2>
+          <p>Choose an option below to continue to the One Shot lecture.</p>
+          <div class="modal-actions">
+              <button class="m-btn m-btn-outline" onclick="closeYTModal()">Stay</button>
+              <button class="m-btn m-btn-solid" onclick="proceedToYT()">Watch</button>
+          </div>
+      </div>
+  </div>
+
+  <div id="status-toast" class="status-toast">
+      🚧 We are currently preparing this material. Coming soon!
+  </div>
+
+  <script src="../../../script.js"></script>
+  <script src="../../../assets/js/dashboard.js"></script>
+  <script src="../../../assets/js/style.js"></script>
+  <script src="../../../assets/js/notes.js"></script>
+</body>
+</html>
