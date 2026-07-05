@@ -353,3 +353,20 @@ document.addEventListener("contextmenu", function (e) {
 document.addEventListener("contextmenu", function (event) {
   event.preventDefault();
 });
+
+// 1. Blur the page when window loses focus (triggers on most screenshot tools)
+window.addEventListener("blur", () => {
+  document.body.style.filter = "blur(15px)";
+});
+
+window.addEventListener("focus", () => {
+  document.body.style.filter = "none";
+});
+
+// 2. Clear clipboard if they attempt to press the PrintScreen key
+window.addEventListener("keyup", (e) => {
+  if (e.key === "PrintScreen") {
+    navigator.clipboard.writeText(""); // Wipes the copied screenshot data
+    alert("Screenshots are disabled to protect proprietary content.");
+  }
+});
