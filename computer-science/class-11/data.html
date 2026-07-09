@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Video Lectures | SinghClasses</title>
 <meta name="description" content="Watch video lectures for CBSE Class 12 Computer Science at SinghClasses.in">
-<meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -23,15 +22,26 @@ body{background-color:var(--app-bg);color:var(--text-main);display:flex;flex-dir
 .app-btn:hover{background-color:var(--primary-blue-hover);transform:translateY(-1px)}
 .mobile-timer,.mobile-eyes{display:none!important}
 .hide-on-mobile{display:flex}
-.main-content{flex-grow:1;position:relative;width:100%;z-index:10;padding:2rem;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.video-container{width:100%;max-width:1100px;aspect-ratio:16/9;border-radius:12px;overflow:hidden;box-shadow:var(--shadow-elevation);border:1px solid var(--border-color);background:#000}
-.video-container iframe{width:100%;height:100%;border:none}
+
+/* FIXED: Centers everything exactly within the main section without causing layout spill */
+.main-content{flex-grow:1;position:relative;width:100%;z-index:10;padding:2rem 1.5rem;display:flex;align-items:center;justify-content:center;overflow:hidden}
+
+/* FIXED: Reconfigured width boundaries so it keeps a true cinematic 16:9 ratio and fits all laptop/desktop viewports safely */
+.video-container{width:100%;max-width:960px;aspect-ratio:16/9;border-radius:12px;overflow:hidden;box-shadow:var(--shadow-elevation);border:1px solid var(--border-color);background:#000;display:flex}
+
+/* FIXED: Handled full thumbnail stretch coverage inside its rounded box */
+.yt-fallback-card{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(rgba(15,23,42,0.3), rgba(15,23,42,0.5)), url('https://img.youtube.com/vi/wGfnxleqNJc/maxresdefault.jpg') center/cover no-repeat;color:#fff;text-decoration:none;position:relative;transition:all 0.3s ease-in-out}
+.yt-fallback-card:hover{filter:brightness(1.15)}
+
+.play-icon-btn{width:76px;height:76px;background:rgba(220,38,38,0.95);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(220,38,38,0.5);transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1);z-index:2}
+.yt-fallback-card:hover .play-icon-btn{transform:scale(1.12);background:#DC2626;box-shadow:0 12px 35px rgba(220,38,38,0.7)}
+
 .unified-workspace-footer{background-color:rgba(15,23,42,0.85);backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,0.08);padding:0.6rem 1.5rem;display:flex;justify-content:space-between;align-items:center;z-index:100;flex-shrink:0;font-size:0.85rem;box-shadow:0 -4px 20px rgba(0,0,0,0.4)}
 .footer-tools{display:flex;align-items:center;gap:1.2rem}
 .motivation-text{color:var(--text-main);font-weight:500}
 .timer-display{font-family:Poppins,monospace;font-weight:600;font-size:1rem;color:var(--text-main);background-color:rgba(255,255,255,0.05);padding:0.2rem 0.8rem;border-radius:4px;border:1px solid rgba(255,255,255,0.1)}
 .tracking-eyes-container{--eye-size:20px;--pupil-size:calc(var(--eye-size) * 0.4);--border-width:calc(var(--eye-size) * 0.07);--eye-gap:calc(var(--eye-size) * 0.25);display:inline-flex;gap:var(--eye-gap)}
-.eye-ball{width:var(--eye-size);height:var(--eye-size);background:#fff;border-radius:50%;border:var(--border-width) solid var(--app-bg);position:relative;overflow:hidden;transition:transform 0.1s linear}
+.eye-ball{width:var(--eye-size);height:var(--eye-size);background:#fff;border-radius:50%;border:var(--border-width) solid var(--app-bg);position:relative;overflow:hidden}
 .eye-ball::before{content:'';position:absolute;top:10%;left:12%;width:25%;height:12%;background:rgba(255,255,255,0.8);border-radius:50%;z-index:2}
 .pupil{width:var(--pupil-size);height:var(--pupil-size);background:var(--app-bg);border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
 @media(max-width:850px){
@@ -72,7 +82,11 @@ Fullscreen
 
 <main class="main-content">
 <div class="video-container" id="viewer-container">
-<iframe id="video-frame" src="https://www.youtube-nocookie.com/embed/wGfnxleqNJc?si=ZkVr-qKMTT6dMftY" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<a href="https://www.youtube.com/watch?v=wGfnxleqNJc" target="_blank" class="yt-fallback-card">
+  <div class="play-icon-btn">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
+  </div>
+</a>
 </div>
 </main>
 
