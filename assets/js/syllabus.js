@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-  
+
   // --- Centralized Reusable SVG Icons ---
   const CARD_ICONS = {
     download: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>`,
@@ -48,9 +48,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // UPDATED SELECTOR: Strictly target only links inside your dynamic resource cards.
     const allLinks = document.querySelectorAll('.sc-custom-card .sc-card-links a');
     let totalLinks = allLinks.length;
-    
+
     if (totalLinks === 0) return; // Exit if no links are present to avoid NaN errors
-    
+
     let counts = { u1: 0, u2: 0, u3: 0, other: 0, locked: 0 };
     let readyTotal = 0;
 
@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
     allLinks.forEach(link => {
       const href = link.getAttribute('href');
       const isReady = href && href !== '#' && href.trim() !== '';
-      
+
       if (!isReady) {
         counts.locked++;
         link.classList.add('sc-locked');
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
             iconSpan.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>';
         }
         link.addEventListener('click', function(e) {
-            e.preventDefault(); 
+            e.preventDefault();
             showToast('🚧 We are currently preparing this material. Coming soon!');
         });
       } else {
@@ -98,25 +98,25 @@ document.addEventListener('DOMContentLoaded', function() {
       if (total === 0) return '';
       let svg = `<svg viewBox="-2 -2 104 104" style="width: 100%; height: 100%; display: block; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.06));">`;
       let startAngle = -Math.PI / 2;
-      
+
       data.forEach(slice => {
           if (slice.count === 0) return;
           let sliceAngle = (slice.count / total) * 2 * Math.PI;
           let endAngle = startAngle + sliceAngle;
-          
+
           let x1 = 50 + 50 * Math.cos(startAngle);
           let y1 = 50 + 50 * Math.sin(startAngle);
           let x2 = 50 + 50 * Math.cos(endAngle);
           let y2 = 50 + 50 * Math.sin(endAngle);
-          
+
           let largeArc = sliceAngle > Math.PI ? 1 : 0;
-          
+
           if (slice.count === total) {
               svg += `<circle cx="50" cy="50" r="50" fill="${slice.color}" />`;
           } else {
               svg += `<path d="M 50 50 L ${x1} ${y1} A 50 50 0 ${largeArc} 1 ${x2} ${y2} Z" fill="${slice.color}" class="sc-pie-slice" />`;
           }
-          
+
           // Outer text percentage
           if (slice.perc > 8) {
              let midAngle = startAngle + sliceAngle / 2;
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
              let ty = 50 + 40 * Math.sin(midAngle);
              svg += `<text x="${tx}" y="${ty}" fill="#ffffff" font-size="12" font-family="sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central">${slice.perc}</text>`;
           }
-          
+
           startAngle = endAngle;
       });
 
@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
       svg += `<circle cx="50" cy="50" r="28" class="sc-donut-center" />`;
       svg += `<text x="50" y="44" class="sc-donut-text-perc" text-anchor="middle" dominant-baseline="central" font-family="sans-serif">${centerText}%</text>`;
       svg += `<text x="50" y="58" class="sc-donut-text-label" text-anchor="middle" dominant-baseline="central" font-family="sans-serif">READY</text>`;
-     
+
       svg += `</svg>`;
       return svg;
     }
@@ -140,11 +140,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const pieContainer = document.getElementById('dynamic-pie-container');
     const legendContainer = document.getElementById('dynamic-pie-legend');
     const subtitleEl = document.getElementById('mp-subtitle-custom');
-    
+
     if (pieContainer && legendContainer && subtitleEl) {
         subtitleEl.textContent = `${readyTotal} of ${totalLinks}`;
         pieContainer.innerHTML = generateDonutSVG(pieData, totalLinks, overallPerc);
-        
+
         let legendHTML = '';
         pieData.forEach(d => {
             if(d.count > 0 || d.label === 'Remaining') { // Only render if relevant or locked
@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
     columns.forEach(col => {
         const colLinks = col.querySelectorAll('.sc-custom-card .sc-card-links a');
         if (colLinks.length === 0) return;
-        
+
         let colReady = 0;
         colLinks.forEach(link => {
             const href = link.getAttribute('href');
@@ -176,10 +176,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 colReady++;
             }
         });
-        
+
         const colPerc = Math.round((colReady / colLinks.length) * 100) || 0;
         const title = col.querySelector('.sc-section-title');
-        
+
         if (title && !col.querySelector('.sc-section-progress-track')) {
             const track = document.createElement('div');
             track.className = 'sc-section-progress-track';
@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
             fill.className = 'sc-section-progress-fill';
             fill.style.width = colPerc + '%';
             track.appendChild(fill);
-            
+
             // Insert after title
             title.parentNode.insertBefore(track, title.nextSibling);
         }
@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     darkModeBtn.addEventListener('click', () => {
       document.body.classList.toggle('sc-dark-mode');
-      
+
       if (document.body.classList.contains('sc-dark-mode')) {
         localStorage.setItem('sc-theme', 'dark');
         if(sunIcon && moonIcon) { sunIcon.style.display = 'block'; moonIcon.style.display = 'none'; }
@@ -269,18 +269,18 @@ document.addEventListener('DOMContentLoaded', function() {
       const isDesktop = (window.innerWidth > 768 && !('ontouchstart' in window) && !navigator.maxTouchPoints);
 
       if (isDesktop) {
-        navigator.clipboard.writeText(window.location.href).then(() => { 
-          showToast('URL Copied! Ready to paste.'); 
+        navigator.clipboard.writeText(window.location.href).then(() => {
+          showToast('URL Copied! Ready to paste.');
         }).catch(() => {
           showToast('Unable to copy URL automatically.');
         });
       } else {
         if (navigator.share) {
-          try { await navigator.share({ title: document.title, url: window.location.href }); } 
+          try { await navigator.share({ title: document.title, url: window.location.href }); }
           catch (err) { console.log('Error sharing:', err); }
         } else {
-          navigator.clipboard.writeText(window.location.href).then(() => { 
-            showToast('URL Copied! Ready to paste.'); 
+          navigator.clipboard.writeText(window.location.href).then(() => {
+            showToast('URL Copied! Ready to paste.');
           });
         }
       }
@@ -295,7 +295,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     window.addEventListener('scroll', checkScroll);
-    checkScroll(); 
+    checkScroll();
 
     scrollBtn.addEventListener('click', () => {
       if (window.scrollY > 150) window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -337,8 +337,8 @@ document.addEventListener('DOMContentLoaded', function() {
       constructor() {
         this.x = Math.random() * width;
         this.y = Math.random() * height;
-        this.vx = (Math.random() - 0.5) * 0.8; 
-        this.vy = (Math.random() - 0.5) * 0.8; 
+        this.vx = (Math.random() - 0.5) * 0.8;
+        this.vy = (Math.random() - 0.5) * 0.8;
         this.radius = 1.5;
       }
       update() {
@@ -350,7 +350,7 @@ document.addEventListener('DOMContentLoaded', function() {
       draw() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        
+
         if (document.body.classList.contains('sc-dark-mode')) {
             ctx.fillStyle = 'rgba(148, 163, 184, 0.4)';
         } else {
@@ -369,7 +369,7 @@ document.addEventListener('DOMContentLoaded', function() {
       for (let i = 0; i < particles.length; i++) {
         particles[i].update();
         particles[i].draw();
-        
+
         for (let j = i + 1; j < particles.length; j++) {
           let dx = particles[i].x - particles[j].x;
           let dy = particles[i].y - particles[j].y;
@@ -378,18 +378,18 @@ document.addEventListener('DOMContentLoaded', function() {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            
+
             if (document.body.classList.contains('sc-dark-mode')) {
                 ctx.strokeStyle = `rgba(148, 163, 184, ${0.25 - (dist/connectionDistance) * 0.25})`;
             } else {
                 ctx.strokeStyle = `rgba(21, 104, 69, ${0.25 - (dist/connectionDistance) * 0.25})`;
             }
-            
+
             ctx.lineWidth = 1;
             ctx.stroke();
           }
         }
-        
+
         if (mouse.x !== null && mouse.y !== null) {
           let dx = particles[i].x - mouse.x;
           let dy = particles[i].y - mouse.y;
@@ -398,7 +398,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(mouse.x, mouse.y);
-            
+
             if (document.body.classList.contains('sc-dark-mode')) {
                 ctx.strokeStyle = `rgba(148, 163, 184, ${0.35 - (dist/100) * 0.35})`;
             } else {
@@ -427,7 +427,7 @@ document.addEventListener('DOMContentLoaded', function() {
       navLinks.forEach(link => {
           link.addEventListener('click', function(e) {
               e.preventDefault();
-              
+
               // Remove active class from all, add to clicked
               navLinks.forEach(l => l.classList.remove('active'));
               this.classList.add('active');
