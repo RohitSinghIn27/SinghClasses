@@ -1,7 +1,7 @@
 :root {
     --dark-navy: #0B1849;
     --primary-green: #0f4c2a;
-    --nav-teal: #0B1849;
+    --nav-navy: #0B1849;
     --bg-light: #f4f5f0;
     --bg-card: #ffffff;
     --accent-amber: #f3b631;
@@ -126,6 +126,9 @@ button {
     border-radius: 2px;
 }
 
+/* =======================================
+   HEADER & NAVIGATION (NAVY BLUE)
+   ======================================= */
 .site-header {
     background: transparent;
     width: 100%;
@@ -146,7 +149,7 @@ button {
     max-width: 1250px;
     flex-wrap: wrap;
     gap: 15px;
-    background: var(--nav-teal);
+    background-color: #0B1849; /* Navy Blue */
     padding: 10px 20px;
     border-radius: 14px;
     box-shadow: 0 4px 18px rgba(11, 24, 73, 0.25);
@@ -803,13 +806,13 @@ button:focus-visible {
 }
 
 /* =======================================
-   COMPACT FOOTER WITH WHITE ICONS & SPACE
+   FOOTER (NAVY BLUE)
    ======================================= */
 .site-footer {
-    background: #0B1849;
+    background-color: #0B1849; /* Navy Blue */
     color: #94a3b8;
     padding: 28px 20px 16px 20px;
-    margin-top: 60px; /* Space added before footer */
+    margin-top: 60px;
 }
 
 .footer-layout-grid {
@@ -869,7 +872,6 @@ button:focus-visible {
     margin-top: 3px;
 }
 
-/* White color for all footer icons */
 .footer-icon svg,
 .social-icon-wrapper svg {
     stroke: #ffffff !important;
