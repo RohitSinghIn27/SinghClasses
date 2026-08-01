@@ -43,18 +43,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // --- 1. COMING SOON TOAST & NEW DONUT CHART ---
+  // --- 1. COMING SOON TOAST & DONUT CHART ---
   function initPieChartReadiness() {
-    // UPDATED SELECTOR: Strictly target only links inside your dynamic resource cards.
     const allLinks = document.querySelectorAll('.sc-custom-card .sc-card-links a');
     let totalLinks = allLinks.length;
 
-    if (totalLinks === 0) return; // Exit if no links are present to avoid NaN errors
+    if (totalLinks === 0) return;
 
     let counts = { u1: 0, u2: 0, u3: 0, other: 0, locked: 0 };
     let readyTotal = 0;
 
-    // Dynamically calculate based entirely on the length of actual rendered nodes
     allLinks.forEach(link => {
       const href = link.getAttribute('href');
       const isReady = href && href !== '#' && href.trim() !== '';
@@ -86,14 +84,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const overallPerc = Math.round((readyTotal / totalLinks) * 100) || 0;
 
     const pieData = [
-      { label: 'Unit I', color: '#2563eb', count: counts.u1, perc: Math.round((counts.u1 / totalLinks) * 100) },
-      { label: 'Unit II', color: '#65a30d', count: counts.u2, perc: Math.round((counts.u2 / totalLinks) * 100) },
+      { label: 'Unit I', color: '#1f8a70', count: counts.u1, perc: Math.round((counts.u1 / totalLinks) * 100) },
+      { label: 'Unit II', color: '#b8862f', count: counts.u2, perc: Math.round((counts.u2 / totalLinks) * 100) },
       { label: 'Unit III', color: '#ea580c', count: counts.u3, perc: Math.round((counts.u3 / totalLinks) * 100) },
       { label: 'Others', color: '#9333ea', count: counts.other, perc: Math.round((counts.other / totalLinks) * 100) },
-      { label: 'Remaining', color: '#cbd5e1', count: counts.locked, perc: Math.round((counts.locked / totalLinks) * 100) }
+      { label: 'Remaining', color: '#5b6178', count: counts.locked, perc: Math.round((counts.locked / totalLinks) * 100) }
     ];
 
-    // Helper to generate SVG Donut Chart
     function generateDonutSVG(data, total, centerText) {
       if (total === 0) return '';
       let svg = `<svg viewBox="-2 -2 104 104" style="width: 100%; height: 100%; display: block; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.06));">`;
@@ -117,22 +114,19 @@ document.addEventListener('DOMContentLoaded', function() {
               svg += `<path d="M 50 50 L ${x1} ${y1} A 50 50 0 ${largeArc} 1 ${x2} ${y2} Z" fill="${slice.color}" class="sc-pie-slice" />`;
           }
 
-          // Outer text percentage
           if (slice.perc > 8) {
              let midAngle = startAngle + sliceAngle / 2;
              let tx = 50 + 40 * Math.cos(midAngle);
              let ty = 50 + 40 * Math.sin(midAngle);
-             svg += `<text x="${tx}" y="${ty}" fill="#ffffff" font-size="12" font-family="sans-serif" font-weight="bold" text-anchor="middle" dominant-baseline="central">${slice.perc}</text>`;
+             svg += `<text x="${tx}" y="${ty}" fill="#ffffff" font-size="12" font-family="monospace" font-weight="bold" text-anchor="middle" dominant-baseline="central">${slice.perc}</text>`;
           }
 
           startAngle = endAngle;
       });
 
-      // Hollow Center & Center Text with Label
       svg += `<circle cx="50" cy="50" r="28" class="sc-donut-center" />`;
-      svg += `<text x="50" y="44" class="sc-donut-text-perc" text-anchor="middle" dominant-baseline="central" font-family="sans-serif">${centerText}%</text>`;
-      svg += `<text x="50" y="58" class="sc-donut-text-label" text-anchor="middle" dominant-baseline="central" font-family="sans-serif">READY</text>`;
-
+      svg += `<text x="50" y="44" class="sc-donut-text-perc" text-anchor="middle" dominant-baseline="central">${centerText}%</text>`;
+      svg += `<text x="50" y="58" class="sc-donut-text-label" text-anchor="middle" dominant-baseline="central">READY</text>`;
       svg += `</svg>`;
       return svg;
     }
@@ -147,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         let legendHTML = '';
         pieData.forEach(d => {
-            if(d.count > 0 || d.label === 'Remaining') { // Only render if relevant or locked
+            if(d.count > 0 || d.label === 'Remaining') {
                 let colorCls = d.label === 'Remaining' ? 'sc-legend-muted' : 'sc-legend-active';
                 legendHTML += `
                   <div class="sc-legend-item">
@@ -163,7 +157,6 @@ document.addEventListener('DOMContentLoaded', function() {
         legendContainer.innerHTML = legendHTML;
     }
 
-    // Calculate per-section progress and append bar
     const columns = document.querySelectorAll('.sc-column');
     columns.forEach(col => {
         const colLinks = col.querySelectorAll('.sc-custom-card .sc-card-links a');
@@ -172,9 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let colReady = 0;
         colLinks.forEach(link => {
             const href = link.getAttribute('href');
-            if (href && href !== '#' && href.trim() !== '') {
-                colReady++;
-            }
+            if (href && href !== '#' && href.trim() !== '') colReady++;
         });
 
         const colPerc = Math.round((colReady / colLinks.length) * 100) || 0;
@@ -187,8 +178,6 @@ document.addEventListener('DOMContentLoaded', function() {
             fill.className = 'sc-section-progress-fill';
             fill.style.width = colPerc + '%';
             track.appendChild(fill);
-
-            // Insert after title
             title.parentNode.insertBefore(track, title.nextSibling);
         }
     });
@@ -232,45 +221,45 @@ document.addEventListener('DOMContentLoaded', function() {
       });
   }
 
-  // --- 3. FLOATING ACTIONS LOGIC ---
+  // --- 3. FLOATING HUD ACTIONS & DARK MODE SYNCHRONIZATION ---
   const shareBtn = document.getElementById('scShareBtn');
   const scrollBtn = document.getElementById('scScrollToggleBtn');
   const darkModeBtn = document.getElementById('scDarkModeBtn');
 
-  // Dark Mode Logic
   if (darkModeBtn) {
     const sunIcon = darkModeBtn.querySelector('.sc-sun-icon');
     const moonIcon = darkModeBtn.querySelector('.sc-moon-icon');
 
+    // Check localStorage theme state
     if (localStorage.getItem('sc-theme') === 'dark') {
-      document.body.classList.add('sc-dark-mode');
-      if(sunIcon && moonIcon) {
+      document.body.classList.add('dark-mode');
+      if (sunIcon && moonIcon) {
         sunIcon.style.display = 'block';
         moonIcon.style.display = 'none';
       }
     }
 
     darkModeBtn.addEventListener('click', () => {
-      document.body.classList.toggle('sc-dark-mode');
+      document.body.classList.toggle('dark-mode');
 
-      if (document.body.classList.contains('sc-dark-mode')) {
+      if (document.body.classList.contains('dark-mode')) {
         localStorage.setItem('sc-theme', 'dark');
-        if(sunIcon && moonIcon) { sunIcon.style.display = 'block'; moonIcon.style.display = 'none'; }
+        if (sunIcon && moonIcon) { sunIcon.style.display = 'block'; moonIcon.style.display = 'none'; }
       } else {
         localStorage.setItem('sc-theme', 'light');
-        if(sunIcon && moonIcon) { sunIcon.style.display = 'none'; moonIcon.style.display = 'block'; }
+        if (sunIcon && moonIcon) { sunIcon.style.display = 'none'; moonIcon.style.display = 'block'; }
       }
     });
   }
 
-  // Share Logic
+  // Share Action
   if (shareBtn) {
     shareBtn.addEventListener('click', async () => {
       const isDesktop = (window.innerWidth > 768 && !('ontouchstart' in window) && !navigator.maxTouchPoints);
 
       if (isDesktop) {
         navigator.clipboard.writeText(window.location.href).then(() => {
-          showToast('URL Copied! Ready to paste.');
+          showToast('URL Copied to clipboard!');
         }).catch(() => {
           showToast('Unable to copy URL automatically.');
         });
@@ -280,14 +269,14 @@ document.addEventListener('DOMContentLoaded', function() {
           catch (err) { console.log('Error sharing:', err); }
         } else {
           navigator.clipboard.writeText(window.location.href).then(() => {
-            showToast('URL Copied! Ready to paste.');
+            showToast('URL Copied to clipboard!');
           });
         }
       }
     });
   }
 
-  // Scroll to Top/Bottom
+  // Smooth Scroll Action
   if (scrollBtn) {
     const checkScroll = () => {
       if (window.scrollY > 150) scrollBtn.classList.remove('sc-point-down');
@@ -303,132 +292,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // --- 4. PARTICLE CANVAS INITIALIZATION ---
-  function initParticleCanvas(containerId, canvasId, particleCount, connectionDistance) {
-    const container = document.getElementById(containerId);
-    const canvas = document.getElementById(canvasId);
-    if (!container || !canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    let width, height;
-    let particles = [];
-    let mouse = { x: null, y: null };
-
-    function resizeCanvas() {
-      width = container.offsetWidth;
-      height = container.offsetHeight;
-      canvas.width = width;
-      canvas.height = height;
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-
-    container.addEventListener('mousemove', function(e) {
-      const rect = container.getBoundingClientRect();
-      mouse.x = e.clientX - rect.left;
-      mouse.y = e.clientY - rect.top;
-    });
-    container.addEventListener('mouseleave', function() {
-      mouse.x = null;
-      mouse.y = null;
-    });
-
-    class Particle {
-      constructor() {
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        this.vx = (Math.random() - 0.5) * 0.8;
-        this.vy = (Math.random() - 0.5) * 0.8;
-        this.radius = 1.5;
-      }
-      update() {
-        this.x += this.vx;
-        this.y += this.vy;
-        if (this.x < 0 || this.x > width) this.vx *= -1;
-        if (this.y < 0 || this.y > height) this.vy *= -1;
-      }
-      draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-
-        if (document.body.classList.contains('sc-dark-mode')) {
-            ctx.fillStyle = 'rgba(148, 163, 184, 0.4)';
-        } else {
-            ctx.fillStyle = 'rgba(21, 104, 69, 0.4)';
-        }
-        ctx.fill();
-      }
-    }
-
-    for (let i = 0; i < particleCount; i++) {
-      particles.push(new Particle());
-    }
-
-    function animate() {
-      ctx.clearRect(0, 0, width, height);
-      for (let i = 0; i < particles.length; i++) {
-        particles[i].update();
-        particles[i].draw();
-
-        for (let j = i + 1; j < particles.length; j++) {
-          let dx = particles[i].x - particles[j].x;
-          let dy = particles[i].y - particles[j].y;
-          let dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < connectionDistance) {
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-
-            if (document.body.classList.contains('sc-dark-mode')) {
-                ctx.strokeStyle = `rgba(148, 163, 184, ${0.25 - (dist/connectionDistance) * 0.25})`;
-            } else {
-                ctx.strokeStyle = `rgba(21, 104, 69, ${0.25 - (dist/connectionDistance) * 0.25})`;
-            }
-
-            ctx.lineWidth = 1;
-            ctx.stroke();
-          }
-        }
-
-        if (mouse.x !== null && mouse.y !== null) {
-          let dx = particles[i].x - mouse.x;
-          let dy = particles[i].y - mouse.y;
-          let dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 100) {
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(mouse.x, mouse.y);
-
-            if (document.body.classList.contains('sc-dark-mode')) {
-                ctx.strokeStyle = `rgba(148, 163, 184, ${0.35 - (dist/100) * 0.35})`;
-            } else {
-                ctx.strokeStyle = `rgba(21, 104, 69, ${0.35 - (dist/100) * 0.35})`;
-            }
-            ctx.lineWidth = 1;
-            ctx.stroke();
-          }
-        }
-      }
-      requestAnimationFrame(animate);
-    }
-    animate();
-  }
-
-  try {
-      initParticleCanvas('colA', 'canvasA', 35, 60);
-      initParticleCanvas('colB', 'canvasB', 35, 60);
-      initParticleCanvas('colC', 'canvasC', 35, 60);
-      initParticleCanvas('bottomSection', 'canvasBottom', 40, 75);
-  } catch(e) {}
-
-  // --- 5. IN-CARD NAV (Scroll without tracking position) ---
+  // --- 4. IN-CARD HERO TAB SCROLLING ---
   const navLinks = document.querySelectorAll('.sc-hero-tab');
   if (navLinks.length > 0) {
       navLinks.forEach(link => {
           link.addEventListener('click', function(e) {
               e.preventDefault();
-
-              // Remove active class from all, add to clicked
               navLinks.forEach(l => l.classList.remove('active'));
               this.classList.add('active');
 
