@@ -11,6 +11,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const navMenu = document.getElementById("nav-menu");
 
   if (hamburgerToggle && navMenu) {
+    // Guarantee the class names the CSS keys off of are present,
+    // regardless of what classes the HTML markup already has.
+    hamburgerToggle.classList.add("hamburger-toggle");
+    navMenu.classList.add("main-navigation");
+
     hamburgerToggle.addEventListener("click", (e) => {
       e.stopPropagation();
       hamburgerToggle.classList.toggle("open");
