@@ -3,73 +3,44 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("pageshow", () => {
     window.scrollTo(0, 0);
   });
-  const yr = document.getElementById("current-year");
-  if (yr) yr.textContent = new Date().getFullYear();
-  const dmBtn = document.getElementById("darkModeToggle");
-  if (localStorage.getItem("theme") === "dark") document.body.classList.add("dark-mode");
-  dmBtn?.addEventListener("click", (e) => {
-    e.preventDefault();
-    document.body.classList.toggle("dark-mode");
-    localStorage.setItem("theme", document.body.classList.contains("dark-mode") ? "dark" : "light");
-  });
-  const copyToClipboardFallback = (text) => {
-    const textArea = document.createElement("textarea");
-    textArea.value = text;
-    textArea.style.position = "fixed";
-    textArea.style.left = "-999999px";
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-    try {
-      document.execCommand("copy");
-      return true;
-    } catch (err) {
-      return false;
-    } finally {
-      textArea.remove();
-    }
-  };
-  const initShareEngine = (btnId) => {
-    document.getElementById(btnId)?.addEventListener("click", async (e) => {
-      e.preventDefault();
-      if (navigator.share && window.location.protocol !== "file:") {
-        try {
-          await navigator.share({ title: document.title, url: window.location.href });
-        } catch (err) {
-          console.log("Error sharing page context:", err);
-        }
-      } else {
-        copyToClipboardFallback(window.location.href);
-        alert("Page link copied to clipboard!");
+
+  // =======================================
+  // MOBILE HAMBURGER MENU CONTROLLER
+  // =======================================
+  const hamburgerToggle = document.getElementById("hamburgerToggle");
+  const navMenu = document.getElementById("nav-menu");
+
+  if (hamburgerToggle && navMenu) {
+    hamburgerToggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      hamburgerToggle.classList.toggle("open");
+      navMenu.classList.toggle("open");
+      const isExpanded = hamburgerToggle.classList.contains("open");
+      hamburgerToggle.setAttribute("aria-expanded", isExpanded ? "true" : "false");
+    });
+
+    // Close menu when clicking any nav link
+    document.querySelectorAll(".nav-link").forEach((link) => {
+      link.addEventListener("click", () => {
+        hamburgerToggle.classList.remove("open");
+        navMenu.classList.remove("open");
+        hamburgerToggle.setAttribute("aria-expanded", "false");
+      });
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener("click", (e) => {
+      if (!hamburgerToggle.contains(e.target) && !navMenu.contains(e.target)) {
+        hamburgerToggle.classList.remove("open");
+        navMenu.classList.remove("open");
+        hamburgerToggle.setAttribute("aria-expanded", "false");
       }
     });
-  };
-  initShareEngine("sharePageToggle");
-  const scrollTopAction = document.getElementById("scrollTopAction");
-  const footerNode = document.querySelector(".site-footer");
-  const hudBar = document.querySelector(".floating-action-hud");
-  scrollTopAction?.addEventListener("click", (e) => {
-    e.preventDefault();
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
-  if (footerNode && hudBar) {
-    let ticking = false;
-    window.addEventListener(
-      "scroll",
-      () => {
-        if (!ticking) {
-          window.requestAnimationFrame(() => {
-            let r = footerNode.getBoundingClientRect(),
-              vh = window.innerHeight;
-            hudBar.style.transform = r.top < vh ? `translateY(-${vh - r.top}px)` : "translateY(0)";
-            ticking = false;
-          });
-          ticking = true;
-        }
-      },
-      { passive: true }
-    );
   }
+
+  const yr = document.getElementById("current-year");
+  if (yr) yr.textContent = new Date().getFullYear();
+
   const slides = document.querySelectorAll(".testimonial-slide");
   const track = document.getElementById("testimonialTrack");
   const dotsContainer = document.getElementById("sliderDots");
@@ -127,6 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
     track.addEventListener("mouseenter", () => clearInterval(slideInterval));
     track.addEventListener("mouseleave", () => startAutoplay());
   }
+
   const initDynamicFabric = (selector, forceLight = false) => {
     const wrapper = document.querySelector(selector);
     if (!wrapper) return;
@@ -164,11 +136,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const runLoop = () => {
       if (!w || !h) return requestAnimationFrame(runLoop);
       ctx.clearRect(0, 0, w, h);
-      const dark = document.body.classList.contains("dark-mode");
-      const lightTheme = forceLight || dark;
-      const cBase = lightTheme ? "rgba(255,255,255,0.35)" : "rgba(13,148,136,0.35)";
-      const cLink = lightTheme ? "rgba(255,255,255,0.12)" : "rgba(13,148,136,0.12)";
-      const cHigh = lightTheme ? "rgba(255,255,255,0.95)" : "rgba(13,148,136,0.95)";
+      const cBase = "rgba(13,148,136,0.35)";
+      const cLink = "rgba(13,148,136,0.12)";
+      const cHigh = "rgba(13,148,136,0.95)";
       for (let i = 0; i < dots.length; i++) {
         for (let j = i + 1; j < dots.length; j++) {
           if ((dots[i].x - dots[j].x) ** 2 + (dots[i].y - dots[j].y) ** 2 < 6400) {
@@ -213,9 +183,11 @@ document.addEventListener("DOMContentLoaded", () => {
   );
   initDynamicFabric(".teacher-section", true);
 });
+
 document.addEventListener("contextmenu", function (e) {
   if (e.target.tagName === "IMG") e.preventDefault();
 });
+
 (function () {
   const API_URL =
     "https://script.google.com/macros/s/AKfycbx_qbyL831Rtr-dG5mNLRYz5LajWvVtgSv4xBO9pWX2TAZ74qNWf33Bdf1NtivHyfM8/exec";
@@ -350,11 +322,12 @@ document.addEventListener("contextmenu", function (e) {
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initCbseWidget);
   else initCbseWidget();
 })();
+
 document.addEventListener("contextmenu", function (event) {
   event.preventDefault();
 });
 
-// 1. Blur the page when window loses focus (triggers on most screenshot tools)
+// Blur page when window loses focus
 window.addEventListener("blur", () => {
   document.body.style.filter = "blur(15px)";
 });
@@ -363,10 +336,10 @@ window.addEventListener("focus", () => {
   document.body.style.filter = "none";
 });
 
-// 2. Clear clipboard if they attempt to press the PrintScreen key
+// Clear clipboard on PrintScreen key release
 window.addEventListener("keyup", (e) => {
   if (e.key === "PrintScreen") {
-    navigator.clipboard.writeText(""); // Wipes the copied screenshot data
+    navigator.clipboard.writeText("");
     alert("Screenshots are disabled to protect proprietary content.");
   }
 });
