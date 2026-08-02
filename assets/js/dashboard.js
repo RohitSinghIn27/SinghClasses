@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Reset scroll position on page load and pageshow
+  // Reset scroll position on page load
   window.scrollTo(0, 0);
-  window.addEventListener("pageshow", () => {
-    window.scrollTo(0, 0);
+  window.addEventListener("pageshow", (e) => {
+    if (!e.persisted) window.scrollTo(0, 0);
   });
 
   // =======================================
@@ -17,14 +17,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     hamburgerToggle.addEventListener("click", (e) => {
       e.stopPropagation();
-      hamburgerToggle.classList.toggle("open");
-      navMenu.classList.toggle("open");
-      const isExpanded = hamburgerToggle.classList.contains("open");
-      hamburgerToggle.setAttribute("aria-expanded", isExpanded ? "true" : "false");
+      const isOpening = !hamburgerToggle.classList.contains("open");
+      hamburgerToggle.classList.toggle("open", isOpening);
+      navMenu.classList.toggle("open", isOpening);
+      hamburgerToggle.setAttribute("aria-expanded", isOpening ? "true" : "false");
     });
 
-    // Close menu when clicking any nav link
-    document.querySelectorAll(".nav-link").forEach((link) => {
+    // Close menu when clicking any navigation link
+    document.querySelectorAll(".nav-link, .main-navigation a").forEach((link) => {
       link.addEventListener("click", () => {
         hamburgerToggle.classList.remove("open");
         navMenu.classList.remove("open");
@@ -125,36 +125,55 @@ document.addEventListener("DOMContentLoaded", () => {
   // =======================================
   // DYNAMIC FABRIC CANVAS ANIMATION
   // =======================================
-  const initDynamicFabric = (selector, forceLight = false) => {
-    const wrapper = document.querySelector(selector);
-    if (!wrapper) return;
+  const initDynamicFabric = (target, forceLight = false) => {
+    const targetEl = document.querySelector(target);
+    if (!targetEl) return;
 
-    const canvas = document.createElement("canvas");
-    canvas.className = "sc-canvas-bg-layer";
-    canvas.style.cssText =
-      "position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;display:block;";
-    wrapper.insertBefore(canvas, wrapper.firstChild);
+    let canvas, wrapper;
+    if (targetEl.tagName.toLowerCase() === "canvas") {
+      canvas = targetEl;
+      wrapper = targetEl.parentElement;
+    } else {
+      wrapper = targetEl;
+      canvas = wrapper.querySelector("canvas.sc-canvas-bg, canvas.sc-canvas-bg-layer");
+      if (!canvas) {
+        canvas = document.createElement("canvas");
+        canvas.className = "sc-canvas-bg-layer";
+        canvas.style.cssText =
+          "position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;display:block;";
+        wrapper.insertBefore(canvas, wrapper.firstChild);
+      }
+    }
+
+    if (window.getComputedStyle(wrapper).position === "static") {
+      wrapper.style.position = "relative";
+    }
+
     const ctx = canvas.getContext("2d");
     let w = 0,
       h = 0,
       dots = [],
       cursor = { x: -2000, y: -2000 };
 
-    new ResizeObserver(() => {
-      w = canvas.width = wrapper.offsetWidth;
-      h = canvas.height = wrapper.offsetHeight;
+    const resizeCanvas = () => {
+      w = canvas.width = wrapper.offsetWidth || wrapper.clientWidth;
+      h = canvas.height = wrapper.offsetHeight || wrapper.clientHeight;
       dots = [];
-      const density = Math.min(Math.floor((w * h) / 30000), 20) || 15;
-      for (let i = 0; i < density; i++) {
-        dots.push({
-          x: Math.random() * w,
-          y: Math.random() * h,
-          vx: (Math.random() - 0.5) * 1.2,
-          vy: (Math.random() - 0.5) * 1.2,
-          r: Math.random() * 0.8 + 0.3
-        });
+      if (w > 0 && h > 0) {
+        const density = Math.min(Math.floor((w * h) / 30000), 20) || 15;
+        for (let i = 0; i < density; i++) {
+          dots.push({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            vx: (Math.random() - 0.5) * 1.2,
+            vy: (Math.random() - 0.5) * 1.2,
+            r: Math.random() * 0.8 + 0.3
+          });
+        }
       }
-    }).observe(wrapper);
+    };
+
+    new ResizeObserver(resizeCanvas).observe(wrapper);
 
     wrapper.addEventListener("mousemove", (e) => {
       const box = wrapper.getBoundingClientRect();
@@ -217,10 +236,82 @@ document.addEventListener("DOMContentLoaded", () => {
     runLoop();
   };
 
-  [".header-container", ".classes-section", ".playlists-section", ".results-section"].forEach((s) =>
-    initDynamicFabric(s, false)
-  );
+  // Bind dynamic canvas generator to all template targets
+  const canvasTargets = [
+    ".header-container",
+    ".sc-hero-box",
+    "#scHeroTop",
+    "#scParticleCanvas1",
+    "#scParticleCanvas2",
+    "#canvasA",
+    "#canvasB",
+    "#canvasC",
+    "#canvasBottom",
+    ".classes-section",
+    ".playlists-section",
+    ".results-section",
+    ".sc-subscribe-banner-green",
+    "#scSubscribeBanner"
+  ];
+
+  canvasTargets.forEach((target) => initDynamicFabric(target, false));
   initDynamicFabric(".teacher-section", true);
+
+  // =======================================
+  // FLOATING HUD ACTIONS & DARK MODE
+  // =======================================
+  const themeBtn = document.querySelector(".theme-toggle-btn") || document.getElementById("scDarkModeBtn");
+  const shareBtn = document.querySelector(".share-action-btn") || document.getElementById("scShareBtn");
+  const scrollTopBtn = document.querySelector(".scroll-top-btn") || document.getElementById("scScrollToggleBtn");
+
+  // Restore saved theme state
+  if (localStorage.getItem("sc-theme") === "dark") {
+    document.body.classList.add("dark-mode");
+  }
+
+  if (themeBtn) {
+    themeBtn.addEventListener("click", () => {
+      const isDark = document.body.classList.toggle("dark-mode");
+      localStorage.setItem("sc-theme", isDark ? "dark" : "light");
+    });
+  }
+
+  if (shareBtn) {
+    shareBtn.addEventListener("click", async () => {
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: document.title, url: window.location.href });
+        } catch (err) {
+          if (err.name !== "AbortError") console.log("Share action failed:", err);
+        }
+      } else if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(window.location.href)
+          .then(() => alert("URL copied to clipboard!"))
+          .catch(() => {});
+      }
+    });
+  }
+
+  if (scrollTopBtn) {
+    const checkScroll = () => {
+      if (window.scrollY > 150) {
+        scrollTopBtn.classList.remove("sc-point-down");
+      } else {
+        scrollTopBtn.classList.add("sc-point-down");
+      }
+    };
+
+    window.addEventListener("scroll", checkScroll);
+    checkScroll();
+
+    scrollTopBtn.addEventListener("click", () => {
+      if (window.scrollY > 150) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+      }
+    });
+  }
 });
 
 // =======================================
@@ -236,7 +327,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function fetchGoogleSheetData() {
     const track = document.getElementById("cbseSliderTrack");
-    if (!track) return; // Guard clause if widget elements are missing on current page
+    if (!track) return;
 
     if (API_URL === "YOUR_APPS_SCRIPT_WEB_APP_URL_HERE") {
       track.innerHTML = `<div class="loading-container"><div class="loading-text" style="color:#ef4444; animation:none;">Please replace API_URL with your Web App URL.</div></div>`;
@@ -415,12 +506,12 @@ document.addEventListener("DOMContentLoaded", () => {
 // PAGE PROTECTION & UTILITIES
 // =======================================
 
-// Disable right click globally
+// Disable context menu
 document.addEventListener("contextmenu", function (e) {
   e.preventDefault();
 });
 
-// Blur page when window loses focus
+// Blur page content when window loses focus
 window.addEventListener("blur", () => {
   document.body.style.filter = "blur(15px)";
 });
@@ -429,7 +520,7 @@ window.addEventListener("focus", () => {
   document.body.style.filter = "none";
 });
 
-// Clear clipboard on PrintScreen key release
+// Clear clipboard on PrintScreen release
 window.addEventListener("keyup", (e) => {
   if (e.key === "PrintScreen") {
     if (navigator.clipboard && navigator.clipboard.writeText) {
