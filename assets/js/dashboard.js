@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const updateSliderDOM = () => {
       slides.forEach((slide, idx) => slide.classList.toggle("active", idx === currentIdx));
-      const dots = document.querySelectorAll(".slider-dot");
+      const dots = dotsContainer ? dotsContainer.querySelectorAll(".slider-dot") : [];
       dots.forEach((dot, idx) => {
         dot.classList.toggle("active", idx === currentIdx);
         dot.setAttribute("aria-selected", idx === currentIdx ? "true" : "false");
