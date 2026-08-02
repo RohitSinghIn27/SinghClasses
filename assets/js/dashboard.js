@@ -11,7 +11,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const hamburgerToggle = document.getElementById("hamburgerToggle");
   const navMenu = document.getElementById("nav-menu");
 
-  if (hamburgerToggle && navMenu) {
+  // Prevent duplicate listener binding if script.js and dashboard.js are both loaded
+  if (hamburgerToggle && navMenu && !hamburgerToggle.dataset.navInitialized) {
+    hamburgerToggle.dataset.navInitialized = "true";
     hamburgerToggle.classList.add("hamburger-toggle");
     navMenu.classList.add("main-navigation");
 
@@ -23,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
       hamburgerToggle.setAttribute("aria-expanded", isOpening ? "true" : "false");
     });
 
-    // Close menu when clicking any navigation link
+    // Close menu when clicking any nav link
     document.querySelectorAll(".nav-link, .main-navigation a").forEach((link) => {
       link.addEventListener("click", () => {
         hamburgerToggle.classList.remove("open");
@@ -236,7 +238,6 @@ document.addEventListener("DOMContentLoaded", () => {
     runLoop();
   };
 
-  // Bind dynamic canvas generator to all template targets
   const canvasTargets = [
     ".header-container",
     ".sc-hero-box",
@@ -264,7 +265,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const shareBtn = document.querySelector(".share-action-btn") || document.getElementById("scShareBtn");
   const scrollTopBtn = document.querySelector(".scroll-top-btn") || document.getElementById("scScrollToggleBtn");
 
-  // Restore saved theme state
   if (localStorage.getItem("sc-theme") === "dark") {
     document.body.classList.add("dark-mode");
   }
@@ -282,7 +282,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
           await navigator.share({ title: document.title, url: window.location.href });
         } catch (err) {
-          if (err.name !== "AbortError") console.log("Share action failed:", err);
+          if (err.name !== "AbortError") console.log("Share failed:", err);
         }
       } else if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(window.location.href)
