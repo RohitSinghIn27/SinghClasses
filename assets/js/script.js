@@ -5,6 +5,108 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // =======================================
+  // CURSOR SPARKLE TRAIL EFFECT
+  // =======================================
+  (function initCursorSparkles() {
+    const isTouch = window.matchMedia("(pointer: coarse)").matches || ("ontouchstart" in window);
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (isTouch || prefersReducedMotion) return;
+
+    const canvas = document.createElement("canvas");
+    canvas.id = "cursor-sparkle-canvas";
+    canvas.style.cssText =
+      "position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:99999;display:block;";
+    document.body.appendChild(canvas);
+
+    const ctx = canvas.getContext("2d");
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    window.addEventListener("resize", () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    const particles = [];
+    const colors = ["#f3b631", "#10b981", "#ffffff", "#38bdf8", "#0f4c2a"];
+    let lastX = 0,
+      lastY = 0;
+
+    function createSparkle(x, y) {
+      const count = Math.random() < 0.4 ? 2 : 1;
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: x + (Math.random() - 0.5) * 8,
+          y: y + (Math.random() - 0.5) * 8,
+          vx: (Math.random() - 0.5) * 0.8,
+          vy: (Math.random() - 0.5) * 0.8 - 0.3,
+          size: Math.random() * 2.2 + 1,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          alpha: 1,
+          decay: Math.random() * 0.02 + 0.015,
+          rotation: Math.random() * Math.PI,
+          vRot: (Math.random() - 0.5) * 0.1
+        });
+      }
+    }
+
+    window.addEventListener("mousemove", (e) => {
+      const dist = Math.hypot(e.clientX - lastX, e.clientY - lastY);
+      if (dist > 6) {
+        createSparkle(e.clientX, e.clientY);
+        lastX = e.clientX;
+        lastY = e.clientY;
+      }
+    });
+
+    function drawStar(ctx, x, y, radius, alpha, color, rotation) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(rotation);
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = color;
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 6;
+
+      ctx.beginPath();
+      for (let i = 0; i < 4; i++) {
+        ctx.lineTo(Math.cos((i * Math.PI) / 2) * radius, Math.sin((i * Math.PI) / 2) * radius);
+        ctx.quadraticCurveTo(
+          0,
+          0,
+          Math.cos(((i + 1) * Math.PI) / 2) * radius * 0.3,
+          Math.sin(((i + 1) * Math.PI) / 2) * radius * 0.3
+        );
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function animateSparkles() {
+      ctx.clearRect(0, 0, width, height);
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= p.decay;
+        p.rotation += p.vRot;
+
+        if (p.alpha <= 0) {
+          particles.splice(i, 1);
+        } else {
+          drawStar(ctx, p.x, p.y, p.size, Math.max(0, p.alpha), p.color, p.rotation);
+        }
+      }
+
+      requestAnimationFrame(animateSparkles);
+    }
+
+    animateSparkles();
+  })();
+
+  // =======================================
   // MOBILE HAMBURGER MENU CONTROLLER
   // =======================================
   const hamburgerToggle = document.getElementById("hamburgerToggle");
