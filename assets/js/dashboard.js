@@ -23,13 +23,18 @@ runOnDOMReady(() => {
   if (hamburgerToggle && navMenu && !hamburgerToggle.dataset.navInitialized) {
     hamburgerToggle.dataset.navInitialized = "true";
 
-    hamburgerToggle.addEventListener("click", (e) => {
-      e.stopPropagation();
+    const toggleMenu = (e) => {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
       const isOpening = !hamburgerToggle.classList.contains("open");
       hamburgerToggle.classList.toggle("open", isOpening);
       navMenu.classList.toggle("open", isOpening);
       hamburgerToggle.setAttribute("aria-expanded", isOpening ? "true" : "false");
-    });
+    };
+
+    hamburgerToggle.addEventListener("click", toggleMenu);
 
     // Close menu when clicking any nav link
     const navLinks = navMenu.querySelectorAll("a");
@@ -43,7 +48,11 @@ runOnDOMReady(() => {
 
     // Close menu when clicking outside
     document.addEventListener("click", (e) => {
-      if (!hamburgerToggle.contains(e.target) && !navMenu.contains(e.target)) {
+      if (
+        navMenu.classList.contains("open") &&
+        !hamburgerToggle.contains(e.target) &&
+        !navMenu.contains(e.target)
+      ) {
         hamburgerToggle.classList.remove("open");
         navMenu.classList.remove("open");
         hamburgerToggle.setAttribute("aria-expanded", "false");
