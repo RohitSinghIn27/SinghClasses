@@ -16,6 +16,8 @@ const getHomeUrl = () => window.CBT_CONFIG?.HOME_URL ?? "https://www.singhclasse
 const getYoutubeUrl = () => window.CBT_CONFIG?.YOUTUBE_URL ?? "https://www.youtube.com/@SinghClasses";
 
 const ICON_ALERT = `<svg class="sc-svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`;
+const SVG_HAMBURGER = `<svg class="sc-svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>`;
+const SVG_CLOSE = `<svg class="sc-svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
 
 let listExamPapers = [], isQuestionsLoading = true, questions = [], sections = [], currentYearIndex = 0, currentQuestion = 0;
 let studentNameVal = "", studentClassVal = "", studentSectionVal = "", schoolNameVal = "", studentName = "";
@@ -153,7 +155,7 @@ document.addEventListener('click', e => { let m = $('modal-security'); if (m && 
 window.addEventListener('scroll', () => { let bar = $("scProgressBar"), st = document.documentElement.scrollTop || document.body.scrollTop, sh = document.documentElement.scrollHeight - document.documentElement.clientHeight; if (bar) bar.style.width = (sh > 0 ? (st / sh) * 100 : 0) + "%"; });
 
 const ym = $('yearMenuToggle'), yc = $('year-nav-container');
-if (ym && yc) ym.addEventListener('click', e => { e.stopPropagation(); yc.classList.toggle('show-year-menu'); ym.innerHTML = yc.classList.contains('show-year-menu') ? '✕' : '☰'; });
+if (ym && yc) ym.addEventListener('click', e => { e.stopPropagation(); yc.classList.toggle('show-year-menu'); ym.innerHTML = yc.classList.contains('show-year-menu') ? SVG_CLOSE : SVG_HAMBURGER; });
 
 window.goToGuidelinesStep = () => {
     studentNameVal = $('student-name-input').value.trim().toUpperCase() || "GOKU";
@@ -264,7 +266,7 @@ window.buildYearNav = () => {
         t.onclick = () => {
             if (sections[idx].submitted || idx === currentYearIndex) {
                 currentYearIndex = idx; currentQuestion = sections[idx].start;
-                if (c && c.classList.contains('show-year-menu')) { c.classList.remove('show-year-menu'); if ($('yearMenuToggle')) $('yearMenuToggle').innerHTML = '☰'; }
+                if (c && c.classList.contains('show-year-menu')) { c.classList.remove('show-year-menu'); if ($('yearMenuToggle')) $('yearMenuToggle').innerHTML = SVG_HAMBURGER; }
                 buildYearNav(); updateTimerDisplay(); loadQuestion(); fetchAndRenderSidebarToppers(); saveSessionToLocalStorage();
             } else { showToastAlert("Submit the current section to unlock this one"); }
         };
@@ -408,6 +410,9 @@ function autoLockAndSubmitSection() {
 }
 
 window.loadQuestion = () => {
+    if (window.innerWidth <= 850) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
     let c = $('question-content'); if (c) { c.classList.remove('fade-in'); void c.offsetWidth; c.classList.add('fade-in'); }
     visitedQuestions[currentQuestion] = true;
     let s = sections[currentYearIndex], qy = currentQuestion - s.start, tot = s.end - s.start, pc = tot > 1 ? (qy / (tot - 1)) * 100 : 100;
