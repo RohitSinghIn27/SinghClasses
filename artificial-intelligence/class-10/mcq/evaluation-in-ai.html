@@ -53,27 +53,10 @@ window.CBT_CONFIG = {
 <div class="year-nav-mobile-header" id="year-nav-mobile-header">
 <div class="sc-hamburger" id="yearMenuToggle" role="button" aria-label="Toggle Section Menu">☰</div>
 <div class="current-paper-label" id="current-paper-label"><span>Section</span>A</div>
-<div class="mobile-filter-wrapper">
-<select id="mobile-filter-select" onchange="filterPalette(this.value)" class="mobile-filter-dropdown">
-<option value="all">🔍 All</option>
-<option value="answered">✅ Answered</option>
-<option value="not-answered">⚠️ Unattempted</option>
-<option value="unvisited">⚪ Unvisited</option>
-</select>
-</div>
 <div class="mobile-timer-wrapper"><div class="timer" id="timer-box-mobile">⏳ <span id="time-left-mobile">00:00</span></div></div>
 </div>
 <div class="year-nav-bar" id="year-nav-container"></div>
 <div class="nav-right-hud hide-on-mobile">
-<div class="filter-slider-wrapper">
-<div class="filter-slider-heading" onclick="toggleFilterSlider()"><span>🔍 Question Filter</span><span class="slider-toggle-indicator">▼</span></div>
-<div class="interactive-legend" id="hud-filter-slider-content">
-<div class="legend-item active-filter" onclick="filterPalette('all'); event.stopPropagation();" id="filter-all"><div class="legend-box" style="background:var(--primary-accent);border:none;"></div> All Questions</div>
-<div class="legend-item" onclick="filterPalette('answered'); event.stopPropagation();" id="filter-answered"><div class="legend-box answered"></div> Answered</div>
-<div class="legend-item" onclick="filterPalette('not-answered'); event.stopPropagation();" id="filter-not-answered"><div class="legend-box not-answered"></div> Unanswered</div>
-<div class="legend-item" onclick="filterPalette('unvisited'); event.stopPropagation();" id="filter-unvisited"><div class="legend-box unvisited"></div> Unvisited</div>
-</div>
-</div>
 <div class="timer" id="timer-box">⏳ <span id="time-left"></span></div>
 <div class="tracking-eyes-container desktop-eyes"><div class="eye-ball"><div class="pupil"></div></div><div class="eye-ball"><div class="pupil"></div></div></div>
 </div>
@@ -177,9 +160,7 @@ window.CBT_CONFIG = {
 <div class="content-header"><div class="question-number" id="q-number"></div><div id="q-tag" class="q-tag-capsule" style="display: none;"></div></div>
 <div class="question-text" id="q-text"></div>
 <ul class="options" id="q-options"></ul>
-<div id="sidebar-keyboard-hints" class="sidebar-hints-container inline-shortcuts-style" style="display:none;"><span class="shortcut-label">Keyboard Shortcuts:</span><div class="sidebar-hints-row"><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd> / <kbd>A</kbd><kbd>B</kbd><kbd>C</kbd><kbd>D</kbd> Select · <kbd>⌫</kbd> Clear · <kbd>↵</kbd> Next</div></div>
 <div id="sidebar-toppers" class="sidebar-toppers-container inline-shortcuts-style" style="display:none;"><span class="shortcut-label">🏆 Top Performers:</span><div id="sidebar-toppers-list" class="sidebar-toppers-list"></div></div>
-<div id="keyboard-hints" class="keyboard-hints-container" style="display:none;"></div>
 </div>
 </div>
 <div class="palette-container">
