@@ -35,9 +35,10 @@ window.CBT_CONFIG = {
 <body>
 <header class="unified-workspace-header" role="banner">
 <div class="header-left-group">
+<button class="back-btn" onclick="goToHome()" aria-label="Go Back to Home"><svg class="btn-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg><span>Back</span></button>
 <div class="chapter-capsule" id="current-chapter" data-drive-id="14ycSzPcKX20mBGdY9kdfNp31fp6LNSYW">Evaluation in Python</div>
 <button class="app-btn app-btn-outline" onclick="window.open(window.CBT_CONFIG.NOTES_URL, '_blank')" aria-label="Open Revision Notes"><svg class="btn-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg><span>Notes</span></button>
-<button class="app-btn app-btn-yt" id="yt-trigger-btn" onclick="triggerVerifyModal('yt')" aria-label="Watch Video Lesson"><span class="yt-badge">YT</span><span>One Shot</span></button>
+<button class="app-btn app-btn-yt" id="yt-trigger-btn" onclick="triggerVerifyModal('yt')" aria-label="Watch Video Lesson"><span class="yt-badge">YT</span><svg class="btn-icon desktop-yt-icon" width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.377.55a3.016 3.016 0 0 0-2.122 2.136C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.55 9.376.55 9.376.55s7.505 0 9.377-.55a3.016 3.016 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" /></svg><span>One Shot</span></button>
 </div>
 <div class="header-right-group">
 <button class="app-btn hide-on-mobile" onclick="toggleFullScreen()" aria-label="Toggle Fullscreen Mode"><svg class="btn-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg><span>Fullscreen</span></button>
@@ -217,7 +218,7 @@ window.CBT_CONFIG = {
 </div>
 <div class="rs-banner-timestamp-box">
 <div><svg class="sc-svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> <span id="lbl-dash-date-node"></span></div>
-<div><svg class="sc-svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 16 14"></polyline></svg> <span id="lbl-dash-time-node"></span></div>
+<div><svg class="sc-svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> <span id="lbl-dash-time-node"></span></div>
 </div>
 </div>
 </div>
@@ -319,7 +320,7 @@ window.CBT_CONFIG = {
 </div>
 </div>
 
-<footer class="fixed-site-footer">
+<footer class="unfixed-site-footer">
 <div class="footer-left-text">© 2026 SinghClasses.in | Designed with ❤️ by Rohit Singh</div>
 <div class="footer-right-links"><a href="../../../legal/contact-us.html">Any Queries? Contact Us</a></div>
 </footer>
