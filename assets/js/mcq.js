@@ -289,7 +289,7 @@ async function fetchAndRenderSidebarToppers() {
         const url = `${topperUrl}?testName=${encodeURIComponent(testName)}&currentSection=${encodeURIComponent(currentSection)}`;
         const res = await fetch(url);
         const data = await res.json();
-        if (data && data.top5) renderTopperLeaderboard(data.top5);
+        if (data && data.top5) renderSidebarToppers(data.top5);
     } catch (err) { console.warn("Sidebar toppers sync note:", err); }
     finally { if (container) container.classList.remove('fetching-pulse'); }
 }
@@ -313,70 +313,6 @@ function renderSidebarToppers(top5Array) {
     }).join(' ');
     container.style.display = 'flex';
 }
-
-window.beginExam = async () => {
-    if (!studentNameVal) {
-        studentNameVal = $('student-name-input').value.trim().toUpperCase() || "GOKU";
-        studentClassVal = $('student-class-input').value || "10";
-        studentSectionVal = $('student-section-input').value || "A";
-        schoolNameVal = $('student-school-input').value.trim().toUpperCase() || "SPS";
-        studentName = `${studentNameVal} | CLASS: ${studentClassVal} | SEC: ${studentSectionVal} | ${schoolNameVal}`;
-    }
-    $('modal-welcome').style.display = 'none';
-    const loadingOverlay = $('quiz-loading-overlay');
-    if (loadingOverlay) loadingOverlay.style.display = 'flex';
-    document.body.classList.add('exam-in-progress'); isExamActive = true;
-    if (isQuestionsLoading) {
-        let checks = 0;
-        while (isQuestionsLoading && checks < 100) { await new Promise(r => setTimeout(r, 100)); checks++; }
-    }
-    if (loadingOverlay) loadingOverlay.style.display = 'none';
-    if (listExamPapers.length === 0) { alert("Could not pull live questions. Re-loading workspace frame..."); location.reload(); return; }
-    
-    questions = []; sections = []; let qt = 0;
-    listExamPapers.forEach((p, idx) => {
-        let st = qt, sq = p.questions.map(q => {
-            let shuffledOptions = [...q.options]; shuffleArray(shuffledOptions);
-            return { question: q.text, tag: q.tag ?? "", options: shuffledOptions, image: q.image ?? "", correctAnswerText: q.correctAnswerText };
-        });
-        shuffleArray(sq);
-        sq.forEach(q => { questions.push(q); qt++; });
-        sections.push({ index: idx, title: p.title, year: p.year, start: st, end: qt, submitted: false, timeSpent: 0 });
-    });
-
-    const savedRaw = localStorage.getItem(getStorageKey());
-    let isRestored = false;
-    if (savedRaw) {
-        if (confirm("Unsaved progress found for " + studentNameVal + ". Unsaved progress found? Resume previous session?")) {
-            try {
-                const s = JSON.parse(savedRaw);
-                currentYearIndex = s.currentYearIndex ?? 0;
-                currentQuestion = s.currentQuestion ?? sections[0].start;
-                userAnswers = s.userAnswers ?? new Array(questions.length).fill(null);
-                visitedQuestions = s.visitedQuestions ?? new Array(questions.length).fill(false);
-                lockedAnswers = s.lockedAnswers ?? new Array(questions.length).fill(false);
-                sectionTimes = s.sectionTimes ?? sections.map(sec => (sec.end - sec.start) * 60);
-                securityWarnings = s.securityWarnings ?? 0;
-                if (s.sectionsData && Array.isArray(s.sectionsData)) {
-                    s.sectionsData.forEach((sd, idx) => {
-                        if (sections[idx]) { sections[idx].submitted = sd.submitted; sections[idx].timeSpent = sd.timeSpent; }
-                    });
-                }
-                isRestored = true;
-            } catch (err) { console.warn("Failed to parse saved session, starting fresh:", err); }
-        } else { clearSessionLocalStorage(); }
-    }
-
-    if (!isRestored) {
-        userAnswers = new Array(questions.length).fill(null); visitedQuestions = new Array(questions.length).fill(false);
-        lockedAnswers = new Array(questions.length).fill(false); sectionTimes = sections.map(s => (s.end - s.start) * 60);
-        currentYearIndex = 0; currentQuestion = sections[0].start;
-    }
-
-    isTimerPaused = false;
-    $('quiz-screen').style.display = 'block'; if ($('unified-nav')) $('unified-nav').style.display = 'flex';
-    buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion(); fetchAndRenderSidebarToppers(); saveSessionToLocalStorage();
-};
 
 function updateTimerDisplay() {
     let t = sectionTimes[currentYearIndex], m = Math.floor(t / 60), s = t % 60, timeStr = `${m}:${s < 10 ? '0' : ''}${s}`;
@@ -464,8 +400,11 @@ window.prevQuestion = () => { if (currentQuestion > sections[currentYearIndex].s
 window.jumpToQuestion = i => { currentQuestion = i; loadQuestion(); };
 
 window.filterPalette = t => {
-    currentFilter = t; document.querySelectorAll('.filter-slider-wrapper .legend-item').forEach(e => e.classList.remove('active-filter'));
-    $('filter-' + t).classList.add('active-filter'); updatePalette();
+    currentFilter = t; 
+    document.querySelectorAll('.filter-slider-wrapper .legend-item').forEach(e => e.classList.remove('active-filter'));
+    if ($('filter-' + t)) $('filter-' + t).classList.add('active-filter');
+    if ($('mobile-filter-select')) $('mobile-filter-select').value = t;
+    updatePalette();
 };
 
 function animateCount(el, target) {
@@ -524,77 +463,6 @@ window.downloadScorecardAsImage = () => {
     }).catch(err => showToastAlert("Image rendering error. Please re-attempt."));
 };
 
-function renderTopperLeaderboard(top5Array) {
-    const tbody = $('topper-leaderboard-body'); if (!tbody) return;
-    if (!Array.isArray(top5Array) || top5Array.length === 0) { tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--stat-lbl-color);">No toppers recorded yet.</td></tr>`; return; }
-    let realSubmissions = top5Array.filter(t => t && t.name !== "Awaiting..." && t.score !== "-");
-    let pendingSlots = top5Array.filter(t => !t || t.name === "Awaiting..." || t.score === "-");
-    realSubmissions.sort((a, b) => {
-        let scoreA = parseFloat(a.score) || 0, scoreB = parseFloat(b.score) || 0;
-        if (scoreB !== scoreA) return scoreB - scoreA;
-        let accA = parseFloat((a.accuracy || "0").toString().replace("%", "")) || 0, accB = parseFloat((b.accuracy || "0").toString().replace("%", "")) || 0;
-        return accB - accA;
-    });
-    let sortedTop5 = [...realSubmissions, ...pendingSlots].slice(0, 5);
-    tbody.innerHTML = '';
-    sortedTop5.forEach((t, idx) => {
-        const rank = idx + 1; let medal = `#${rank}`;
-        if (rank === 1) medal = '🥇 #1'; else if (rank === 2) medal = '🥈 #2'; else if (rank === 3) medal = '🥉 #3';
-        const accStr = typeof t.accuracy === 'number' ? (t.accuracy + "%") : (t.accuracy || "-");
-        tbody.innerHTML += `<tr class="${rank === 1 ? 'rank-first-place' : ''}"><td><span class="badge-pct-pill rank-badge">${medal}</span></td><td><strong>${escapeHTML(t.name || t.studentName || 'Awaiting...')}</strong></td><td>${escapeHTML(t.classVal || '-')} / ${escapeHTML(t.sectionVal || '-')}</td><td>${escapeHTML(t.school || '-')}</td><td><strong>${t.score !== undefined ? t.score : '-'}</strong></td><td>${accStr}</td><td>${escapeHTML(t.timeTaken || '-')}</td></tr>`;
-    });
-    renderSidebarToppers(sortedTop5);
-}
-
-function processSectionSubmission() {
-    if (!lockedAnswers[currentQuestion] && userAnswers[currentQuestion] !== null) lockedAnswers[currentQuestion] = true;
-    let sec = sections[currentYearIndex]; sec.submitted = true;
-    for (let i = sec.start; i < sec.end; i++) lockedAnswers[i] = true;
-    document.body.classList.remove('exam-in-progress');
-    $('quiz-screen').style.display = 'none'; $('unified-nav').style.display = 'none';
-    if ($('sc-global-footer-banner')) $('sc-global-footer-banner').style.display = 'none';
-    $('result-screen').style.display = 'block';
-    $('rs-dynamic-greeting').innerText = `Great effort ${studentNameVal}`;
-    $('lbl-dash-name').innerText = studentName;
-    $('lbl-dash-date-node').innerText = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-    $('lbl-dash-time-node').innerText = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-
-    let rC = 0, rI = 0, rL = 0, aS = 0, cM = 0, cT = 0, pQ = 0, tg = $('table-body-matrix-target');
-    if (tg) {
-        tg.innerHTML = '';
-        sections.forEach(s => {
-            if (s.index > currentYearIndex) return;
-            let sC = 0, sI = 0, sL = 0, sS = 0, sT = s.end - s.start, sM = sT * getCorrectMarks();
-            cM += sM; cT += s.timeSpent; pQ += sT;
-            for (let i = s.start; i < s.end; i++) {
-                if (userAnswers[i] !== null) {
-                    if (isAnswerCorrect(i)) { sC++; if (s.submitted) { rC++; sS += getCorrectMarks(); } }
-                    else { sI++; if (s.submitted) { rI++; sS -= getIncorrectMarks(); } }
-                } else { sL++; if (s.submitted) rL++; }
-            }
-            if (!s.submitted) sL = sT; else aS += sS;
-            let pR = sM > 0 && sS > 0 ? ((sS / sM) * 100).toFixed(0) : 0; if (!s.submitted) pR = 0;
-            let pillBg = s.submitted && sS > 0 ? 'var(--badge-pass-bg)' : 'var(--badge-fail-bg)';
-            let pillText = s.submitted && sS > 0 ? 'var(--badge-pass-text)' : 'var(--badge-fail-text)';
-            tg.innerHTML += `<tr><td>${s.year} - ${s.title}</td><td>${sM}</td><td>${s.submitted ? sC : '-'}</td><td>${s.submitted ? sI : '-'}</td><td>${sL}</td><td><span class="badge-pct-pill" style="background:${pillBg};color:${pillText};">${s.submitted ? pR : 0}%</span></td><td>${Math.floor(s.timeSpent / 60)}m ${s.timeSpent % 60}s</td></tr>`;
-        });
-
-        aS = Math.max(0, aS - (securityWarnings * getPenaltyMarks()));
-        let fP = cM > 0 ? Math.round((aS / cM) * 100) : 0, tm = Math.floor(cT / 60), ts = cT % 60, totalAttempted = rC + rI, avgTimePerQ = totalAttempted > 0 ? (cT / totalAttempted).toFixed(1) + "s" : "0s";
-        $('lbl-dash-max-marks').innerText = cM; $('lbl-dash-obtained-marks').innerText = aS; $('lbl-dash-attempted').innerText = `${totalAttempted}`; $('lbl-dash-incorrect').innerText = `${rI}`; $('lbl-dash-unattempted').innerText = `${rL}`;
-        $('lbl-dash-time').innerText = `${tm}m ${ts}s`; $('lbl-dash-warning').innerText = securityWarnings;
-        $('lbl-radial-score-pct').innerText = `${fP}%`; $('lbl-radial-obtained-val').innerText = aS; $('lbl-radial-obtained-pct').innerText = `${fP}%`; $('lbl-radial-rem-val').innerText = cM - aS; $('lbl-radial-rem-pct').innerText = `${100 - fP}%`;
-        if ($('lbl-radial-max-1')) $('lbl-radial-max-1').innerText = cM; if ($('lbl-radial-max-2')) $('lbl-radial-max-2').innerText = cM;
-        let ringNode = $('radial-bar-fill-node');
-        if (ringNode) { ringNode.style.strokeDashoffset = 282.74 - (282.74 * fP) / 100; ringNode.style.stroke = fP >= 70 ? 'var(--color-correct)' : (fP >= 40 ? 'var(--color-warning)' : 'var(--color-danger)'); }
-        tg.innerHTML += `<tr class="total-sum-row"><td>Cumulative Total</td><td>${cM}</td><td>${rC}</td><td>${rI}</td><td>${rL}</td><td><span class="badge-pct-pill" style="background:var(--badge-total-bg);color:var(--badge-total-text);">${fP}%</span></td><td>${tm}m ${ts}s</td></tr>`;
-        globalFormPayload = { studentName: studentNameVal, studentClass: studentClassVal, studentSection: studentSectionVal, schoolName: schoolNameVal, testName: getTestName(), currentSection: `${sec.year} - ${sec.title}`, obtainedScore: aS, correctAnswers: rC, incorrectAnswers: rI, unattemptQuestions: rL, accuracy: `${fP}.00%`, avgTimePerQuestion: avgTimePerQ, proctoringWarnings: securityWarnings, activeTimeTaken: `${tm}m ${ts}s` };
-    }
-
-    let b = $('btn-dashboard-main-trigger');
-    if (b) { b.disabled = false; b.style.opacity = '1'; b.innerHTML = currentYearIndex === sections.length - 1 ? `Finish Exam Evaluation` : `Proceed to Next Section`; }
-}
-
 window.handleSectionProgression = () => {
     let b = $('btn-dashboard-main-trigger'); if (!b || b.disabled) return;
     b.disabled = true; b.innerHTML = `💾 Saving Results to Server...`;
@@ -603,8 +471,7 @@ window.handleSectionProgression = () => {
     const saveRequest = saveUrl ? fetch(saveUrl, { method: "POST", body: params }).then(r => r.json()).catch(() => null) : Promise.resolve(null);
     const topperRequest = topperUrl ? fetch(topperUrl, { method: "POST", body: params }).then(r => r.json()).catch(() => null) : Promise.resolve(null);
     Promise.all([saveRequest, topperRequest]).then(([saveRes, topperRes]) => {
-        if (topperRes && topperRes.top5) renderTopperLeaderboard(topperRes.top5);
-        showToastAlert("Saved to both Google Sheets successfully!"); executeProgressionAdvance();
+        showToastAlert("Saved to Google Sheets successfully!"); executeProgressionAdvance();
     }).catch(err => { console.warn("Sync warning:", err); showToastAlert("Proceeding forward..."); executeProgressionAdvance(); });
 };
 
@@ -612,7 +479,6 @@ function executeProgressionAdvance() {
     if (currentYearIndex + 1 < sections.length) {
         currentYearIndex++; currentQuestion = sections[currentYearIndex].start;
         $('result-screen').style.display = 'none'; $('quiz-screen').style.display = 'block'; $('unified-nav').style.display = 'flex';
-        if ($('sc-global-footer-banner')) $('sc-global-footer-banner').style.display = 'block';
         buildYearNav(); updateTimerDisplay(); loadQuestion(); fetchAndRenderSidebarToppers(); saveSessionToLocalStorage();
     } else {
         clearSessionLocalStorage();
