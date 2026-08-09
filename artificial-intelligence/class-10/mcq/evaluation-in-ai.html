@@ -68,13 +68,35 @@
         }
     }
 
-    /* 3. Text Form Formatting for Result Section on Mobile Devices */
+    /* 3. Result Screen Mobile Layout - Move "Proceed to Next" Button to the Top */
     #result-screen .target-result-outer-container {
+        display: flex !important;
+        flex-direction: column !important;
         padding: 10px !important;
-        gap: 10px !important;
+        gap: 12px !important;
         background: var(--app-bg) !important;
     }
+
+    /* Order Result Screen Elements */
+    #result-screen .target-result-outer-container > .rs-panel-card:first-child {
+        order: 1 !important; /* Top Summary Greeting Banner */
+    }
+
+    #result-screen .dashboard-action-wrapper {
+        order: 2 !important; /* Move Action Buttons right below the Greeting Banner */
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+        margin: 4px 0 !important;
+    }
+
+    #btn-dashboard-main-trigger {
+        order: -1 !important; /* Ensure Proceed to Next Section is the top-most button */
+        width: 100% !important;
+    }
+
     #result-screen .rs-stats-grid {
+        order: 3 !important;
         display: flex !important;
         flex-direction: column !important;
         gap: 6px !important;
@@ -82,6 +104,23 @@
         background: transparent !important;
         border: none !important;
     }
+
+    #result-screen .rs-overview-quick-split-row {
+        order: 4 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+
+    #result-screen .topper-card-container {
+        order: 5 !important;
+    }
+
+    #result-screen .matrix-section-container {
+        order: 6 !important;
+    }
+
+    /* 4. Text Form Formatting for Result Section on Mobile Devices */
     #result-screen .rs-quad-stat-item {
         display: flex !important;
         justify-content: space-between !important;
@@ -107,11 +146,6 @@
         font-size: 1rem !important;
     }
 
-    #result-screen .rs-overview-quick-split-row {
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 10px !important;
-    }
     #result-screen .rs-svg-radial-container {
         display: none !important; /* Hide SVG graphic ring chart for clean text form */
     }
@@ -486,6 +520,78 @@ window.CBT_CONFIG = {
 <script src="../../../assets/js/syllabus.js"></script>
 <script src="../../../assets/js/mcq.js"></script>
 <script>
+// Overrides for beginExam to prevent prompt when student hasn't entered a custom name
+window.beginExam = async () => {
+    const rawNameInput = document.getElementById('student-name-input') ? document.getElementById('student-name-input').value.trim() : "";
+    const isNameProvided = rawNameInput.length > 0;
+
+    studentNameVal = rawNameInput.toUpperCase() || "GOKU";
+    studentClassVal = document.getElementById('student-class-input').value || "10";
+    studentSectionVal = document.getElementById('student-section-input').value || "A";
+    schoolNameVal = document.getElementById('student-school-input').value.trim().toUpperCase() || "SPS";
+    studentName = `${studentNameVal} | CLASS: ${studentClassVal} | SEC: ${studentSectionVal} | ${schoolNameVal}`;
+
+    document.getElementById('modal-welcome').style.display = 'none';
+    const loadingOverlay = document.getElementById('quiz-loading-overlay');
+    if (loadingOverlay) loadingOverlay.style.display = 'flex';
+    document.body.classList.add('exam-in-progress'); isExamActive = true;
+    if (isQuestionsLoading) {
+        let checks = 0;
+        while (isQuestionsLoading && checks < 100) { await new Promise(r => setTimeout(r, 100)); checks++; }
+    }
+    if (loadingOverlay) loadingOverlay.style.display = 'none';
+    if (listExamPapers.length === 0) { alert("Could not pull live questions. Re-loading workspace frame..."); location.reload(); return; }
+    
+    questions = []; sections = []; let qt = 0;
+    listExamPapers.forEach((p, idx) => {
+        let st = qt, sq = p.questions.map(q => {
+            let shuffledOptions = [...q.options]; shuffleArray(shuffledOptions);
+            return { question: q.text, tag: q.tag ?? "", options: shuffledOptions, image: q.image ?? "", correctAnswerText: q.correctAnswerText };
+        });
+        shuffleArray(sq);
+        sq.forEach(q => { questions.push(q); qt++; });
+        sections.push({ index: idx, title: p.title, year: p.year, start: st, end: qt, submitted: false, timeSpent: 0 });
+    });
+
+    let isRestored = false;
+    if (isNameProvided) {
+        const savedRaw = localStorage.getItem(getStorageKey());
+        if (savedRaw) {
+            if (confirm("Unsaved progress found for " + studentNameVal + ". Resume previous session?")) {
+                try {
+                    const s = JSON.parse(savedRaw);
+                    currentYearIndex = s.currentYearIndex ?? 0;
+                    currentQuestion = s.currentQuestion ?? sections[0].start;
+                    userAnswers = s.userAnswers ?? new Array(questions.length).fill(null);
+                    visitedQuestions = s.visitedQuestions ?? new Array(questions.length).fill(false);
+                    lockedAnswers = s.lockedAnswers ?? new Array(questions.length).fill(false);
+                    sectionTimes = s.sectionTimes ?? sections.map(sec => (sec.end - sec.start) * 60);
+                    securityWarnings = s.securityWarnings ?? 0;
+                    if (s.sectionsData && Array.isArray(s.sectionsData)) {
+                        s.sectionsData.forEach((sd, idx) => {
+                            if (sections[idx]) { sections[idx].submitted = sd.submitted; sections[idx].timeSpent = sd.timeSpent; }
+                        });
+                    }
+                    isRestored = true;
+                } catch (err) { console.warn("Failed to parse saved session, starting fresh:", err); }
+            } else { clearSessionLocalStorage(); }
+        }
+    } else {
+        clearSessionLocalStorage();
+    }
+
+    if (!isRestored) {
+        userAnswers = new Array(questions.length).fill(null); visitedQuestions = new Array(questions.length).fill(false);
+        lockedAnswers = new Array(questions.length).fill(false); sectionTimes = sections.map(s => (s.end - s.start) * 60);
+        currentYearIndex = 0; currentQuestion = sections[0].start;
+    }
+
+    isTimerPaused = false;
+    document.getElementById('quiz-screen').style.display = 'block'; 
+    if (document.getElementById('unified-nav')) document.getElementById('unified-nav').style.display = 'flex';
+    buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion(); fetchAndRenderSidebarToppers(); saveSessionToLocalStorage();
+};
+
 // Overrides to dynamically inject mobile text-label attributes for mobile form display
 const originalProcessSectionSubmission = window.processSectionSubmission;
 function renderTopperLeaderboard(top5Array) {
