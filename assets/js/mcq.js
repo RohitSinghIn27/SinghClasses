@@ -152,8 +152,16 @@ document.addEventListener('click', e => { let m = $('modal-security'); if (m && 
 
 window.addEventListener('scroll', () => { let bar = $("scProgressBar"), st = document.documentElement.scrollTop || document.body.scrollTop, sh = document.documentElement.scrollHeight - document.documentElement.clientHeight; if (bar) bar.style.width = (sh > 0 ? (st / sh) * 100 : 0) + "%"; });
 
-const ym = $('yearMenuToggle'), yc = $('year-nav-container');
-if (ym && yc) ym.addEventListener('click', e => { e.stopPropagation(); yc.classList.toggle('show-year-menu'); ym.innerHTML = yc.classList.contains('show-year-menu') ? '✕' : '☰'; });
+document.addEventListener("DOMContentLoaded", () => {
+    const ym = $('yearMenuToggle'), yc = $('year-nav-container');
+    if (ym && yc) {
+        ym.addEventListener('click', e => { 
+            e.stopPropagation(); 
+            yc.classList.toggle('show-year-menu'); 
+            ym.innerHTML = yc.classList.contains('show-year-menu') ? '✕' : '☰'; 
+        });
+    }
+});
 
 window.goToGuidelinesStep = () => {
     studentNameVal = $('student-name-input').value.trim().toUpperCase() || "GOKU";
@@ -371,7 +379,7 @@ window.loadQuestion = () => {
     });
 
     let kh = $('keyboard-hints'); if (kh) kh.style.display = 'none';
-    let skh = $('sidebar-keyboard-hints'); if (skh) skh.style.display = (qy === 1) ? 'flex' : 'none';
+    let skh = $('sidebar-keyboard-hints'); if (skh) skh.style.display = 'none';
     $('btn-prev').disabled = currentQuestion === s.start;
     $('btn-clear').disabled = userAnswers[currentQuestion] === null || isL;
     let nb = $('btn-next'); nb.classList.remove('highlight-submit');
@@ -403,7 +411,6 @@ window.filterPalette = t => {
     currentFilter = t; 
     document.querySelectorAll('.filter-slider-wrapper .legend-item').forEach(e => e.classList.remove('active-filter'));
     if ($('filter-' + t)) $('filter-' + t).classList.add('active-filter');
-    if ($('mobile-filter-select')) $('mobile-filter-select').value = t;
     updatePalette();
 };
 
