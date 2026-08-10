@@ -1,9 +1,3 @@
-/**
- * Interactive CBT Test Engine Module Workspace
- * Test-Wise & Section-Wise Live Sync with Client-Side Sorting Engine
- * Includes Auto-Save LocalStorage Recovery & Question Image Preloading
- */
-
 const $ = id => document.getElementById(id);
 const getCorrectMarks = () => window.CBT_CONFIG?.MARKS_CORRECT ?? 5;
 const getIncorrectMarks = () => window.CBT_CONFIG?.MARKS_INCORRECT ?? 1;
@@ -87,7 +81,7 @@ async function loadQuestionsFromSheet() {
                 title: getVerbatim(paper, ['title', 'Title', 'sectiontitle', 'SectionTitle'], "Section"),
                 year: getVerbatim(paper, ['year', 'Year', 'section', 'Section'], "Set"),
                 questions: (paper.questions || []).map(q => {
-                    let rawOpts = Array.isArray(q.options) ? q.options : [getVerbatim(q, ['optiona', 'OptionA', 'option1', '0'], ""), getVerbatim(q, ['optionb', 'OptionB', 'option2', '1'], ""), getVerbatim(q, ['optionc', 'OptionC', 'option3', '2'], ""), getVerbatim(q, ['optiond', 'OptionD', 'option4', '3'], "")];
+                    let rawOpts = Array.isArray(q.options) ? q.options : [getVerbatim(q, ['optiona', 'OptionB', 'option1', '0'], ""), getVerbatim(q, ['optionb', 'OptionB', 'option2', '1'], ""), getVerbatim(q, ['optionc', 'OptionC', 'option3', '2'], ""), getVerbatim(q, ['optiond', 'OptionD', 'option4', '3'], "")];
                     let cleanOpts = rawOpts.map(o => (o !== null && o !== undefined ? o : "").toString());
                     let rawCorrect = getVerbatim(q, ['correctIndex', 'correct', 'answer', 'ans', '4'], "A");
                     return { text: getVerbatim(q, ['text', 'Text', 'question', 'Question'], "").toString(), tag: getVerbatim(q, ['tag', 'Tag', 'info', 'Info'], "").toString(), options: cleanOpts, image: getVerbatim(q, ['image', 'Image', 'imageurl'], "").toString(), correctAnswerText: resolveCorrectText(rawCorrect, cleanOpts) };
@@ -125,7 +119,7 @@ function showToastAlert(m) {
 }
 
 function triggerVerifyModal(type) {
-    const modal = $('verify-resource-modal'), icon = $('verify-card-icon'), heading = $('verify-modal-heading'), text = $('verify-modal-text'), actionBtn = $('verify-proceed-action-btn'), driveId = $('current-chapter').getAttribute('data-drive-id');
+    const modal = $('verify-resource-modal'), icon = $('verify-card-icon'), heading = $('verify-modal-heading'), text = $('verify-modal-text'), actionBtn = $('verify-proceed-action-btn'), driveId = $('current-chapter') ? $('current-chapter').getAttribute('data-drive-id') : "";
     modal.style.display = 'flex';
     if (type === 'pdf') {
         activeResourceUrl = `https://drive.google.com/file/d/${driveId}/preview`;
@@ -175,6 +169,15 @@ window.goToGuidelinesStep = () => {
 window.goToLoginStep = () => { $('welcome-step-2').style.display = 'none'; $('welcome-step-1').style.display = 'block'; };
 
 window.onload = () => {
+    // DYNAMICALLY BIND GLOBAL CBT_CONFIG TEST NAME TO UI NODES
+    const activeTestName = getTestName();
+    
+    const chapterCapsule = $('current-chapter');
+    if (chapterCapsule) chapterCapsule.innerText = activeTestName;
+
+    const topicTextNode = document.querySelector('.topic-text');
+    if (topicTextNode) topicTextNode.innerText = activeTestName;
+
     $('welcome-correct-lbl').innerText = `+${getCorrectMarks()} Correct`;
     $('welcome-incorrect-lbl').innerText = `-${getIncorrectMarks()} Incorrect`;
     $('modal-welcome').style.display = 'flex';
