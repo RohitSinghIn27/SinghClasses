@@ -258,7 +258,7 @@ body.dark-mode .sc-subscribe-banner-green { background: var(--card); border: 1px
   background: var(--gold-bright);
   color: #12172c;
   padding: 10px 20px;
-  border-radius: 9px;
+  border-radius: 99px;
   font-size: 0.78rem;
   font-weight: 700;
   text-decoration: none;
@@ -316,7 +316,15 @@ body.dark-mode .sc-column-c { background-color: rgba(194, 65, 12, 0.1); border-c
 .sc-column-b .sc-section-title { background-color: #fef9c3; color: #a16207; border: 1.5px solid #facc15; }
 .sc-column-c .sc-section-title { background-color: #ffedd5; color: #c2410c; border: 1.5px solid #fdba74; }
 
-.sc-cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; position: relative; z-index: 2; }
+/* --- DYNAMIC FLEXBOX CARD CONTAINER --- */
+.sc-cards-grid { 
+  display: flex; 
+  flex-wrap: wrap; 
+  gap: 16px; 
+  position: relative; 
+  z-index: 2; 
+}
+
 .sc-custom-card {
   background-color: var(--card);
   border: 1px solid var(--border);
@@ -327,7 +335,12 @@ body.dark-mode .sc-column-c { background-color: rgba(194, 65, 12, 0.1); border-c
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  /* Dynamic Card Growing: Default 3 per row (~33.333%), expands dynamically when leftover cards occur */
+  flex: 1 1 calc(33.333% - 12px);
+  min-width: 260px;
 }
+
 .sc-custom-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-soft); border-color: var(--gold); }
 .sc-custom-card h4 { font-family: var(--font-display); font-size: 1.02rem; font-weight: 600; margin: 10px 0 12px; padding-bottom: 8px; color: var(--ink); text-align: center; flex-grow: 1; }
 .sc-column-a .sc-custom-card h4 { border-bottom: 1px solid #93c5fd; }
@@ -384,12 +397,12 @@ body.dark-mode .sc-modal-icon-bg { border-color: rgba(220, 38, 38, 0.3); backgro
 
 /* Responsive Adjustments */
 @media (max-width: 992px) {
-  .sc-cards-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
   .sc-hero-wrapper { flex-direction: column; gap: 24px; padding: 24px; }
   .sc-multi-progress-card { flex: 1 1 100%; max-width: 100%; width: 100%; }
 }
+
 @media (max-width: 680px) {
-  .sc-cards-grid { grid-template-columns: 1fr; }
+  .sc-custom-card { flex: 1 1 100%; }
   .sc-subscribe-banner-green { flex-direction: column; text-align: center; gap: 16px; }
   .sc-sbg-left { flex-direction: column; gap: 12px; }
   .sc-sbg-btn { width: 100%; justify-content: center; }
