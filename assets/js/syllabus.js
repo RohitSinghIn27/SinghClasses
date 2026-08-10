@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
         mainNavigation.classList.remove('open');
         hamburgerToggle.setAttribute('aria-expanded', 'false');
       });
-    });
+    }); 
   }
 
   // =======================================
