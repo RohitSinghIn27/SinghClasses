@@ -1,4 +1,3 @@
-// script.js
 document.addEventListener("DOMContentLoaded", () => {
   window.scrollTo(0, 0);
   window.addEventListener("pageshow", () => window.scrollTo(0, 0));
@@ -21,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("focus", unblurImages);
   document.addEventListener("visibilitychange", () => { if (document.hidden) blurImages(); else unblurImages(); });
 
-  // CURSOR SPARKLE TRAIL
+  // 2. CURSOR SPARKLE TRAIL
   (function initCursorSparkles() {
     if (window.matchMedia("(pointer: coarse), (prefers-reduced-motion: reduce)").matches) return;
     const canvas = document.createElement("canvas");
@@ -58,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
     })();
   })();
 
-  // NAVIGATION & HAMBURGER MENU
+  // 3. NAVIGATION & HAMBURGER MENU
   const hamburgerToggle = document.getElementById("hamburgerToggle"), navMenu = document.getElementById("nav-menu");
   if (hamburgerToggle && navMenu) {
     const toggleMenu = (state) => {
@@ -71,10 +70,11 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("click", (e) => { if (!hamburgerToggle.contains(e.target) && !navMenu.contains(e.target)) toggleMenu(false); });
   }
 
+  // 4. DYNAMIC YEAR
   const currentYearElem = document.getElementById("current-year");
   if (currentYearElem) currentYearElem.textContent = new Date().getFullYear();
 
-  // DYNAMIC FABRIC CANVAS BACKGROUND (EXCLUDED NAV CONTAINER TO REMOVE PARTICLES FROM HEADER ONLY)
+  // 5. DYNAMIC FABRIC CANVAS BACKGROUND (EXCLUDED NAV CONTAINER & REDUCED PARTICLE COUNT)
   const initDynamicFabric = (selector) => {
     const wrapper = document.querySelector(selector); if (!wrapper) return;
     const canvas = document.createElement("canvas");
@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     new ResizeObserver(() => {
       w = canvas.width = wrapper.offsetWidth; h = canvas.height = wrapper.offsetHeight; dots = [];
-      for (let i = 0, density = Math.min(Math.floor((w * h) / 30000), 20) || 15; i < density; i++) {
+      for (let i = 0, density = Math.min(Math.floor((w * h) / 60000), 8) || 5; i < density; i++) {
         dots.push({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - 0.5) * 1.2, vy: (Math.random() - 0.5) * 1.2, r: Math.random() * 0.8 + 0.3 });
       }
     }).observe(wrapper);
@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
   [".classes-section", ".playlists-section", ".results-section", ".teacher-section"].forEach(initDynamicFabric);
 });
 
-// CBSE RESULT WIDGET API FETCH & SLIDER
+// 6. CBSE RESULT WIDGET API FETCH & SLIDER
 (function () {
   const API_URL = "https://script.google.com/macros/s/AKfycbx_qbyL831Rtr-dG5mNLRYz5LajWvVtgSv4xBO9pWX2TAZ74qNWf33Bdf1NtivHyfM8/exec";
   
