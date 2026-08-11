@@ -1,6 +1,25 @@
+// script.js
 document.addEventListener("DOMContentLoaded", () => {
   window.scrollTo(0, 0);
   window.addEventListener("pageshow", () => window.scrollTo(0, 0));
+
+  // 1. COMPLETE RIGHT CLICK DISABLE & STRICT IMAGE-ONLY BLUR PROTECTION
+  document.addEventListener("contextmenu", (e) => e.preventDefault());
+
+  const blurImages = () => document.querySelectorAll("img").forEach((i) => i.classList.add("img-blur-protected"));
+  const unblurImages = () => document.querySelectorAll("img").forEach((i) => i.classList.remove("img-blur-protected"));
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "PrintScreen" || (e.ctrlKey && ["c", "p", "s", "u", "i", "j"].includes(e.key.toLowerCase())) || (e.metaKey && ["c", "p", "s", "u", "i", "j"].includes(e.key.toLowerCase()))) {
+      blurImages();
+      if (e.key === "PrintScreen") { navigator.clipboard?.writeText(""); setTimeout(unblurImages, 3000); }
+    }
+  });
+  document.addEventListener("keyup", (e) => { if (e.key === "PrintScreen") blurImages(); });
+  document.addEventListener("copy", blurImages);
+  window.addEventListener("blur", blurImages);
+  window.addEventListener("focus", unblurImages);
+  document.addEventListener("visibilitychange", () => { if (document.hidden) blurImages(); else unblurImages(); });
 
   // CURSOR SPARKLE TRAIL
   (function initCursorSparkles() {
@@ -55,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const currentYearElem = document.getElementById("current-year");
   if (currentYearElem) currentYearElem.textContent = new Date().getFullYear();
 
-  // DYNAMIC FABRIC CANVAS BACKGROUND
+  // DYNAMIC FABRIC CANVAS BACKGROUND (EXCLUDED NAV CONTAINER TO REMOVE PARTICLES FROM HEADER ONLY)
   const initDynamicFabric = (selector) => {
     const wrapper = document.querySelector(selector); if (!wrapper) return;
     const canvas = document.createElement("canvas");
@@ -97,11 +116,8 @@ document.addEventListener("DOMContentLoaded", () => {
       requestAnimationFrame(loop);
     })();
   };
-  [".header-container", ".classes-section", ".playlists-section", ".results-section", ".teacher-section"].forEach(initDynamicFabric);
+  [".classes-section", ".playlists-section", ".results-section", ".teacher-section"].forEach(initDynamicFabric);
 });
-
-// DISABLE CONTEXT MENU ON IMAGES
-document.addEventListener("contextmenu", (e) => { if (e.target.tagName === "IMG") e.preventDefault(); });
 
 // CBSE RESULT WIDGET API FETCH & SLIDER
 (function () {
@@ -181,7 +197,3 @@ document.addEventListener("contextmenu", (e) => { if (e.target.tagName === "IMG"
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fetchGoogleSheetData);
   else fetchGoogleSheetData();
 })();
-
-// WINDOW BLUR / FOCUS VISUAL EFFECTS
-window.addEventListener("blur", () => document.querySelectorAll("section").forEach((sec) => sec.classList.add("section-blurred")));
-window.addEventListener("focus", () => document.querySelectorAll("section").forEach((sec) => sec.classList.remove("section-blurred")));
