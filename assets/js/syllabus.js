@@ -1,31 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-  // =======================================
-  // 0. HAMBURGER MENU TOGGLE & ACCESSIBILITY
-  // =======================================
-  const hamburgerToggle = document.getElementById('hamburgerToggle');
-  const mainNavigation = document.querySelector('.main-navigation');
-
-  if (hamburgerToggle && mainNavigation) {
-    hamburgerToggle.addEventListener('click', function() {
-      const isOpen = hamburgerToggle.classList.toggle('open');
-      mainNavigation.classList.toggle('open', isOpen);
-      hamburgerToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-    });
-
-    // Close menu when a navigation link inside is clicked
-    mainNavigation.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', function() {
-        hamburgerToggle.classList.remove('open');
-        mainNavigation.classList.remove('open');
-        hamburgerToggle.setAttribute('aria-expanded', 'false');
-      });
-    }); 
+  // Set current year dynamically in footer
+  const yearEl = document.getElementById('current-year');
+  if (yearEl) {
+    yearEl.textContent = new Date().getFullYear();
   }
 
-  // =======================================
-  // CENTRALIZED REUSABLE SVG ICONS & TOAST
-  // =======================================
+  // Centralized SVG Icons
   const CARD_ICONS = {
     download: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>`,
     oneshot: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>`,
@@ -50,9 +31,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // Prepend SVG icons dynamically if not already present
+  // Prepend SVG icons dynamically
   document.querySelectorAll('.sc-card-links a').forEach(link => {
-    if (link.querySelector('.sc-svg-icon')) return; // Skip if icon already exists
+    if (link.querySelector('.sc-svg-icon')) return;
 
     const textLabel = link.textContent.trim();
     let markup = '';
@@ -71,9 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // =======================================
-  // 1. COMING SOON TOAST & DONUT CHART
-  // =======================================
+  // Donut SVG Generator
   function generateDonutSVG(data, total, centerText) {
     if (total === 0) return '';
     let svg = `<svg viewBox="-2 -2 104 104" style="width: 100%; height: 100%; display: block; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.06));">`;
@@ -84,10 +63,10 @@ document.addEventListener('DOMContentLoaded', function() {
       let sliceAngle = (slice.count / total) * 2 * Math.PI;
       let endAngle = startAngle + sliceAngle;
 
-      let x1 = 50 + 50 * Math.cos(startAngle);
-      let y1 = 50 + 50 * Math.sin(startAngle);
-      let x2 = 50 + 50 * Math.cos(endAngle);
-      let y2 = 50 + 50 * Math.sin(endAngle);
+      let x1 = (50 + 50 * Math.cos(startAngle)).toFixed(4);
+      let y1 = (50 + 50 * Math.sin(startAngle)).toFixed(4);
+      let x2 = (50 + 50 * Math.cos(endAngle)).toFixed(4);
+      let y2 = (50 + 50 * Math.sin(endAngle)).toFixed(4);
 
       let largeArc = sliceAngle > Math.PI ? 1 : 0;
 
@@ -99,8 +78,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
       if (slice.perc > 8) {
         let midAngle = startAngle + sliceAngle / 2;
-        let tx = 50 + 40 * Math.cos(midAngle);
-        let ty = 50 + 40 * Math.sin(midAngle);
+        let tx = (50 + 40 * Math.cos(midAngle)).toFixed(4);
+        let ty = (50 + 40 * Math.sin(midAngle)).toFixed(4);
         svg += `<text x="${tx}" y="${ty}" fill="#ffffff" font-size="12" font-family="monospace" font-weight="bold" text-anchor="middle" dominant-baseline="central">${slice.perc}</text>`;
       }
 
@@ -114,6 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
     return svg;
   }
 
+  // Calculate Progress and Fill Section Progress Lines
   function initPieChartReadiness() {
     const allLinks = document.querySelectorAll('.sc-custom-card .sc-card-links a');
     let totalLinks = allLinks.length;
@@ -191,6 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
       legendContainer.innerHTML = legendHTML;
     }
 
+    // Update the Section Progress Bars under Part A, Part B, and Part C Headers
     const columns = document.querySelectorAll('.sc-column');
     columns.forEach(col => {
       const colLinks = col.querySelectorAll('.sc-custom-card .sc-card-links a');
@@ -203,38 +184,33 @@ document.addEventListener('DOMContentLoaded', function() {
       });
 
       const colPerc = Math.round((colReady / colLinks.length) * 100) || 0;
-      const title = col.querySelector('.sc-section-title');
-
-      if (title) {
-        let track = col.querySelector('.sc-section-progress-track');
-        if (!track) {
-          track = document.createElement('div');
-          track.className = 'sc-section-progress-track';
-          const fill = document.createElement('div');
-          fill.className = 'sc-section-progress-fill';
-          track.appendChild(fill);
-          title.parentNode.insertBefore(track, title.nextSibling);
-        }
+      const track = col.querySelector('.sc-section-progress-track');
+      if (track) {
         const fill = track.querySelector('.sc-section-progress-fill');
-        if (fill) fill.style.width = colPerc + '%';
+        if (fill) {
+          fill.style.width = colPerc + '%';
+        }
       }
     });
   }
 
   initPieChartReadiness();
 
-  // =======================================
-  // 2. VIDEO CONFIRMATION MODAL
-  // =======================================
+  // Video Modal Intercept
   const videoModal = document.getElementById('scVideoModal');
   const btnStay = document.getElementById('scModalStay');
   const btnWatch = document.getElementById('scModalWatch');
   let currentVideoUrl = '';
 
+  function isVideoUrl(url) {
+    if (!url) return false;
+    return url.includes('youtube.com') || url.includes('youtu.be') || url.includes('vimeo.com');
+  }
+
   document.querySelectorAll('.sc-btn-oneshot').forEach(link => {
     link.addEventListener('click', function(e) {
       const href = this.getAttribute('href');
-      if (href && href !== '#' && href.trim() !== '' && !this.classList.contains('sc-locked')) {
+      if (href && href !== '#' && href.trim() !== '' && !this.classList.contains('sc-locked') && isVideoUrl(href)) {
         if (videoModal) {
           e.preventDefault();
           currentVideoUrl = href;
@@ -245,7 +221,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   if (videoModal) {
-    // Dismiss modal on backdrop click
     videoModal.addEventListener('click', (e) => {
       if (e.target === videoModal) {
         videoModal.classList.remove('show');
@@ -271,93 +246,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // =======================================
-  // 3. FLOATING HUD ACTIONS & DARK MODE SYNCHRONIZATION
-  // =======================================
-  const shareBtn = document.getElementById('scShareBtn');
-  const scrollBtn = document.getElementById('scScrollToggleBtn');
-  const darkModeBtn = document.getElementById('scDarkModeBtn');
-
-  if (darkModeBtn) {
-    const sunIcon = darkModeBtn.querySelector('.sc-sun-icon');
-    const moonIcon = darkModeBtn.querySelector('.sc-moon-icon');
-
-    // Check localStorage theme state
-    if (localStorage.getItem('sc-theme') === 'dark') {
-      document.body.classList.add('dark-mode');
-      if (sunIcon && moonIcon) {
-        sunIcon.style.display = 'block';
-        moonIcon.style.display = 'none';
-      }
-    }
-
-    darkModeBtn.addEventListener('click', () => {
-      document.body.classList.toggle('dark-mode');
-
-      if (document.body.classList.contains('dark-mode')) {
-        localStorage.setItem('sc-theme', 'dark');
-        if (sunIcon && moonIcon) { sunIcon.style.display = 'block'; moonIcon.style.display = 'none'; }
-      } else {
-        localStorage.setItem('sc-theme', 'light');
-        if (sunIcon && moonIcon) { sunIcon.style.display = 'none'; moonIcon.style.display = 'block'; }
-      }
-    });
-  }
-
-  // Share Action
-  if (shareBtn) {
-    shareBtn.addEventListener('click', async () => {
-      const isDesktop = (window.innerWidth > 768 && !('ontouchstart' in window) && !navigator.maxTouchPoints);
-
-      if (isDesktop) {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(window.location.href).then(() => {
-            showToast('URL Copied to clipboard!');
-          }).catch(() => {
-            showToast('Unable to copy URL automatically.');
-          });
-        } else {
-          showToast('Clipboard copy not supported on this browser.');
-        }
-      } else {
-        if (navigator.share) {
-          try {
-            await navigator.share({ title: document.title, url: window.location.href });
-          } catch (err) {
-            if (err.name !== 'AbortError') {
-              console.log('Error sharing:', err);
-            }
-          }
-        } else if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(window.location.href).then(() => {
-            showToast('URL Copied to clipboard!');
-          }).catch(() => {
-            showToast('Unable to copy URL automatically.');
-          });
-        }
-      }
-    });
-  }
-
-  // Smooth Scroll Action
-  if (scrollBtn) {
-    const checkScroll = () => {
-      if (window.scrollY > 150) scrollBtn.classList.remove('sc-point-down');
-      else scrollBtn.classList.add('sc-point-down');
-    };
-
-    window.addEventListener('scroll', checkScroll);
-    checkScroll();
-
-    scrollBtn.addEventListener('click', () => {
-      if (window.scrollY > 150) window.scrollTo({ top: 0, behavior: 'smooth' });
-      else window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    });
-  }
-
-  // =======================================
-  // 4. IN-CARD HERO TAB SCROLLING
-  // =======================================
+  // Hero Navigation Smooth Scroll
   const navLinks = document.querySelectorAll('.sc-hero-tab');
   if (navLinks.length > 0) {
     navLinks.forEach(link => {
@@ -373,13 +262,73 @@ document.addEventListener('DOMContentLoaded', function() {
           const targetSection = document.getElementById(targetId);
           if (targetSection) {
             const targetPosition = targetSection.getBoundingClientRect().top + window.scrollY - 20;
-            window.scrollTo({
-              top: targetPosition,
-              behavior: 'smooth'
-            });
+            window.scrollTo({ top: targetPosition, behavior: 'smooth' });
           }
         }
       });
     });
   }
+
+  // Canvas Ambient Particle Animations
+  const canvasIds = ['canvasA', 'canvasB', 'canvasC', 'canvasBottom'];
+  canvasIds.forEach(id => {
+    const canvas = document.getElementById(id);
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let animationFrameId;
+
+    function resizeCanvas() {
+      const parent = canvas.parentElement;
+      if (parent) {
+        canvas.width = parent.clientWidth;
+        canvas.height = parent.clientHeight;
+      }
+    }
+
+    function initParticles() {
+      particles = [];
+      const particleCount = Math.floor((canvas.width * canvas.height) / 15000) || 12;
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          radius: Math.random() * 2 + 1,
+          dx: (Math.random() - 0.5) * 0.4,
+          dy: (Math.random() - 0.5) * 0.4,
+          alpha: Math.random() * 0.3 + 0.1
+        });
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.x += p.dx;
+        p.y += p.dy;
+
+        if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(100, 116, 139, ${p.alpha})`;
+        ctx.fill();
+      });
+
+      animationFrameId = requestAnimationFrame(animate);
+    }
+
+    resizeCanvas();
+    initParticles();
+    animate();
+
+    window.addEventListener('resize', () => {
+      cancelAnimationFrame(animationFrameId);
+      resizeCanvas();
+      initParticles();
+      animate();
+    });
+  });
 });
