@@ -18,15 +18,13 @@
     <meta property="og:description" content="Complete Class 11 AI study resource with notes, MCQs, PYQs & practical guides — Theory 50M + Practical 50M.">
     <meta property="og:url" content="https://www.singhclasses.in/artificial-intelligence/class-11/index.html">
 
-    <!-- Fonts & Design Tokens -->
+    <!-- Fonts -->
     <link rel="icon" href="../../assets/images/favicon/favicon.ico" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="../../assets/css/style.css">
-    <link rel="stylesheet" href="../../assets/css/dashboard.css">
     <link rel="stylesheet" href="../../assets/css/syllabus.css">
 
     <!-- JSON-LD Structured Data -->
@@ -48,7 +46,7 @@
 
 <body>
 
-    <!-- Unified Site Header -->
+    <!-- Header Navigation -->
     <header class="site-header" role="banner">
         <div class="header-container">
             <a class="logo-brand" href="../../index.html" aria-label="SinghClasses Home">
@@ -58,7 +56,9 @@
                     </div>
                     <div class="logo-tagline-row">
                         <span class="tagline-line"></span>
-                        <span class="tagline-text">Think Logic <span class="tagline-dot">•</span> Code Magic</span>
+                        <span class="tagline-text">Think Logic</span>
+                        <span class="tagline-separator" aria-hidden="true">✦</span>
+                        <span class="tagline-text">Code Magic</span>
                         <span class="tagline-line"></span>
                     </div>
                 </div>
@@ -75,6 +75,7 @@
                     <li><a class="nav-link" href="../../computer-science/index.html">Computer Science</a></li>
                     <li><a class="nav-link" href="../../informatics-practices/index.html">Informatics Practices</a></li>
                     <li><a class="nav-link active" href="../../artificial-intelligence/index.html">Artificial Intelligence</a></li>
+                    <li><a class="nav-link" href="../../higher-education/index.html">Higher Edu.</a></li>
                     <li><a class="nav-link" href="../../legal/about-us.html">About Us</a></li>
                     <li><a class="nav-link" href="../../legal/contact-us.html">Contact Us</a></li>
                 </ul>
@@ -85,10 +86,10 @@
     <!-- Main Container -->
     <main class="main-content container-inner">
 
-        <!-- Unified Announcement Bar -->
+        <!-- Announcement Bar -->
         <div class="announcement-bar" role="status">
             <span class="announcement-segment">
-                <span class="inline-svg-icon icon-teal">
+                <span class="inline-svg-icon icon-orange">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
                         <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
@@ -100,7 +101,7 @@
             </span>
             <span class="divider hide-mobile">|</span>
             <span class="announcement-segment hide-mobile">
-                <span class="inline-svg-icon icon-teal">
+                <span class="inline-svg-icon icon-orange">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
                         <line x1="2" y1="20" x2="22" y2="20"></line>
@@ -110,7 +111,7 @@
             </span>
             <span class="divider hide-mobile">|</span>
             <span class="announcement-segment hide-mobile">
-                <span class="inline-svg-icon icon-teal">
+                <span class="inline-svg-icon icon-orange">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                         <circle cx="12" cy="10" r="3"></circle>
@@ -142,7 +143,7 @@
                     </nav>
                 </div>
 
-                <!-- Interactive Multi-Progress Card -->
+                <!-- Progress Widget -->
                 <div class="sc-multi-progress-card">
                     <div class="sc-mp-header">
                         <h3 class="sc-mp-title">Content Covered: <span id="mp-subtitle-custom" class="sc-mp-count">0 of 0</span></h3>
@@ -154,33 +155,6 @@
                 </div>
             </div>
 
-            <!-- Video Modal -->
-            <div id="scVideoModal" class="sc-modal-overlay">
-                <div class="sc-modal-card">
-                    <div class="sc-modal-icon-wrapper">
-                        <div class="sc-modal-icon-bg"></div>
-                        <div class="sc-modal-particle">✦</div>
-                        <div class="sc-modal-particle">▲</div>
-                        <div class="sc-modal-particle">●</div>
-                        <div class="sc-modal-particle">✦</div>
-                        <div class="sc-modal-play-btn">▶</div>
-                    </div>
-                    <h2>Want to watch this video?</h2>
-                    <p>Choose an option below to continue.</p>
-                    <div class="sc-modal-actions">
-                        <button id="scModalStay" class="sc-modal-btn sc-btn-stay">
-                            <span style="color:#dc2626; font-size:18px">◷</span> Stay
-                        </button>
-                        <button id="scModalWatch" class="sc-modal-btn sc-btn-watch">
-                            ▶ Watch
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Toast Notification -->
-            <div id="scToast" class="sc-toast">🚧 We are currently preparing this material. Coming soon!</div>
-
             <!-- Main Syllabus Grid -->
             <div class="sc-main-grid">
 
@@ -188,6 +162,12 @@
                 <div class="sc-column sc-column-a" id="colA">
                     <div class="sc-column-bg"><canvas id="canvasA" class="sc-canvas-bg"></canvas></div>
                     <h2 class="sc-section-title">Section A | CBSE RESOURCES | 2026-27</h2>
+                    
+                    <!-- Dynamic Progress Line -->
+                    <div class="sc-section-progress-track">
+                        <div class="sc-section-progress-fill"></div>
+                    </div>
+
                     <div class="sc-cards-grid">
 
                         <div class="sc-custom-card">
@@ -221,6 +201,12 @@
                 <div class="sc-column sc-column-b" id="colB">
                     <div class="sc-column-bg"><canvas id="canvasB" class="sc-canvas-bg"></canvas></div>
                     <h2 class="sc-section-title">Section B : PART A | EMPLOYABILITY SKILLS | 10 Marks</h2>
+                    
+                    <!-- Dynamic Progress Line -->
+                    <div class="sc-section-progress-track">
+                        <div class="sc-section-progress-fill"></div>
+                    </div>
+
                     <div class="sc-cards-grid">
 
                         <div class="sc-custom-card">
@@ -308,6 +294,12 @@
                 <div class="sc-column sc-column-c" id="colC">
                     <div class="sc-column-bg"><canvas id="canvasC" class="sc-canvas-bg"></canvas></div>
                     <h2 class="sc-section-title">Section C : PART B | SUBJECT SPECIFIC SKILLS | 40 Marks</h2>
+                    
+                    <!-- Dynamic Progress Line -->
+                    <div class="sc-section-progress-track">
+                        <div class="sc-section-progress-fill"></div>
+                    </div>
+
                     <div class="sc-cards-grid">
 
                         <div class="sc-custom-card">
@@ -421,6 +413,12 @@
                 <div class="sc-column sc-column-a" id="colD1">
                     <div class="sc-column-bg"><canvas id="canvasD1" class="sc-canvas-bg"></canvas></div>
                     <h2 class="sc-section-title">Section D | MOCK PAPERS | 50 Marks</h2>
+                    
+                    <!-- Dynamic Progress Line -->
+                    <div class="sc-section-progress-track">
+                        <div class="sc-section-progress-fill"></div>
+                    </div>
+
                     <div class="sc-cards-grid">
 
                         <div class="sc-custom-card">
@@ -456,6 +454,12 @@
                 <div class="sc-column sc-column-b" id="colD2">
                     <div class="sc-column-bg"><canvas id="canvasD2" class="sc-canvas-bg"></canvas></div>
                     <h2 class="sc-section-title">Section E | Practical / Project Work | 50 Marks</h2>
+                    
+                    <!-- Dynamic Progress Line -->
+                    <div class="sc-section-progress-track">
+                        <div class="sc-section-progress-fill"></div>
+                    </div>
+
                     <div class="sc-cards-grid">
 
                         <div class="sc-custom-card">
@@ -562,6 +566,25 @@
             </div>
         </div>
     </footer>
+
+    <!-- Video Confirmation Modal (Placed outside main containers) -->
+    <div id="scVideoModal" class="sc-modal-overlay">
+        <div class="sc-modal-card">
+            <div class="sc-modal-icon-wrapper">
+                <div class="sc-modal-icon-bg"></div>
+                <div class="sc-modal-play-btn">▶</div>
+            </div>
+            <h2>Want to watch this video?</h2>
+            <p>Choose an option below to continue.</p>
+            <div class="sc-modal-actions">
+                <button id="scModalStay" class="sc-modal-btn sc-btn-stay">Stay</button>
+                <button id="scModalWatch" class="sc-modal-btn sc-btn-watch">▶ Watch</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification (Placed outside main containers) -->
+    <div id="scToast" class="sc-toast">🚧 We are currently preparing this material. Coming soon!</div>
 
     <!-- Scripts -->
     <script src="../../assets/js/dashboard.js"></script>
