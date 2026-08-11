@@ -21,13 +21,15 @@
     <meta name="twitter:title" content="CBSE Class 11 Computer Science (Code 085) Notes, MCQs & PYQs">
     <meta name="twitter:description" content="NCERT book, syllabus, chapter-wise notes, MCQs, PYQs & DPPs for CBSE Class 11 Computer Science (Code 085).">
 
-    <!-- Fonts -->
+    <!-- Fonts & Design Tokens -->
     <link rel="icon" href="../assets/images/favicon/favicon.ico" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Stylesheets -->
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
     <link rel="stylesheet" href="../../assets/css/syllabus.css">
 
     <!-- JSON-LD Structured Data -->
@@ -38,7 +40,7 @@
 
 <body>
 
-    <!-- Header Navigation -->
+    <!-- Unified Site Header -->
     <header class="site-header" role="banner">
         <div class="header-container">
             <a class="logo-brand" href="../../index.html" aria-label="SinghClasses Home">
@@ -48,9 +50,7 @@
                     </div>
                     <div class="logo-tagline-row">
                         <span class="tagline-line"></span>
-                        <span class="tagline-text">Think Logic</span>
-                        <span class="tagline-separator" aria-hidden="true">✦</span>
-                        <span class="tagline-text">Code Magic</span>
+                        <span class="tagline-text">Think Logic <span class="tagline-dot">•</span> Code Magic</span>
                         <span class="tagline-line"></span>
                     </div>
                 </div>
@@ -67,7 +67,7 @@
                     <li><a class="nav-link active" href="../../computer-science/index.html">Computer Science</a></li>
                     <li><a class="nav-link" href="../../informatics-practices/index.html">Informatics Practices</a></li>
                     <li><a class="nav-link" href="../../artificial-intelligence/index.html">Artificial Intelligence</a></li>
-                    <li><a class="nav-link" href="../../higher-education/index.html">Higher Edu.</a></li>
+
                     <li><a class="nav-link" href="../../legal/about-us.html">About Us</a></li>
                     <li><a class="nav-link" href="../../legal/contact-us.html">Contact Us</a></li>
                 </ul>
@@ -78,10 +78,10 @@
     <!-- Main Container -->
     <main class="main-content container-inner">
 
-        <!-- Announcement Bar -->
+        <!-- Unified Announcement Bar -->
         <div class="announcement-bar" role="status">
             <span class="announcement-segment">
-                <span class="inline-svg-icon icon-orange">
+                <span class="inline-svg-icon icon-teal">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
                         <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
@@ -93,7 +93,7 @@
             </span>
             <span class="divider hide-mobile">|</span>
             <span class="announcement-segment hide-mobile">
-                <span class="inline-svg-icon icon-orange">
+                <span class="inline-svg-icon icon-teal">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
                         <line x1="2" y1="20" x2="22" y2="20"></line>
@@ -103,7 +103,7 @@
             </span>
             <span class="divider hide-mobile">|</span>
             <span class="announcement-segment hide-mobile">
-                <span class="inline-svg-icon icon-orange">
+                <span class="inline-svg-icon icon-teal">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                         <circle cx="12" cy="10" r="3"></circle>
@@ -118,7 +118,7 @@
             <div class="sc-hero-wrapper">
                 <div class="sc-hero-bg-pattern"></div>
                 <div class="sc-hero-main">
-                    <h1 class="sc-hero-title">Class XI Computer Science</h1>
+                    <h1 class="sc-hero-title">CLASS XI COMPUTER SCIENCE</h1>
                     <p class="sc-hero-desc">Complete study resource for CBSE Class 11 Computer Science <br>— Theory 70M + Practical 30M</p>
                     <div class="sc-hero-pills">
                         <span class="sc-hero-pill pill-blue"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg> 13 Chapters</span>
@@ -133,7 +133,7 @@
                     </nav>
                 </div>
 
-                <!-- Progress Widget -->
+                <!-- Interactive Multi-Progress Card -->
                 <div class="sc-multi-progress-card">
                     <div class="sc-mp-header">
                         <h3 class="sc-mp-title">Content Covered: <span id="mp-subtitle-custom" class="sc-mp-count">0 of 0</span></h3>
@@ -145,19 +145,40 @@
                 </div>
             </div>
 
+            <!-- Video Modal -->
+            <div id="scVideoModal" class="sc-modal-overlay">
+                <div class="sc-modal-card">
+                    <div class="sc-modal-icon-wrapper">
+                        <div class="sc-modal-icon-bg"></div>
+                        <div class="sc-modal-particle">✦</div>
+                        <div class="sc-modal-particle">▲</div>
+                        <div class="sc-modal-particle">●</div>
+                        <div class="sc-modal-particle">✦</div>
+                        <div class="sc-modal-play-btn">▶</div>
+                    </div>
+                    <h2>Want to watch this video?</h2>
+                    <p>Choose an option below to continue.</p>
+                    <div class="sc-modal-actions">
+                        <button id="scModalStay" class="sc-modal-btn sc-btn-stay">
+                            <span style="color:#dc2626; font-size:18px">◷</span> Stay
+                        </button>
+                        <button id="scModalWatch" class="sc-modal-btn sc-btn-watch">
+                            ▶ Watch
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Toast Notification -->
+            <div id="scToast" class="sc-toast">🚧 We are currently preparing this material. Coming soon!</div>
+
             <!-- Main Syllabus Grid -->
             <div class="sc-main-grid">
 
                 <!-- Part A Column -->
                 <div class="sc-column sc-column-a" id="colA">
                     <div class="sc-column-bg"><canvas id="canvasA" class="sc-canvas-bg"></canvas></div>
-                    <h2 class="sc-section-title">Part A • CBSE Class 11 Computer Science Resources • 2026-27</h2>
-                    
-                    <!-- Dynamic Progress Line -->
-                    <div class="sc-section-progress-track">
-                        <div class="sc-section-progress-fill"></div>
-                    </div>
-
+                    <h2 class="sc-section-title">Part A • CBSE RESOURCES • 2026-27</h2>
                     <div class="sc-cards-grid">
 
                         <div class="sc-custom-card">
@@ -190,13 +211,7 @@
                 <!-- Part B Column -->
                 <div class="sc-column sc-column-b" id="colB">
                     <div class="sc-column-bg"><canvas id="canvasB" class="sc-canvas-bg"></canvas></div>
-                    <h2 class="sc-section-title">Part B • Class 11 Computer Science Theory Syllabus • 70 Marks</h2>
-                    
-                    <!-- Dynamic Progress Line -->
-                    <div class="sc-section-progress-track">
-                        <div class="sc-section-progress-fill"></div>
-                    </div>
-
+                    <h2 class="sc-section-title">Part B • THEORY SYLLABUS • 70 Marks</h2>
                     <div class="sc-cards-grid">
 
                         <div class="sc-custom-card">
@@ -290,7 +305,7 @@
                             </div>
                         </div>
 
-                        <div class="sc-custom-card">
+                                                <div class="sc-custom-card">
                             <div class="sc-unit-badge"><span>Ch 8 · Unit II</span><span>8 Marks</span></div>
                             <h4>List in Python</h4>
                             <div class="sc-card-links">
@@ -302,6 +317,7 @@
                                 <a href="#" target="_blank" class="sc-btn-dpp">DPP</a>
                             </div>
                         </div>
+
 
                         <div class="sc-custom-card">
                             <div class="sc-unit-badge"><span>Ch 9 · Unit II</span><span>8 Marks</span></div>
@@ -315,6 +331,7 @@
                                 <a href="#" target="_blank" class="sc-btn-dpp">DPP</a>
                             </div>
                         </div>
+
 
                         <div class="sc-custom-card">
                             <div class="sc-unit-badge"><span>Ch 10 · Unit II</span><span>8 Marks</span></div>
@@ -374,13 +391,7 @@
                 <!-- Part C Column -->
                 <div class="sc-column sc-column-c" id="colC">
                     <div class="sc-column-bg"><canvas id="canvasC" class="sc-canvas-bg"></canvas></div>
-                    <h2 class="sc-section-title">Part C • Class 11 Computer Science Practical Work • 30 Marks</h2>
-                    
-                    <!-- Dynamic Progress Line -->
-                    <div class="sc-section-progress-track">
-                        <div class="sc-section-progress-fill"></div>
-                    </div>
-
+                    <h2 class="sc-section-title">PART C • PRACTICAL WORK • 30 Marks</h2>
                     <div class="sc-cards-grid">
 
                         <div class="sc-custom-card">
@@ -440,26 +451,8 @@
         </div>
     </footer>
 
-    <!-- Video Confirmation Modal (Placed outside main containers) -->
-    <div id="scVideoModal" class="sc-modal-overlay">
-        <div class="sc-modal-card">
-            <div class="sc-modal-icon-wrapper">
-                <div class="sc-modal-icon-bg"></div>
-                <div class="sc-modal-play-btn">▶</div>
-            </div>
-            <h2>Want to watch this video?</h2>
-            <p>Choose an option below to continue.</p>
-            <div class="sc-modal-actions">
-                <button id="scModalStay" class="sc-modal-btn sc-btn-stay">Stay</button>
-                <button id="scModalWatch" class="sc-modal-btn sc-btn-watch">▶ Watch</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Toast Notification (Placed outside main containers) -->
-    <div id="scToast" class="sc-toast">🚧 We are currently preparing this material. Coming soon!</div>
-
     <!-- Scripts -->
+    <script src="../../assets/js/dashboard.js"></script>
     <script src="../../assets/js/script.js"></script>
     <script src="../../assets/js/syllabus.js"></script>
 </body>
