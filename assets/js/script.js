@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Respect user motion preferences
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  const TRIGGER_KEYWORD = 'lift'; // Keyword to trigger scrolling
+  const TRIGGER_KEYWORD = 'LIFT'; // Keyword to trigger scrolling
   const SCROLL_SPEED = 1.2;       // Movement speed in pixels per frame
   const PAUSE_AT_BOTTOM = 1200;   // Pause duration at bottom before returning (ms)
 
