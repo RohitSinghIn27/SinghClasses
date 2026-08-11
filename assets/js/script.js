@@ -1,447 +1,187 @@
 document.addEventListener("DOMContentLoaded", () => {
   window.scrollTo(0, 0);
-  window.addEventListener("pageshow", () => {
-    window.scrollTo(0, 0);
-  });
+  window.addEventListener("pageshow", () => window.scrollTo(0, 0));
 
-  // =======================================
-  // CURSOR SPARKLE TRAIL EFFECT
-  // =======================================
+  // CURSOR SPARKLE TRAIL
   (function initCursorSparkles() {
-    const isTouch = window.matchMedia("(pointer: coarse)").matches || ("ontouchstart" in window);
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (isTouch || prefersReducedMotion) return;
-
+    if (window.matchMedia("(pointer: coarse), (prefers-reduced-motion: reduce)").matches) return;
     const canvas = document.createElement("canvas");
-    canvas.id = "cursor-sparkle-canvas";
-    canvas.style.cssText =
-      "position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:99999;display:block;";
+    canvas.style.cssText = "position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:99999;";
     document.body.appendChild(canvas);
-
     const ctx = canvas.getContext("2d");
-    let width = (canvas.width = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
-
-    window.addEventListener("resize", () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    });
-
-    const particles = [];
-    const colors = ["#f3b631", "#10b981", "#ffffff", "#38bdf8", "#0f4c2a"];
-    let lastX = 0,
-      lastY = 0;
-
-    function createSparkle(x, y) {
-      const count = Math.random() < 0.4 ? 2 : 1;
-      for (let i = 0; i < count; i++) {
-        particles.push({
-          x: x + (Math.random() - 0.5) * 8,
-          y: y + (Math.random() - 0.5) * 8,
-          vx: (Math.random() - 0.5) * 0.8,
-          vy: (Math.random() - 0.5) * 0.8 - 0.3,
-          size: Math.random() * 2.2 + 1,
-          color: colors[Math.floor(Math.random() * colors.length)],
-          alpha: 1,
-          decay: Math.random() * 0.02 + 0.015,
-          rotation: Math.random() * Math.PI,
-          vRot: (Math.random() - 0.5) * 0.1
-        });
-      }
-    }
-
+    let w = (canvas.width = window.innerWidth), h = (canvas.height = window.innerHeight);
+    window.addEventListener("resize", () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; });
+    const particles = [], colors = ["#e04d2d", "#f2b824", "#ffffff", "#13386b"];
+    let lastX = 0, lastY = 0;
+    
     window.addEventListener("mousemove", (e) => {
-      const dist = Math.hypot(e.clientX - lastX, e.clientY - lastY);
-      if (dist > 6) {
-        createSparkle(e.clientX, e.clientY);
-        lastX = e.clientX;
-        lastY = e.clientY;
+      if (Math.hypot(e.clientX - lastX, e.clientY - lastY) > 6) {
+        for (let i = 0, count = Math.random() < 0.4 ? 2 : 1; i < count; i++) {
+          particles.push({ x: e.clientX + (Math.random() - 0.5) * 8, y: e.clientY + (Math.random() - 0.5) * 8, vx: (Math.random() - 0.5) * 0.8, vy: (Math.random() - 0.5) * 0.8 - 0.3, size: Math.random() * 2.2 + 1, color: colors[Math.floor(Math.random() * colors.length)], alpha: 1, decay: Math.random() * 0.02 + 0.015, rotation: Math.random() * Math.PI, vRot: (Math.random() - 0.5) * 0.1 });
+        }
+        lastX = e.clientX; lastY = e.clientY;
       }
     });
 
-    function drawStar(ctx, x, y, radius, alpha, color, rotation) {
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.rotate(rotation);
-      ctx.globalAlpha = alpha;
-      ctx.fillStyle = color;
-      ctx.shadowColor = color;
-      ctx.shadowBlur = 6;
-
-      ctx.beginPath();
-      for (let i = 0; i < 4; i++) {
-        ctx.lineTo(Math.cos((i * Math.PI) / 2) * radius, Math.sin((i * Math.PI) / 2) * radius);
-        ctx.quadraticCurveTo(
-          0,
-          0,
-          Math.cos(((i + 1) * Math.PI) / 2) * radius * 0.3,
-          Math.sin(((i + 1) * Math.PI) / 2) * radius * 0.3
-        );
-      }
-      ctx.closePath();
-      ctx.fill();
-      ctx.restore();
+    function drawStar(p) {
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rotation); ctx.globalAlpha = p.alpha; ctx.fillStyle = p.color; ctx.shadowColor = p.color; ctx.shadowBlur = 6; ctx.beginPath();
+      for (let i = 0; i < 4; i++) { ctx.lineTo(Math.cos((i * Math.PI) / 2) * p.size, Math.sin((i * Math.PI) / 2) * p.size); ctx.quadraticCurveTo(0, 0, Math.cos(((i + 1) * Math.PI) / 2) * p.size * 0.3, Math.sin(((i + 1) * Math.PI) / 2) * p.size * 0.3); }
+      ctx.closePath(); ctx.fill(); ctx.restore();
     }
 
-    function animateSparkles() {
-      ctx.clearRect(0, 0, width, height);
-
+    (function animate() {
+      ctx.clearRect(0, 0, w, h);
       for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
-        p.x += p.vx;
-        p.y += p.vy;
-        p.alpha -= p.decay;
-        p.rotation += p.vRot;
-
-        if (p.alpha <= 0) {
-          particles.splice(i, 1);
-        } else {
-          drawStar(ctx, p.x, p.y, p.size, Math.max(0, p.alpha), p.color, p.rotation);
-        }
+        const p = particles[i]; p.x += p.vx; p.y += p.vy; p.alpha -= p.decay; p.rotation += p.vRot;
+        if (p.alpha <= 0) particles.splice(i, 1); else drawStar(p);
       }
-
-      requestAnimationFrame(animateSparkles);
-    }
-
-    animateSparkles();
+      requestAnimationFrame(animate);
+    })();
   })();
 
-  // =======================================
-  // MOBILE HAMBURGER MENU CONTROLLER
-  // =======================================
-  const hamburgerToggle = document.getElementById("hamburgerToggle");
-  const navMenu = document.getElementById("nav-menu");
-
+  // NAVIGATION & HAMBURGER MENU
+  const hamburgerToggle = document.getElementById("hamburgerToggle"), navMenu = document.getElementById("nav-menu");
   if (hamburgerToggle && navMenu) {
-    hamburgerToggle.addEventListener("click", (e) => {
-      e.stopPropagation();
-      hamburgerToggle.classList.toggle("open");
-      navMenu.classList.toggle("open");
-      const isExpanded = hamburgerToggle.classList.contains("open");
-      hamburgerToggle.setAttribute("aria-expanded", isExpanded ? "true" : "false");
-    });
-
-    // Close menu when clicking any nav link
-    document.querySelectorAll(".nav-link").forEach((link) => {
-      link.addEventListener("click", () => {
-        hamburgerToggle.classList.remove("open");
-        navMenu.classList.remove("open");
-        hamburgerToggle.setAttribute("aria-expanded", "false");
-      });
-    });
-
-    // Close menu when clicking outside
-    document.addEventListener("click", (e) => {
-      if (!hamburgerToggle.contains(e.target) && !navMenu.contains(e.target)) {
-        hamburgerToggle.classList.remove("open");
-        navMenu.classList.remove("open");
-        hamburgerToggle.setAttribute("aria-expanded", "false");
-      }
-    });
+    const toggleMenu = (state) => {
+      const isOpen = state !== undefined ? state : !navMenu.classList.contains("open");
+      hamburgerToggle.classList.toggle("open", isOpen); navMenu.classList.toggle("open", isOpen);
+      hamburgerToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    };
+    hamburgerToggle.addEventListener("click", (e) => { e.stopPropagation(); toggleMenu(); });
+    document.querySelectorAll(".nav-link").forEach((link) => link.addEventListener("click", () => toggleMenu(false)));
+    document.addEventListener("click", (e) => { if (!hamburgerToggle.contains(e.target) && !navMenu.contains(e.target)) toggleMenu(false); });
   }
 
-  const yr = document.getElementById("current-year");
-  if (yr) yr.textContent = new Date().getFullYear();
+  const currentYearElem = document.getElementById("current-year");
+  if (currentYearElem) currentYearElem.textContent = new Date().getFullYear();
 
-  const slides = document.querySelectorAll(".testimonial-slide");
-  const track = document.getElementById("testimonialTrack");
-  const dotsContainer = document.getElementById("sliderDots");
-  if (slides.length && track) {
-    let currentIdx = 0,
-      slideInterval = null;
-    if (dotsContainer) {
-      dotsContainer.innerHTML = "";
-      slides.forEach((_, idx) => {
-        const dot = document.createElement("button");
-        dot.className = "slider-dot";
-        dot.setAttribute("role", "tab");
-        dot.setAttribute("aria-label", `Go to testimonial slide ${idx + 1}`);
-        dot.setAttribute("aria-selected", idx === 0 ? "true" : "false");
-        if (idx === 0) dot.classList.add("active");
-        dot.addEventListener("click", () => jumpToSlide(idx));
-        dotsContainer.appendChild(dot);
-      });
-    }
-    const dots = document.querySelectorAll(".slider-dot");
-    const updateSliderDOM = () => {
-      slides.forEach((slide, idx) => slide.classList.toggle("active", idx === currentIdx));
-      dots.forEach((dot, idx) => {
-        dot.classList.toggle("active", idx === currentIdx);
-        dot.setAttribute("aria-selected", idx === currentIdx ? "true" : "false");
-      });
-    };
-    const advanceSlide = () => {
-      currentIdx = (currentIdx + 1) % slides.length;
-      updateSliderDOM();
-    };
-    const regressSlide = () => {
-      currentIdx = (currentIdx - 1 + slides.length) % slides.length;
-      updateSliderDOM();
-    };
-    const jumpToSlide = (index) => {
-      currentIdx = index;
-      updateSliderDOM();
-      restartAutoplay();
-    };
-    const startAutoplay = () => (slideInterval = setInterval(advanceSlide, 6000));
-    const restartAutoplay = () => {
-      if (slideInterval) clearInterval(slideInterval);
-      startAutoplay();
-    };
-    document.getElementById("nextSlideBtn")?.addEventListener("click", () => {
-      advanceSlide();
-      restartAutoplay();
-    });
-    document.getElementById("prevSlideBtn")?.addEventListener("click", () => {
-      regressSlide();
-      restartAutoplay();
-    });
-    startAutoplay();
-    track.addEventListener("mouseenter", () => clearInterval(slideInterval));
-    track.addEventListener("mouseleave", () => startAutoplay());
-  }
-
-  const initDynamicFabric = (selector, forceLight = false) => {
-    const wrapper = document.querySelector(selector);
-    if (!wrapper) return;
+  // DYNAMIC FABRIC CANVAS BACKGROUND
+  const initDynamicFabric = (selector) => {
+    const wrapper = document.querySelector(selector); if (!wrapper) return;
     const canvas = document.createElement("canvas");
-    canvas.className = "sc-canvas-bg-layer";
-    canvas.style.cssText =
-      "position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;display:block;";
+    canvas.style.cssText = "position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;";
     wrapper.insertBefore(canvas, wrapper.firstChild);
     const ctx = canvas.getContext("2d");
-    let w = 0,
-      h = 0,
-      dots = [],
-      cursor = { x: -2000, y: -2000 };
+    let w = 0, h = 0, dots = [], cursor = { x: -2000, y: -2000 };
+
     new ResizeObserver(() => {
-      w = canvas.width = wrapper.offsetWidth;
-      h = canvas.height = wrapper.offsetHeight;
-      dots = [];
-      const density = Math.min(Math.floor((w * h) / 30000), 20) || 15;
-      for (let i = 0; i < density; i++) {
-        dots.push({
-          x: Math.random() * w,
-          y: Math.random() * h,
-          vx: (Math.random() - 0.5) * 1.2,
-          vy: (Math.random() - 0.5) * 1.2,
-          r: Math.random() * 0.8 + 0.3
-        });
+      w = canvas.width = wrapper.offsetWidth; h = canvas.height = wrapper.offsetHeight; dots = [];
+      for (let i = 0, density = Math.min(Math.floor((w * h) / 30000), 20) || 15; i < density; i++) {
+        dots.push({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - 0.5) * 1.2, vy: (Math.random() - 0.5) * 1.2, r: Math.random() * 0.8 + 0.3 });
       }
     }).observe(wrapper);
-    wrapper.addEventListener("mousemove", (e) => {
-      const box = wrapper.getBoundingClientRect();
-      cursor.x = e.clientX - box.left;
-      cursor.y = e.clientY - box.top;
-    });
+
+    wrapper.addEventListener("mousemove", (e) => { const box = wrapper.getBoundingClientRect(); cursor.x = e.clientX - box.left; cursor.y = e.clientY - box.top; });
     wrapper.addEventListener("mouseleave", () => (cursor.x = cursor.y = -2000));
-    const runLoop = () => {
-      if (!w || !h) return requestAnimationFrame(runLoop);
+
+    (function loop() {
+      if (!w || !h) return requestAnimationFrame(loop);
       ctx.clearRect(0, 0, w, h);
-      const cBase = "rgba(13,148,136,0.35)";
-      const cLink = "rgba(13,148,136,0.12)";
-      const cHigh = "rgba(13,148,136,0.95)";
       for (let i = 0; i < dots.length; i++) {
         for (let j = i + 1; j < dots.length; j++) {
           if ((dots[i].x - dots[j].x) ** 2 + (dots[i].y - dots[j].y) ** 2 < 6400) {
-            ctx.beginPath();
-            ctx.moveTo(dots[i].x, dots[i].y);
-            ctx.lineTo(dots[j].x, dots[j].y);
-            ctx.strokeStyle = cLink;
-            ctx.lineWidth = 0.8;
-            ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(dots[i].x, dots[i].y); ctx.lineTo(dots[j].x, dots[j].y); ctx.strokeStyle = "rgba(224,77,45,0.12)"; ctx.lineWidth = 0.8; ctx.stroke();
           }
         }
       }
       dots.forEach((p) => {
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0 || p.x > w) p.vx *= -1;
-        if (p.y < 0 || p.y > h) p.vy *= -1;
-        let cDist = (cursor.x - p.x) ** 2 + (cursor.y - p.y) ** 2,
-          size = p.r,
-          color = cBase;
+        p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > w) p.vx *= -1; if (p.y < 0 || p.y > h) p.vy *= -1;
+        const cDist = (cursor.x - p.x) ** 2 + (cursor.y - p.y) ** 2;
+        let size = p.r, color = "rgba(224,77,45,0.35)";
         if (cDist < 16900) {
-          size = p.r + (1 - Math.sqrt(cDist) / 130) * 3;
-          color = cHigh;
-          ctx.beginPath();
-          ctx.moveTo(p.x, p.y);
-          ctx.lineTo(cursor.x, cursor.y);
-          ctx.strokeStyle = cLink;
-          ctx.lineWidth = 1.1;
-          ctx.stroke();
+          size = p.r + (1 - Math.sqrt(cDist) / 130) * 3; color = "rgba(224,77,45,0.95)";
+          ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(cursor.x, cursor.y); ctx.strokeStyle = "rgba(224,77,45,0.25)"; ctx.lineWidth = 1.1; ctx.stroke();
         }
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
-        ctx.fillStyle = color;
-        ctx.fill();
+        ctx.beginPath(); ctx.arc(p.x, p.y, size, 0, Math.PI * 2); ctx.fillStyle = color; ctx.fill();
       });
-      requestAnimationFrame(runLoop);
-    };
-    runLoop();
+      requestAnimationFrame(loop);
+    })();
   };
-  [".header-container", ".classes-section", ".playlists-section", ".results-section"].forEach((s) =>
-    initDynamicFabric(s, false)
-  );
-  initDynamicFabric(".teacher-section", true);
+  [".header-container", ".classes-section", ".playlists-section", ".results-section", ".teacher-section"].forEach(initDynamicFabric);
 });
 
-document.addEventListener("contextmenu", function (e) {
-  if (e.target.tagName === "IMG") e.preventDefault();
-});
+// DISABLE CONTEXT MENU ON IMAGES
+document.addEventListener("contextmenu", (e) => { if (e.target.tagName === "IMG") e.preventDefault(); });
 
+// CBSE RESULT WIDGET API FETCH & SLIDER
 (function () {
-  const API_URL =
-    "https://script.google.com/macros/s/AKfycbx_qbyL831Rtr-dG5mNLRYz5LajWvVtgSv4xBO9pWX2TAZ74qNWf33Bdf1NtivHyfM8/exec";
-  function initCbseWidget() {
-    fetchGoogleSheetData();
-  }
+  const API_URL = "https://script.google.com/macros/s/AKfycbx_qbyL831Rtr-dG5mNLRYz5LajWvVtgSv4xBO9pWX2TAZ74qNWf33Bdf1NtivHyfM8/exec";
+  
   async function fetchGoogleSheetData() {
-    const track = document.getElementById("cbseSliderTrack");
-    if (API_URL === "YOUR_APPS_SCRIPT_WEB_APP_URL_HERE") {
-      track.innerHTML = `<div class="loading-container"><div class="loading-text" style="color:#ef4444; animation:none;">Please replace API_URL with your Web App URL.</div></div>`;
-      return;
-    }
+    const track = document.getElementById("cbseSliderTrack"); if (!track) return;
     try {
       const response = await fetch(API_URL);
       const data = await response.json();
       buildSlides(data);
-    } catch (error) {
-      console.error("Error fetching CBSE data:", error);
-      track.innerHTML = `<div class="loading-container"><div class="loading-text" style="color:#ef4444; animation:none;">Error loading data. Check console.</div></div>`;
+    } catch {
+      track.innerHTML = `<div class="loading-container"><div class="loading-text" style="color:#ef4444;">Error loading data.</div></div>`;
     }
   }
+
   function buildSlides(studentData) {
-    const track = document.getElementById("cbseSliderTrack");
-    track.innerHTML = "";
+    const track = document.getElementById("cbseSliderTrack"); track.innerHTML = "";
     studentData.forEach((student, index) => {
-      const picKey = Object.keys(student).find((key) => key.toLowerCase().includes("picture")) || "CandidatePicture";
-      let rawPic = student[picKey] || "";
-      rawPic = rawPic.replace(/['"“”\n\r]/g, "").trim();
-      const isLocalAsset = rawPic.includes("assets/");
-      const isSupportedUrl = isLocalAsset || rawPic.startsWith("http");
-      const fallbackAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(student.Name || "Student")}&background=ffffff&color=584ddb&size=150`;
-      const finalImageSrc = isSupportedUrl ? rawPic : fallbackAvatar;
-      const crossOriginPolicy = isLocalAsset ? "" : 'crossorigin="anonymous"';
-      const marksNum = parseInt(student.Marks) || 0;
-      const slideHTML = `<div class="slide-wrapper ${index === 0 ? "active" : ""}"><div class="report-card"><div class="main-content"><div class="profile-card"><div class="avatar-wrap"><div class="avatar-arc"></div><img src="${finalImageSrc}" alt="Candidate Picture" class="avatar-img" ${crossOriginPolicy} onerror="this.onerror=null; this.src='${fallbackAvatar}';"></div><h2 class="profile-name">${student.Name || "--"}</h2><div class="profile-pill">${student.Batch || "--"}</div></div><div class="right-col"><div class="stats-grid"><div class="stat-box"><div class="icon-box icon-blue"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="3" ry="3"></rect><circle cx="12" cy="10" r="2"></circle><line x1="9" y1="15" x2="15" y2="15"></line></svg></div><div class="stat-details"><div class="stat-title">Roll Number</div><div class="stat-val">${student.RollNumber || "--"}</div></div></div><div class="stat-box"><div class="icon-box icon-purple"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2" ry="2"></rect><path d="M8 21h8"></path><path d="M12 17v4"></path></svg></div><div class="stat-details"><div class="stat-title">Subject</div><div class="stat-val">${student.Subject || "--"}</div></div></div><div class="stat-box"><div class="icon-box icon-purple"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L12 10"></path><path d="M14 4H10"></path><path d="M4 12V22"></path><path d="M20 12V22"></path><rect x="8" y="10" width="8" height="12"></rect><rect x="2" y="14" width="6" height="8"></rect><rect x="16" y="14" width="6" height="8"></rect><path d="M10 22V18h4v4"></path></svg></div><div class="stat-details"><div class="stat-title">School</div><div class="stat-val">${student.School || "--"}</div></div></div><div class="stat-box"><div class="icon-box icon-yellow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg></div><div class="stat-details"><div class="stat-title">Mode of Class</div><div class="mode-toggles">${(student.Mode || "").toLowerCase() === "online" ? `<span class="mode-inactive">Offline</span><span class="mode-active"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Online</span>` : `<span class="mode-active"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Offline</span><span class="mode-inactive">Online</span>`}</div></div></div></div><div class="score-card"><div class="donut-chart" data-score="${marksNum}"><div class="donut-inner"><span class="score-num">0</span></div></div><div class="score-details"><div class="score-title">Marks Obtained out of 100</div><div class="score-grade">--</div><div class="progress-track"><div class="progress-fill"></div></div></div></div></div></div><div class="testimonial-unit"><div class="test-content"><div class="test-avatar">${student.Tname || "--"}</div><div class="test-body-wrap"><div class="quote-mark quote-mark-open">"</div><p class="test-text">${student.Testimonial || "--"}</p><div class="quote-mark quote-mark-close">"</div></div></div></div></div></div>`;
-      track.innerHTML += slideHTML;
+      const picKey = Object.keys(student).find((k) => k.toLowerCase().includes("picture")) || "CandidatePicture";
+      const rawPic = (student[picKey] || "").replace(/['"“”\n\r]/g, "").trim();
+      const fallbackAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(student.Name || "Student")}&background=e04d2d&color=ffffff&size=150`;
+      const finalImageSrc = rawPic.includes("assets/") || rawPic.startsWith("http") ? rawPic : fallbackAvatar;
+      const marksNum = parseInt(student.Marks, 10) || 0;
+      const isOnline = (student.Mode || "").toLowerCase() === "online";
+
+      track.innerHTML += `<div class="slide-wrapper ${index === 0 ? "active" : ""}"><div class="report-card"><div class="main-content"><div class="profile-card"><div class="avatar-wrap"><img src="${finalImageSrc}" alt="Candidate Picture" class="avatar-img" onerror="this.onerror=null; this.src='${fallbackAvatar}';"></div><h2 class="profile-name">${student.Name || "--"}</h2><div class="profile-pill">${student.Batch || "--"}</div></div><div class="right-col"><div class="stats-grid"><div class="stat-box"><div class="icon-box icon-blue"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="3" width="14" height="18" rx="3"></rect><circle cx="12" cy="10" r="2"></circle><line x1="9" y1="15" x2="15" y2="15"></line></svg></div><div class="stat-details"><div class="stat-title">Roll Number</div><div class="stat-val">${student.RollNumber || "--"}</div></div></div><div class="stat-box"><div class="icon-box icon-purple"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="13" rx="2"></rect><path d="M8 21h8"></path><path d="M12 17v4"></path></svg></div><div class="stat-details"><div class="stat-title">Subject</div><div class="stat-val">${student.Subject || "--"}</div></div></div><div class="stat-box"><div class="icon-box icon-purple"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v8"></path><rect x="8" y="10" width="8" height="12"></rect></svg></div><div class="stat-details"><div class="stat-title">School</div><div class="stat-val">${student.School || "--"}</div></div></div><div class="stat-box"><div class="icon-box icon-yellow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle></svg></div><div class="stat-details"><div class="stat-title">Mode</div><div class="mode-toggles"><span class="${isOnline ? "mode-inactive" : "mode-active"}">Offline</span><span class="${isOnline ? "mode-active" : "mode-inactive"}">Online</span></div></div></div></div><div class="score-card"><div class="donut-chart" data-score="${marksNum}"><div class="donut-inner"><span class="score-num">0</span></div></div><div class="score-details"><div class="score-title">Marks Obtained out of 100</div><div class="score-grade">--</div><div class="progress-track"><div class="progress-fill"></div></div></div></div></div></div><div class="testimonial-unit"><div class="test-content"><div class="test-avatar">${student.Tname || "--"}</div><div class="test-body-wrap"><div class="quote-mark">"</div><p class="test-text">${student.Testimonial || "--"}</p><div class="quote-mark">"</div></div></div></div></div></div>`;
     });
-    setTimeout(() => {
-      initializeAllScores();
-      initReportSlider();
-    }, 100);
+    setTimeout(() => { initializeAllScores(); initReportSlider(); }, 100);
   }
+
   function initializeAllScores() {
     document.querySelectorAll("#cbse-results-widget .slide-wrapper").forEach((wrapper) => {
-      const donutChart = wrapper.querySelector(".donut-chart");
-      if (!donutChart) return;
-      let marks = parseInt(donutChart.getAttribute("data-score"), 10) || 0;
-      marks = Math.max(0, Math.min(100, marks));
-      let gradeText = "",
-        colorHex = "";
-      if (marks >= 90) {
-        gradeText = "A+ Grade";
-        colorHex = "#16a34a";
-      } else if (marks >= 80) {
-        gradeText = "A Grade";
-        colorHex = "#2563eb";
-      } else if (marks >= 70) {
-        gradeText = "B+ Grade";
-        colorHex = "#ca8a04";
-      } else if (marks >= 60) {
-        gradeText = "B Grade";
-        colorHex = "#ea580c";
-      } else {
-        gradeText = "C Grade";
-        colorHex = "#dc2626";
-      }
-      wrapper.querySelector(".score-num").innerText = marks;
-      wrapper.querySelector(".score-num").style.color = colorHex;
-      wrapper.querySelector(".score-grade").innerText = gradeText;
+      const donutChart = wrapper.querySelector(".donut-chart"); if (!donutChart) return;
+      const marks = Math.max(0, Math.min(100, parseInt(donutChart.getAttribute("data-score"), 10) || 0));
+      const gradeText = marks >= 90 ? "A+ Grade" : marks >= 80 ? "A Grade" : marks >= 70 ? "B+ Grade" : marks >= 60 ? "B Grade" : "C Grade";
+      const colorHex = marks >= 90 ? "#e04d2d" : marks >= 80 ? "#13386b" : marks >= 70 ? "#f2b824" : "#525b68";
+      const scoreNum = wrapper.querySelector(".score-num"), progressBar = wrapper.querySelector(".progress-fill");
+      
+      scoreNum.innerText = marks; scoreNum.style.color = colorHex; wrapper.querySelector(".score-grade").innerText = gradeText;
       setTimeout(() => {
         donutChart.style.background = `conic-gradient(${colorHex} 0% ${marks}%, var(--border-color) ${marks}% 100%)`;
-        const progressBar = wrapper.querySelector(".progress-fill");
-        progressBar.style.width = `${marks}%`;
-        progressBar.style.backgroundColor = colorHex;
+        progressBar.style.width = `${marks}%`; progressBar.style.backgroundColor = colorHex;
       }, 50);
     });
   }
+
   function initReportSlider() {
-    const track = document.getElementById("cbseSliderTrack");
-    const slides = document.querySelectorAll("#cbse-results-widget .slide-wrapper");
-    const dotsContainer = document.getElementById("cbseDotsContainer");
-    dotsContainer.innerHTML = "";
-    if (slides.length <= 1) return;
-    let currentIndex = 0,
-      slideInterval;
-    dotsContainer.innerHTML = `<button class="slider-arrow prev-arrow" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button><div class="slider-dots-line-wrapper"><div class="slider-dots-line"></div><div class="slider-dots-inner"></div></div><button class="slider-arrow next-arrow" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>`;
+    const track = document.getElementById("cbseSliderTrack"), slides = document.querySelectorAll("#cbse-results-widget .slide-wrapper"), dotsContainer = document.getElementById("cbseDotsContainer");
+    dotsContainer.innerHTML = ""; if (slides.length <= 1) return;
+    let currentIndex = 0, slideInterval;
+    
+    dotsContainer.innerHTML = `<button class="slider-arrow prev-arrow" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg></button><div class="slider-dots-line-wrapper"><div class="slider-dots-line"></div><div class="slider-dots-inner"></div></div><button class="slider-arrow next-arrow" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></button>`;
     const innerDots = dotsContainer.querySelector(".slider-dots-inner");
+    
     slides.forEach((_, index) => {
-      const dot = document.createElement("div");
-      dot.classList.add("slider-dot");
-      if (index === 0) dot.classList.add("active");
-      dot.addEventListener("click", () => {
-        goToSlide(index);
-        resetInterval();
-      });
+      const dot = document.createElement("div"); dot.classList.add("slider-dot"); if (index === 0) dot.classList.add("active");
+      dot.addEventListener("click", () => { goToSlide(index); resetInterval(); });
       innerDots.appendChild(dot);
     });
+    
     const dots = dotsContainer.querySelectorAll(".slider-dot");
-    const prevBtn = dotsContainer.querySelector(".prev-arrow");
-    const nextBtn = dotsContainer.querySelector(".next-arrow");
     function goToSlide(index) {
       track.style.transform = `translateX(-${index * 100}%)`;
-      slides.forEach((s) => s.classList.remove("active"));
-      dots.forEach((d) => d.classList.remove("active"));
-      slides[index].classList.add("active");
-      dots[index].classList.add("active");
-      currentIndex = index;
+      slides.forEach((s) => s.classList.remove("active")); dots.forEach((d) => d.classList.remove("active"));
+      slides[index].classList.add("active"); dots[index].classList.add("active"); currentIndex = index;
     }
-    function nextSlide() {
-      goToSlide((currentIndex + 1) % slides.length);
-    }
-    function prevSlide() {
-      goToSlide((currentIndex - 1 + slides.length) % slides.length);
-    }
-    prevBtn.addEventListener("click", () => {
-      prevSlide();
-      resetInterval();
-    });
-    nextBtn.addEventListener("click", () => {
-      nextSlide();
-      resetInterval();
-    });
-    function startInterval() {
-      slideInterval = setInterval(nextSlide, 6000);
-    }
-    function resetInterval() {
-      clearInterval(slideInterval);
-      startInterval();
-    }
+
+    dotsContainer.querySelector(".prev-arrow").addEventListener("click", () => { goToSlide((currentIndex - 1 + slides.length) % slides.length); resetInterval(); });
+    dotsContainer.querySelector(".next-arrow").addEventListener("click", () => { goToSlide((currentIndex + 1) % slides.length); resetInterval(); });
+    
+    function startInterval() { slideInterval = setInterval(() => goToSlide((currentIndex + 1) % slides.length), 6000); }
+    function resetInterval() { clearInterval(slideInterval); startInterval(); }
     startInterval();
   }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initCbseWidget);
-  else initCbseWidget();
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fetchGoogleSheetData);
+  else fetchGoogleSheetData();
 })();
 
-document.addEventListener("contextmenu", function (event) {
-  event.preventDefault();
-});
-
-// Blur page when window loses focus
-window.addEventListener("blur", () => {
-  document.body.style.filter = "blur(15px)";
-});
-
-window.addEventListener("focus", () => {
-  document.body.style.filter = "none";
-});
-
-// Clear clipboard on PrintScreen key release
-window.addEventListener("keyup", (e) => {
-  if (e.key === "PrintScreen") {
-    navigator.clipboard.writeText("");
-    alert("Screenshots are disabled to protect proprietary content.");
-  }
-});
+// WINDOW BLUR / FOCUS VISUAL EFFECTS
+window.addEventListener("blur", () => document.querySelectorAll("section").forEach((sec) => sec.classList.add("section-blurred")));
+window.addEventListener("focus", () => document.querySelectorAll("section").forEach((sec) => sec.classList.remove("section-blurred")));
