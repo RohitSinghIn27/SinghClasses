@@ -1,35 +1,15 @@
-function runOnDOMReady(fn) { 
-  if (document.readyState !== "loading") fn(); 
-  else document.addEventListener("DOMContentLoaded", fn); 
-}
+function runOnDOMReady(fn) { if (document.readyState !== "loading") fn(); else document.addEventListener("DOMContentLoaded", fn); }
 
 runOnDOMReady(() => {
   window.scrollTo(0, 0);
-  const hamburgerToggle = document.getElementById("hamburgerToggle"), 
-        navMenu = document.getElementById("nav-menu");
+  const hamburgerToggle = document.getElementById("hamburgerToggle"), navMenu = document.getElementById("nav-menu");
 
   if (hamburgerToggle && navMenu && !hamburgerToggle.dataset.navInitialized) {
     hamburgerToggle.dataset.navInitialized = "true";
-    const toggleMenu = (e) => { 
-      if (e) { e.preventDefault(); e.stopPropagation(); } 
-      const isOpening = !hamburgerToggle.classList.contains("open"); 
-      hamburgerToggle.classList.toggle("open", isOpening); 
-      navMenu.classList.toggle("open", isOpening); 
-      hamburgerToggle.setAttribute("aria-expanded", isOpening ? "true" : "false"); 
-    };
+    const toggleMenu = (e) => { if (e) { e.preventDefault(); e.stopPropagation(); } const isOpening = !hamburgerToggle.classList.contains("open"); hamburgerToggle.classList.toggle("open", isOpening); navMenu.classList.toggle("open", isOpening); hamburgerToggle.setAttribute("aria-expanded", isOpening ? "true" : "false"); };
     hamburgerToggle.addEventListener("click", toggleMenu);
-    navMenu.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => { 
-      hamburgerToggle.classList.remove("open"); 
-      navMenu.classList.remove("open"); 
-      hamburgerToggle.setAttribute("aria-expanded", "false"); 
-    }));
-    document.addEventListener("click", (e) => { 
-      if (navMenu.classList.contains("open") && !hamburgerToggle.contains(e.target) && !navMenu.contains(e.target)) { 
-        hamburgerToggle.classList.remove("open"); 
-        navMenu.classList.remove("open"); 
-        hamburgerToggle.setAttribute("aria-expanded", "false"); 
-      } 
-    });
+    navMenu.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => { hamburgerToggle.classList.remove("open"); navMenu.classList.remove("open"); hamburgerToggle.setAttribute("aria-expanded", "false"); }));
+    document.addEventListener("click", (e) => { if (navMenu.classList.contains("open") && !hamburgerToggle.contains(e.target) && !navMenu.contains(e.target)) { hamburgerToggle.classList.remove("open"); navMenu.classList.remove("open"); hamburgerToggle.setAttribute("aria-expanded", "false"); } });
   }
 
   const yr = document.getElementById("current-year");
