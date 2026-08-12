@@ -81,7 +81,12 @@ async function loadQuestionsFromSheet() {
                 title: getVerbatim(paper, ['title', 'Title', 'sectiontitle', 'SectionTitle'], "Section"),
                 year: getVerbatim(paper, ['year', 'Year', 'section', 'Section'], "Set"),
                 questions: (paper.questions || []).map(q => {
-                    let rawOpts = Array.isArray(q.options) ? q.options : [getVerbatim(q, ['optiona', 'OptionB', 'option1', '0'], ""), getVerbatim(q, ['optionb', 'OptionB', 'option2', '1'], ""), getVerbatim(q, ['optionc', 'OptionC', 'option3', '2'], ""), getVerbatim(q, ['optiond', 'OptionD', 'option4', '3'], "")];
+                    let rawOpts = Array.isArray(q.options) ? q.options : [
+                        getVerbatim(q, ['optiona', 'OptionA', 'option1', '0'], ""), 
+                        getVerbatim(q, ['optionb', 'OptionB', 'option2', '1'], ""), 
+                        getVerbatim(q, ['optionc', 'OptionC', 'option3', '2'], ""), 
+                        getVerbatim(q, ['optiond', 'OptionD', 'option4', '3'], "")
+                    ];
                     let cleanOpts = rawOpts.map(o => (o !== null && o !== undefined ? o : "").toString());
                     let rawCorrect = getVerbatim(q, ['correctIndex', 'correct', 'answer', 'ans', '4'], "A");
                     return { text: getVerbatim(q, ['text', 'Text', 'question', 'Question'], "").toString(), tag: getVerbatim(q, ['tag', 'Tag', 'info', 'Info'], "").toString(), options: cleanOpts, image: getVerbatim(q, ['image', 'Image', 'imageurl'], "").toString(), correctAnswerText: resolveCorrectText(rawCorrect, cleanOpts) };
@@ -169,7 +174,6 @@ window.goToGuidelinesStep = () => {
 window.goToLoginStep = () => { $('welcome-step-2').style.display = 'none'; $('welcome-step-1').style.display = 'block'; };
 
 window.onload = () => {
-    // DYNAMICALLY BIND GLOBAL CBT_CONFIG TEST NAME TO UI NODES
     const activeTestName = getTestName();
     
     const chapterCapsule = $('current-chapter');
@@ -300,15 +304,16 @@ async function fetchAndRenderSidebarToppers() {
         const url = `${topperUrl}?testName=${encodeURIComponent(testName)}&currentSection=${encodeURIComponent(currentSection)}`;
         const res = await fetch(url);
         const data = await res.json();
-        if (data && data.top5) renderSidebarToppers(data.top5);
+        const toppersList = data ? (data.top7 || data.top5 || data.toppers || (Array.isArray(data) ? data : [])) : [];
+        if (toppersList.length > 0) renderSidebarToppers(toppersList);
     } catch (err) { console.warn("Sidebar toppers sync note:", err); }
     finally { if (container) container.classList.remove('fetching-pulse'); }
 }
 
-function renderSidebarToppers(top5Array) {
+function renderSidebarToppers(toppersArray) {
     const container = $('sidebar-toppers'), listEl = $('sidebar-toppers-list');
     if (!container || !listEl) return;
-    let realToppers = top5Array.filter(t => t && t.name && t.name !== "Awaiting..." && t.score !== "-");
+    let realToppers = toppersArray.filter(t => t && t.name && t.name !== "Awaiting..." && t.score !== "-");
     if (realToppers.length === 0) { container.style.display = 'none'; return; }
     realToppers.sort((a, b) => {
         let scoreA = parseFloat(a.score) || 0, scoreB = parseFloat(b.score) || 0;
@@ -316,8 +321,9 @@ function renderSidebarToppers(top5Array) {
         let accA = parseFloat((a.accuracy || "0").toString().replace("%", "")) || 0, accB = parseFloat((b.accuracy || "0").toString().replace("%", "")) || 0;
         return accB - accA;
     });
-    listEl.innerHTML = realToppers.slice(0, 3).map((t, idx) => {
-        const rank = idx + 1, medal = rank === 1 ? '🥇' : (rank === 2 ? '🥈' : '🥉');
+    listEl.innerHTML = realToppers.slice(0, 7).map((t, idx) => {
+        const rank = idx + 1;
+        const medal = rank === 1 ? '🥇' : (rank === 2 ? '🥈' : (rank === 3 ? '🥉' : `#${rank}`));
         const clsSec = (t.classVal && t.classVal !== '-' ? t.classVal : '') + (t.sectionVal && t.sectionVal !== '-' ? t.sectionVal : '');
         const school = t.school && t.school !== '-' ? ` ${t.school}` : '';
         return `<span class="topper-badge">${medal} <strong>${escapeHTML(t.name)}</strong> · ${t.score} Marks · ${clsSec}${school}</span>`;
