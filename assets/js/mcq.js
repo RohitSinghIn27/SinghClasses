@@ -43,7 +43,6 @@ function resolveCorrectText(rawValue, optionsArray) { if (rawValue == null || ra
 
 function textToIndex(correctText, optionsArray) { let idx = optionsArray.findIndex(opt => opt !== null && opt !== undefined && opt.toString().trim().toLowerCase() === correctText.toLowerCase()); return idx !== -1 ? idx : 0; }
 
-/* 1. FETCH QUESTIONS WITH INSTANT SILENT BACKGROUND LOADING */
 async function loadQuestionsFromSheet(retries = 3) {
   if (isQuestionsLoading || listExamPapers.length > 0) return;
   isQuestionsLoading = true;
@@ -160,11 +159,10 @@ window.addEventListener('scroll', () => { let bar = $("scProgressBar"), st = doc
 
 document.addEventListener("DOMContentLoaded", () => { const ym = $('yearMenuToggle'), yc = $('year-nav-container'); if (ym && yc) { ym.addEventListener('click', e => { e.stopPropagation(); yc.classList.toggle('show-year-menu'); ym.innerHTML = yc.classList.contains('show-year-menu') ? '✕' : '☰'; }); } });
 
-window.goToGuidelinesStep = () => { studentNameVal = $('student-name-input').value.trim().toUpperCase() || "AMAN"; studentClassVal = $('student-class-input').value || "12"; studentSectionVal = $('student-section-input').value || "A"; schoolNameVal = $('student-school-input').value.trim().toUpperCase() || "SPS"; studentName = `${studentNameVal} | CLASS: ${studentClassVal} | SEC: ${studentSectionVal} | ${schoolNameVal}`; $('welcome-step-1').style.display = 'none'; $('welcome-step-2').style.display = 'block'; };
+window.goToGuidelinesStep = () => { studentNameVal = $('student-name-input').value.trim().toUpperCase() || "AGYAT"; studentClassVal = $('student-class-input').value || "12"; studentSectionVal = $('student-section-input').value || "A"; schoolNameVal = $('student-school-input').value.trim().toUpperCase() || "SPS"; studentName = `${studentNameVal} | CLASS: ${studentClassVal} | SEC: ${studentSectionVal} | ${schoolNameVal}`; $('welcome-step-1').style.display = 'none'; $('welcome-step-2').style.display = 'block'; };
 
 window.goToLoginStep = () => { $('welcome-step-2').style.display = 'none'; $('welcome-step-1').style.display = 'block'; };
 
-/* SILENT EARLY BACKGROUND PRE-FETCH ON WINDOW LOAD + REGISTRATION FOCUS */
 window.onload = async () => { 
   const activeTestName = getTestName(); 
   const chapterCapsule = $('current-chapter'); if (chapterCapsule) chapterCapsule.innerText = activeTestName; 
@@ -173,7 +171,6 @@ window.onload = async () => {
   $('welcome-incorrect-lbl').innerText = `-${getIncorrectMarks()} Incorrect`; 
   $('modal-welcome').style.display = 'flex'; 
   
-  // Attach listeners to start pre-fetching as soon as the student clicks/types in input
   ['student-name-input', 'student-school-input'].forEach(id => { 
     const el = $(id); 
     if (el) {
@@ -183,7 +180,6 @@ window.onload = async () => {
     }
   }); 
 
-  // Trigger background fetch immediately on page load
   loadQuestionsFromSheet(); 
 
   const contentEl = $('question-content'); 
@@ -256,7 +252,7 @@ function handleBlurOrHide() {
 document.addEventListener("visibilitychange", () => { if (document.visibilityState === 'hidden') handleBlurOrHide(); });
 window.addEventListener("blur", handleBlurOrHide);
 
-window.addEventListener("beforeunload", e => { if (isExamActive && sections[currentYearIndex] && !sections[currentYearIndex].submitted) { let s = sections[currentYearIndex], c = 0, ic = 0, l = 0, sc = 0, tot = s.end - s.start; for (let i = s.start; i < s.end; i++) { if (userAnswers[i] !== null) { if (isAnswerCorrect(i)) { c++; sc += getCorrectMarks(); } else { ic++; sc -= getIncorrectMarks(); } } else l++; } sc = Math.max(0, sc - (securityWarnings * getPenaltyMarks())); let accStr = tot > 0 ? ((c / tot) * 100).toFixed(2) + "%" : "0.00%", tm = Math.floor(s.timeSpent / 60), ts = s.timeSpent % 60, avgTimeSec = (tot > 0 ? (s.timeSpent / tot).toFixed(1) : 0) + "s"; const formattedTimestamp = getFormattedTimestamp(); let p = new URLSearchParams(); p.append("timestamp", formattedTimestamp); p.append("studentName", studentNameVal + " (Reload Dropout)"); p.append("studentClass", studentClassVal); p.append("studentSection", studentSectionVal); p.append("schoolName", schoolNameVal); p.append("testName", getTestName()); p.append("currentSection", s.year + " - " + s.title); p.append("obtainedScore", sc); p.append("correctAnswers", c); p.append("incorrectAnswers", ic); p.append("unattemptQuestions", l); p.append("accuracy", accStr); p.append("avgTimePerQuestion", avgTimeSec); p.append("proctoringWarnings", securityWarnings); p.append("activeTimeTaken", `${tm}m ${ts}s`); navigator.sendBeacon(getSaveRecordOfCBT(), p); } });
+window.addEventListener("beforeunload", e => { if (isExamActive && sections[currentYearIndex] && !sections[currentYearIndex].submitted) { let s = sections[currentYearIndex], c = 0, ic = 0, l = 0, sc = 0, tot = s.end - s.start; for (let i = s.start; i < s.end; i++) { if (userAnswers[i] !== null) { if (isAnswerCorrect(i)) { c++; sc += getCorrectMarks(); } else { ic++; sc -= getIncorrectMarks(); } } else l++; } sc = Math.max(0, sc - (securityWarnings * getPenaltyMarks())); let accStr = tot > 0 ? ((c / tot) * 100).toFixed(2) + "%" : "0.00%", tm = Math.floor(s.timeSpent / 60), ts = s.timeSpent % 60, avgTimeSec = (tot > 0 ? (s.timeSpent / tot).toFixed(1) : 0) + "s"; const formattedTimestamp = getFormattedTimestamp(); let p = new URLSearchParams(); p.append("timestamp", formattedTimestamp); p.append("studentName", (studentNameVal || "AGYAT") + " (Reload Dropout)"); p.append("studentClass", studentClassVal); p.append("studentSection", studentSectionVal); p.append("schoolName", schoolNameVal); p.append("testName", getTestName()); p.append("currentSection", s.year + " - " + s.title); p.append("obtainedScore", sc); p.append("correctAnswers", c); p.append("incorrectAnswers", ic); p.append("unattemptQuestions", l); p.append("accuracy", accStr); p.append("avgTimePerQuestion", avgTimeSec); p.append("proctoringWarnings", securityWarnings); p.append("activeTimeTaken", `${tm}m ${ts}s`); navigator.sendBeacon(getSaveRecordOfCBT(), p); } });
 
 function applySecurityPenalty() { 
   if (!isProctoringEnabled()) return;
@@ -366,7 +362,6 @@ window.showSubmitModal = () => { if (userAnswers[currentQuestion] !== null && !s
 window.closeSubmitModal = () => { $('modal-submit').style.display = 'none'; isTimerPaused = false; };
 window.confirmSubmitExam = () => { $('modal-submit').style.display = 'none'; isTimerPaused = false; if (typeof window.processSectionSubmission === 'function') window.processSectionSubmission(); };
 
-/* SECTION SUBMISSION - SHOWS COMPACT SECTION CARD ONLY; HIDES SUMMARY SHEET INITIALLY */
 window.processSectionSubmission = async function() { 
   if (!lockedAnswers[currentQuestion] && userAnswers[currentQuestion] !== null) {
     lockedAnswers[currentQuestion] = true; 
@@ -389,9 +384,9 @@ window.processSectionSubmission = async function() {
   resultScreen.style.display = 'block'; 
   loaderBox.style.display = 'flex';
   scorecardFrame.style.display = 'none';
-  if (summaryCard) summaryCard.style.display = 'none'; // KEEP SUMMARY SHEET ALWAYS HIDDEN INITIALLY
+  if (summaryCard) summaryCard.style.display = 'none';
 
-  document.getElementById('lbl-user-greeting').innerText = studentNameVal || "Aman";
+  document.getElementById('lbl-user-greeting').innerText = studentNameVal || "AGYAT";
   document.getElementById('lbl-section-title').innerText = `${sec.year} Completed,`;
 
   let nextSecName = (currentYearIndex + 1 < sections.length) ? (sections[currentYearIndex + 1].year || `Part ${currentYearIndex + 2}`) : "";
@@ -429,7 +424,6 @@ window.processSectionSubmission = async function() {
   document.getElementById('lbl-stat-unattempted-val').innerText = secUnattempted; 
   document.getElementById('lbl-stat-time-val').innerText = formattedTime;
 
-  // PRE-BUILD SUMMARY SHEET FOR WHEN USER CLICKS COMPLETE EVALUATION
   let tg = document.getElementById('table-body-matrix-target'); 
   if (tg) {
     tg.innerHTML = '';
@@ -459,13 +453,12 @@ window.processSectionSubmission = async function() {
               </div>
             </div>
           </td>
-          <td class="td-val-bold">${sM}</td>
-          <td class="td-val-correct">${s.submitted ? sC : '-'}</td>
-          <td class="td-val-incorrect">${s.submitted ? sI : '-'}</td>
-          <td class="td-val-unattempted">${s.submitted ? sL : sT}</td>
           <td class="td-val-badge">
             <span class="badge-pct-pill green">${s.submitted ? pR : 0}%</span>
           </td>
+          <td class="td-val-correct">${s.submitted ? sC : '-'}</td>
+          <td class="td-val-incorrect">${s.submitted ? sI : '-'}</td>
+          <td class="td-val-unattempted">${s.submitted ? sL : sT}</td>
         </tr>
       `;
     });
@@ -481,20 +474,19 @@ window.processSectionSubmission = async function() {
             </div>
           </div>
         </td>
-        <td class="td-val-bold">${cM}</td>
-        <td class="td-val-correct">${rC}</td>
-        <td class="td-val-incorrect">${rI}</td>
-        <td class="td-val-unattempted">${rL}</td>
         <td class="td-val-badge">
           <span class="badge-pct-pill blue">${fP}%</span>
         </td>
+        <td class="td-val-correct">${rC}</td>
+        <td class="td-val-incorrect">${rI}</td>
+        <td class="td-val-unattempted">${rL}</td>
       </tr>
     `;
   }
 
   globalFormPayload = { 
     timestamp: formattedTimestamp, 
-    studentName: studentNameVal, 
+    studentName: studentNameVal || "AGYAT", 
     studentClass: studentClassVal, 
     studentSection: studentSectionVal, 
     schoolName: schoolNameVal, 
@@ -540,7 +532,6 @@ window.processSectionSubmission = async function() {
   } 
 };
 
-/* DISPLAY STANDALONE FINAL CUMULATIVE EVALUATION SUMMARY SHEET */
 function showFinalCumulativeEvaluation() {
   const scorecardFrame = document.getElementById('capture-scorecard-frame');
   const summaryCard = document.getElementById('cumulative-matrix-container');
