@@ -90,6 +90,22 @@ a { text-decoration: none; transition: var(--transition-smooth); }
   .announcement-bar .divider, .hide-mobile { display: none; } 
 }
 
+/* Lock universal container width across all pages */
+.container-inner,
+.main-content.container-inner {
+  width: 100% !important;
+  max-width: 1250px !important;
+  margin: 0 auto !important;
+  padding: 0 16px !important;
+  box-sizing: border-box !important;
+}
+
+.sc-widget-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
 /* Hero Section */
 .sc-widget-container { font-family: var(--font-body); color: var(--ink); max-width: 1240px; margin: 0 auto; padding: 24px; position: relative; background: var(--card); border: 1px solid var(--border); border-radius: 20px; box-shadow: var(--shadow-card); }
 .sc-hero-wrapper { position: relative; overflow: hidden; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px 32px; margin-bottom: 32px; box-shadow: var(--shadow-card); display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 32px; flex-wrap: wrap; }
