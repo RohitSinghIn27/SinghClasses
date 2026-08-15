@@ -1,14 +1,19 @@
+/* =========================================================================
+   CBT Engine - Configuration Getters (Reads directly from window.CBT_CONFIG)
+   ========================================================================= */
 const $ = id => document.getElementById(id);
-const getCorrectMarks = () => window.CBT_CONFIG?.MARKS_CORRECT ?? 5;
-const getIncorrectMarks = () => window.CBT_CONFIG?.MARKS_INCORRECT ?? 1;
-const getPenaltyMarks = () => window.CBT_CONFIG?.PENALTY_WARNING ?? 2;
+
+const isProctoringEnabled    = () => window.CBT_CONFIG?.ENABLE_PROCTORING ?? true;
+const getCorrectMarks        = () => Number(window.CBT_CONFIG?.MARKS_CORRECT ?? 5);
+const getIncorrectMarks      = () => Number(window.CBT_CONFIG?.MARKS_INCORRECT ?? 1);
+const getPenaltyMarks        = () => Number(window.CBT_CONFIG?.PENALTY_WARNING ?? 2);
+const getTestName            = () => window.CBT_CONFIG?.TEST_NAME ?? "Online Test";
 const getFetchQuestionsOfCBT = () => window.CBT_CONFIG?.FetchQuestionsOfCBT ?? window.CBT_CONFIG?.SHEET_API_URL ?? "";
-const getSaveRecordOfCBT = () => window.CBT_CONFIG?.SaveRecordOfCBT ?? window.CBT_CONFIG?.FORM_SAVE_URL ?? "";
-const getFetchRecordOfCBT = () => window.CBT_CONFIG?.FetchRecordOfCBT ?? window.CBT_CONFIG?.TOPPER_API_URL ?? "";
-const getTestName = () => window.CBT_CONFIG?.TEST_NAME ?? "Quiz";
-const getHomeUrl = () => window.CBT_CONFIG?.HOME_URL ?? "https://www.singhclasses.in/";
-const getYoutubeUrl = () => window.CBT_CONFIG?.YOUTUBE_URL ?? "https://www.youtube.com/@SinghClasses";
-const isProctoringEnabled = () => window.CBT_CONFIG?.ENABLE_PROCTORING ?? true;
+const getSaveRecordOfCBT     = () => window.CBT_CONFIG?.SaveRecordOfCBT ?? window.CBT_CONFIG?.FORM_SAVE_URL ?? "";
+const getFetchRecordOfCBT    = () => window.CBT_CONFIG?.FetchRecordOfCBT ?? window.CBT_CONFIG?.TOPPER_API_URL ?? "";
+const getHomeUrl             = () => window.CBT_CONFIG?.HOME_URL ?? "https://www.singhclasses.in/";
+const getYoutubeUrl          = () => window.CBT_CONFIG?.YOUTUBE_URL ?? "https://www.youtube.com/@SinghClasses";
+const getNotesUrl            = () => window.CBT_CONFIG?.NOTES_URL ?? "#";
 
 const ICON_ALERT = `<svg class="sc-svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`;
 
@@ -49,7 +54,7 @@ function getFormattedTimestamp() {
   return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}-${pad(now.getMinutes())}-${pad(now.getSeconds())}`;
 }
 
-/* Single-Record Scoped LocalStorage Key */
+/* Single-Record Scoped LocalStorage Key based on dynamic TEST_NAME */
 function getSingleSessionKey() {
   return `cbt_active_attempt_${getTestName().replace(/\s+/g, '_')}`;
 }
@@ -128,10 +133,10 @@ function restoreSession(data) {
   if ($('student-section-input')) $('student-section-input').value = CBTState.studentSectionVal;
   if ($('student-school-input')) $('student-school-input').value = CBTState.schoolNameVal;
 
-  $('modal-resume').style.display = 'none';
-  $('modal-welcome').style.display = 'none';
+  if ($('modal-resume')) $('modal-resume').style.display = 'none';
+  if ($('modal-welcome')) $('modal-welcome').style.display = 'none';
   document.body.classList.add('exam-in-progress');
-  $('quiz-screen').style.display = 'block';
+  if ($('quiz-screen')) $('quiz-screen').style.display = 'block';
   if ($('unified-nav')) $('unified-nav').style.display = 'flex';
 
   buildYearNav();
@@ -151,8 +156,8 @@ window.confirmResumeSession = function() {
 window.dismissResumeSession = function() {
   clearSessionLocalStorage();
   CBTState.pendingRestoreData = null;
-  $('modal-resume').style.display = 'none';
-  $('modal-welcome').style.display = 'flex';
+  if ($('modal-resume')) $('modal-resume').style.display = 'none';
+  if ($('modal-welcome')) $('modal-welcome').style.display = 'flex';
 };
 
 function preloadQuestionImages() { 
@@ -165,9 +170,6 @@ function preloadQuestionImages() {
     }); 
   }); 
 }
-
-function toggleFilterSlider() { const w = document.querySelector('.filter-slider-wrapper'); if (w) w.classList.toggle('active'); }
-document.addEventListener('click', e => { const w = document.querySelector('.filter-slider-wrapper'); if (w && !w.contains(e.target)) w.classList.remove('active'); });
 
 function escapeHTML(str) { return str == null ? "" : str.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;").replace(/\n/g, "<br>"); }
 function getVerbatim(obj, keys, fallback = "") { for (let k of keys) { if (obj[k] !== undefined && obj[k] !== null) return obj[k]; } return fallback; }
@@ -293,63 +295,121 @@ window.handleSectionProgression = function() {
 
 function shuffleArray(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } }
 
-function showToastAlert(m) { let t = $('custom-alert-toast'), txt = $('custom-alert-text'); if (t && txt) { txt.innerHTML = `${ICON_ALERT} ${m}`; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 4000); } }
+function showToastAlert(m) { 
+  let t = $('custom-alert-toast'), txt = $('custom-alert-text'); 
+  if (t && txt) { 
+    txt.innerHTML = `${ICON_ALERT} ${m}`; 
+    t.classList.add('show'); 
+    setTimeout(() => t.classList.remove('show'), 4000); 
+  } 
+}
 
 function triggerVerifyModal(type) { 
   const modal = $('verify-resource-modal'), icon = $('verify-card-icon'), heading = $('verify-modal-heading'), text = $('verify-modal-text'), actionBtn = $('verify-proceed-action-btn'), driveId = $('current-chapter') ? $('current-chapter').getAttribute('data-drive-id') : ""; 
+  if (!modal) return;
   modal.style.display = 'flex'; 
   if (type === 'pdf') { 
-    CBTState.activeResourceUrl = `https://drive.google.com/file/d/${driveId}/preview`; 
-    icon.className = "verify-modal-icon pdf-style"; 
-    icon.innerHTML = `<svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line></svg>`; 
-    heading.innerText = "Open Chapter Study Material?"; 
-    text.innerText = "You are going to view the embedded revision lecture notes inside your student drive space."; 
-    actionBtn.className = "v-btn v-btn-pdf"; 
-    actionBtn.innerText = "Open Notes"; 
+    CBTState.activeResourceUrl = getNotesUrl(); 
+    if (icon) {
+      icon.className = "verify-modal-icon pdf-style"; 
+      icon.innerHTML = `<svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line></svg>`; 
+    }
+    if (heading) heading.innerText = "Open Chapter Revision Notes?"; 
+    if (text) text.innerText = "You are going to view the chapter lecture notes inside a new tab."; 
+    if (actionBtn) {
+      actionBtn.className = "v-btn v-btn-pdf"; 
+      actionBtn.innerText = "Open Notes"; 
+    }
   } else if (type === 'yt') { 
     CBTState.activeResourceUrl = getYoutubeUrl(); 
-    icon.className = "verify-modal-icon yt-style"; 
-    icon.innerHTML = `<svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.377.55a3.016 3.016 0 0 0-2.122 2.136C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.55 9.376.55 9.376.55s7.505 0 9.377-.55a3.016 3.016 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`; 
-    heading.innerText = "Watch the Video Lesson?"; 
-    text.innerText = "Choose to continue onward if you are ready to launch the One Shot educational lecture window streams."; 
-    actionBtn.className = "v-btn v-btn-yt"; 
-    actionBtn.innerText = "Watch Video"; 
+    if (icon) {
+      icon.className = "verify-modal-icon yt-style"; 
+      icon.innerHTML = `<svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.377.55a3.016 3.016 0 0 0-2.122 2.136C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.55 9.376.55 9.376.55s7.505 0 9.377-.55a3.016 3.016 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`; 
+    }
+    if (heading) heading.innerText = "Watch the Video Lesson?"; 
+    if (text) text.innerText = "Choose to continue onward if you are ready to launch the educational lecture video."; 
+    if (actionBtn) {
+      actionBtn.className = "v-btn v-btn-yt"; 
+      actionBtn.innerText = "Watch Video"; 
+    }
   } 
-  actionBtn.onclick = () => { 
-    window.open(CBTState.activeResourceUrl, '_blank'); 
-    closeVerifyModal(); 
-  }; 
+  if (actionBtn) {
+    actionBtn.onclick = () => { 
+      window.open(CBTState.activeResourceUrl, '_blank'); 
+      closeVerifyModal(); 
+    }; 
+  }
 }
 
-function closeVerifyModal() { $('verify-resource-modal').style.display = 'none'; }
-function toggleFullScreen() { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen().catch(err => console.error(err.message)); }
-function goToHome() { window.location.href = getHomeUrl(); }
+function closeVerifyModal() { 
+  if ($('verify-resource-modal')) $('verify-resource-modal').style.display = 'none'; 
+}
 
-window.closeSecurityModal = () => { $('modal-security').style.display = 'none'; document.querySelector('.sc-widget-container').classList.remove('sc-blur-active'); CBTState.isTimerPaused = false; };
+function toggleFullScreen() { 
+  document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen().catch(err => console.error(err.message)); 
+}
 
-window.addEventListener('scroll', () => { let bar = $("scProgressBar"), st = document.documentElement.scrollTop || document.body.scrollTop, sh = document.documentElement.scrollHeight - document.documentElement.clientHeight; if (bar) bar.style.width = (sh > 0 ? (st / sh) * 100 : 0) + "%"; });
+function goToHome() { 
+  window.location.href = getHomeUrl(); 
+}
 
-document.addEventListener("DOMContentLoaded", () => { const ym = $('yearMenuToggle'), yc = $('year-nav-container'); if (ym && yc) { ym.addEventListener('click', e => { e.stopPropagation(); yc.classList.toggle('show-year-menu'); ym.innerHTML = yc.classList.contains('show-year-menu') ? '✕' : '☰'; }); } });
+function openNotesTab() {
+  window.open(getNotesUrl(), '_blank');
+}
 
-window.goToGuidelinesStep = () => { 
-  CBTState.studentNameVal = $('student-name-input').value.trim().toUpperCase() || "AGYAT"; 
-  CBTState.studentClassVal = $('student-class-input').value || "12"; 
-  CBTState.studentSectionVal = $('student-section-input').value || "A"; 
-  CBTState.schoolNameVal = $('student-school-input').value.trim().toUpperCase() || "SPS"; 
-  CBTState.studentName = `${CBTState.studentNameVal} | CLASS: ${CBTState.studentClassVal} | SEC: ${CBTState.studentSectionVal} | ${CBTState.schoolNameVal}`; 
-  $('welcome-step-1').style.display = 'none'; 
-  $('welcome-step-2').style.display = 'block'; 
+window.closeSecurityModal = () => { 
+  if ($('modal-security')) $('modal-security').style.display = 'none'; 
+  const widget = document.querySelector('.sc-widget-container');
+  if (widget) widget.classList.remove('sc-blur-active'); 
+  CBTState.isTimerPaused = false; 
 };
 
-window.goToLoginStep = () => { $('welcome-step-2').style.display = 'none'; $('welcome-step-1').style.display = 'block'; };
+window.addEventListener('scroll', () => { 
+  let bar = $("scProgressBar"), st = document.documentElement.scrollTop || document.body.scrollTop, sh = document.documentElement.scrollHeight - document.documentElement.clientHeight; 
+  if (bar) bar.style.width = (sh > 0 ? (st / sh) * 100 : 0) + "%"; 
+});
 
+document.addEventListener("DOMContentLoaded", () => { 
+  const ym = $('yearMenuToggle'), yc = $('year-nav-container'); 
+  if (ym && yc) { 
+    ym.addEventListener('click', e => { 
+      e.stopPropagation(); 
+      yc.classList.toggle('show-year-menu'); 
+      ym.innerHTML = yc.classList.contains('show-year-menu') ? '✕' : '☰'; 
+    }); 
+  } 
+});
+
+window.goToGuidelinesStep = () => { 
+  CBTState.studentNameVal = ($('student-name-input') ? $('student-name-input').value.trim() : "").toUpperCase() || "AGYAT"; 
+  CBTState.studentClassVal = $('student-class-input') ? $('student-class-input').value : "12"; 
+  CBTState.studentSectionVal = $('student-section-input') ? $('student-section-input').value : "A"; 
+  CBTState.schoolNameVal = ($('student-school-input') ? $('student-school-input').value.trim() : "").toUpperCase() || "SPS"; 
+  CBTState.studentName = `${CBTState.studentNameVal} | CLASS: ${CBTState.studentClassVal} | SEC: ${CBTState.studentSectionVal} | ${CBTState.schoolNameVal}`; 
+  if ($('welcome-step-1')) $('welcome-step-1').style.display = 'none'; 
+  if ($('welcome-step-2')) $('welcome-step-2').style.display = 'block'; 
+};
+
+window.goToLoginStep = () => { 
+  if ($('welcome-step-2')) $('welcome-step-2').style.display = 'none'; 
+  if ($('welcome-step-1')) $('welcome-step-1').style.display = 'block'; 
+};
+
+/* Unified Window Load Handler (Populates Dynamic Text & Preloads Data) */
 window.onload = async () => { 
   const activeTestName = getTestName(); 
-  const chapterCapsule = $('current-chapter'); if (chapterCapsule) chapterCapsule.innerText = activeTestName; 
-  const topicTextNode = document.querySelector('.topic-text'); if (topicTextNode) topicTextNode.innerText = activeTestName; 
-  const resumeTopicNode = $('resume-topic-text'); if (resumeTopicNode) resumeTopicNode.innerText = activeTestName;
-  $('welcome-correct-lbl').innerText = `+${getCorrectMarks()} Correct`; 
-  $('welcome-incorrect-lbl').innerText = `-${getIncorrectMarks()} Incorrect`; 
+  const chapterCapsule = $('current-chapter'); 
+  if (chapterCapsule) chapterCapsule.innerText = activeTestName; 
+  
+  document.querySelectorAll('.topic-text').forEach(node => {
+    node.innerText = activeTestName;
+  });
+
+  const correctLbl = $('welcome-correct-lbl');
+  if (correctLbl) correctLbl.innerText = `+${getCorrectMarks()} Correct`; 
+  
+  const incorrectLbl = $('welcome-incorrect-lbl');
+  if (incorrectLbl) incorrectLbl.innerText = `-${getIncorrectMarks()} Incorrect`; 
 
   /* Check Single-Session Data (Custom Resume Card Modal) */
   const savedData = getSavedSession();
@@ -357,9 +417,9 @@ window.onload = async () => {
     CBTState.pendingRestoreData = savedData;
     const subtext = $('resume-modal-subtext');
     if (subtext) subtext.innerText = `A previous attempt for "${savedData.studentNameVal}" was found. Would you like to resume your session?`;
-    $('modal-resume').style.display = 'flex';
+    if ($('modal-resume')) $('modal-resume').style.display = 'flex';
   } else {
-    $('modal-welcome').style.display = 'flex';
+    if ($('modal-welcome')) $('modal-welcome').style.display = 'flex';
   }
   
   ['student-name-input', 'student-school-input'].forEach(id => { 
@@ -377,12 +437,97 @@ window.onload = async () => {
   if (contentEl) { 
     let tx = 0, ty = 0; 
     contentEl.addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true }); 
-    contentEl.addEventListener('touchend', e => { const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty; if (Math.abs(dx) > Math.abs(dy) + 30) { if (dx < -40) nextQuestion(); if (dx > 40) prevQuestion(); } }, { passive: true }); 
+    contentEl.addEventListener('touchend', e => { 
+      const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty; 
+      if (Math.abs(dx) > Math.abs(dy) + 30) { 
+        if (dx < -40) nextQuestion(); 
+        if (dx > 40) prevQuestion(); 
+      } 
+    }, { passive: true }); 
   } 
   initParticleCanvas('quiz-screen', 'canvasCBT', 12, 90); 
   initParticleCanvas('quiz-screen', 'canvasPalette', 6, 70); 
 };
 
+/* Begin Exam Flow */
+window.beginExam = async () => { 
+  const rawNameInput = $('student-name-input') ? $('student-name-input').value.trim() : ""; 
+  CBTState.studentNameVal = rawNameInput.toUpperCase() || "AGYAT"; 
+  CBTState.studentClassVal = $('student-class-input') ? $('student-class-input').value : "12"; 
+  CBTState.studentSectionVal = $('student-section-input') ? $('student-section-input').value : "A"; 
+  CBTState.schoolNameVal = ($('student-school-input') ? $('student-school-input').value.trim() : "").toUpperCase() || "SPS"; 
+  CBTState.studentName = `${CBTState.studentNameVal} | CLASS: ${CBTState.studentClassVal} | SEC: ${CBTState.studentSectionVal} | ${CBTState.schoolNameVal}`; 
+  
+  if ($('modal-welcome')) $('modal-welcome').style.display = 'none'; 
+  const loadingOverlay = $('quiz-loading-overlay'); 
+  if (loadingOverlay) loadingOverlay.style.display = 'flex'; 
+  document.body.classList.add('exam-in-progress'); 
+  CBTState.isExamActive = true; 
+
+  if (CBTState.isQuestionsLoading) { 
+    let checks = 0; 
+    while (CBTState.isQuestionsLoading && checks < 300) { 
+      await new Promise(r => setTimeout(r, 100)); 
+      checks++; 
+    } 
+  } 
+
+  if (CBTState.listExamPapers.length === 0) {
+    await loadQuestionsFromSheet(3);
+  }
+
+  if (loadingOverlay) loadingOverlay.style.display = 'none'; 
+
+  if (CBTState.listExamPapers.length === 0) { 
+    showToastAlert("Unable to sync questions. Retrying connection..."); 
+    await new Promise(r => setTimeout(r, 1000));
+    await loadQuestionsFromSheet(3);
+    if (CBTState.listExamPapers.length === 0) {
+      document.body.classList.remove('exam-in-progress');
+      CBTState.isExamActive = false;
+      if ($('modal-welcome')) $('modal-welcome').style.display = 'flex';
+      alert("Network request timed out. Please check your internet connection and try starting again.");
+      return;
+    }
+  } 
+
+  CBTState.questions = []; 
+  CBTState.sections = []; 
+  let qt = 0; 
+  CBTState.listExamPapers.forEach((p, idx) => { 
+    let st = qt, sq = p.questions.map(q => { 
+      let shuffledOptions = [...q.options]; 
+      shuffleArray(shuffledOptions); 
+      return { question: q.text, tag: q.tag ?? "", options: shuffledOptions, image: q.image ?? "", correctAnswerText: q.correctAnswerText }; 
+    }); 
+    shuffleArray(sq); 
+    sq.forEach(q => { 
+      CBTState.questions.push(q); 
+      qt++; 
+    }); 
+    CBTState.sections.push({ index: idx, title: p.title, year: p.year, start: st, end: qt, submitted: false, timeSpent: 0 }); 
+  }); 
+
+  clearSessionLocalStorage(); 
+  CBTState.userAnswers = new Array(CBTState.questions.length).fill(null); 
+  CBTState.visitedQuestions = new Array(CBTState.questions.length).fill(false); 
+  CBTState.lockedAnswers = new Array(CBTState.questions.length).fill(false); 
+  CBTState.sectionTimes = CBTState.sections.map(s => (s.end - s.start) * 60); 
+  CBTState.currentYearIndex = 0; 
+  CBTState.currentQuestion = CBTState.sections[0].start; 
+
+  /* Exam Active & Timer Running */
+  CBTState.isTimerPaused = false; 
+  if ($('quiz-screen')) $('quiz-screen').style.display = 'block'; 
+  if ($('unified-nav')) $('unified-nav').style.display = 'flex'; 
+  buildYearNav(); 
+  updateTimerDisplay(); 
+  startTimer(); 
+  loadQuestion(); 
+  saveSessionToLocalStorage(); 
+};
+
+/* Proctoring Listeners */
 ['contextmenu', 'copy', 'cut', 'dragstart'].forEach(ev => {
   document.addEventListener(ev, e => {
     if (isProctoringEnabled() && CBTState.isExamActive) e.preventDefault();
@@ -512,12 +657,12 @@ function applySecurityPenalty() {
   if (Date.now() - CBTState.lastWT < 1000) return; 
   CBTState.lastWT = Date.now(); 
   CBTState.securityWarnings++; 
-  $('warning-count-display').innerText = `Total Warnings: ${CBTState.securityWarnings} (Penalty: -${CBTState.securityWarnings * getPenaltyMarks()} Marks)`; 
+  if ($('warning-count-display')) $('warning-count-display').innerText = `Total Warnings: ${CBTState.securityWarnings} (Penalty: -${CBTState.securityWarnings * getPenaltyMarks()} Marks)`; 
   
   const widget = document.querySelector('.sc-widget-container');
-  if (widget) widget.classList.add('sc-blur-active');
+  if (widget) widget.classList.add('sc-blur-active'); 
   
-  $('modal-security').style.display = 'flex'; 
+  if ($('modal-security')) $('modal-security').style.display = 'flex'; 
   CBTState.isTimerPaused = true; 
   updatePalette(); 
   saveSessionToLocalStorage(); 
@@ -527,7 +672,9 @@ window.buildYearNav = () => {
   let c = $('year-nav-container'); 
   if (!c) return; 
   c.innerHTML = ''; 
-  if ($('current-paper-label') && CBTState.sections[CBTState.currentYearIndex]) $('current-paper-label').innerHTML = `<span>${CBTState.sections[CBTState.currentYearIndex].year}</span>${CBTState.sections[CBTState.sections[CBTState.currentYearIndex].index].title}`; 
+  if ($('current-paper-label') && CBTState.sections[CBTState.currentYearIndex]) {
+    $('current-paper-label').innerHTML = `<span>${CBTState.sections[CBTState.currentYearIndex].year}</span>${CBTState.sections[CBTState.currentYearIndex].title}`; 
+  }
   CBTState.sections.forEach((p, idx) => { 
     let t = document.createElement('div'); 
     t.className = `year-tab ${idx === CBTState.currentYearIndex ? 'active' : ''}`; 
@@ -609,7 +756,7 @@ function renderSidebarToppers(toppersArray) {
 }
 
 function updateTimerDisplay() { 
-  let t = CBTState.sectionTimes[CBTState.currentYearIndex], m = Math.floor(t / 60), s = t % 60, timeStr = `${m}:${s < 10 ? '0' : ''}${s}`; 
+  let t = CBTState.sectionTimes[CBTState.currentYearIndex] || 0, m = Math.floor(t / 60), s = t % 60, timeStr = `${m}:${s < 10 ? '0' : ''}${s}`; 
   let elDesktop = $('time-left'), elMobile = $('time-left-mobile'); 
   if (elDesktop) elDesktop.innerText = timeStr; 
   if (elMobile) elMobile.innerText = timeStr; 
@@ -669,11 +816,11 @@ window.loadQuestion = () => {
     c.classList.add('swipe-hint-animation'); 
   } 
   if ($('section-header-title')) $('section-header-title').innerText = `${s.year}: ${s.title}`; 
-  $('exam-progress').style.width = `${pc}%`; 
-  $('q-number').innerText = `Question ${qy + 1} of ${tot}`; 
+  if ($('exam-progress')) $('exam-progress').style.width = `${pc}%`; 
+  if ($('q-number')) $('q-number').innerText = `Question ${qy + 1} of ${tot}`; 
   let baseQuestionText = `<span style="font-weight:800;color:var(--q-num-color);margin-right:6px;">Q${qy + 1}.</span>` + escapeHTML(CBTState.questions[CBTState.currentQuestion].question); 
   if (CBTState.questions[CBTState.currentQuestion].image) baseQuestionText += `<div class="question-image-wrap" style="margin:0 0 12px 0;text-align:left;max-width:100%;display:flex;justify-content:flex-start;align-items:center;"><img src="${CBTState.questions[CBTState.currentQuestion].image}" alt="Image for Question ${qy + 1}" style="max-width:100%;max-height:220px;width:auto;height:auto;border-radius:8px;border:1px solid var(--border-color);box-shadow:0 4px 10px rgba(0,0,0,0.05);object-fit:contain;display:block;"></div>`; 
-  $('q-text').innerHTML = baseQuestionText; 
+  if ($('q-text')) $('q-text').innerHTML = baseQuestionText; 
   let currentTag = CBTState.questions[CBTState.currentQuestion].tag ?? "", tagEl = $('q-tag'); 
   if (tagEl) { 
     if (currentTag) { 
@@ -684,36 +831,40 @@ window.loadQuestion = () => {
     } 
   } 
   let ol = $('q-options'); 
-  ol.innerHTML = ''; 
-  let isL = CBTState.lockedAnswers[CBTState.currentQuestion] || s.submitted, lt = ['A', 'B', 'C', 'D', 'E'], ci = getCorrectIndex(CBTState.currentQuestion); 
-  CBTState.questions[CBTState.currentQuestion].options.forEach((opt, i) => { 
-    let cls = ""; 
-    if (isL && CBTState.userAnswers[CBTState.currentQuestion] !== null) { 
-      cls = "disabled-label" + (i === ci ? " correct-answer" : (CBTState.userAnswers[CBTState.currentQuestion] === i ? " wrong-answer" : "")); 
-    } else if (CBTState.userAnswers[CBTState.currentQuestion] === i) { 
-      cls = "selected" + (isL ? " disabled-label" : ""); 
-    } else if (isL) { 
-      cls = "disabled-label"; 
-    } 
-    ol.innerHTML += `<li><label class="${cls}"><input type="radio" name="option" value="${i}" ${CBTState.userAnswers[CBTState.currentQuestion] === i ? "checked" : ""} ${isL ? "disabled" : ""} onclick="saveAnswer(${i})"><span class="option-letter">${lt[i]}</span><span class="option-text">${escapeHTML(opt)}</span></label></li>`; 
-  }); 
-  $('btn-prev').disabled = CBTState.currentQuestion === s.start; 
-  $('btn-clear').disabled = CBTState.userAnswers[CBTState.currentQuestion] === null || isL; 
+  if (ol) {
+    ol.innerHTML = ''; 
+    let isL = CBTState.lockedAnswers[CBTState.currentQuestion] || s.submitted, lt = ['A', 'B', 'C', 'D', 'E'], ci = getCorrectIndex(CBTState.currentQuestion); 
+    CBTState.questions[CBTState.currentQuestion].options.forEach((opt, i) => { 
+      let cls = ""; 
+      if (isL && CBTState.userAnswers[CBTState.currentQuestion] !== null) { 
+        cls = "disabled-label" + (i === ci ? " correct-answer" : (CBTState.userAnswers[CBTState.currentQuestion] === i ? " wrong-answer" : "")); 
+      } else if (CBTState.userAnswers[CBTState.currentQuestion] === i) { 
+        cls = "selected" + (isL ? " disabled-label" : ""); 
+      } else if (isL) { 
+        cls = "disabled-label"; 
+      } 
+      ol.innerHTML += `<li><label class="${cls}"><input type="radio" name="option" value="${i}" ${CBTState.userAnswers[CBTState.currentQuestion] === i ? "checked" : ""} ${isL ? "disabled" : ""} onclick="saveAnswer(${i})"><span class="option-letter">${lt[i]}</span><span class="option-text">${escapeHTML(opt)}</span></label></li>`; 
+    }); 
+  }
+  if ($('btn-prev')) $('btn-prev').disabled = CBTState.currentQuestion === s.start; 
+  if ($('btn-clear')) $('btn-clear').disabled = CBTState.userAnswers[CBTState.currentQuestion] === null || isL; 
   let nb = $('btn-next'); 
-  nb.classList.remove('highlight-submit'); 
-  if (s.submitted) { 
-    nb.innerHTML = `<svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg><span>NEXT QUESTION</span>`; 
-    nb.disabled = CBTState.currentQuestion === s.end - 1; 
-    nb.onclick = nextQuestion; 
-  } else { 
-    if (CBTState.currentQuestion === s.end - 1) { 
-      nb.innerHTML = `<span>SUBMIT SECTION →</span>`; 
-      nb.classList.add('highlight-submit'); 
+  if (nb) {
+    nb.classList.remove('highlight-submit'); 
+    if (s.submitted) { 
+      nb.innerHTML = `<svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg><span>NEXT QUESTION</span>`; 
+      nb.disabled = CBTState.currentQuestion === s.end - 1; 
+      nb.onclick = nextQuestion; 
     } else { 
-      nb.innerHTML = `<span>SAVE & NEXT →</span>`; 
+      if (CBTState.currentQuestion === s.end - 1) { 
+        nb.innerHTML = `<span>SUBMIT SECTION →</span>`; 
+        nb.classList.add('highlight-submit'); 
+      } else { 
+        nb.innerHTML = `<span>SAVE & NEXT →</span>`; 
+      } 
+      nb.onclick = nextQuestion; 
     } 
-    nb.onclick = nextQuestion; 
-  } 
+  }
   updatePalette(); 
   saveSessionToLocalStorage(); 
 };
@@ -721,7 +872,7 @@ window.loadQuestion = () => {
 window.saveAnswer = i => { 
   if (CBTState.lockedAnswers[CBTState.currentQuestion] || CBTState.sections[CBTState.currentYearIndex].submitted) return; 
   CBTState.userAnswers[CBTState.currentQuestion] = i; 
-  $('btn-clear').disabled = false; 
+  if ($('btn-clear')) $('btn-clear').disabled = false; 
 
   if (!CBTState.sectionToppersFetched[CBTState.currentYearIndex]) {
     CBTState.sectionToppersFetched[CBTState.currentYearIndex] = true;
@@ -824,11 +975,19 @@ window.showSubmitModal = () => {
   if (u > 0) showToastAlert(`${u} Question(s) still pending, please check.`); 
   if ($('submit-modal-text')) $('submit-modal-text').innerText = `Are you sure you want to submit your responses for ${CBTState.sections[CBTState.currentYearIndex].year}?`; 
   CBTState.isTimerPaused = true; 
-  $('modal-submit').style.display = 'flex'; 
+  if ($('modal-submit')) $('modal-submit').style.display = 'flex'; 
 };
 
-window.closeSubmitModal = () => { $('modal-submit').style.display = 'none'; CBTState.isTimerPaused = false; };
-window.confirmSubmitExam = () => { $('modal-submit').style.display = 'none'; CBTState.isTimerPaused = false; if (typeof window.processSectionSubmission === 'function') window.processSectionSubmission(); };
+window.closeSubmitModal = () => { 
+  if ($('modal-submit')) $('modal-submit').style.display = 'none'; 
+  CBTState.isTimerPaused = false; 
+};
+
+window.confirmSubmitExam = () => { 
+  if ($('modal-submit')) $('modal-submit').style.display = 'none'; 
+  CBTState.isTimerPaused = false; 
+  if (typeof window.processSectionSubmission === 'function') window.processSectionSubmission(); 
+};
 
 window.processSectionSubmission = async function() { 
   if (!CBTState.lockedAnswers[CBTState.currentQuestion] && CBTState.userAnswers[CBTState.currentQuestion] !== null) {
@@ -841,24 +1000,24 @@ window.processSectionSubmission = async function() {
   }
   
   document.body.classList.remove('exam-in-progress'); 
-  document.getElementById('quiz-screen').style.display = 'none'; 
-  if (document.getElementById('unified-nav')) document.getElementById('unified-nav').style.display = 'none'; 
+  if ($('quiz-screen')) $('quiz-screen').style.display = 'none'; 
+  if ($('unified-nav')) $('unified-nav').style.display = 'none'; 
   
-  const resultScreen = document.getElementById('result-screen');
-  const loaderBox = document.getElementById('processing-loader-box');
-  const scorecardFrame = document.getElementById('capture-scorecard-frame');
-  const summaryCard = document.getElementById('cumulative-matrix-container');
+  const resultScreen = $('result-screen');
+  const loaderBox = $('processing-loader-box');
+  const scorecardFrame = $('capture-scorecard-frame');
+  const summaryCard = $('cumulative-matrix-container');
 
-  resultScreen.style.display = 'block'; 
-  loaderBox.style.display = 'flex';
-  scorecardFrame.style.display = 'none';
+  if (resultScreen) resultScreen.style.display = 'block'; 
+  if (loaderBox) loaderBox.style.display = 'flex';
+  if (scorecardFrame) scorecardFrame.style.display = 'none';
   if (summaryCard) summaryCard.style.display = 'none';
 
-  document.getElementById('lbl-user-greeting').innerText = CBTState.studentNameVal || "AGYAT";
-  document.getElementById('lbl-section-title').innerText = `${sec.year} Completed,`;
+  if ($('lbl-user-greeting')) $('lbl-user-greeting').innerText = CBTState.studentNameVal || "AGYAT";
+  if ($('lbl-section-title')) $('lbl-section-title').innerText = `${sec.year} Completed,`;
 
   let nextSecName = (CBTState.currentYearIndex + 1 < CBTState.sections.length) ? (CBTState.sections[CBTState.currentYearIndex + 1].year || `Part ${CBTState.currentYearIndex + 2}`) : "";
-  document.getElementById('lbl-keep-going-msg').innerText = nextSecName ? "Keep going." : "All sections complete!";
+  if ($('lbl-keep-going-msg')) $('lbl-keep-going-msg').innerText = nextSecName ? "Keep going." : "All sections complete!";
 
   const formattedTimestamp = getFormattedTimestamp(); 
 
@@ -885,15 +1044,15 @@ window.processSectionSubmission = async function() {
   let timeSecs = sec.timeSpent % 60;
   let formattedTime = `${timeMins < 10 ? '0' : ''}${timeMins}:${timeSecs < 10 ? '0' : ''}${timeSecs}`;
 
-  document.getElementById('lbl-score-obtained').innerText = secMarks; 
-  document.getElementById('lbl-score-total').innerText = totalSectionMarks; 
-  document.getElementById('lbl-stat-correct-val').innerText = secCorrect; 
-  document.getElementById('lbl-stat-incorrect-val').innerText = secIncorrect; 
-  document.getElementById('lbl-stat-unattempted-val').innerText = secUnattempted; 
-  document.getElementById('lbl-stat-time-val').innerText = formattedTime;
+  if ($('lbl-score-obtained')) $('lbl-score-obtained').innerText = secMarks; 
+  if ($('lbl-score-total')) $('lbl-score-total').innerText = totalSectionMarks; 
+  if ($('lbl-stat-correct-val')) $('lbl-stat-correct-val').innerText = secCorrect; 
+  if ($('lbl-stat-incorrect-val')) $('lbl-stat-incorrect-val').innerText = secIncorrect; 
+  if ($('lbl-stat-unattempted-val')) $('lbl-stat-unattempted-val').innerText = secUnattempted; 
+  if ($('lbl-stat-time-val')) $('lbl-stat-time-val').innerText = formattedTime;
 
-  /* RENDER MODERN SECTION CARDS SUMMARY MATRIX */
-  let tg = document.getElementById('table-body-matrix-target'); 
+  /* Render Modern Section Cards Summary Matrix */
+  let tg = $('table-body-matrix-target'); 
   if (tg) {
     tg.innerHTML = '';
     let cM = 0, aS = 0, rC = 0, rI = 0, rL = 0, totalExamQuestions = 0;
@@ -1027,10 +1186,10 @@ window.processSectionSubmission = async function() {
     }
   }
 
-  loaderBox.style.display = 'none';
-  scorecardFrame.style.display = 'flex';
+  if (loaderBox) loaderBox.style.display = 'none';
+  if (scorecardFrame) scorecardFrame.style.display = 'flex';
 
-  let b = document.getElementById('btn-dashboard-main-trigger'); 
+  let b = $('btn-dashboard-main-trigger'); 
   if (b) { 
     b.disabled = false; 
     b.style.opacity = '1'; 
@@ -1044,9 +1203,9 @@ window.processSectionSubmission = async function() {
 };
 
 function showFinalCumulativeEvaluation() {
-  clearSessionLocalStorage(); // Clear cached attempt once exam is fully concluded
-  const scorecardFrame = document.getElementById('capture-scorecard-frame');
-  const summaryCard = document.getElementById('cumulative-matrix-container');
+  clearSessionLocalStorage(); 
+  const scorecardFrame = $('capture-scorecard-frame');
+  const summaryCard = $('cumulative-matrix-container');
 
   if (scorecardFrame) scorecardFrame.style.display = 'none';
   if (summaryCard) {
@@ -1059,9 +1218,9 @@ function executeProgressionAdvance() {
   if (CBTState.currentYearIndex + 1 < CBTState.sections.length) { 
     CBTState.currentYearIndex++; 
     CBTState.currentQuestion = CBTState.sections[CBTState.currentYearIndex].start; 
-    document.getElementById('result-screen').style.display = 'none'; 
-    document.getElementById('quiz-screen').style.display = 'block'; 
-    if (document.getElementById('unified-nav')) document.getElementById('unified-nav').style.display = 'flex'; 
+    if ($('result-screen')) $('result-screen').style.display = 'none'; 
+    if ($('quiz-screen')) $('quiz-screen').style.display = 'block'; 
+    if ($('unified-nav')) $('unified-nav').style.display = 'flex'; 
     buildYearNav(); 
     updateTimerDisplay(); 
     loadQuestion(); 
