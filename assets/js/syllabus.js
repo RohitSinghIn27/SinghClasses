@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function initPieChartReadiness() {
     const allLinks = document.querySelectorAll('.sc-custom-card .sc-card-links a');
     
-    // Apply lock classes and click notifications to unfinished links site-wide
+    // Apply lock classes and click notifications to unfinished links
     allLinks.forEach(link => {
       const href = link.getAttribute('href');
       const isReady = href && href !== '#' && href.trim() !== '';
@@ -95,13 +95,12 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
 
-    // Targeted Sections: Any section with [data-count-to-content="true"] (or all .sc-column if none tagged)
+    // Targeted Sections: Sections with [data-count-to-content="true"] or all columns
     let targetSections = document.querySelectorAll('.sc-column[data-count-to-content="true"]');
     if (targetSections.length === 0) {
       targetSections = document.querySelectorAll('.sc-column');
     }
 
-    // High-contrast color palette for sections
     const SECTION_PALETTE = ['#2563eb', '#ca8a04', '#ea580c', '#9333ea', '#059669', '#0284c7'];
     let pieData = [];
     let totalTrackedLinks = 0;
@@ -111,9 +110,10 @@ document.addEventListener('DOMContentLoaded', function() {
     targetSections.forEach((section, idx) => {
       const titleEl = section.querySelector('.sc-section-title');
       let rawTitle = titleEl ? titleEl.textContent.trim() : `Section ${idx + 1}`;
-      // Clean section name (e.g. "Section B | PART A" -> "Section B" or "Section B (Part A)")
-      let sectionParts = rawTitle.split('|').map(s => s.trim());
-      let sectionLabel = sectionParts[0] || `Section ${idx + 1}`;
+      
+      // Clean section label: extracts "Section A", "Section B", "Section 1", etc.
+      let match = rawTitle.match(/Section\s+[A-Z0-9]+/i);
+      let sectionLabel = match ? match[0] : (rawTitle.split(/[:|•]/)[0].trim() || `Section ${idx + 1}`);
 
       const secLinks = section.querySelectorAll('.sc-custom-card .sc-card-links a');
       let secReady = 0;
@@ -141,12 +141,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (totalTrackedLinks === 0) return;
 
-    // Calculate percentages for each section
+    // Calculate percentage for each section
     pieData.forEach(d => {
       d.perc = Math.round((d.count / totalTrackedLinks) * 100) || 0;
     });
 
-    // Append Pending / Remaining slice to the legend & chart
+    // Add Remaining / Pending slice
     pieData.push({
       label: 'Pending',
       color: '#64748b',
@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function() {
       `).join('');
     }
 
-    // Update section progress lines under headers
+    // Update individual section progress bar fills
     document.querySelectorAll('.sc-column').forEach(col => {
       const colLinks = col.querySelectorAll('.sc-custom-card .sc-card-links a');
       if (colLinks.length === 0) return;
@@ -224,7 +224,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Hero Navigation Smooth Scroll
+  // Hero Tabs Smooth Scroll
   const navTabs = document.querySelectorAll('.sc-hero-tab');
   navTabs.forEach(tab => {
     tab.addEventListener('click', function(e) {
