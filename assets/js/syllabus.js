@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
-  // Set current year dynamically in footer
+  // 1. Dynamic Footer Year
   const yearEl = document.getElementById('current-year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  // Centralized SVG Icons
+  // 2. Centralized SVG Icons
   const CARD_ICONS = {
     download: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>`,
     oneshot: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>`,
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // Prepend SVG icons dynamically
+  // 3. Prepend SVG icons dynamically
   document.querySelectorAll('.sc-card-links a').forEach(link => {
     if (link.querySelector('.sc-svg-icon')) return;
     const text = link.textContent.trim();
@@ -35,10 +35,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (icon) link.innerHTML = `<span class="sc-svg-icon">${icon}</span><span>${text}</span>`;
   });
 
-  // Generate Donut SVG
+  // 4. Generate Donut SVG
   function generateDonutSVG(data, total, centerText) {
     if (total === 0) return '';
-    let svg = `<svg viewBox="-2 -2 104 104" style="width:100%;height:100%;display:block;filter:drop-shadow(0 4px 6px rgba(0,0,0,0.06));">`;
+    let svg = `<svg viewBox="-2 -2 104 104" style="width:100%;height:100%;display:block;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.06));">`;
     let startAngle = -Math.PI / 2;
 
     data.forEach(slice => {
@@ -55,12 +55,6 @@ document.addEventListener('DOMContentLoaded', function() {
         ? `<circle cx="50" cy="50" r="50" fill="${slice.color}" />`
         : `<path d="M 50 50 L ${x1} ${y1} A 50 50 0 ${largeArc} 1 ${x2} ${y2} Z" fill="${slice.color}" class="sc-pie-slice" />`;
 
-      if (slice.perc > 7) {
-        let mid = startAngle + sliceAngle / 2;
-        let tx = (50 + 38 * Math.cos(mid)).toFixed(4);
-        let ty = (50 + 38 * Math.sin(mid)).toFixed(4);
-        svg += `<text x="${tx}" y="${ty}" fill="#ffffff" font-size="10" font-family="monospace" font-weight="bold" text-anchor="middle" dominant-baseline="central">${slice.perc}%</text>`;
-      }
       startAngle = endAngle;
     });
 
@@ -71,11 +65,10 @@ document.addEventListener('DOMContentLoaded', function() {
     return svg;
   }
 
-  // Section-Wise Readiness Calculation & Legend Generator
+  // 5. Section-Wise Readiness Calculation & Legend Generator
   function initPieChartReadiness() {
     const allLinks = document.querySelectorAll('.sc-custom-card .sc-card-links a');
     
-    // Apply lock classes and click notifications to unfinished links
     allLinks.forEach(link => {
       const href = link.getAttribute('href');
       const isReady = href && href !== '#' && href.trim() !== '';
@@ -95,11 +88,8 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
 
-    // Targeted Sections: Sections with [data-count-to-content="true"] or all columns
     let targetSections = document.querySelectorAll('.sc-column[data-count-to-content="true"]');
-    if (targetSections.length === 0) {
-      targetSections = document.querySelectorAll('.sc-column');
-    }
+    if (targetSections.length === 0) targetSections = document.querySelectorAll('.sc-column');
 
     const SECTION_PALETTE = ['#2563eb', '#ca8a04', '#ea580c', '#9333ea', '#059669', '#0284c7'];
     let pieData = [];
@@ -111,7 +101,6 @@ document.addEventListener('DOMContentLoaded', function() {
       const titleEl = section.querySelector('.sc-section-title');
       let rawTitle = titleEl ? titleEl.textContent.trim() : `Section ${idx + 1}`;
       
-      // Clean section label: extracts "Section A", "Section B", "Section 1", etc.
       let match = rawTitle.match(/Section\s+[A-Z0-9]+/i);
       let sectionLabel = match ? match[0] : (rawTitle.split(/[:|•]/)[0].trim() || `Section ${idx + 1}`);
 
@@ -141,12 +130,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (totalTrackedLinks === 0) return;
 
-    // Calculate percentage for each section
     pieData.forEach(d => {
       d.perc = Math.round((d.count / totalTrackedLinks) * 100) || 0;
     });
 
-    // Add Remaining / Pending slice
     pieData.push({
       label: 'Pending',
       color: '#64748b',
@@ -175,7 +162,6 @@ document.addEventListener('DOMContentLoaded', function() {
       `).join('');
     }
 
-    // Update individual section progress bar fills
     document.querySelectorAll('.sc-column').forEach(col => {
       const colLinks = col.querySelectorAll('.sc-custom-card .sc-card-links a');
       if (colLinks.length === 0) return;
@@ -193,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   initPieChartReadiness();
 
-  // Video Modal Intercept
+  // 6. Video Modal Intercept
   const videoModal = document.getElementById('scVideoModal');
   const btnStay = document.getElementById('scModalStay');
   const btnWatch = document.getElementById('scModalWatch');
@@ -224,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Hero Tabs Smooth Scroll
+  // 7. Hero Tabs Smooth Scroll
   const navTabs = document.querySelectorAll('.sc-hero-tab');
   navTabs.forEach(tab => {
     tab.addEventListener('click', function(e) {
@@ -241,7 +227,18 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // Ambient Canvas Particles
+  // 8. Mobile Navigation Hamburger Menu Toggle
+  const hamburgerBtn = document.getElementById('hamburgerToggle');
+  const navMenu = document.getElementById('nav-menu');
+  if (hamburgerBtn && navMenu) {
+    hamburgerBtn.addEventListener('click', function() {
+      navMenu.classList.toggle('open');
+      const isExpanded = navMenu.classList.contains('open');
+      hamburgerBtn.setAttribute('aria-expanded', isExpanded);
+    });
+  }
+
+  // 9. Ambient Canvas Particles
   ['canvasA', 'canvasB', 'canvasC', 'canvasD1', 'canvasD2', 'canvasBottom'].forEach(id => {
     const canvas = document.getElementById(id);
     if (!canvas) return;
