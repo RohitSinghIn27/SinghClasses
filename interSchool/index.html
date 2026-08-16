@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EduPulse | Live Timetable & Substitute Management System</title>
+
+<!-- ===== Fonts & Tailwind ===== -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+// Custom brand colors/fonts layered on top of default Tailwind theme
+tailwind.config = {
+  theme: { extend: {
+    colors: {
+      navy: { 800: "#102A43", 900: "#0B192C", 950: "#030A16" },
+      gold: { 400: "#FBBF24", 500: "#F59E0B", 600: "#D97706" },
+      accentRed: { 50: "#FEF2F2", 600: "#DC2626", 700: "#B91C1C" }
+    },
+    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] }
+  }}
+};
+</script>
+
+<!-- ===== Print & misc UI styles ===== -->
+<style>
+@page { size: A4 landscape; margin: 6mm 8mm; } /* landscape print sheet sizing */
+@media print {
+  html, body { background: #fff !important; color: #000 !important; font-size: 10px !important; margin: 0 !important; }
+  body > *:not(#printable-arrangement-slip) { display: none !important; } /* only the print slip is visible on paper */
+  #printable-arrangement-slip { display: block !important; width: 100% !important; }
+  table.matrix-table th, table.matrix-table td { border: 1px solid #1e293b !important; padding: 3px 4px !important; }
+  .no-print { display: none !important; } /* hides on-screen-only controls */
+}
+.custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; } /* slim scrollbars for list/table panels */
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+.glow-border { border: 1px solid rgba(245,158,11,0.45); box-shadow: 0 0 25px -4px rgba(245,158,11,0.2), 0 6px 16px -2px rgba(15,23,42,0.05); } /* amber glow on hero card */
+</style>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col font-sans selection:bg-gold-500 selection:text-navy-950">
+
+<!-- ===== SECTION: Top status/clock bar ===== -->
+<div class="bg-navy-950 text-slate-300 text-xs py-2 px-4 border-b border-navy-900 no-print">
+  <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+    <div class="flex items-center gap-2 font-semibold text-gold-400">
+      <span id="sync-indicator" class="w-2 h-2 rounded-full bg-emerald-400"></span>
+      <span>EduPulse Substitution Portal</span>
+    </div>
+    <div class="flex items-center gap-4 text-xs font-mono">
+      <span id="live-clock" class="text-gold-400 bg-navy-900 px-2.5 py-0.5 rounded border border-navy-800 tracking-wider">--:--:--</span>
+      <span class="text-slate-400 font-sans">Academic Session 2026–27</span>
+    </div>
+  </div>
+</div>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex-1 w-full space-y-4">
+
+  <!-- ===== SECTION: Hero card (title, 2x2 grid controls, KPI stats) ===== -->
+  <div class="relative bg-white rounded-2xl p-4 sm:p-5 glow-border no-print overflow-hidden">
+    <div class="absolute -top-20 -right-20 w-64 h-64 bg-amber-100/50 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-black tracking-tight text-navy-950">EduPulse Substitution Portal</h1>
+      </div>
+
+      <!-- Top-right 2x2 grid for global controls -->
+      <div class="grid grid-cols-2 gap-2 shrink-0">
+        <!-- Row 1, Col 1: Day Selector -->
+        <div class="flex items-center justify-between bg-slate-50 px-2.5 py-1 rounded-xl border border-slate-200 shadow-xs">
+          <label for="day-selector" class="text-xs font-bold text-navy-900 mr-2">Day:</label>
+          <select id="day-selector" onchange="switchDay(this.value)" class="bg-white text-navy-950 font-bold text-xs px-2 py-1 rounded-lg border border-slate-300 focus:ring-2 focus:ring-gold-500 focus:outline-none cursor-pointer">
+            <option value="Monday">Monday</option>
+            <option value="Tuesday">Tuesday</option>
+            <option value="Wednesday">Wednesday</option>
+            <option value="Thursday">Thursday</option>
+            <option value="Friday">Friday</option>
+            <option value="Saturday">Saturday</option>
+          </select>
+        </div>
+
+        <!-- Row 1, Col 2: Sync Sheet -->
+        <button onclick="fetchSheetData()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-navy-900 font-bold text-xs rounded-xl border border-slate-300 transition shadow-xs flex items-center justify-center gap-1.5 cursor-pointer">
+          <span id="sync-spinner" class="hidden animate-spin">🔄</span><span>📥 Sync Sheet</span>
+        </button>
+
+        <!-- Row 2, Col 1: Fair Auto-Assign All -->
+        <button onclick="autoAssignAll()" class="px-3 py-1.5 bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 text-navy-950 font-black text-xs rounded-xl shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer">
+          ⚡ Fair Auto-Assign All
+        </button>
+
+        <!-- Row 2, Col 2: Print Matrix -->
+        <button onclick="window.print()" class="px-3 py-1.5 bg-navy-950 hover:bg-navy-900 text-gold-400 font-bold text-xs rounded-xl border border-navy-900 transition shadow-xs flex items-center justify-center gap-1.5 cursor-pointer">
+          🖨️ Print Matrix
+        </button>
+      </div>
+    </div>
+
+    <!-- KPI strip: totals updated by renderAttendanceList()/renderQueue() -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mt-3.5 pt-3.5 border-t border-slate-100">
+      <div class="bg-slate-50 rounded-xl p-2.5 sm:p-3 border border-slate-200 flex flex-col justify-center">
+        <div id="stat-total-teachers" class="text-xl sm:text-2xl font-black text-navy-950">0</div>
+        <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mt-0.5">Total Faculty</div>
+      </div>
+      <div class="bg-accentRed-50 rounded-xl p-2.5 sm:p-3 border border-red-200 flex flex-col justify-center">
+        <div id="stat-absent-today" class="text-xl sm:text-2xl font-black text-accentRed-600">0</div>
+        <div class="text-[10px] font-bold text-accentRed-700 uppercase tracking-wider mt-0.5">Absent Today</div>
+      </div>
+      <div class="bg-amber-50/70 rounded-xl p-2.5 sm:p-3 border border-amber-200 flex flex-col justify-center">
+        <div id="stat-pending-slots" class="text-xl sm:text-2xl font-black text-amber-700">0</div>
+        <div class="text-[10px] font-bold text-amber-800 uppercase tracking-wider mt-0.5">Periods To Adjust</div>
+      </div>
+      <div class="bg-emerald-50 rounded-xl p-2.5 sm:p-3 border border-emerald-200 flex flex-col justify-center">
+        <div id="stat-assigned-slots" class="text-xl sm:text-2xl font-black text-emerald-600">0</div>
+        <div class="text-[10px] font-bold text-emerald-700 uppercase tracking-wider mt-0.5">Adjusted Slots</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SECTION: Workstation (attendance toggles + allocation queue) ===== -->
+  <div class="grid lg:grid-cols-3 gap-4 no-print">
+
+    <!-- Attendance panel: list populated by renderAttendanceList() -->
+    <div class="bg-sky-50/70 rounded-2xl border border-sky-200 shadow-sm p-4 flex flex-col">
+      <div class="flex items-center justify-between pb-3 border-b border-sky-200/80 mb-3">
+        <div>
+          <h2 class="text-sm font-black text-navy-950">Mark Absent Teachers</h2>
+          <p class="text-[11px] text-sky-800/80 font-medium">Toggle leave status and duty reasons</p>
+        </div>
+        <button onclick="resetAllAttendance()" class="text-[11px] text-accentRed-600 font-bold hover:underline cursor-pointer">Mark All Present</button>
+      </div>
+      <div class="space-y-2.5 overflow-y-auto max-h-[380px] custom-scrollbar pr-1" id="teacher-attendance-list"></div>
+    </div>
+
+    <!-- Allocation queue: rows populated by renderQueue() -->
+    <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm p-4 flex flex-col">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+        <div>
+          <h2 class="text-sm font-black text-navy-900 flex items-center gap-2">
+            <span>Interactive Substitution Allocator</span>
+            <span id="active-day-badge" class="px-2 py-0.5 text-[10px] rounded-full bg-gold-100 text-gold-800 font-bold">Monday</span>
+          </h2>
+          <p class="text-[11px] text-slate-500">Dynamic workload leveling across free faculty members</p>
+        </div>
+        <button onclick="clearAssignments()" class="text-xs text-slate-500 hover:text-accentRed-600 font-bold cursor-pointer">Clear All</button>
+      </div>
+      <div class="overflow-x-auto max-h-[380px] custom-scrollbar">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="bg-slate-50 text-slate-600 font-bold uppercase text-[9px] border-b border-slate-200">
+              <th class="py-2.5 px-3">Period</th>
+              <th class="py-2.5 px-3">Absent Faculty</th>
+              <th class="py-2.5 px-3">Class</th>
+              <th class="py-2.5 px-3">Assign Free Teacher (Workload)</th>
+              <th class="py-2.5 px-3 text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody id="substitution-table-body" class="divide-y divide-slate-100"></tbody>
+        </table>
+        <div id="no-absent-state" class="py-12 text-center text-slate-400">
+          <div class="text-3xl mb-1">🎉</div>
+          <div class="text-xs font-bold text-navy-900">All Teachers Are Present</div>
+          <div class="text-[11px] text-slate-500">No period adjustments needed.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SECTION: Live master matrix (on-screen mirror of the print sheet) ===== -->
+  <div class="bg-white rounded-2xl border-2 border-navy-950 shadow-sm p-4 sm:p-5 no-print">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-3 border-b-2 border-slate-200 gap-2">
+      <div>
+        <span class="text-[10px] font-extrabold tracking-widest text-accentRed-600 uppercase">Live Master Substitution Sheet</span>
+        <h3 class="text-base font-extrabold text-navy-950 flex items-center gap-2">
+          <span>Substitution Chart 2026–27</span>
+          <span id="summary-badge-day" class="text-xs bg-navy-950 text-gold-400 px-2 py-0.5 rounded">Monday</span>
+        </h3>
+      </div>
+      <div class="text-xs text-slate-600">Date: <strong id="summary-date" class="text-navy-900">--</strong></div>
+    </div>
+    <div class="overflow-x-auto mt-4">
+      <table class="w-full text-center text-xs border-collapse border border-slate-400">
+        <thead id="matrix-head-screen"></thead>
+        <tbody id="screen-matrix-body"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<!-- ===== SECTION: Printable landscape slip (shown only via window.print()) ===== -->
+<div id="printable-arrangement-slip" class="bg-white text-black p-0 hidden">
+  <div class="text-center mb-1.5 pb-1">
+    <h1 class="text-xl font-black uppercase tracking-tight text-black">Substitution Chart 2026–27</h1>
+    <div class="flex justify-between items-center text-xs font-bold text-black mt-2 px-1 border-b border-black pb-1">
+      <span>Date: <span id="print-date" class="underline underline-offset-4 decoration-1">--/--/----</span></span>
+      <span>Day: <span id="print-day" class="underline underline-offset-4 decoration-1">Monday</span></span>
+      <span>Academic Session: 2026–2027</span>
+    </div>
+  </div>
+  <table class="w-full text-[10px] border-collapse border border-black text-center matrix-table">
+    <thead id="matrix-head-print"></thead>
+    <tbody id="print-matrix-body"></tbody>
+  </table>
+  <div class="mt-8 flex justify-between items-end text-xs font-bold text-black px-8">
+    <div class="text-center"><div class="w-44 border-b border-black mb-1"></div><span>Timetable Incharge</span></div>
+    <div class="text-center"><div class="w-44 border-b border-black mb-1"></div><span>Principal</span></div>
+  </div>
+</div>
+
+<!-- ===== SECTION: Toast notification ===== -->
+<div id="toast" class="fixed bottom-5 right-5 bg-navy-950 text-gold-400 px-4 py-2.5 rounded-xl shadow-2xl border border-gold-500/40 text-xs font-bold transition-all transform translate-y-20 opacity-0 pointer-events-none z-50 flex items-center gap-2">
+  <span id="toast-message">Notification</span>
+</div>
+
+<script>
+/* ============================================================
+   CONFIG — static data that never changes at runtime
+   ============================================================ */
+const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbzl0FAuW6uP3-yuOEsxvP_mIYpUoRapRLk1sDPFe-26WBruyxn4_mY7TrUcopc-FTDB/exec";
+
+const PERIODS = [
+  { id: "P1", name: "Period I",    label: "1", time: "8:40–9:15"  },
+  { id: "P2", name: "Period II",   label: "2", time: "9:25–10:00" },
+  { id: "P3", name: "Period III",  label: "3", time: "10:00–10:35" },
+  { id: "P4", name: "Period IV",   label: "4", time: "10:35–11:10" },
+  { id: "P5", name: "Period V",    label: "5", time: "11:40–12:20" },
+  { id: "P6", name: "Period VI",   label: "6", time: "12:20–12:55" },
+  { id: "P7", name: "Period VII",  label: "7", time: "12:55–1:30" },
+  { id: "P8", name: "Period VIII", label: "8", time: "1:30–2:00" }
+];
+
+/* ============================================================
+   STATE — the single source of truth for the whole app
+   ============================================================ */
+let teachers = [];        
+let roundDuties = {};     
+let substitutions = {};   
+let activeDay = "Monday"; 
+
+/* ============================================================
+   BOOTSTRAP — runs once when the page loads
+   ============================================================ */
+document.addEventListener("DOMContentLoaded", () => {
+  initClock();          
+  renderTableHeaders(); 
+  fetchSheetData();     
+});
+
+function el(id) {
+  return document.getElementById(id);
+}
+
+function initClock() {
+  const clockEl = el("live-clock");
+  const updateDate = () => {
+    const now = new Date();
+    const dateFormatted = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    el("summary-date").textContent = dateFormatted;
+    el("print-date").textContent = dateFormatted;
+    el("print-day").textContent = activeDay;
+    clockEl.textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+  };
+  updateDate();
+  setInterval(updateDate, 1000);
+}
+
+/* ============================================================
+   DATA SYNC — fetching the live sheet
+   ============================================================ */
+async function fetchSheetData() {
+  const spinner = el("sync-spinner");
+  const indicator = el("sync-indicator");
+  spinner.classList.remove("hidden");
+  indicator.className = "w-2 h-2 rounded-full bg-amber-400 animate-pulse";
+  try {
+    const res = await fetch(GAS_ENDPOINT);
+    const data = await res.json();
+    if (data.status === "success" && Array.isArray(data.faculty)) {
+      teachers = data.faculty;
+      roundDuties = data.roundDuties || {};
+      substitutions = {};
+      updateUI();
+      indicator.className = "w-2 h-2 rounded-full bg-emerald-400";
+      notify(`Loaded ${teachers.length} faculty timetables!`);
+    } else {
+      throw new Error(data.message || "Invalid payload format");
+    }
+  } catch (err) {
+    console.error(err);
+    indicator.className = "w-2 h-2 rounded-full bg-accentRed-600";
+    notify("Sync failed. Check network connection.");
+  } finally {
+    spinner.classList.add("hidden");
+  }
+}
+
+/* ============================================================
+   LOOKUP HELPERS
+   ============================================================ */
+function getTeacherById(id) {
+  return teachers.find(t => t.id === id);
+}
+
+function isTeachingPeriod(cls) {
+  return !!cls && cls !== "Free" && cls !== "—";
+}
+
+function buildSubKey(day, periodId, teacherId) {
+  return `${day}_${periodId}_${teacherId}`;
+}
+
+function getSubstituteFor(day, periodId, teacherId) {
+  return getTeacherById(substitutions[buildSubKey(day, periodId, teacherId)]);
+}
+
+/* ============================================================
+   WORKLOAD & AUTO-ASSIGN LOGIC
+   ============================================================ */
+function getTeacherLoad(id, day) {
+  const teacher = getTeacherById(id);
+  if (!teacher || teacher.isAbsent || !teacher.timetable?.[day]) return 0;
+  const regular = Object.values(teacher.timetable[day]).filter(isTeachingPeriod).length;
+  const subCount = Object.entries(substitutions).filter(([k, val]) => k.startsWith(`${day}_`) && val === id).length;
+  return regular + subCount;
+}
+
+function getFreeTeachers(day, periodId) {
+  return teachers.filter(t => {
+    if (t.isAbsent || !t.timetable?.[day]) return false;
+    const isFree = t.timetable[day][periodId] === "Free";
+    const isSubbing = Object.entries(substitutions).some(([k, val]) => k.startsWith(`${day}_${periodId}_`) && val === t.id);
+    return isFree && !isSubbing;
+  });
+}
+
+function pickBestSubstitute(freeTeachers, day) {
+  if (!freeTeachers?.length) return null;
+  return [...freeTeachers].sort((a, b) => getTeacherLoad(a.id, day) - getTeacherLoad(b.id, day) || a.name.localeCompare(b.name))[0];
+}
+
+/* ============================================================
+   ATTENDANCE ACTIONS
+   ============================================================ */
+function toggleAttendance(id) {
+  const teacher = getTeacherById(id);
+  if (!teacher) return;
+  teacher.isAbsent = !teacher.isAbsent;
+  Object.keys(substitutions).forEach(key => {
+    if (key.includes(`_${id}`) || substitutions[key] === id) delete substitutions[key];
+  });
+  updateUI();
+}
+
+function setLeaveReason(id, reason) {
+  const teacher = getTeacherById(id);
+  if (teacher) { teacher.leaveReason = reason; renderMatrix(); }
+}
+
+function resetAllAttendance() {
+  teachers.forEach(t => t.isAbsent = false);
+  substitutions = {};
+  updateUI();
+  notify("All faculty marked Present");
+}
+
+/* ============================================================
+   SUBSTITUTION ACTIONS
+   ============================================================ */
+function switchDay(day) {
+  activeDay = day;
+  el("active-day-badge").textContent = day;
+  el("summary-badge-day").textContent = day;
+  el("print-day").textContent = day;
+  updateUI();
+  notify(`Switched to ${day}`);
+}
+
+function assignSub(key, teacherId) {
+  teacherId ? substitutions[key] = teacherId : delete substitutions[key];
+  updateUI();
+}
+
+function autoAssignSingle(key, periodId) {
+  const free = getFreeTeachers(activeDay, periodId);
+  const best = pickBestSubstitute(free, activeDay);
+  if (best) { substitutions[key] = best.id; updateUI(); notify(`Assigned ${best.name}`); }
+  else notify("No free teachers for this period");
+}
+
+function autoAssignAll() {
+  const absentees = teachers.filter(t => t.isAbsent);
+  if (!absentees.length) return notify("No teachers are absent");
+  let assignedCount = 0;
+  PERIODS.forEach(p => {
+    absentees.forEach(t => {
+      const assignedClass = t.timetable?.[activeDay]?.[p.id];
+      if (isTeachingPeriod(assignedClass)) {
+        const key = buildSubKey(activeDay, p.id, t.id);
+        if (!substitutions[key]) {
+          const free = getFreeTeachers(activeDay, p.id);
+          const best = pickBestSubstitute(free, activeDay);
+          if (best) { substitutions[key] = best.id; assignedCount++; }
+        }
+      }
+    });
+  });
+  updateUI();
+  notify(`Auto-assigned ${assignedCount} period(s)`);
+}
+
+function clearAssignments() {
+  substitutions = {};
+  updateUI();
+  notify("All assignments cleared");
+}
+
+/* ============================================================
+   RENDERING
+   ============================================================ */
+function updateUI() {
+  renderAttendanceList();
+  renderQueue();
+  renderMatrix();
+}
+
+function renderAttendanceList() {
+  const container = el("teacher-attendance-list");
+  container.innerHTML = teachers.map(t => {
+    const todayLoad = getTeacherLoad(t.id, activeDay);
+    const basePeriods = Object.values(t.timetable?.[activeDay] || {}).filter(isTeachingPeriod).length;
+    return `
+    <div class="p-2.5 rounded-xl border flex items-center justify-between transition ${t.isAbsent ? 'bg-accentRed-50 border-red-200 shadow-sm' : 'bg-white border-sky-200/70 shadow-xs hover:border-sky-300'}">
+      <div class="flex items-center space-x-2.5">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-[10px] ${t.isAbsent ? 'bg-accentRed-600 text-white' : 'bg-navy-950 text-gold-400'}">
+          ${t.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+        </div>
+        <div>
+          <div class="font-bold text-xs ${t.isAbsent ? 'text-accentRed-700' : 'text-navy-950'}">${t.name}</div>
+          <div class="text-[9px] text-slate-500">${basePeriods} base • <span class="font-bold text-navy-900">${todayLoad} total</span></div>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        ${t.isAbsent ? `
+          <select onchange="setLeaveReason('${t.id}', this.value)" class="text-[9px] font-bold border border-red-300 rounded-lg bg-white px-1.5 py-1 text-accentRed-700 focus:outline-none">
+            <option value="Leave" ${t.leaveReason === 'Leave' ? 'selected' : ''}>Leave</option>
+            <option value="On Duty" ${t.leaveReason === 'On Duty' ? 'selected' : ''}>On Duty</option>
+            <option value="Short Leave" ${t.leaveReason === 'Short Leave' ? 'selected' : ''}>Short Leave</option>
+          </select>` : ''}
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" onchange="toggleAttendance('${t.id}')" ${t.isAbsent ? 'checked' : ''} class="sr-only peer">
+          <div class="w-8 h-4 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-accentRed-600"></div>
+        </label>
+      </div>
+    </div>`;
+  }).join('');
+  el("stat-total-teachers").textContent = teachers.length;
+  el("stat-absent-today").textContent = teachers.filter(t => t.isAbsent).length;
+}
+
+function renderQueue() {
+  const tableBody = el("substitution-table-body");
+  const emptyState = el("no-absent-state");
+  const absentees = teachers.filter(t => t.isAbsent);
+  let pending = 0, assigned = 0, rowsHTML = "";
+
+  absentees.forEach(absentT => {
+    const timetable = absentT.timetable?.[activeDay] || {};
+    PERIODS.forEach(p => {
+      const cls = timetable[p.id];
+      if (!isTeachingPeriod(cls)) return;
+      pending++;
+      const key = buildSubKey(activeDay, p.id, absentT.id);
+      const currentSubId = substitutions[key] || "";
+      if (currentSubId) assigned++;
+
+      const freeTeachers = getFreeTeachers(activeDay, p.id);
+      const assignedTeacher = getTeacherById(currentSubId);
+
+      rowsHTML += `
+      <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+        <td class="py-2.5 px-3">
+          <div class="font-black text-navy-950">${p.name}</div>
+          <div class="text-[9px] text-slate-500 font-mono">${p.time}</div>
+        </td>
+        <td class="py-2.5 px-3">
+          <div class="font-bold text-accentRed-700">${absentT.name}</div>
+          <div class="text-[9px] text-slate-400">(${absentT.leaveReason || 'Leave'})</div>
+        </td>
+        <td class="py-2.5 px-3"><span class="px-2 py-0.5 bg-navy-950 text-gold-400 font-black rounded text-[10px]">${cls}</span></td>
+        <td class="py-2.5 px-3">
+          <select onchange="assignSub('${key}', this.value)" class="w-full text-xs rounded-lg border ${currentSubId ? 'border-emerald-500 bg-emerald-50 text-emerald-900 font-bold' : 'border-slate-300 text-slate-700'} px-2 py-1.5 focus:outline-none">
+            <option value="">-- Choose Free Faculty --</option>
+            ${currentSubId && !freeTeachers.some(t => t.id === currentSubId) && assignedTeacher ? `<option value="${assignedTeacher.id}" selected>${assignedTeacher.name} [Load: ${getTeacherLoad(assignedTeacher.id, activeDay)}]</option>` : ''}
+            ${freeTeachers.map(t => `<option value="${t.id}" ${t.id === currentSubId ? 'selected' : ''}>${t.name} [Load: ${getTeacherLoad(t.id, activeDay)}]</option>`).join('')}
+          </select>
+        </td>
+        <td class="py-2.5 px-3 text-right"><button onclick="autoAssignSingle('${key}', '${p.id}')" class="text-[10px] bg-gold-500 hover:bg-gold-600 text-navy-950 font-black px-2.5 py-1 rounded-lg shadow-sm cursor-pointer">Fair Pick</button></td>
+      </tr>`;
+    });
+  });
+
+  tableBody.innerHTML = rowsHTML;
+  absentees.length === 0 ? emptyState.classList.remove("hidden") : emptyState.classList.add("hidden");
+  el("stat-pending-slots").textContent = pending;
+  el("stat-assigned-slots").textContent = assigned;
+}
+
+function renderTableHeaders() {
+  const headerHTML = `
+    <tr class="bg-slate-100 text-slate-900 font-extrabold text-[9.5px] uppercase">
+      <th class="border border-slate-400 p-2 text-left w-44">Name of Absentee Teacher</th>
+      <th class="border border-slate-400 p-1 w-16"><div>0</div><div class="text-[7.5px] font-normal">C.Teacher<br>8:30–8:40</div></th>
+      <th class="border border-slate-400 p-1 w-20"><div>1</div><div class="text-[7.5px] font-normal">8:40–9:15</div></th>
+      <th class="border border-slate-400 p-1 bg-amber-50 text-amber-900 w-12"><div>FB</div><div class="text-[7px] font-normal">9:15–9:25</div></th>
+      <th class="border border-slate-400 p-1 w-20"><div>2</div><div class="text-[7.5px] font-normal">9:25–10:00</div></th>
+      <th class="border border-slate-400 p-1 w-20"><div>3</div><div class="text-[7.5px] font-normal">10:00–10:35</div></th>
+      <th class="border border-slate-400 p-1 w-20"><div>4</div><div class="text-[7.5px] font-normal">10:35–11:10</div></th>
+      <th class="border border-slate-400 p-1 bg-amber-50 text-amber-900 w-12"><div>Recess</div><div class="text-[7px] font-normal">11:10–11:40</div></th>
+      <th class="border border-slate-400 p-1 w-20"><div>5</div><div class="text-[7.5px] font-normal">11:40–12:20</div></th>
+      <th class="border border-slate-400 p-1 w-20"><div>6</div><div class="text-[7.5px] font-normal">12:20–12:55</div></th>
+      <th class="border border-slate-400 p-1 w-20"><div>7</div><div class="text-[7.5px] font-normal">12:55–1:30</div></th>
+      <th class="border border-slate-400 p-1 w-20"><div>8</div><div class="text-[7.5px] font-normal">1:30–2:00</div></th>
+    </tr>`;
+  el("matrix-head-screen").innerHTML = headerHTML;
+  el("matrix-head-print").innerHTML = headerHTML;
+}
+
+function renderMatrix() {
+  const screenBody = el("screen-matrix-body");
+  const printBody = el("print-matrix-body");
+  const absentees = teachers.filter(t => t.isAbsent);
+  const rounds = roundDuties[activeDay] || {};
+
+  let rows = `
+  <tr class="bg-slate-50 font-bold border-b border-slate-300">
+    <td class="border border-slate-400 p-1.5 text-left font-black text-slate-800 text-[10px]">Round Duty<br><span class="text-[8px] font-normal text-slate-500">(All Floors)</span></td>
+    <td class="border border-slate-400 p-1 text-[9px]">${rounds.P0 || '—'}</td>
+    <td class="border border-slate-400 p-1 text-[9px] font-bold">${rounds.P1 || '—'}</td>
+    <td class="border border-slate-400 p-1 bg-amber-50/50"></td>
+    <td class="border border-slate-400 p-1 text-[9px] font-bold">${rounds.P2 || '—'}</td>
+    <td class="border border-slate-400 p-1 text-[9px] font-bold">${rounds.P3 || '—'}</td>
+    <td class="border border-slate-400 p-1 text-[9px] font-bold">${rounds.P4 || '—'}</td>
+    <td class="border border-slate-400 p-1 bg-amber-50/50"></td>
+    <td class="border border-slate-400 p-1 text-[9px] font-bold">${rounds.P5 || '—'}</td>
+    <td class="border border-slate-400 p-1 text-[9px] font-bold">${rounds.P6 || '—'}</td>
+    <td class="border border-slate-400 p-1 text-[9px] font-bold">${rounds.P7 || '—'}</td>
+    <td class="border border-slate-400 p-1 text-[9px] font-bold">${rounds.P8 || '—'}</td>
+  </tr>`;
+
+  if (absentees.length === 0) {
+    rows += `<tr><td colspan="12" class="p-4 text-center text-slate-400 font-bold border border-slate-300">All faculty members are present today.</td></tr>`;
+  } else {
+    absentees.forEach(t => {
+      const timetable = t.timetable?.[activeDay] || {};
+      let periodCells = "";
+      PERIODS.forEach((p, idx) => {
+        if (idx === 1 || idx === 4) periodCells += `<td class="border border-slate-400 p-1 bg-amber-50/30"></td>`;
+        const cls = timetable[p.id];
+        const sub = getSubstituteFor(activeDay, p.id, t.id);
+        periodCells += isTeachingPeriod(cls)
+          ? `<td class="border border-slate-400 p-1 align-top bg-white">
+               <div class="font-black text-[10px] text-navy-950">${cls}</div>
+               <div class="text-[8px] font-bold mt-0.5 leading-tight ${sub ? 'text-slate-800' : 'text-accentRed-600'}">${sub ? sub.name : 'Unassigned'}</div>
+             </td>`
+          : `<td class="border border-slate-400 p-1 text-slate-300 font-bold text-[10px] bg-slate-50/40">—</td>`;
+      });
+
+      rows += `
+      <tr class="hover:bg-slate-50 border-b border-slate-300">
+        <td class="border border-slate-400 p-1.5 text-left font-bold text-slate-900 text-[10px]">
+          <div>${t.name}</div>
+          <div class="text-[8px] text-slate-500 italic">(${t.leaveReason || 'Leave'})</div>
+        </td>
+        <td class="border border-slate-400 p-1 font-black text-[9.5px] text-navy-950">${timetable.P0 || '—'}</td>
+        ${periodCells}
+      </tr>`;
+    });
+  }
+
+  screenBody.innerHTML = rows;
+  printBody.innerHTML = rows;
+}
+
+/* ============================================================
+   UI UTILITIES
+   ============================================================ */
+function notify(msg) {
+  const toast = el("toast");
+  el("toast-message").textContent = msg;
+  toast.classList.remove("translate-y-20", "opacity-0");
+  toast.classList.add("translate-y-0", "opacity-100");
+  setTimeout(() => {
+    toast.classList.add("translate-y-20", "opacity-0");
+    toast.classList.remove("translate-y-0", "opacity-100");
+  }, 2200);
+}
+</script>
+</body>
+</html>
