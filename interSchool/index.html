@@ -11,7 +11,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
-// Custom brand colors/fonts layered on top of default Tailwind theme
 tailwind.config = {
   theme: { extend: {
     colors: {
@@ -26,24 +25,24 @@ tailwind.config = {
 
 <!-- ===== Print & misc UI styles ===== -->
 <style>
-@page { size: A4 landscape; margin: 6mm 8mm; } /* landscape print sheet sizing */
+@page { size: A4 landscape; margin: 6mm 8mm; }
 @media print {
   html, body { background: #fff !important; color: #000 !important; font-size: 10px !important; margin: 0 !important; }
-  body > *:not(#printable-arrangement-slip) { display: none !important; } /* only the print slip is visible on paper */
+  body > *:not(#printable-arrangement-slip) { display: none !important; }
   #printable-arrangement-slip { display: block !important; width: 100% !important; }
   table.matrix-table th, table.matrix-table td { border: 1px solid #1e293b !important; padding: 3px 4px !important; }
-  .no-print { display: none !important; } /* hides on-screen-only controls */
+  .no-print { display: none !important; }
 }
-.custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; } /* slim scrollbars for list/table panels */
+.custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
 .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-.glow-border { border: 1px solid rgba(245,158,11,0.45); box-shadow: 0 0 25px -4px rgba(245,158,11,0.2), 0 6px 16px -2px rgba(15,23,42,0.05); } /* amber glow on hero card */
+.glow-border { border: 1px solid rgba(245,158,11,0.45); box-shadow: 0 0 25px -4px rgba(245,158,11,0.2), 0 6px 16px -2px rgba(15,23,42,0.05); }
 </style>
 </head>
 <body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col font-sans selection:bg-gold-500 selection:text-navy-950">
 
 <!-- ===== SECTION: Top status/clock bar ===== -->
-<div class="bg-navy-950 text-slate-300 text-xs py-2.5 px-4 border-b border-navy-900 no-print">
-  <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+<div class="bg-navy-950 text-slate-300 text-xs py-2 px-3.5 sm:px-4 border-b border-navy-900 no-print">
+  <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-1.5 sm:gap-2">
     <div class="flex items-center gap-2 font-semibold text-gold-400">
       <span id="sync-indicator" class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
       <span>EduPulse Substitution Portal</span>
@@ -55,21 +54,21 @@ tailwind.config = {
   </div>
 </div>
 
-<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex-1 w-full space-y-5">
+<main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3.5 sm:py-5 flex-1 w-full space-y-3.5 sm:space-y-5">
 
   <!-- ===== SECTION: Hero Card ===== -->
-  <div class="relative w-full bg-white rounded-2xl p-5 sm:p-6 glow-border no-print overflow-hidden shadow-sm">
+  <div class="relative w-full bg-white rounded-2xl p-4 sm:p-6 glow-border no-print overflow-hidden shadow-sm">
     <div class="absolute -top-20 -right-20 w-64 h-64 bg-amber-100/50 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3.5 sm:gap-4">
       <div>
-        <h1 class="text-2xl sm:text-3xl font-black tracking-tight text-navy-950">EduPulse Substitution Portal</h1>
+        <h1 class="text-xl sm:text-3xl font-black tracking-tight text-navy-950">EduPulse Substitution Portal</h1>
       </div>
 
       <!-- Top-right 2x2 grid for global controls -->
-      <div class="grid grid-cols-2 gap-2.5 shrink-0 w-full sm:w-auto">
+      <div class="grid grid-cols-2 gap-2 sm:gap-2.5 shrink-0 w-full sm:w-auto">
         <!-- Row 1, Col 1: Day Selector -->
-        <div class="flex items-center justify-between bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 shadow-xs">
-          <label for="day-selector" class="text-xs font-bold text-navy-900 mr-2 shrink-0">Day:</label>
+        <div class="flex items-center justify-between bg-slate-50 px-2.5 sm:px-3 py-1.5 rounded-xl border border-slate-200 shadow-xs">
+          <label for="day-selector" class="text-xs font-bold text-navy-900 mr-1.5 shrink-0">Day:</label>
           <select id="day-selector" onchange="switchDay(this.value)" class="bg-white text-navy-950 font-bold text-xs px-2 py-1 rounded-lg border border-slate-300 focus:ring-2 focus:ring-gold-500 focus:outline-none cursor-pointer w-full">
             <option value="Monday">Monday</option>
             <option value="Tuesday">Tuesday</option>
@@ -81,85 +80,85 @@ tailwind.config = {
         </div>
 
         <!-- Row 1, Col 2: Sync Sheet -->
-        <button onclick="fetchSheetData()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-navy-900 font-bold text-xs rounded-xl border border-slate-300 transition shadow-xs flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap">
+        <button onclick="fetchSheetData()" class="px-3 sm:px-3.5 py-1.5 sm:py-2 bg-slate-100 hover:bg-slate-200 text-navy-900 font-bold text-xs rounded-xl border border-slate-300 transition shadow-xs flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap">
           <span id="sync-spinner" class="hidden animate-spin">🔄</span><span>📥 Sync Sheet</span>
         </button>
 
         <!-- Row 2, Col 1: Fair Auto-Assign All -->
-        <button onclick="autoAssignAll()" class="px-3.5 py-2 bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 text-navy-950 font-black text-xs rounded-xl shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap">
+        <button onclick="autoAssignAll()" class="px-3 sm:px-3.5 py-1.5 sm:py-2 bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 text-navy-950 font-black text-xs rounded-xl shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap">
           ⚡ Fair Auto-Assign All
         </button>
 
         <!-- Row 2, Col 2: Print Matrix -->
-        <button onclick="window.print()" class="px-3.5 py-2 bg-navy-950 hover:bg-navy-900 text-gold-400 font-bold text-xs rounded-xl border border-navy-900 transition shadow-xs flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap">
+        <button onclick="window.print()" class="px-3 sm:px-3.5 py-1.5 sm:py-2 bg-navy-950 hover:bg-navy-900 text-gold-400 font-bold text-xs rounded-xl border border-navy-900 transition shadow-xs flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap">
           🖨️ Print Matrix
         </button>
       </div>
     </div>
 
     <!-- KPI Strip -->
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5 pt-5 border-t border-slate-100">
-      <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-200 flex flex-col justify-center">
-        <div id="stat-total-teachers" class="text-2xl font-black text-navy-950">0</div>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 mt-3.5 sm:mt-5 pt-3.5 sm:pt-5 border-t border-slate-100">
+      <div class="bg-slate-50 rounded-xl p-2.5 sm:p-3.5 border border-slate-200 flex flex-col justify-center">
+        <div id="stat-total-teachers" class="text-xl sm:text-2xl font-black text-navy-950">0</div>
         <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mt-0.5">Total Faculty</div>
       </div>
-      <div class="bg-accentRed-50 rounded-xl p-3.5 border border-red-200 flex flex-col justify-center">
-        <div id="stat-absent-today" class="text-2xl font-black text-accentRed-600">0</div>
+      <div class="bg-accentRed-50 rounded-xl p-2.5 sm:p-3.5 border border-red-200 flex flex-col justify-center">
+        <div id="stat-absent-today" class="text-xl sm:text-2xl font-black text-accentRed-600">0</div>
         <div class="text-[10px] font-bold text-accentRed-700 uppercase tracking-wider mt-0.5">Absent Today</div>
       </div>
-      <div class="bg-amber-50/70 rounded-xl p-3.5 border border-amber-200 flex flex-col justify-center">
-        <div id="stat-pending-slots" class="text-2xl font-black text-amber-700">0</div>
+      <div class="bg-amber-50/70 rounded-xl p-2.5 sm:p-3.5 border border-amber-200 flex flex-col justify-center">
+        <div id="stat-pending-slots" class="text-xl sm:text-2xl font-black text-amber-700">0</div>
         <div class="text-[10px] font-bold text-amber-800 uppercase tracking-wider mt-0.5">Periods To Adjust</div>
       </div>
-      <div class="bg-emerald-50 rounded-xl p-3.5 border border-emerald-200 flex flex-col justify-center">
-        <div id="stat-assigned-slots" class="text-2xl font-black text-emerald-600">0</div>
+      <div class="bg-emerald-50 rounded-xl p-2.5 sm:p-3.5 border border-emerald-200 flex flex-col justify-center">
+        <div id="stat-assigned-slots" class="text-xl sm:text-2xl font-black text-emerald-600">0</div>
         <div class="text-[10px] font-bold text-emerald-700 uppercase tracking-wider mt-0.5">Adjusted Slots</div>
       </div>
     </div>
   </div>
 
-  <!-- ===== SECTION: Workstation ===== -->
-  <div class="grid lg:grid-cols-3 gap-5 no-print w-full">
+  <!-- ===== SECTION: Workstation (Compact on Mobile) ===== -->
+  <div class="grid lg:grid-cols-3 gap-3.5 sm:gap-5 no-print w-full min-w-0">
 
     <!-- Card 2: Attendance Panel -->
-    <div class="w-full bg-sky-50/70 rounded-2xl border border-sky-200 shadow-sm p-5 sm:p-6 flex flex-col">
-      <div class="flex items-center justify-between pb-3.5 border-b border-sky-200/80 mb-3.5">
+    <div class="w-full bg-sky-50/70 rounded-2xl border border-sky-200 shadow-sm p-3.5 sm:p-5 flex flex-col min-w-0 overflow-hidden">
+      <div class="flex items-center justify-between pb-2.5 sm:pb-3 border-b border-sky-200/80 mb-3">
         <div>
-          <h2 class="text-sm font-black text-navy-950">Mark Absent Teachers</h2>
-          <p class="text-[11px] text-sky-800/80 font-medium">Toggle leave status and duty reasons</p>
+          <h2 class="text-xs sm:text-sm font-black text-navy-950">Mark Absent Teachers</h2>
+          <p class="text-[10px] sm:text-[11px] text-sky-800/80 font-medium">Toggle leave status and duty reasons</p>
         </div>
-        <button onclick="resetAllAttendance()" class="text-[11px] text-accentRed-600 font-bold hover:underline cursor-pointer shrink-0">Mark All Present</button>
+        <button onclick="resetAllAttendance()" class="text-[10px] sm:text-[11px] text-accentRed-600 font-bold hover:underline cursor-pointer shrink-0">Mark All Present</button>
       </div>
-      <div class="space-y-2.5 overflow-y-auto max-h-[380px] custom-scrollbar pr-1" id="teacher-attendance-list"></div>
+      <div class="space-y-2 overflow-y-auto max-h-[360px] custom-scrollbar pr-0.5" id="teacher-attendance-list"></div>
     </div>
 
     <!-- Card 3: Allocation Queue -->
-    <div class="w-full lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 flex flex-col">
-      <div class="flex items-start sm:items-center justify-between pb-3.5 border-b border-slate-100 mb-3.5 gap-2">
+    <div class="w-full lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm p-3.5 sm:p-5 flex flex-col min-w-0 overflow-hidden">
+      <div class="flex items-start sm:items-center justify-between pb-2.5 sm:pb-3 border-b border-slate-100 mb-3 gap-2">
         <div>
-          <div class="flex flex-wrap items-center gap-2">
-            <h2 class="text-sm font-black text-navy-900">Interactive Substitution Allocator</h2>
-            <span id="active-day-badge" class="px-2 py-0.5 text-[10px] rounded-full bg-gold-100 text-gold-800 font-bold">Monday</span>
+          <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+            <h2 class="text-xs sm:text-sm font-black text-navy-900">Interactive Substitution Allocator</h2>
+            <span id="active-day-badge" class="px-2 py-0.5 text-[9px] sm:text-[10px] rounded-full bg-gold-100 text-gold-800 font-bold">Monday</span>
           </div>
-          <p class="text-[11px] text-slate-500 mt-0.5">Dynamic workload leveling across free faculty members</p>
+          <p class="text-[10px] sm:text-[11px] text-slate-500 mt-0.5">Dynamic workload leveling across free faculty members</p>
         </div>
         <button onclick="clearAssignments()" class="text-xs text-slate-500 hover:text-accentRed-600 font-bold cursor-pointer shrink-0">Clear All</button>
       </div>
-      <div class="overflow-x-auto max-h-[380px] custom-scrollbar">
-        <table class="w-full min-w-[580px] text-left text-xs border-collapse">
+      <div class="overflow-x-auto max-h-[360px] custom-scrollbar w-full min-w-0">
+        <table class="w-full min-w-[520px] text-left text-xs border-collapse">
           <thead>
             <tr class="bg-slate-50 text-slate-600 font-bold uppercase text-[9px] border-b border-slate-200">
-              <th class="py-2.5 px-3 whitespace-nowrap">Period</th>
-              <th class="py-2.5 px-3 whitespace-nowrap">Absent Faculty</th>
-              <th class="py-2.5 px-3 whitespace-nowrap">Class</th>
-              <th class="py-2.5 px-3 whitespace-nowrap">Assign Free Teacher (Workload)</th>
-              <th class="py-2.5 px-3 text-right whitespace-nowrap">Action</th>
+              <th class="py-2 px-2.5 whitespace-nowrap">Period</th>
+              <th class="py-2 px-2.5 whitespace-nowrap">Absent Faculty</th>
+              <th class="py-2 px-2.5 whitespace-nowrap">Class</th>
+              <th class="py-2 px-2.5 whitespace-nowrap">Assign Free Teacher (Workload)</th>
+              <th class="py-2 px-2.5 text-right whitespace-nowrap">Action</th>
             </tr>
           </thead>
           <tbody id="substitution-table-body" class="divide-y divide-slate-100"></tbody>
         </table>
-        <div id="no-absent-state" class="py-12 text-center text-slate-400">
-          <div class="text-3xl mb-1">🎉</div>
+        <div id="no-absent-state" class="py-10 text-center text-slate-400">
+          <div class="text-2xl mb-1">🎉</div>
           <div class="text-xs font-bold text-navy-900">All Teachers Are Present</div>
           <div class="text-[11px] text-slate-500">No period adjustments needed.</div>
         </div>
@@ -168,19 +167,19 @@ tailwind.config = {
   </div>
 
   <!-- ===== SECTION: Card 4: Live Master Substitution Sheet ===== -->
-  <div class="w-full bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 no-print overflow-hidden">
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-3.5 border-b border-slate-200 gap-2">
+  <div class="w-full bg-white rounded-2xl border border-slate-200 shadow-sm p-3.5 sm:p-5 no-print min-w-0 overflow-hidden">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-2.5 sm:pb-3 border-b border-slate-200 gap-1.5 sm:gap-2">
       <div>
-        <span class="text-[10px] font-extrabold tracking-widest text-accentRed-600 uppercase">Live Master Substitution Sheet</span>
-        <h3 class="text-base font-extrabold text-navy-950 flex items-center gap-2 mt-0.5">
+        <span class="text-[9px] sm:text-[10px] font-extrabold tracking-widest text-accentRed-600 uppercase">Live Master Substitution Sheet</span>
+        <h3 class="text-sm sm:text-base font-extrabold text-navy-950 flex items-center gap-2 mt-0.5">
           <span>Substitution Chart 2026–27</span>
-          <span id="summary-badge-day" class="text-xs bg-navy-950 text-gold-400 px-2 py-0.5 rounded">Monday</span>
+          <span id="summary-badge-day" class="text-[10px] sm:text-xs bg-navy-950 text-gold-400 px-2 py-0.5 rounded">Monday</span>
         </h3>
       </div>
       <div class="text-xs text-slate-600">Date: <strong id="summary-date" class="text-navy-900">--</strong></div>
     </div>
-    <div class="overflow-x-auto mt-4 custom-scrollbar">
-      <table class="w-full min-w-[700px] text-center text-xs border-collapse border border-slate-300">
+    <div class="overflow-x-auto mt-3 custom-scrollbar w-full min-w-0">
+      <table class="w-full min-w-[650px] text-center text-xs border-collapse border border-slate-300">
         <thead id="matrix-head-screen"></thead>
         <tbody id="screen-matrix-body"></tbody>
       </table>
@@ -430,26 +429,26 @@ function renderAttendanceList() {
     const todayLoad = getTeacherLoad(t.id, activeDay);
     const basePeriods = Object.values(t.timetable?.[activeDay] || {}).filter(isTeachingPeriod).length;
     return `
-    <div class="p-2.5 rounded-xl border flex items-center justify-between transition ${t.isAbsent ? 'bg-accentRed-50 border-red-200 shadow-sm' : 'bg-white border-sky-200/70 shadow-xs hover:border-sky-300'}">
-      <div class="flex items-center space-x-2.5">
-        <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-[10px] shrink-0 ${t.isAbsent ? 'bg-accentRed-600 text-white' : 'bg-navy-950 text-gold-400'}">
+    <div class="p-2 sm:p-2.5 rounded-xl border flex items-center justify-between transition ${t.isAbsent ? 'bg-accentRed-50 border-red-200 shadow-sm' : 'bg-white border-sky-200/70 shadow-xs hover:border-sky-300'}">
+      <div class="flex items-center space-x-2 sm:space-x-2.5">
+        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center font-bold text-[9px] sm:text-[10px] shrink-0 ${t.isAbsent ? 'bg-accentRed-600 text-white' : 'bg-navy-950 text-gold-400'}">
           ${t.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
         </div>
         <div>
-          <div class="font-bold text-xs ${t.isAbsent ? 'text-accentRed-700' : 'text-navy-950'}">${t.name}</div>
-          <div class="text-[9px] text-slate-500">${basePeriods} base • <span class="font-bold text-navy-900">${todayLoad} total</span></div>
+          <div class="font-bold text-[11px] sm:text-xs ${t.isAbsent ? 'text-accentRed-700' : 'text-navy-950'}">${t.name}</div>
+          <div class="text-[8.5px] sm:text-[9px] text-slate-500">${basePeriods} base • <span class="font-bold text-navy-900">${todayLoad} total</span></div>
         </div>
       </div>
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-1.5 sm:gap-2">
         ${t.isAbsent ? `
-          <select onchange="setLeaveReason('${t.id}', this.value)" class="text-[9px] font-bold border border-red-300 rounded-lg bg-white px-1.5 py-1 text-accentRed-700 focus:outline-none">
+          <select onchange="setLeaveReason('${t.id}', this.value)" class="text-[8.5px] sm:text-[9px] font-bold border border-red-300 rounded-lg bg-white px-1 sm:px-1.5 py-0.5 sm:py-1 text-accentRed-700 focus:outline-none">
             <option value="Leave" ${t.leaveReason === 'Leave' ? 'selected' : ''}>Leave</option>
             <option value="On Duty" ${t.leaveReason === 'On Duty' ? 'selected' : ''}>On Duty</option>
             <option value="Short Leave" ${t.leaveReason === 'Short Leave' ? 'selected' : ''}>Short Leave</option>
           </select>` : ''}
         <label class="relative inline-flex items-center cursor-pointer shrink-0">
           <input type="checkbox" onchange="toggleAttendance('${t.id}')" ${t.isAbsent ? 'checked' : ''} class="sr-only peer">
-          <div class="w-8 h-4 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-accentRed-600"></div>
+          <div class="w-7 h-3.5 sm:w-8 sm:h-4 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1.5px] after:left-[2px] after:bg-white after:rounded-full after:h-2.5 after:w-2.5 sm:after:h-3 sm:after:w-3 after:transition-all peer-checked:bg-accentRed-600"></div>
         </label>
       </div>
     </div>`;
@@ -479,26 +478,26 @@ function renderQueue() {
 
       rowsHTML += `
       <tr class="hover:bg-slate-50 transition border-b border-slate-100">
-        <td class="py-2.5 px-3 whitespace-nowrap">
-          <div class="font-black text-navy-950">${p.name}</div>
-          <div class="text-[9px] text-slate-500 font-mono">${p.time}</div>
+        <td class="py-2 px-2.5 whitespace-nowrap">
+          <div class="font-black text-navy-950 text-[11px] sm:text-xs">${p.name}</div>
+          <div class="text-[8.5px] sm:text-[9px] text-slate-500 font-mono">${p.time}</div>
         </td>
-        <td class="py-2.5 px-3 whitespace-nowrap">
-          <div class="font-bold text-accentRed-700">${absentT.name}</div>
-          <div class="text-[9px] text-slate-400">(${absentT.leaveReason || 'Leave'})</div>
+        <td class="py-2 px-2.5 whitespace-nowrap">
+          <div class="font-bold text-accentRed-700 text-[11px] sm:text-xs">${absentT.name}</div>
+          <div class="text-[8.5px] sm:text-[9px] text-slate-400">(${absentT.leaveReason || 'Leave'})</div>
         </td>
-        <td class="py-2.5 px-3 whitespace-nowrap">
-          <span class="px-2 py-0.5 bg-navy-950 text-gold-400 font-black rounded text-[10px] inline-block whitespace-nowrap">${cls}</span>
+        <td class="py-2 px-2.5 whitespace-nowrap">
+          <span class="px-2 py-0.5 bg-navy-950 text-gold-400 font-black rounded text-[9.5px] sm:text-[10px] inline-block whitespace-nowrap">${cls}</span>
         </td>
-        <td class="py-2.5 px-3 min-w-[180px]">
-          <select onchange="assignSub('${key}', this.value)" class="w-full text-xs rounded-lg border ${currentSubId ? 'border-emerald-500 bg-emerald-50 text-emerald-900 font-bold' : 'border-slate-300 text-slate-700'} px-2 py-1.5 focus:outline-none">
+        <td class="py-2 px-2.5 min-w-[160px] sm:min-w-[180px]">
+          <select onchange="assignSub('${key}', this.value)" class="w-full text-[11px] sm:text-xs rounded-lg border ${currentSubId ? 'border-emerald-500 bg-emerald-50 text-emerald-900 font-bold' : 'border-slate-300 text-slate-700'} px-2 py-1 sm:py-1.5 focus:outline-none">
             <option value="">-- Choose Free Faculty --</option>
             ${currentSubId && !freeTeachers.some(t => t.id === currentSubId) && assignedTeacher ? `<option value="${assignedTeacher.id}" selected>${assignedTeacher.name} [Load: ${getTeacherLoad(assignedTeacher.id, activeDay)}]</option>` : ''}
             ${freeTeachers.map(t => `<option value="${t.id}" ${t.id === currentSubId ? 'selected' : ''}>${t.name} [Load: ${getTeacherLoad(t.id, activeDay)}]</option>`).join('')}
           </select>
         </td>
-        <td class="py-2.5 px-3 text-right whitespace-nowrap">
-          <button onclick="autoAssignSingle('${key}', '${p.id}')" class="text-[10px] bg-gold-500 hover:bg-gold-600 text-navy-950 font-black px-2.5 py-1.5 rounded-lg shadow-sm cursor-pointer whitespace-nowrap">Fair Pick</button>
+        <td class="py-2 px-2.5 text-right whitespace-nowrap">
+          <button onclick="autoAssignSingle('${key}', '${p.id}')" class="text-[9.5px] sm:text-[10px] bg-gold-500 hover:bg-gold-600 text-navy-950 font-black px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg shadow-sm cursor-pointer whitespace-nowrap">Fair Pick</button>
         </td>
       </tr>`;
     });
