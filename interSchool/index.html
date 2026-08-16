@@ -42,34 +42,34 @@ tailwind.config = {
 <body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col font-sans selection:bg-gold-500 selection:text-navy-950">
 
 <!-- ===== SECTION: Top status/clock bar ===== -->
-<div class="bg-navy-950 text-slate-300 text-xs py-2 px-3 sm:px-4 border-b border-navy-900 no-print">
-  <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-1.5 sm:gap-2">
+<div class="bg-navy-950 text-slate-300 text-xs py-2.5 px-4 border-b border-navy-900 no-print">
+  <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
     <div class="flex items-center gap-2 font-semibold text-gold-400">
       <span id="sync-indicator" class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
       <span>EduPulse Substitution Portal</span>
     </div>
     <div class="flex items-center gap-3 text-xs font-mono">
       <span id="live-clock" class="text-gold-400 bg-navy-900 px-2.5 py-0.5 rounded border border-navy-800 tracking-wider">--:--:--</span>
-      <span class="text-slate-400 font-sans text-[11px] sm:text-xs">Academic Session 2026–27</span>
+      <span class="text-slate-400 font-sans text-xs">Academic Session 2026–27</span>
     </div>
   </div>
 </div>
 
-<main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-5 flex-1 w-full space-y-4 sm:space-y-5">
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex-1 w-full space-y-5">
 
-  <!-- ===== SECTION: Hero card (title, 2x2 controls grid, KPI stats) ===== -->
-  <div class="relative bg-white rounded-2xl p-4 sm:p-6 glow-border no-print overflow-hidden">
+  <!-- ===== SECTION: Hero Card ===== -->
+  <div class="relative w-full bg-white rounded-2xl p-5 sm:p-6 glow-border no-print overflow-hidden shadow-sm">
     <div class="absolute -top-20 -right-20 w-64 h-64 bg-amber-100/50 rounded-full blur-3xl pointer-events-none"></div>
     <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
-        <h1 class="text-xl sm:text-3xl font-black tracking-tight text-navy-950">EduPulse Substitution Portal</h1>
+        <h1 class="text-2xl sm:text-3xl font-black tracking-tight text-navy-950">EduPulse Substitution Portal</h1>
       </div>
 
-      <!-- 2x2 grid controls on mobile & desktop -->
-      <div class="grid grid-cols-2 gap-2 sm:gap-2.5 shrink-0 w-full sm:w-auto">
+      <!-- Top-right 2x2 grid for global controls -->
+      <div class="grid grid-cols-2 gap-2.5 shrink-0 w-full sm:w-auto">
         <!-- Row 1, Col 1: Day Selector -->
-        <div class="flex items-center justify-between bg-slate-50 px-2.5 sm:px-3 py-1.5 rounded-xl border border-slate-200 shadow-xs">
-          <label for="day-selector" class="text-xs font-bold text-navy-900 mr-1.5 shrink-0">Day:</label>
+        <div class="flex items-center justify-between bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 shadow-xs">
+          <label for="day-selector" class="text-xs font-bold text-navy-900 mr-2 shrink-0">Day:</label>
           <select id="day-selector" onchange="switchDay(this.value)" class="bg-white text-navy-950 font-bold text-xs px-2 py-1 rounded-lg border border-slate-300 focus:ring-2 focus:ring-gold-500 focus:outline-none cursor-pointer w-full">
             <option value="Monday">Monday</option>
             <option value="Tuesday">Tuesday</option>
@@ -81,49 +81,49 @@ tailwind.config = {
         </div>
 
         <!-- Row 1, Col 2: Sync Sheet -->
-        <button onclick="fetchSheetData()" class="px-3 sm:px-3.5 py-1.5 sm:py-2 bg-slate-100 hover:bg-slate-200 text-navy-900 font-bold text-xs rounded-xl border border-slate-300 transition shadow-xs flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap">
+        <button onclick="fetchSheetData()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-navy-900 font-bold text-xs rounded-xl border border-slate-300 transition shadow-xs flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap">
           <span id="sync-spinner" class="hidden animate-spin">🔄</span><span>📥 Sync Sheet</span>
         </button>
 
         <!-- Row 2, Col 1: Fair Auto-Assign All -->
-        <button onclick="autoAssignAll()" class="px-3 sm:px-3.5 py-1.5 sm:py-2 bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 text-navy-950 font-black text-xs rounded-xl shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap">
+        <button onclick="autoAssignAll()" class="px-3.5 py-2 bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 text-navy-950 font-black text-xs rounded-xl shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap">
           ⚡ Fair Auto-Assign All
         </button>
 
         <!-- Row 2, Col 2: Print Matrix -->
-        <button onclick="window.print()" class="px-3 sm:px-3.5 py-1.5 sm:py-2 bg-navy-950 hover:bg-navy-900 text-gold-400 font-bold text-xs rounded-xl border border-navy-900 transition shadow-xs flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap">
+        <button onclick="window.print()" class="px-3.5 py-2 bg-navy-950 hover:bg-navy-900 text-gold-400 font-bold text-xs rounded-xl border border-navy-900 transition shadow-xs flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap">
           🖨️ Print Matrix
         </button>
       </div>
     </div>
 
-    <!-- KPI strip: totals updated by renderAttendanceList()/renderQueue() -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3 mt-4 sm:mt-5 pt-4 sm:pt-5 border-t border-slate-100">
-      <div class="bg-slate-50 rounded-xl p-3 sm:p-3.5 border border-slate-200 flex flex-col justify-center">
-        <div id="stat-total-teachers" class="text-xl sm:text-2xl font-black text-navy-950">0</div>
+    <!-- KPI Strip -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5 pt-5 border-t border-slate-100">
+      <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-200 flex flex-col justify-center">
+        <div id="stat-total-teachers" class="text-2xl font-black text-navy-950">0</div>
         <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mt-0.5">Total Faculty</div>
       </div>
-      <div class="bg-accentRed-50 rounded-xl p-3 sm:p-3.5 border border-red-200 flex flex-col justify-center">
-        <div id="stat-absent-today" class="text-xl sm:text-2xl font-black text-accentRed-600">0</div>
+      <div class="bg-accentRed-50 rounded-xl p-3.5 border border-red-200 flex flex-col justify-center">
+        <div id="stat-absent-today" class="text-2xl font-black text-accentRed-600">0</div>
         <div class="text-[10px] font-bold text-accentRed-700 uppercase tracking-wider mt-0.5">Absent Today</div>
       </div>
-      <div class="bg-amber-50/70 rounded-xl p-3 sm:p-3.5 border border-amber-200 flex flex-col justify-center">
-        <div id="stat-pending-slots" class="text-xl sm:text-2xl font-black text-amber-700">0</div>
+      <div class="bg-amber-50/70 rounded-xl p-3.5 border border-amber-200 flex flex-col justify-center">
+        <div id="stat-pending-slots" class="text-2xl font-black text-amber-700">0</div>
         <div class="text-[10px] font-bold text-amber-800 uppercase tracking-wider mt-0.5">Periods To Adjust</div>
       </div>
-      <div class="bg-emerald-50 rounded-xl p-3 sm:p-3.5 border border-emerald-200 flex flex-col justify-center">
-        <div id="stat-assigned-slots" class="text-xl sm:text-2xl font-black text-emerald-600">0</div>
+      <div class="bg-emerald-50 rounded-xl p-3.5 border border-emerald-200 flex flex-col justify-center">
+        <div id="stat-assigned-slots" class="text-2xl font-black text-emerald-600">0</div>
         <div class="text-[10px] font-bold text-emerald-700 uppercase tracking-wider mt-0.5">Adjusted Slots</div>
       </div>
     </div>
   </div>
 
-  <!-- ===== SECTION: Workstation (attendance toggles + allocation queue) ===== -->
-  <div class="grid lg:grid-cols-3 gap-4 sm:gap-5 no-print">
+  <!-- ===== SECTION: Workstation ===== -->
+  <div class="grid lg:grid-cols-3 gap-5 no-print w-full">
 
-    <!-- Attendance panel: list populated by renderAttendanceList() -->
-    <div class="bg-sky-50/70 rounded-2xl border border-sky-200 shadow-sm p-4 flex flex-col">
-      <div class="flex items-center justify-between pb-3 border-b border-sky-200/80 mb-3">
+    <!-- Card 2: Attendance Panel -->
+    <div class="w-full bg-sky-50/70 rounded-2xl border border-sky-200 shadow-sm p-5 sm:p-6 flex flex-col">
+      <div class="flex items-center justify-between pb-3.5 border-b border-sky-200/80 mb-3.5">
         <div>
           <h2 class="text-sm font-black text-navy-950">Mark Absent Teachers</h2>
           <p class="text-[11px] text-sky-800/80 font-medium">Toggle leave status and duty reasons</p>
@@ -133,9 +133,9 @@ tailwind.config = {
       <div class="space-y-2.5 overflow-y-auto max-h-[380px] custom-scrollbar pr-1" id="teacher-attendance-list"></div>
     </div>
 
-    <!-- Allocation queue: rows populated by renderQueue() -->
-    <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm p-4 flex flex-col">
-      <div class="flex items-start sm:items-center justify-between pb-3 border-b border-slate-100 mb-3 gap-2">
+    <!-- Card 3: Allocation Queue -->
+    <div class="w-full lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 flex flex-col">
+      <div class="flex items-start sm:items-center justify-between pb-3.5 border-b border-slate-100 mb-3.5 gap-2">
         <div>
           <div class="flex flex-wrap items-center gap-2">
             <h2 class="text-sm font-black text-navy-900">Interactive Substitution Allocator</h2>
@@ -145,7 +145,7 @@ tailwind.config = {
         </div>
         <button onclick="clearAssignments()" class="text-xs text-slate-500 hover:text-accentRed-600 font-bold cursor-pointer shrink-0">Clear All</button>
       </div>
-      <div class="overflow-x-auto max-h-[380px] custom-scrollbar -mx-1 px-1 sm:mx-0 sm:px-0">
+      <div class="overflow-x-auto max-h-[380px] custom-scrollbar">
         <table class="w-full min-w-[580px] text-left text-xs border-collapse">
           <thead>
             <tr class="bg-slate-50 text-slate-600 font-bold uppercase text-[9px] border-b border-slate-200">
@@ -167,20 +167,20 @@ tailwind.config = {
     </div>
   </div>
 
-  <!-- ===== SECTION: Live master matrix (on-screen mirror of the print sheet) ===== -->
-  <div class="bg-white rounded-2xl border-2 border-navy-950 shadow-sm p-4 sm:p-5 no-print">
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-3 border-b-2 border-slate-200 gap-2">
+  <!-- ===== SECTION: Card 4: Live Master Substitution Sheet ===== -->
+  <div class="w-full bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 no-print overflow-hidden">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-3.5 border-b border-slate-200 gap-2">
       <div>
         <span class="text-[10px] font-extrabold tracking-widest text-accentRed-600 uppercase">Live Master Substitution Sheet</span>
-        <h3 class="text-base font-extrabold text-navy-950 flex items-center gap-2">
+        <h3 class="text-base font-extrabold text-navy-950 flex items-center gap-2 mt-0.5">
           <span>Substitution Chart 2026–27</span>
           <span id="summary-badge-day" class="text-xs bg-navy-950 text-gold-400 px-2 py-0.5 rounded">Monday</span>
         </h3>
       </div>
       <div class="text-xs text-slate-600">Date: <strong id="summary-date" class="text-navy-900">--</strong></div>
     </div>
-    <div class="overflow-x-auto mt-4 custom-scrollbar -mx-1 px-1 sm:mx-0 sm:px-0">
-      <table class="w-full min-w-[700px] text-center text-xs border-collapse border border-slate-400">
+    <div class="overflow-x-auto mt-4 custom-scrollbar">
+      <table class="w-full min-w-[700px] text-center text-xs border-collapse border border-slate-300">
         <thead id="matrix-head-screen"></thead>
         <tbody id="screen-matrix-body"></tbody>
       </table>
@@ -188,7 +188,7 @@ tailwind.config = {
   </div>
 </main>
 
-<!-- ===== SECTION: Printable landscape slip (shown only via window.print()) ===== -->
+<!-- ===== SECTION: Printable landscape slip ===== -->
 <div id="printable-arrangement-slip" class="bg-white text-black p-0 hidden">
   <div class="text-center mb-1.5 pb-1">
     <h1 class="text-xl font-black uppercase tracking-tight text-black">Substitution Chart 2026–27</h1>
@@ -215,7 +215,7 @@ tailwind.config = {
 
 <script>
 /* ============================================================
-   CONFIG — static data that never changes at runtime
+   CONFIG
    ============================================================ */
 const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbzl0FAuW6uP3-yuOEsxvP_mIYpUoRapRLk1sDPFe-26WBruyxn4_mY7TrUcopc-FTDB/exec";
 
@@ -231,7 +231,7 @@ const PERIODS = [
 ];
 
 /* ============================================================
-   STATE — the single source of truth for the whole app
+   STATE
    ============================================================ */
 let teachers = [];        
 let roundDuties = {};     
@@ -239,7 +239,7 @@ let substitutions = {};
 let activeDay = "Monday"; 
 
 /* ============================================================
-   BOOTSTRAP — runs once when the page loads
+   BOOTSTRAP
    ============================================================ */
 document.addEventListener("DOMContentLoaded", () => {
   initClock();          
@@ -266,13 +266,13 @@ function initClock() {
 }
 
 /* ============================================================
-   DATA SYNC — fetching the live sheet
+   DATA SYNC
    ============================================================ */
 async function fetchSheetData() {
   const spinner = el("sync-spinner");
   const indicator = el("sync-indicator");
   spinner.classList.remove("hidden");
-  indicator.className = "w-2 h-2 rounded-full bg-amber-400 animate-pulse";
+  indicator.className = "w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0";
   try {
     const res = await fetch(GAS_ENDPOINT);
     const data = await res.json();
@@ -281,14 +281,14 @@ async function fetchSheetData() {
       roundDuties = data.roundDuties || {};
       substitutions = {};
       updateUI();
-      indicator.className = "w-2 h-2 rounded-full bg-emerald-400";
+      indicator.className = "w-2 h-2 rounded-full bg-emerald-400 shrink-0";
       notify(`Loaded ${teachers.length} faculty timetables!`);
     } else {
       throw new Error(data.message || "Invalid payload format");
     }
   } catch (err) {
     console.error(err);
-    indicator.className = "w-2 h-2 rounded-full bg-accentRed-600";
+    indicator.className = "w-2 h-2 rounded-full bg-accentRed-600 shrink-0";
     notify("Sync failed. Check network connection.");
   } finally {
     spinner.classList.add("hidden");
@@ -513,18 +513,18 @@ function renderQueue() {
 function renderTableHeaders() {
   const headerHTML = `
     <tr class="bg-slate-100 text-slate-900 font-extrabold text-[9.5px] uppercase">
-      <th class="border border-slate-400 p-2 text-left w-44">Name of Absentee Teacher</th>
-      <th class="border border-slate-400 p-1 w-16"><div>0</div><div class="text-[7.5px] font-normal">C.Teacher<br>8:30–8:40</div></th>
-      <th class="border border-slate-400 p-1 w-20"><div>1</div><div class="text-[7.5px] font-normal">8:40–9:15</div></th>
-      <th class="border border-slate-400 p-1 bg-amber-50 text-amber-900 w-12"><div>FB</div><div class="text-[7px] font-normal">9:15–9:25</div></th>
-      <th class="border border-slate-400 p-1 w-20"><div>2</div><div class="text-[7.5px] font-normal">9:25–10:00</div></th>
-      <th class="border border-slate-400 p-1 w-20"><div>3</div><div class="text-[7.5px] font-normal">10:00–10:35</div></th>
-      <th class="border border-slate-400 p-1 w-20"><div>4</div><div class="text-[7.5px] font-normal">10:35–11:10</div></th>
-      <th class="border border-slate-400 p-1 bg-amber-50 text-amber-900 w-12"><div>Recess</div><div class="text-[7px] font-normal">11:10–11:40</div></th>
-      <th class="border border-slate-400 p-1 w-20"><div>5</div><div class="text-[7.5px] font-normal">11:40–12:20</div></th>
-      <th class="border border-slate-400 p-1 w-20"><div>6</div><div class="text-[7.5px] font-normal">12:20–12:55</div></th>
-      <th class="border border-slate-400 p-1 w-20"><div>7</div><div class="text-[7.5px] font-normal">12:55–1:30</div></th>
-      <th class="border border-slate-400 p-1 w-20"><div>8</div><div class="text-[7.5px] font-normal">1:30–2:00</div></th>
+      <th class="border border-slate-300 p-2 text-left w-44">Name of Absentee Teacher</th>
+      <th class="border border-slate-300 p-1 w-16"><div>0</div><div class="text-[7.5px] font-normal">C.Teacher<br>8:30–8:40</div></th>
+      <th class="border border-slate-300 p-1 w-20"><div>1</div><div class="text-[7.5px] font-normal">8:40–9:15</div></th>
+      <th class="border border-slate-300 p-1 bg-amber-50 text-amber-900 w-12"><div>FB</div><div class="text-[7px] font-normal">9:15–9:25</div></th>
+      <th class="border border-slate-300 p-1 w-20"><div>2</div><div class="text-[7.5px] font-normal">9:25–10:00</div></th>
+      <th class="border border-slate-300 p-1 w-20"><div>3</div><div class="text-[7.5px] font-normal">10:00–10:35</div></th>
+      <th class="border border-slate-300 p-1 w-20"><div>4</div><div class="text-[7.5px] font-normal">10:35–11:10</div></th>
+      <th class="border border-slate-300 p-1 bg-amber-50 text-amber-900 w-12"><div>Recess</div><div class="text-[7px] font-normal">11:10–11:40</div></th>
+      <th class="border border-slate-300 p-1 w-20"><div>5</div><div class="text-[7.5px] font-normal">11:40–12:20</div></th>
+      <th class="border border-slate-300 p-1 w-20"><div>6</div><div class="text-[7.5px] font-normal">12:20–12:55</div></th>
+      <th class="border border-slate-300 p-1 w-20"><div>7</div><div class="text-[7.5px] font-normal">12:55–1:30</div></th>
+      <th class="border border-slate-300 p-1 w-20"><div>8</div><div class="text-[7.5px] font-normal">1:30–2:00</div></th>
     </tr>`;
   el("matrix-head-screen").innerHTML = headerHTML;
   el("matrix-head-print").innerHTML = headerHTML;
@@ -538,18 +538,18 @@ function renderMatrix() {
 
   let rows = `
   <tr class="bg-slate-50 font-bold border-b border-slate-300">
-    <td class="border border-slate-400 p-1.5 text-left font-black text-slate-800 text-[10px]">Round Duty<br><span class="text-[8px] font-normal text-slate-500">(All Floors)</span></td>
-    <td class="border border-slate-400 p-1 text-[9px]">${rounds.P0 || '—'}</td>
-    <td class="border border-slate-400 p-1 text-[9px] font-bold">${rounds.P1 || '—'}</td>
-    <td class="border border-slate-400 p-1 bg-amber-50/50"></td>
-    <td class="border border-slate-400 p-1 text-[9px] font-bold">${rounds.P2 || '—'}</td>
-    <td class="border border-slate-400 p-1 text-[9px] font-bold">${rounds.P3 || '—'}</td>
-    <td class="border border-slate-400 p-1 text-[9px] font-bold">${rounds.P4 || '—'}</td>
-    <td class="border border-slate-400 p-1 bg-amber-50/50"></td>
-    <td class="border border-slate-400 p-1 text-[9px] font-bold">${rounds.P5 || '—'}</td>
-    <td class="border border-slate-400 p-1 text-[9px] font-bold">${rounds.P6 || '—'}</td>
-    <td class="border border-slate-400 p-1 text-[9px] font-bold">${rounds.P7 || '—'}</td>
-    <td class="border border-slate-400 p-1 text-[9px] font-bold">${rounds.P8 || '—'}</td>
+    <td class="border border-slate-300 p-1.5 text-left font-black text-slate-800 text-[10px]">Round Duty<br><span class="text-[8px] font-normal text-slate-500">(All Floors)</span></td>
+    <td class="border border-slate-300 p-1 text-[9px]">${rounds.P0 || '—'}</td>
+    <td class="border border-slate-300 p-1 text-[9px] font-bold">${rounds.P1 || '—'}</td>
+    <td class="border border-slate-300 p-1 bg-amber-50/50"></td>
+    <td class="border border-slate-300 p-1 text-[9px] font-bold">${rounds.P2 || '—'}</td>
+    <td class="border border-slate-300 p-1 text-[9px] font-bold">${rounds.P3 || '—'}</td>
+    <td class="border border-slate-300 p-1 text-[9px] font-bold">${rounds.P4 || '—'}</td>
+    <td class="border border-slate-300 p-1 bg-amber-50/50"></td>
+    <td class="border border-slate-300 p-1 text-[9px] font-bold">${rounds.P5 || '—'}</td>
+    <td class="border border-slate-300 p-1 text-[9px] font-bold">${rounds.P6 || '—'}</td>
+    <td class="border border-slate-300 p-1 text-[9px] font-bold">${rounds.P7 || '—'}</td>
+    <td class="border border-slate-300 p-1 text-[9px] font-bold">${rounds.P8 || '—'}</td>
   </tr>`;
 
   if (absentees.length === 0) {
@@ -559,24 +559,24 @@ function renderMatrix() {
       const timetable = t.timetable?.[activeDay] || {};
       let periodCells = "";
       PERIODS.forEach((p, idx) => {
-        if (idx === 1 || idx === 4) periodCells += `<td class="border border-slate-400 p-1 bg-amber-50/30"></td>`;
+        if (idx === 1 || idx === 4) periodCells += `<td class="border border-slate-300 p-1 bg-amber-50/30"></td>`;
         const cls = timetable[p.id];
         const sub = getSubstituteFor(activeDay, p.id, t.id);
         periodCells += isTeachingPeriod(cls)
-          ? `<td class="border border-slate-400 p-1 align-top bg-white">
+          ? `<td class="border border-slate-300 p-1 align-top bg-white">
                <div class="font-black text-[10px] text-navy-950">${cls}</div>
                <div class="text-[8px] font-bold mt-0.5 leading-tight ${sub ? 'text-slate-800' : 'text-accentRed-600'}">${sub ? sub.name : 'Unassigned'}</div>
              </td>`
-          : `<td class="border border-slate-400 p-1 text-slate-300 font-bold text-[10px] bg-slate-50/40">—</td>`;
+          : `<td class="border border-slate-300 p-1 text-slate-300 font-bold text-[10px] bg-slate-50/40">—</td>`;
       });
 
       rows += `
       <tr class="hover:bg-slate-50 border-b border-slate-300">
-        <td class="border border-slate-400 p-1.5 text-left font-bold text-slate-900 text-[10px]">
+        <td class="border border-slate-300 p-1.5 text-left font-bold text-slate-900 text-[10px]">
           <div>${t.name}</div>
           <div class="text-[8px] text-slate-500 italic">(${t.leaveReason || 'Leave'})</div>
         </td>
-        <td class="border border-slate-400 p-1 font-black text-[9.5px] text-navy-950">${timetable.P0 || '—'}</td>
+        <td class="border border-slate-300 p-1 font-black text-[9.5px] text-navy-950">${timetable.P0 || '—'}</td>
         ${periodCells}
       </tr>`;
     });
