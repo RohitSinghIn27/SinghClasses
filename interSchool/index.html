@@ -42,35 +42,35 @@ tailwind.config = {
 <body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col font-sans selection:bg-gold-500 selection:text-navy-950">
 
 <!-- ===== SECTION: Top status/clock bar ===== -->
-<div class="bg-navy-950 text-slate-300 text-xs py-2 px-4 border-b border-navy-900 no-print">
-  <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+<div class="bg-navy-950 text-slate-300 text-xs py-2 px-3 sm:px-4 border-b border-navy-900 no-print">
+  <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-1.5 sm:gap-2">
     <div class="flex items-center gap-2 font-semibold text-gold-400">
-      <span id="sync-indicator" class="w-2 h-2 rounded-full bg-emerald-400"></span>
+      <span id="sync-indicator" class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
       <span>EduPulse Substitution Portal</span>
     </div>
-    <div class="flex items-center gap-4 text-xs font-mono">
+    <div class="flex items-center gap-3 text-xs font-mono">
       <span id="live-clock" class="text-gold-400 bg-navy-900 px-2.5 py-0.5 rounded border border-navy-800 tracking-wider">--:--:--</span>
-      <span class="text-slate-400 font-sans">Academic Session 2026–27</span>
+      <span class="text-slate-400 font-sans text-[11px] sm:text-xs">Academic Session 2026–27</span>
     </div>
   </div>
 </div>
 
-<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex-1 w-full space-y-4">
+<main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-5 flex-1 w-full space-y-4 sm:space-y-5">
 
-  <!-- ===== SECTION: Hero card (title, 2x2 grid controls, KPI stats) ===== -->
-  <div class="relative bg-white rounded-2xl p-4 sm:p-5 glow-border no-print overflow-hidden">
+  <!-- ===== SECTION: Hero card (title, 2x2 controls grid, KPI stats) ===== -->
+  <div class="relative bg-white rounded-2xl p-4 sm:p-6 glow-border no-print overflow-hidden">
     <div class="absolute -top-20 -right-20 w-64 h-64 bg-amber-100/50 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3">
+    <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
-        <h1 class="text-2xl sm:text-3xl font-black tracking-tight text-navy-950">EduPulse Substitution Portal</h1>
+        <h1 class="text-xl sm:text-3xl font-black tracking-tight text-navy-950">EduPulse Substitution Portal</h1>
       </div>
 
-      <!-- Top-right 2x2 grid for global controls -->
-      <div class="grid grid-cols-2 gap-2 shrink-0">
+      <!-- 2x2 grid controls on mobile & desktop -->
+      <div class="grid grid-cols-2 gap-2 sm:gap-2.5 shrink-0 w-full sm:w-auto">
         <!-- Row 1, Col 1: Day Selector -->
-        <div class="flex items-center justify-between bg-slate-50 px-2.5 py-1 rounded-xl border border-slate-200 shadow-xs">
-          <label for="day-selector" class="text-xs font-bold text-navy-900 mr-2">Day:</label>
-          <select id="day-selector" onchange="switchDay(this.value)" class="bg-white text-navy-950 font-bold text-xs px-2 py-1 rounded-lg border border-slate-300 focus:ring-2 focus:ring-gold-500 focus:outline-none cursor-pointer">
+        <div class="flex items-center justify-between bg-slate-50 px-2.5 sm:px-3 py-1.5 rounded-xl border border-slate-200 shadow-xs">
+          <label for="day-selector" class="text-xs font-bold text-navy-900 mr-1.5 shrink-0">Day:</label>
+          <select id="day-selector" onchange="switchDay(this.value)" class="bg-white text-navy-950 font-bold text-xs px-2 py-1 rounded-lg border border-slate-300 focus:ring-2 focus:ring-gold-500 focus:outline-none cursor-pointer w-full">
             <option value="Monday">Monday</option>
             <option value="Tuesday">Tuesday</option>
             <option value="Wednesday">Wednesday</option>
@@ -81,37 +81,37 @@ tailwind.config = {
         </div>
 
         <!-- Row 1, Col 2: Sync Sheet -->
-        <button onclick="fetchSheetData()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-navy-900 font-bold text-xs rounded-xl border border-slate-300 transition shadow-xs flex items-center justify-center gap-1.5 cursor-pointer">
+        <button onclick="fetchSheetData()" class="px-3 sm:px-3.5 py-1.5 sm:py-2 bg-slate-100 hover:bg-slate-200 text-navy-900 font-bold text-xs rounded-xl border border-slate-300 transition shadow-xs flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap">
           <span id="sync-spinner" class="hidden animate-spin">🔄</span><span>📥 Sync Sheet</span>
         </button>
 
         <!-- Row 2, Col 1: Fair Auto-Assign All -->
-        <button onclick="autoAssignAll()" class="px-3 py-1.5 bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 text-navy-950 font-black text-xs rounded-xl shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer">
+        <button onclick="autoAssignAll()" class="px-3 sm:px-3.5 py-1.5 sm:py-2 bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 text-navy-950 font-black text-xs rounded-xl shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap">
           ⚡ Fair Auto-Assign All
         </button>
 
         <!-- Row 2, Col 2: Print Matrix -->
-        <button onclick="window.print()" class="px-3 py-1.5 bg-navy-950 hover:bg-navy-900 text-gold-400 font-bold text-xs rounded-xl border border-navy-900 transition shadow-xs flex items-center justify-center gap-1.5 cursor-pointer">
+        <button onclick="window.print()" class="px-3 sm:px-3.5 py-1.5 sm:py-2 bg-navy-950 hover:bg-navy-900 text-gold-400 font-bold text-xs rounded-xl border border-navy-900 transition shadow-xs flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap">
           🖨️ Print Matrix
         </button>
       </div>
     </div>
 
     <!-- KPI strip: totals updated by renderAttendanceList()/renderQueue() -->
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mt-3.5 pt-3.5 border-t border-slate-100">
-      <div class="bg-slate-50 rounded-xl p-2.5 sm:p-3 border border-slate-200 flex flex-col justify-center">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3 mt-4 sm:mt-5 pt-4 sm:pt-5 border-t border-slate-100">
+      <div class="bg-slate-50 rounded-xl p-3 sm:p-3.5 border border-slate-200 flex flex-col justify-center">
         <div id="stat-total-teachers" class="text-xl sm:text-2xl font-black text-navy-950">0</div>
         <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mt-0.5">Total Faculty</div>
       </div>
-      <div class="bg-accentRed-50 rounded-xl p-2.5 sm:p-3 border border-red-200 flex flex-col justify-center">
+      <div class="bg-accentRed-50 rounded-xl p-3 sm:p-3.5 border border-red-200 flex flex-col justify-center">
         <div id="stat-absent-today" class="text-xl sm:text-2xl font-black text-accentRed-600">0</div>
         <div class="text-[10px] font-bold text-accentRed-700 uppercase tracking-wider mt-0.5">Absent Today</div>
       </div>
-      <div class="bg-amber-50/70 rounded-xl p-2.5 sm:p-3 border border-amber-200 flex flex-col justify-center">
+      <div class="bg-amber-50/70 rounded-xl p-3 sm:p-3.5 border border-amber-200 flex flex-col justify-center">
         <div id="stat-pending-slots" class="text-xl sm:text-2xl font-black text-amber-700">0</div>
         <div class="text-[10px] font-bold text-amber-800 uppercase tracking-wider mt-0.5">Periods To Adjust</div>
       </div>
-      <div class="bg-emerald-50 rounded-xl p-2.5 sm:p-3 border border-emerald-200 flex flex-col justify-center">
+      <div class="bg-emerald-50 rounded-xl p-3 sm:p-3.5 border border-emerald-200 flex flex-col justify-center">
         <div id="stat-assigned-slots" class="text-xl sm:text-2xl font-black text-emerald-600">0</div>
         <div class="text-[10px] font-bold text-emerald-700 uppercase tracking-wider mt-0.5">Adjusted Slots</div>
       </div>
@@ -119,7 +119,7 @@ tailwind.config = {
   </div>
 
   <!-- ===== SECTION: Workstation (attendance toggles + allocation queue) ===== -->
-  <div class="grid lg:grid-cols-3 gap-4 no-print">
+  <div class="grid lg:grid-cols-3 gap-4 sm:gap-5 no-print">
 
     <!-- Attendance panel: list populated by renderAttendanceList() -->
     <div class="bg-sky-50/70 rounded-2xl border border-sky-200 shadow-sm p-4 flex flex-col">
@@ -128,7 +128,7 @@ tailwind.config = {
           <h2 class="text-sm font-black text-navy-950">Mark Absent Teachers</h2>
           <p class="text-[11px] text-sky-800/80 font-medium">Toggle leave status and duty reasons</p>
         </div>
-        <button onclick="resetAllAttendance()" class="text-[11px] text-accentRed-600 font-bold hover:underline cursor-pointer">Mark All Present</button>
+        <button onclick="resetAllAttendance()" class="text-[11px] text-accentRed-600 font-bold hover:underline cursor-pointer shrink-0">Mark All Present</button>
       </div>
       <div class="space-y-2.5 overflow-y-auto max-h-[380px] custom-scrollbar pr-1" id="teacher-attendance-list"></div>
     </div>
@@ -146,7 +146,7 @@ tailwind.config = {
         <button onclick="clearAssignments()" class="text-xs text-slate-500 hover:text-accentRed-600 font-bold cursor-pointer shrink-0">Clear All</button>
       </div>
       <div class="overflow-x-auto max-h-[380px] custom-scrollbar -mx-1 px-1 sm:mx-0 sm:px-0">
-        <table class="w-full min-w-[560px] text-left text-xs border-collapse">
+        <table class="w-full min-w-[580px] text-left text-xs border-collapse">
           <thead>
             <tr class="bg-slate-50 text-slate-600 font-bold uppercase text-[9px] border-b border-slate-200">
               <th class="py-2.5 px-3 whitespace-nowrap">Period</th>
@@ -179,8 +179,8 @@ tailwind.config = {
       </div>
       <div class="text-xs text-slate-600">Date: <strong id="summary-date" class="text-navy-900">--</strong></div>
     </div>
-    <div class="overflow-x-auto mt-4">
-      <table class="w-full text-center text-xs border-collapse border border-slate-400">
+    <div class="overflow-x-auto mt-4 custom-scrollbar -mx-1 px-1 sm:mx-0 sm:px-0">
+      <table class="w-full min-w-[700px] text-center text-xs border-collapse border border-slate-400">
         <thead id="matrix-head-screen"></thead>
         <tbody id="screen-matrix-body"></tbody>
       </table>
@@ -432,7 +432,7 @@ function renderAttendanceList() {
     return `
     <div class="p-2.5 rounded-xl border flex items-center justify-between transition ${t.isAbsent ? 'bg-accentRed-50 border-red-200 shadow-sm' : 'bg-white border-sky-200/70 shadow-xs hover:border-sky-300'}">
       <div class="flex items-center space-x-2.5">
-        <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-[10px] ${t.isAbsent ? 'bg-accentRed-600 text-white' : 'bg-navy-950 text-gold-400'}">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-[10px] shrink-0 ${t.isAbsent ? 'bg-accentRed-600 text-white' : 'bg-navy-950 text-gold-400'}">
           ${t.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
         </div>
         <div>
@@ -447,7 +447,7 @@ function renderAttendanceList() {
             <option value="On Duty" ${t.leaveReason === 'On Duty' ? 'selected' : ''}>On Duty</option>
             <option value="Short Leave" ${t.leaveReason === 'Short Leave' ? 'selected' : ''}>Short Leave</option>
           </select>` : ''}
-        <label class="relative inline-flex items-center cursor-pointer">
+        <label class="relative inline-flex items-center cursor-pointer shrink-0">
           <input type="checkbox" onchange="toggleAttendance('${t.id}')" ${t.isAbsent ? 'checked' : ''} class="sr-only peer">
           <div class="w-8 h-4 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-accentRed-600"></div>
         </label>
