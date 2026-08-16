@@ -135,25 +135,25 @@ tailwind.config = {
 
     <!-- Allocation queue: rows populated by renderQueue() -->
     <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm p-4 flex flex-col">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+      <div class="flex items-start sm:items-center justify-between pb-3 border-b border-slate-100 mb-3 gap-2">
         <div>
-          <h2 class="text-sm font-black text-navy-900 flex items-center gap-2">
-            <span>Interactive Substitution Allocator</span>
+          <div class="flex flex-wrap items-center gap-2">
+            <h2 class="text-sm font-black text-navy-900">Interactive Substitution Allocator</h2>
             <span id="active-day-badge" class="px-2 py-0.5 text-[10px] rounded-full bg-gold-100 text-gold-800 font-bold">Monday</span>
-          </h2>
-          <p class="text-[11px] text-slate-500">Dynamic workload leveling across free faculty members</p>
+          </div>
+          <p class="text-[11px] text-slate-500 mt-0.5">Dynamic workload leveling across free faculty members</p>
         </div>
-        <button onclick="clearAssignments()" class="text-xs text-slate-500 hover:text-accentRed-600 font-bold cursor-pointer">Clear All</button>
+        <button onclick="clearAssignments()" class="text-xs text-slate-500 hover:text-accentRed-600 font-bold cursor-pointer shrink-0">Clear All</button>
       </div>
-      <div class="overflow-x-auto max-h-[380px] custom-scrollbar">
-        <table class="w-full text-left text-xs border-collapse">
+      <div class="overflow-x-auto max-h-[380px] custom-scrollbar -mx-1 px-1 sm:mx-0 sm:px-0">
+        <table class="w-full min-w-[560px] text-left text-xs border-collapse">
           <thead>
             <tr class="bg-slate-50 text-slate-600 font-bold uppercase text-[9px] border-b border-slate-200">
-              <th class="py-2.5 px-3">Period</th>
-              <th class="py-2.5 px-3">Absent Faculty</th>
-              <th class="py-2.5 px-3">Class</th>
-              <th class="py-2.5 px-3">Assign Free Teacher (Workload)</th>
-              <th class="py-2.5 px-3 text-right">Action</th>
+              <th class="py-2.5 px-3 whitespace-nowrap">Period</th>
+              <th class="py-2.5 px-3 whitespace-nowrap">Absent Faculty</th>
+              <th class="py-2.5 px-3 whitespace-nowrap">Class</th>
+              <th class="py-2.5 px-3 whitespace-nowrap">Assign Free Teacher (Workload)</th>
+              <th class="py-2.5 px-3 text-right whitespace-nowrap">Action</th>
             </tr>
           </thead>
           <tbody id="substitution-table-body" class="divide-y divide-slate-100"></tbody>
@@ -479,23 +479,27 @@ function renderQueue() {
 
       rowsHTML += `
       <tr class="hover:bg-slate-50 transition border-b border-slate-100">
-        <td class="py-2.5 px-3">
+        <td class="py-2.5 px-3 whitespace-nowrap">
           <div class="font-black text-navy-950">${p.name}</div>
           <div class="text-[9px] text-slate-500 font-mono">${p.time}</div>
         </td>
-        <td class="py-2.5 px-3">
+        <td class="py-2.5 px-3 whitespace-nowrap">
           <div class="font-bold text-accentRed-700">${absentT.name}</div>
           <div class="text-[9px] text-slate-400">(${absentT.leaveReason || 'Leave'})</div>
         </td>
-        <td class="py-2.5 px-3"><span class="px-2 py-0.5 bg-navy-950 text-gold-400 font-black rounded text-[10px]">${cls}</span></td>
-        <td class="py-2.5 px-3">
+        <td class="py-2.5 px-3 whitespace-nowrap">
+          <span class="px-2 py-0.5 bg-navy-950 text-gold-400 font-black rounded text-[10px] inline-block whitespace-nowrap">${cls}</span>
+        </td>
+        <td class="py-2.5 px-3 min-w-[180px]">
           <select onchange="assignSub('${key}', this.value)" class="w-full text-xs rounded-lg border ${currentSubId ? 'border-emerald-500 bg-emerald-50 text-emerald-900 font-bold' : 'border-slate-300 text-slate-700'} px-2 py-1.5 focus:outline-none">
             <option value="">-- Choose Free Faculty --</option>
             ${currentSubId && !freeTeachers.some(t => t.id === currentSubId) && assignedTeacher ? `<option value="${assignedTeacher.id}" selected>${assignedTeacher.name} [Load: ${getTeacherLoad(assignedTeacher.id, activeDay)}]</option>` : ''}
             ${freeTeachers.map(t => `<option value="${t.id}" ${t.id === currentSubId ? 'selected' : ''}>${t.name} [Load: ${getTeacherLoad(t.id, activeDay)}]</option>`).join('')}
           </select>
         </td>
-        <td class="py-2.5 px-3 text-right"><button onclick="autoAssignSingle('${key}', '${p.id}')" class="text-[10px] bg-gold-500 hover:bg-gold-600 text-navy-950 font-black px-2.5 py-1 rounded-lg shadow-sm cursor-pointer">Fair Pick</button></td>
+        <td class="py-2.5 px-3 text-right whitespace-nowrap">
+          <button onclick="autoAssignSingle('${key}', '${p.id}')" class="text-[10px] bg-gold-500 hover:bg-gold-600 text-navy-950 font-black px-2.5 py-1.5 rounded-lg shadow-sm cursor-pointer whitespace-nowrap">Fair Pick</button>
+        </td>
       </tr>`;
     });
   });
