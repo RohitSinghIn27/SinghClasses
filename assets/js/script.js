@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", () => {
   window.scrollTo(0, 0);
   window.addEventListener("pageshow", () => window.scrollTo(0, 0));
@@ -75,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const currentYearElem = document.getElementById("current-year");
   if (currentYearElem) currentYearElem.textContent = new Date().getFullYear();
 
-  // 5. DYNAMIC FABRIC CANVAS BACKGROUND (EXCLUDED NAV CONTAINER & REDUCED PARTICLE COUNT)
+  // 5. DYNAMIC FABRIC CANVAS BACKGROUND
   const initDynamicFabric = (selector) => {
     const wrapper = document.querySelector(selector); if (!wrapper) return;
     const canvas = document.createElement("canvas");
@@ -136,7 +135,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function buildSlides(studentData) {
-    const track = document.getElementById("cbseSliderTrack"); track.innerHTML = "";
+    const track = document.getElementById("cbseSliderTrack"); 
+    if (!track) return;
+    track.innerHTML = "";
     studentData.forEach((student, index) => {
       const picKey = Object.keys(student).find((k) => k.toLowerCase().includes("picture")) || "CandidatePicture";
       const rawPic = (student[picKey] || "").replace(/['"“”\n\r]/g, "").trim();
@@ -168,6 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function initReportSlider() {
     const track = document.getElementById("cbseSliderTrack"), slides = document.querySelectorAll("#cbse-results-widget .slide-wrapper"), dotsContainer = document.getElementById("cbseDotsContainer");
+    if (!dotsContainer || !track) return;
     dotsContainer.innerHTML = ""; if (slides.length <= 1) return;
     let currentIndex = 0, slideInterval;
     
@@ -197,4 +199,314 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fetchGoogleSheetData);
   else fetchGoogleSheetData();
+})();
+
+// 7. YOUTUBE & GOOGLE REVIEWS TESTIMONIAL MODULE
+(function initReviewsModule() {
+  const APPS_SCRIPT_BASE_URL = "https://script.google.com/macros/s/AKfycbwFiDDgh-1rIDD0Ba-uzVjsMYKnKxR-3b44vxKe-kUOaUo8-Js68WvMMZd7uII3u9Ze4g/exec";
+  const TOTAL_SLOTS = 8;
+  let grid, filterButtons;
+
+  let rawCommentsData = [];
+  let currentFilter = 'all';
+  let currentFilteredPool = [];
+  let activeSlots = [];
+  let isHovered = new Array(TOTAL_SLOTS).fill(false);
+  let rotationIntervalId = null;
+  let recentSlotHistory = [];
+
+  function shuffle(array) {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  function calculateRelativeTime(dateStr) {
+    if (!dateStr) return '';
+    const str = String(dateStr).trim();
+
+    let targetDate;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
+      const parts = str.split('-');
+      targetDate = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+    } else {
+      targetDate = new Date(str);
+    }
+
+    if (isNaN(targetDate.getTime())) return str;
+
+    const now = new Date();
+    const diffMs = now.getTime() - targetDate.getTime();
+    if (diffMs < 0) return 'just now';
+
+    const diffSec = Math.floor(diffMs / 1000);
+    const diffMin = Math.floor(diffSec / 60);
+    const diffHr = Math.floor(diffMin / 60);
+    const diffDays = Math.floor(diffHr / 24);
+    const diffWeeks = Math.floor(diffDays / 7);
+    const diffMonths = Math.floor(diffDays / 30);
+    const diffYears = Math.floor(diffDays / 365);
+
+    if (diffDays === 0) {
+      if (diffHr < 1) return diffMin < 1 ? 'just now' : `${diffMin}m ago`;
+      return `${diffHr}h ago`;
+    }
+    if (diffDays === 1) return '1d ago';
+    if (diffDays < 7) return `${diffDays}d ago`;
+    if (diffWeeks < 5) return `${diffWeeks}w ago`;
+    if (diffMonths < 12) return `${diffMonths}mo ago`;
+    return `${diffYears}y ago`;
+  }
+
+  function normalizeCategory(cat) {
+    if (!cat) return 'class12';
+    const clean = String(cat).toLowerCase().replace(/[\s\-_]/g, '');
+
+    if (clean.includes('google')) return 'google_review';
+    if (clean.includes('12') || clean.includes('classxii') || clean === 'xii') return 'class12';
+    if (clean.includes('11') || clean.includes('classxi') || clean === 'xi') return 'class11';
+    if (clean.includes('cuet')) return 'cuet';
+    if (clean.includes('high') || clean.includes('college') || clean.includes('btech') || clean.includes('bca') || clean.includes('web')) return 'higher_ed';
+
+    return clean;
+  }
+
+  function processIncomingData(items) {
+    return items.map(item => {
+      const rawName = String(item.name || '').trim();
+      const rawInitials = String(item.initials || '').trim() || 
+        (rawName ? rawName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) : 'US');
+      
+      const rawDate = item.time || item.date || '';
+      const rawCat = item.category || '';
+      const rawVideo = String(item.video || 'Computer Science Lecture').trim();
+      const rawText = String(item.text || '').trim();
+
+      return {
+        name: rawName,
+        initials: rawInitials,
+        formattedTime: calculateRelativeTime(rawDate),
+        category: normalizeCategory(rawCat),
+        video: rawVideo,
+        text: rawText
+      };
+    }).filter(item => item.name && item.text);
+  }
+
+  function applyFilter(category) {
+    let pool = [];
+    if (category === 'all') {
+      pool = [...rawCommentsData];
+    } else {
+      pool = rawCommentsData.filter(c => c.category === category);
+    }
+
+    currentFilteredPool = shuffle(pool);
+    recentSlotHistory = [];
+    renderGrid();
+    restartRotator();
+  }
+
+  function renderCardContent(item, isYellow) {
+    const avatarClass = isYellow ? 'avatar-yellow-card' : 'avatar-white-card';
+    const pillClass = isYellow ? 'pill-yellow-card' : 'pill-white-card';
+    const timeClass = isYellow ? 'time-yellow-card' : 'time-white-card';
+    const commentClass = isYellow ? 'comment-yellow-card' : 'comment-white-card';
+
+    const isGoogleReview = item.category === 'google_review';
+
+    const iconSvg = isGoogleReview 
+      ? `<div style="width: 14px; height: 14px; border-radius: 50%; background: rgba(255,255,255,0.9); box-shadow: 0 1px 2px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; flex-shrink: 0; padding: 1.5px;">
+          <svg style="width: 100%; height: 100%;" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+            <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 10.03 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+            <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+          </svg>
+        </div>`
+      : `<div style="width: 14px; height: 14px; border-radius: 4px; background: rgba(220, 38, 38, 0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+          <svg style="width: 10px; height: 10px; color: #dc2626; fill: currentColor;" viewBox="0 0 24 24">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+        </div>`;
+
+    return `
+      <div class="review-card-top">
+        <div class="review-avatar ${avatarClass}">
+          ${item.initials}
+        </div>
+        <div class="review-user-info">
+          <div class="review-user-row">
+            <span class="review-user-name">${item.name}</span>
+            <span class="review-time ${timeClass}">${item.formattedTime}</span>
+          </div>
+          <div class="review-source-pill ${pillClass}">
+            ${iconSvg}
+            <span class="review-source-title">${item.video}</span>
+          </div>
+        </div>
+      </div>
+      <p class="review-comment-body ${commentClass}">
+        "${item.text}"
+      </p>
+    `;
+  }
+
+  function renderGrid() {
+    if (!grid) return;
+    grid.innerHTML = '';
+    activeSlots = [];
+
+    if (currentFilteredPool.length === 0) {
+      grid.innerHTML = `
+        <div class="reviews-error-state">
+          No testimonials available for this category yet.
+        </div>
+      `;
+      return;
+    }
+
+    const slotCount = Math.min(TOTAL_SLOTS, currentFilteredPool.length);
+
+    for (let i = 0; i < slotCount; i++) {
+      const item = currentFilteredPool[i];
+      activeSlots.push(item);
+
+      const isYellow = (Math.floor(i / 4) + (i % 4)) % 2 === 0;
+      const themeClass = isYellow ? 'theme-yellow' : 'theme-white';
+
+      const cardElem = document.createElement('div');
+      cardElem.className = `review-card ${themeClass}`;
+      cardElem.id = `review-slot-${i}`;
+      cardElem.innerHTML = renderCardContent(item, isYellow);
+
+      cardElem.addEventListener('click', () => {
+        cardElem.classList.toggle('is-expanded');
+      });
+
+      cardElem.addEventListener('mouseenter', () => { isHovered[i] = true; });
+      cardElem.addEventListener('mouseleave', () => { isHovered[i] = false; });
+
+      grid.appendChild(cardElem);
+    }
+  }
+
+  function cycleSingleCard() {
+    if (currentFilteredPool.length <= activeSlots.length) return;
+
+    const slotCount = activeSlots.length;
+    const eligibleSlots = [];
+
+    for (let i = 0; i < slotCount; i++) {
+      const cardElem = document.getElementById(`review-slot-${i}`);
+      if (cardElem && !isHovered[i] && !cardElem.classList.contains('is-expanded')) {
+        if (!recentSlotHistory.includes(i)) {
+          eligibleSlots.push(i);
+        }
+      }
+    }
+
+    const slotCandidates = eligibleSlots.length > 0 ? eligibleSlots : Array.from({length: slotCount}, (_, i) => i);
+    const chosenSlotIndex = slotCandidates[Math.floor(Math.random() * slotCandidates.length)];
+
+    recentSlotHistory.push(chosenSlotIndex);
+    if (recentSlotHistory.length > Math.floor(slotCount / 2)) {
+      recentSlotHistory.shift();
+    }
+
+    const availableItems = currentFilteredPool.filter(poolItem => 
+      !activeSlots.some(active => active.name === poolItem.name && active.video === poolItem.video)
+    );
+
+    if (availableItems.length === 0) return;
+
+    const newItem = availableItems[Math.floor(Math.random() * availableItems.length)];
+    const card = document.getElementById(`review-slot-${chosenSlotIndex}`);
+    if (!card) return;
+
+    const isYellow = (Math.floor(chosenSlotIndex / 4) + (chosenSlotIndex % 4)) % 2 === 0;
+
+    card.style.opacity = '0';
+    card.style.transform = 'scale(0.97) translateY(2px)';
+
+    setTimeout(() => {
+      activeSlots[chosenSlotIndex] = newItem;
+      card.innerHTML = renderCardContent(newItem, isYellow);
+
+      card.style.opacity = '1';
+      card.style.transform = 'scale(1) translateY(0)';
+
+      card.classList.remove('shimmer-active');
+      void card.offsetWidth;
+      card.classList.add('shimmer-active');
+
+      setTimeout(() => {
+        card.classList.remove('shimmer-active');
+      }, 900);
+    }, 350);
+  }
+
+  function restartRotator() {
+    if (rotationIntervalId) clearInterval(rotationIntervalId);
+    if (currentFilteredPool.length > TOTAL_SLOTS) {
+      rotationIntervalId = setInterval(cycleSingleCard, 4200);
+    }
+  }
+
+  function showErrorMessage() {
+    if (rotationIntervalId) clearInterval(rotationIntervalId);
+    if (!grid) return;
+    grid.innerHTML = `
+      <div class="reviews-error-state" style="flex-direction: column;">
+        <svg style="width: 32px; height: 32px; color: rgba(217, 119, 6, 0.8); margin-bottom: 8px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+        </svg>
+        <p style="font-weight: 700; color: #374151;">Currently unable to fetch reviews.</p>
+        <p style="font-size: 10px; color: #9ca3af; margin-top: 2px;">Please check back in a moment.</p>
+      </div>
+    `;
+  }
+
+  // JSONP Global Callback Function
+  window.handleSheetReviews = function(json) {
+    if (json && json.status === "success" && Array.isArray(json.data) && json.data.length > 0) {
+      rawCommentsData = processIncomingData(json.data);
+      applyFilter('all');
+    } else {
+      showErrorMessage();
+    }
+  };
+
+  function loadTestimonials() {
+    grid = document.getElementById('reviewsGrid');
+    filterButtons = document.querySelectorAll('.reviews-filter-btn');
+
+    if (!grid) return;
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (rawCommentsData.length === 0) return;
+        filterButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.category;
+        applyFilter(currentFilter);
+      });
+    });
+
+    const script = document.createElement('script');
+    script.src = `${APPS_SCRIPT_BASE_URL}?callback=handleSheetReviews&_t=${Date.now()}`;
+    script.onerror = function() {
+      showErrorMessage();
+    };
+    document.body.appendChild(script);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", loadTestimonials);
+  } else {
+    loadTestimonials();
+  }
 })();
