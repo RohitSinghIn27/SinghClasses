@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // 9. Ambient Canvas Particles
-  ['canvasA', 'canvasB', 'canvasC', 'canvasD1', 'canvasD2', 'canvasBottom'].forEach(id => {
+  ['canvasA', 'canvasB', 'canvasC', 'canvasD', 'canvasBottom'].forEach(id => {
     const canvas = document.getElementById(id);
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
