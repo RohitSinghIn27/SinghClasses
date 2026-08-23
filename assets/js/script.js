@@ -261,18 +261,19 @@ document.addEventListener("DOMContentLoaded", () => {
     return `${diffYears}y ago`;
   }
 
-  function normalizeCategory(cat) {
-    if (!cat) return 'class12';
-    const clean = String(cat).toLowerCase().replace(/[\s\-_]/g, '');
+function normalizeCategory(cat) {
+  if (!cat) return 'class12';
+  const clean = String(cat).toLowerCase().replace(/[\s\-_]/g, '');
 
-    if (clean.includes('google')) return 'google_review';
-    if (clean.includes('12') || clean.includes('classxii') || clean === 'xii') return 'class12';
-    if (clean.includes('11') || clean.includes('classxi') || clean === 'xi') return 'class11';
-    if (clean.includes('cuet')) return 'cuet';
-    if (clean.includes('high') || clean.includes('college') || clean.includes('btech') || clean.includes('bca') || clean.includes('web')) return 'higher_ed';
+  if (clean.includes('google')) return 'google_review';
+  if (clean.includes('12') || clean.includes('xii')) return 'class12';
+  if (clean.includes('11') || clean.includes('xi')) return 'class11';
+  if (clean.includes('9') || clean.includes('10') || clean.includes('ix') || clean.includes('classx') || clean.includes('ai') || clean.includes('417')) return 'class9_10';
+  if (clean.includes('cuet')) return 'cuet';
+  if (clean.includes('high') || clean.includes('college') || clean.includes('btech') || clean.includes('bca') || clean.includes('mca') || clean.includes('ugc') || clean.includes('dsssb') || clean.includes('web')) return 'higher_ed';
 
-    return clean;
-  }
+  return clean;
+}
 
   function processIncomingData(items) {
     return items.map(item => {
