@@ -64,6 +64,7 @@
             <span class="divider hide-mobile" aria-hidden="true">|</span>
             <span class="announcement-segment hide-mobile"><span class="inline-svg-icon icon-orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></span>Online & Offline Classes Available</span>
         </div>
+        
         <section class="hero-wrapper" aria-label="Welcome Introduction">
             <div class="hero-container">
                 <div class="hero-matrix-dots hero-dots-bl" aria-hidden="true"></div>
@@ -86,6 +87,7 @@
                 </div>
             </div>
         </section>
+
         <section class="classes-section" aria-label="Academic Offerings">
             <div class="section-decor-header"><h2><span class="header-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c0 2 3 6 3s6-1 6-3v-5"></path></svg></span> Courses Available for Classes IX–XII <span class="header-svg-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"></path></svg></span></h2></div>
             <div class="classes-layout-grid">
@@ -95,6 +97,7 @@
             </div>
             <div class="classes-summary-footer"><span>🏫 Online & Offline Classes</span> <span class="bullet-separator">|</span> <span>📍 Sant Nagar & Mukherjee Nagar Centers</span> <span class="bullet-separator">|</span> <span>🎯 Flexible Learning Options</span></div>
         </section>
+
         <section class="teacher-section" id="meet-teacher" aria-label="Instructor Bio">
             <div class="teacher-photo-frame"><img alt="Portrait profile of Instructor Rohit Singh" height="170" width="170" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEglXvBDODoAbkNlIG0iGmrw1gSbyb0GKbnsKUhjdorH8Ur4sb52aZnlnWFWXDuh6C4-cTQmbiih9UPRI2OiEf0lO6-8Aj5IOV1M3wsLw547yZSghXL__an7vZmSteH-TbLGlZK__7KslW0CcMUgc-1pAIjoy790Rdte-NLNjN7ABV-zcRJ3Yor3gsLNvxoo/s500/5_Original.jpg" loading="lazy"></div>
             <div class="teacher-biography">
@@ -103,10 +106,49 @@
                 <h3 class="tagline-animated">Think Logic <span class="tagline-separator" aria-hidden="true">✦</span> Code Magic</h3>
             </div>
         </section>
+
         <section class="results-section" aria-label="Achievements and Testimonials">
             <div class="section-decor-header"><h1><span class="header-svg-icon" aria-hidden="true"><svg width="24" height="24"><use href="#icon-trophy"/></svg></span> CBSE BOARD RESULTS ✦ 2026–27 <span class="header-svg-icon" aria-hidden="true"><svg width="24" height="24"><use href="#icon-trophy"/></svg></span></h1></div>
             <div id="cbse-results-widget"><div class="dashboard-wrapper"><div class="slider-viewport"><div class="slider-track" id="cbseSliderTrack"><div class="loading-container"><div class="loader-ring"></div><div class="loading-text">Fetching Live Data...</div></div></div><div class="slider-controls" id="cbseDotsContainer"></div></div></div></div>
         </section>
+
+        <!-- Dynamic Reviews & Testimonials Section (Moved Before Playlists) -->
+        <section class="reviews-section" aria-label="Student Reviews and Testimonials">
+            <svg class="review-star-top" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z"/>
+            </svg>
+            <svg class="review-star-bottom" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z"/>
+            </svg>
+
+            <div class="reviews-header">
+                <h2>Loved by Students. Trusted by Teachers.</h2>
+                <p>Real feedback from learners across school boards, entrance tests, and higher computer science.</p>
+            </div>
+
+<!-- Category Filter Pills -->
+<div class="reviews-filter-bar" id="filterBar">
+    <button class="reviews-filter-btn active" data-category="all">All Reviews</button>
+    <button class="reviews-filter-btn" data-category="higher_ed">Higher Education</button>
+    <button class="reviews-filter-btn" data-category="cuet">CUET</button>
+    <button class="reviews-filter-btn" data-category="class12">Class 12</button>
+    <button class="reviews-filter-btn" data-category="class11">Class 11</button>
+    <button class="reviews-filter-btn" data-category="class9_10">Class IX–X</button>
+    <button class="reviews-filter-btn" data-category="google_review">Google Reviews</button>
+</div>
+
+            <div class="reviews-grid" id="reviewsGrid">
+                <div class="reviews-loading-state">
+                    <svg class="reviews-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle style="opacity: 0.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path style="opacity: 0.75;" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>Loading live student reviews...</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Course Learning Dashboards (Positioned directly before footer) -->
         <section class="playlists-section" aria-label="Course Learning Dashboards">
             <div class="pl-header-wrap"><div class="pl-main-title"><span class="header-svg-icon icon-orange" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg></span>Zero to Hero Learning Dashboards <svg class="title-play-icon" viewBox="0 0 24 24" fill="none" stroke="#e04d2d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg></div><p class="pl-sub-title">Structured course directories designed to take you from basics to mastery</p></div>
             <div class="pl-list-container">
@@ -120,45 +162,8 @@
                 <a href="https://www.youtube.com/playlist?list=PL_xrPHUh3EKoPf018x_Un9h7dZFRvLYs6" class="pl-dashboard-row"><div class="pl-left-meta"><svg class="pl-raw-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="15" x2="23" y2="15"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="15" x2="4" y2="15"></line></svg><div><div class="pl-item-title">Artificial Intelligence</div><div class="pl-item-desc">Notes • OneShot • PYQs • Lab</div></div></div><div class="pl-arrow-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div></a>
             </div>
         </section>
-
-        <!-- Dynamic Reviews & Testimonials Section -->
-        <section class="reviews-section" aria-label="Student Reviews and Testimonials">
-            <!-- Sparkle Stars -->
-            <svg class="review-star-top" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z"/>
-            </svg>
-            <svg class="review-star-bottom" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z"/>
-            </svg>
-
-            <!-- Header Section -->
-            <div class="reviews-header">
-                <h2>Loved by Students. Trusted by Teachers.</h2>
-                <p>Real feedback from learners across school boards, entrance tests, and higher computer science.</p>
-            </div>
-
-            <!-- Category Filter Pills -->
-            <div class="reviews-filter-bar" id="filterBar">
-                <button class="reviews-filter-btn active" data-category="all">All Reviews</button>
-                <button class="reviews-filter-btn" data-category="class11">Class 11</button>
-                <button class="reviews-filter-btn" data-category="class12">Class 12</button>
-                <button class="reviews-filter-btn" data-category="cuet">CUET</button>
-                <button class="reviews-filter-btn" data-category="higher_ed">Higher Education</button>
-                <button class="reviews-filter-btn" data-category="google_review">Google Reviews</button>
-            </div>
-
-            <!-- 4x2 Cards Grid -->
-            <div class="reviews-grid" id="reviewsGrid">
-                <div class="reviews-loading-state">
-                    <svg class="reviews-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle style="opacity: 0.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path style="opacity: 0.75;" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <span>Loading live student reviews...</span>
-                </div>
-            </div>
-        </section>
     </main>
+
     <footer class="site-footer" role="contentinfo">
         <div class="footer-layout-grid">
             <div class="footer-column contact-column">
