@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   window.scrollTo(0, 0);
   window.addEventListener("pageshow", () => window.scrollTo(0, 0));
 
-  // 1. RIGHT CLICK DISABLE & BLUR PROTECTION
+  // 1. COMPLETE RIGHT CLICK DISABLE & STRICT IMAGE-ONLY BLUR PROTECTION
   document.addEventListener("contextmenu", (e) => e.preventDefault());
 
   const blurImages = () => document.querySelectorAll("img").forEach((i) => i.classList.add("img-blur-protected"));
@@ -21,7 +21,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   });
-  document.addEventListener("keyup", (e) => { if (e.key === "PrintScreen") blurImages(); });
+  document.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") blurImages();
+  });
   document.addEventListener("copy", blurImages);
   window.addEventListener("blur", blurImages);
   window.addEventListener("focus", unblurImages);
@@ -37,13 +39,16 @@ document.addEventListener("DOMContentLoaded", () => {
     canvas.style.cssText = "position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:99999;";
     document.body.appendChild(canvas);
     const ctx = canvas.getContext("2d");
-    let w = (canvas.width = window.innerWidth), h = (canvas.height = window.innerHeight);
+    let w = (canvas.width = window.innerWidth),
+      h = (canvas.height = window.innerHeight);
     window.addEventListener("resize", () => {
       w = canvas.width = window.innerWidth;
       h = canvas.height = window.innerHeight;
     });
-    const particles = [], colors = ["#e04d2d", "#f2b824", "#ffffff", "#13386b"];
-    let lastX = 0, lastY = 0;
+    const particles = [],
+      colors = ["#e04d2d", "#f2b824", "#ffffff", "#13386b"];
+    let lastX = 0,
+      lastY = 0;
 
     window.addEventListener("mousemove", (e) => {
       if (Math.hypot(e.clientX - lastX, e.clientY - lastY) > 6) {
@@ -77,7 +82,12 @@ document.addEventListener("DOMContentLoaded", () => {
       ctx.beginPath();
       for (let i = 0; i < 4; i++) {
         ctx.lineTo(Math.cos((i * Math.PI) / 2) * p.size, Math.sin((i * Math.PI) / 2) * p.size);
-        ctx.quadraticCurveTo(0, 0, Math.cos(((i + 1) * Math.PI) / 2) * p.size * 0.3, Math.sin(((i + 1) * Math.PI) / 2) * p.size * 0.3);
+        ctx.quadraticCurveTo(
+          0,
+          0,
+          Math.cos(((i + 1) * Math.PI) / 2) * p.size * 0.3,
+          Math.sin(((i + 1) * Math.PI) / 2) * p.size * 0.3
+        );
       }
       ctx.closePath();
       ctx.fill();
@@ -100,7 +110,8 @@ document.addEventListener("DOMContentLoaded", () => {
   })();
 
   // 3. NAVIGATION & HAMBURGER MENU
-  const hamburgerToggle = document.getElementById("hamburgerToggle"), navMenu = document.getElementById("nav-menu");
+  const hamburgerToggle = document.getElementById("hamburgerToggle"),
+    navMenu = document.getElementById("nav-menu");
   if (hamburgerToggle && navMenu) {
     const toggleMenu = (state) => {
       const isOpen = state !== undefined ? state : !navMenu.classList.contains("open");
@@ -108,7 +119,10 @@ document.addEventListener("DOMContentLoaded", () => {
       navMenu.classList.toggle("open", isOpen);
       hamburgerToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
     };
-    hamburgerToggle.addEventListener("click", (e) => { e.stopPropagation(); toggleMenu(); });
+    hamburgerToggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      toggleMenu();
+    });
     document.querySelectorAll(".nav-link").forEach((link) => link.addEventListener("click", () => toggleMenu(false)));
     document.addEventListener("click", (e) => {
       if (!hamburgerToggle.contains(e.target) && !navMenu.contains(e.target)) toggleMenu(false);
@@ -127,7 +141,10 @@ document.addEventListener("DOMContentLoaded", () => {
     canvas.style.cssText = "position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;";
     wrapper.insertBefore(canvas, wrapper.firstChild);
     const ctx = canvas.getContext("2d");
-    let w = 0, h = 0, dots = [], cursor = { x: -2000, y: -2000 };
+    let w = 0,
+      h = 0,
+      dots = [],
+      cursor = { x: -2000, y: -2000 };
 
     new ResizeObserver(() => {
       w = canvas.width = wrapper.offsetWidth;
@@ -172,7 +189,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (p.x < 0 || p.x > w) p.vx *= -1;
         if (p.y < 0 || p.y > h) p.vy *= -1;
         const cDist = (cursor.x - p.x) ** 2 + (cursor.y - p.y) ** 2;
-        let size = p.r, color = "rgba(224,77,45,0.35)";
+        let size = p.r,
+          color = "rgba(224,77,45,0.35)";
         if (cDist < 16900) {
           size = p.r + (1 - Math.sqrt(cDist) / 130) * 3;
           color = "rgba(224,77,45,0.95)";
@@ -194,10 +212,15 @@ document.addEventListener("DOMContentLoaded", () => {
   [".classes-section", ".playlists-section", ".results-section", ".teacher-section"].forEach(initDynamicFabric);
 });
 
-// 6. CBSE RESULT WIDGET (With Instant Cache)
+// 6. CBSE RESULT WIDGET (Visible only on data readiness)
 (function () {
-  const RESULTS_API_URL = "https://script.google.com/macros/s/AKfycby8y_UnsNqsHTX8-vmbwctvV10XeNnhupX6lzJFE8xmQRdxOsAQ4r7l1lxgwqZ65rEPuQ/exec";
+  const RESULTS_API_URL =
+    "https://script.google.com/macros/s/AKfycby8y_UnsNqsHTX8-vmbwctvV10XeNnhupX6lzJFE8xmQRdxOsAQ4r7l1lxgwqZ65rEPuQ/exec";
   const CACHE_KEY = "sc_cbse_results_cache";
+  const sectionElem = document.querySelector(".results-section") || document.getElementById("cbse-results-widget");
+
+  // Ensure initially hidden
+  if (sectionElem) sectionElem.style.display = "none";
 
   function getProp(obj, propName) {
     if (!obj) return "";
@@ -210,16 +233,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const track = document.getElementById("cbseSliderTrack");
     if (!track) return;
 
-    // 1. Instant Cache Load
+    // Load from cache instantly if available
     const cachedData = localStorage.getItem(CACHE_KEY);
     if (cachedData) {
       try {
         const parsed = JSON.parse(cachedData);
-        if (Array.isArray(parsed) && parsed.length > 0) buildSlides(parsed);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          buildSlides(parsed);
+          if (sectionElem) sectionElem.style.display = "";
+        }
       } catch (e) {}
     }
 
-    // 2. Background Revalidation
     try {
       const response = await fetch(RESULTS_API_URL, { method: "GET", redirect: "follow" });
       const json = await response.json();
@@ -228,13 +253,10 @@ document.addEventListener("DOMContentLoaded", () => {
       if (studentData && studentData.length > 0) {
         localStorage.setItem(CACHE_KEY, JSON.stringify(studentData));
         buildSlides(studentData);
-      } else if (!cachedData) {
-        track.innerHTML = `<div class="loading-container"><div class="loading-text" style="color:#ef4444;">No result records found.</div></div>`;
+        if (sectionElem) sectionElem.style.display = "";
       }
     } catch (err) {
-      if (!cachedData) {
-        track.innerHTML = `<div class="loading-container"><div class="loading-text" style="color:#ef4444;">Error loading results.</div></div>`;
-      }
+      // Keep hidden if fetch fails and no cache exists
     }
   }
 
@@ -349,9 +371,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const donutChart = wrapper.querySelector(".donut-chart");
       if (!donutChart) return;
       const marks = Math.max(0, Math.min(100, parseInt(donutChart.getAttribute("data-score"), 10) || 0));
-      const gradeText = marks >= 90 ? "A+ Grade" : marks >= 80 ? "A Grade" : marks >= 70 ? "B+ Grade" : marks >= 60 ? "B Grade" : "C Grade";
+      const gradeText =
+        marks >= 90 ? "A+ Grade" : marks >= 80 ? "A Grade" : marks >= 70 ? "B+ Grade" : marks >= 60 ? "B Grade" : "C Grade";
       const colorHex = marks >= 90 ? "#e04d2d" : marks >= 80 ? "#13386b" : marks >= 70 ? "#f2b824" : "#525b68";
-      const scoreNum = wrapper.querySelector(".score-num"), progressBar = wrapper.querySelector(".progress-fill");
+      const scoreNum = wrapper.querySelector(".score-num"),
+        progressBar = wrapper.querySelector(".progress-fill");
 
       scoreNum.innerText = marks;
       scoreNum.style.color = colorHex;
@@ -371,7 +395,8 @@ document.addEventListener("DOMContentLoaded", () => {
     dotsContainer.innerHTML = "";
     if (slides.length <= 1) return;
 
-    let currentIndex = 0, slideInterval;
+    let currentIndex = 0,
+      slideInterval;
 
     dotsContainer.innerHTML = `
       <button class="slider-arrow prev-arrow" aria-label="Previous">
@@ -390,7 +415,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const dot = document.createElement("div");
       dot.classList.add("slider-dot");
       if (index === 0) dot.classList.add("active");
-      dot.addEventListener("click", () => { goToSlide(index); resetInterval(); });
+      dot.addEventListener("click", () => {
+        goToSlide(index);
+        resetInterval();
+      });
       innerDots.appendChild(dot);
     });
 
@@ -413,21 +441,27 @@ document.addEventListener("DOMContentLoaded", () => {
       resetInterval();
     });
 
-    function startInterval() { slideInterval = setInterval(() => goToSlide((currentIndex + 1) % slides.length), 6000); }
-    function resetInterval() { clearInterval(slideInterval); startInterval(); }
+    function startInterval() {
+      slideInterval = setInterval(() => goToSlide((currentIndex + 1) % slides.length), 6000);
+    }
+    function resetInterval() {
+      clearInterval(slideInterval);
+      startInterval();
+    }
     startInterval();
   }
 
   fetchGoogleSheetData();
 })();
 
-// 7. YOUTUBE & GOOGLE REVIEWS (With Instant Cache)
+// 7. YOUTUBE & GOOGLE REVIEWS (Visible only on data readiness)
 (function initReviewsModule() {
-  const TESTIMONIALS_API_URL = "https://script.google.com/macros/s/AKfycby9UsEHn8ACEFc84PjT2I9v_Vsam4dagYZK3YyBVcErTbkxMFltOquwmoPr2c9-2k-EWw/exec";
+  const TESTIMONIALS_API_URL =
+    "https://script.google.com/macros/s/AKfycby9UsEHn8ACEFc84PjT2I9v_Vsam4dagYZK3YyBVcErTbkxMFltOquwmoPr2c9-2k-EWw/exec";
   const CACHE_KEY = "sc_reviews_cache";
   const TOTAL_SLOTS = 8;
 
-  let grid, filterButtons;
+  let grid, filterButtons, sectionElem;
   let rawCommentsData = [];
   let currentFilter = "all";
   let currentFilteredPool = [];
@@ -485,9 +519,27 @@ document.addEventListener("DOMContentLoaded", () => {
     if (clean.includes("google")) return "google_review";
     if (clean.includes("12") || clean.includes("xii")) return "class12";
     if (clean.includes("11") || clean.includes("xi")) return "class11";
-    if (clean.includes("9") || clean.includes("10") || clean.includes("ix") || clean.includes("classx") || clean.includes("ai") || clean.includes("417")) return "class9_10";
+    if (
+      clean.includes("9") ||
+      clean.includes("10") ||
+      clean.includes("ix") ||
+      clean.includes("classx") ||
+      clean.includes("ai") ||
+      clean.includes("417")
+    )
+      return "class9_10";
     if (clean.includes("cuet")) return "cuet";
-    if (clean.includes("high") || clean.includes("college") || clean.includes("btech") || clean.includes("bca") || clean.includes("mca") || clean.includes("ugc") || clean.includes("dsssb") || clean.includes("web")) return "higher_ed";
+    if (
+      clean.includes("high") ||
+      clean.includes("college") ||
+      clean.includes("btech") ||
+      clean.includes("bca") ||
+      clean.includes("mca") ||
+      clean.includes("ugc") ||
+      clean.includes("dsssb") ||
+      clean.includes("web")
+    )
+      return "higher_ed";
     return clean;
   }
 
@@ -495,7 +547,9 @@ document.addEventListener("DOMContentLoaded", () => {
     return items
       .map((item) => {
         const rawName = String(getField(item, "Name") || "").trim();
-        const rawInitials = String(getField(item, "Initials") || "").trim() || (rawName ? rawName.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2) : "US");
+        const rawInitials =
+          String(getField(item, "Initials") || "").trim() ||
+          (rawName ? rawName.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2) : "US");
         const rawDate = getField(item, "Time") || getField(item, "Date") || "";
         const rawCat = getField(item, "Category") || "";
         const rawVideo = String(getField(item, "Video") || "Computer Science Lecture").trim();
@@ -514,7 +568,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function applyFilter(category) {
-    currentFilteredPool = shuffle(category === "all" ? [...rawCommentsData] : rawCommentsData.filter((c) => c.category === category));
+    currentFilteredPool = shuffle(
+      category === "all" ? [...rawCommentsData] : rawCommentsData.filter((c) => c.category === category)
+    );
     recentSlotHistory = [];
     renderGrid();
     restartRotator();
@@ -552,10 +608,7 @@ document.addEventListener("DOMContentLoaded", () => {
     grid.innerHTML = "";
     activeSlots = [];
 
-    if (currentFilteredPool.length === 0) {
-      grid.innerHTML = `<div class="reviews-error-state">No testimonials available for this category yet.</div>`;
-      return;
-    }
+    if (currentFilteredPool.length === 0) return;
 
     const slotCount = Math.min(TOTAL_SLOTS, currentFilteredPool.length);
     for (let i = 0; i < slotCount; i++) {
@@ -568,8 +621,12 @@ document.addEventListener("DOMContentLoaded", () => {
       cardElem.id = `review-slot-${i}`;
       cardElem.innerHTML = renderCardContent(item, isYellow);
       cardElem.addEventListener("click", () => cardElem.classList.toggle("is-expanded"));
-      cardElem.addEventListener("mouseenter", () => { isHovered[i] = true; });
-      cardElem.addEventListener("mouseleave", () => { isHovered[i] = false; });
+      cardElem.addEventListener("mouseenter", () => {
+        isHovered[i] = true;
+      });
+      cardElem.addEventListener("mouseleave", () => {
+        isHovered[i] = false;
+      });
       grid.appendChild(cardElem);
     }
   }
@@ -592,7 +649,9 @@ document.addEventListener("DOMContentLoaded", () => {
     recentSlotHistory.push(chosenIndex);
     if (recentSlotHistory.length > Math.floor(slotCount / 2)) recentSlotHistory.shift();
 
-    const availableItems = currentFilteredPool.filter((p) => !activeSlots.some((a) => a.name === p.name && a.video === p.video));
+    const availableItems = currentFilteredPool.filter(
+      (p) => !activeSlots.some((a) => a.name === p.name && a.video === p.video)
+    );
     if (availableItems.length === 0) return;
 
     const newItem = availableItems[Math.floor(Math.random() * availableItems.length)];
@@ -628,6 +687,7 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem(CACHE_KEY, JSON.stringify(items));
       rawCommentsData = processIncomingData(items);
       applyFilter("all");
+      if (sectionElem) sectionElem.style.display = "";
     }
   };
 
@@ -635,6 +695,14 @@ document.addEventListener("DOMContentLoaded", () => {
     grid = document.getElementById("reviewsGrid");
     filterButtons = document.querySelectorAll(".reviews-filter-btn");
     if (!grid) return;
+
+    sectionElem =
+      document.querySelector(".testimonials-section") ||
+      document.querySelector(".reviews-section") ||
+      grid.closest("section");
+
+    // Ensure initially hidden
+    if (sectionElem) sectionElem.style.display = "none";
 
     filterButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
@@ -646,7 +714,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
-    // 1. Instant Cache Load
+    // Check localStorage cache
     const cachedReviews = localStorage.getItem(CACHE_KEY);
     if (cachedReviews) {
       try {
@@ -654,11 +722,12 @@ document.addEventListener("DOMContentLoaded", () => {
         if (Array.isArray(items) && items.length > 0) {
           rawCommentsData = processIncomingData(items);
           applyFilter("all");
+          if (sectionElem) sectionElem.style.display = "";
         }
       } catch (e) {}
     }
 
-    // 2. Background Network Sync (JSONP without cache-busting timestamp)
+    // JSONP background fetch
     const script = document.createElement("script");
     script.src = `${TESTIMONIALS_API_URL}?callback=handleSheetReviews`;
     script.onerror = async function () {
