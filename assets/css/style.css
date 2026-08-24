@@ -613,3 +613,10 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--primary-orange)
   .reviews-header h2 { font-size: 1.25rem; }
   .reviews-grid { grid-template-columns: 1fr; }
 }
+
+/* Hide until records are successfully fetched and rendered */
+.results-section,
+.testimonials-section,
+.reviews-section {
+  display: none;
+}
