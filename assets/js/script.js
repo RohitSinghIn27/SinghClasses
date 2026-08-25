@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   window.scrollTo(0, 0);
   window.addEventListener("pageshow", () => window.scrollTo(0, 0));
 
-  // 1. COMPLETE RIGHT CLICK DISABLE & STRICT IMAGE-ONLY BLUR PROTECTION
+  // 1. RIGHT CLICK DISABLE & BLUR PROTECTION
   document.addEventListener("contextmenu", (e) => e.preventDefault());
 
   const blurImages = () => document.querySelectorAll("img").forEach((i) => i.classList.add("img-blur-protected"));
@@ -21,9 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   });
-  document.addEventListener("keyup", (e) => {
-    if (e.key === "PrintScreen") blurImages();
-  });
+  document.addEventListener("keyup", (e) => { if (e.key === "PrintScreen") blurImages(); });
   document.addEventListener("copy", blurImages);
   window.addEventListener("blur", blurImages);
   window.addEventListener("focus", unblurImages);
@@ -39,16 +37,13 @@ document.addEventListener("DOMContentLoaded", () => {
     canvas.style.cssText = "position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:99999;";
     document.body.appendChild(canvas);
     const ctx = canvas.getContext("2d");
-    let w = (canvas.width = window.innerWidth),
-      h = (canvas.height = window.innerHeight);
+    let w = (canvas.width = window.innerWidth), h = (canvas.height = window.innerHeight);
     window.addEventListener("resize", () => {
       w = canvas.width = window.innerWidth;
       h = canvas.height = window.innerHeight;
     });
-    const particles = [],
-      colors = ["#e04d2d", "#f2b824", "#ffffff", "#13386b"];
-    let lastX = 0,
-      lastY = 0;
+    const particles = [], colors = ["#e04d2d", "#f2b824", "#ffffff", "#13386b"];
+    let lastX = 0, lastY = 0;
 
     window.addEventListener("mousemove", (e) => {
       if (Math.hypot(e.clientX - lastX, e.clientY - lastY) > 6) {
@@ -82,12 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ctx.beginPath();
       for (let i = 0; i < 4; i++) {
         ctx.lineTo(Math.cos((i * Math.PI) / 2) * p.size, Math.sin((i * Math.PI) / 2) * p.size);
-        ctx.quadraticCurveTo(
-          0,
-          0,
-          Math.cos(((i + 1) * Math.PI) / 2) * p.size * 0.3,
-          Math.sin(((i + 1) * Math.PI) / 2) * p.size * 0.3
-        );
+        ctx.quadraticCurveTo(0, 0, Math.cos(((i + 1) * Math.PI) / 2) * p.size * 0.3, Math.sin(((i + 1) * Math.PI) / 2) * p.size * 0.3);
       }
       ctx.closePath();
       ctx.fill();
@@ -110,8 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
   })();
 
   // 3. NAVIGATION & HAMBURGER MENU
-  const hamburgerToggle = document.getElementById("hamburgerToggle"),
-    navMenu = document.getElementById("nav-menu");
+  const hamburgerToggle = document.getElementById("hamburgerToggle"), navMenu = document.getElementById("nav-menu");
   if (hamburgerToggle && navMenu) {
     const toggleMenu = (state) => {
       const isOpen = state !== undefined ? state : !navMenu.classList.contains("open");
@@ -119,10 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
       navMenu.classList.toggle("open", isOpen);
       hamburgerToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
     };
-    hamburgerToggle.addEventListener("click", (e) => {
-      e.stopPropagation();
-      toggleMenu();
-    });
+    hamburgerToggle.addEventListener("click", (e) => { e.stopPropagation(); toggleMenu(); });
     document.querySelectorAll(".nav-link").forEach((link) => link.addEventListener("click", () => toggleMenu(false)));
     document.addEventListener("click", (e) => {
       if (!hamburgerToggle.contains(e.target) && !navMenu.contains(e.target)) toggleMenu(false);
@@ -141,10 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
     canvas.style.cssText = "position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;";
     wrapper.insertBefore(canvas, wrapper.firstChild);
     const ctx = canvas.getContext("2d");
-    let w = 0,
-      h = 0,
-      dots = [],
-      cursor = { x: -2000, y: -2000 };
+    let w = 0, h = 0, dots = [], cursor = { x: -2000, y: -2000 };
 
     new ResizeObserver(() => {
       w = canvas.width = wrapper.offsetWidth;
@@ -189,8 +172,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (p.x < 0 || p.x > w) p.vx *= -1;
         if (p.y < 0 || p.y > h) p.vy *= -1;
         const cDist = (cursor.x - p.x) ** 2 + (cursor.y - p.y) ** 2;
-        let size = p.r,
-          color = "rgba(224,77,45,0.35)";
+        let size = p.r, color = "rgba(224,77,45,0.35)";
         if (cDist < 16900) {
           size = p.r + (1 - Math.sqrt(cDist) / 130) * 3;
           color = "rgba(224,77,45,0.95)";
@@ -212,38 +194,20 @@ document.addEventListener("DOMContentLoaded", () => {
   [".classes-section", ".playlists-section", ".results-section", ".teacher-section"].forEach(initDynamicFabric);
 });
 
-// 6. CBSE RESULT WIDGET (Visible only on data readiness)
+// 6. CBSE RESULT WIDGET (Direct Apps Script Fetch — No Hardcoded Defaults)
 (function () {
-  const RESULTS_API_URL =
-    "https://script.google.com/macros/s/AKfycby8y_UnsNqsHTX8-vmbwctvV10XeNnhupX6lzJFE8xmQRdxOsAQ4r7l1lxgwqZ65rEPuQ/exec";
-  const CACHE_KEY = "sc_cbse_results_cache";
-  const sectionElem = document.querySelector(".results-section") || document.getElementById("cbse-results-widget");
-
-  // Ensure initially hidden
-  if (sectionElem) sectionElem.style.display = "none";
+  const RESULTS_API_URL = "https://script.google.com/macros/s/AKfycbzuLWc_ECzT-aTvGZDYjH--_YEGgwxXYqb3Y02JTLXRBgqsrktFoqi8VeW7VpbXF_Gh9g/exec";
 
   function getProp(obj, propName) {
     if (!obj) return "";
     const cleanProp = propName.toLowerCase().replace(/[\s_-]/g, "");
     const matchKey = Object.keys(obj).find((k) => k.toLowerCase().replace(/[\s_-]/g, "") === cleanProp);
-    return matchKey ? obj[matchKey] : "";
+    return matchKey ? String(obj[matchKey]).trim() : "";
   }
 
   async function fetchGoogleSheetData() {
     const track = document.getElementById("cbseSliderTrack");
     if (!track) return;
-
-    // Load from cache instantly if available
-    const cachedData = localStorage.getItem(CACHE_KEY);
-    if (cachedData) {
-      try {
-        const parsed = JSON.parse(cachedData);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          buildSlides(parsed);
-          if (sectionElem) sectionElem.style.display = "";
-        }
-      } catch (e) {}
-    }
 
     try {
       const response = await fetch(RESULTS_API_URL, { method: "GET", redirect: "follow" });
@@ -251,12 +215,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const studentData = Array.isArray(json) ? json : json && Array.isArray(json.data) ? json.data : null;
 
       if (studentData && studentData.length > 0) {
-        localStorage.setItem(CACHE_KEY, JSON.stringify(studentData));
         buildSlides(studentData);
-        if (sectionElem) sectionElem.style.display = "";
+      } else {
+        track.innerHTML = `<div class="loading-container"><div class="loading-text" style="color:#ef4444;">No result records found.</div></div>`;
       }
     } catch (err) {
-      // Keep hidden if fetch fails and no cache exists
+      track.innerHTML = `<div class="loading-container"><div class="loading-text" style="color:#ef4444;">Error loading results from server.</div></div>`;
     }
   }
 
@@ -265,16 +229,24 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!track) return;
     track.innerHTML = "";
 
-    studentData.forEach((student, index) => {
-      const name = getProp(student, "Name") || "--";
-      const rollNumber = getProp(student, "RollNumber") || "--";
-      const batch = getProp(student, "Batch") || "--";
-      const subject = getProp(student, "Subject") || "--";
-      const school = getProp(student, "School") || "--";
-      const mode = getProp(student, "Mode") || "";
-      const marksNum = parseInt(getProp(student, "Marks"), 10) || 0;
-      const tname = getProp(student, "Tname") || (name !== "--" ? name.slice(0, 2).toUpperCase() : "--");
-      const testimonial = getProp(student, "Testimonial") || "Proud student of SinghClasses.";
+    const validRecords = studentData.filter((student) => getProp(student, "Name"));
+
+    if (validRecords.length === 0) {
+      track.innerHTML = `<div class="loading-container"><div class="loading-text" style="color:#ef4444;">No valid results available.</div></div>`;
+      return;
+    }
+
+    validRecords.forEach((student, index) => {
+      const name = getProp(student, "Name");
+      const rollNumber = getProp(student, "RollNumber");
+      const batch = getProp(student, "Batch");
+      const subject = getProp(student, "Subject");
+      const school = getProp(student, "School");
+      const mode = getProp(student, "Mode");
+      const rawMarks = getProp(student, "Marks");
+      const marksNum = rawMarks !== "" ? parseInt(rawMarks, 10) : 0;
+      const tname = getProp(student, "Tname") || (name ? name.slice(0, 2).toUpperCase() : "");
+      const testimonial = getProp(student, "Testimonial");
 
       const rawPic = String(getProp(student, "CandidatePicture") || "").replace(/['"“”\n\r]/g, "").trim();
       const fallbackAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=e04d2d&color=ffffff&size=150`;
@@ -290,7 +262,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   <img src="${finalImageSrc}" alt="${name}" class="avatar-img" onerror="this.onerror=null; this.src='${fallbackAvatar}';">
                 </div>
                 <h2 class="profile-name">${name}</h2>
-                <div class="profile-pill">${batch}</div>
+                ${batch ? `<div class="profile-pill">${batch}</div>` : ""}
               </div>
               <div class="right-col">
                 <div class="stats-grid">
@@ -336,16 +308,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
                 <div class="score-card">
                   <div class="donut-chart" data-score="${marksNum}">
-                    <div class="donut-inner"><span class="score-num">0</span></div>
+                    <div class="donut-inner"><span class="score-num">${marksNum}</span></div>
                   </div>
                   <div class="score-details">
                     <div class="score-title">Marks Obtained out of 100</div>
-                    <div class="score-grade">--</div>
+                    <div class="score-grade"></div>
                     <div class="progress-track"><div class="progress-fill"></div></div>
                   </div>
                 </div>
               </div>
             </div>
+            ${testimonial ? `
             <div class="testimonial-unit">
               <div class="test-content">
                 <div class="test-avatar">${tname}</div>
@@ -355,7 +328,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   <div class="quote-mark">"</div>
                 </div>
               </div>
-            </div>
+            </div>` : ""}
           </div>
         </div>`;
     });
@@ -371,19 +344,22 @@ document.addEventListener("DOMContentLoaded", () => {
       const donutChart = wrapper.querySelector(".donut-chart");
       if (!donutChart) return;
       const marks = Math.max(0, Math.min(100, parseInt(donutChart.getAttribute("data-score"), 10) || 0));
-      const gradeText =
-        marks >= 90 ? "A+ Grade" : marks >= 80 ? "A Grade" : marks >= 70 ? "B+ Grade" : marks >= 60 ? "B Grade" : "C Grade";
+      const gradeText = marks >= 90 ? "A+ Grade" : marks >= 80 ? "A Grade" : marks >= 70 ? "B+ Grade" : marks >= 60 ? "B Grade" : "C Grade";
       const colorHex = marks >= 90 ? "#e04d2d" : marks >= 80 ? "#13386b" : marks >= 70 ? "#f2b824" : "#525b68";
-      const scoreNum = wrapper.querySelector(".score-num"),
-        progressBar = wrapper.querySelector(".progress-fill");
+      const scoreNum = wrapper.querySelector(".score-num"), progressBar = wrapper.querySelector(".progress-fill");
 
-      scoreNum.innerText = marks;
-      scoreNum.style.color = colorHex;
-      wrapper.querySelector(".score-grade").innerText = gradeText;
+      if (scoreNum) {
+        scoreNum.innerText = marks;
+        scoreNum.style.color = colorHex;
+      }
+      const gradeElem = wrapper.querySelector(".score-grade");
+      if (gradeElem) gradeElem.innerText = gradeText;
 
       donutChart.style.background = `conic-gradient(${colorHex} 0% ${marks}%, var(--border-color) ${marks}% 100%)`;
-      progressBar.style.width = `${marks}%`;
-      progressBar.style.backgroundColor = colorHex;
+      if (progressBar) {
+        progressBar.style.width = `${marks}%`;
+        progressBar.style.backgroundColor = colorHex;
+      }
     });
   }
 
@@ -395,8 +371,7 @@ document.addEventListener("DOMContentLoaded", () => {
     dotsContainer.innerHTML = "";
     if (slides.length <= 1) return;
 
-    let currentIndex = 0,
-      slideInterval;
+    let currentIndex = 0, slideInterval;
 
     dotsContainer.innerHTML = `
       <button class="slider-arrow prev-arrow" aria-label="Previous">
@@ -415,10 +390,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const dot = document.createElement("div");
       dot.classList.add("slider-dot");
       if (index === 0) dot.classList.add("active");
-      dot.addEventListener("click", () => {
-        goToSlide(index);
-        resetInterval();
-      });
+      dot.addEventListener("click", () => { goToSlide(index); resetInterval(); });
       innerDots.appendChild(dot);
     });
 
@@ -441,27 +413,20 @@ document.addEventListener("DOMContentLoaded", () => {
       resetInterval();
     });
 
-    function startInterval() {
-      slideInterval = setInterval(() => goToSlide((currentIndex + 1) % slides.length), 6000);
-    }
-    function resetInterval() {
-      clearInterval(slideInterval);
-      startInterval();
-    }
+    function startInterval() { slideInterval = setInterval(() => goToSlide((currentIndex + 1) % slides.length), 6000); }
+    function resetInterval() { clearInterval(slideInterval); startInterval(); }
     startInterval();
   }
 
   fetchGoogleSheetData();
 })();
 
-// 7. YOUTUBE & GOOGLE REVIEWS (Visible only on data readiness)
+// 7. YOUTUBE & GOOGLE REVIEWS (Direct Apps Script Fetch — No Hardcoded Defaults)
 (function initReviewsModule() {
-  const TESTIMONIALS_API_URL =
-    "https://script.google.com/macros/s/AKfycby9UsEHn8ACEFc84PjT2I9v_Vsam4dagYZK3YyBVcErTbkxMFltOquwmoPr2c9-2k-EWw/exec";
-  const CACHE_KEY = "sc_reviews_cache";
+  const TESTIMONIALS_API_URL = "https://script.google.com/macros/s/AKfycbx1_cxJfifJWWB2WGhOUXZLNb0YZsFBlIamHaHuEYGVM0kMj0si6JkTntOmZJjEU_iQwA/exec";
   const TOTAL_SLOTS = 8;
 
-  let grid, filterButtons, sectionElem;
+  let grid, filterButtons;
   let rawCommentsData = [];
   let currentFilter = "all";
   let currentFilteredPool = [];
@@ -474,7 +439,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!obj) return "";
     const clean = fieldName.toLowerCase().replace(/[\s_-]/g, "");
     const match = Object.keys(obj).find((k) => k.toLowerCase().replace(/[\s_-]/g, "") === clean);
-    return match ? obj[match] : "";
+    return match ? String(obj[match]).trim() : "";
   }
 
   function shuffle(array) {
@@ -514,32 +479,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function normalizeCategory(cat) {
-    if (!cat) return "class12";
+    if (!cat) return "";
     const clean = String(cat).toLowerCase().replace(/[\s\-_]/g, "");
     if (clean.includes("google")) return "google_review";
     if (clean.includes("12") || clean.includes("xii")) return "class12";
     if (clean.includes("11") || clean.includes("xi")) return "class11";
-    if (
-      clean.includes("9") ||
-      clean.includes("10") ||
-      clean.includes("ix") ||
-      clean.includes("classx") ||
-      clean.includes("ai") ||
-      clean.includes("417")
-    )
-      return "class9_10";
+    if (clean.includes("9") || clean.includes("10") || clean.includes("ix") || clean.includes("classx") || clean.includes("ai") || clean.includes("417")) return "class9_10";
     if (clean.includes("cuet")) return "cuet";
-    if (
-      clean.includes("high") ||
-      clean.includes("college") ||
-      clean.includes("btech") ||
-      clean.includes("bca") ||
-      clean.includes("mca") ||
-      clean.includes("ugc") ||
-      clean.includes("dsssb") ||
-      clean.includes("web")
-    )
-      return "higher_ed";
+    if (clean.includes("high") || clean.includes("college") || clean.includes("btech") || clean.includes("bca") || clean.includes("mca") || clean.includes("ugc") || clean.includes("dsssb") || clean.includes("web")) return "higher_ed";
     return clean;
   }
 
@@ -547,12 +494,10 @@ document.addEventListener("DOMContentLoaded", () => {
     return items
       .map((item) => {
         const rawName = String(getField(item, "Name") || "").trim();
-        const rawInitials =
-          String(getField(item, "Initials") || "").trim() ||
-          (rawName ? rawName.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2) : "US");
+        const rawInitials = String(getField(item, "Initials") || "").trim() || (rawName ? rawName.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2) : "");
         const rawDate = getField(item, "Time") || getField(item, "Date") || "";
         const rawCat = getField(item, "Category") || "";
-        const rawVideo = String(getField(item, "Video") || "Computer Science Lecture").trim();
+        const rawVideo = String(getField(item, "Video") || "").trim();
         const rawText = String(getField(item, "Text") || "").trim();
 
         return {
@@ -568,9 +513,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function applyFilter(category) {
-    currentFilteredPool = shuffle(
-      category === "all" ? [...rawCommentsData] : rawCommentsData.filter((c) => c.category === category)
-    );
+    currentFilteredPool = shuffle(category === "all" ? [...rawCommentsData] : rawCommentsData.filter((c) => c.category === category));
     recentSlotHistory = [];
     renderGrid();
     restartRotator();
@@ -594,10 +537,11 @@ document.addEventListener("DOMContentLoaded", () => {
             <span class="review-user-name">${item.name}</span>
             <span class="review-time ${isYellow ? "time-yellow-card" : "time-white-card"}">${item.formattedTime}</span>
           </div>
+          ${item.video ? `
           <div class="review-source-pill ${isYellow ? "pill-yellow-card" : "pill-white-card"}">
             ${iconSvg}
             <span class="review-source-title">${item.video}</span>
-          </div>
+          </div>` : ""}
         </div>
       </div>
       <p class="review-comment-body ${isYellow ? "comment-yellow-card" : "comment-white-card"}">"${item.text}"</p>`;
@@ -608,7 +552,10 @@ document.addEventListener("DOMContentLoaded", () => {
     grid.innerHTML = "";
     activeSlots = [];
 
-    if (currentFilteredPool.length === 0) return;
+    if (currentFilteredPool.length === 0) {
+      grid.innerHTML = `<div class="reviews-error-state">No reviews available for this category.</div>`;
+      return;
+    }
 
     const slotCount = Math.min(TOTAL_SLOTS, currentFilteredPool.length);
     for (let i = 0; i < slotCount; i++) {
@@ -621,12 +568,8 @@ document.addEventListener("DOMContentLoaded", () => {
       cardElem.id = `review-slot-${i}`;
       cardElem.innerHTML = renderCardContent(item, isYellow);
       cardElem.addEventListener("click", () => cardElem.classList.toggle("is-expanded"));
-      cardElem.addEventListener("mouseenter", () => {
-        isHovered[i] = true;
-      });
-      cardElem.addEventListener("mouseleave", () => {
-        isHovered[i] = false;
-      });
+      cardElem.addEventListener("mouseenter", () => { isHovered[i] = true; });
+      cardElem.addEventListener("mouseleave", () => { isHovered[i] = false; });
       grid.appendChild(cardElem);
     }
   }
@@ -649,9 +592,7 @@ document.addEventListener("DOMContentLoaded", () => {
     recentSlotHistory.push(chosenIndex);
     if (recentSlotHistory.length > Math.floor(slotCount / 2)) recentSlotHistory.shift();
 
-    const availableItems = currentFilteredPool.filter(
-      (p) => !activeSlots.some((a) => a.name === p.name && a.video === p.video)
-    );
+    const availableItems = currentFilteredPool.filter((p) => !activeSlots.some((a) => a.name === p.name && a.video === p.video));
     if (availableItems.length === 0) return;
 
     const newItem = availableItems[Math.floor(Math.random() * availableItems.length)];
@@ -684,10 +625,10 @@ document.addEventListener("DOMContentLoaded", () => {
   window.handleSheetReviews = function (json) {
     const items = Array.isArray(json) ? json : json && Array.isArray(json.data) ? json.data : null;
     if (items && items.length > 0) {
-      localStorage.setItem(CACHE_KEY, JSON.stringify(items));
       rawCommentsData = processIncomingData(items);
       applyFilter("all");
-      if (sectionElem) sectionElem.style.display = "";
+    } else {
+      if (grid) grid.innerHTML = `<div class="reviews-error-state">No reviews found.</div>`;
     }
   };
 
@@ -695,14 +636,6 @@ document.addEventListener("DOMContentLoaded", () => {
     grid = document.getElementById("reviewsGrid");
     filterButtons = document.querySelectorAll(".reviews-filter-btn");
     if (!grid) return;
-
-    sectionElem =
-      document.querySelector(".testimonials-section") ||
-      document.querySelector(".reviews-section") ||
-      grid.closest("section");
-
-    // Ensure initially hidden
-    if (sectionElem) sectionElem.style.display = "none";
 
     filterButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
@@ -714,20 +647,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
-    // Check localStorage cache
-    const cachedReviews = localStorage.getItem(CACHE_KEY);
-    if (cachedReviews) {
-      try {
-        const items = JSON.parse(cachedReviews);
-        if (Array.isArray(items) && items.length > 0) {
-          rawCommentsData = processIncomingData(items);
-          applyFilter("all");
-          if (sectionElem) sectionElem.style.display = "";
-        }
-      } catch (e) {}
-    }
-
-    // JSONP background fetch
     const script = document.createElement("script");
     script.src = `${TESTIMONIALS_API_URL}?callback=handleSheetReviews`;
     script.onerror = async function () {
@@ -735,7 +654,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const res = await fetch(TESTIMONIALS_API_URL, { method: "GET", redirect: "follow" });
         const json = await res.json();
         window.handleSheetReviews(json);
-      } catch (e) {}
+      } catch (e) {
+        grid.innerHTML = `<div class="reviews-error-state">Failed to load reviews.</div>`;
+      }
     };
     document.body.appendChild(script);
   }
