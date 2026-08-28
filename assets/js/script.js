@@ -240,7 +240,7 @@ const extractProp = (obj, prop) => {
 
 // 7. DYNAMIC TESTIMONIALS MODULE
 (function initTestimonialsModule() {
-  const API_URL = "https://script.google.com/macros/s/AKfycbx1_cxJfifJWWB2WGhOUXZLNb0YZsFBlIamHaHuEYGVM0kMj0si6JkTntOmZJjEU_iQwA/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbzReACnRQ6liOLCFUCKESRhjTBgTalEWI2TKc_Xm6DIKMLoKGgfVNTH9tEoQz9eIjG7Kg/exec";
   const TOTAL_SLOTS = 6;
   const COLORS = ["#1E2740", "#B45309", "#0D4A2B", "#047857", "#E27923", "#13386B", "#6366F1", "#0284C7"];
 
