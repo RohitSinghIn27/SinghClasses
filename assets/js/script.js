@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
       h = canvas.height = window.innerHeight;
     });
     const particles = [], colors = ["#e04d2d", "#f2b824", "#ffffff", "#13386b"];
-    let lastX = 0, lastY = 0;
+    let lastX = 0, lastY = 0, isSparkleRunning = false;
 
     window.addEventListener("mousemove", (e) => {
       if (Math.hypot(e.clientX - lastX, e.clientY - lastY) > 6) {
@@ -63,6 +63,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         lastX = e.clientX;
         lastY = e.clientY;
+        if (!isSparkleRunning) {
+          isSparkleRunning = true;
+          requestAnimationFrame(animate);
+        }
       }
     });
 
@@ -84,7 +88,12 @@ document.addEventListener("DOMContentLoaded", () => {
       ctx.restore();
     }
 
-    (function animate() {
+    function animate() {
+      if (!particles.length) {
+        ctx.clearRect(0, 0, w, h);
+        isSparkleRunning = false;
+        return;
+      }
       ctx.clearRect(0, 0, w, h);
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
@@ -96,7 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
         else drawStar(p);
       }
       requestAnimationFrame(animate);
-    })();
+    }
   })();
 
   // 3. NAVIGATION & HAMBURGER MENU
@@ -121,6 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 5. DYNAMIC FABRIC CANVAS BACKGROUND
   const initDynamicFabric = (selector) => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const wrapper = document.querySelector(selector);
     if (!wrapper) return;
     const canvas = document.createElement("canvas");
@@ -128,6 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
     wrapper.insertBefore(canvas, wrapper.firstChild);
     const ctx = canvas.getContext("2d");
     let w = 0, h = 0, dots = [], cursor = { x: -2000, y: -2000 };
+    let isVisible = false, animFrameId = null;
 
     new ResizeObserver(() => {
       w = canvas.width = wrapper.offsetWidth;
@@ -151,8 +162,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     wrapper.addEventListener("mouseleave", () => (cursor.x = cursor.y = -2000));
 
-    (function loop() {
-      if (!w || !h) return requestAnimationFrame(loop);
+    function loop() {
+      if (!isVisible) return;
+      if (!w || !h) {
+        animFrameId = requestAnimationFrame(loop);
+        return;
+      }
       ctx.clearRect(0, 0, w, h);
       for (let i = 0; i < dots.length; i++) {
         for (let j = i + 1; j < dots.length; j++) {
@@ -188,13 +203,24 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.fillStyle = color;
         ctx.fill();
       });
-      requestAnimationFrame(loop);
-    })();
+      animFrameId = requestAnimationFrame(loop);
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      isVisible = entry.isIntersecting;
+      if (isVisible) {
+        cancelAnimationFrame(animFrameId);
+        animFrameId = requestAnimationFrame(loop);
+      } else {
+        cancelAnimationFrame(animFrameId);
+      }
+    }, { threshold: 0.05 });
+    observer.observe(wrapper);
   };
   [".classes-section", ".playlists-section", ".results-section", ".teacher-section"].forEach(initDynamicFabric);
 });
 
-// 6. CBSE RESULT WIDGET (Direct Apps Script Fetch — No Hardcoded Defaults)
+// 6. CBSE RESULT WIDGET
 (function () {
   const RESULTS_API_URL = "https://script.google.com/macros/s/AKfycbzuLWc_ECzT-aTvGZDYjH--_YEGgwxXYqb3Y02JTLXRBgqsrktFoqi8VeW7VpbXF_Gh9g/exec";
 
@@ -421,10 +447,10 @@ document.addEventListener("DOMContentLoaded", () => {
   fetchGoogleSheetData();
 })();
 
-// 7. YOUTUBE & GOOGLE REVIEWS (Direct Apps Script Fetch — No Hardcoded Defaults)
+// 7. YOUTUBE & GOOGLE REVIEWS (4X3 Grid: 12 Total Slots)
 (function initReviewsModule() {
   const TESTIMONIALS_API_URL = "https://script.google.com/macros/s/AKfycbx1_cxJfifJWWB2WGhOUXZLNb0YZsFBlIamHaHuEYGVM0kMj0si6JkTntOmZJjEU_iQwA/exec";
-  const TOTAL_SLOTS = 8;
+  const TOTAL_SLOTS = 12;
 
   let grid, filterButtons;
   let rawCommentsData = [];
