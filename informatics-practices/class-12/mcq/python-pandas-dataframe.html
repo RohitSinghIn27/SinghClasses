@@ -322,7 +322,7 @@ window.beginExam = async () => {
   CBTState.currentYearIndex = 0; 
   CBTState.currentQuestion = CBTState.sections[0].start; 
 
-  CBTState.isTimerPaused = true; 
+  CBTState.isTimerPaused = false; 
   document.getElementById('quiz-screen').style.display = 'block'; 
   if (document.getElementById('unified-nav')) document.getElementById('unified-nav').style.display = 'flex'; 
   buildYearNav(); 
