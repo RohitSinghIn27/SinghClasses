@@ -305,7 +305,7 @@ function showToastAlert(m) {
 }
 
 function triggerVerifyModal(type) { 
-  const modal = $('verify-resource-modal'), icon = $('verify-card-icon'), heading = $('verify-modal-heading'), text = $('verify-modal-text'), actionBtn = $('verify-proceed-action-btn'), driveId = $('current-chapter') ? $('current-chapter').getAttribute('data-drive-id') : ""; 
+  const modal = $('verify-resource-modal'), icon = $('verify-card-icon'), heading = $('verify-modal-heading'), text = $('verify-modal-text'), actionBtn = $('verify-proceed-action-btn'); 
   if (!modal) return;
   modal.style.display = 'flex'; 
   if (type === 'pdf') { 
@@ -516,7 +516,7 @@ window.beginExam = async () => {
   CBTState.currentYearIndex = 0; 
   CBTState.currentQuestion = CBTState.sections[0].start; 
 
-  /* Exam Active & Timer Running */
+  /* Timer runs automatically on exam start */
   CBTState.isTimerPaused = false; 
   if ($('quiz-screen')) $('quiz-screen').style.display = 'block'; 
   if ($('unified-nav')) $('unified-nav').style.display = 'flex'; 
