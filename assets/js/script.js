@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ["focus", "pageshow"].forEach((ev) => window.addEventListener(ev, () => toggleImgBlur(false)));
   document.addEventListener("visibilitychange", () => toggleImgBlur(document.hidden));
 
-  // 2. CURSOR SPARKLE TRAIL
+  // 2. CURSOR SPARKLE TRAIL (Navy, Royal Blue, Yellow/Amber, Red, White)
   (function initCursorSparkles() {
     if (window.matchMedia("(pointer: coarse), (prefers-reduced-motion: reduce)").matches) return;
     const canvas = document.createElement("canvas");
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let w = (canvas.width = window.innerWidth), h = (canvas.height = window.innerHeight), lastX = 0, lastY = 0, isRunning = false;
     window.addEventListener("resize", () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; });
 
-    const particles = [], colors = ["#e04d2d", "#f2b824", "#ffffff", "#13386b"];
+    const particles = [], colors = ["#0F1E3D", "#1E3A8A", "#F59E0B", "#DC2626", "#FFFFFF"];
     window.addEventListener("mousemove", (e) => {
       if (Math.hypot(e.clientX - lastX, e.clientY - lastY) > 6) {
         for (let i = 0; i < (Math.random() < 0.4 ? 2 : 1); i++) {
@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const yr = document.getElementById("current-year");
   if (yr) yr.textContent = new Date().getFullYear();
 
-  // 5. FABRIC CANVAS BACKGROUND
+  // 5. FABRIC CANVAS BACKGROUND (Navy Grid, Red / Yellow Highlights)
   const initDynamicFabric = (sel) => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const el = document.querySelector(sel);
@@ -107,7 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
         for (let j = i + 1; j < dots.length; j++) {
           if ((dots[i].x - dots[j].x) ** 2 + (dots[i].y - dots[j].y) ** 2 < 6400) {
             ctx.beginPath(); ctx.moveTo(dots[i].x, dots[i].y); ctx.lineTo(dots[j].x, dots[j].y);
-            ctx.strokeStyle = "rgba(224,77,45,0.12)"; ctx.lineWidth = 0.8; ctx.stroke();
+            ctx.strokeStyle = "rgba(15, 30, 61, 0.08)"; ctx.lineWidth = 0.8; ctx.stroke();
           }
         }
       }
@@ -116,11 +116,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (p.x < 0 || p.x > w) p.vx *= -1;
         if (p.y < 0 || p.y > h) p.vy *= -1;
         const dist = (cur.x - p.x) ** 2 + (cur.y - p.y) ** 2;
-        let size = p.r, color = "rgba(224,77,45,0.35)";
+        let size = p.r, color = "rgba(30, 58, 138, 0.25)";
         if (dist < 16900) {
-          size += (1 - Math.sqrt(dist) / 130) * 3; color = "rgba(224,77,45,0.95)";
+          size += (1 - Math.sqrt(dist) / 130) * 3; color = "rgba(220, 38, 38, 0.85)";
           ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(cur.x, cur.y);
-          ctx.strokeStyle = "rgba(224,77,45,0.25)"; ctx.lineWidth = 1.1; ctx.stroke();
+          ctx.strokeStyle = "rgba(245, 158, 11, 0.35)"; ctx.lineWidth = 1.1; ctx.stroke();
         }
         ctx.beginPath(); ctx.arc(p.x, p.y, size, 0, Math.PI * 2); ctx.fillStyle = color; ctx.fill();
       });
@@ -155,9 +155,9 @@ const extractProp = (obj, prop) => {
       const json = await res.json();
       const list = Array.isArray(json) ? json : json?.data || [];
       if (list.length) buildSlides(list);
-      else track.innerHTML = `<div class="loading-container"><div class="loading-text" style="color:#ef4444;">No result records found.</div></div>`;
+      else track.innerHTML = `<div class="loading-container"><div class="loading-text" style="color:var(--red-cta);">No result records found.</div></div>`;
     } catch {
-      track.innerHTML = `<div class="loading-container"><div class="loading-text" style="color:#ef4444;">Error loading results from server.</div></div>`;
+      track.innerHTML = `<div class="loading-container"><div class="loading-text" style="color:var(--red-cta);">Error loading results from server.</div></div>`;
     }
   }
 
@@ -171,7 +171,7 @@ const extractProp = (obj, prop) => {
       const name = extractProp(s, "Name"), marks = parseInt(extractProp(s, "Marks"), 10) || 0;
       const isOnline = extractProp(s, "Mode").toLowerCase() === "online";
       const rawPic = extractProp(s, "CandidatePicture").replace(/['"“”\n\r]/g, "");
-      const img = rawPic.includes("assets/") || rawPic.startsWith("http") ? rawPic : `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=e04d2d&color=ffffff&size=150`;
+      const img = rawPic.includes("assets/") || rawPic.startsWith("http") ? rawPic : `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=0F1E3D&color=ffffff&size=150`;
       const tname = extractProp(s, "Tname") || name.slice(0, 2).toUpperCase(), test = extractProp(s, "Testimonial");
 
       return `
@@ -185,10 +185,10 @@ const extractProp = (obj, prop) => {
               </div>
               <div class="right-col">
                 <div class="stats-grid">
-                  <div class="stat-box"><div class="icon-box icon-blue"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="3" width="14" height="18" rx="3"></rect><circle cx="12" cy="10" r="2"></circle><line x1="9" y1="15" x2="15" y2="15"></line></svg></div><div class="stat-details"><div class="stat-title">Roll Number</div><div class="stat-val">${extractProp(s, "RollNumber")}</div></div></div>
-                  <div class="stat-box"><div class="icon-box icon-purple"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="13" rx="2"></rect><path d="M8 21h8M12 17v4"></path></svg></div><div class="stat-details"><div class="stat-title">Subject</div><div class="stat-val">${extractProp(s, "Subject")}</div></div></div>
-                  <div class="stat-box"><div class="icon-box icon-purple"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v8M8 10h8v12H8z"></path></svg></div><div class="stat-details"><div class="stat-title">School</div><div class="stat-val">${extractProp(s, "School")}</div></div></div>
-                  <div class="stat-box"><div class="icon-box icon-yellow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle></svg></div><div class="stat-details"><div class="stat-title">Mode</div><div class="mode-toggles"><span class="${isOnline ? "mode-inactive" : "mode-active"}">Offline</span><span class="${isOnline ? "mode-active" : "mode-inactive"}">Online</span></div></div></div>
+                  <div class="stat-box"><div class="icon-box icon-navy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="3" width="14" height="18" rx="3"></rect><circle cx="12" cy="10" r="2"></circle><line x1="9" y1="15" x2="15" y2="15"></line></svg></div><div class="stat-details"><div class="stat-title">Roll Number</div><div class="stat-val">${extractProp(s, "RollNumber")}</div></div></div>
+                  <div class="stat-box"><div class="icon-box icon-red"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="13" rx="2"></rect><path d="M8 21h8M12 17v4"></path></svg></div><div class="stat-details"><div class="stat-title">Subject</div><div class="stat-val">${extractProp(s, "Subject")}</div></div></div>
+                  <div class="stat-box"><div class="icon-box icon-yellow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v8M8 10h8v12H8z"></path></svg></div><div class="stat-details"><div class="stat-title">School</div><div class="stat-val">${extractProp(s, "School")}</div></div></div>
+                  <div class="stat-box"><div class="icon-box icon-navy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle></svg></div><div class="stat-details"><div class="stat-title">Mode</div><div class="mode-toggles"><span class="${isOnline ? "mode-inactive" : "mode-active"}">Offline</span><span class="${isOnline ? "mode-active" : "mode-inactive"}">Online</span></div></div></div>
                 </div>
                 <div class="score-card">
                   <div class="donut-chart" data-score="${marks}"><div class="donut-inner"><span class="score-num">${marks}</span></div></div>
@@ -206,7 +206,7 @@ const extractProp = (obj, prop) => {
         const donut = wrap.querySelector(".donut-chart");
         if (!donut) return;
         const marks = Math.max(0, Math.min(100, parseInt(donut.dataset.score, 10) || 0));
-        const color = marks >= 90 ? "#e04d2d" : marks >= 80 ? "#13386b" : marks >= 70 ? "#f2b824" : "#525b68";
+        const color = marks >= 90 ? "#1E3A8A" : marks >= 80 ? "#DC2626" : marks >= 70 ? "#F59E0B" : "#0F1E3D";
         donut.style.background = `conic-gradient(${color} 0% ${marks}%, var(--border-color) ${marks}% 100%)`;
         wrap.querySelector(".score-num").style.color = color;
         wrap.querySelector(".score-grade").innerText = marks >= 90 ? "A+ Grade" : marks >= 80 ? "A Grade" : marks >= 70 ? "B+ Grade" : "B Grade";
@@ -238,11 +238,11 @@ const extractProp = (obj, prop) => {
   fetchData();
 })();
 
-// 7. DYNAMIC TESTIMONIALS MODULE
+// 7. DYNAMIC TESTIMONIALS MODULE (Navy, Yellow & Red Avatars)
 (function initTestimonialsModule() {
   const API_URL = "https://script.google.com/macros/s/AKfycbzReACnRQ6liOLCFUCKESRhjTBgTalEWI2TKc_Xm6DIKMLoKGgfVNTH9tEoQz9eIjG7Kg/exec";
   const TOTAL_SLOTS = 6;
-  const COLORS = ["#1E2740", "#B45309", "#0D4A2B", "#047857", "#E27923", "#13386B", "#6366F1", "#0284C7"];
+  const COLORS = ["#0F1E3D", "#DC2626", "#F59E0B", "#1E3A8A", "#B91C1C", "#D97706", "#2563EB", "#991B1B"];
 
   let grid, pool = [], rawData = [], activeSlots = [], hovered = [], timer = null, hist = [];
 
