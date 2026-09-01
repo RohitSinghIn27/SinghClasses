@@ -4,14 +4,17 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Working with Functions in Python MCQs | CBSE Class 12 Computer Science (083)</title>
-<meta name="description" content="Practice CBSE Class 12 Computer Science (CS 083) Objective-based MCQs on Working with Functions in Python. Attempt interactive CBT mock tests on user-defined functions, scope, parameters, and return values!" />
-<meta name="keywords" content="Working with Functions in Python MCQs, CBSE Class 12 Computer Science MCQs, Class 12 CS 083 MCQs, Functions in Python Class 12 questions, Computer Science Objective Questions, SinghClasses Mock Test" />
+<meta name="description" content="Practice CBSE Class 12 Computer Science (CS 083) objective MCQs on Working with Functions in Python. Attempt interactive CBT mock tests on function definition, parameters, arguments, return values, and scope of variables!" />
+<meta name="keywords" content="Working with Functions in Python MCQs, CBSE Class 12 Computer Science MCQs, Class 12 CS 083 MCQs, Python Functions Class 12 questions, User Defined Functions MCQs, Scope of Variables Local Global, SinghClasses Mock Test" />
 <meta name="author" content="Rohit Singh" />
 <meta name="robots" content="index, follow" />
+
+<!-- Open Graph / Social Media Meta Tags -->
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Working with Functions in Python MCQs - CBSE Class 12 Computer Science (083)" />
-<meta property="og:description" content="Master Working with Functions in Python for CBSE Class 12 Computer Science (CS 083)! Take interactive objective-based CBT mock tests." />
+<meta property="og:description" content="Master Working with Functions in Python for CBSE Class 12 Computer Science (CS 083)! Take interactive objective-based CBT mock tests with instant scorecards." />
 <meta property="og:site_name" content="SinghClasses" />
+
 <link rel="icon" href="../../../assets/images/favicon/favicon.ico" type="image/x-icon" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -23,11 +26,11 @@
 <script>
     /* CBT Configuration Pipeline */
     window.CBT_CONFIG = {
-        ENABLE_PROCTORING: false,
+        ENABLE_PROCTORING: true,
         MARKS_CORRECT: 5,
         MARKS_INCORRECT: 1,
         PENALTY_WARNING: 2,
-        TEST_NAME: "Working with functions in Python",
+        TEST_NAME: "Working with Functions in Python",
         FetchQuestionsOfCBT: "https://script.google.com/macros/s/AKfycbwH6vi6XLqvVc7kekhYDSWYMR4NfAEH8-gGUTPQpKzFld4Gfb9UZuk0CsnjDsv_nLhZ/exec",
         SaveRecordOfCBT: "https://script.google.com/macros/s/AKfycbzNq2Q4qL1w3DjqqYJlHxRTI3OTqGETqsyb4q3SCJRIRFWzzSvpwW7_2lDDN8b3oA0ikA/exec",
         FetchRecordOfCBT: "https://script.google.com/macros/s/AKfycbwpK6z8HC87ZKvQFnGX78Prnv4sVPxF7tAER1uZkRl-jeMxhaSOcSoIkdKJf4ak1VGwQw/exec",
@@ -41,8 +44,8 @@
 <header class="unified-workspace-header" role="banner">
 <div class="header-left-group">
 <button class="back-btn" onclick="goToHome()" aria-label="Go Back to Home"><svg class="btn-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg><span>Back</span></button>
-<div class="chapter-capsule" id="current-chapter" data-drive-id="14ycSzPcKX20mBGdY9kdfNp31fp6LNSYW">Working with Functions in Python</div>
-<button class="app-btn app-btn-outline" onclick="window.open(window.CBT_CONFIG.NOTES_URL, '_blank')" aria-label="Open Revision Notes"><svg class="btn-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg><span>Notes</span></button>
+<div class="chapter-capsule" id="current-chapter">Working with Functions in Python</div>
+<button class="app-btn app-btn-outline" onclick="window.open(window.CBT_CONFIG.NOTES_URL, '_blank')" aria-label="Open Revision Notes"><svg class="btn-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg><span>Notes</span></button>
 <button class="app-btn app-btn-yt" id="yt-trigger-btn" onclick="triggerVerifyModal('yt')" aria-label="Watch Video Lesson"><span class="yt-badge">YT</span><svg class="btn-icon desktop-yt-icon" width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.377.55a3.016 3.016 0 0 0-2.122 2.136C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.55 9.376.55 9.376.55s7.505 0 9.377-.55a3.016 3.016 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" /></svg><span>OneShot</span></button>
 </div>
 <div class="header-right-group">
@@ -60,7 +63,7 @@
 <div class="nav-right-hud hide-on-mobile"><div class="timer" id="timer-box">⏳ <span id="time-left"></span></div><div class="tracking-eyes-container desktop-eyes"><div class="eye-ball"><div class="pupil"></div></div><div class="eye-ball"><div class="pupil"></div></div></div></div>
 </div>
 
-<!-- RESUME ATTEMPT MODAL (MATCHES REGISTRATION CARD THEME) -->
+<!-- RESUME ATTEMPT MODAL -->
 <div id="modal-resume" class="custom-modal-overlay">
   <div class="custom-modal-box registration-card">
     <div class="topic-banner-wrapper">
@@ -256,81 +259,5 @@
 <script src="../../../assets/js/script.js"></script>
 <script src="../../../assets/js/syllabus.js"></script>
 <script src="../../../assets/js/mcq.js"></script>
-<script>
-window.beginExam = async () => { 
-  const rawNameInput = document.getElementById('student-name-input') ? document.getElementById('student-name-input').value.trim() : ""; 
-  CBTState.studentNameVal = rawNameInput.toUpperCase() || "AGYAT"; 
-  CBTState.studentClassVal = document.getElementById('student-class-input').value || "12"; 
-  CBTState.studentSectionVal = document.getElementById('student-section-input').value || "A"; 
-  CBTState.schoolNameVal = document.getElementById('student-school-input').value.trim().toUpperCase() || "SPS"; 
-  CBTState.studentName = `${CBTState.studentNameVal} | CLASS: ${CBTState.studentClassVal} | SEC: ${CBTState.studentSectionVal} | ${CBTState.schoolNameVal}`; 
-  document.getElementById('modal-welcome').style.display = 'none'; 
-  const loadingOverlay = document.getElementById('quiz-loading-overlay'); 
-  if (loadingOverlay) loadingOverlay.style.display = 'flex'; 
-  document.body.classList.add('exam-in-progress'); 
-  CBTState.isExamActive = true; 
-
-  if (CBTState.isQuestionsLoading) { 
-    let checks = 0; 
-    while (CBTState.isQuestionsLoading && checks < 300) { 
-      await new Promise(r => setTimeout(r, 100)); 
-      checks++; 
-    } 
-  } 
-
-  if (CBTState.listExamPapers.length === 0) {
-    await loadQuestionsFromSheet(3);
-  }
-
-  if (loadingOverlay) loadingOverlay.style.display = 'none'; 
-
-  if (CBTState.listExamPapers.length === 0) { 
-    showToastAlert("Unable to sync questions. Retrying connection..."); 
-    await new Promise(r => setTimeout(r, 1000));
-    await loadQuestionsFromSheet(3);
-    if (CBTState.listExamPapers.length === 0) {
-      document.body.classList.remove('exam-in-progress');
-      CBTState.isExamActive = false;
-      document.getElementById('modal-welcome').style.display = 'flex';
-      alert("Network request timed out. Please check your internet connection and try starting again.");
-      return;
-    }
-  } 
-
-  CBTState.questions = []; 
-  CBTState.sections = []; 
-  let qt = 0; 
-  CBTState.listExamPapers.forEach((p, idx) => { 
-    let st = qt, sq = p.questions.map(q => { 
-      let shuffledOptions = [...q.options]; 
-      shuffleArray(shuffledOptions); 
-      return { question: q.text, tag: q.tag ?? "", options: shuffledOptions, image: q.image ?? "", correctAnswerText: q.correctAnswerText }; 
-    }); 
-    shuffleArray(sq); 
-    sq.forEach(q => { 
-      CBTState.questions.push(q); 
-      qt++; 
-    }); 
-    CBTState.sections.push({ index: idx, title: p.title, year: p.year, start: st, end: qt, submitted: false, timeSpent: 0 }); 
-  }); 
-
-  clearSessionLocalStorage(); 
-  CBTState.userAnswers = new Array(CBTState.questions.length).fill(null); 
-  CBTState.visitedQuestions = new Array(CBTState.questions.length).fill(false); 
-  CBTState.lockedAnswers = new Array(CBTState.questions.length).fill(false); 
-  CBTState.sectionTimes = CBTState.sections.map(s => (s.end - s.start) * 60); 
-  CBTState.currentYearIndex = 0; 
-  CBTState.currentQuestion = CBTState.sections[0].start; 
-
-  CBTState.isTimerPaused = true; 
-  document.getElementById('quiz-screen').style.display = 'block'; 
-  if (document.getElementById('unified-nav')) document.getElementById('unified-nav').style.display = 'flex'; 
-  buildYearNav(); 
-  updateTimerDisplay(); 
-  startTimer(); 
-  loadQuestion(); 
-  saveSessionToLocalStorage(); 
-};
-</script>
 </body>
 </html>
