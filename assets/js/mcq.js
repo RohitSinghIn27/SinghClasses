@@ -1098,7 +1098,7 @@ window.processSectionSubmission = async function() {
           </div>
           <div class="sm-col">
             <span class="badge-pct-pill green">${s.submitted ? pR : 0}%</span>
-            <span class="sm-subtext">(${s.submitted ? sS : 0} / ${sT})</span>
+            <span class="sm-subtext">(${s.submitted ? sS : 0} / ${sM})</span>
           </div>
           <div class="sm-col">
             <span class="stat-circle-badge correct">${s.submitted ? sC : '0'}</span>
@@ -1136,7 +1136,7 @@ window.processSectionSubmission = async function() {
         </div>
         <div class="sm-col">
           <span class="badge-pct-pill blue">${fP}%</span>
-          <span class="sm-subtext">(${aS} / ${totalExamQuestions})</span>
+          <span class="sm-subtext">(${aS} / ${cM})</span>
         </div>
         <div class="sm-col">
           <span class="stat-circle-badge correct">${rC}</span>
