@@ -1,0 +1,2075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Python Class 11 Mindmap: Tokens, Variables, Operators & Types</title>
+<style>
+  :root {
+    --bg: #f8fafc;
+    --grid: #e2e8f0;
+    --border: #0f172a;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    
+    /* Strict Semantic Palette */
+    --accent-blue: #2563eb;       /* Navigation & Structure */
+    --accent-blue-subtle: #eff6ff;
+    --accent-purple: #7c3aed;     /* Assessment & Quiz Only */
+    --accent-purple-hover: #6d28d9;
+    --completed: #16a34a;         /* Progress & Success Only */
+    --completed-subtle: #f0fdf4;
+    --focus-ring: #2563eb;
+    --yt-red: #dc2626;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  body {
+    background-color: var(--bg);
+    background-image: radial-gradient(var(--grid) 1.5px, transparent 1.5px);
+    background-size: 22px 22px;
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+  }
+
+  /* Sticky Header */
+  header {
+    min-height: 72px;
+    background: #ffffff;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.55rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    gap: 1rem;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  .logo-badge {
+    background: #ffffff;
+    color: var(--border);
+    border: 2px solid var(--border);
+    padding: 0.3rem 0.6rem;
+    font-weight: 800;
+    font-size: 0.82rem;
+    border-radius: 6px;
+    box-shadow: 2px 2px 0 var(--border);
+    white-space: nowrap;
+  }
+
+  .title-group h1 {
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1.2;
+  }
+
+  .title-group p {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  /* Dynamic Stakes Progress Indicator */
+  .progress-card {
+    background: #ffffff;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 0.45rem 0.75rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.25rem;
+    min-width: 170px;
+    box-shadow: 2px 2px 0 var(--border);
+  }
+
+  .progress-header-line {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.45rem;
+  }
+
+  .progress-percent-label {
+    font-size: 1.15rem;
+    font-weight: 900;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .progress-tag {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    line-height: 1;
+  }
+
+  .progress-bar-container {
+    width: 100%;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--completed);
+    border-radius: 999px;
+    transition: width 0.35s ease;
+  }
+
+  .progress-hint {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  /* Decluttered Header Actions Grid */
+  .btn-grid-2x2 {
+    display: grid;
+    grid-template-columns: repeat(2, 108px);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 0.35rem 0.45rem;
+  }
+
+  .ctrl-btn {
+    padding: 0.34rem 0.5rem;
+    background: #ffffff;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    cursor: pointer;
+    box-shadow: 2px 2px 0 var(--border);
+    transition: transform 0.1s, box-shadow 0.1s, background-color 0.15s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    white-space: nowrap;
+    text-decoration: none;
+    color: var(--text);
+  }
+
+  .ctrl-btn:hover {
+    background: #f1f5f9;
+  }
+
+  .ctrl-btn:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 var(--border);
+  }
+
+  /* Primary Assessment CTA */
+  .ctrl-btn.btn-quiz-primary {
+    background: var(--accent-purple);
+    color: #ffffff;
+    font-weight: 800;
+    border-color: var(--border);
+  }
+
+  .ctrl-btn.btn-quiz-primary:hover {
+    background: var(--accent-purple-hover);
+    color: #ffffff;
+  }
+
+  /* Utility Secondary Buttons */
+  .ctrl-btn.btn-subtle {
+    background: #f8fafc;
+    color: var(--text-muted);
+  }
+
+  .ctrl-btn.btn-subtle:hover {
+    background: #e2e8f0;
+    color: var(--text);
+  }
+
+  /* Main Container */
+  main {
+    flex: 1;
+    width: 100%;
+    max-width: 1100px;
+    margin: 1.25rem auto;
+    padding: 0 1.25rem 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  /* Sequential Flow Pathway */
+  .pathway-tracker {
+    background: #ffffff;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 2.5px 2.5px 0 var(--border);
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    overflow-x: auto;
+    font-size: 0.75rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .pathway-title {
+    color: var(--accent-blue);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    letter-spacing: 0.4px;
+    margin-right: 0.25rem;
+  }
+
+  .path-step {
+    background: #f8fafc;
+    padding: 0.25rem 0.55rem;
+    border-radius: 4px;
+    border: 1px solid var(--grid);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+
+  .path-step:hover {
+    background: var(--accent-blue-subtle);
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+  }
+
+  .path-arrow {
+    color: #94a3b8;
+    font-weight: 900;
+  }
+
+  /* Fixed Grid: Strict Source Order Preserved */
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-flow: row;
+    gap: 1.25rem;
+    align-items: start;
+  }
+
+  .module-card {
+    background: #ffffff;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 3px 3px 0 var(--border);
+    overflow: hidden;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
+  .module-card.open {
+    grid-column: 1 / -1;
+    box-shadow: 4px 4px 0 var(--border);
+  }
+
+  .module-head {
+    background: #f8fafc;
+    border-bottom: 2px solid transparent;
+    padding: 0.95rem 1.15rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    font-weight: 800;
+    font-size: 0.92rem;
+    transition: background-color 0.15s;
+    user-select: none;
+  }
+
+  .module-head:hover {
+    background: #f1f5f9;
+  }
+
+  .module-card.open .module-head {
+    background: var(--accent-blue-subtle);
+    border-bottom: 2px solid var(--border);
+  }
+
+  .head-left {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+
+  .branch-num {
+    background: var(--accent-blue);
+    color: #ffffff;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 0.18rem 0.45rem;
+    border-radius: 4px;
+  }
+
+  .head-right {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+  }
+
+  .head-toggle-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    background: white;
+    border: 1.5px solid var(--border);
+    font-size: 0.7rem;
+    transition: transform 0.2s ease;
+  }
+
+  .module-card.open .head-toggle-icon {
+    transform: rotate(90deg);
+  }
+
+  .subhead-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.22rem 0.55rem;
+    border-radius: 4px;
+    background: #e2e8f0;
+  }
+
+  /* Subhead List */
+  .subhead-list {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    padding: 0 0.95rem;
+    transition: max-height 0.25s cubic-bezier(0, 1, 0, 1), opacity 0.2s, padding 0.2s;
+  }
+
+  .module-card.open .subhead-list {
+    max-height: 700px;
+    opacity: 1;
+    padding: 0.95rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    transition: max-height 0.35s ease-in-out, opacity 0.25s, padding 0.2s;
+  }
+
+  .subhead-item {
+    background: #ffffff;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 0.7rem 0.9rem;
+    font-size: 0.84rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.1s, background-color 0.15s;
+  }
+
+  .subhead-item:hover {
+    background: #f8fafc;
+    border-color: var(--accent-blue);
+    transform: translateY(-1px);
+  }
+
+  .subhead-item.done {
+    text-decoration: line-through;
+    opacity: 0.6;
+    background: #f1f5f9;
+  }
+
+  .sub-seq {
+    font-family: Consolas, monospace;
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: var(--accent-blue);
+    background: var(--accent-blue-subtle);
+    padding: 0.12rem 0.45rem;
+    border-radius: 3px;
+    border: 1px solid #bfdbfe;
+    flex-shrink: 0;
+  }
+
+  .sub-text {
+    flex: 1;
+  }
+
+  .subhead-check {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--completed);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  /* Bottom Resource & Exam Hub */
+  .revision-hub {
+    margin-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .hub-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #ffffff;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 1.25rem;
+    box-shadow: 2.5px 2.5px 0 var(--border);
+  }
+
+  .hub-banner h2 {
+    font-size: 0.95rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .hub-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  .hub-card {
+    background: #ffffff;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 3px 3px 0 var(--border);
+    padding: 1.15rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .hub-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1.5px solid var(--grid);
+    padding-bottom: 0.55rem;
+  }
+
+  .hub-card-title {
+    font-size: 0.9rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .hub-card-tag {
+    font-size: 0.68rem;
+    font-weight: 800;
+    background: #f1f5f9;
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    color: var(--text-muted);
+  }
+
+  .terms-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.65rem;
+  }
+
+  .term-box {
+    background: #f8fafc;
+    border: 1.5px solid var(--grid);
+    border-radius: 6px;
+    padding: 0.6rem 0.75rem;
+    font-size: 0.78rem;
+  }
+
+  .term-box strong {
+    color: var(--accent-blue);
+    display: block;
+    margin-bottom: 0.2rem;
+    font-size: 0.8rem;
+  }
+
+  .question-item {
+    background: #f8fafc;
+    border: 1.5px solid var(--grid);
+    border-radius: 6px;
+    padding: 0.65rem 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .question-item:hover {
+    background: #f1f5f9;
+  }
+
+  .question-text {
+    font-size: 0.82rem;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .question-ans {
+    font-size: 0.78rem;
+    color: #334155;
+    line-height: 1.45;
+    display: none;
+    border-top: 1px dashed #cbd5e1;
+    padding-top: 0.4rem;
+    margin-top: 0.2rem;
+  }
+
+  .question-item.active .question-ans {
+    display: block;
+  }
+
+  /* Modals and Overlays */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    z-index: 90;
+  }
+
+  .modal-backdrop.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Custom Video Confirmation Modal UI (from screenshot) */
+  #scVideoModal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.95);
+    width: 90%;
+    max-width: 440px;
+    background: #ffffff;
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 4px 4px 0 var(--border);
+    padding: 2.25rem 2rem 2rem;
+    text-align: center;
+    z-index: 210;
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #scVideoModal.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .sc-video-icon-circle {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #fee2e2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+    border: 2px solid #fecaca;
+  }
+
+  .sc-video-play-icon {
+    color: var(--yt-red);
+    font-size: 1.35rem;
+    margin-left: 3px;
+  }
+
+  .sc-video-title {
+    font-family: Georgia, Cambria, 'Times New Roman', serif;
+    font-size: 1.45rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 0.4rem;
+    line-height: 1.25;
+  }
+
+  .sc-video-desc {
+    font-size: 0.88rem;
+    color: #64748b;
+    margin-bottom: 1.6rem;
+    font-weight: 500;
+  }
+
+  .sc-video-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+    width: 100%;
+  }
+
+  .sc-btn-stay {
+    padding: 0.72rem 1rem;
+    background: #ffffff;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+    color: #0f172a;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+
+  .sc-btn-stay:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+  }
+
+  .sc-btn-watch {
+    padding: 0.72rem 1rem;
+    background: var(--yt-red);
+    border: 1.5px solid #b91c1c;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    transition: background 0.15s;
+  }
+
+  .sc-btn-watch:hover {
+    background: #b91c1c;
+  }
+
+  #detail-drawer {
+    position: fixed;
+    top: 0;
+    right: -480px;
+    width: 460px;
+    height: 100vh;
+    background: #ffffff;
+    border-left: 2px solid var(--border);
+    box-shadow: -6px 0 24px rgba(0, 0, 0, 0.12);
+    transition: right 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #detail-drawer.open {
+    right: 0;
+  }
+
+  .drawer-header {
+    padding: 1rem 1.25rem;
+    border-bottom: 2px solid var(--grid);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fafafa;
+  }
+
+  .drawer-header h3 {
+    font-size: 0.98rem;
+    font-weight: 800;
+    line-height: 1.3;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+    font-weight: 700;
+    line-height: 1;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+  }
+
+  .close-btn:hover {
+    background: #e2e8f0;
+  }
+
+  .drawer-content {
+    padding: 1.25rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    overflow-y: auto;
+  }
+
+  .exam-tip-callout {
+    background: var(--accent-blue-subtle);
+    border-left: 4px solid var(--accent-blue);
+    border-radius: 0 6px 6px 0;
+    padding: 0.75rem 0.9rem;
+    font-size: 0.83rem;
+    color: #1e3a8a;
+  }
+
+  .exam-tip-callout strong {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--accent-blue);
+    font-size: 0.76rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 0.3rem;
+  }
+
+  .code-block {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 0.75rem 0.95rem;
+    border-radius: 6px;
+    font-family: Consolas, Monaco, "Courier New", monospace;
+    font-size: 0.8rem;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    border: 1px solid #334155;
+  }
+
+  .badge-tag {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 0.2rem 0.45rem;
+    border-radius: 4px;
+    background: #e2e8f0;
+  }
+
+  .drawer-footer {
+    padding: 0.85rem 1.25rem;
+    background: #f8fafc;
+    border-top: 2px solid var(--grid);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .drawer-nav-btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .drawer-nav-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
+
+  /* Modals: Notes & Quiz */
+  .center-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -46%) scale(0.96);
+    width: 92%;
+    max-width: 780px;
+    max-height: 85vh;
+    background: #ffffff;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 6px 6px 0 var(--border);
+    z-index: 210;
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .center-modal.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .modal-head {
+    background: #f8fafc;
+    border-bottom: 2px solid var(--grid);
+    padding: 0.85rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .modal-head h3 {
+    font-size: 1rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .modal-body {
+    padding: 1.25rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    font-size: 0.86rem;
+    line-height: 1.55;
+  }
+
+  .notes-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    margin-top: 0.4rem;
+  }
+
+  .notes-table th, .notes-table td {
+    border: 1.5px solid var(--grid);
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+  }
+
+  .notes-table th {
+    background: #f1f5f9;
+    font-weight: 800;
+    color: var(--text);
+  }
+
+  /* 10-Question Quiz Cards */
+  .quiz-card {
+    background: #f8fafc;
+    border: 1.5px solid var(--grid);
+    border-radius: 6px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .quiz-card.answered-correct {
+    border-color: var(--completed);
+    background: var(--completed-subtle);
+  }
+
+  .quiz-card.answered-wrong {
+    border-color: #ef4444;
+    background: #fef2f2;
+  }
+
+  .quiz-question-title {
+    font-weight: 800;
+    font-size: 0.88rem;
+  }
+
+  .quiz-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  .quiz-opt-btn {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 5px;
+    padding: 0.48rem 0.7rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .quiz-opt-btn:hover:not(:disabled) {
+    background: var(--accent-blue-subtle);
+  }
+
+  .quiz-opt-btn.correct-picked {
+    background: #bbf7d0;
+    border-color: var(--completed);
+    font-weight: 800;
+  }
+
+  .quiz-opt-btn.wrong-picked {
+    background: #fecaca;
+    border-color: #dc2626;
+    font-weight: 800;
+  }
+
+  .quiz-explanation {
+    font-size: 0.78rem;
+    padding-top: 0.25rem;
+    color: #475569;
+  }
+
+  .quiz-score-banner {
+    background: var(--accent-purple-hover);
+    color: #ffffff;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 800;
+  }
+
+  @media (max-width: 900px) {
+    header {
+      flex-wrap: wrap;
+      padding: 0.6rem 1rem;
+    }
+    .header-right {
+      width: 100%;
+      justify-content: flex-start;
+    }
+    .hub-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .modules-grid {
+      grid-template-columns: 1fr;
+    }
+    .module-card.open .subhead-list {
+      grid-template-columns: 1fr;
+    }
+    .terms-list {
+      grid-template-columns: 1fr;
+    }
+    .quiz-options {
+      grid-template-columns: 1fr;
+    }
+    #detail-drawer {
+      width: 100%;
+      right: -100%;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- Streamlined Header with Clear Hierarchy -->
+<header role="banner">
+  <div class="header-left">
+    <span class="logo-badge">CBSE XI CS</span>
+    <div class="title-group">
+      <h1>Python Mindmap: Fundamentals &amp; Tokens</h1>
+      <p>Lexical Units, Variables, Memory Model &amp; Operators &bull; Class 11</p>
+    </div>
+  </div>
+
+  <div class="header-right" role="toolbar" aria-label="Roadmap Controls">
+    <!-- Informative Stakes Progress Card -->
+    <div class="progress-card">
+      <div class="progress-header-line">
+        <span class="progress-percent-label" id="progress-text">0%</span>
+        <span class="progress-tag" id="progress-tag">START REVISING</span>
+      </div>
+      <div class="progress-bar-container" role="progressbar" id="progress-bar-container" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar-fill" id="progress-fill"></div>
+      </div>
+      <span class="progress-hint" id="progress-hint">Check off topics as you study</span>
+    </div>
+
+    <!-- Actions Grid: Primary Assessment + Utility Controls -->
+    <div class="btn-grid-2x2">
+      <button class="ctrl-btn" onclick="openNotesModal()">📝 Notes</button>
+      <button class="ctrl-btn btn-quiz-primary" onclick="handleHeaderQuizClick(event)" title="Open Quiz">🎯 Quiz Time</button>
+      <button class="ctrl-btn btn-subtle" onclick="openVideoConfirmModal()" title="Watch lesson">▶ Video</button>
+      <button class="ctrl-btn btn-subtle" id="fullscreen-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- Sequential Flow Ribbon -->
+  <nav class="pathway-tracker" aria-label="Learning Sequence Pathway">
+    <span class="pathway-title">📍 Sequential Flow:</span>
+    <span class="path-step" onclick="toggleModule('card-1')">1. Tokens</span>
+    <span class="path-arrow">➔</span>
+    <span class="path-step" onclick="toggleModule('card-2')">2. Variables &amp; Memory</span>
+    <span class="path-arrow">➔</span>
+    <span class="path-step" onclick="toggleModule('card-3')">3. Literals</span>
+    <span class="path-arrow">➔</span>
+    <span class="path-step" onclick="toggleModule('card-4')">4. Operators</span>
+    <span class="path-arrow">➔</span>
+    <span class="path-step" onclick="toggleModule('card-5')">5. Types &amp; Mutability</span>
+    <span class="path-arrow">➔</span>
+    <span class="path-step" onclick="toggleModule('card-6')">6. CBSE Summary</span>
+  </nav>
+
+  <!-- Mindmap Grid (Preserves Strict 1 to 6 DOM Order) -->
+  <div class="modules-grid" id="modules-grid">
+
+    <!-- Branch 1: Tokens, Keywords & Identifiers -->
+    <div class="module-card open" id="card-1">
+      <div class="module-head" role="button" tabindex="0" aria-expanded="true" onclick="toggleModule('card-1')" onkeydown="handleHeaderKey(event, 'card-1')">
+        <div class="head-left">
+          <span class="head-toggle-icon" aria-hidden="true">▶</span>
+          <span class="branch-num">01</span>
+          <span>Tokens, Keywords &amp; Identifiers</span>
+        </div>
+        <div class="head-right">
+          <span class="subhead-badge">3 Topics</span>
+        </div>
+      </div>
+      <div class="subhead-list">
+        <div class="subhead-item" data-id="tokens" role="button" tabindex="0" onclick="openInfo('tokens')" onkeydown="handleKey(event, 'tokens')">
+          <input type="checkbox" class="subhead-check" aria-label="Mark 1.1 Complete" onclick="toggleDone(event, this)">
+          <span class="sub-seq">1.1</span>
+          <span class="sub-text">Character Set &amp; Lexical Units</span>
+        </div>
+        <div class="subhead-item" data-id="keywords" role="button" tabindex="0" onclick="openInfo('keywords')" onkeydown="handleKey(event, 'keywords')">
+          <input type="checkbox" class="subhead-check" aria-label="Mark 1.2 Complete" onclick="toggleDone(event, this)">
+          <span class="sub-seq">1.2</span>
+          <span class="sub-text">Keywords (Reserved Words)</span>
+        </div>
+        <div class="subhead-item" data-id="identifiers" role="button" tabindex="0" onclick="openInfo('identifiers')" onkeydown="handleKey(event, 'identifiers')">
+          <input type="checkbox" class="subhead-check" aria-label="Mark 1.3 Complete" onclick="toggleDone(event, this)">
+          <span class="sub-seq">1.3</span>
+          <span class="sub-text">Identifiers &amp; Naming Rules</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Branch 2: Variables, Assignment & Memory Model -->
+    <div class="module-card" id="card-2">
+      <div class="module-head" role="button" tabindex="0" aria-expanded="false" onclick="toggleModule('card-2')" onkeydown="handleHeaderKey(event, 'card-2')">
+        <div class="head-left">
+          <span class="head-toggle-icon" aria-hidden="true">▶</span>
+          <span class="branch-num">02</span>
+          <span>Variables, Assignment &amp; Memory Model</span>
+        </div>
+        <div class="head-right">
+          <span class="subhead-badge">2 Topics</span>
+        </div>
+      </div>
+      <div class="subhead-list">
+        <div class="subhead-item" data-id="var_assign" role="button" tabindex="0" onclick="openInfo('var_assign')" onkeydown="handleKey(event, 'var_assign')">
+          <input type="checkbox" class="subhead-check" aria-label="Mark 2.1 Complete" onclick="toggleDone(event, this)">
+          <span class="sub-seq">2.1</span>
+          <span class="sub-text">Variable Assignment &amp; Multiple Assignment</span>
+        </div>
+        <div class="subhead-item" data-id="var_properties" role="button" tabindex="0" onclick="openInfo('var_properties')" onkeydown="handleKey(event, 'var_properties')">
+          <input type="checkbox" class="subhead-check" aria-label="Mark 2.2 Complete" onclick="toggleDone(event, this)">
+          <span class="sub-seq">2.2</span>
+          <span class="sub-text">3 Object Properties: Identity, Type, Value</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Branch 3: Literals & Constants -->
+    <div class="module-card" id="card-3">
+      <div class="module-head" role="button" tabindex="0" aria-expanded="false" onclick="toggleModule('card-3')" onkeydown="handleHeaderKey(event, 'card-3')">
+        <div class="head-left">
+          <span class="head-toggle-icon" aria-hidden="true">▶</span>
+          <span class="branch-num">03</span>
+          <span>Literals (Constants)</span>
+        </div>
+        <div class="head-right">
+          <span class="subhead-badge">3 Topics</span>
+        </div>
+      </div>
+      <div class="subhead-list">
+        <div class="subhead-item" data-id="literals_num" role="button" tabindex="0" onclick="openInfo('literals_num')" onkeydown="handleKey(event, 'literals_num')">
+          <input type="checkbox" class="subhead-check" aria-label="Mark 3.1 Complete" onclick="toggleDone(event, this)">
+          <span class="sub-seq">3.1</span>
+          <span class="sub-text">Numeric Literals (Int, Float, Complex)</span>
+        </div>
+        <div class="subhead-item" data-id="literals_str" role="button" tabindex="0" onclick="openInfo('literals_str')" onkeydown="handleKey(event, 'literals_str')">
+          <input type="checkbox" class="subhead-check" aria-label="Mark 3.2 Complete" onclick="toggleDone(event, this)">
+          <span class="sub-seq">3.2</span>
+          <span class="sub-text">String Literals &amp; Quotation Forms</span>
+        </div>
+        <div class="subhead-item" data-id="literals_bool_none" role="button" tabindex="0" onclick="openInfo('literals_bool_none')" onkeydown="handleKey(event, 'literals_bool_none')">
+          <input type="checkbox" class="subhead-check" aria-label="Mark 3.3 Complete" onclick="toggleDone(event, this)">
+          <span class="sub-seq">3.3</span>
+          <span class="sub-text">Boolean Literals &amp; Special Literal None</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Branch 4: Expressions & Operators -->
+    <div class="module-card" id="card-4">
+      <div class="module-head" role="button" tabindex="0" aria-expanded="false" onclick="toggleModule('card-4')" onkeydown="handleHeaderKey(event, 'card-4')">
+        <div class="head-left">
+          <span class="head-toggle-icon" aria-hidden="true">▶</span>
+          <span class="branch-num">04</span>
+          <span>Expressions &amp; Complete Operators</span>
+        </div>
+        <div class="head-right">
+          <span class="subhead-badge">6 Topics</span>
+        </div>
+      </div>
+      <div class="subhead-list">
+        <div class="subhead-item" data-id="expressions" role="button" tabindex="0" onclick="openInfo('expressions')" onkeydown="handleKey(event, 'expressions')">
+          <input type="checkbox" class="subhead-check" aria-label="Mark 4.1 Complete" onclick="toggleDone(event, this)">
+          <span class="sub-seq">4.1</span>
+          <span class="sub-text">Expressions &amp; Operands Overview</span>
+        </div>
+        <div class="subhead-item" data-id="op_arithmetic" role="button" tabindex="0" onclick="openInfo('op_arithmetic')" onkeydown="handleKey(event, 'op_arithmetic')">
+          <input type="checkbox" class="subhead-check" aria-label="Mark 4.2 Complete" onclick="toggleDone(event, this)">
+          <span class="sub-seq">4.2</span>
+          <span class="sub-text">Arithmetic Operators (/, //, %, **)</span>
+        </div>
+        <div class="subhead-item" data-id="op_relational" role="button" tabindex="0" onclick="openInfo('op_relational')" onkeydown="handleKey(event, 'op_relational')">
+          <input type="checkbox" class="subhead-check" aria-label="Mark 4.3 Complete" onclick="toggleDone(event, this)">
+          <span class="sub-seq">4.3</span>
+          <span class="sub-text">Relational Operators (&lt;, &gt;, ==, !=)</span>
+        </div>
+        <div class="subhead-item" data-id="op_logical" role="button" tabindex="0" onclick="openInfo('op_logical')" onkeydown="handleKey(event, 'op_logical')">
+          <input type="checkbox" class="subhead-check" aria-label="Mark 4.4 Complete" onclick="toggleDone(event, this)">
+          <span class="sub-seq">4.4</span>
+          <span class="sub-text">Logical Operators (and, or, not)</span>
+        </div>
+        <div class="subhead-item" data-id="op_identity" role="button" tabindex="0" onclick="openInfo('op_identity')" onkeydown="handleKey(event, 'op_identity')">
+          <input type="checkbox" class="subhead-check" aria-label="Mark 4.5 Complete" onclick="toggleDone(event, this)">
+          <span class="sub-seq">4.5</span>
+          <span class="sub-text">Identity (is) vs Equality (==)</span>
+        </div>
+        <div class="subhead-item" data-id="precedence" role="button" tabindex="0" onclick="openInfo('precedence')" onkeydown="handleKey(event, 'precedence')">
+          <input type="checkbox" class="subhead-check" aria-label="Mark 4.6 Complete" onclick="toggleDone(event, this)">
+          <span class="sub-seq">4.6</span>
+          <span class="sub-text">Augmented Assignment &amp; Precedence</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Branch 5: Type Conversion, Typing & Mutability -->
+    <div class="module-card" id="card-5">
+      <div class="module-head" role="button" tabindex="0" aria-expanded="false" onclick="toggleModule('card-5')" onkeydown="handleHeaderKey(event, 'card-5')">
+        <div class="head-left">
+          <span class="head-toggle-icon" aria-hidden="true">▶</span>
+          <span class="branch-num">05</span>
+          <span>Type Conversion, Typing &amp; Mutability</span>
+        </div>
+        <div class="head-right">
+          <span class="subhead-badge">5 Topics</span>
+        </div>
+      </div>
+      <div class="subhead-list">
+        <div class="subhead-item" data-id="conv_implicit" role="button" tabindex="0" onclick="openInfo('conv_implicit')" onkeydown="handleKey(event, 'conv_implicit')">
+          <input type="checkbox" class="subhead-check" aria-label="Mark 5.1 Complete" onclick="toggleDone(event, this)">
+          <span class="sub-seq">5.1</span>
+          <span class="sub-text">Implicit Conversion (Type Coercion)</span>
+        </div>
+        <div class="subhead-item" data-id="conv_explicit" role="button" tabindex="0" onclick="openInfo('conv_explicit')" onkeydown="handleKey(event, 'conv_explicit')">
+          <input type="checkbox" class="subhead-check" aria-label="Mark 5.2 Complete" onclick="toggleDone(event, this)">
+          <span class="sub-seq">5.2</span>
+          <span class="sub-text">Explicit Conversion (Type Casting)</span>
+        </div>
+        <div class="subhead-item" data-id="dynamic_typing" role="button" tabindex="0" onclick="openInfo('dynamic_typing')" onkeydown="handleKey(event, 'dynamic_typing')">
+          <input type="checkbox" class="subhead-check" aria-label="Mark 5.3 Complete" onclick="toggleDone(event, this)">
+          <span class="sub-seq">5.3</span>
+          <span class="sub-text">Dynamic Typing vs Static Typing</span>
+        </div>
+        <div class="subhead-item" data-id="mutability" role="button" tabindex="0" onclick="openInfo('mutability')" onkeydown="handleKey(event, 'mutability')">
+          <input type="checkbox" class="subhead-check" aria-label="Mark 5.4 Complete" onclick="toggleDone(event, this)">
+          <span class="sub-seq">5.4</span>
+          <span class="sub-text">Mutable vs Immutable Types</span>
+        </div>
+        <div class="subhead-item" data-id="escape_seq" role="button" tabindex="0" onclick="openInfo('escape_seq')" onkeydown="handleKey(event, 'escape_seq')">
+          <input type="checkbox" class="subhead-check" aria-label="Mark 5.5 Complete" onclick="toggleDone(event, this)">
+          <span class="sub-seq">5.5</span>
+          <span class="sub-text">Escape Sequences &amp; String Length</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Branch 6: CBSE Summary & Output Mastery -->
+    <div class="module-card" id="card-6">
+      <div class="module-head" role="button" tabindex="0" aria-expanded="false" onclick="toggleModule('card-6')" onkeydown="handleHeaderKey(event, 'card-6')">
+        <div class="head-left">
+          <span class="head-toggle-icon" aria-hidden="true">▶</span>
+          <span class="branch-num">06</span>
+          <span>CBSE Summary &amp; Output Mastery</span>
+        </div>
+        <div class="head-right">
+          <span class="subhead-badge">1 Topic</span>
+        </div>
+      </div>
+      <div class="subhead-list">
+        <div class="subhead-item" data-id="summary_outro" role="button" tabindex="0" onclick="openInfo('summary_outro')" onkeydown="handleKey(event, 'summary_outro')">
+          <input type="checkbox" class="subhead-check" aria-label="Mark 6.1 Complete" onclick="toggleDone(event, this)">
+          <span class="sub-seq">6.1</span>
+          <span class="sub-text">CBSE Exam Revision &amp; Output Guidelines</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Resource & Exam Prep Dashboard -->
+  <section class="revision-hub" aria-label="Quick Revision and Exam Bank">
+    <div class="hub-banner">
+      <h2>⚡ Quick Revision, Key Terms &amp; Most Important Questions</h2>
+      <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted);">Sumita Arora &amp; Preeti Arora Aligned</span>
+    </div>
+
+    <div class="hub-grid">
+      <!-- 1. Key Terms Glossary -->
+      <div class="hub-card">
+        <div class="hub-card-header">
+          <div class="hub-card-title">📖 Key Terms &amp; Definitions</div>
+          <span class="hub-card-tag">Glossary</span>
+        </div>
+        <div class="terms-list">
+          <div class="term-box">
+            <strong>Token (Lexical Unit)</strong>
+            The smallest individual unit recognized by the Python interpreter.
+          </div>
+          <div class="term-box">
+            <strong>Dynamic Typing</strong>
+            Variable data types are bound during runtime rather than compile-time.
+          </div>
+          <div class="term-box">
+            <strong>Immutable Object</strong>
+            Cannot be modified in-place (e.g., <code>int</code>, <code>str</code>, <code>tuple</code>).
+          </div>
+          <div class="term-box">
+            <strong>Floor Division (//)</strong>
+            Returns the quotient truncated to the nearest lesser integer.
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Most Important Questions -->
+      <div class="hub-card">
+        <div class="hub-card-header">
+          <div class="hub-card-title">🎯 Most Important Questions (Click to Reveal)</div>
+          <span class="hub-card-tag">CBSE Favorite</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:0.5rem;">
+          <div class="question-item" onclick="toggleAnswer(this)">
+            <div class="question-text">
+              <span>Q1. Why does <code>len('\n')</code> evaluate to 1?</span>
+              <span style="font-size:0.7rem; color:var(--accent-blue);">▼</span>
+            </div>
+            <div class="question-ans">
+              An escape sequence consists of a backslash followed by a character, but Python parses it as a single non-printable character token.
+            </div>
+          </div>
+          <div class="question-item" onclick="toggleAnswer(this)">
+            <div class="question-text">
+              <span>Q2. Distinguish between <code>==</code> and <code>is</code> operator.</span>
+              <span style="font-size:0.7rem; color:var(--accent-blue);">▼</span>
+            </div>
+            <div class="question-ans">
+              <code>==</code> checks for value equality, whereas <code>is</code> tests memory identity (whether both variables point to the same <code>id()</code>).
+            </div>
+          </div>
+          <div class="question-item" onclick="toggleAnswer(this)">
+            <div class="question-text">
+              <span>Q3. Predict output: <code>print(-7 // 2, 2 ** 3 ** 2)</code></span>
+              <span style="font-size:0.7rem; color:var(--accent-blue);">▼</span>
+            </div>
+            <div class="question-ans">
+              Output: <code>-4 512</code>. Floor division rounds down towards negative infinity (<code>-3.5</code> floors to <code>-4</code>), and exponentiation evaluates right-to-left (<code>3**2=9</code>, then <code>2**9=512</code>).
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. High-Yield Exam Tips & Traps -->
+      <div class="hub-card">
+        <div class="hub-card-header">
+          <div class="hub-card-title">💡 CBSE Exam Traps &amp; Tips</div>
+          <span class="hub-card-tag">Must Read</span>
+        </div>
+        <ul style="padding-left:1.15rem; font-size:0.8rem; line-height:1.6; color:#334155;">
+          <li><strong>Division Trap:</strong> True division <code>/</code> in Python 3 always yields a <code>float</code> (e.g. <code>6 / 3</code> produces <code>2.0</code>, not <code>2</code>).</li>
+          <li><strong>Reserved Capitalization:</strong> Exactly three keywords start with an uppercase letter: <code>True</code>, <code>False</code>, and <code>None</code>.</li>
+          <li><strong>Identifier Rules:</strong> Identifiers can never begin with digits or contain hyphens (e.g. <code>2nd_var</code> and <code>my-val</code> cause a <code>SyntaxError</code>).</li>
+        </ul>
+      </div>
+
+      <!-- 4. Interactive Quiz Launch Card -->
+      <div class="hub-card" style="justify-content:space-between; background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);">
+        <div>
+          <div class="hub-card-header">
+            <div class="hub-card-title">🎯 Test Your Understanding</div>
+            <span class="hub-card-tag" style="background:#f3e8ff; color:var(--accent-purple);">10 MCQs</span>
+          </div>
+          <p style="font-size:0.82rem; color:#475569; margin-top:0.6rem; line-height:1.5;">
+            Solve 10 board-level conceptual questions covering tokens, dynamic typing, operators, floor division, and mutability.
+          </p>
+        </div>
+        <button class="ctrl-btn btn-quiz-primary" onclick="openQuizModal()" style="width:100%; padding:0.65rem; font-size:0.84rem;">
+          🎯 Launch Interactive Quiz (10 Questions)
+        </button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Shared Modal Backdrop -->
+<div id="modal-backdrop" class="modal-backdrop" onclick="closeAllModals()"></div>
+
+<!-- Video Confirmation Modal (Matching Screenshot UI) -->
+<div id="scVideoModal" role="dialog" aria-modal="true" aria-labelledby="scVideoTitle">
+  <div class="sc-video-icon-circle">
+    <span class="sc-video-play-icon">▶</span>
+  </div>
+  <h2 class="sc-video-title" id="scVideoTitle">Want to watch this video?</h2>
+  <p class="sc-video-desc">Choose an option below to continue.</p>
+  <div class="sc-video-actions">
+    <button class="sc-btn-stay" onclick="closeVideoConfirmModal()">Stay</button>
+    <button class="sc-btn-watch" onclick="confirmWatchVideo()">▶ Watch</button>
+  </div>
+</div>
+
+<!-- Concept Detail Drawer -->
+<aside id="detail-drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title" aria-hidden="true">
+  <div class="drawer-header">
+    <h3 id="drawer-title">Concept Detail</h3>
+    <button class="close-btn" onclick="closeDrawer()" aria-label="Close details drawer">&times;</button>
+  </div>
+  <div class="drawer-content" id="drawer-body"></div>
+  <div class="drawer-footer" id="drawer-footer" style="display:none;">
+    <button class="ctrl-btn drawer-nav-btn" id="drawer-prev-btn" onclick="navigateDrawer(-1)">← Previous</button>
+    <button class="ctrl-btn drawer-nav-btn" id="drawer-next-btn" onclick="navigateDrawer(1)">Next →</button>
+  </div>
+</aside>
+
+<!-- Rapid Revision Notes Modal -->
+<div id="notes-modal" class="center-modal" role="dialog" aria-modal="true" aria-labelledby="notes-title">
+  <div class="modal-head">
+    <h3 id="notes-title">📝 Class 11 CS Rapid Revision Notes</h3>
+    <button class="close-btn" onclick="closeNotesModal()" aria-label="Close Notes">&times;</button>
+  </div>
+  <div class="modal-body">
+    <div>
+      <h4 style="font-size:0.9rem; color:var(--accent-blue);">1. Classification of Tokens (Lexical Units)</h4>
+      <p style="margin-top:4px;">A token is the smallest individual unit in a program. Python has 5 core token types:</p>
+      <table class="notes-table">
+        <thead>
+          <tr>
+            <th>Token Type</th>
+            <th>Description</th>
+            <th>Examples</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Keywords</strong></td>
+            <td>Reserved words with predefined compiler meaning.</td>
+            <td><code>if, else, for, while, def, return</code></td>
+          </tr>
+          <tr>
+            <td><strong>Identifiers</strong></td>
+            <td>Names of variables, functions, and objects.</td>
+            <td><code>count, total_score, _val</code></td>
+          </tr>
+          <tr>
+            <td><strong>Literals</strong></td>
+            <td>Constant data values directly written in code.</td>
+            <td><code>100, 3.14, 'Hello', True, None</code></td>
+          </tr>
+          <tr>
+            <td><strong>Operators</strong></td>
+            <td>Symbols triggering computation on operands.</td>
+            <td><code>+, -, *, /, //, %, **, ==, is</code></td>
+          </tr>
+          <tr>
+            <td><strong>Punctuators</strong></td>
+            <td>Organizing symbols and grouping delimiters.</td>
+            <td><code>( ), [ ], { }, :, ,, .</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div>
+      <h4 style="font-size:0.9rem; color:var(--accent-blue);">2. Mutable vs Immutable Types</h4>
+      <table class="notes-table">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Characteristics</th>
+            <th>Python Types</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Immutable</strong></td>
+            <td>Cannot be modified in-place; alterations create new memory objects.</td>
+            <td><code>int, float, complex, bool, str, tuple</code></td>
+          </tr>
+          <tr>
+            <td><strong>Mutable</strong></td>
+            <td>Values can be altered without altering original memory address (<code>id</code>).</td>
+            <td><code>list, dict, set</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div>
+      <h4 style="font-size:0.9rem; color:var(--accent-blue);">3. Operator Precedence Hierarchy (High to Low)</h4>
+      <p style="margin-top:4px;">Parentheses <code>()</code> &gt; Exponentiation <code>**</code> (Right-to-Left) &gt; Unary <code>+, -</code> &gt; Multiplication/Division <code>*, /, //, %</code> &gt; Addition/Subtraction <code>+, -</code> &gt; Relational <code>&lt;, &gt;, ==, !=</code> &gt; Identity/Membership <code>is, in</code> &gt; Logical <code>not</code> &gt; <code>and</code> &gt; <code>or</code>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 10-Question Interactive Quiz Modal -->
+<div id="quiz-modal" class="center-modal" role="dialog" aria-modal="true" aria-labelledby="quiz-title">
+  <div class="modal-head">
+    <h3 id="quiz-title">🎯 Class 11 CS Interactive Quiz (10 Questions)</h3>
+    <button class="close-btn" onclick="closeQuizModal()" aria-label="Close Quiz">&times;</button>
+  </div>
+  <div class="modal-body">
+    <div class="quiz-score-banner">
+      <span>Score: <span id="quiz-score-display">0 / 10</span></span>
+      <button class="ctrl-btn" onclick="initQuiz()" style="padding:0.25rem 0.6rem; font-size:0.75rem;">↺ Retake Quiz</button>
+    </div>
+    <div id="quiz-container" style="display:flex; flex-direction:column; gap:1rem;"></div>
+  </div>
+</div>
+
+<script>
+  const YT_URL = "https://youtu.be/dvvhZZRLx0M";
+  const STORAGE_KEY = "cbse_py_ch1_progress_v7";
+
+  // Dedicated Quiz link for top-right button:
+  const HEADER_QUIZ_LINK = "https://singhclasses.in/quiz";
+
+  function handleHeaderQuizClick(e) {
+    if (HEADER_QUIZ_LINK && HEADER_QUIZ_LINK.trim() !== "" && HEADER_QUIZ_LINK !== "#") {
+      window.open(HEADER_QUIZ_LINK, "_blank");
+    } else {
+      openQuizModal();
+    }
+  }
+
+  /* VIDEO CONFIRMATION MODAL LOGIC */
+  const videoConfirmModal = document.getElementById('scVideoModal');
+  const modalBackdrop = document.getElementById('modal-backdrop');
+
+  function openVideoConfirmModal() {
+    videoConfirmModal.classList.add('open');
+    modalBackdrop.classList.add('show');
+  }
+
+  function closeVideoConfirmModal() {
+    videoConfirmModal.classList.remove('open');
+    checkBackdropClose();
+  }
+
+  function confirmWatchVideo() {
+    window.open(YT_URL, '_blank');
+    closeVideoConfirmModal();
+  }
+
+  const orderedKeys = [
+    "tokens", "keywords", "identifiers",
+    "var_assign", "var_properties",
+    "literals_num", "literals_str", "literals_bool_none",
+    "expressions", "op_arithmetic", "op_relational", "op_logical", "op_identity", "precedence",
+    "conv_implicit", "conv_explicit", "dynamic_typing", "mutability", "escape_seq",
+    "summary_outro"
+  ];
+
+  let currentKey = null;
+
+  const topicData = {
+    tokens: {
+      tag: "Lexical Units",
+      title: "1.1 Python Character Set and Tokens",
+      desc: "The smallest individual unit in a Python program is known as a Token or Lexical Unit. Python recognizes five token categories: Keywords, Identifiers, Literals, Operators, and Punctuators (Delimiters).",
+      example: "# Tokens breakdown:\n# 'x' -> Identifier\n# '=' -> Assignment Operator\n# 100 -> Literal (Integer Constant)\nx = 100",
+      notes: "The character set consists of ASCII and Unicode characters (letters A-Z, a-z, digits 0-9, special characters, whitespace, and newline)."
+    },
+    keywords: {
+      tag: "Reserved Words",
+      title: "1.2 Keywords in Python",
+      desc: "Keywords are reserved words that carry predefined meaning for the Python compiler/interpreter. They convey special instructions and cannot be repurposed as identifier names.",
+      example: "import keyword\nprint(keyword.kwlist)\nprint('Keyword count:', len(keyword.kwlist))\n# Examples: True, False, None, if, elif, else, while, for, break, def, return",
+      notes: "In Python 3, all keywords are strictly lowercase except exactly three: True, False, and None."
+    },
+    identifiers: {
+      tag: "Naming Rules",
+      title: "1.3 Python Identifiers & Variable Naming Rules",
+      desc: "Identifiers are names assigned to variables, functions, and objects. Rules: (1) Must start with an alphabet (A-Z, a-z) or underscore (_), (2) Cannot begin with a digit, (3) Strictly case-sensitive, (4) Special characters except underscore are disallowed, (5) Cannot use reserved keywords.",
+      example: "# Valid Identifiers:\ntotal_score = 95\n_count = 10\nrollNo2 = 14\n\n# Invalid Identifiers:\n# 2roll = 10    (SyntaxError: Cannot start with digit)\n# my-name = 5   (SyntaxError: Hyphen is illegal)\n# for = 20       (SyntaxError: Keyword cannot be identifier)",
+      notes: "Popular CBSE question: 'Which of the following are valid identifiers in Python: 2ndName, My_Var, for, _val, True?'"
+    },
+    var_assign: {
+      tag: "Assignment",
+      title: "2.1 Variable Assignment & Multiple Assignment",
+      desc: "Variables in Python do not require prior type declaration; they come into existence automatically the moment an initial value is bound using the assignment operator (=). Python also supports simultaneous assignment.",
+      example: "# Chained assignment:\na = b = c = 10\n\n# Simultaneous assignment / Unpacking:\nx, y, z = 10, 20, 30\n\n# Swapping without third variable:\nx, y = y, x\nprint(x, y) # Output: 20 10",
+      notes: "The right-hand side expressions are fully evaluated first from left to right, and then assigned to the left-hand variables."
+    },
+    var_properties: {
+      tag: "Memory Model",
+      title: "2.2 The 3 Properties of an Object: Identity, Type, and Value",
+      desc: "Every object created in Python has three fundamental attributes: (1) Identity: internal memory address accessed via id(), (2) Type: data class accessed via type(), and (3) Value: the data content.",
+      example: "marks = 95\nprint('Value:', marks)       # 95\nprint('Type:', type(marks))   # <class 'int'>\nprint('Identity:', id(marks)) # Memory address integer",
+      notes: "Python variables do not store values directly; they store memory references (pointers) pointing to value objects."
+    },
+    literals_num: {
+      tag: "Literals",
+      title: "3.1 Python Numeric Literals & Constants",
+      desc: "Numeric literals represent immutable numeric constants. Python supports: Integers (decimal, binary with prefix 0b, octal with 0o, hex with 0x), Floating point numbers (fractional or scientific exponential format like 1.5e3), and Complex numbers (real + imag j).",
+      example: "dec = 25\nbin_val = 0b1010  # Evaluates to 10\nflt = 3.14e2      # Evaluates to 314.0\ncomp = 4 + 7j     # Complex number (real=4.0, imag=7.0)",
+      notes: "Booleans (True / False) in Python are treated as integer sub-types with values 1 and 0."
+    },
+    literals_str: {
+      tag: "Literals",
+      title: "3.2 String Literals & Quotation Styles",
+      desc: "String literals are sequences of text surrounded by matching single, double, or triple quotes. Triple quotes (''' or \"\"\") allow multi-line string constants and docstrings.",
+      example: "s1 = 'Single quote'\ns2 = \"Double quote\"\ns3 = '''Multi\nLine\nString'''\nprint(s3)",
+      notes: "Prefixing a string literal with 'r' or 'R' designates it as a Raw String, which suppresses escape sequence substitution."
+    },
+    literals_bool_none: {
+      tag: "Literals",
+      title: "3.3 Boolean Literals & Special Literal None",
+      desc: "Python provides two boolean constants: True and False. The special literal None signifies absence of a value, uninitialized states, or an empty return.",
+      example: "flag = True\nresult = None\n\nprint(bool(0))        # False\nprint(bool('Python')) # True\nprint(result is None) # True",
+      notes: "In Python conditional tests, 0, None, empty strings '', and empty sequences [] evaluate to False; non-empty values evaluate to True."
+    },
+    expressions: {
+      tag: "Syntax",
+      title: "4.1 Expressions & Operands Explained",
+      desc: "An expression is an arrangement of operators, variables, and constants that resolves to a single atomic value. Operands are the targets upon which operators act.",
+      example: "# Compound expression:\nresult = (10 + 5) * 2\nis_adult = (age >= 18) and (has_license == True)\nprint(result) # 30",
+      notes: "Remember: Statements perform an action or declare instructions; expressions compute a tangible value."
+    },
+    op_arithmetic: {
+      tag: "Operators",
+      title: "4.2 Mathematical & Arithmetic Operators",
+      desc: "Arithmetic operators: + (addition), - (subtraction), * (multiplication), / (float division), // (floor/integer division), % (modulus/remainder), and ** (exponentiation).",
+      example: "print(10 / 4)   # 2.5 (True float division)\nprint(10 // 4)  # 2 (Floor division: integer quotient)\nprint(10 % 4)   # 2 (Remainder)\nprint(2 ** 3)   # 8 (Exponentiation)\nprint(-7 // 2)  # -4 (Floors to the lesser integer)",
+      notes: "Crucial rule: In Python 3, true division (/) ALWAYS returns a float (e.g., 4 / 2 returns 2.0, not 2)."
+    },
+    op_relational: {
+      tag: "Operators",
+      title: "4.3 Relational / Comparison Operators",
+      desc: "Relational operators compare two values and produce a boolean outcome (True or False): <, <=, >, >=, == (equality), and != (not equal).",
+      example: "a = 15\nprint(a > 10)       # True\nprint(a == 20)      # False\nprint(a != 10)      # True\n\n# Chained comparison in Python:\nx = 5\nprint(1 < x < 10)   # True (Equivalent to: 1 < x and x < 10)",
+      notes: "Never confuse the assignment operator (=) with the relational equality operator (==)."
+    },
+    op_logical: {
+      tag: "Operators",
+      title: "4.4 Logical Operators (and, or, not)",
+      desc: "Logical operators evaluate boolean conditions: 'and' (both True), 'or' at least one True, 'not' (inverts truth value). Python uses short-circuit evaluation during evaluation.",
+      example: "print(True and False) # False\nprint(True or False)  # True\nprint(not True)       # False\n\n# Short-circuit returns actual values:\nprint(10 and 20)      # 20\nprint(0 or 50)        # 50",
+      notes: "Short-circuit rule: For 'and', if the first operand is False, Python stops immediately and returns it without evaluating the second operand."
+    },
+    op_identity: {
+      tag: "Operators",
+      title: "4.5 Identity (is) vs Equality (==)",
+      desc: "Equality (==) checks whether two variables hold identical values. Identity (is / is not) checks whether two variables refer to the exact same memory address (id).",
+      example: "L1 = [1, 2, 3]\nL2 = [1, 2, 3]\n\nprint(L1 == L2)  # True (Values match)\nprint(L1 is L2)  # False (Different memory objects!)\n\n# Small integer caching:\na = 256\nb = 256\nprint(a is b)    # True (Python caches integers between -5 and 256)",
+      notes: "Board Exam Favorite: 'Explain with code why L1 == L2 can be True while L1 is L2 evaluates to False.'"
+    },
+    precedence: {
+      tag: "Precedence",
+      title: "4.6 Augmented Assignment & Operator Precedence",
+      desc: "Augmented assignments (+=, -=, *=, /=, //=, %=, **=) modify and reassign in one step. Precedence determines evaluation order: () -> ** -> Unary -> (*, /, //, %) -> (+, -) -> Relational -> Identity -> not -> and -> or.",
+      example: "# Augmented Assignment:\nx = 10\nx += 5 # Equivalent to x = x + 5 -> 15\n\n# Precedence:\nval = 10 + 2 * 3 ** 2\n# 3**2=9 -> 2*9=18 -> 10+18 = 28\nprint(val) # 28",
+      notes: "Exponentiation (**) is evaluated from right to left: 2 ** 3 ** 2 is calculated as 2 ** (3 ** 2) = 2 ** 9 = 512."
+    },
+    conv_implicit: {
+      tag: "Type Conversion",
+      title: "5.1 Implicit Type Conversion (Type Coercion)",
+      desc: "Implicit conversion occurs automatically when Python converts a narrower data type into a wider data type to prevent loss of precision during arithmetic operations.",
+      example: "num_int = 120\nnum_flo = 1.5\n\nnew_val = num_int + num_flo\nprint('Value:', new_val)      # 121.5\nprint('Type:', type(new_val)) # <class 'float'>",
+      notes: "Python never performs implicit conversion if data loss or semantic ambiguity could result (e.g., '10' + 5 causes a TypeError)."
+    },
+    conv_explicit: {
+      tag: "Type Conversion",
+      title: "5.2 Explicit Type Conversion (Type Casting)",
+      desc: "Explicit conversion (Type Casting) is enforced by the programmer using built-in functions: int(), float(), str(), bool(), list(), tuple().",
+      example: "s = '100'\nval = int(s)         # String to integer\nprice = float('50')  # String to float (50.0)\ns_val = str(45.6)    # Float to string\n\n# Nested conversion required for float strings:\n# int('45.6') -> ValueError!\nval_clean = int(float('45.6')) # Works: 45",
+      notes: "Always cast user inputs from input(): num = int(input('Enter roll number: '))."
+    },
+    dynamic_typing: {
+      tag: "Language Design",
+      title: "5.3 Dynamic Typing vs Static Typing",
+      desc: "In statically typed languages (C/C++/Java), variable data types are hard-coded at declaration. In Python, variables are dynamically typed: a variable name can refer to an integer at one moment and be rebound to a string later.",
+      example: "# Dynamic Typing in Python:\nx = 10\nprint(type(x)) # <class 'int'>\n\nx = 'Hello'\nprint(type(x)) # <class 'str'> (Valid and re-assigned!)",
+      notes: "Take caution with dynamic typing: shifting types unintentionally can cause runtime TypeErrors during arithmetic operations."
+    },
+    mutability: {
+      tag: "Data Types",
+      title: "5.4 Mutable vs Immutable Variables in Python",
+      desc: "Immutable objects cannot be altered in memory once created (int, float, complex, str, tuple, bool). Attempting to alter them creates a new object in memory. Mutable objects can have their values modified in-place (list, dict, set).",
+      example: "# Strings are immutable:\ns = 'Python'\n# s[0] = 'J'  -> TypeError: does not support item assignment\n\n# Lists are mutable:\nL = [10, 20, 30]\nL[0] = 99\nprint(L)      # [99, 20, 30]",
+      notes: "Classic CBSE exam question: 'Distinguish between mutable and immutable data types with 2 examples each.'"
+    },
+    escape_seq: {
+      tag: "Character Literals",
+      title: "5.5 How to Use Escape Sequences & Characters",
+      desc: "Escape sequences allow non-printable, control, or syntax-conflicting characters to be included inside string literals via a preceding backslash (\\).",
+      example: "print('Line 1\\nLine 2')     # \\n = Newline\nprint('Python\\tClass 11')  # \\t = Horizontal tab\nprint('He said, \\\"Yes!\\\"') # \\\" = Escaped double quote\nprint('C:\\\\Users\\\\Rohit')   # \\\\ = Escaped backslash",
+      notes: "Important length rule: len('\\n') evaluates to 1 in Python because the escape character plus letter is parsed as a single character token."
+    },
+    summary_outro: {
+      tag: "CBSE Summary",
+      title: "6.1 Chapter Recap & Practice Guidelines",
+      desc: "Complete Chapter 1 & 2 recap: Identifier naming rules, operator precedence hierarchy, mutable vs immutable distinctions, and type casting rules.",
+      example: "# Quick Output Prediction:\na, b = 7, 2\nprint(a // b, a / b, a ** b)\n# Output: 3  3.5  49",
+      notes: "Revise NCERT & Sumita Arora chapter-end multiple choice questions and output prediction problems."
+    }
+  };
+
+  /* NOTES MODAL */
+  const notesModal = document.getElementById('notes-modal');
+  function openNotesModal() {
+    notesModal.classList.add('open');
+    modalBackdrop.classList.add('show');
+  }
+  function closeNotesModal() {
+    notesModal.classList.remove('open');
+    checkBackdropClose();
+  }
+
+  /* 10 CBSE QUESTIONS FOR QUIZ TIME */
+  const quizModal = document.getElementById('quiz-modal');
+  const quizData = [
+    {
+      q: "1. Which of the following is a valid Python identifier?",
+      options: ["2ndName", "my-var", "_total_score", "for"],
+      correct: 2,
+      exp: "Identifiers cannot begin with a digit, cannot contain hyphens (-), and cannot use reserved keywords like 'for'. Leading underscores are completely valid."
+    },
+    {
+      q: "2. Which built-in Python keywords start with an uppercase letter?",
+      options: ["True, False, None", "If, Else, While", "Def, Return, Class", "Int, Float, Str"],
+      correct: 0,
+      exp: "In Python 3, all keywords are strictly lowercase except exactly three: True, False, and None."
+    },
+    {
+      q: "3. What is the output of: print(10 // 4, 10 / 4)?",
+      options: ["2  2.5", "2.5  2.5", "2  2", "2.0  2.5"],
+      correct: 0,
+      exp: "// performs floor (integer) division returning 2, whereas / performs true float division returning 2.5."
+    },
+    {
+      q: "4. What is the evaluated output of: print(-11 // 3)?",
+      options: ["-3", "-4", "-3.66", "3"],
+      correct: 1,
+      exp: "Floor division rounds down towards negative infinity. Since -11 / 3 = -3.666..., the next lower integer is -4."
+    },
+    {
+      q: "5. What is the value of the expression: 2 ** 3 ** 2?",
+      options: ["64", "512", "36", "256"],
+      correct: 1,
+      exp: "Exponentiation (**) evaluates from right to left: 3 ** 2 evaluates to 9, then 2 ** 9 evaluates to 512."
+    },
+    {
+      q: "6. What does len('\\n\\t\\\\') evaluate to in Python?",
+      options: ["6", "3", "4", "1"],
+      correct: 1,
+      exp: "Each escape sequence (\\n, \\t, \\\\) is recognized as a single distinct character token in memory. Hence, length is 3."
+    },
+    {
+      q: "7. Which of the following data types in Python is MUTABLE?",
+      options: ["tuple", "str", "int", "list"],
+      correct: 3,
+      exp: "Lists and Dictionaries are mutable (support in-place item alteration). Strings, Integers, and Tuples are immutable."
+    },
+    {
+      q: "8. If L1 = [1, 2] and L2 = [1, 2], what do L1 == L2 and L1 is L2 evaluate to?",
+      options: ["True and True", "True and False", "False and True", "False and False"],
+      correct: 1,
+      exp: "== compares value equality (True), while 'is' verifies if both point to the exact same memory id (False)."
+    },
+    {
+      q: "9. What will be the values of a and b after: a, b = 5, 10 followed by a, b = b, a + b?",
+      options: ["10, 15", "10, 20", "5, 15", "10, 10"],
+      correct: 0,
+      exp: "Right-hand side expressions evaluate first simultaneously: b is 10 and a + b is 15. Then they are unpacked into a and b."
+    },
+    {
+      q: "10. What occurs when executing int('45.8') in Python?",
+      options: ["Returns 45", "Returns 46", "Raises ValueError", "Returns 45.8"],
+      correct: 2,
+      exp: "int() cannot directly parse strings with decimal points; it raises a ValueError. It requires int(float('45.8'))."
+    }
+  ];
+
+  let quizUserAnswers = {};
+
+  function openQuizModal() {
+    initQuiz();
+    quizModal.classList.add('open');
+    modalBackdrop.classList.add('show');
+  }
+
+  function closeQuizModal() {
+    quizModal.classList.remove('open');
+    checkBackdropClose();
+  }
+
+  function initQuiz() {
+    quizUserAnswers = {};
+    updateQuizScore();
+    const container = document.getElementById('quiz-container');
+    container.innerHTML = "";
+
+    quizData.forEach((item, qIdx) => {
+      const card = document.createElement('div');
+      card.className = 'quiz-card';
+      card.id = `quiz-card-${qIdx}`;
+
+      let optButtons = item.options.map((opt, oIdx) => `
+        <button class="quiz-opt-btn" onclick="handleQuizAnswer(${qIdx}, ${oIdx})">${opt}</button>
+      `).join('');
+
+      card.innerHTML = `
+        <div class="quiz-question-title">${item.q}</div>
+        <div class="quiz-options">${optButtons}</div>
+        <div class="quiz-explanation" id="quiz-exp-${qIdx}" style="display:none;"></div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  function handleQuizAnswer(qIdx, optIdx) {
+    if (quizUserAnswers[qIdx] !== undefined) return;
+    quizUserAnswers[qIdx] = optIdx;
+
+    const item = quizData[qIdx];
+    const card = document.getElementById(`quiz-card-${qIdx}`);
+    const exp = document.getElementById(`quiz-exp-${qIdx}`);
+    const buttons = card.querySelectorAll('.quiz-opt-btn');
+
+    buttons.forEach((btn, idx) => {
+      btn.disabled = true;
+      if (idx === item.correct) {
+        btn.classList.add('correct-picked');
+      } else if (idx === optIdx) {
+        btn.classList.add('wrong-picked');
+      }
+    });
+
+    if (optIdx === item.correct) {
+      card.classList.add('answered-correct');
+      exp.innerHTML = `<strong>Correct!</strong> ${item.exp}`;
+      exp.style.color = "#15803d";
+    } else {
+      card.classList.add('answered-wrong');
+      exp.innerHTML = `<strong>Incorrect.</strong> ${item.exp}`;
+      exp.style.color = "#b91c1c";
+    }
+    exp.style.display = 'block';
+
+    updateQuizScore();
+  }
+
+  function updateQuizScore() {
+    let score = 0;
+    Object.keys(quizUserAnswers).forEach(qIdx => {
+      if (quizUserAnswers[qIdx] === quizData[qIdx].correct) score++;
+    });
+    document.getElementById('quiz-score-display').innerText = `${score} / ${quizData.length}`;
+  }
+
+  /* ACCORDION REVEAL FOR MIQs */
+  function toggleAnswer(el) {
+    el.classList.toggle('active');
+  }
+
+  /* MODAL / BACKDROP CLOSE HELPERS */
+  function checkBackdropClose() {
+    const anyOpen = (videoConfirmModal && videoConfirmModal.classList.contains('open')) ||
+                    notesModal.classList.contains('open') ||
+                    quizModal.classList.contains('open') ||
+                    drawer.classList.contains('open');
+    if (!anyOpen) {
+      modalBackdrop.classList.remove('show');
+    }
+  }
+
+  function closeAllModals() {
+    closeDrawer();
+    closeVideoConfirmModal();
+    closeNotesModal();
+    closeQuizModal();
+  }
+
+  /* PROGRESS STORAGE WITH ENHANCED STAKES */
+  function loadSavedProgress() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const completedIds = JSON.parse(saved);
+        if (Array.isArray(completedIds)) {
+          document.querySelectorAll('.subhead-item').forEach(item => {
+            const id = item.getAttribute('data-id');
+            const cb = item.querySelector('.subhead-check');
+            if (completedIds.includes(id)) {
+              item.classList.add('done');
+              if (cb) cb.checked = true;
+            }
+          });
+        }
+      }
+    } catch(err) {
+      console.warn("Storage read failed:", err);
+    }
+    updateProgress(false);
+  }
+
+  function saveProgress() {
+    try {
+      const completed = Array.from(document.querySelectorAll('.subhead-item.done'))
+        .map(el => el.getAttribute('data-id'))
+        .filter(Boolean);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(completed));
+    } catch(err) {
+      console.warn("Storage write failed:", err);
+    }
+  }
+
+  function toggleDone(event, checkbox) {
+    event.stopPropagation();
+    const item = checkbox.closest('.subhead-item');
+    item.classList.toggle('done', checkbox.checked);
+    updateProgress(true);
+  }
+
+  function updateProgress(shouldSave = true) {
+    const total = document.querySelectorAll('.subhead-item').length;
+    const completed = document.querySelectorAll('.subhead-item.done').length;
+    const pct = total === 0 ? 0 : Math.round((completed / total) * 100);
+    
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-text').innerText = pct + '%';
+    document.getElementById('progress-bar-container').setAttribute('aria-valuenow', pct);
+
+    const tagEl = document.getElementById('progress-tag');
+    const hintEl = document.getElementById('progress-hint');
+
+    if (completed === 0) {
+      tagEl.innerText = "START REVISING";
+      hintEl.innerText = "Check off topics as you study";
+    } else if (completed === total) {
+      tagEl.innerText = "ALL COMPLETE! 🎉";
+      hintEl.innerText = `All ${total} topics mastered!`;
+    } else {
+      tagEl.innerText = "IN PROGRESS";
+      hintEl.innerText = `${completed} of ${total} topics done`;
+    }
+
+    if (shouldSave) saveProgress();
+  }
+
+  /* ACCORDION HANDLERS */
+  function toggleModule(cardId) {
+    const targetCard = document.getElementById(cardId);
+    const willOpen = !targetCard.classList.contains('open');
+
+    document.querySelectorAll('.module-card').forEach(card => {
+      card.classList.remove('open');
+      const head = card.querySelector('.module-head');
+      if (head) head.setAttribute('aria-expanded', 'false');
+    });
+
+    if (willOpen) {
+      targetCard.classList.add('open');
+      const targetHead = targetCard.querySelector('.module-head');
+      if (targetHead) targetHead.setAttribute('aria-expanded', 'true');
+
+      setTimeout(() => {
+        targetCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 120);
+    }
+  }
+
+  function handleHeaderKey(event, cardId) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      toggleModule(cardId);
+    }
+  }
+
+  /* DRAWER LOGIC */
+  const drawer = document.getElementById('detail-drawer');
+  const drawerTitle = document.getElementById('drawer-title');
+  const drawerBody = document.getElementById('drawer-body');
+  const drawerFooter = document.getElementById('drawer-footer');
+  let lastActive = null;
+
+  function openInfo(key) {
+    lastActive = document.activeElement;
+    currentKey = key;
+    renderDrawerContent(key);
+
+    drawer.classList.add('open');
+    modalBackdrop.classList.add('show');
+    drawer.setAttribute('aria-hidden', 'false');
+  }
+
+  function renderDrawerContent(key) {
+    const data = topicData[key];
+    if (!data) return;
+
+    drawerTitle.innerText = data.title;
+    drawerBody.innerHTML = `
+      <div style="display:flex; align-items:center; gap:0.5rem;">
+        <span class="badge-tag">${data.tag}</span>
+      </div>
+
+      <div>
+        <strong style="font-size:0.85rem; color:#0f172a;">Concept Explanation:</strong>
+        <p style="margin-top: 5px; color: #334155;">${data.desc}</p>
+      </div>
+
+      <div class="exam-tip-callout">
+        <strong>💡 Key Rule / CBSE Exam Tip</strong>
+        <p>${data.notes}</p>
+      </div>
+
+      <div>
+        <strong style="font-size:0.85rem; color:#0f172a;">Python Code Example:</strong>
+        <div class="code-block">${escapeHTML(data.example)}</div>
+      </div>
+    `;
+
+    const idx = orderedKeys.indexOf(key);
+    if (idx !== -1) {
+      drawerFooter.style.display = 'flex';
+      const prevBtn = document.getElementById('drawer-prev-btn');
+      const nextBtn = document.getElementById('drawer-next-btn');
+
+      prevBtn.disabled = (idx === 0);
+      nextBtn.disabled = (idx === orderedKeys.length - 1);
+    } else {
+      drawerFooter.style.display = 'none';
+    }
+  }
+
+  function navigateDrawer(direction) {
+    const idx = orderedKeys.indexOf(currentKey);
+    if (idx === -1) return;
+
+    const newIdx = idx + direction;
+    if (newIdx >= 0 && newIdx < orderedKeys.length) {
+      currentKey = orderedKeys[newIdx];
+      renderDrawerContent(currentKey);
+      drawerBody.scrollTop = 0;
+    }
+  }
+
+  function closeDrawer() {
+    drawer.classList.remove('open');
+    drawer.setAttribute('aria-hidden', 'true');
+    checkBackdropClose();
+    if (lastActive && typeof lastActive.focus === 'function') lastActive.focus();
+  }
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeAllModals();
+    } else if (drawer.classList.contains('open')) {
+      if (e.key === 'ArrowLeft') navigateDrawer(-1);
+      if (e.key === 'ArrowRight') navigateDrawer(1);
+    }
+  });
+
+  function handleKey(event, key) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      openInfo(key);
+    }
+  }
+
+  function escapeHTML(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  /* FULLSCREEN */
+  function toggleFullscreen() {
+    const doc = document;
+    const docEl = document.documentElement;
+
+    const requestFS = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
+    const exitFS = doc.exitFullscreen || doc.webkitExitFullscreen || doc.mozCancelFullScreen || doc.msExitFullscreen;
+    const isFS = doc.fullscreenElement || doc.webkitFullscreenElement || doc.mozFullScreenElement || doc.msFullscreenElement;
+
+    if (!isFS) {
+      if (requestFS) requestFS.call(docEl).catch(() => {});
+    } else {
+      if (exitFS) exitFS.call(doc);
+    }
+  }
+
+  ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(ev => {
+    document.addEventListener(ev, () => {
+      const btn = document.getElementById('fullscreen-btn');
+      if (!btn) return;
+      const isFS = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+      btn.innerHTML = isFS ? '⤢ Exit' : '⛶ Fullscreen';
+    });
+  });
+
+  // Init
+  window.addEventListener('DOMContentLoaded', () => {
+    loadSavedProgress();
+  });
+</script>
+
+</body>
+</html>
