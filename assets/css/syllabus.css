@@ -209,7 +209,7 @@ a { text-decoration: none; transition: var(--transition-smooth); }
 
 /* ==========================================================================
    NAVIGATION ROWS
-   ========================================================================== */
+   ========================================================================= */
 .sc-hero-nav {
   display: flex;
   flex-direction: column;
@@ -436,7 +436,8 @@ a { text-decoration: none; transition: var(--transition-smooth); }
 .sc-btn-notes   { background-color: var(--bg-light-yellow); color: var(--btn-yellow-text); border-color: #fef08a; }
 .sc-btn-pro     { background-color: var(--bg-light-orange); color: var(--btn-orange-text); border-color: #ffedd5; }
 .sc-btn-mcq     { background-color: var(--bg-light-purple); color: var(--btn-purple-text); border-color: #f3e8f5; }
-.sc-btn-pyq     { background-color: var(--bg-light-pink); color: var(--btn-pink-text); border-color: #fce4ec; }
+.sc-btn-pyq,
+.sc-btn-roadmap { background-color: var(--bg-light-pink); color: var(--btn-pink-text); border-color: #fce4ec; }
 .sc-btn-dpp     { background-color: var(--bg-light-teal); color: var(--btn-teal-text); border-color: #e0f2f1; }
 
 .sc-card-links a:hover:not(.sc-locked) { color: #ffffff !important; transform: translateY(-1px); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
@@ -444,7 +445,8 @@ a { text-decoration: none; transition: var(--transition-smooth); }
 .sc-card-links a.sc-btn-notes:hover   { background: var(--btn-yellow-hover); }
 .sc-card-links a.sc-btn-pro:hover     { background: var(--btn-orange-hover); }
 .sc-card-links a.sc-btn-mcq:hover     { background: var(--btn-purple-hover); }
-.sc-card-links a.sc-btn-pyq:hover     { background: var(--btn-pink-hover); }
+.sc-card-links a.sc-btn-pyq:hover,
+.sc-card-links a.sc-btn-roadmap:hover { background: var(--btn-pink-hover); }
 .sc-card-links a.sc-btn-dpp:hover     { background: var(--btn-teal-hover); }
 .sc-card-links a.sc-locked { background-color: #f1f5f9 !important; color: #94a3b8 !important; border-color: #e2e8f0 !important; cursor: not-allowed; }
 
