@@ -293,10 +293,10 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--yellow-main); o
   background: linear-gradient(135deg, #0A1429 0%, #0F1E3D 100%);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-md);
-  padding: 22px 26px;
+  padding: 26px 30px;
   display: flex;
-  align-items: flex-start;
-  gap: 22px;
+  align-items: center; /* Vertically centers the image with the bio text */
+  gap: 28px;
   margin-bottom: 22px;
   box-shadow: 0 8px 24px rgba(7, 15, 30, 0.28);
   position: relative;
@@ -304,29 +304,29 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--yellow-main); o
 
 .mentor-photo-wrap {
   position: relative;
-  width: 100px;
-  height: 100px;
+  width: 135px; /* Increased from 100px to match text height */
+  height: 135px;
   border-radius: 50%;
-  padding: 3px;
+  padding: 3.5px;
   background: var(--yellow-main);
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  margin-top: 2px;
+  margin: 0; /* Clears top offset for exact vertical alignment */
+  box-shadow: 0 4px 18px rgba(245, 158, 11, 0.25);
 }
 
 .mentor-photo-wrap img {
-  width: 94px;
-  height: 94px;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #0A1429;
+  border: 2.5px solid #0A1429;
   background-color: #0A1429;
   display: block;
 }
-
 .mentor-bio-content {
   flex: 1;
   min-width: 0;
