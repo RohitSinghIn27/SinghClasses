@@ -2,21 +2,89 @@ document.addEventListener("DOMContentLoaded", () => {
   window.scrollTo(0, 0);
   window.addEventListener("pageshow", () => window.scrollTo(0, 0));
 
-  // 1. PROTECTION & SECURITY
-  document.addEventListener("contextmenu", (e) => e.preventDefault());
-  const toggleImgBlur = (blur) => document.querySelectorAll("img").forEach((i) => i.classList.toggle("img-blur-protected", blur));
+  // 1. IMAGE PROTECTION & SCREENSHOT DEFENSE
+  const toggleImgBlur = (blur) => {
+    document.querySelectorAll("img").forEach((i) => i.classList.toggle("img-blur-protected", blur));
+  };
 
+  // Prevent right-click context menu on images and UI (except contact details)
+  document.addEventListener("contextmenu", (e) => {
+    if (e.target.closest(".selectable-contact")) return;
+    e.preventDefault();
+  });
+
+  // Anti-Screenshot & Shortcut Protection
   document.addEventListener("keydown", (e) => {
-    if (e.key === "PrintScreen" || ((e.ctrlKey || e.metaKey) && ["c", "p", "s", "u", "i", "j"].includes(e.key.toLowerCase()))) {
+    // PrintScreen trigger
+    if (e.key === "PrintScreen") {
       toggleImgBlur(true);
-      if (e.key === "PrintScreen") { navigator.clipboard?.writeText(""); setTimeout(() => toggleImgBlur(false), 3000); }
+      navigator.clipboard?.writeText("");
+      setTimeout(() => toggleImgBlur(false), 2500);
+      return;
+    }
+
+    // Common inspection, save, and print shortcuts (Ctrl/Cmd + P, S, U, I, J)
+    if ((e.ctrlKey || e.metaKey) && ["p", "s", "u", "i", "j"].includes(e.key.toLowerCase())) {
+      e.preventDefault();
+      toggleImgBlur(true);
+      setTimeout(() => toggleImgBlur(false), 2000);
+      return;
+    }
+
+    // Selective Copy: Allow only phone, email, or address
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "c") {
+      const sel = window.getSelection();
+      const anchorNode = sel?.anchorNode;
+      const parent = anchorNode?.nodeType === Node.TEXT_NODE ? anchorNode.parentElement : anchorNode;
+      if (!parent?.closest(".selectable-contact")) {
+        e.preventDefault();
+        toggleImgBlur(true);
+        setTimeout(() => toggleImgBlur(false), 1500);
+      }
     }
   });
-  ["keyup", "copy", "blur"].forEach((ev) => window.addEventListener(ev, (e) => (ev === "keyup" && e.key !== "PrintScreen") || toggleImgBlur(true)));
-  ["focus", "pageshow"].forEach((ev) => window.addEventListener(ev, () => toggleImgBlur(false)));
-  document.addEventListener("visibilitychange", () => toggleImgBlur(document.hidden));
 
-  // 2. CURSOR SPARKLE TRAIL (Navy, Royal Blue, Yellow/Amber, Red, White)
+  // Windows PrintScreen keyup fallback (in case keydown is consumed by the OS)
+  window.addEventListener("keyup", (e) => {
+    if (e.key === "PrintScreen") {
+      toggleImgBlur(true);
+      navigator.clipboard?.writeText("");
+      setTimeout(() => toggleImgBlur(false), 2500);
+    }
+  });
+
+  // Snipping Tool / OS Screen Capture Detection:
+  // Whenever Snipping Tool, Mac Grab, or an overlay steals focus, blur all images immediately
+  window.addEventListener("blur", () => {
+    toggleImgBlur(true);
+  });
+
+  // Restore image clarity immediately when user refocuses or returns to the window
+  window.addEventListener("focus", () => {
+    toggleImgBlur(false);
+  });
+  window.addEventListener("pageshow", () => {
+    toggleImgBlur(false);
+  });
+
+  // Tab hidden or window minimized
+  document.addEventListener("visibilitychange", () => {
+    toggleImgBlur(document.hidden);
+  });
+
+  // Disallow copying anything outside .selectable-contact
+  document.addEventListener("copy", (e) => {
+    const sel = window.getSelection();
+    const anchorNode = sel?.anchorNode;
+    const parent = anchorNode?.nodeType === Node.TEXT_NODE ? anchorNode?.parentElement : anchorNode;
+    if (!parent?.closest(".selectable-contact")) {
+      e.preventDefault();
+      toggleImgBlur(true);
+      setTimeout(() => toggleImgBlur(false), 1500);
+    }
+  });
+
+  // 2. CURSOR SPARKLE TRAIL
   (function initCursorSparkles() {
     if (window.matchMedia("(pointer: coarse), (prefers-reduced-motion: reduce)").matches) return;
     const canvas = document.createElement("canvas");
@@ -79,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const yr = document.getElementById("current-year");
   if (yr) yr.textContent = new Date().getFullYear();
 
-  // 5. FABRIC CANVAS BACKGROUND (Navy Grid, Red / Yellow Highlights)
+  // 5. FABRIC CANVAS BACKGROUND
   const initDynamicFabric = (sel) => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const el = document.querySelector(sel);
@@ -133,62 +201,164 @@ document.addEventListener("DOMContentLoaded", () => {
       if (active) animId = requestAnimationFrame(loop);
     }, { threshold: 0.05 }).observe(el);
   };
-  [".classes-section", ".playlists-section", ".results-section", ".teacher-section"].forEach(initDynamicFabric);
+  [".mentorship-courses-section", ".playlists-section", ".results-section", ".testimonials-page-wrapper"].forEach(initDynamicFabric);
 });
 
-// Helper for Google Apps Script data resolution
-const extractProp = (obj, prop) => {
-  if (!obj) return "";
-  const key = Object.keys(obj).find((k) => k.toLowerCase().replace(/[\s_-]/g, "") === prop.toLowerCase().replace(/[\s_-]/g, ""));
-  return key ? String(obj[key]).trim() : "";
+// Multi-Key Prop Extractor
+const extractProp = (obj, ...props) => {
+  if (!obj || typeof obj !== "object") return "";
+  const keys = Object.keys(obj);
+  for (const prop of props) {
+    const cleanProp = prop.toLowerCase().replace(/[\s_-]/g, "");
+    const foundKey = keys.find((k) => {
+      const cleanKey = k.toLowerCase().replace(/[\s_-]/g, "");
+      return cleanKey === cleanProp || cleanKey.includes(cleanProp);
+    });
+    if (foundKey && obj[foundKey] !== undefined && String(obj[foundKey]).trim() !== "") {
+      return String(obj[foundKey]).trim();
+    }
+  }
+  return "";
+};
+
+// LocalStorage Cache Manager
+const GAS_CACHE = {
+  TTL: 3600 * 1000,
+  get(key) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (Date.now() - parsed.timestamp < this.TTL) return parsed.data;
+    } catch { return null; }
+    return null;
+  },
+  set(key, data) {
+    try {
+      localStorage.setItem(key, JSON.stringify({ timestamp: Date.now(), data }));
+    } catch {}
+  }
 };
 
 // 6. CBSE RESULT WIDGET
 (function initCBSEWidget() {
   const API_URL = "https://script.google.com/macros/s/AKfycbzuLWc_ECzT-aTvGZDYjH--_YEGgwxXYqb3Y02JTLXRBgqsrktFoqi8VeW7VpbXF_Gh9g/exec";
+  const CACHE_KEY = "sc_cbse_results_v6";
+
+  let activeTimer = null;
+
+  const cached = GAS_CACHE.get(CACHE_KEY);
+  if (cached && Array.isArray(cached) && cached.length) {
+    buildSlides(cached);
+  }
 
   async function fetchData() {
     const track = document.getElementById("cbseSliderTrack");
     if (!track) return;
     try {
-      const res = await fetch(API_URL, { redirect: "follow" });
+      const fetchUrl = `${API_URL}${API_URL.includes("?") ? "&" : "?"}_nocache=${Date.now()}`;
+      const res = await fetch(fetchUrl, { redirect: "follow" });
       const json = await res.json();
-      const list = Array.isArray(json) ? json : json?.data || [];
-      if (list.length) buildSlides(list);
-      else track.innerHTML = `<div class="loading-container"><div class="loading-text" style="color:var(--red-cta);">No result records found.</div></div>`;
+      
+      let list = [];
+      if (Array.isArray(json)) {
+        list = json;
+      } else if (json && typeof json === "object") {
+        list = json.data || json.records || json.results || json.result || Object.values(json);
+      }
+
+      if (Array.isArray(list) && list.length) {
+        if (!cached || JSON.stringify(list) !== JSON.stringify(cached)) {
+          GAS_CACHE.set(CACHE_KEY, list);
+          buildSlides(list);
+        }
+      } else if (!cached) {
+        track.innerHTML = `<div class="loading-container"><div class="loading-text" style="color:var(--red-cta);">No result records found.</div></div>`;
+      }
     } catch {
-      track.innerHTML = `<div class="loading-container"><div class="loading-text" style="color:var(--red-cta);">Error loading results from server.</div></div>`;
+      if (!cached) {
+        track.innerHTML = `<div class="loading-container"><div class="loading-text" style="color:var(--red-cta);">Error loading results from server.</div></div>`;
+      }
     }
   }
 
   function buildSlides(data) {
     const track = document.getElementById("cbseSliderTrack");
     if (!track) return;
-    const records = data.filter((s) => extractProp(s, "Name"));
+
+    const records = data.filter((s) => extractProp(s, "Name", "StudentName", "CandidateName", "Student"));
     if (!records.length) return;
 
+    const offlineSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M4 10h16M12 2l8 5H4l8-5zM6 10v11M10 10v11M14 10v11M18 10v11"/></svg>`;
+    const onlineSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="2" y1="20" x2="22" y2="20"/></svg>`;
+    const miniOfflineSvg = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M4 10h16M12 2l8 5H4l8-5zM6 10v11M10 10v11M14 10v11M18 10v11"/></svg>`;
+    const miniOnlineSvg = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="2" y1="20" x2="22" y2="20"/></svg>`;
+
+    track.style.transform = "translateX(0%)";
     track.innerHTML = records.map((s, idx) => {
-      const name = extractProp(s, "Name"), marks = parseInt(extractProp(s, "Marks"), 10) || 0;
+      const name = extractProp(s, "Name", "StudentName", "CandidateName", "Student");
+      const marks = parseInt(extractProp(s, "Marks", "Score"), 10) || 0;
       const isOnline = extractProp(s, "Mode").toLowerCase() === "online";
-      const rawPic = extractProp(s, "CandidatePicture").replace(/['"“”\n\r]/g, "");
-      const img = rawPic.includes("assets/") || rawPic.startsWith("http") ? rawPic : `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=0F1E3D&color=ffffff&size=150`;
-      const tname = extractProp(s, "Tname") || name.slice(0, 2).toUpperCase(), test = extractProp(s, "Testimonial");
+      const rawPic = extractProp(s, "CandidatePicture", "Picture", "Image").replace(/['"“”\n\r]/g, "");
+      const tname = extractProp(s, "Tname") || name.split(" ").filter(Boolean).map(n => n[0]).join("").slice(0, 2).toUpperCase() || "SC";
+      
+      const svgFallback = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><rect width="120" height="120" rx="60" fill="#0F1E3D"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-size="42" font-weight="700">${tname}</text></svg>`;
+      const fallbackPlaceholder = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svgFallback)))}`;
+      const img = rawPic.includes("assets/") || rawPic.startsWith("http") ? rawPic : fallbackPlaceholder;
+      const test = extractProp(s, "Testimonial", "Review");
+      const batch = extractProp(s, "Batch", "Session");
 
       return `
         <div class="slide-wrapper ${idx === 0 ? "active" : ""}">
           <div class="report-card">
             <div class="main-content">
               <div class="profile-card">
-                <div class="avatar-wrap"><img src="${img}" alt="${name}" class="avatar-img" onerror="this.onerror=null;this.src='${img}';"></div>
-                <h2 class="profile-name">${name}</h2>
-                ${extractProp(s, "Batch") ? `<div class="profile-pill">${extractProp(s, "Batch")}</div>` : ""}
+                <div class="avatar-wrap"><img src="${img}" alt="${name}" class="avatar-img" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='${fallbackPlaceholder}';"></div>
+                <h3 class="profile-name">${name}</h3>
+                ${batch ? `<div class="profile-pill">${batch}</div>` : ""}
               </div>
               <div class="right-col">
                 <div class="stats-grid">
-                  <div class="stat-box"><div class="icon-box icon-navy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="3" width="14" height="18" rx="3"></rect><circle cx="12" cy="10" r="2"></circle><line x1="9" y1="15" x2="15" y2="15"></line></svg></div><div class="stat-details"><div class="stat-title">Roll Number</div><div class="stat-val">${extractProp(s, "RollNumber")}</div></div></div>
-                  <div class="stat-box"><div class="icon-box icon-red"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="13" rx="2"></rect><path d="M8 21h8M12 17v4"></path></svg></div><div class="stat-details"><div class="stat-title">Subject</div><div class="stat-val">${extractProp(s, "Subject")}</div></div></div>
-                  <div class="stat-box"><div class="icon-box icon-yellow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v8M8 10h8v12H8z"></path></svg></div><div class="stat-details"><div class="stat-title">School</div><div class="stat-val">${extractProp(s, "School")}</div></div></div>
-                  <div class="stat-box"><div class="icon-box icon-navy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle></svg></div><div class="stat-details"><div class="stat-title">Mode</div><div class="mode-toggles"><span class="${isOnline ? "mode-inactive" : "mode-active"}">Offline</span><span class="${isOnline ? "mode-active" : "mode-inactive"}">Online</span></div></div></div>
+                  <div class="stat-box">
+                    <div class="icon-box icon-navy">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="3"></rect><circle cx="12" cy="10" r="2"></circle><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+                    </div>
+                    <div class="stat-details"><div class="stat-title">Roll Number</div><div class="stat-val">${extractProp(s, "RollNumber", "RollNo")}</div></div>
+                  </div>
+                  <div class="stat-box">
+                    <div class="icon-box icon-red">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"></rect><path d="M8 21h8M12 17v4"></path></svg>
+                    </div>
+                    <div class="stat-details"><div class="stat-title">Subject</div><div class="stat-val">${extractProp(s, "Subject", "Course")}</div></div>
+                  </div>
+
+                  <div class="stat-box">
+                    <div class="icon-box icon-yellow">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 21h18"></path>
+                        <path d="M5 21V5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v16"></path>
+                        <path d="M16 10h3a2 2 0 0 1 2 2v9"></path>
+                        <path d="M8 7h4"></path>
+                        <path d="M8 11h4"></path>
+                        <path d="M8 15h4"></path>
+                        <path d="M8 19h4"></path>
+                      </svg>
+                    </div>
+                    <div class="stat-details"><div class="stat-title">School</div><div class="stat-val" title="${extractProp(s, "School")}">${extractProp(s, "School")}</div></div>
+                  </div>
+
+                  <div class="stat-box">
+                    <div class="icon-box icon-navy">
+                      ${isOnline ? onlineSvg : offlineSvg}
+                    </div>
+                    <div class="stat-details">
+                      <div class="stat-title">Mode</div>
+                      <div class="mode-toggles">
+                        <span class="${isOnline ? "mode-inactive" : "mode-active"}">${miniOfflineSvg} Offline</span>
+                        <span class="${isOnline ? "mode-active" : "mode-inactive"}">${miniOnlineSvg} Online</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div class="score-card">
                   <div class="donut-chart" data-score="${marks}"><div class="donut-inner"><span class="score-num">${marks}</span></div></div>
@@ -216,10 +386,23 @@ const extractProp = (obj, prop) => {
 
       const slides = document.querySelectorAll("#cbse-results-widget .slide-wrapper");
       const ctrl = document.getElementById("cbseDotsContainer");
-      if (!ctrl || slides.length <= 1) return;
-      ctrl.innerHTML = `<button class="slider-arrow prev-arrow" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg></button><div class="slider-dots-line-wrapper"><div class="slider-dots-line"></div><div class="slider-dots-inner">${slides.map((_, i) => `<div class="slider-dot ${i === 0 ? "active" : ""}"></div>`).join("")}</div></div><button class="slider-arrow next-arrow" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></button>`;
+      if (!ctrl) return;
+      
+      clearInterval(activeTimer);
+      if (slides.length <= 1) {
+        ctrl.innerHTML = "";
+        return;
+      }
 
-      let curr = 0, timer;
+      ctrl.innerHTML = `
+        <button class="slider-arrow prev-arrow" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+        <div class="slider-dots-line-wrapper">
+          <div class="slider-dots-line"></div>
+          <div class="slider-dots-inner">${Array.from(slides).map((_, i) => `<div class="slider-dot ${i === 0 ? "active" : ""}"></div>`).join("")}</div>
+        </div>
+        <button class="slider-arrow next-arrow" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></button>`;
+
+      let curr = 0;
       const dots = ctrl.querySelectorAll(".slider-dot");
       const goTo = (idx) => {
         curr = (idx + slides.length) % slides.length;
@@ -227,20 +410,36 @@ const extractProp = (obj, prop) => {
         slides.forEach((s, i) => s.classList.toggle("active", i === curr));
         dots.forEach((d, i) => d.classList.toggle("active", i === curr));
       };
-      const restart = () => { clearInterval(timer); timer = setInterval(() => goTo(curr + 1), 6000); };
+      const restart = () => { 
+        clearInterval(activeTimer); 
+        activeTimer = setInterval(() => goTo(curr + 1), 6000); 
+      };
 
       ctrl.querySelector(".prev-arrow").onclick = () => { goTo(curr - 1); restart(); };
       ctrl.querySelector(".next-arrow").onclick = () => { goTo(curr + 1); restart(); };
       dots.forEach((d, i) => (d.onclick = () => { goTo(i); restart(); }));
       restart();
-    }, 50);
+    }, 60);
   }
-  fetchData();
+
+  const resultsEl = document.querySelector(".results-section");
+  if (resultsEl && "IntersectionObserver" in window) {
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        fetchData();
+        obs.disconnect();
+      }
+    }, { rootMargin: "300px 0px" });
+    obs.observe(resultsEl);
+  } else {
+    fetchData();
+  }
 })();
 
-// 7. DYNAMIC TESTIMONIALS MODULE (Navy, Yellow & Red Avatars)
+// 7. TESTIMONIALS MODULE
 (function initTestimonialsModule() {
   const API_URL = "https://script.google.com/macros/s/AKfycbzReACnRQ6liOLCFUCKESRhjTBgTalEWI2TKc_Xm6DIKMLoKGgfVNTH9tEoQz9eIjG7Kg/exec";
+  const CACHE_KEY = "sc_testimonials_cache_v2";
   const TOTAL_SLOTS = 6;
   const COLORS = ["#0F1E3D", "#DC2626", "#F59E0B", "#1E3A8A", "#B91C1C", "#D97706", "#2563EB", "#991B1B"];
 
@@ -260,7 +459,7 @@ const extractProp = (obj, prop) => {
     if (c.includes("google")) return "google_review";
     if (c.includes("12") || c.includes("xii")) return "class12";
     if (c.includes("11") || c.includes("xi")) return "class11";
-    if (c.includes("9") || c.includes("10") || c.includes("ix") || c.includes("ai") || c.includes("417")) return "class9_10";
+    if (c.includes("9") || c.includes("10") || c.includes("ix") || c.includes("ai")) return "class9_10";
     if (c.includes("cuet")) return "cuet";
     if (c.includes("high") || c.includes("college") || c.includes("bca") || c.includes("mca") || c.includes("ugc") || c.includes("dsssb")) return "higher_ed";
     return c;
@@ -334,17 +533,24 @@ const extractProp = (obj, prop) => {
     if (pool.length > TOTAL_SLOTS) timer = setInterval(rotateSingle, 4500);
   }
 
-  window.handleSheetReviews = (json) => {
-    const list = Array.isArray(json) ? json : json?.data || [];
-    rawData = list.map((item) => {
-      const name = extractProp(item, "Name");
+  function parseReviews(list) {
+    return list.map((item) => {
+      const name = extractProp(item, "Name", "StudentName", "Author");
       return {
-        name, initials: extractProp(item, "Initials") || name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase() || "SC",
+        name, initials: extractProp(item, "Initials") || name.split(" ").filter(Boolean).map((n) => n[0]).join("").slice(0, 2).toUpperCase() || "SC",
         time: relTime(extractProp(item, "Time") || extractProp(item, "Date")),
-        category: normCat(extractProp(item, "Category")), video: extractProp(item, "Video"), text: extractProp(item, "Text")
+        category: normCat(extractProp(item, "Category")), video: extractProp(item, "Video"), text: extractProp(item, "Text", "Review")
       };
     }).filter((i) => i.name && i.text);
-    setFilter("all");
+  }
+
+  window.handleSheetReviews = (json) => {
+    const list = Array.isArray(json) ? json : json?.data || [];
+    if (list.length) {
+      GAS_CACHE.set(CACHE_KEY, list);
+      rawData = parseReviews(list);
+      setFilter("all");
+    }
   };
 
   grid = document.getElementById("reviewsGrid");
@@ -355,8 +561,31 @@ const extractProp = (obj, prop) => {
     };
   });
 
-  const script = document.createElement("script");
-  script.src = `${API_URL}?callback=handleSheetReviews`;
-  script.onerror = () => fetch(API_URL).then((r) => r.json()).then(window.handleSheetReviews).catch(() => (grid.innerHTML = `<div class="testimonials-error">Failed to load verified reviews.</div>`));
-  document.body.appendChild(script);
+  const cachedReviews = GAS_CACHE.get(CACHE_KEY);
+  if (cachedReviews && Array.isArray(cachedReviews) && cachedReviews.length) {
+    rawData = parseReviews(cachedReviews);
+    setFilter("all");
+  }
+
+  function fetchLiveReviews() {
+    const script = document.createElement("script");
+    script.src = `${API_URL}?callback=handleSheetReviews`;
+    script.onerror = () => fetch(API_URL).then((r) => r.json()).then(window.handleSheetReviews).catch(() => {
+      if (!cachedReviews && grid) grid.innerHTML = `<div class="testimonials-error">Failed to load verified reviews.</div>`;
+    });
+    document.body.appendChild(script);
+  }
+
+  const testSec = document.querySelector(".testimonials-page-wrapper");
+  if (testSec && "IntersectionObserver" in window) {
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        fetchLiveReviews();
+        obs.disconnect();
+      }
+    }, { rootMargin: "300px 0px" });
+    obs.observe(testSec);
+  } else {
+    fetchLiveReviews();
+  }
 })();
