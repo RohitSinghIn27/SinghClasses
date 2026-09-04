@@ -43,7 +43,17 @@
       padding: 20px 26px; display: flex; justify-content: space-between; align-items: center; gap: 20px;
       box-shadow: 0 4px 18px rgba(15, 23, 42, 0.04); position: relative; overflow: hidden; z-index: 2; box-sizing: border-box;
     }
-    .sc-paper-1-master { border-left: 6px solid #2563eb; background: linear-gradient(90deg, #f8faff 0%, #ffffff 100%); }
+    .sc-paper-1-master {
+      border-left: 6px solid #2563eb;
+      background: linear-gradient(90deg, #f8faff 0%, #ffffff 100%);
+      cursor: pointer;
+      user-select: none;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+    }
+    .sc-paper-1-master:hover {
+      border-color: #2563eb;
+      box-shadow: 0 6px 22px rgba(37, 99, 235, 0.12);
+    }
     .sc-paper-2-master { border-left: 6px solid #7c3aed; background: linear-gradient(90deg, #fbf9ff 0%, #ffffff 100%); margin-top: 15px; }
     .sc-pmh-left { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; }
     .sc-pmh-badge {
@@ -63,6 +73,35 @@
     .sc-pill-num { font-family: var(--font-mono); font-size: 1.1rem; font-weight: 800; color: #2563eb; line-height: 1.1; }
     .pill-p2 .sc-pill-num { color: #7c3aed; }
     .sc-pill-lbl { font-family: var(--font-mono); font-size: 0.62rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; }
+
+    /* PAPER 1 TOGGLE CHEVRON */
+    .sc-pmh-chevron {
+      display: flex; align-items: center; justify-content: center; width: 38px; height: 38px;
+      border-radius: 10px; background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s ease, color 0.2s ease; flex-shrink: 0;
+    }
+    .sc-paper-1-master:hover .sc-pmh-chevron { background: #2563eb; color: #ffffff; }
+    .sc-paper-1-master.active .sc-pmh-chevron { transform: rotate(180deg); background: #2563eb; color: #ffffff; }
+
+    /* SECTION A TOGGLE VISIBILITY */
+    #secA {
+      display: none;
+    }
+    #secA.is-visible {
+      display: block;
+      animation: fadeInSecA 0.35s ease-out forwards;
+    }
+
+    @keyframes fadeInSecA {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
     /* SECTION A GRID & CARDS */
     .sc-cards-grid-expandable { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 14px !important; position: relative; z-index: 2; width: 100% !important; box-sizing: border-box !important; }
@@ -253,8 +292,8 @@
       <!-- MAIN SECTION-BASED SYLLABUS GRID -->
       <div class="sc-main-grid">
 
-        <!-- PAPER 1 MASTER HEADER -->
-        <div class="sc-paper-master-header sc-paper-1-master" id="paper1Header">
+        <!-- PAPER 1 MASTER HEADER (CLICKABLE ACCORDION) -->
+        <div class="sc-paper-master-header sc-paper-1-master" id="paper1Header" onclick="toggleSectionA()" role="button" tabindex="0" aria-expanded="false" aria-controls="secA">
           <div class="sc-pmh-left">
             <span class="sc-pmh-badge badge-paper1"><span class="sc-tag-dot"></span> PAPER 1 · COMMON SECTION</span>
             <h2 class="sc-pmh-title">Paper 1: General Objective Section</h2>
@@ -264,10 +303,13 @@
             <div class="sc-pmh-pill"><span class="sc-pill-num">100</span><span class="sc-pill-lbl">Marks</span></div>
             <div class="sc-pmh-pill"><span class="sc-pill-num">5</span><span class="sc-pill-lbl">Subjects</span></div>
             <div class="sc-pmh-pill"><span class="sc-pill-num">100</span><span class="sc-pill-lbl">MCQs</span></div>
+            <div class="sc-pmh-chevron" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
           </div>
         </div>
 
-        <!-- SECTION A -->
+        <!-- SECTION A (TOGGLED VIA PAPER 1 MASTER HEADER) -->
         <div class="sc-column sc-column-a" id="secA" data-count-to-content="true">
           <div class="sc-column-bg"><canvas id="canvasA" class="sc-canvas-bg"></canvas></div>
           <h2 class="sc-section-title">SECTION A | PAPER 1: GENERAL SUBJECTS | 100 MARKS</h2>
@@ -644,6 +686,21 @@
   <!-- Scripts -->
   <script src="../../assets/js/syllabus.js"></script>
   <script>
+    function toggleSectionA() {
+      const secA = document.getElementById('secA');
+      const header = document.getElementById('paper1Header');
+      if (!secA || !header) return;
+
+      const isExpanded = secA.classList.toggle('is-visible');
+      header.classList.toggle('active', isExpanded);
+      header.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+
+      // Trigger resize for dynamic layout/canvas calculations inside Section A
+      if (isExpanded) {
+        window.dispatchEvent(new Event('resize'));
+      }
+    }
+
     function toggleSectionACard(targetEl) {
       const currentCard = targetEl.closest('.sc-custom-card');
       const currentDrawer = currentCard.querySelector('.sc-custom-card-drawer');
@@ -672,6 +729,17 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
+      // Keyboard support (Enter/Space) for Paper 1 header toggle
+      const p1Header = document.getElementById('paper1Header');
+      if (p1Header) {
+        p1Header.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggleSectionA();
+          }
+        });
+      }
+
       document.querySelectorAll('.sc-column-a .sc-custom-card').forEach(card => {
         card.classList.remove('active');
         const drawer = card.querySelector('.sc-custom-card-drawer');
@@ -683,6 +751,20 @@
           e.preventDefault();
           const targetId = this.getAttribute('href');
           if (targetId && targetId.startsWith('#')) {
+            // Auto-open Section A if Paper 1 tab is clicked
+            if (targetId === '#paper1Header' || targetId === '#secA') {
+              const secA = document.getElementById('secA');
+              const header = document.getElementById('paper1Header');
+              if (secA && !secA.classList.contains('is-visible')) {
+                secA.classList.add('is-visible');
+                if (header) {
+                  header.classList.add('active');
+                  header.setAttribute('aria-expanded', 'true');
+                }
+                window.dispatchEvent(new Event('resize'));
+              }
+            }
+
             document.querySelectorAll('.sc-hero-tab').forEach(t => t.classList.remove('active'));
             this.classList.add('active');
             const targetEl = document.querySelector(targetId);
