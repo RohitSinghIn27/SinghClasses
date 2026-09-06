@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DSSSB TGT Computer Science MCQs Mock Test | CBT Practice</title>
+<meta name="description" content="Practice DSSSB TGT Computer Science objective MCQs. Take real-time CBT mock tests with negative marking, section tracking, and live scoring." />
+<meta name="keywords" content="DSSSB TGT CS MCQs, DSSSB Computer Science Mock Test, TGT CS CBT Test, Computer Science Teacher Exam" />
+<meta name="author" content="SinghClasses" />
+<meta name="robots" content="index, follow" />
+<link rel="icon" href="../../../assets/images/favicon/favicon.ico" type="image/x-icon" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../../../assets/css/style.css" />
+<link rel="stylesheet" href="../../../assets/css/dashboard.css" />
+<link rel="stylesheet" href="../../../assets/css/syllabus.css" />
+<link rel="stylesheet" href="../../../assets/css/mcq.css" />
+
+<style>
+  /* STRICT 4-SECTION VIEWPORT LOCK & OVERRIDE SHIELD */
+  .unified-nav {
+    background-color: #0f172a !important;
+    display: flex !important;
+    align-items: stretch !important;
+    border: 2px solid rgba(255, 255, 255, 0.2) !important;
+    border-bottom: 4px solid #eab308 !important;
+    border-radius: 8px !important;
+    margin-bottom: 16px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    height: 64px !important;
+  }
+
+  .year-nav-bar {
+    display: flex !important;
+    flex: 1 1 0% !important;
+    width: 0 !important;
+    min-width: 0 !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scroll-behavior: smooth !important;
+    scroll-snap-type: x mandatory !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+
+  .year-nav-bar::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  /* Exactly 4 sections visible simultaneously */
+  .year-tab {
+    flex: 0 0 25% !important;
+    width: 25% !important;
+    min-width: 25% !important;
+    max-width: 25% !important;
+    box-sizing: border-box !important;
+    padding: 6px 6px !important;
+    text-align: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    cursor: pointer !important;
+    border-bottom: 3.5px solid transparent !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.12) !important;
+    scroll-snap-align: start !important;
+    background-color: transparent !important;
+    transition: background-color 0.2s ease !important;
+    user-select: none !important;
+  }
+
+  .year-tab.active {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-bottom: 3.5px solid #eab308 !important;
+  }
+
+  .tab-letter-pill {
+    font-family: 'SFMono-Regular', Consolas, monospace !important;
+    font-size: 0.72rem !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    color: #94a3b8 !important;
+    margin-bottom: 2px !important;
+    line-height: 1 !important;
+  }
+
+  .year-tab.active .tab-letter-pill {
+    color: #eab308 !important;
+  }
+
+  .tab-title-text {
+    font-size: 0.84rem !important;
+    font-weight: 700 !important;
+    color: #f8fafc !important;
+    line-height: 1.25 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 95% !important;
+  }
+
+  .year-tab.active .tab-title-text {
+    color: #eab308 !important;
+    font-weight: 800 !important;
+  }
+
+  .nav-right-hud {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 0 16px !important;
+    margin-left: auto !important;
+    flex-shrink: 0 !important;
+    background-color: #0f172a !important;
+    border-left: 2px solid rgba(255, 255, 255, 0.15) !important;
+    z-index: 10 !important;
+  }
+
+  /* Single-line Header Meta & Online Dot Indicator */
+  .content-header-left {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .cbt-domain-watermark {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0;
+    font-size: 0.90rem;
+    font-weight: 600;
+    color: #0f172a;
+    letter-spacing: -0.01em;
+    user-select: none;
+  }
+
+  .online-dot {
+    width: 9px;
+    height: 9px;
+    background-color: #22c55e;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+    animation: onlineBlinkPulse 1.6s infinite ease-in-out;
+  }
+
+  @keyframes onlineBlinkPulse {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.75);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.1);
+      box-shadow: 0 0 0 6px rgba(34, 197, 94, 0);
+      opacity: 0.45;
+    }
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+      opacity: 1;
+    }
+  }
+
+  .header-divider {
+    color: var(--border-color);
+    font-weight: 400;
+    user-select: none;
+  }
+
+  body.dark-mode .cbt-domain-watermark {
+    color: #e2e8f0;
+  }
+</style>
+
+<script>
+    /* CBT Configuration Pipeline for DSSSB TGT CS */
+    window.CBT_CONFIG = {
+        ENABLE_PROCTORING: false,
+        MARKS_CORRECT: 1.0,   
+        MARKS_INCORRECT: 0.25, 
+        PENALTY_WARNING: 1.0, 
+        TEST_NAME: "Computer Organisation and Architecture",
+        DOMAIN_NAME: "www.SinghClasses.in",
+        FetchQuestionsOfCBT: "https://script.google.com/macros/s/AKfycbwULp-rGBDh9NgV2orBd3bLuTgh4wfF6JeH46QZ-64gMtWOCh_ZaJnBT7UD-HWnY5OV/exec",
+        SaveRecordOfCBT: "https://script.google.com/macros/s/AKfycbzNq2Q4qL1w3DjqqYJlHxRTI3OTqGETqsyb4q3SCJRIRFWzzSvpwW7_2lDDN8b3oA0ikA/exec",
+        FetchRecordOfCBT: "https://script.google.com/macros/s/AKfycbwpK6z8HC87ZKvQFnGX78Prnv4sVPxF7tAER1uZkRl-jeMxhaSOcSoIkdKJf4ak1VGwQw/exec",
+        HOME_URL: "https://www.singhclasses.in/",
+        YOUTUBE_URL: "https://youtu.be/cqiM2VVs-HM",
+        NOTES_URL: "https://singhclasses.in/computer-science/class-12/notes/working-with-functions-in-python.html"
+    };
+</script>
+</head>
+<body>
+<header class="unified-workspace-header" role="banner">
+  <div class="header-left-group">
+    <button class="back-btn" onclick="goToHome()" aria-label="Go Back to Home">
+      <svg class="btn-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      <span>Back</span>
+    </button>
+    <div class="chapter-capsule" id="current-chapter">Computer Organisation and Architecture</div>
+    <button class="app-btn app-btn-outline" onclick="window.open(window.CBT_CONFIG.NOTES_URL, '_blank')" aria-label="Open Revision Notes">
+      <svg class="btn-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+      <span>Notes</span>
+    </button>
+    <button class="app-btn app-btn-yt" id="yt-trigger-btn" onclick="triggerVerifyModal('yt')" aria-label="Watch Video Lesson">
+      <span class="yt-badge">YT</span>
+      <svg class="btn-icon desktop-yt-icon" width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.377.55a3.016 3.016 0 0 0-2.122 2.136C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.55 9.376.55 9.376.55s7.505 0 9.377-.55a3.016 3.016 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" /></svg>
+      <span>OneShot</span>
+    </button>
+  </div>
+  <div class="header-right-group">
+    <button class="app-btn hide-on-mobile" onclick="toggleFullScreen()" aria-label="Toggle Fullscreen Mode">
+      <svg class="btn-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+      <span>Fullscreen</span>
+    </button>
+  </div>
+</header>
+
+<main class="main-content container-inner">
+  <div class="sc-widget-container">
+    <div id="custom-alert-toast" class="sc-custom-alert"><span id="custom-alert-text">Please complete all questions or sections before saving.</span></div>
+    <div class="sc-progress-wrapper"><div class="sc-progress-fill" id="scProgressBar"></div></div>
+
+    <!-- 4-SLOT HORIZONTAL CAROUSEL NAV BAR -->
+    <div class="unified-nav" id="unified-nav" style="display:none;">
+      <div class="year-nav-mobile-header" id="year-nav-mobile-header">
+        <div class="sc-hamburger" id="yearMenuToggle" role="button" aria-label="Toggle Section Menu">☰</div>
+        <div class="current-paper-label" id="current-paper-label"><span>Section</span>A</div>
+        <div class="mobile-timer-wrapper">
+          <div class="timer" id="timer-box-mobile">⏳ <span id="time-left-mobile">00:00</span></div>
+        </div>
+      </div>
+      <div class="year-nav-bar" id="year-nav-container"></div>
+      <div class="nav-right-hud hide-on-mobile">
+        <div class="timer" id="timer-box">⏳ <span id="time-left"></span></div>
+        <div class="tracking-eyes-container desktop-eyes">
+          <div class="eye-ball"><div class="pupil"></div></div>
+          <div class="eye-ball"><div class="pupil"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESUME ATTEMPT MODAL -->
+    <div id="modal-resume" class="custom-modal-overlay">
+      <div class="custom-modal-box registration-card">
+        <div class="topic-banner-wrapper">
+          <div class="banner-line"></div>
+          <div class="modal-topic-title">
+            <svg class="topic-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#046a38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect><line x1="9" y1="12" x2="15" y2="12"></line><line x1="9" y1="16" x2="15" y2="16"></line></svg>
+            <span class="topic-text" id="resume-topic-text">Computer Organisation and Architecture</span>
+          </div>
+          <div class="banner-line"></div>
+        </div>
+        <div style="font-size: 1.15rem; font-weight: 800; color: #0f172a; margin-bottom: 6px;">Resume Previous Test?</div>
+        <p style="font-size: 0.88rem; color: #64748b; margin: 0 0 20px 0; line-height: 1.5;" id="resume-modal-subtext">A previous unfinished session was found. Would you like to continue?</p>
+        <div class="modal-btn-row" style="flex-direction: column; gap: 10px;">
+          <button type="button" class="btn-green-submit" onclick="confirmResumeSession()">RESUME SESSION →</button>
+          <button type="button" class="btn-back-home" style="border-radius: 10px; height: 46px; font-weight: 700; width: 100%;" onclick="dismissResumeSession()">START FRESH ATTEMPT</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CANDIDATE REGISTRATION MODAL -->
+    <div id="modal-welcome" class="custom-modal-overlay">
+      <div class="custom-modal-box registration-card">
+        <div id="welcome-step-1">
+          <div class="topic-banner-wrapper">
+            <div class="banner-line"></div>
+            <div class="modal-topic-title" id="welcome-topic-title">
+              <svg class="topic-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#046a38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect><line x1="9" y1="12" x2="15" y2="12"></line><line x1="9" y1="16" x2="15" y2="16"></line></svg>
+              <span class="topic-text">Computer Organisation and Architecture</span>
+            </div>
+            <div class="banner-line"></div>
+          </div>
+          <div class="modal-stepper">
+            <div class="step-item active"><span class="step-badge">1</span><span class="step-text">Candidate</span></div>
+            <div class="step-divider"></div>
+            <div class="step-item"><span class="step-badge">2</span><span class="step-text">Instructions</span></div>
+            <div class="step-divider"></div>
+            <div class="step-item"><span class="step-badge">3</span><span class="step-text">Test</span></div>
+          </div>
+
+          <div class="registration-form-grid">
+            <div class="field-box">
+              <svg class="field-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#046a38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              <input type="text" id="candidate-name-input" class="field-control" placeholder="Candidate Full Name" autocomplete="off" />
+            </div>
+
+            <div class="input-row-half">
+              <div class="field-box">
+                <svg class="field-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#046a38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                <select id="candidate-state-input" class="field-control select-control">
+                  <option value="Delhi" selected>Delhi (NCT)</option>
+                  <option value="Uttar Pradesh">Uttar Pradesh</option>
+                  <option value="Haryana">Haryana</option>
+                  <option value="Rajasthan">Rajasthan</option>
+                  <option value="Bihar">Bihar</option>
+                  <option value="Madhya Pradesh">Madhya Pradesh</option>
+                  <option value="Punjab">Punjab</option>
+                  <option value="Uttarakhand">Uttarakhand</option>
+                  <option value="Chandigarh">Chandigarh</option>
+                  <option value="Other">Other State / UT</option>
+                </select>
+                <svg class="chevron-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </div>
+
+              <div class="field-box">
+                <svg class="field-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#046a38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>
+                <select id="candidate-category-input" class="field-control select-control">
+                  <option value="UR" selected>UR (General)</option>
+                  <option value="OBC">OBC (Delhi)</option>
+                  <option value="SC">SC</option>
+                  <option value="ST">ST</option>
+                  <option value="EWS">EWS</option>
+                  <option value="PwD">PwD</option>
+                </select>
+                <svg class="chevron-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </div>
+            </div>
+
+            <div class="modal-btn-row">
+              <button type="button" class="btn-green-submit" onclick="goToGuidelinesStep()">PROCEED TO INSTRUCTIONS &rarr;</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="welcome-step-2" style="display:none;">
+          <div class="instructions-container">
+            <h3>DSSSB Examination Guidelines</h3>
+            <ul class="instructions-list">
+              <li><strong>Time Limit:</strong> 1 Minute allocated per Question.</li>
+              <li><strong>Marking Scheme:</strong> <span id="welcome-correct-lbl" style="color:var(--color-correct);font-weight:700;">+1.00</span> per correct answer | <span id="welcome-incorrect-lbl" style="color:var(--color-wrong);font-weight:700;">-0.25</span> per wrong response | <span style="color:var(--stat-lbl-color);font-weight:600;">0 Unattempted</span>.</li>
+              <li>Switch sections via the top navigation bar (4 sections displayed at a time with smooth scrolling).</li>
+              <li>Once you submit a section, answers are locked and results are evaluated.</li>
+            </ul>
+            <div class="palette-legend">
+              <div style="font-weight:bold;color:var(--q-num-color);font-size:0.8em;">📍 Status:</div>
+              <div class="legend-item"><div class="legend-box unvisited"></div>Not Visited</div>
+              <div class="legend-item"><div class="legend-box not-answered"></div>Unattempted</div>
+              <div class="legend-item"><div class="legend-box answered"></div>Answered</div>
+            </div>
+          </div>
+          <div class="modal-btn-row">
+            <button type="button" class="btn-green-submit" onclick="beginExam()">Start DSSSB CBT Mock Test</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECURITY & TIMEOUT MODALS -->
+    <div id="modal-security" class="custom-modal-overlay">
+      <div class="custom-modal-box security-box">
+        <div class="security-title">Security Warning</div>
+        <div class="security-text"><svg class="sc-svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>Tab switch detected!</div>
+        <div id="warning-count-display"></div>
+        <div class="modal-btn-row"><button type="button" class="modal-btn modal-btn-danger" onclick="closeSecurityModal()">Continue Exam</button></div>
+      </div>
+    </div>
+
+    <div id="modal-submit" class="custom-modal-overlay">
+      <div class="custom-modal-box">
+        <div id="submit-modal-text" style="color:var(--text-color);margin-bottom:20px;font-size:1.1em;"></div>
+        <div class="modal-btn-row">
+          <button type="button" class="modal-btn modal-btn-secondary" onclick="closeSubmitModal()">Cancel</button>
+          <button type="button" class="modal-btn modal-btn-success" onclick="confirmSubmitExam()">Yes, Submit</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="modal-timeout" class="custom-modal-overlay">
+      <div class="custom-modal-box" style="border:3px solid var(--color-danger);">
+        <div class="modal-title" style="color:var(--color-danger);display:flex;align-items:center;justify-content:center;gap:8px;">Time's Up!</div>
+        <div style="font-size:1.25em;font-weight:700;margin:20px 0;">Section timer expired! Submitting responses...</div>
+      </div>
+    </div>
+
+    <!-- LOADER -->
+    <div id="quiz-loading-overlay" style="display: none; flex-direction: column; align-items: center; justify-content: center; padding: 40px; text-align: center; min-height: 350px;">
+      <div class="fetch-spinner"></div>
+      <div style="margin-top: 20px; font-size: var(--text-base); font-weight: 700; color: var(--stat-lbl-color); letter-spacing: var(--tracking-wide);">Please wait while test questions are syncing...</div>
+    </div>
+
+    <!-- CBT QUESTION WORKSPACE -->
+    <div id="quiz-screen" style="display:none;">
+      <div class="main-wrapper">
+        <div class="cbt-container">
+          <div class="sc-column-bg"><canvas id="canvasCBT"></canvas></div>
+          <div class="progress-container"><div class="progress-bar" id="exam-progress"></div></div>
+          
+          <div class="content" id="question-content">
+            <!-- UNIFIED SINGLE-LINE QUESTION HEADER WITH ONLINE DOT -->
+            <div class="content-header">
+              <div class="content-header-left">
+                <div class="cbt-domain-watermark">
+                  <span class="online-dot"></span>
+                  <span id="domain-watermark-text">www.SinghClasses.in</span>
+                </div>
+                <span class="header-divider">|</span>
+                <div class="question-number" id="q-number"></div>
+              </div>
+              <div id="q-tag" class="q-tag-capsule" style="display: none;"></div>
+            </div>
+
+            <div class="question-text" id="q-text"></div>
+            <ul class="options" id="q-options"></ul>
+            <div id="sidebar-toppers" class="sidebar-toppers-container inline-shortcuts-style" style="display:none;">
+              <span class="shortcut-label">🏆 Top Performers:</span>
+              <div id="sidebar-toppers-list" class="sidebar-toppers-list"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="palette-container">
+          <div class="sc-column-bg"><canvas id="canvasPalette"></canvas></div>
+          <div class="palette-title" id="palette-section-title">Question Palette</div>
+          <div class="palette-filter-bar">
+            <button type="button" class="filter-pill-btn active" id="filter-all" onclick="filterPalette('all')">All</button>
+            <button type="button" class="filter-pill-btn" id="filter-answered" onclick="filterPalette('answered')">Answered</button>
+            <button type="button" class="filter-pill-btn" id="filter-not-answered" onclick="filterPalette('not-answered')">Unattempted</button>
+            <button type="button" class="filter-pill-btn" id="filter-unvisited" onclick="filterPalette('unvisited')">Unvisited</button>
+          </div>
+          <div class="mini-stats">
+            <div class="stat-col-card stat-card-right"><span class="stat-card-lbl">Right</span><span class="stat-card-val" id="stat-right">0</span></div>
+            <div class="stat-col-card stat-card-wrong"><span class="stat-card-lbl">Wrong</span><span class="stat-card-val" id="stat-wrong">0</span></div>
+            <div class="stat-col-card stat-card-score"><span class="stat-card-lbl">Score</span><span class="stat-card-val" id="stat-score">0</span></div>
+          </div>
+          <div class="palette-grid-wrapper"><div class="palette-grid" id="palette-grid"></div></div>
+          <div class="sidebar-actions-control-matrix">
+            <div class="matrix-row-primary">
+              <button type="button" class="btn-next" id="btn-next" onclick="nextQuestion()"><span>SAVE & NEXT →</span></button>
+            </div>
+            <div class="matrix-row-secondary">
+              <button type="button" class="btn-prev" id="btn-prev" onclick="prevQuestion()"><span>← PREVIOUS</span></button>
+              <button type="button" class="btn-clear" id="btn-clear" onclick="clearResponse()"><svg class="btn-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg><span>CLEAR</span></button>
+            </div>
+            <div class="matrix-divider"></div>
+            <button type="button" class="btn-submit" id="main-section-submit-btn" onclick="showSubmitModal()"><span>SUBMIT SECTION →</span></button>
+            <div class="submit-warning-notice"><svg class="warning-shield-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg><span>Submitted answers cannot be modified.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT WORKSPACE -->
+    <div id="result-screen">
+      <div id="processing-loader-box" class="processing-container-box">
+        <div class="processing-spinner-ring"></div>
+        <div class="processing-title">Processing Test Evaluation</div>
+        <div class="processing-subtext">Calculating score with negative marking...</div>
+      </div>
+
+      <div id="capture-scorecard-frame" class="target-result-outer-container" style="display: none;">
+        <div class="rs-hero-banner">
+          <div class="rs-hero-title-group">
+            <span class="rs-hero-trophy-icon">🏆</span>
+            <h2 class="rs-hero-title"><span id="lbl-section-title">Section Completed,</span> <strong id="lbl-user-greeting"></strong>!</h2>
+          </div>
+          <div class="rs-hero-sub-pills">
+            <span class="rs-pill-lightning">⚡ <span id="lbl-keep-going-msg">Keep progressing.</span></span>
+            <span class="rs-pill-divider">|</span>
+            <span class="rs-pill-success">Result Verified</span>
+          </div>
+        </div>
+
+        <div class="rs-score-banner-box">
+          <div class="rs-score-banner-text">Obtained Score: <strong id="lbl-score-obtained">0</strong> / <span id="lbl-score-total">100</span></div>
+        </div>
+
+        <div class="rs-stats-grid-4col">
+          <div class="rs-stat-box-card">
+            <div class="rs-stat-box-icon correct">✓</div>
+            <span class="rs-stat-box-val" id="lbl-stat-correct-val">0</span>
+            <span class="rs-stat-box-lbl">CORRECT</span>
+          </div>
+          <div class="rs-stat-box-card">
+            <div class="rs-stat-box-icon incorrect">✕</div>
+            <span class="rs-stat-box-val" id="lbl-stat-incorrect-val">0</span>
+            <span class="rs-stat-box-lbl">INCORRECT</span>
+          </div>
+          <div class="rs-stat-box-card">
+            <div class="rs-stat-box-icon unattempted">-</div>
+            <span class="rs-stat-box-val" id="lbl-stat-unattempted-val">0</span>
+            <span class="rs-stat-box-lbl">UNATTEMPTED</span>
+          </div>
+          <div class="rs-stat-box-card">
+            <div class="rs-stat-box-icon timetaken">⏱</div>
+            <span class="rs-stat-box-val" id="lbl-stat-time-val">00:00</span>
+            <span class="rs-stat-box-lbl">TIME TAKEN</span>
+          </div>
+        </div>
+
+        <div class="dashboard-action-row">
+          <button type="button" class="btn-proceed-green" id="btn-dashboard-main-trigger" onclick="handleSectionProgression()">
+            PROCEED TO NEXT PART →
+          </button>
+          <button type="button" class="btn-back-home" onclick="goToHome()">
+            BACK TO DASHBOARD
+          </button>
+        </div>
+      </div>
+
+      <!-- CUMULATIVE MATRIX -->
+      <div id="cumulative-matrix-container" class="cumulative-summary-card" style="display: none;">
+        <div class="summary-card-header">
+          <div class="summary-title-icon-box">📊</div>
+          <h2>DSSSB TGT Cumulative Scorecard</h2>
+        </div>
+        <div class="summary-matrix-wrapper">
+          <div class="summary-matrix-header-row">
+            <div class="smh-cell smh-section">PART</div>
+            <div class="smh-cell smh-marks">MARKS</div>
+            <div class="smh-cell smh-correct">CORRECT</div>
+            <div class="smh-cell smh-incorrect">WRONG</div>
+            <div class="smh-cell smh-unattempted">LEFT</div>
+          </div>
+          <div class="summary-matrix-body" id="table-body-matrix-target"></div>
+        </div>
+        <div style="margin-top: 24px; text-align: center;">
+          <button type="button" class="btn-summary-home" onclick="goToHome()">FINISH & EXIT</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="verify-resource-modal" class="verify-modal-overlay">
+  <div class="verify-modal-card">
+    <div id="verify-card-icon" class="verify-modal-icon"></div>
+    <h2 id="verify-modal-heading">Open Link?</h2>
+    <p id="verify-modal-text">You will be redirected to an external resource.</p>
+    <div class="verify-actions">
+      <button type="button" class="v-btn v-btn-outline" onclick="closeVerifyModal()">Cancel</button>
+      <button type="button" id="verify-proceed-action-btn" class="v-btn">Proceed</button>
+    </div>
+  </div>
+</div>
+
+<footer class="unfixed-site-footer">
+  <div class="footer-left-text">© 2026 SinghClasses.in | DSSSB Exam Portal</div>
+  <div class="footer-right-links"><a href="../../../legal/contact-us.html">Contact Us</a></div>
+</footer>
+
+<script src="../../../assets/js/dashboard.js"></script>
+<script src="../../../assets/js/script.js"></script>
+<script src="../../../assets/js/syllabus.js"></script>
+<script src="../../../assets/js/mcq.js"></script>
+</body>
+</html>
