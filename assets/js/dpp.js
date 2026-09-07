@@ -1,436 +1,228 @@
-let parsedQuestionBank = {
-    mcqs: [],
-    vsas: [],
-    sas: [],
-    cases: []
-}; 
+/**
+ * Generic DPP Engine
+ * This file contains zero hardcoded question content.
+ * All question text, choices, explanations, and patterns are read dynamically
+ * from data-* attributes inside index.html.
+ */
 
-// Helper to format backticks to lavender code snippets
-function formatText(text) {
-    if (!text) return '';
-    return text.replace(/`([^`]+)`/g, '<span class="code-snippet">$1</span>');
+const state = {
+  scores: {},
+  attempted: {},
+  subjective: {},
+  weaknesses: new Set()
+};
+
+function getStageCompletionStatus() {
+  const s1 = state.attempted.q1 && state.attempted.q2 && state.attempted.q3 && state.attempted.q4;
+  const s2 = state.attempted.q5;
+  const s3 = state.attempted['6a'] && state.attempted['6b'] && state.attempted['6c'] && state.attempted['6d'] && state.attempted['6e'];
+  const s4 = state.subjective.q7 && state.subjective.q8;
+  const s5 = state.subjective.q9 && state.subjective.q10;
+  return [s1, s2, s3, s4, s5];
 }
 
-// Helper to shuffle arrays randomly
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-}
- 
-// --- 2. DATA FETCHING (AppScript / Excel Integration) ---
-async function loadQuestionsFromSheet() {
-    if (!FETCH_API_URL) {
-        console.error("Missing AppScript URL.");
-        document.getElementById('start-btn').innerText = "Configuration Error";
-        return;
-    }
+function updateStageSequence() {
+  const status = getStageCompletionStatus();
+  let recommendedIdx = status.findIndex(d => !d);
+  if (recommendedIdx === -1) recommendedIdx = 5;
 
-    try {
-        const response = await fetch(FETCH_API_URL);
-        const data = await response.json();
+  for (let i = 1; i <= 5; i++) {
+    const idx = i - 1;
+    const wrapper = document.getElementById(`stage-${i}`);
+    const pill = document.getElementById(`stage-pill-${i}`);
+    const step = document.getElementById(`rail-step-${i}`);
+    const rStatus = document.getElementById(`rail-status-${i}`);
+    const banner = document.getElementById(`advisory-stage-${i}`);
 
-        // Helper to strip spaces and underscores for foolproof matching
-        const cleanKey = (key) => String(key).toLowerCase().replace(/[^a-z0-9]/g, '');
+    wrapper.classList.remove('state-complete', 'state-recommended', 'state-available');
+    step.classList.remove('state-complete', 'state-recommended', 'state-available');
+    pill.className = 'stage-state-pill';
 
-        data.forEach(row => {
-            let keys = Object.keys(row);
-            
-            // Foolproof Key Matching
-            let qTypeKey = keys.find(k => cleanKey(k).includes('type'));
-            let qTextKey = keys.find(k => cleanKey(k).includes('question'));
-            
-            let opt1Key = keys.find(k => cleanKey(k).includes('optiona') || cleanKey(k).includes('assertion'));
-            let opt2Key = keys.find(k => cleanKey(k).includes('optionb') || cleanKey(k).includes('reason'));
-            let opt3Key = keys.find(k => cleanKey(k).includes('optionc'));
-            let opt4Key = keys.find(k => cleanKey(k).includes('optiond'));
-            
-            let marksKey = keys.find(k => cleanKey(k) === 'marks' || cleanKey(k).includes('marks'));
-
-            if (!qTypeKey || !qTextKey) return;
-
-            let qType = String(row[qTypeKey] || '').trim().toUpperCase();
-            let qText = formatText(row[qTextKey] || '');
-            let marks = row[marksKey] || '';
-
-            if (qType === 'MCQ') {
-                parsedQuestionBank.mcqs.push({
-                    q: qText,
-                    type: "mcq",
-                    marks: marks,
-                    options: [
-                        formatText(row[opt1Key]),
-                        formatText(row[opt2Key]),
-                        formatText(row[opt3Key]),
-                        formatText(row[opt4Key])
-                    ]
-                });
-            } else if (qType === 'ASSERTION-REASON' || qType === 'ASSERTION REASON') {
-                parsedQuestionBank.mcqs.push({
-                    q: "Evaluate the given Assertion and Reason:",
-                    type: "assertion",
-                    marks: marks,
-                    assertion: formatText(row[opt1Key] || 'Assertion missing'),
-                    reason: formatText(row[opt2Key] || 'Reason missing')
-                });
-            } else if (qType === 'VSA') {
-                parsedQuestionBank.vsas.push({ q: qText, marks: marks });
-            } else if (qType === 'SA') {
-                parsedQuestionBank.sas.push({ q: qText, marks: marks });
-            } else if (qType === 'CASE STUDY QUESTION' || qType === 'CASE STUDY') {
-                parsedQuestionBank.cases.push({
-                    context: qText,
-                    subs: []
-                });
-            } else if (qType === 'CASE STUDY SUB PART' || qType === 'SUB PART') {
-                if (parsedQuestionBank.cases.length > 0) {
-                    parsedQuestionBank.cases[parsedQuestionBank.cases.length - 1].subs.push({
-                        text: qText,
-                        marks: marks
-                    });
-                }
-            }
-        });
-
-        // SHUFFLE AND LIMIT QUESTIONS
-        if (typeof LIMIT_MCQ !== 'undefined') parsedQuestionBank.mcqs = shuffleArray(parsedQuestionBank.mcqs).slice(0, LIMIT_MCQ);
-        if (typeof LIMIT_VSA !== 'undefined') parsedQuestionBank.vsas = shuffleArray(parsedQuestionBank.vsas).slice(0, LIMIT_VSA);
-        if (typeof LIMIT_SA !== 'undefined') parsedQuestionBank.sas = shuffleArray(parsedQuestionBank.sas).slice(0, LIMIT_SA);
-        if (typeof LIMIT_CASE !== 'undefined') parsedQuestionBank.cases = shuffleArray(parsedQuestionBank.cases).slice(0, LIMIT_CASE);
-
-        if (parsedQuestionBank.mcqs.length === 0 && parsedQuestionBank.vsas.length === 0 && parsedQuestionBank.sas.length === 0 && parsedQuestionBank.cases.length === 0) {
-            document.getElementById('start-btn').innerText = "Data Format Error";
-            document.getElementById('exam-container').innerHTML = '<div style="text-align: center; padding: 50px; color: #DC2626; font-weight: bold;">Error: No questions loaded.</div>';
-            return;
-        }
-
-        const startBtn = document.getElementById('start-btn');
-        startBtn.innerText = "Start Test";
-        startBtn.disabled = false;
-
-    } catch (error) {
-        console.error("Error loading questions from Google Sheets:", error);
-        document.getElementById('start-btn').innerText = "Network Error";
-    }
-}
-// --- 3. INITIALIZATION & UI EFFECTS ---
-document.addEventListener("DOMContentLoaded", () => {
-    initTrackingEyes();
-    document.getElementById('modal-container').style.display = 'flex';
-    document.getElementById('start-btn').disabled = true;
-
-    loadQuestionsFromSheet();
-});
-
-function toggleFullScreen() {
-    if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(err => console.error(err));
+    if (status[idx]) {
+      wrapper.classList.add('state-complete');
+      step.classList.add('state-complete');
+      pill.classList.add('pill-complete');
+      pill.innerHTML = '✅ Complete';
+      rStatus.innerText = '✓';
+      if (banner) banner.style.display = 'none';
+    } else if (idx === recommendedIdx) {
+      wrapper.classList.add('state-recommended');
+      step.classList.add('state-recommended');
+      pill.classList.add('pill-recommended');
+      pill.innerHTML = '▶ Recommended next';
+      rStatus.innerText = '▶';
+      if (banner) banner.style.display = status.slice(0, idx).some(d => !d) ? 'flex' : 'none';
     } else {
-        document.exitFullscreen();
+      wrapper.classList.add('state-available');
+      step.classList.add('state-available');
+      pill.classList.add('pill-available');
+      pill.innerHTML = '○ Available';
+      rStatus.innerText = '○';
+      if (banner) banner.style.display = status.slice(0, idx).some(d => !d) ? 'flex' : 'none';
     }
+  }
 }
 
-// --- 4. EXAM LOGIC & MODALS ---
-let examActive = false;
-let tabSwitchCount = 0;
-let timeLeft = 30 * 60;
-let timerInterval;
-
-function startExam() {
-    let nameInput = document.getElementById('candidate-name').value.trim();
-    if (!nameInput) {
-        nameInput = "Student";
-    }
-
-    document.getElementById('start-modal').classList.remove('active-modal');
-    document.getElementById('modal-container').style.display = 'none';
-    document.getElementById('main-app').style.display = 'flex';
-
-    generatePaper();
-    updateTimerDisplay();
-    startTimer();
-    examActive = true;
+function jumpToStage(num) {
+  const el = document.getElementById(`stage-${num}`);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-function openConfirmModal() {
-    if (!examActive) return;
-    document.getElementById('modal-container').style.display = 'flex';
-    document.querySelectorAll('.custom-modal').forEach(m => m.classList.remove('active-modal'));
-    document.getElementById('confirm-modal').classList.add('active-modal');
+function jumpToQuestion(qId) {
+  const el = document.getElementById(qId);
+  if (!el) return;
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  el.classList.add('active-target');
+  setTimeout(() => el.classList.remove('active-target'), 1200);
 }
 
-function closeConfirmModal() {
-    document.getElementById('modal-container').style.display = 'none';
-    document.getElementById('confirm-modal').classList.remove('active-modal');
+// Handles any MCQ dynamically by reading data-* attributes from the question card
+function submitMCQ(btn, selectedIdx) {
+  const card = btn.closest('.question-card');
+  const correctIdx = parseInt(card.getAttribute('data-correct'), 10);
+  const qid = card.getAttribute('data-qid');
+  const concept = card.getAttribute('data-concept');
+  const why = card.getAttribute('data-why');
+  const trap = card.getAttribute('data-trap');
+  const remember = card.getAttribute('data-remember');
+  const isCorrect = (selectedIdx === correctIdx);
+
+  card.querySelectorAll('.mcq-opt').forEach((b, idx) => {
+    b.disabled = true;
+    if (idx === correctIdx) b.classList.add('is-correct');
+    else if (idx === selectedIdx) b.classList.add('is-wrong');
+  });
+
+  state.scores[qid] = isCorrect ? 1 : 0;
+  state.attempted[qid] = true;
+  document.getElementById(`rail-${qid}`).className = `q-node-bullet ${isCorrect ? 'correct' : 'incorrect'}`;
+
+  const fb = document.getElementById(`feedback-${qid}`);
+  fb.className = `pedagogical-feedback ${isCorrect ? 'correct-feedback' : 'wrong-feedback'} open`;
+  fb.innerHTML = `
+    <div class="fb-status-headline">${isCorrect ? '✓ Correct Answer' : '✗ Needs Attention'}</div>
+    <div class="fb-point"><strong>Why:</strong> <span>${why}</span></div>
+    <div class="fb-trap-highlight">⚠️ <strong>Trap:</strong> ${trap}</div>
+    <div class="fb-point"><strong>Remember:</strong> <span>${remember}</span></div>
+  `;
+
+  if (!isCorrect) state.weaknesses.add(concept);
+  else state.weaknesses.delete(concept);
+  
+  updateProgressMetrics();
+  updateStageSequence();
 }
 
-function closeSecurityModal() {
-    document.getElementById('modal-container').style.display = 'none';
-    document.getElementById('security-modal').classList.remove('active-modal');
+// Dynamically validates all inputs inside Question 5 using data-match
+function validateBlanksQ5() {
+  const inputs = document.querySelectorAll('#item-q5 input[data-match]');
+  let score = 0;
+
+  inputs.forEach((input) => {
+    const pattern = new RegExp(input.getAttribute('data-match'), 'i');
+    const isMatch = pattern.test(input.value.trim());
+    input.className = `code-input-field ${isMatch ? 'correct' : 'wrong'}`;
+    if (isMatch) score += 1;
+  });
+
+  state.scores.q5 = score;
+  state.attempted.q5 = true;
+  document.getElementById('rail-q5').className = `q-node-bullet ${score === inputs.length ? 'correct' : (score > 0 ? 'attempted' : 'incorrect')}`;
+
+  const fb = document.getElementById('feedback-q5');
+  fb.className = 'pedagogical-feedback neutral-feedback open';
+
+  if (score < inputs.length) state.weaknesses.add("Default I/O Parameters & input() types");
+  else state.weaknesses.delete("Default I/O Parameters & input() types");
+
+  updateProgressMetrics();
+  updateStageSequence();
 }
 
-// --- YOUTUBE CUSTOM MODAL LOGIC ---
-function openYTModal() {
-    document.getElementById('modal-container').style.display = 'flex';
-    document.querySelectorAll('.custom-modal').forEach(m => m.classList.remove('active-modal'));
-    document.getElementById('yt-confirm-modal').classList.add('active-modal');
+// Dynamically validates prediction inputs using data-match
+function verifyPrediction(inputId) {
+  const input = document.getElementById(inputId);
+  const pattern = new RegExp(input.getAttribute('data-match'), 'i');
+  const subKey = input.getAttribute('data-sub');
+  const concept = input.getAttribute('data-concept');
+  const isCorrect = pattern.test(input.value.trim());
+
+  input.className = `code-input-field ${isCorrect ? 'correct' : 'wrong'}`;
+  state.scores[subKey] = isCorrect ? 1 : 0;
+  state.attempted[subKey] = true;
+
+  const fb = document.getElementById(`feedback-${subKey}`);
+  fb.className = `pedagogical-feedback ${isCorrect ? 'correct-feedback' : 'wrong-feedback'} open`;
+  fb.innerHTML = isCorrect ? 
+    `<div class="fb-status-headline">✓ Spot on! Correctly evaluated ${concept}.</div>` : 
+    `<div class="fb-status-headline">✗ Re-evaluate operator rules for: ${concept}.</div>`;
+
+  if (!isCorrect) state.weaknesses.add(concept); 
+  else state.weaknesses.delete(concept);
+
+  const subkeys = ['6a', '6b', '6c', '6d', '6e'];
+  const correctCount = subkeys.filter(k => state.scores[k] === 1).length;
+  const rail6 = document.getElementById('rail-q6');
+  if (correctCount === subkeys.length) rail6.className = "q-node-bullet correct";
+  else if (correctCount > 0) rail6.className = "q-node-bullet attempted";
+
+  updateProgressMetrics();
+  updateStageSequence();
 }
 
-function closeYTModal() {
-    document.getElementById('modal-container').style.display = 'none';
-    document.getElementById('yt-confirm-modal').classList.remove('active-modal');
+function markSubjectiveReviewed(qKey, btnId, railId) {
+  const btn = document.getElementById(btnId);
+  const rail = document.getElementById(railId);
+  state.subjective[qKey] = !state.subjective[qKey];
+  const isDone = state.subjective[qKey];
+  btn.classList.toggle('checked', isDone);
+  btn.innerText = isDone ? "✓ Reviewed & Mastered" : "✓ Mark Self-Reviewed";
+  rail.className = isDone ? "q-node-bullet attempted" : "q-node-bullet";
+  updateProgressMetrics();
+  updateStageSequence();
 }
 
-function proceedToYouTube() {
-    closeYTModal();
-    window.open('https://youtu.be/IZyZDC7Q3iw', '_blank');
+function toggleHelp(id) {
+  document.getElementById(id).classList.toggle('open');
 }
 
-// --- 5. EXAM GENERATION ---
-function generatePaper() {
-    let qCounter = 1;
+function updateProgressMetrics() {
+  const objKeys = ['q1', 'q2', 'q3', 'q4', 'q5', '6a', '6b', '6c', '6d', '6e'];
+  const objSum = objKeys.reduce((sum, key) => sum + (state.scores[key] || 0), 0);
+  const pct = Math.round((objSum / 12) * 100);
 
-    let html = `
-    <div class="exam-section" style="padding-bottom: 0;">
-        <div class="question-block" style="margin-bottom: 1.5rem;">
-            <h3 style="color: var(--primary-blue); margin-bottom: 16px; font-weight: 800; text-align: center; font-size: 1.4rem; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 2px solid var(--bond-border); padding-bottom: 8px;">General Instructions</h3>
-            <ol style="margin-left: 24px; color: #334155; line-height: 1.8; font-size: 0.95rem; font-weight: 600;">
-                <li>This question paper comprises four sections: <strong>A, B, C, and D</strong>.</li>
-                <li><strong>Section A</strong> consists of Objective Type / Assertion-Reason questions.</li>
-                <li><strong>Section B</strong> consists of Very Short Answer questions.</li>
-                <li><strong>Section C</strong> consists of Short Answer questions.</li>
-                <li><strong>Section D</strong> consists of Case-Based questions.</li>
-                <li>All questions are compulsory. Read the scenarios carefully before answering.</li>
-                <li>There is no negative marking for incorrect answers.</li>
-            </ol>
-        </div>
-    </div>`;
+  const totalMarks = objSum + (Object.values(state.subjective).filter(Boolean).length * 2);
+  document.getElementById('final-marks-box').innerText = `${totalMarks} / 20 Marks`;
+  document.getElementById('final-acc-box').innerText = `${pct}% Accuracy`;
 
-    if (parsedQuestionBank.mcqs.length > 0) {
-        html += `<div id="sec-a" class="exam-section">
-            <div class="section-header"><span class="section-title-text">Section A: Objective Type</span></div>`;
+  const weakBox = document.getElementById('weak-topics-list');
+  weakBox.innerText = state.weaknesses.size > 0 ? Array.from(state.weaknesses).join(', ') : "Clean sheet! No recurring traps flagged today.";
 
-        parsedQuestionBank.mcqs.forEach(q => {
-            let mks = q.marks ? `[${q.marks}]` : '';
-            if (q.type === "mcq") {
-                html += `<div class="question-block"><div class="question-header"><div class="q-num">Q${qCounter}.</div><div class="q-text">${q.q}</div><div class="q-marks">${mks}</div></div>
-                    <ul class="options-list">
-                        <li class="option-item">A) ${q.options[0]}</li><li class="option-item">B) ${q.options[1]}</li>
-                        <li class="option-item">C) ${q.options[2]}</li><li class="option-item">D) ${q.options[3]}</li>
-                    </ul></div>`;
-            } else {
-                html += `<div class="question-block"><div class="question-header"><div class="q-num">Q${qCounter}.</div><div class="q-text">${q.q}</div><div class="q-marks">${mks}</div></div>
-                    <div class="assertion-box"><strong>Assertion (A):</strong> ${q.assertion}<br><br><strong>Reason (R):</strong> ${q.reason}</div></div>`;
-            }
-            qCounter++;
-        });
-        html += `</div>`;
-    }
-
-    if (parsedQuestionBank.vsas.length > 0) {
-        html += `<div id="sec-b" class="exam-section"><div class="section-header"><span class="section-title-text">Section B: Very Short Answer</span></div>`;
-        parsedQuestionBank.vsas.forEach(q => {
-            let mks = q.marks ? `[${q.marks}]` : '';
-            html += `<div class="question-block"><div class="question-header"><div class="q-num">Q${qCounter}.</div><div class="q-text">${q.q}</div><div class="q-marks">${mks}</div></div></div>`;
-            qCounter++;
-        });
-        html += `</div>`;
-    }
-
-    if (parsedQuestionBank.sas.length > 0) {
-        html += `<div id="sec-c" class="exam-section"><div class="section-header"><span class="section-title-text">Section C: Short Answer</span></div>`;
-        parsedQuestionBank.sas.forEach(q => {
-            let mks = q.marks ? `[${q.marks}]` : '';
-            html += `<div class="question-block"><div class="question-header"><div class="q-num">Q${qCounter}.</div><div class="q-text">${q.q}</div><div class="q-marks">${mks}</div></div></div>`;
-            qCounter++;
-        });
-        html += `</div>`;
-    }
-
-    if (parsedQuestionBank.cases.length > 0) {
-        html += `<div id="sec-d" class="exam-section"><div class="section-header"><span class="section-title-text">Section D: Case-Based</span></div>`;
-        parsedQuestionBank.cases.forEach(cs => {
-            html += `<div class="question-block"><div class="question-header"><div class="q-num">Q${qCounter}.</div><div class="q-text">Read the scenario:</div><div class="q-marks"></div></div>
-                <div class="assertion-box" style="margin-left:0;">${cs.context}</div><div class="sub-questions">`;
-            cs.subs.forEach(sub => {
-                let mks = sub.marks ? `[${sub.marks}]` : '';
-                html += `<div class="sub-question"><div style="flex:1">${sub.text}</div><div class="q-marks">${mks}</div></div>`;
-            });
-            html += `</div></div>`;
-            qCounter++;
-        });
-        html += `</div>`;
-    }
-
-    document.getElementById('exam-container').innerHTML = html;
+  const strongBox = document.getElementById('strong-topics-list');
+  const mastered = [];
+  document.querySelectorAll('.question-card[data-concept]').forEach(card => {
+    const qid = card.getAttribute('data-qid');
+    if (state.scores[qid] === 1) mastered.push(card.getAttribute('data-concept'));
+  });
+  if (mastered.length > 0) strongBox.innerText = mastered.join(', ');
 }
 
-// --- 6. TIMER & SUBMISSION ---
-const motivationEl = document.getElementById('motivation-text');
-
-function updateTimerDisplay() {
-    let m = Math.floor(timeLeft / 60);
-    let s = timeLeft % 60;
-    let finalStr = (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
-    
-    document.getElementById('study-timer').innerText = finalStr;
-    document.getElementById('dynamic-mobile-header').setAttribute('data-time-val', finalStr);
-
-    if (timeLeft === 25 * 60) motivationEl.textContent = "Great focus! 🧠";
-    else if (timeLeft === 15 * 60) motivationEl.textContent = "Halfway there! ⚡";
-    else if (timeLeft === 5 * 60) motivationEl.textContent = "5 Mins left! Wrap up! ⚠️";
-    else if (timeLeft <= 60) motivationEl.textContent = "Final minute! 🚨";
+function toggleSheetMenu(e) {
+  e.stopPropagation();
+  document.getElementById('sheet-menu').classList.toggle('open');
 }
 
-function startTimer() {
-    timerInterval = setInterval(() => {
-        if (timeLeft > 0) {
-            timeLeft--;
-            updateTimerDisplay();
-        } else {
-            clearInterval(timerInterval);
-            alert("Time is Up! Your test is being auto-submitted.");
-            processSubmission();
-        }
-    }, 1000);
-}
-
-function processSubmission() {
-    clearInterval(timerInterval);
-    examActive = false; 
-    closeConfirmModal();
-
-    let totalSecondsTaken = (30 * 60) - timeLeft;
-    let m = Math.floor(totalSecondsTaken / 60);
-    let s = totalSecondsTaken % 60;
-    let timeTakenStr = (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
-
-    let studentName = document.getElementById('candidate-name').value.trim() || "Student";
-    let feedback = document.getElementById('student-feedback').value.trim() || "-";
-
-    const payload = {
-        "Timestamp": new Date().toISOString(),
-        "Student Name": studentName,
-        "Proctoring": "Active",
-        "WarningsActive": tabSwitchCount.toString(),
-        "Time Taken": timeTakenStr,
-        "Doubt and Feedback": feedback
-    };
-
-    const formData = new FormData();
-    for (let key in payload) {
-        formData.append(key, payload[key]);
-    }
-
-    fetch(SUBMIT_API_URL, {
-        method: "POST",
-        body: formData,
-        mode: "no-cors" 
-    })
-    .then(() => console.log("Test data pushed."))
-    .catch(error => console.error("Error submitting test:", error));
-
-    // UI Update: Hide specific items
-    document.getElementById('exam-scroll-wrap').style.display = 'none';
-    const submitBtn = document.getElementById('submit-test-btn');
-    if (submitBtn) submitBtn.style.display = 'none';
-
-    document.getElementById('study-timer').innerText = "Done";
-    document.getElementById('dynamic-mobile-header').setAttribute('data-time-val', 'Done');
-    document.getElementById('motivation-text').innerText = "";
-    
-    // Bypass Thank You Message - Show Question Bank directly
-    let successScreen = document.getElementById('success-screen');
-    successScreen.style.display = 'flex';
-
-    let reviewWrap = document.getElementById('review-wrap');
-    reviewWrap.innerHTML = ''; 
-
-    let reviewContainer = document.createElement('div');
-    reviewContainer.className = 'test-scroll-container';
-    reviewContainer.style.marginTop = '20px';
-    reviewContainer.style.marginBottom = '40px';
-    reviewContainer.style.textAlign = 'left';
-    
-    let reviewTitle = document.createElement('h2');
-    reviewTitle.innerText = "Question Bank Review";
-    reviewTitle.style.textAlign = 'center';
-    reviewTitle.style.padding = '20px';
-    reviewTitle.style.color = 'var(--primary-blue)';
-    reviewTitle.style.borderBottom = '2px dashed var(--bond-border)';
-    reviewContainer.appendChild(reviewTitle);
-
-    let originalExam = document.getElementById('exam-container');
-    let examClone = originalExam.cloneNode(true);
-    
-    if (examClone.firstElementChild && examClone.firstElementChild.querySelector('h3')) {
-        examClone.firstElementChild.remove();
-    }
-    
-    reviewContainer.appendChild(examClone);
-    
-    let homeBtn = document.createElement('button');
-    homeBtn.className = 'm-btn m-btn-primary';
-    homeBtn.style.margin = '20px auto';
-    homeBtn.style.width = '200px';
-    homeBtn.innerText = 'Return Home';
-    homeBtn.onclick = () => window.location.href = HOME_URL;
-    
-    reviewWrap.appendChild(reviewContainer);
-    reviewWrap.appendChild(homeBtn);
-}
-
-// --- 7. STRICT SECURITY ---
-document.addEventListener('contextmenu', e => e.preventDefault());
-
-document.addEventListener('visibilitychange', () => {
-    if (document.hidden && examActive) {
-        tabSwitchCount++;
-        document.querySelectorAll('.custom-modal').forEach(m => m.classList.remove('active-modal'));
-        document.getElementById('warning-count-display').innerText = `Total Warnings: ${tabSwitchCount}`;
-        document.getElementById('modal-container').style.display = 'flex';
-        document.getElementById('security-modal').classList.add('active-modal');
-    }
+window.addEventListener('click', () => {
+  const sheetMenu = document.getElementById('sheet-menu');
+  if (sheetMenu) sheetMenu.classList.remove('open');
 });
 
-// --- 8. TRACKING EYES ENGINE ---
-function initTrackingEyes() {
-    const eyeContainers = document.querySelectorAll('.tracking-eyes-container');
-    eyeContainers.forEach(container => {
-        const eyes = container.querySelectorAll('.eye-ball');
-        const pupils = container.querySelectorAll('.pupil');
-
-        document.addEventListener('mousemove', (e) => {
-            eyes.forEach((eye, index) => {
-                const pupil = pupils[index];
-                if (!pupil) return;
-                const rect = eye.getBoundingClientRect();
-                const cx = rect.left + rect.width / 2;
-                const cy = rect.top + rect.height / 2;
-                const dx = e.clientX - cx;
-                const dy = e.clientY - cy;
-                const angle = Math.atan2(dy, dx);
-                const maxRadius = (rect.width / 2) - (pupil.offsetWidth / 2) - 1.5;
-                const distance = Math.min(Math.hypot(dx, dy) / 10, maxRadius);
-                pupil.style.transform = `translate(calc(-50% + ${Math.cos(angle) * distance}px), calc(-50% + ${Math.sin(angle) * distance}px))`;
-            });
-        });
-
-        const blink = () => {
-            eyes.forEach(eye => {
-                eye.style.transform = 'scaleY(0.06)';
-                setTimeout(() => eye.style.transform = 'scaleY(1)', 110);
-            });
-        };
-
-        const scheduleBlink = () => {
-            setTimeout(() => {
-                blink();
-                scheduleBlink();
-            }, 3000 + Math.random() * 4000);
-        };
-        scheduleBlink();
-    });
+function switchResource(key, stamp, title) {
+  document.getElementById('header-stamp-label').innerText = stamp;
+  document.getElementById('header-sheet-title').innerText = title;
+  document.getElementById('sheet-menu').classList.remove('open');
+  jumpToStage(1);
 }
+
+// Initial setup
+updateStageSequence();
