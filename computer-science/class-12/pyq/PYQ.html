@@ -5,513 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CBSE Class 12 Computer Science (Python) Revision Tour PYQs | SinghClasses</title>
   <meta name="description" content="Interactive CBSE Class 12 Computer Science Python Revision Tour question papers with Practice mode, code execution, canvas annotations, and dynamic navigation." />
+  
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
-  <style>
-    @page { size: A4; margin: 0; }
-    :root {
-      --app-bg: #f8fafc;
-      --paper-bg: #ffffff;
-      --paper-text: #0f172a;
-      --paper-border: #000000;
-      --brand-blue: #2563eb;
-      --brand-blue-hover: #1d4ed8;
-      --brand-red: #dc2626;
-      --brand-red-hover: #b91c1c;
-      --brand-yellow: #f59e0b;
-      --brand-green: #16a34a;
-      --bar-bg: #090e18;
-      --code-bg: #0f172a;
-      --code-text: #e2e8f0;
-      --card-border: #e2e8f0;
-      --card-hover: #f1f5f9;
-    }
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-    body.dark-paper {
-      --app-bg: #020617;
-      --paper-bg: #0b1120;
-      --paper-text: #e2e8f0;
-      --paper-border: #334155;
-      --card-border: #1e293b;
-      --card-hover: #1e293b;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background-color: var(--app-bg);
-      font-family: 'Inter', sans-serif;
-      color: var(--paper-text);
-      line-height: 1.55;
-      padding-top: 52px;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
-      transition: background-color 0.2s ease;
-    }
-
-    /* Scroll progress bar */
-    #scrollProgressBar {
-      position: fixed;
-      top: 52px;
-      left: 0;
-      height: 3px;
-      background: var(--brand-yellow);
-      width: 0%;
-      z-index: 1001;
-      transition: width 0.1s ease-out;
-    }
-
-    /* Non-blocking Toast Component */
-    .app-toast {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      background: #0f172a;
-      border: 1px solid #334155;
-      color: #f8fafc;
-      padding: 10px 20px;
-      border-radius: 30px;
-      font-size: 13px;
-      font-weight: 500;
-      box-shadow: 0 10px 25px rgba(0,0,0,.35);
-      z-index: 2000;
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .app-toast.show {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
-
-    /* Unified Navbar */
-    .unified-navbar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 52px;
-      z-index: 1000;
-      background: var(--bar-bg);
-      border-bottom: 2px solid var(--brand-yellow);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 18px;
-      color: #fff;
-      user-select: none;
-      gap: 10px;
-      box-shadow: 0 4px 14px rgba(0,0,0,.35);
-      white-space: nowrap;
-    }
-    .nav-cluster { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-    
-    .btn-portal-back, .btn-portal-action {
-      background: #1e293b;
-      border: 1px solid #334155;
-      color: #fff;
-      padding: 7px 10px;
-      border-radius: 6px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      text-decoration: none;
-      transition: background 0.15s;
-    }
-    .btn-portal-back:hover, .btn-portal-action:hover { background: #2d3d54; }
-    .btn-portal-action.btn-blue { background: var(--brand-blue); border-color: var(--brand-blue); }
-    .btn-portal-action.btn-blue:hover { background: var(--brand-blue-hover); }
-    .btn-portal-action.btn-red { background: var(--brand-red); border-color: var(--brand-red); }
-    .btn-portal-action.btn-red:hover { background: var(--brand-red-hover); }
-
-    .session-badge {
-      display: inline-flex;
-      align-items: center;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.18);
-      border-radius: 6px;
-      padding: 3px 8px;
-    }
-    .session-badge select {
-      background: transparent;
-      border: none;
-      color: #38bdf8;
-      font-family: 'Fira Code', monospace;
-      font-size: 11.5px;
-      font-weight: 600;
-      cursor: pointer;
-      outline: none;
-    }
-    .session-badge select option { background: #0d131f; color: #fff; }
-
-    .mode-group {
-      display: inline-flex;
-      background: rgba(255,255,255,.07);
-      padding: 2px;
-      border-radius: 6px;
-      border: 1px solid rgba(255,255,255,.12);
-      gap: 2px;
-    }
-    .mode-btn {
-      background: transparent;
-      border: none;
-      color: #cbd5e1;
-      font-size: 11.5px;
-      font-weight: 600;
-      padding: 5px 10px;
-      border-radius: 5px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      transition: all 0.15s ease;
-    }
-    .mode-btn:hover { color: #fff; background: rgba(255,255,255,.1); }
-    .mode-btn.active { background: var(--brand-blue); color: #fff; box-shadow: 0 1px 6px rgba(37,99,235,.5); }
-
-    .toolbar-navigator-center {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      background: rgba(255,255,255,.06);
-      padding: 3px 6px;
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,.1);
-    }
-    .nav-pill {
-      background: transparent;
-      border: 1px solid transparent;
-      color: #94a3b8;
-      font-family: 'Fira Code', monospace;
-      font-size: 11px;
-      font-weight: 600;
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-    .nav-pill:hover { background: rgba(255,255,255,.15); color: #fff; }
-    .nav-pill.attempted { border-color: #38bdf8; color: #38bdf8; }
-    .nav-pill.correct { background: var(--brand-green) !important; color: #fff !important; border-color: var(--brand-green); }
-    .nav-pill.incorrect { background: var(--brand-red) !important; color: #fff !important; border-color: var(--brand-red); }
-    .nav-pill.active { background: var(--brand-yellow); color: #000; border-color: #fde047; font-weight: 700; }
-
-    .btn-top {
-      background: rgba(255,255,255,.1);
-      border: none;
-      color: #38bdf8;
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    /* Annotation Bar */
-    .annotation-docked-bar {
-      position: fixed;
-      top: 60px;
-      left: 50%;
-      transform: translate(-50%,-10px);
-      background: #0f172a;
-      border: 1.5px solid var(--brand-blue);
-      padding: 5px 14px;
-      border-radius: 30px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      z-index: 999;
-      box-shadow: 0 6px 20px rgba(0,0,0,.35);
-      opacity: 0;
-      pointer-events: none;
-      transition: all .2s ease;
-    }
-    .annotation-docked-bar.visible { opacity: 1; pointer-events: auto; transform: translate(-50%,0); }
-    .tool-tab {
-      background: transparent;
-      border: 1px solid transparent;
-      color: #94a3b8;
-      font-size: 11.5px;
-      font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 16px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .tool-tab:hover, .tool-tab.active { color: #fff; }
-    .tool-tab.active { background: var(--brand-blue); }
-    .eraser-tab.active { background: var(--brand-red); }
-    .all-clear-tab { color: #fca5a5; }
-    .all-clear-tab:hover { background: #dc2626; color: #fff; }
-    .swatches-inline { display: flex; align-items: center; gap: 5px; }
-    .swatch { width: 17px; height: 17px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
-    .swatch.active { border-color: #fff; transform: scale(1.25); box-shadow: 0 0 5px rgba(255,255,255,.7); }
-    .thickness-box { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #94a3b8; }
-    .thickness-box input { width: 54px; accent-color: var(--brand-yellow); cursor: pointer; }
-
-    /* Practice Bar & Urgency Timers */
-    .practice-bar {
-      position: fixed;
-      top: 60px;
-      right: 20px;
-      background: #0f172a;
-      border: 1px solid var(--brand-yellow);
-      padding: 5px 14px;
-      border-radius: 20px;
-      display: none;
-      align-items: center;
-      gap: 8px;
-      z-index: 999;
-      box-shadow: 0 6px 18px rgba(0,0,0,.35);
-      color: #f1f5f9;
-      font-family: 'Fira Code', monospace;
-      font-size: 11.5px;
-    }
-    .practice-bar.visible { display: flex; }
-    .timer-warning { color: #f59e0b !important; }
-    .timer-critical { color: #ef4444 !important; animation: pulse 1s infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-    .timer-btn { background: rgba(255,255,255,.1); border: none; color: #38bdf8; font-size: 11px; padding: 2px 7px; border-radius: 4px; cursor: pointer; }
-    .score-badge { background: #1e293b; border: 1px solid #334155; padding: 2px 6px; border-radius: 4px; font-size: 11px; color: #38bdf8; }
-
-    /* Full Width Paper Container */
-    .paper-canvas-container {
-      position: relative;
-      width: 100vw;
-      max-width: 100vw;
-      margin: 0;
-      background: var(--paper-bg);
-      flex: 1 0 auto;
-    }
-    #drawingCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 50; pointer-events: none; }
-    #drawingCanvas.pen-active { pointer-events: auto; cursor: crosshair; }
-    
-    /* Expanded Sheet to Screen Width */
-    .paper-sheet {
-      position: relative;
-      z-index: 10;
-      width: 100%;
-      max-width: 100%;
-      margin: 0;
-      padding: 24px 36px 48px;
-      font-family: 'Merriweather', serif;
-      font-size: 14.5px;
-      color: var(--paper-text);
-      line-height: 1.6;
-    }
-    
-    /* CBSE Paper Header */
-    .cbse-header { margin-bottom: 20px; border-bottom: 2px solid var(--paper-border); padding-bottom: 12px; }
-    .cbse-top-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; font-family: 'Inter', sans-serif; }
-    .roll-container { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; }
-    .roll-grid { display: flex; border: 1.5px solid var(--paper-border); background: var(--paper-bg); }
-    .roll-input { width: 26px; height: 28px; border: none; border-right: 1.5px solid var(--paper-border); text-align: center; font-family: 'Fira Code', monospace; font-size: 13px; font-weight: 600; background: transparent; color: inherit; }
-    .roll-input:last-child { border-right: none; }
-    .qp-block { border: 1.5px solid var(--paper-border); padding: 4px 10px; font-family: 'Fira Code', monospace; font-size: 11.5px; font-weight: 600; text-align: right; }
-    .cbse-title-block { text-align: center; margin-bottom: 8px; }
-    .cbse-title-block h1 { font-size: 22px; font-weight: 700; text-transform: uppercase; margin-bottom: 2px; }
-    .cbse-title-block h2 { font-size: 14px; font-weight: 700; text-transform: uppercase; opacity: 0.85; }
-    .cbse-title-block .paper-chapter { font-family: 'Inter', sans-serif; font-size: 13.5px; font-weight: 700; text-transform: uppercase; margin-top: 3px; }
-    .cbse-title-block .paper-topic { font-family: 'Inter', sans-serif; font-size: 12px; opacity: 0.75; font-weight: 600; margin-top: 2px; }
-    .cbse-meta-row { display: flex; justify-content: space-between; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700; border-top: 1px dashed #9ca3af; padding-top: 6px; margin-top: 8px; }
-
-    /* Question UI Elements */
-    .question-block { display: flex; align-items: flex-start; margin-bottom: 16px; padding: 14px 16px; border-radius: 8px; scroll-margin-top: 68px; border: 1px solid transparent; transition: background 0.15s ease; }
-    .body-practice .question-block:hover { background: rgba(0,0,0,.015); }
-    .q-number-badge { width: 30px; height: 30px; border-radius: 50%; background: #0f172a; color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 12.5px; flex-shrink: 0; margin-right: 14px; }
-    body.dark-paper .q-number-badge { background: #334155; }
-    .q-content { flex: 1; padding-right: 16px; }
-    .q-marks-col { flex-shrink: 0; }
-    .marks-pill { background: #e2e8f0; color: #334155; padding: 3px 10px; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; display: inline-block; }
-    body.dark-paper .marks-pill { background: #1e293b; color: #94a3b8; }
-
-    /* Code Snippet Box */
-    .code-container { position: relative; margin: 10px 0; border-radius: 6px; overflow: hidden; background: var(--code-bg); border: 1px solid #334155; }
-    .code-header-bar { display: flex; align-items: center; justify-content: space-between; background: #090e18; padding: 5px 12px; border-bottom: 1px solid #1e293b; font-family: 'Fira Code', monospace; font-size: 11px; color: #94a3b8; }
-    .code-box { font-family: 'Fira Code', monospace; font-size: 13px; color: var(--code-text); padding: 12px 16px; line-height: 1.5; white-space: pre-wrap; }
-    .code-btn-group { display: flex; gap: 6px; }
-    .code-btn { background: #1e293b; color: #38bdf8; border: 1px solid #334155; font-family: 'Fira Code', monospace; font-size: 10.5px; padding: 3px 8px; border-radius: 4px; cursor: pointer; display: none; align-items: center; gap: 4px; }
-    .body-practice .code-btn { display: inline-flex; }
-    .code-btn:hover { background: #283548; }
-    .terminal-output { display: none; background: #020617; color: #34d399; font-family: 'Fira Code', monospace; font-size: 12px; padding: 10px 16px; border-top: 1px dashed #334155; }
-    .terminal-output.show { display: block; }
-
-    /* Syntax Highlighting */
-    .kw { color: #f472b6; font-weight: 600; }
-    .str { color: #a5f3fc; }
-    .fn { color: #38bdf8; }
-
-    /* Option Cards */
-    .exam-options-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 10px; font-family: 'Inter', sans-serif; font-size: 13.5px; }
-    .exam-options-grid.two-col { grid-template-columns: 1fr 1fr; }
-    .exam-options-grid.stacked { grid-template-columns: 1fr; }
-    .exam-opt { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 6px; border: 1.5px solid var(--card-border); background: var(--paper-bg); transition: all 0.15s ease; position: relative; }
-    .body-practice .exam-opt { cursor: pointer; }
-    .body-practice .exam-opt:hover { background: var(--card-hover); }
-    .exam-opt input[type="radio"] { width: 16px; height: 16px; accent-color: var(--brand-blue); cursor: pointer; }
-    .body-read .exam-opt input[type="radio"], .body-annotate .exam-opt input[type="radio"] { display: none; }
-    .opt-label { font-weight: 700; min-width: 22px; }
-    
-    /* Interactive Practice States */
-    .body-practice .exam-opt.selected { border-color: var(--brand-blue); background: #eff6ff; }
-    body.dark-paper.body-practice .exam-opt.selected { background: #1e293b; }
-    .body-practice .exam-opt.correct-answer { border-color: var(--brand-green) !important; background: #ecfdf5 !important; color: #065f46; font-weight: 600; }
-    body.dark-paper.body-practice .exam-opt.correct-answer { background: #064e3b !important; color: #a7f3d0; }
-    .body-practice .exam-opt.incorrect-answer { border-color: var(--brand-red) !important; background: #fef2f2 !important; color: #991b1b; }
-    body.dark-paper.body-practice .exam-opt.incorrect-answer { background: #7f1d1d !important; color: #fecaca; }
-
-    /* Practice Controls & Animated Reveal */
-    .practice-controls-row { display: none; align-items: center; gap: 8px; margin-top: 12px; font-family: 'Inter', sans-serif; }
-    .body-practice .practice-controls-row { display: flex; }
-    .btn-reveal { background: #f1f5f9; border: 1px solid #cbd5e1; font-size: 11.5px; font-weight: 600; color: #1e293b; padding: 5px 12px; border-radius: 5px; cursor: pointer; transition: all 0.15s ease; }
-    .btn-reveal:hover { background: #e2e8f0; }
-    body.dark-paper .btn-reveal { background: #1e293b; border-color: #334155; color: #e2e8f0; }
-    .explanation-box { max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.28s ease, opacity 0.25s ease, margin-top 0.2s ease; background: #fefce8; border-left: 4px solid var(--brand-yellow); border-radius: 0 6px 6px 0; font-family: 'Inter', sans-serif; font-size: 13px; color: #713f12; }
-    body.dark-paper .explanation-box { background: #292524; color: #fde047; }
-    .explanation-box.show { max-height: 350px; opacity: 1; padding: 12px 16px; margin-top: 10px; }
-
-    /* Interactive Practice Inputs for Subjective Qs */
-    .practice-subjective-box { display: none; margin-top: 10px; }
-    .body-practice .practice-subjective-box { display: block; }
-    .practice-subjective-input { width: 100%; min-height: 65px; font-family: 'Fira Code', monospace; font-size: 13px; padding: 10px 12px; border: 1.5px solid var(--card-border); border-radius: 6px; background: transparent; color: inherit; resize: vertical; }
-
-    .or-divider { text-align: center; font-weight: 700; font-style: italic; color: #64748b; margin: 8px 0; font-size: 12px; position: relative; }
-    .or-divider::before, .or-divider::after { content: ""; position: absolute; top: 50%; width: 45%; height: 1px; background: #cbd5e1; }
-    .or-divider::before { left: 0; } .or-divider::after { right: 0; }
-
-    .stub-notice { background: #fffbeb; border: 1.5px dashed var(--brand-yellow); border-radius: 8px; padding: 14px 18px; margin: 15px 0; font-family: 'Inter', sans-serif; font-size: 13px; color: #92400e; display: flex; align-items: center; gap: 10px; }
-    body.dark-paper .stub-notice { background: #1e1b18; color: #fde68a; }
-
-    /* Minimal Completion Strip */
-    .paper-completion-strip {
-      margin-top: 36px;
-      padding-top: 24px;
-      border-top: 1px dashed var(--card-border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
-      font-family: 'Inter', sans-serif;
-    }
-    .completion-thanks {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .completion-thanks .badge-check {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: #ecfdf5;
-      color: var(--brand-green);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    body.dark-paper .completion-thanks .badge-check {
-      background: #064e3b;
-      color: #a7f3d0;
-    }
-    .completion-thanks h4 {
-      font-size: 13.5px;
-      font-weight: 600;
-      color: inherit;
-    }
-    .completion-thanks p {
-      font-size: 12px;
-      opacity: 0.65;
-    }
-    .btn-next-paper {
-      background: transparent;
-      border: 1px solid var(--card-border);
-      color: inherit;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 500;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.15s ease;
-      opacity: 0.85;
-    }
-    .btn-next-paper:hover {
-      opacity: 1;
-      border-color: var(--brand-blue);
-      color: var(--brand-blue);
-      background: rgba(37,99,235,0.04);
-      transform: translateX(2px);
-    }
-
-    /* Footer */
-    .site-footer { background: #090e1a; border-top: 3px solid var(--brand-yellow); color: #94a3b8; font-size: 13px; margin-top: auto; user-select: none; }
-    .footer-bottom-bar { width: 100%; padding: 14px 28px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
-    .copyright-text { display: flex; align-items: center; gap: 4px; color: #cbd5e1; font-size: 13px; }
-    .copyright-text .heart-icon { color: #f43f5e; margin: 0 2px; }
-    .footer-legal-links { display: flex; align-items: center; gap: 20px; }
-    .footer-legal-links a { color: #94a3b8; text-decoration: none; font-size: 13px; }
-    .footer-legal-links a:hover { color: #38bdf8; text-decoration: underline; }
-
-    /* Responsive Adaptations */
-    @media (max-width: 860px) {
-      .toolbar-navigator-center { max-width: 220px; overflow-x: auto; }
-      .exam-options-grid { grid-template-columns: 1fr 1fr; }
-      .paper-sheet { padding: 16px 14px; }
-    }
-    @media (max-width: 480px) {
-      .exam-options-grid.two-col, .exam-options-grid { grid-template-columns: 1fr; }
-      .unified-navbar { padding: 0 8px; }
-      .nav-cluster { gap: 4px; }
-      .mode-btn span { display: none; }
-      .paper-completion-strip { flex-direction: column; align-items: flex-start; }
-    }
-
-    @media print {
-      body { background: #fff !important; padding-top: 0 !important; color: #000 !important; }
-      #scrollProgressBar, .unified-navbar, .annotation-docked-bar, .practice-bar, .site-footer, .practice-controls-row, .code-btn, .practice-subjective-box, .app-toast, .paper-completion-strip { display: none !important; }
-      .paper-canvas-container { max-width: 100% !important; width: 100% !important; }
-      .paper-sheet { padding: 4mm 6mm !important; color: #000 !important; max-width: 100% !important; width: 100% !important; }
-      #drawingCanvas { display: block; }
-      .explanation-box { display: none !important; }
-      .exam-opt input[type="radio"] { display: none !important; }
-    }
-  </style>
+  <!-- External Stylesheets -->
+  <link rel="stylesheet" href="../../../assets/css/style.css" />
+  <link rel="stylesheet" href="../../../assets/css/pyq.css" />
 </head>
 <body class="body-read">
   <div id="scrollProgressBar" role="progressbar" aria-label="Page reading progress"></div>
-  
+
   <header class="unified-navbar">
     <div class="nav-cluster">
       <button type="button" class="btn-portal-back" onclick="window.history.back()" aria-label="Go Back" title="Go Back">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><polyline points="15 18 9 12 15 6"/></svg>
       </button>
       <div class="session-badge">
-        <select id="sessionSelect" onchange="switchSession(this.value)" aria-label="Select examination paper session">
-          <option value="2025-26">2025–26 (Set 91)</option>
-          <option value="2024-25">2024–25 (Set 4)</option>
-          <option value="2023-24">2023–24 (Set 1)</option>
-        </select>
+        <span class="session-tag">2025–26 (Set 91)</span>
       </div>
     </div>
 
@@ -527,11 +40,24 @@
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg><span>Annotate</span>
         </button>
       </nav>
+
+      <!-- Clean Practice Stopwatch (Placed directly before Question Navigation) -->
+      <div class="practice-stopwatch-pill" id="practiceTimerBar" aria-label="Time Consumed">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span id="timerDisplay">00:00</span>
+      </div>
+
       <nav class="toolbar-navigator-center" id="dynamicNavPills" aria-label="Question Navigation"></nav>
     </div>
 
     <div class="nav-cluster">
       <div class="actions-group">
+        <!-- Page Width Stepper (- / +) -->
+        <div class="page-width-ctrl" role="group" aria-label="Page Width Controls">
+          <button type="button" class="btn-width" onclick="changePaperWidth(-1)" aria-label="Decrease Page Width" title="Narrow Page Width (−)">−</button>
+          <button type="button" class="btn-width" onclick="changePaperWidth(1)" aria-label="Increase Page Width" title="Widen Page Width (+)">+</button>
+        </div>
+
         <button type="button" class="btn-portal-action" onclick="togglePaperTheme()" aria-label="Toggle Dark Paper Mode" title="Toggle Light/Dark Paper">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         </button>
@@ -548,7 +74,7 @@
     </div>
   </header>
 
-  <!-- Annotation Docked Bar -->
+  <!-- Annotation Controls Bar -->
   <div class="annotation-docked-bar" id="annotationBar" role="toolbar" aria-label="Annotation Controls">
     <button type="button" class="tool-tab active" id="tabPen" onclick="setDrawingTool('pen')">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg> Pen
@@ -575,18 +101,506 @@
     </div>
   </div>
 
-  <!-- Practice Bar -->
-  <div class="practice-bar" id="practiceTimerBar">
-    <span>Time:</span>
-    <strong id="timerDisplay" style="color:#38bdf8;">30:00</strong>
-    <button type="button" class="timer-btn" onclick="toggleTimer()" id="btnTimerToggle">Start</button>
-    <button type="button" class="timer-btn" onclick="resetTimer()">Reset</button>
-    <span class="score-badge" id="scoreDisplay">Score: 0/12</span>
+  <!-- In-Browser Confirmation Modal -->
+  <div class="app-modal-backdrop" id="clearConfirmModal" role="dialog" aria-modal="true" aria-labelledby="modalClearTitle">
+    <div class="app-modal-box">
+      <div class="modal-header-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+      </div>
+      <h3 id="modalClearTitle">Clear All Progress?</h3>
+      <p>Are you sure you want to clear all notes, responses, and practice progress? This action cannot be undone.</p>
+      <div class="modal-btn-row">
+        <button type="button" class="btn-modal-cancel" onclick="closeClearModal()">Cancel</button>
+        <button type="button" class="btn-modal-confirm" onclick="confirmAndClearAll()">Yes, Clear All</button>
+      </div>
+    </div>
   </div>
 
   <div class="paper-canvas-container" id="paperContainer">
     <canvas id="drawingCanvas"></canvas>
-    <main class="paper-sheet" id="paperContent"></main>
+    <main class="paper-sheet" id="paperContent">
+      <header class="cbse-header">
+        <div class="cbse-top-row">
+          <div class="qp-block">Series: <strong>QR1SP</strong> &nbsp;|&nbsp; Set: <strong>91</strong> &nbsp;|&nbsp; Q.P. Code: <strong>91/1</strong></div>
+        </div>
+        <div class="cbse-title-block">
+          <h1>Computer Science (Python)</h1>
+          <h2>Session: 2025–26 — Class XII</h2>
+          <div class="paper-chapter">Chapter: Revision Tour (Periodic Assessment)</div>
+        </div>
+        <div class="cbse-meta-row">
+          <span>Time Allowed: 30 Minutes</span>
+          <span>Maximum Marks: 12</span>
+        </div>
+      </header>
+
+      <!-- Question 01 -->
+      <section class="question-block" id="q1" data-type="mcq" data-correct="B" data-marks="1">
+        <div class="q-number-badge">01</div>
+        <div class="q-content">
+          <div>State <strong>True</strong> or <strong>False</strong>: In Python, the data type of <code>74</code> is the same as the data type of <code>74.0</code>.</div>
+          <div class="exam-options-grid">
+            <label class="exam-opt" id="label_q1_A">
+              <input type="radio" name="p_q1" value="A">
+              <span class="opt-label">(A)</span>
+              <span>True</span>
+            </label>
+            <label class="exam-opt" id="label_q1_B">
+              <input type="radio" name="p_q1" value="B">
+              <span class="opt-label">(B)</span>
+              <span>False</span>
+            </label>
+          </div>
+          <div class="practice-controls-row">
+            <button type="button" class="btn-reveal" onclick="toggleExplanation('q1')">Show Answer &amp; Explanation</button>
+          </div>
+          <div class="explanation-box" id="exp_q1">
+            <strong>Correct Answer: (B) False</strong><br><code>74</code> is an integer (<code>int</code>) while <code>74.0</code> is a floating-point number (<code>float</code>).
+          </div>
+        </div>
+        <div class="q-marks-col">
+          <span class="marks-pill">1 mark</span>
+        </div>
+      </section>
+
+      <!-- Question 02 -->
+      <section class="question-block" id="q2" data-type="code-mcq" data-correct="A" data-marks="1">
+        <div class="q-number-badge">02</div>
+        <div class="q-content">
+          <div>What is the output of the following code?</div>
+          <div class="code-container">
+            <div class="code-header-bar">
+              <div class="code-header-left">
+                <div class="mac-dots">
+                  <span class="mac-dot dot-red"></span>
+                  <span class="mac-dot dot-yellow"></span>
+                  <span class="mac-dot dot-green"></span>
+                </div>
+              </div>
+              <div class="code-btn-group">
+                <button type="button" class="code-btn" onclick="copySnippet('q2')">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy
+                </button>
+                <button type="button" class="code-btn" onclick="toggleSnippetOutput('q2')">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Run Code
+                </button>
+              </div>
+            </div>
+            <pre class="code-box" id="code_q2"><span class="kw">s</span> = <span class="str">"the Truth"</span>
+<span class="fn">print</span>(s.<span class="fn">capitalize</span>())</pre>
+            <div class="terminal-output" id="out_q2">> The truth</div>
+          </div>
+          <div class="exam-options-grid">
+            <label class="exam-opt" id="label_q2_A">
+              <input type="radio" name="p_q2" value="A">
+              <span class="opt-label">(A)</span>
+              <span>The truth</span>
+            </label>
+            <label class="exam-opt" id="label_q2_B">
+              <input type="radio" name="p_q2" value="B">
+              <span class="opt-label">(B)</span>
+              <span>THE TRUTH</span>
+            </label>
+            <label class="exam-opt" id="label_q2_C">
+              <input type="radio" name="p_q2" value="C">
+              <span class="opt-label">(C)</span>
+              <span>The Truth</span>
+            </label>
+            <label class="exam-opt" id="label_q2_D">
+              <input type="radio" name="p_q2" value="D">
+              <span class="opt-label">(D)</span>
+              <span>the Truth</span>
+            </label>
+          </div>
+          <div class="practice-controls-row">
+            <button type="button" class="btn-reveal" onclick="toggleExplanation('q2')">Show Answer &amp; Explanation</button>
+          </div>
+          <div class="explanation-box" id="exp_q2">
+            <strong>Correct Answer: (A) The truth</strong><br><code>capitalize()</code> converts the first character to uppercase and all other characters to lowercase.
+          </div>
+        </div>
+        <div class="q-marks-col">
+          <span class="marks-pill">1 mark</span>
+        </div>
+      </section>
+
+      <!-- Question 03 -->
+      <section class="question-block" id="q3" data-type="mcq" data-correct="C" data-marks="1">
+        <div class="q-number-badge">03</div>
+        <div class="q-content">
+          <div>Which of the following expressions evaluates to <code>True</code>?</div>
+          <div class="exam-options-grid">
+            <label class="exam-opt" id="label_q3_A">
+              <input type="radio" name="p_q3" value="A">
+              <span class="opt-label">(A)</span>
+              <span>2 > 3 and 2 < 3</span>
+            </label>
+            <label class="exam-opt" id="label_q3_B">
+              <input type="radio" name="p_q3" value="B">
+              <span class="opt-label">(B)</span>
+              <span>3 > 1 and 2</span>
+            </label>
+            <label class="exam-opt" id="label_q3_C">
+              <input type="radio" name="p_q3" value="C">
+              <span class="opt-label">(C)</span>
+              <span>3 > 1 and 3 > 2</span>
+            </label>
+            <label class="exam-opt" id="label_q3_D">
+              <input type="radio" name="p_q3" value="D">
+              <span class="opt-label">(D)</span>
+              <span>3 > 1 and 3 < 2</span>
+            </label>
+          </div>
+          <div class="practice-controls-row">
+            <button type="button" class="btn-reveal" onclick="toggleExplanation('q3')">Show Answer &amp; Explanation</button>
+          </div>
+          <div class="explanation-box" id="exp_q3">
+            <strong>Correct Answer: (C) 3 > 1 and 3 > 2</strong><br>Both conditions evaluate to <code>True</code>; in Python <code>True and True</code> produces <code>True</code>.
+          </div>
+        </div>
+        <div class="q-marks-col">
+          <span class="marks-pill">1 mark</span>
+        </div>
+      </section>
+
+      <!-- Question 04 -->
+      <section class="question-block" id="q4" data-type="code-mcq" data-correct="A" data-marks="1">
+        <div class="q-number-badge">04</div>
+        <div class="q-content">
+          <div>What is the output of the following code?</div>
+          <div class="code-container">
+            <div class="code-header-bar">
+              <div class="code-header-left">
+                <div class="mac-dots">
+                  <span class="mac-dot dot-red"></span>
+                  <span class="mac-dot dot-yellow"></span>
+                  <span class="mac-dot dot-green"></span>
+                </div>
+              </div>
+              <div class="code-btn-group">
+                <button type="button" class="code-btn" onclick="copySnippet('q4')">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy
+                </button>
+                <button type="button" class="code-btn" onclick="toggleSnippetOutput('q4')">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Run Code
+                </button>
+              </div>
+            </div>
+            <pre class="code-box" id="code_q4"><span class="kw">s</span> = <span class="str">'War and Peace by Leo Tolstoy'</span>
+<span class="fn">print</span>(s.<span class="fn">partition</span>(<span class="str">"by"</span>))</pre>
+            <div class="terminal-output" id="out_q4">> ('War and Peace ', 'by', ' Leo Tolstoy')</div>
+          </div>
+          <div class="exam-options-grid">
+            <label class="exam-opt" id="label_q4_A">
+              <input type="radio" name="p_q4" value="A">
+              <span class="opt-label">(A)</span>
+              <span>('War and Peace ', 'by', ' Leo Tolstoy')</span>
+            </label>
+            <label class="exam-opt" id="label_q4_B">
+              <input type="radio" name="p_q4" value="B">
+              <span class="opt-label">(B)</span>
+              <span>['War and Peace ', 'by', ' Leo Tolstoy']</span>
+            </label>
+            <label class="exam-opt" id="label_q4_C">
+              <input type="radio" name="p_q4" value="C">
+              <span class="opt-label">(C)</span>
+              <span>('War and Peace ', ' Leo Tolstoy')</span>
+            </label>
+            <label class="exam-opt" id="label_q4_D">
+              <input type="radio" name="p_q4" value="D">
+              <span class="opt-label">(D)</span>
+              <span>['War and Peace ', ' Leo Tolstoy']</span>
+            </label>
+          </div>
+          <div class="practice-controls-row">
+            <button type="button" class="btn-reveal" onclick="toggleExplanation('q4')">Show Answer &amp; Explanation</button>
+          </div>
+          <div class="explanation-box" id="exp_q4">
+            <strong>Correct Answer: (A)</strong><br><code>str.partition(sep)</code> splits at the first occurrence and always returns a 3-tuple: <code>(head, sep, tail)</code>.
+          </div>
+        </div>
+        <div class="q-marks-col">
+          <span class="marks-pill">1 mark</span>
+        </div>
+      </section>
+
+      <!-- Question 05 -->
+      <section class="question-block" id="q5" data-type="code-mcq" data-correct="B" data-marks="1">
+        <div class="q-number-badge">05</div>
+        <div class="q-content">
+          <div>What is the output of the following slicing statement?</div>
+          <div class="code-container">
+            <div class="code-header-bar">
+              <div class="code-header-left">
+                <div class="mac-dots">
+                  <span class="mac-dot dot-red"></span>
+                  <span class="mac-dot dot-yellow"></span>
+                  <span class="mac-dot dot-green"></span>
+                </div>
+              </div>
+              <div class="code-btn-group">
+                <button type="button" class="code-btn" onclick="copySnippet('q5')">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy
+                </button>
+                <button type="button" class="code-btn" onclick="toggleSnippetOutput('q5')">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Run Code
+                </button>
+              </div>
+            </div>
+            <pre class="code-box" id="code_q5"><span class="fn">print</span>(<span class="str">"PythonProgram"</span>[-1:2:-2])</pre>
+            <div class="terminal-output" id="out_q5">> mroPo</div>
+          </div>
+          <div class="exam-options-grid">
+            <label class="exam-opt" id="label_q5_A">
+              <input type="radio" name="p_q5" value="A">
+              <span class="opt-label">(A)</span>
+              <span>mroP</span>
+            </label>
+            <label class="exam-opt" id="label_q5_B">
+              <input type="radio" name="p_q5" value="B">
+              <span class="opt-label">(B)</span>
+              <span>mroPo</span>
+            </label>
+            <label class="exam-opt" id="label_q5_C">
+              <input type="radio" name="p_q5" value="C">
+              <span class="opt-label">(C)</span>
+              <span>mro</span>
+            </label>
+            <label class="exam-opt" id="label_q5_D">
+              <input type="radio" name="p_q5" value="D">
+              <span class="opt-label">(D)</span>
+              <span>margor</span>
+            </label>
+          </div>
+          <div class="practice-controls-row">
+            <button type="button" class="btn-reveal" onclick="toggleExplanation('q5')">Show Answer &amp; Explanation</button>
+          </div>
+          <div class="explanation-box" id="exp_q5">
+            <strong>Correct Answer: (B) mroPo</strong><br>Traversed reverse indices: -1 ('m'), -3 ('r'), -5 ('o'), -7 ('P'), -9 ('o').
+          </div>
+        </div>
+        <div class="q-marks-col">
+          <span class="marks-pill">1 mark</span>
+        </div>
+      </section>
+
+      <!-- Question 06 -->
+      <section class="question-block" id="q6" data-type="code-mcq" data-correct="C" data-marks="1">
+        <div class="q-number-badge">06</div>
+        <div class="q-content">
+          <div>What is the output of the following code?</div>
+          <div class="code-container">
+            <div class="code-header-bar">
+              <div class="code-header-left">
+                <div class="mac-dots">
+                  <span class="mac-dot dot-red"></span>
+                  <span class="mac-dot dot-yellow"></span>
+                  <span class="mac-dot dot-green"></span>
+                </div>
+              </div>
+              <div class="code-btn-group">
+                <button type="button" class="code-btn" onclick="copySnippet('q6')">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy
+                </button>
+                <button type="button" class="code-btn" onclick="toggleSnippetOutput('q6')">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Run Code
+                </button>
+              </div>
+            </div>
+            <pre class="code-box" id="code_q6"><span class="kw">t</span> = <span class="fn">tuple</span>(<span class="str">'tuple'</span>)
+t2 = t[2],
+t += t2
+<span class="fn">print</span>(t)</pre>
+            <div class="terminal-output" id="out_q6">> ('t', 'u', 'p', 'l', 'e', 'p')</div>
+          </div>
+          <div class="exam-options-grid">
+            <label class="exam-opt" id="label_q6_A">
+              <input type="radio" name="p_q6" value="A">
+              <span class="opt-label">(A)</span>
+              <span>('tuple')</span>
+            </label>
+            <label class="exam-opt" id="label_q6_B">
+              <input type="radio" name="p_q6" value="B">
+              <span class="opt-label">(B)</span>
+              <span>('tuple', 'p')</span>
+            </label>
+            <label class="exam-opt" id="label_q6_C">
+              <input type="radio" name="p_q6" value="C">
+              <span class="opt-label">(C)</span>
+              <span>('t', 'u', 'p', 'l', 'e', 'p')</span>
+            </label>
+            <label class="exam-opt" id="label_q6_D">
+              <input type="radio" name="p_q6" value="D">
+              <span class="opt-label">(D)</span>
+              <span>('t', 'u', 'p', 'l', 'e')</span>
+            </label>
+          </div>
+          <div class="practice-controls-row">
+            <button type="button" class="btn-reveal" onclick="toggleExplanation('q6')">Show Answer &amp; Explanation</button>
+          </div>
+          <div class="explanation-box" id="exp_q6">
+            <strong>Correct Answer: (C) ('t', 'u', 'p', 'l', 'e', 'p')</strong><br>Trailing comma makes <code>t2</code> a 1-tuple <code>('p',)</code> which concatenates to the unpacked tuple.
+          </div>
+        </div>
+        <div class="q-marks-col">
+          <span class="marks-pill">1 mark</span>
+        </div>
+      </section>
+
+      <!-- Question 07 -->
+      <section class="question-block" id="q7" data-type="mcq" data-correct="B" data-marks="1">
+        <div class="q-number-badge">07</div>
+        <div class="q-content">
+          <div>Which statement about Python dictionaries is true?</div>
+          <div class="exam-options-grid stacked">
+            <label class="exam-opt" id="label_q7_A">
+              <input type="radio" name="p_q7" value="A">
+              <span class="opt-label">(A)</span>
+              <span>A dictionary is an example of a sequence data type.</span>
+            </label>
+            <label class="exam-opt" id="label_q7_B">
+              <input type="radio" name="p_q7" value="B">
+              <span class="opt-label">(B)</span>
+              <span>A dictionary cannot have two elements with the same key.</span>
+            </label>
+            <label class="exam-opt" id="label_q7_C">
+              <input type="radio" name="p_q7" value="C">
+              <span class="opt-label">(C)</span>
+              <span>A dictionary cannot have two elements with the same value.</span>
+            </label>
+            <label class="exam-opt" id="label_q7_D">
+              <input type="radio" name="p_q7" value="D">
+              <span class="opt-label">(D)</span>
+              <span>The key and value of an element cannot be the same.</span>
+            </label>
+          </div>
+          <div class="practice-controls-row">
+            <button type="button" class="btn-reveal" onclick="toggleExplanation('q7')">Show Answer &amp; Explanation</button>
+          </div>
+          <div class="explanation-box" id="exp_q7">
+            <strong>Correct Answer: (B)</strong><br>Dictionary keys must be unique and immutable. Duplicate keys overwrite previous values.
+          </div>
+        </div>
+        <div class="q-marks-col">
+          <span class="marks-pill">1 mark</span>
+        </div>
+      </section>
+
+      <!-- Question 08 -->
+      <section class="question-block" id="q8" data-type="mcq" data-correct="B" data-marks="1">
+        <div class="q-number-badge">08</div>
+        <div class="q-content">
+          <div>If <code>L</code> is a list with 6 elements, which statement will raise an exception?</div>
+          <div class="exam-options-grid">
+            <label class="exam-opt" id="label_q8_A">
+              <input type="radio" name="p_q8" value="A">
+              <span class="opt-label">(A)</span>
+              <span>L.pop(1)</span>
+            </label>
+            <label class="exam-opt" id="label_q8_B">
+              <input type="radio" name="p_q8" value="B">
+              <span class="opt-label">(B)</span>
+              <span>L.pop(6)</span>
+            </label>
+            <label class="exam-opt" id="label_q8_C">
+              <input type="radio" name="p_q8" value="C">
+              <span class="opt-label">(C)</span>
+              <span>L.insert(1, 6)</span>
+            </label>
+            <label class="exam-opt" id="label_q8_D">
+              <input type="radio" name="p_q8" value="D">
+              <span class="opt-label">(D)</span>
+              <span>L.insert(6, 1)</span>
+            </label>
+          </div>
+          <div class="practice-controls-row">
+            <button type="button" class="btn-reveal" onclick="toggleExplanation('q8')">Show Answer &amp; Explanation</button>
+          </div>
+          <div class="explanation-box" id="exp_q8">
+            <strong>Correct Answer: (B) L.pop(6)</strong><br>A 6-element list has valid indices 0 to 5. Index 6 triggers <code>IndexError: pop index out of range</code>.
+          </div>
+        </div>
+        <div class="q-marks-col">
+          <span class="marks-pill">1 mark</span>
+        </div>
+      </section>
+
+      <!-- Question 09 -->
+      <section class="question-block" id="q9" data-type="subjective" data-marks="2">
+        <div class="q-number-badge">09</div>
+        <div class="q-content">
+          <div>
+            Write Python statements for the following:
+            <div style="margin-top:6px;"><strong>(i)</strong> Create a new list <code>L1</code> containing the elements of list <code>L</code> in ascending order, without modifying <code>L</code>.</div>
+            <div style="margin-top:4px;"><strong>(ii)</strong> Check whether a given character <code>ch</code> is an alphabet or a digit.</div>
+          </div>
+          <div class="practice-subjective-box">
+            <textarea class="practice-subjective-input" placeholder="# Type your solution code here..."></textarea>
+          </div>
+          <div class="practice-controls-row">
+            <button type="button" class="btn-reveal" onclick="toggleExplanation('q9')">Show Answer &amp; Explanation</button>
+          </div>
+          <div class="explanation-box" id="exp_q9">
+            <strong>Model Solutions:</strong><br>
+            <strong>(i)</strong> <code>L1 = sorted(L)</code><br>
+            <strong>(ii)</strong> <code>ch.isalnum()</code>
+          </div>
+        </div>
+        <div class="q-marks-col">
+          <span class="marks-pill">2 marks</span>
+        </div>
+      </section>
+
+      <!-- Question 10 -->
+      <section class="question-block" id="q10" data-type="subjective" data-marks="2">
+        <div class="q-number-badge">10</div>
+        <div class="q-content">
+          <div>
+            Assume <code>D1</code> is a dictionary. (Attempt any one part under each sub-question):
+            <div style="margin-top:6px;">
+              <strong>(i)</strong> (a) Write an expression to check if the key <code>'RNo'</code> is present in <code>D1</code>.<br>
+              <div class="or-divider">OR</div><br>
+              (b) Write an expression to check if any key in <code>D1</code> has the value <code>12</code>.
+            </div>
+            <div style="margin-top:8px;">
+              <strong>(ii)</strong> (a) Using a single built-in function, add <code>'RNo': 12</code> to <code>D1</code> if <code>'RNo'</code> isn't already a key; if it is, return its existing value.<br>
+              <div class="or-divider">OR</div><br>
+              (b) Write a single statement to delete all elements from <code>D1</code>.
+            </div>
+          </div>
+          <div class="practice-subjective-box">
+            <textarea class="practice-subjective-input" placeholder="# Type your answers for (i) and (ii)..."></textarea>
+          </div>
+          <div class="practice-controls-row">
+            <button type="button" class="btn-reveal" onclick="toggleExplanation('q10')">Show Answer &amp; Explanation</button>
+          </div>
+          <div class="explanation-box" id="exp_q10">
+            <strong>Model Solutions:</strong><br>
+            <strong>(i)</strong> <code>'RNo' in D1</code> OR <code>12 in D1.values()</code><br>
+            <strong>(ii)</strong> <code>D1.setdefault('RNo', 12)</code> OR <code>D1.clear()</code>
+          </div>
+        </div>
+        <div class="q-marks-col">
+          <span class="marks-pill">2 marks</span>
+        </div>
+      </section>
+
+      <div class="paper-completion-strip">
+        <div class="completion-thanks">
+          <div class="badge-check">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div>
+            <h4>Thank you for practicing!</h4>
+            <p>Review your notes or proceed to test your skills on the next available set.</p>
+          </div>
+        </div>
+        <button type="button" class="btn-next-paper" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+          <span>Back to Top</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="18 15 12 9 6 15"/></svg>
+        </button>
+      </div>
+    </main>
   </div>
 
   <footer class="site-footer" role="contentinfo">
@@ -604,711 +618,8 @@
 
   <div id="appToast" class="app-toast" role="status" aria-live="polite"></div>
 
-  <script>
-    const papers = {
-      '2025-26': {
-        series: 'QR1SP', set: '91', qpCode: '91/1', session: '2025–26', totalMarks: 12,
-        drivePdfUrl: 'https://drive.google.com/file/d/YOUR_2025_26_FILE_ID/view?usp=sharing',
-        questions: [
-          {
-            id: 'q1', num: '01', marks: 1, type: 'mcq', correct: 'B',
-            text: `State <strong>True</strong> or <strong>False</strong>: In Python, the data type of <code>74</code> is the same as the data type of <code>74.0</code>.`,
-            options: [
-              { label: '(A)', val: 'A', text: 'True' },
-              { label: '(B)', val: 'B', text: 'False' }
-            ],
-            gridClass: 'two-col',
-            exp: `<strong>Correct Answer: (B) False</strong><br><code>74</code> is an integer (<code>int</code>) while <code>74.0</code> is a floating-point number (<code>float</code>).`
-          },
-          {
-            id: 'q2', num: '02', marks: 1, type: 'code-mcq', correct: 'A',
-            text: `What is the output of the following code?`,
-            code: `<span class="kw">s</span> = <span class="str">"the Truth"</span>\n<span class="fn">print</span>(s.<span class="fn">capitalize</span>())`,
-            rawCode: 's = "the Truth"\nprint(s.capitalize())',
-            output: '> The truth',
-            options: [
-              { label: '(A)', val: 'A', text: 'The truth' },
-              { label: '(B)', val: 'B', text: 'THE TRUTH' },
-              { label: '(C)', val: 'C', text: 'The Truth' },
-              { label: '(D)', val: 'D', text: 'the Truth' }
-            ],
-            gridClass: '',
-            exp: `<strong>Correct Answer: (A) The truth</strong><br><code>capitalize()</code> converts the first character to uppercase and all other characters to lowercase.`
-          },
-          {
-            id: 'q3', num: '03', marks: 1, type: 'mcq', correct: 'C',
-            text: `Which of the following expressions evaluates to <code>True</code>?`,
-            options: [
-              { label: '(A)', val: 'A', text: '2 > 3 and 2 < 3' },
-              { label: '(B)', val: 'B', text: '3 > 1 and 2' },
-              { label: '(C)', val: 'C', text: '3 > 1 and 3 > 2' },
-              { label: '(D)', val: 'D', text: '3 > 1 and 3 < 2' }
-            ],
-            gridClass: 'two-col',
-            exp: `<strong>Correct Answer: (C) 3 > 1 and 3 > 2</strong><br>Both conditions evaluate to <code>True</code>; in Python <code>True and True</code> produces <code>True</code>. Note: Option (B) returns <code>2</code> (truthy value) rather than the boolean literal <code>True</code>.`
-          },
-          {
-            id: 'q4', num: '04', marks: 1, type: 'code-mcq', correct: 'A',
-            text: `What is the output of the following code?`,
-            code: `<span class="kw">s</span> = <span class="str">'War and Peace by Leo Tolstoy'</span>\n<span class="fn">print</span>(s.<span class="fn">partition</span>(<span class="str">"by"</span>))`,
-            rawCode: "s = 'War and Peace by Leo Tolstoy'\nprint(s.partition('by'))",
-            output: "> ('War and Peace ', 'by', ' Leo Tolstoy')",
-            options: [
-              { label: '(A)', val: 'A', text: `('War and Peace ', 'by', ' Leo Tolstoy')` },
-              { label: '(B)', val: 'B', text: `['War and Peace ', 'by', ' Leo Tolstoy']` },
-              { label: '(C)', val: 'C', text: `('War and Peace ', ' Leo Tolstoy')` },
-              { label: '(D)', val: 'D', text: `['War and Peace ', ' Leo Tolstoy']` }
-            ],
-            gridClass: 'two-col',
-            exp: `<strong>Correct Answer: (A)</strong><br><code>str.partition(sep)</code> splits at the first occurrence of the separator and always returns a 3-tuple: <code>(head, sep, tail)</code>.`
-          },
-          {
-            id: 'q5', num: '05', marks: 1, type: 'code-mcq', correct: 'B',
-            text: `What is the output of the following slicing statement?`,
-            code: `<span class="fn">print</span>(<span class="str">"PythonProgram"</span>[-1:2:-2])`,
-            rawCode: 'print("PythonProgram"[-1:2:-2])',
-            output: '> mroPo',
-            options: [
-              { label: '(A)', val: 'A', text: 'mroP' },
-              { label: '(B)', val: 'B', text: 'mroPo' },
-              { label: '(C)', val: 'C', text: 'mro' },
-              { label: '(D)', val: 'D', text: 'margor' }
-            ],
-            gridClass: '',
-            exp: `<strong>Correct Answer: (B) mroPo</strong><br>Index -1 is 'm', step is -2. Traversed indices: -1 ('m'), -3 ('r'), -5 ('o'), -7 ('P'), -9 ('o'). Index -11 ('y', index 1) is past stop index 2 ('t').`
-          },
-          {
-            id: 'q6', num: '06', marks: 1, type: 'code-mcq', correct: 'C',
-            text: `What is the output of the following code?`,
-            code: `<span class="kw">t</span> = <span class="fn">tuple</span>(<span class="str">'tuple'</span>)\nt2 = t[2],\nt += t2\n<span class="fn">print</span>(t)`,
-            rawCode: "t = tuple('tuple')\nt2 = t[2],\nt += t2\nprint(t)",
-            output: "> ('t', 'u', 'p', 'l', 'e', 'p')",
-            options: [
-              { label: '(A)', val: 'A', text: `('tuple')` },
-              { label: '(B)', val: 'B', text: `('tuple', 'p')` },
-              { label: '(C)', val: 'C', text: `('t', 'u', 'p', 'l', 'e', 'p')` },
-              { label: '(D)', val: 'D', text: `('t', 'u', 'p', 'l', 'e')` }
-            ],
-            gridClass: 'two-col',
-            exp: `<strong>Correct Answer: (C) ('t', 'u', 'p', 'l', 'e', 'p')</strong><br><code>tuple('tuple')</code> unpacks into <code>('t', 'u', 'p', 'l', 'e')</code>. The trailing comma creates a 1-tuple <code>t2 = ('p',)</code>. Concatenating yields <code>('t', 'u', 'p', 'l', 'e', 'p')</code>.`
-          },
-          {
-            id: 'q7', num: '07', marks: 1, type: 'mcq', correct: 'B',
-            text: `Which statement about Python dictionaries is true?`,
-            options: [
-              { label: '(A)', val: 'A', text: 'A dictionary is an example of a sequence data type.' },
-              { label: '(B)', val: 'B', text: 'A dictionary cannot have two elements with the same key.' },
-              { label: '(C)', val: 'C', text: 'A dictionary cannot have two elements with the same value.' },
-              { label: '(D)', val: 'D', text: 'The key and value of an element cannot be the same.' }
-            ],
-            gridClass: 'stacked',
-            exp: `<strong>Correct Answer: (B)</strong><br>Dictionary keys must be unique and immutable. If duplicate keys are written, the latter overwrites the earlier.`
-          },
-          {
-            id: 'q8', num: '08', marks: 1, type: 'mcq', correct: 'B',
-            text: `If <code>L</code> is a list with 6 elements, which statement will raise an exception?`,
-            options: [
-              { label: '(A)', val: 'A', text: 'L.pop(1)' },
-              { label: '(B)', val: 'B', text: 'L.pop(6)' },
-              { label: '(C)', val: 'C', text: 'L.insert(1, 6)' },
-              { label: '(D)', val: 'D', text: 'L.insert(6, 1)' }
-            ],
-            gridClass: '',
-            exp: `<strong>Correct Answer: (B) L.pop(6)</strong><br>A 6-element list has valid indices 0 to 5. <code>pop(6)</code> raises <code>IndexError: pop index out of range</code>. Note that <code>insert(6, 1)</code> does not throw an error; it simply appends.`
-          },
-          {
-            id: 'q9', num: '09', marks: 2, type: 'subjective',
-            text: `Write Python statements for the following:
-            <div style="margin-top:6px;"><strong>(i)</strong> Create a new list <code>L1</code> containing the elements of list <code>L</code> in ascending order, without modifying <code>L</code>.</div>
-            <div style="margin-top:4px;"><strong>(ii)</strong> Check whether a given character <code>ch</code> is an alphabet or a digit.</div>`,
-            promptPlaceholder: '# Type your solution code here...',
-            exp: `<strong>Model Solutions:</strong><br>
-            <strong>(i)</strong> <code>L1 = sorted(L)</code> (Using <code>L.copy().sort()</code> is also acceptable).<br>
-            <strong>(ii)</strong> <code>ch.isalnum()</code> or <code>ch.isalpha() or ch.isdigit()</code>.`
-          },
-          {
-            id: 'q10', num: '10', marks: 2, type: 'subjective',
-            text: `Assume <code>D1</code> is a dictionary. (Attempt any one part under each sub-question):
-            <div style="margin-top:6px;"><strong>(i)</strong> (a) Write an expression to check if the key <code>'RNo'</code> is present in <code>D1</code>.<div class="or-divider">OR</div>(b) Write an expression to check if any key in <code>D1</code> has the value <code>12</code>.</div>
-            <div style="margin-top:8px;"><strong>(ii)</strong> (a) Using a single built-in function, add <code>'RNo': 12</code> to <code>D1</code> if <code>'RNo'</code> isn't already a key; if it is, return its existing value.<div class="or-divider">OR</div>(b) Write a single statement to delete all elements from <code>D1</code>.</div>`,
-            promptPlaceholder: '# Type your answers for (i) and (ii)...',
-            exp: `<strong>Model Solutions:</strong><br>
-            <strong>(i)</strong> (a) <code>'RNo' in D1</code> OR (b) <code>12 in D1.values()</code><br>
-            <strong>(ii)</strong> (a) <code>D1.setdefault('RNo', 12)</code> OR (b) <code>D1.clear()</code>.`
-          }
-        ]
-      },
-      '2024-25': {
-        series: 'PQ49X', set: '4', qpCode: '91/4', session: '2024–25', totalMarks: 3, isStub: true,
-        drivePdfUrl: 'https://drive.google.com/file/d/YOUR_2024_25_FILE_ID/view?usp=sharing',
-        questions: [
-          {
-            id: 'q1', num: '01', marks: 1, type: 'mcq', correct: 'A',
-            text: `State <strong>True</strong> or <strong>False</strong>: Python strings and tuples are immutable, whereas lists and dictionaries are mutable.`,
-            options: [
-              { label: '(A)', val: 'A', text: 'True' },
-              { label: '(B)', val: 'B', text: 'False' }
-            ],
-            gridClass: 'two-col',
-            exp: `<strong>Correct Answer: (A) True</strong><br>Strings and tuples cannot be altered in-place after creation; lists and dicts are mutable.`
-          },
-          {
-            id: 'q2', num: '02', marks: 1, type: 'code-mcq', correct: 'B',
-            text: `What is the output of the following expression?`,
-            code: `<span class="fn">print</span>(<span class="fn">bool</span>(<span class="str">'False'</span>) == <span class="fn">bool</span>(<span class="str">''</span>))`,
-            rawCode: "print(bool('False') == bool(''))",
-            output: '> False',
-            options: [
-              { label: '(A)', val: 'A', text: 'True' },
-              { label: '(B)', val: 'B', text: 'False' }
-            ],
-            gridClass: 'two-col',
-            exp: `<strong>Correct Answer: (B) False</strong><br><code>bool('False')</code> evaluates to <code>True</code> (non-empty string), whereas <code>bool('')</code> evaluates to <code>False</code> (empty string). <code>True == False</code> yields <code>False</code>.`
-          },
-          {
-            id: 'q3', num: '03', marks: 1, type: 'mcq', correct: 'C',
-            text: `Which of the following is an invalid identifier in Python?`,
-            options: [
-              { label: '(A)', val: 'A', text: '_num_1' },
-              { label: '(B)', val: 'B', text: 'True_val' },
-              { label: '(C)', val: 'C', text: '2nd_val' },
-              { label: '(D)', val: 'D', text: 'my_var' }
-            ],
-            gridClass: '',
-            exp: `<strong>Correct Answer: (C) 2nd_val</strong><br>Identifiers in Python cannot begin with a numeric digit.`
-          }
-        ]
-      },
-      '2023-24': {
-        series: 'CB23A', set: '1', qpCode: '91/0', session: '2023–24', totalMarks: 1, isStub: true,
-        drivePdfUrl: 'https://drive.google.com/file/d/YOUR_2023_24_FILE_ID/view?usp=sharing',
-        questions: [
-          {
-            id: 'q1', num: '01', marks: 1, type: 'mcq', correct: 'B',
-            text: `State <strong>True</strong> or <strong>False</strong>: Python identifier names are case-insensitive.`,
-            options: [
-              { label: '(A)', val: 'A', text: 'True' },
-              { label: '(B)', val: 'B', text: 'False' }
-            ],
-            gridClass: 'two-col',
-            exp: `<strong>Correct Answer: (B) False</strong><br>Python is strictly case-sensitive. <code>myVar</code> and <code>myvar</code> are distinct identifiers.`
-          }
-        ]
-      }
-    };
-
-    let currentSession = '2025-26', strokes = [], redoStack = [], appMode = 'read', hideTimer = null;
-    let currentTool = 'pen', strokeColor = '#dc2626', baseWidth = 2.5, currentStroke = null;
-    let timerDuration = 1800, timerInterval = null, isTimerRunning = false;
-    let userAnswers = {};
-    let toastTimeout = null;
-
-    const annotationBar = document.getElementById('annotationBar');
-    const practiceTimerBar = document.getElementById('practiceTimerBar');
-    const canvas = document.getElementById('drawingCanvas');
-    const container = document.getElementById('paperContainer');
-    const ctx = canvas.getContext('2d');
-    const timerDisplay = document.getElementById('timerDisplay');
-    const toastEl = document.getElementById('appToast');
-
-    function showToast(msg) {
-      clearTimeout(toastTimeout);
-      toastEl.textContent = msg;
-      toastEl.classList.add('show');
-      toastTimeout = setTimeout(() => {
-        toastEl.classList.remove('show');
-      }, 2400);
-    }
-
-    const getStorageKey = s => `singhclasses_${s}_${papers[s].set}_notes`;
-    const saveStrokesToStorage = () => { try { localStorage.setItem(getStorageKey(currentSession), JSON.stringify(strokes)); } catch(e){} };
-    const loadStrokesFromStorage = s => { try { return JSON.parse(localStorage.getItem(getStorageKey(s))) || []; } catch(e) { return []; } };
-
-    document.getElementById('current-year').textContent = new Date().getFullYear();
-
-    function renderPaper(sessionKey) {
-      const p = papers[sessionKey];
-      userAnswers = {};
-
-      // Update the Drive download link
-      const btnDownload = document.getElementById('btnDownloadPdf');
-      if (btnDownload) {
-        btnDownload.href = p.drivePdfUrl || 'https://drive.google.com';
-      }
-
-      let html = `
-        <header class="cbse-header">
-          <div class="cbse-top-row">
-            <div class="roll-container">
-              <span>Roll No.</span>
-              <div class="roll-grid">
-                <input class="roll-input" maxlength="1" aria-label="Roll digit 1">
-                <input class="roll-input" maxlength="1" aria-label="Roll digit 2">
-                <input class="roll-input" maxlength="1" aria-label="Roll digit 3">
-                <input class="roll-input" maxlength="1" aria-label="Roll digit 4">
-                <input class="roll-input" maxlength="1" aria-label="Roll digit 5">
-                <input class="roll-input" maxlength="1" aria-label="Roll digit 6">
-                <input class="roll-input" maxlength="1" aria-label="Roll digit 7">
-                <input class="roll-input" maxlength="1" aria-label="Roll digit 8">
-              </div>
-            </div>
-            <div class="qp-block">
-              <div>Series: <strong>${p.series}</strong> | Set: <strong>${p.set}</strong></div>
-              <div>Q.P. Code: <strong>${p.qpCode}</strong></div>
-            </div>
-          </div>
-          <div class="cbse-title-block">
-            <h1>Computer Science (Python)</h1>
-            <h2>Session: ${p.session} — Class XII</h2>
-            <div class="paper-chapter">Chapter: Revision Tour (Periodic Assessment)</div>
-          </div>
-          <div class="cbse-meta-row">
-            <span>Time Allowed: 30 Minutes</span>
-            <span>Maximum Marks: ${p.totalMarks}</span>
-          </div>
-        </header>
-      `;
-
-      if (p.isStub) {
-        html += `<div class="stub-notice">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          <div><strong>Notice:</strong> This sample set contains a stub of ${p.questions.length} questions. Full sets are being digitized.</div>
-        </div>`;
-      }
-
-      p.questions.forEach((q) => {
-        html += `
-          <section class="question-block" id="${q.id}">
-            <div class="q-number-badge">${q.num}</div>
-            <div class="q-content">
-              <div>${q.text}</div>
-              ${q.code ? `
-                <div class="code-container">
-                  <div class="code-header-bar">
-                    <span>Python 3.x</span>
-                    <div class="code-btn-group">
-                      <button type="button" class="code-btn" onclick="copySnippet('${q.id}')">
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy
-                      </button>
-                      <button type="button" class="code-btn" onclick="toggleSnippetOutput('${q.id}')">
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Run Code
-                      </button>
-                    </div>
-                  </div>
-                  <pre class="code-box" id="code_${q.id}">${q.code}</pre>
-                  <div class="terminal-output" id="out_${q.id}">${q.output}</div>
-                </div>
-              ` : ''}
-
-              ${q.options ? `
-                <div class="exam-options-grid ${q.gridClass || ''}">
-                  ${q.options.map(opt => `
-                    <label class="exam-opt" id="label_${q.id}_${opt.val}">
-                      <input type="radio" name="p_${q.id}" value="${opt.val}" onchange="selectMCQAnswer('${q.id}', '${opt.val}', '${q.correct}')" aria-label="${opt.text}">
-                      <span class="opt-label">${opt.label}</span>
-                      <span>${opt.text}</span>
-                    </label>
-                  `).join('')}
-                </div>
-              ` : ''}
-
-              ${q.type === 'subjective' ? `
-                <div class="practice-subjective-box">
-                  <textarea class="practice-subjective-input" placeholder="${q.promptPlaceholder}" oninput="recordSubjectiveAttempt('${q.id}', this.value)"></textarea>
-                </div>
-              ` : ''}
-
-              <div class="practice-controls-row">
-                <button type="button" class="btn-reveal" onclick="toggleExplanation('exp_${q.id}', '${q.id}')">
-                  Show Answer &amp; Explanation
-                </button>
-              </div>
-
-              <div class="explanation-box" id="exp_${q.id}">
-                ${q.exp}
-              </div>
-            </div>
-            <div class="q-marks-col">
-              <span class="marks-pill">${q.marks} mark${q.marks > 1 ? 's' : ''}</span>
-            </div>
-          </section>
-        `;
-      });
-
-      // Subtle completion & Next Paper strip
-      html += `
-        <div class="paper-completion-strip">
-          <div class="completion-thanks">
-            <div class="badge-check">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><polyline points="20 6 9 17 4 12"/></svg>
-            </div>
-            <div>
-              <h4>Thank you for practicing!</h4>
-              <p>Review your notes or proceed to test your skills on the next available set.</p>
-            </div>
-          </div>
-          <button type="button" class="btn-next-paper" onclick="navigateToNextPaper()">
-            <span>Next Paper</span>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"/></svg>
-          </button>
-        </div>
-      `;
-
-      document.getElementById('paperContent').innerHTML = html;
-      buildDynamicPills(p.questions);
-      updateScoreSummary();
-    }
-
-    function navigateToNextPaper() {
-      const sessionKeys = Object.keys(papers);
-      const currentIndex = sessionKeys.indexOf(currentSession);
-      const nextIndex = (currentIndex + 1) % sessionKeys.length;
-      const nextSession = sessionKeys[nextIndex];
-      
-      document.getElementById('sessionSelect').value = nextSession;
-      switchSession(nextSession);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      showToast(`Loaded ${papers[nextSession].session} (${papers[nextSession].set})`);
-    }
-
-    function buildDynamicPills(questionList) {
-      const nav = document.getElementById('dynamicNavPills');
-      nav.innerHTML = questionList.map(q => `
-        <button class="nav-pill" id="pill_${q.id}" onclick="jumpToQuestion('${q.id}')">${q.num}</button>
-      `).join('') + `<button class="btn-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Top">↑</button>`;
-      highlightActivePillOnScroll();
-    }
-
-    function switchSession(s) {
-      if (!papers[s]) return;
-      saveStrokesToStorage();
-      currentSession = s;
-      renderPaper(s);
-      strokes = loadStrokesFromStorage(s);
-      redoStack = [];
-      requestAnimationFrame(resizeCanvas);
-    }
-
-    function selectMCQAnswer(qId, selectedVal, correctVal) {
-      userAnswers[qId] = { selected: selectedVal, correct: correctVal };
-      const q = papers[currentSession].questions.find(item => item.id === qId);
-      
-      q.options.forEach(opt => {
-        const el = document.getElementById(`label_${qId}_${opt.val}`);
-        el?.classList.toggle('selected', opt.val === selectedVal);
-      });
-
-      const pill = document.getElementById(`pill_${qId}`);
-      if (pill) pill.classList.add('attempted');
-      updateScoreSummary();
-    }
-
-    function recordSubjectiveAttempt(qId, val) {
-      const pill = document.getElementById(`pill_${qId}`);
-      if (pill) pill.classList.toggle('attempted', val.trim().length > 0);
-    }
-
-    function toggleExplanation(expId, qId) {
-      const box = document.getElementById(expId);
-      const isOpen = box.classList.toggle('show');
-      const question = papers[currentSession].questions.find(q => q.id === qId);
-
-      if (isOpen && question?.type?.includes('mcq')) {
-        const pill = document.getElementById(`pill_${qId}`);
-        const userChoice = userAnswers[qId]?.selected;
-
-        question.options.forEach(opt => {
-          const el = document.getElementById(`label_${qId}_${opt.val}`);
-          if (opt.val === question.correct) {
-            el?.classList.add('correct-answer');
-          } else if (opt.val === userChoice) {
-            el?.classList.add('incorrect-answer');
-          }
-        });
-
-        if (userChoice) {
-          const isRight = userChoice === question.correct;
-          pill.classList.remove('attempted');
-          pill.classList.toggle('correct', isRight);
-          pill.classList.toggle('incorrect', !isRight);
-        }
-      }
-      updateScoreSummary();
-    }
-
-    function updateScoreSummary() {
-      const p = papers[currentSession];
-      let gained = 0;
-      p.questions.forEach(q => {
-        if (q.type.includes('mcq') && userAnswers[q.id]?.selected === q.correct) {
-          gained += q.marks;
-        }
-      });
-      document.getElementById('scoreDisplay').textContent = `Score: ${gained}/${p.totalMarks} Marks`;
-    }
-
-    function setAppMode(m) {
-      if (m === 'annotate' && appMode === 'annotate') {
-        annotationBar.classList.toggle('visible');
-        return;
-      }
-      appMode = m;
-      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-      document.body.classList.remove('body-read', 'body-practice', 'body-annotate');
-      document.body.classList.add(`body-${m}`);
-
-      annotationBar.classList.remove('visible');
-      practiceTimerBar.classList.remove('visible');
-      canvas.classList.remove('pen-active');
-
-      if (m === 'read') document.getElementById('btnModeRead').classList.add('active');
-      else if (m === 'practice') {
-        document.getElementById('btnModePractice').classList.add('active');
-        practiceTimerBar.classList.add('visible');
-      } else if (m === 'annotate') {
-        document.getElementById('btnModeAnnotate').classList.add('active');
-        annotationBar.classList.add('visible');
-        canvas.classList.add('pen-active');
-      }
-    }
-
-    function togglePaperTheme() {
-      document.body.classList.toggle('dark-paper');
-    }
-
-    function autoHideAnnotationBar(delay = 280) {
-      clearTimeout(hideTimer);
-      hideTimer = setTimeout(() => annotationBar.classList.remove('visible'), delay);
-    }
-
-    function resizeCanvas() {
-      const rect = container.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = Math.round(rect.width * dpr);
-      canvas.height = Math.round(rect.height * dpr);
-      canvas.style.width = `${rect.width}px`;
-      canvas.style.height = `${rect.height}px`;
-      redrawAllStrokes();
-    }
-    window.addEventListener('resize', resizeCanvas);
-
-    function redrawAllStrokes() {
-      const dpr = window.devicePixelRatio || 1;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.save();
-      ctx.scale(dpr, dpr);
-      strokes.forEach(renderSmoothStroke);
-      ctx.restore();
-    }
-
-    function renderSmoothStroke(stroke) {
-      if (!stroke.points?.length) return;
-      ctx.save();
-      ctx.beginPath();
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      if (stroke.tool === 'highlighter') {
-        ctx.strokeStyle = stroke.color;
-        ctx.lineWidth = stroke.width * 5;
-        ctx.globalAlpha = 0.32;
-        ctx.globalCompositeOperation = 'multiply';
-      } else if (stroke.tool === 'eraser') {
-        ctx.lineWidth = stroke.width * 7;
-        ctx.globalCompositeOperation = 'destination-out';
-        ctx.globalAlpha = 1;
-      } else {
-        ctx.strokeStyle = stroke.color;
-        ctx.lineWidth = stroke.width;
-        ctx.globalAlpha = 1;
-        ctx.globalCompositeOperation = 'source-over';
-      }
-      const pts = stroke.points;
-      if (pts.length === 1) {
-        ctx.arc(pts[0].x, pts[0].y, ctx.lineWidth / 2, 0, Math.PI * 2);
-        ctx.fillStyle = stroke.color;
-        ctx.fill();
-        ctx.restore();
-        return;
-      }
-      ctx.moveTo(pts[0].x, pts[0].y);
-      for (let i = 1; i < pts.length - 1; i++) {
-        ctx.quadraticCurveTo(pts[i].x, pts[i].y, (pts[i].x + pts[i + 1].x) / 2, (pts[i].y + pts[i + 1].y) / 2);
-      }
-      ctx.lineTo(pts[pts.length - 1].x, pts[pts.length - 1].y);
-      ctx.stroke();
-      ctx.restore();
-    }
-
-    const getCoords = e => {
-      const r = canvas.getBoundingClientRect();
-      return { x: e.clientX - r.left, y: e.clientY - r.top, pressure: e.pressure > 0 ? e.pressure : 0.5 };
-    };
-
-    canvas.addEventListener('pointerdown', e => {
-      if (appMode !== 'annotate') return;
-      annotationBar.classList.remove('visible');
-      const p = getCoords(e);
-      const w = (e.pointerType === 'pen' && e.pressure > 0) ? baseWidth * (0.5 + e.pressure * 0.9) : baseWidth;
-      currentStroke = { tool: currentTool, color: strokeColor, width: w, points: [p] };
-      strokes.push(currentStroke);
-      redoStack = [];
-      canvas.setPointerCapture(e.pointerId);
-      const dpr = window.devicePixelRatio || 1;
-      ctx.save();
-      ctx.scale(dpr, dpr);
-      renderSmoothStroke(currentStroke);
-      ctx.restore();
-    });
-
-    canvas.addEventListener('pointermove', e => {
-      if (currentStroke && appMode === 'annotate') {
-        currentStroke.points.push(getCoords(e));
-        redrawAllStrokes();
-      }
-    });
-
-    canvas.addEventListener('pointerup', e => {
-      if (currentStroke) {
-        canvas.releasePointerCapture(e.pointerId);
-        currentStroke = null;
-        saveStrokesToStorage();
-      }
-    });
-
-    canvas.addEventListener('pointercancel', () => currentStroke = null);
-
-    function setDrawingTool(t) {
-      currentTool = t;
-      document.querySelectorAll('.tool-tab').forEach(el => el.classList.remove('active'));
-      const tab = t === 'pen' ? 'tabPen' : t === 'highlighter' ? 'tabHighlight' : 'tabEraser';
-      document.getElementById(tab)?.classList.add('active');
-      autoHideAnnotationBar();
-    }
-
-    function setStrokeColor(c, el) {
-      strokeColor = c;
-      document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
-      el.classList.add('active');
-      if (currentTool === 'eraser') setDrawingTool('pen');
-      autoHideAnnotationBar();
-    }
-
-    const setStrokeSize = v => baseWidth = parseFloat(v);
-    function undoStroke() { if (strokes.length) { redoStack.push(strokes.pop()); saveStrokesToStorage(); redrawAllStrokes(); } }
-    function redoStroke() { if (redoStack.length) { strokes.push(redoStack.pop()); saveStrokesToStorage(); redrawAllStrokes(); } }
-
-    function clearEverythingNow() {
-      strokes = [];
-      redoStack = [];
-      saveStrokesToStorage();
-      redrawAllStrokes();
-      userAnswers = {};
-      document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
-      document.querySelectorAll('.exam-opt').forEach(opt => opt.classList.remove('selected', 'correct-answer', 'incorrect-answer'));
-      document.querySelectorAll('.practice-subjective-input').forEach(t => t.value = '');
-      document.querySelectorAll('.terminal-output, .explanation-box').forEach(el => el.classList.remove('show'));
-      document.querySelectorAll('.nav-pill').forEach(pill => pill.classList.remove('attempted', 'correct', 'incorrect'));
-      updateScoreSummary();
-      showToast("All annotations and responses cleared.");
-    }
-
-    function jumpToQuestion(id) {
-      const el = document.getElementById(id);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }
-
-    function highlightActivePillOnScroll() {
-      const qBlocks = document.querySelectorAll('.question-block');
-      const scrollPos = window.scrollY + 100;
-      qBlocks.forEach(block => {
-        const top = block.offsetTop;
-        const height = block.offsetHeight;
-        const id = block.id;
-        const pill = document.getElementById(`pill_${id}`);
-        if (pill && scrollPos >= top && scrollPos < top + height) {
-          document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
-          pill.classList.add('active');
-        }
-      });
-
-      const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
-      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      const scrolled = (winScroll / height) * 100;
-      document.getElementById('scrollProgressBar').style.width = scrolled + '%';
-    }
-    window.addEventListener('scroll', highlightActivePillOnScroll);
-
-    function toggleFullscreen() {
-      !document.fullscreenElement ? document.documentElement.requestFullscreen().catch(()=>{}) : document.exitFullscreen?.();
-    }
-
-    const toggleSnippetOutput = id => document.getElementById(`out_${id}`)?.classList.toggle('show');
-
-    function copySnippet(id) {
-      const q = papers[currentSession].questions.find(item => item.id === id);
-      if (q && q.rawCode) {
-        navigator.clipboard.writeText(q.rawCode).then(() => {
-          showToast("Code copied to clipboard!");
-        });
-      }
-    }
-
-    function toggleTimer() {
-      const btn = document.getElementById('btnTimerToggle');
-      if (isTimerRunning) {
-        clearInterval(timerInterval);
-        isTimerRunning = false;
-        btn.innerText = 'Resume';
-      } else {
-        isTimerRunning = true;
-        btn.innerText = 'Pause';
-        timerInterval = setInterval(() => {
-          if (timerDuration > 0) {
-            timerDuration--;
-            const mins = Math.floor(timerDuration / 60);
-            const secs = timerDuration % 60;
-            timerDisplay.innerText = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
-            timerDisplay.classList.toggle('timer-warning', timerDuration < 300 && timerDuration >= 60);
-            timerDisplay.classList.toggle('timer-critical', timerDuration < 60);
-          } else { 
-            clearInterval(timerInterval); 
-            isTimerRunning = false; 
-            btn.innerText = 'Start';
-            showToast("Time's up!");
-          }
-        }, 1000);
-      }
-    }
-
-    function resetTimer() {
-      clearInterval(timerInterval);
-      isTimerRunning = false;
-      timerDuration = 1800;
-      timerDisplay.innerText = '30:00';
-      timerDisplay.classList.remove('timer-warning', 'timer-critical');
-      document.getElementById('btnTimerToggle').innerText = 'Start';
-      showToast("Timer reset.");
-    }
-
-    window.addEventListener('keydown', e => {
-      if (['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) return;
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
-        e.preventDefault();
-        e.shiftKey ? redoStroke() : undoStroke();
-      } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
-        e.preventDefault();
-        redoStroke();
-      } else if (e.key.toLowerCase() === 's') setAppMode('read');
-      else if (e.key.toLowerCase() === 't') setAppMode('practice');
-      else if (e.key.toLowerCase() === 'p') appMode === 'annotate' ? annotationBar.classList.toggle('visible') : setAppMode('annotate');
-    });
-
-    window.addEventListener('DOMContentLoaded', () => {
-      switchSession('2025-26');
-      setAppMode('read');
-    });
-  </script>
+  <!-- External Script Files -->
+  <script src="../../../assets/js/script.js"></script>
+  <script src="../../../assets/js/pyq.js"></script>
 </body>
 </html>
