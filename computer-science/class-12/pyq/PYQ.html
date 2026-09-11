@@ -2,624 +2,589 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CBSE Class 12 Computer Science (Python) Revision Tour PYQs | SinghClasses</title>
-  <meta name="description" content="Interactive CBSE Class 12 Computer Science Python Revision Tour question papers with Practice mode, code execution, canvas annotations, and dynamic navigation." />
-  
-  <!-- Google Fonts -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>CBSE Class 12 Computer Science PYQ Portal | SinghClasses</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-
-  <!-- External Stylesheets -->
-  <link rel="stylesheet" href="../../../assets/css/style.css" />
   <link rel="stylesheet" href="../../../assets/css/pyq.css" />
+  <link rel="stylesheet" href="../../../assets/css/style.css" />
+
+
 </head>
 <body class="body-read">
-  <div id="scrollProgressBar" role="progressbar" aria-label="Page reading progress"></div>
+  <div id="scrollProgressBar" role="progressbar" aria-label="Page progress"></div>
 
-  <header class="unified-navbar">
-    <div class="nav-cluster">
-      <button type="button" class="btn-portal-back" onclick="window.history.back()" aria-label="Go Back" title="Go Back">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><polyline points="15 18 9 12 15 6"/></svg>
-      </button>
-      <div class="session-badge">
-        <span class="session-tag">2025–26 (Set 91)</span>
-      </div>
-    </div>
+  <!-- Header Navigation -->
+  <header class="header-floating-wrapper">
+    <div class="unified-navbar">
+      <!-- Left Controls -->
+      <div class="nav-cluster">
+        <button type="button" class="btn-portal-back" onclick="window.history.back()" title="Go Back" aria-label="Go Back">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="nav-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" /></svg>
+        </button>
 
-    <div class="nav-cluster">
-      <nav class="mode-group" aria-label="Viewing Modes">
-        <button type="button" class="mode-btn active" id="btnModeRead" onclick="setAppMode('read')" aria-label="Read paper mode">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>Read</span>
-        </button>
-        <button type="button" class="mode-btn" id="btnModePractice" onclick="setAppMode('practice')" aria-label="Interactive practice mode">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m9 11 3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Practice</span>
-        </button>
-        <button type="button" class="mode-btn" id="btnModeAnnotate" onclick="setAppMode('annotate')" aria-label="Draw and annotate paper mode">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg><span>Annotate</span>
-        </button>
-      </nav>
-
-      <!-- Clean Practice Stopwatch (Placed directly before Question Navigation) -->
-      <div class="practice-stopwatch-pill" id="practiceTimerBar" aria-label="Time Consumed">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        <span id="timerDisplay">00:00</span>
+        <div class="session-picker-wrapper" id="sessionPickerWrapper">
+          <button type="button" class="session-picker-btn" id="sessionPickerBtn" onclick="toggleSessionDropdown(event)" aria-haspopup="true" aria-expanded="false">
+            <span class="session-tag" id="currentPaperLabel">2025-26 • Main</span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="chevron-icon"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
+          </button>
+          <div class="session-dropdown-menu" id="sessionDropdownMenu" role="menu">
+            <div class="dropdown-header-title">Select Session &amp; Exam Type</div>
+            <div class="session-tabs-row" id="sessionTabsContainer" role="tablist"></div>
+            <div id="paperPanelsContainer"></div>
+          </div>
+        </div>
       </div>
 
-      <nav class="toolbar-navigator-center" id="dynamicNavPills" aria-label="Question Navigation"></nav>
-    </div>
+      <!-- Center Controls -->
+      <div class="nav-cluster center-cluster">
+        <nav class="mode-group" aria-label="Viewing Modes">
+          <button type="button" class="mode-btn active" id="btnModeRead" onclick="handleStudyClick()">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="mode-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" /></svg>
+            <span>Study</span>
+          </button>
+          <button type="button" class="mode-btn" id="btnModePractice" onclick="setAppMode('practice')">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="mode-icon"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" /></svg>
+            <span>Practice</span>
+          </button>
+        </nav>
 
-    <div class="nav-cluster">
-      <div class="actions-group">
-        <!-- Page Width Stepper (- / +) -->
-        <div class="page-width-ctrl" role="group" aria-label="Page Width Controls">
-          <button type="button" class="btn-width" onclick="changePaperWidth(-1)" aria-label="Decrease Page Width" title="Narrow Page Width (−)">−</button>
-          <button type="button" class="btn-width" onclick="changePaperWidth(1)" aria-label="Increase Page Width" title="Widen Page Width (+)">+</button>
+        <div class="toolbar-navigator-center" id="navigatorWrapper">
+          <div class="pills-viewport" id="pillsViewport">
+            <nav class="pills-track" id="dynamicNavPills" aria-label="Question Navigation"></nav>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Controls -->
+      <div class="nav-cluster actions-cluster">
+        <div class="page-width-ctrl desktop-action">
+          <button type="button" class="btn-width" onclick="changePaperWidth(-1)" title="Narrow Width">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="action-svg"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" /></svg>
+          </button>
+          <button type="button" class="btn-width" onclick="changePaperWidth(1)" title="Widen Width">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="action-svg"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+          </button>
         </div>
 
-        <button type="button" class="btn-portal-action" onclick="togglePaperTheme()" aria-label="Toggle Dark Paper Mode" title="Toggle Light/Dark Paper">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <button type="button" class="btn-portal-action desktop-action" onclick="togglePaperTheme()" title="Toggle Dark Paper">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="action-svg"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" /></svg>
         </button>
-        <a id="btnDownloadPdf" href="https://drive.google.com" target="_blank" rel="noopener noreferrer" class="btn-portal-action btn-blue" aria-label="Download Question Paper PDF from Google Drive" title="Download PDF via Google Drive">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+
+        <a href="https://www.youtube.com/@SinghClasses" target="_blank" rel="noopener noreferrer" class="btn-portal-action btn-red desktop-action" title="YouTube Channel">
+          <svg viewBox="0 0 24 24" fill="currentColor" class="action-svg"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
         </a>
-        <a href="https://www.youtube.com/@SinghClasses" target="_blank" rel="noopener noreferrer" class="btn-portal-action btn-red" aria-label="SinghClasses YouTube Channel" title="YouTube Channel">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-        </a>
-        <button type="button" class="btn-portal-action btn-blue" onclick="toggleFullscreen()" aria-label="Toggle Fullscreen" title="Fullscreen">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+
+        <button type="button" class="btn-portal-action btn-blue desktop-action" id="btnFullscreen" onclick="toggleFullscreen()" title="Toggle Fullscreen">
+          <svg id="iconFullscreen" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" class="action-svg">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+          </svg>
+          <svg id="iconMinimize" style="display:none;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" class="action-svg">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 9V4.5M9 9H4.5M9 9 3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5M15 15v4.5m0-4.5 5.25 5.25" />
+          </svg>
         </button>
+
+        <div class="actions-overflow-wrapper" id="actionsOverflowWrapper">
+          <button type="button" class="btn-portal-action mobile-overflow-btn" onclick="toggleActionsMenu(event)" aria-label="More Options">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="action-svg"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z" /></svg>
+          </button>
+          <div class="actions-dropdown-menu" id="actionsDropdownMenu">
+            <button type="button" class="dropdown-menu-item" onclick="togglePaperTheme()">Toggle Dark Mode</button>
+            <div class="dropdown-menu-item width-subitem">
+              <span>Page Width:</span>
+              <div class="page-width-ctrl mini">
+                <button type="button" class="btn-width" onclick="changePaperWidth(-1)">−</button>
+                <button type="button" class="btn-width" onclick="changePaperWidth(1)">+</button>
+              </div>
+            </div>
+            <button type="button" class="dropdown-menu-item" onclick="toggleFullscreen()">Fullscreen</button>
+            <a href="https://www.youtube.com/@SinghClasses" target="_blank" rel="noopener noreferrer" class="dropdown-menu-item yt-item">SinghClasses YouTube</a>
+          </div>
+        </div>
       </div>
     </div>
   </header>
 
-  <!-- Annotation Controls Bar -->
-  <div class="annotation-docked-bar" id="annotationBar" role="toolbar" aria-label="Annotation Controls">
-    <button type="button" class="tool-tab active" id="tabPen" onclick="setDrawingTool('pen')">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg> Pen
+  <!-- Annotation Toolbar -->
+  <div class="annotation-docked-bar bar-hidden" id="annotationBar" role="toolbar" aria-label="Annotation Toolbar">
+    <button type="button" class="tool-tab active" id="tabRead" onclick="setDrawingTool('read')">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="tool-icon"><path d="M10 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" /><path fill-rule="evenodd" d="M.664 10.59a1.651 1.651 0 0 1 0-1.186A10.004 10.004 0 0 1 10 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0 1 10 17c-4.257 0-7.893-2.66-9.336-6.41ZM14 10a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z" clip-rule="evenodd" /></svg>
+      <span>Read</span>
     </button>
-    <button type="button" class="tool-tab" id="tabHighlight" onclick="setDrawingTool('highlighter')">Highlight</button>
+    <button type="button" class="tool-tab" id="tabPen" onclick="setDrawingTool('pen')">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="tool-icon"><path d="m5.433 13.917 1.262-3.155A4 4 0 0 1 7.58 9.42l6.92-6.918a2.121 2.121 0 0 1 3 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 0 1-.65-.65Z" /><path d="M3.5 5.75c0-.414.336-.75.75-.75h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 3.5 5.75Z" /></svg>
+      <span>Pen</span>
+    </button>
+    <button type="button" class="tool-tab" id="tabHighlight" onclick="setDrawingTool('highlighter')">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="tool-icon"><path fill-rule="evenodd" d="M4.5 2A1.5 1.5 0 0 0 3 3.5v13A1.5 1.5 0 0 0 4.5 18h11a1.5 1.5 0 0 0 1.5-1.5V7.621a1.5 1.5 0 0 0-.44-1.06l-4.12-4.122A1.5 1.5 0 0 0 11.378 2H4.5Zm2.25 8.75a.75.75 0 0 0 0 1.5h6.5a.75.75 0 0 0 0-1.5h-6.5Z" clip-rule="evenodd" /></svg>
+      <span>Highlight</span>
+    </button>
     <button type="button" class="tool-tab eraser-tab" id="tabEraser" onclick="setDrawingTool('eraser')">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/><path d="M22 21H7"/></svg> Eraser
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="tool-icon"><path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 0 0 6 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 1 0 .23 1.482l.149-.022.841 10.518A2.75 2.75 0 0 0 7.596 19h4.807a2.75 2.75 0 0 0 2.742-2.53l.841-10.52.149.023a.75.75 0 0 0 .23-1.482A41.03 41.03 0 0 0 14 4.193V3.75A2.75 2.75 0 0 0 11.25 1h-2.5ZM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4ZM8.58 7.72a.75.75 0 0 1 .75.75v7a.75.75 0 0 1-1.5 0v-7a.75.75 0 0 1 .75-.75Zm3.58.75a.75.75 0 0 0-1.5 0v7a.75.75 0 0 0 1.5 0v-7Z" clip-rule="evenodd" /></svg>
+      <span>Eraser</span>
     </button>
-    <button type="button" class="tool-tab all-clear-tab" onclick="clearEverythingNow()" title="Clear all notes, answers &amp; explanations">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Clear All
+    <button type="button" class="tool-tab all-clear-tab" onclick="openClearModal()">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="tool-icon"><path fill-rule="evenodd" d="M15.312 11.424a5.5 5.5 0 0 1-9.201 2.466l-.312-.311h2.451a.75.75 0 0 0 0-1.5H4.5a.75.75 0 0 0-.75.75v3.75a.75.75 0 0 0 1.5 0v-2.022l.334.333a7 7 0 0 0 11.89-3.238.75.75 0 0 0-1.472-.378l.31-.05Z" clip-rule="evenodd" /></svg>
+      <span>Clear</span>
     </button>
-    <span style="width:1px;height:16px;background:#334155;"></span>
+
+    <span class="sep-line"></span>
+
     <div class="swatches-inline">
-      <div class="swatch active" style="background:#dc2626;" onclick="setStrokeColor('#dc2626',this)"></div>
-      <div class="swatch" style="background:#2563eb;" onclick="setStrokeColor('#2563eb',this)"></div>
-      <div class="swatch" style="background:#0f172a;" onclick="setStrokeColor('#0f172a',this)"></div>
-      <div class="swatch" style="background:#16a34a;" onclick="setStrokeColor('#16a34a',this)"></div>
-      <div class="swatch" style="background:#f59e0b;" onclick="setStrokeColor('#f59e0b',this)"></div>
+      <div class="swatch active" style="background:#dc2626;" onclick="setStrokeColor('#dc2626',this)" title="Red"></div>
+      <div class="swatch" style="background:#2563eb;" onclick="setStrokeColor('#2563eb',this)" title="Blue"></div>
+      <span class="sep-line mini"></span>
+      <div class="swatch" style="background:#16a34a;" onclick="setStrokeColor('#16a34a',this)" title="Green"></div>
+      <div class="swatch" style="background:#f59e0b;" onclick="setStrokeColor('#f59e0b',this)" title="Yellow/Orange"></div>
     </div>
-    <span style="width:1px;height:16px;background:#334155;"></span>
+
+    <span class="sep-line"></span>
+
     <div class="thickness-box">
       <span>Size</span>
-      <input type="range" id="sizeRange" min="1" max="14" value="2.5" step="0.5" oninput="setStrokeSize(this.value)" onchange="autoHideAnnotationBar()">
+      <input type="range" id="sizeRange" min="1" max="14" value="2.5" step="0.5" oninput="setStrokeSize(this.value)">
+      <span class="thickness-val" id="sizeNumDisplay">2.5</span>
     </div>
   </div>
 
-  <!-- In-Browser Confirmation Modal -->
-  <div class="app-modal-backdrop" id="clearConfirmModal" role="dialog" aria-modal="true" aria-labelledby="modalClearTitle">
+  <!-- Clear Confirmation Dialog -->
+  <div class="app-modal-backdrop" id="clearConfirmModal" role="dialog" aria-modal="true">
     <div class="app-modal-box">
-      <div class="modal-header-icon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-      </div>
-      <h3 id="modalClearTitle">Clear All Progress?</h3>
-      <p>Are you sure you want to clear all notes, responses, and practice progress? This action cannot be undone.</p>
+      <h3>Reset Paper Progress?</h3>
+      <p>This will erase your drawings, selected answers, and timer for this paper.</p>
       <div class="modal-btn-row">
         <button type="button" class="btn-modal-cancel" onclick="closeClearModal()">Cancel</button>
-        <button type="button" class="btn-modal-confirm" onclick="confirmAndClearAll()">Yes, Clear All</button>
+        <button type="button" class="btn-modal-confirm" onclick="confirmAndClearAll()">Yes, Reset</button>
       </div>
     </div>
   </div>
 
+  <!-- In-App Feedback Modal -->
+  <div class="app-modal-backdrop" id="feedbackModal" role="dialog" aria-modal="true">
+    <div class="app-modal-box feedback-modal-box">
+      <div class="modal-header-row">
+        <h3 id="feedbackModalTitle">Share Feedback</h3>
+        <button type="button" class="btn-close-x" onclick="closeFeedbackModal()">✕</button>
+      </div>
+      <p class="modal-subtext" id="feedbackModalDesc">Your response helps improve future tests and study material.</p>
+
+      <form id="feedbackForm" onsubmit="handleFeedbackSubmit(event)">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="feedbackUserName">Your Name *</label>
+            <input type="text" id="feedbackUserName" class="form-input" placeholder="e.g. Rohit" required />
+          </div>
+          <div class="form-group">
+            <label for="feedbackUserClass">Class *</label>
+            <select id="feedbackUserClass" class="form-select" required>
+              <option value="Class 12">Class 12</option>
+              <option value="Class 11">Class 11</option>
+              <option value="CUET">CUET</option>
+              <option value="Teacher">Teacher</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="feedbackCategory">Response Category</label>
+          <select id="feedbackCategory" class="form-select">
+            <option value="Suggestion">Suggest Improvement</option>
+            <option value="Issue / Typo">Report an Issue / Typo</option>
+            <option value="Exam Feedback">General Paper Review</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="feedbackMessage">Your Message / Query *</label>
+          <textarea id="feedbackMessage" class="form-textarea" rows="3" placeholder="Write your feedback, observations, or point out any typo..." required></textarea>
+        </div>
+
+        <div class="modal-btn-row">
+          <button type="button" class="btn-modal-cancel" onclick="closeFeedbackModal()">Cancel</button>
+          <button type="submit" class="btn-modal-confirm btn-submit-accent">Save Feedback</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Canvas Container with 2.5s Loader -->
   <div class="paper-canvas-container" id="paperContainer">
     <canvas id="drawingCanvas"></canvas>
+
+    <div class="paper-loading-overlay" id="paperLoader">
+      <div class="loader-pulse-circle">
+        <div class="paper-spinner"></div>
+      </div>
+      <div class="loading-label" id="loaderStatusText">Loading CBSE Question Paper...</div>
+      <div class="loading-progress-bar-track">
+        <div class="loading-progress-bar-fill" id="loaderBarFill"></div>
+      </div>
+    </div>
+
     <main class="paper-sheet" id="paperContent">
       <header class="cbse-header">
         <div class="cbse-top-row">
-          <div class="qp-block">Series: <strong>QR1SP</strong> &nbsp;|&nbsp; Set: <strong>91</strong> &nbsp;|&nbsp; Q.P. Code: <strong>91/1</strong></div>
+          <div class="qp-block" id="displayQpBlock">Q.P. Code: <strong>91/1</strong> &nbsp;|&nbsp; Set: <strong>Set 91</strong></div>
         </div>
         <div class="cbse-title-block">
-          <h1>Computer Science (Python)</h1>
-          <h2>Session: 2025–26 — Class XII</h2>
-          <div class="paper-chapter">Chapter: Revision Tour (Periodic Assessment)</div>
+          <h1 id="displaySubject">Computer Science (Python)</h1>
+          <h2 id="displaySessionTitle">Session: 2025–26 — Class XII</h2>
+          <div class="paper-chapter" id="displayCategoryTitle">CBSE Board Main Paper</div>
         </div>
         <div class="cbse-meta-row">
-          <span>Time Allowed: 30 Minutes</span>
-          <span>Maximum Marks: 12</span>
+          <span id="displayTime">Time Allowed: 45 Mins</span>
+          <div class="score-pills-cluster">
+            <span class="score-badge current-score" id="scoreDisplay">Live Score: 0/15</span>
+            <span class="score-badge best-score" id="bestScoreDisplay">Best: --/15</span>
+          </div>
+          <span id="displayMarks">Maximum Marks: 15</span>
         </div>
       </header>
 
-      <!-- Question 01 -->
-      <section class="question-block" id="q1" data-type="mcq" data-correct="B" data-marks="1">
-        <div class="q-number-badge">01</div>
-        <div class="q-content">
-          <div>State <strong>True</strong> or <strong>False</strong>: In Python, the data type of <code>74</code> is the same as the data type of <code>74.0</code>.</div>
-          <div class="exam-options-grid">
-            <label class="exam-opt" id="label_q1_A">
-              <input type="radio" name="p_q1" value="A">
-              <span class="opt-label">(A)</span>
-              <span>True</span>
-            </label>
-            <label class="exam-opt" id="label_q1_B">
-              <input type="radio" name="p_q1" value="B">
-              <span class="opt-label">(B)</span>
-              <span>False</span>
-            </label>
+      <!-- Question List Embedded Directly Inside HTML -->
+      <div id="paperQuestionsContainer">
+        <!-- Q1 -->
+        <section class="question-block" id="q1" data-type="mcq" data-correct="A" data-marks="1">
+          <div class="q-number-badge">01</div>
+          <div class="q-content">
+            <div>State <strong>True</strong> or <strong>False</strong>: Python function arguments with default values must be placed at the end of the argument list.</div>
+            <div class="exam-options-grid stacked">
+              <label class="exam-opt" id="opt_q1_A">
+                <input type="radio" name="p_q1" value="A">
+                <span class="opt-label">(A)</span><span>True</span>
+              </label>
+              <label class="exam-opt" id="opt_q1_B">
+                <input type="radio" name="p_q1" value="B">
+                <span class="opt-label">(B)</span><span>False</span>
+              </label>
+            </div>
+            <div class="explanation-box" id="exp_q1"><strong>Correct Answer: (A) True</strong><br>In Python functions, non-default arguments cannot follow default arguments.</div>
           </div>
-          <div class="practice-controls-row">
-            <button type="button" class="btn-reveal" onclick="toggleExplanation('q1')">Show Answer &amp; Explanation</button>
-          </div>
-          <div class="explanation-box" id="exp_q1">
-            <strong>Correct Answer: (B) False</strong><br><code>74</code> is an integer (<code>int</code>) while <code>74.0</code> is a floating-point number (<code>float</code>).
-          </div>
-        </div>
-        <div class="q-marks-col">
-          <span class="marks-pill">1 mark</span>
-        </div>
-      </section>
+          <div class="q-marks-col"><span class="marks-pill">1 mark</span></div>
+        </section>
 
-      <!-- Question 02 -->
-      <section class="question-block" id="q2" data-type="code-mcq" data-correct="A" data-marks="1">
-        <div class="q-number-badge">02</div>
-        <div class="q-content">
-          <div>What is the output of the following code?</div>
-          <div class="code-container">
-            <div class="code-header-bar">
-              <div class="code-header-left">
-                <div class="mac-dots">
-                  <span class="mac-dot dot-red"></span>
-                  <span class="mac-dot dot-yellow"></span>
-                  <span class="mac-dot dot-green"></span>
+        <!-- Q2 -->
+        <section class="question-block" id="q2" data-type="code-mcq" data-correct="D" data-marks="1">
+          <div class="q-number-badge">02</div>
+          <div class="q-content">
+            <div>Identify the valid output of the following random module snippet:</div>
+            <div class="code-container">
+              <div class="code-header-bar">
+                <div class="mac-dots"><span class="mac-dot dot-red"></span><span class="mac-dot dot-yellow"></span><span class="mac-dot dot-green"></span></div>
+                <div class="code-btn-group">
+                  <button type="button" class="code-btn code-watermark-btn" onclick="copySnippet('q2')" title="Click to copy code">www.SinghClasses.in</button>
+                  <button type="button" class="code-btn btn-code-output" onclick="toggleSnippetOutput('q2')">Show Output</button>
                 </div>
               </div>
-              <div class="code-btn-group">
-                <button type="button" class="code-btn" onclick="copySnippet('q2')">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy
-                </button>
-                <button type="button" class="code-btn" onclick="toggleSnippetOutput('q2')">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Run Code
-                </button>
-              </div>
+              <pre class="code-box" id="code_q2">import random
+colors = ["RED", "BLUE", "GREEN"]
+print(colors[random.randint(0, 1)])</pre>
+              <div class="terminal-output" id="out_q2">> RED  (or BLUE)</div>
             </div>
-            <pre class="code-box" id="code_q2"><span class="kw">s</span> = <span class="str">"the Truth"</span>
-<span class="fn">print</span>(s.<span class="fn">capitalize</span>())</pre>
-            <div class="terminal-output" id="out_q2">> The truth</div>
+            <div class="exam-options-grid">
+              <label class="exam-opt" id="opt_q2_A">
+                <input type="radio" name="p_q2" value="A">
+                <span class="opt-label">(A)</span><span>GREEN only</span>
+              </label>
+              <label class="exam-opt" id="opt_q2_B">
+                <input type="radio" name="p_q2" value="B">
+                <span class="opt-label">(B)</span><span>BLUE or GREEN</span>
+              </label>
+              <label class="exam-opt" id="opt_q2_C">
+                <input type="radio" name="p_q2" value="C">
+                <span class="opt-label">(C)</span><span>Any among all three</span>
+              </label>
+              <label class="exam-opt" id="opt_q2_D">
+                <input type="radio" name="p_q2" value="D">
+                <span class="opt-label">(D)</span><span>RED or BLUE</span>
+              </label>
+            </div>
+            <div class="explanation-box" id="exp_q2"><strong>Correct Answer: (D)</strong><br><code>random.randint(0, 1)</code> yields index 0 or 1, which corresponds to 'RED' or 'BLUE'.</div>
           </div>
-          <div class="exam-options-grid">
-            <label class="exam-opt" id="label_q2_A">
-              <input type="radio" name="p_q2" value="A">
-              <span class="opt-label">(A)</span>
-              <span>The truth</span>
-            </label>
-            <label class="exam-opt" id="label_q2_B">
-              <input type="radio" name="p_q2" value="B">
-              <span class="opt-label">(B)</span>
-              <span>THE TRUTH</span>
-            </label>
-            <label class="exam-opt" id="label_q2_C">
-              <input type="radio" name="p_q2" value="C">
-              <span class="opt-label">(C)</span>
-              <span>The Truth</span>
-            </label>
-            <label class="exam-opt" id="label_q2_D">
-              <input type="radio" name="p_q2" value="D">
-              <span class="opt-label">(D)</span>
-              <span>the Truth</span>
-            </label>
-          </div>
-          <div class="practice-controls-row">
-            <button type="button" class="btn-reveal" onclick="toggleExplanation('q2')">Show Answer &amp; Explanation</button>
-          </div>
-          <div class="explanation-box" id="exp_q2">
-            <strong>Correct Answer: (A) The truth</strong><br><code>capitalize()</code> converts the first character to uppercase and all other characters to lowercase.
-          </div>
-        </div>
-        <div class="q-marks-col">
-          <span class="marks-pill">1 mark</span>
-        </div>
-      </section>
+          <div class="q-marks-col"><span class="marks-pill">1 mark</span></div>
+        </section>
 
-      <!-- Question 03 -->
-      <section class="question-block" id="q3" data-type="mcq" data-correct="C" data-marks="1">
-        <div class="q-number-badge">03</div>
-        <div class="q-content">
-          <div>Which of the following expressions evaluates to <code>True</code>?</div>
-          <div class="exam-options-grid">
-            <label class="exam-opt" id="label_q3_A">
-              <input type="radio" name="p_q3" value="A">
-              <span class="opt-label">(A)</span>
-              <span>2 > 3 and 2 < 3</span>
-            </label>
-            <label class="exam-opt" id="label_q3_B">
-              <input type="radio" name="p_q3" value="B">
-              <span class="opt-label">(B)</span>
-              <span>3 > 1 and 2</span>
-            </label>
-            <label class="exam-opt" id="label_q3_C">
-              <input type="radio" name="p_q3" value="C">
-              <span class="opt-label">(C)</span>
-              <span>3 > 1 and 3 > 2</span>
-            </label>
-            <label class="exam-opt" id="label_q3_D">
-              <input type="radio" name="p_q3" value="D">
-              <span class="opt-label">(D)</span>
-              <span>3 > 1 and 3 < 2</span>
-            </label>
+        <!-- Q3 -->
+        <section class="question-block" id="q3" data-type="mcq" data-correct="C" data-marks="1">
+          <div class="q-number-badge">03</div>
+          <div class="q-content">
+            <div>Which SQL keyword is used to eliminate duplicate rows from a query result set?</div>
+            <div class="exam-options-grid">
+              <label class="exam-opt" id="opt_q3_A">
+                <input type="radio" name="p_q3" value="A">
+                <span class="opt-label">(A)</span><span>UNIQUE</span>
+              </label>
+              <label class="exam-opt" id="opt_q3_B">
+                <input type="radio" name="p_q3" value="B">
+                <span class="opt-label">(B)</span><span>GROUP BY</span>
+              </label>
+              <label class="exam-opt" id="opt_q3_C">
+                <input type="radio" name="p_q3" value="C">
+                <span class="opt-label">(C)</span><span>DISTINCT</span>
+              </label>
+              <label class="exam-opt" id="opt_q3_D">
+                <input type="radio" name="p_q3" value="D">
+                <span class="opt-label">(D)</span><span>CHECK</span>
+              </label>
+            </div>
+            <div class="explanation-box" id="exp_q3"><strong>Correct Answer: (C) DISTINCT</strong><br>The <code>DISTINCT</code> clause suppresses duplicate records.</div>
           </div>
-          <div class="practice-controls-row">
-            <button type="button" class="btn-reveal" onclick="toggleExplanation('q3')">Show Answer &amp; Explanation</button>
-          </div>
-          <div class="explanation-box" id="exp_q3">
-            <strong>Correct Answer: (C) 3 > 1 and 3 > 2</strong><br>Both conditions evaluate to <code>True</code>; in Python <code>True and True</code> produces <code>True</code>.
-          </div>
-        </div>
-        <div class="q-marks-col">
-          <span class="marks-pill">1 mark</span>
-        </div>
-      </section>
+          <div class="q-marks-col"><span class="marks-pill">1 mark</span></div>
+        </section>
 
-      <!-- Question 04 -->
-      <section class="question-block" id="q4" data-type="code-mcq" data-correct="A" data-marks="1">
-        <div class="q-number-badge">04</div>
-        <div class="q-content">
-          <div>What is the output of the following code?</div>
-          <div class="code-container">
-            <div class="code-header-bar">
-              <div class="code-header-left">
-                <div class="mac-dots">
-                  <span class="mac-dot dot-red"></span>
-                  <span class="mac-dot dot-yellow"></span>
-                  <span class="mac-dot dot-green"></span>
+        <!-- Q4 -->
+        <section class="question-block" id="q4" data-type="code-mcq" data-correct="B" data-marks="1">
+          <div class="q-number-badge">04</div>
+          <div class="q-content">
+            <div>What will be the output of the following stack list operations?</div>
+            <div class="code-container">
+              <div class="code-header-bar">
+                <div class="mac-dots"><span class="mac-dot dot-red"></span><span class="mac-dot dot-yellow"></span><span class="mac-dot dot-green"></span></div>
+                <div class="code-btn-group">
+                  <button type="button" class="code-btn code-watermark-btn" onclick="copySnippet('q4')" title="Click to copy code">www.SinghClasses.in</button>
+                  <button type="button" class="code-btn btn-code-output" onclick="toggleSnippetOutput('q4')">Show Output</button>
                 </div>
               </div>
-              <div class="code-btn-group">
-                <button type="button" class="code-btn" onclick="copySnippet('q4')">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy
-                </button>
-                <button type="button" class="code-btn" onclick="toggleSnippetOutput('q4')">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Run Code
-                </button>
-              </div>
+              <pre class="code-box" id="code_q4">stk = []
+stk.append(10)
+stk.append(20)
+stk.append(30)
+print(stk.pop(), stk[-1])</pre>
+              <div class="terminal-output" id="out_q4">> 30 20</div>
             </div>
-            <pre class="code-box" id="code_q4"><span class="kw">s</span> = <span class="str">'War and Peace by Leo Tolstoy'</span>
-<span class="fn">print</span>(s.<span class="fn">partition</span>(<span class="str">"by"</span>))</pre>
-            <div class="terminal-output" id="out_q4">> ('War and Peace ', 'by', ' Leo Tolstoy')</div>
+            <div class="exam-options-grid">
+              <label class="exam-opt" id="opt_q4_A">
+                <input type="radio" name="p_q4" value="A">
+                <span class="opt-label">(A)</span><span>10 20</span>
+              </label>
+              <label class="exam-opt" id="opt_q4_B">
+                <input type="radio" name="p_q4" value="B">
+                <span class="opt-label">(B)</span><span>30 20</span>
+              </label>
+              <label class="exam-opt" id="opt_q4_C">
+                <input type="radio" name="p_q4" value="C">
+                <span class="opt-label">(C)</span><span>30 10</span>
+              </label>
+              <label class="exam-opt" id="opt_q4_D">
+                <input type="radio" name="p_q4" value="D">
+                <span class="opt-label">(D)</span><span>20 20</span>
+              </label>
+            </div>
+            <div class="explanation-box" id="exp_q4"><strong>Correct Answer: (B) 30 20</strong><br><code>pop()</code> removes 30, leaving 20 as the top element at <code>stk[-1]</code>.</div>
           </div>
-          <div class="exam-options-grid">
-            <label class="exam-opt" id="label_q4_A">
-              <input type="radio" name="p_q4" value="A">
-              <span class="opt-label">(A)</span>
-              <span>('War and Peace ', 'by', ' Leo Tolstoy')</span>
-            </label>
-            <label class="exam-opt" id="label_q4_B">
-              <input type="radio" name="p_q4" value="B">
-              <span class="opt-label">(B)</span>
-              <span>['War and Peace ', 'by', ' Leo Tolstoy']</span>
-            </label>
-            <label class="exam-opt" id="label_q4_C">
-              <input type="radio" name="p_q4" value="C">
-              <span class="opt-label">(C)</span>
-              <span>('War and Peace ', ' Leo Tolstoy')</span>
-            </label>
-            <label class="exam-opt" id="label_q4_D">
-              <input type="radio" name="p_q4" value="D">
-              <span class="opt-label">(D)</span>
-              <span>['War and Peace ', ' Leo Tolstoy']</span>
-            </label>
-          </div>
-          <div class="practice-controls-row">
-            <button type="button" class="btn-reveal" onclick="toggleExplanation('q4')">Show Answer &amp; Explanation</button>
-          </div>
-          <div class="explanation-box" id="exp_q4">
-            <strong>Correct Answer: (A)</strong><br><code>str.partition(sep)</code> splits at the first occurrence and always returns a 3-tuple: <code>(head, sep, tail)</code>.
-          </div>
-        </div>
-        <div class="q-marks-col">
-          <span class="marks-pill">1 mark</span>
-        </div>
-      </section>
+          <div class="q-marks-col"><span class="marks-pill">1 mark</span></div>
+        </section>
 
-      <!-- Question 05 -->
-      <section class="question-block" id="q5" data-type="code-mcq" data-correct="B" data-marks="1">
-        <div class="q-number-badge">05</div>
-        <div class="q-content">
-          <div>What is the output of the following slicing statement?</div>
-          <div class="code-container">
-            <div class="code-header-bar">
-              <div class="code-header-left">
-                <div class="mac-dots">
-                  <span class="mac-dot dot-red"></span>
-                  <span class="mac-dot dot-yellow"></span>
-                  <span class="mac-dot dot-green"></span>
+        <!-- Q5 -->
+        <section class="question-block" id="q5" data-type="mcq" data-correct="C" data-marks="1">
+          <div class="q-number-badge">05</div>
+          <div class="q-content">
+            <div>Which network topology requires a central hub or switch to connect all client nodes?</div>
+            <div class="exam-options-grid stacked">
+              <label class="exam-opt" id="opt_q5_A">
+                <input type="radio" name="p_q5" value="A">
+                <span class="opt-label">(A)</span><span>Ring Topology</span>
+              </label>
+              <label class="exam-opt" id="opt_q5_B">
+                <input type="radio" name="p_q5" value="B">
+                <span class="opt-label">(B)</span><span>Bus Topology</span>
+              </label>
+              <label class="exam-opt" id="opt_q5_C">
+                <input type="radio" name="p_q5" value="C">
+                <span class="opt-label">(C)</span><span>Star Topology</span>
+              </label>
+              <label class="exam-opt" id="opt_q5_D">
+                <input type="radio" name="p_q5" value="D">
+                <span class="opt-label">(D)</span><span>Mesh Topology</span>
+              </label>
+            </div>
+            <div class="explanation-box" id="exp_q5"><strong>Correct Answer: (C) Star Topology</strong><br>In a star topology, each node is connected to a central hub or switch.</div>
+          </div>
+          <div class="q-marks-col"><span class="marks-pill">1 mark</span></div>
+        </section>
+
+        <!-- Q6 -->
+        <section class="question-block" id="q6" data-type="code-mcq" data-correct="A" data-marks="2">
+          <div class="q-number-badge">06</div>
+          <div class="q-content">
+            <div>What is the expected output when reading from a binary file using <code>pickle.load()</code>?</div>
+            <div class="code-container">
+              <div class="code-header-bar">
+                <div class="mac-dots"><span class="mac-dot dot-red"></span><span class="mac-dot dot-yellow"></span><span class="mac-dot dot-green"></span></div>
+                <div class="code-btn-group">
+                  <button type="button" class="code-btn code-watermark-btn" onclick="copySnippet('q6')" title="Click to copy code">www.SinghClasses.in</button>
+                  <button type="button" class="code-btn btn-code-output" onclick="toggleSnippetOutput('q6')">Show Output</button>
                 </div>
               </div>
-              <div class="code-btn-group">
-                <button type="button" class="code-btn" onclick="copySnippet('q5')">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy
-                </button>
-                <button type="button" class="code-btn" onclick="toggleSnippetOutput('q5')">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Run Code
-                </button>
+              <pre class="code-box" id="code_q6">import pickle
+# Assume data.dat contains stored list: [101, "Amit", 95]
+with open("data.dat", "rb") as f:
+    data = pickle.load(f)
+    print(data[1])</pre>
+              <div class="terminal-output" id="out_q6">> Amit</div>
+            </div>
+            <div class="exam-options-grid">
+              <label class="exam-opt" id="opt_q6_A">
+                <input type="radio" name="p_q6" value="A">
+                <span class="opt-label">(A)</span><span>Amit</span>
+              </label>
+              <label class="exam-opt" id="opt_q6_B">
+                <input type="radio" name="p_q6" value="B">
+                <span class="opt-label">(B)</span><span>101</span>
+              </label>
+              <label class="exam-opt" id="opt_q6_C">
+                <input type="radio" name="p_q6" value="C">
+                <span class="opt-label">(C)</span><span>95</span>
+              </label>
+              <label class="exam-opt" id="opt_q6_D">
+                <input type="radio" name="p_q6" value="D">
+                <span class="opt-label">(D)</span><span>Error</span>
+              </label>
+            </div>
+            <div class="explanation-box" id="exp_q6"><strong>Correct Answer: (A) Amit</strong><br>Element at index 1 is the string 'Amit'.</div>
+          </div>
+          <div class="q-marks-col"><span class="marks-pill">2 marks</span></div>
+        </section>
+
+        <!-- Q7 -->
+        <section class="question-block" id="q7" data-type="subjective" data-marks="3">
+          <div class="q-number-badge">07</div>
+          <div class="q-content">
+            <div>Write a function <code>CountVowels(filename)</code> in Python to count and return the total number of vowels present in the text file <code>"Story.txt"</code>.</div>
+            <div class="practice-subjective-box">
+              <textarea class="practice-subjective-input" id="sub_q7" placeholder="# Type your solution / answer here..." oninput="handleSubjectiveInput('q7')"></textarea>
+              <div class="subjective-action-row">
+                <button type="button" class="btn-check-solution" id="btn_sub_q7" onclick="checkSubjectiveSolution('q7')" disabled>Check Solution</button>
               </div>
             </div>
-            <pre class="code-box" id="code_q5"><span class="fn">print</span>(<span class="str">"PythonProgram"</span>[-1:2:-2])</pre>
-            <div class="terminal-output" id="out_q5">> mroPo</div>
+            <div class="explanation-box" id="exp_q7">
+              <strong>Solution:</strong><br>
+              <pre>def CountVowels(filename):
+    count = 0
+    with open(filename, 'r') as f:
+        content = f.read()
+        for ch in content:
+            if ch.lower() in 'aeiou':
+                count += 1
+    return count</pre>
+            </div>
           </div>
-          <div class="exam-options-grid">
-            <label class="exam-opt" id="label_q5_A">
-              <input type="radio" name="p_q5" value="A">
-              <span class="opt-label">(A)</span>
-              <span>mroP</span>
-            </label>
-            <label class="exam-opt" id="label_q5_B">
-              <input type="radio" name="p_q5" value="B">
-              <span class="opt-label">(B)</span>
-              <span>mroPo</span>
-            </label>
-            <label class="exam-opt" id="label_q5_C">
-              <input type="radio" name="p_q5" value="C">
-              <span class="opt-label">(C)</span>
-              <span>mro</span>
-            </label>
-            <label class="exam-opt" id="label_q5_D">
-              <input type="radio" name="p_q5" value="D">
-              <span class="opt-label">(D)</span>
-              <span>margor</span>
-            </label>
-          </div>
-          <div class="practice-controls-row">
-            <button type="button" class="btn-reveal" onclick="toggleExplanation('q5')">Show Answer &amp; Explanation</button>
-          </div>
-          <div class="explanation-box" id="exp_q5">
-            <strong>Correct Answer: (B) mroPo</strong><br>Traversed reverse indices: -1 ('m'), -3 ('r'), -5 ('o'), -7 ('P'), -9 ('o').
-          </div>
-        </div>
-        <div class="q-marks-col">
-          <span class="marks-pill">1 mark</span>
-        </div>
-      </section>
+          <div class="q-marks-col"><span class="marks-pill">3 marks</span></div>
+        </section>
 
-      <!-- Question 06 -->
-      <section class="question-block" id="q6" data-type="code-mcq" data-correct="C" data-marks="1">
-        <div class="q-number-badge">06</div>
-        <div class="q-content">
-          <div>What is the output of the following code?</div>
-          <div class="code-container">
-            <div class="code-header-bar">
-              <div class="code-header-left">
-                <div class="mac-dots">
-                  <span class="mac-dot dot-red"></span>
-                  <span class="mac-dot dot-yellow"></span>
-                  <span class="mac-dot dot-green"></span>
-                </div>
-              </div>
-              <div class="code-btn-group">
-                <button type="button" class="code-btn" onclick="copySnippet('q6')">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy
-                </button>
-                <button type="button" class="code-btn" onclick="toggleSnippetOutput('q6')">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Run Code
-                </button>
+        <!-- Q8 -->
+        <section class="question-block" id="q8" data-type="subjective" data-marks="5">
+          <div class="q-number-badge">08</div>
+          <div class="q-content">
+            <div>Consider table <code>STUDENT(RollNo, Name, Marks, Stream)</code>. Write SQL queries to:<br>
+            <strong>(i)</strong> Display all records of Science stream students having Marks &gt; 80.<br>
+            <strong>(ii)</strong> Count total students enrolled per Stream.<br>
+            <strong>(iii)</strong> Increase Marks by 5 for students scoring less than 33.</div>
+            <div class="practice-subjective-box">
+              <textarea class="practice-subjective-input" id="sub_q8" placeholder="# Type your SQL statements here..." oninput="handleSubjectiveInput('q8')"></textarea>
+              <div class="subjective-action-row">
+                <button type="button" class="btn-check-solution" id="btn_sub_q8" onclick="checkSubjectiveSolution('q8')" disabled>Check Solution</button>
               </div>
             </div>
-            <pre class="code-box" id="code_q6"><span class="kw">t</span> = <span class="fn">tuple</span>(<span class="str">'tuple'</span>)
-t2 = t[2],
-t += t2
-<span class="fn">print</span>(t)</pre>
-            <div class="terminal-output" id="out_q6">> ('t', 'u', 'p', 'l', 'e', 'p')</div>
-          </div>
-          <div class="exam-options-grid">
-            <label class="exam-opt" id="label_q6_A">
-              <input type="radio" name="p_q6" value="A">
-              <span class="opt-label">(A)</span>
-              <span>('tuple')</span>
-            </label>
-            <label class="exam-opt" id="label_q6_B">
-              <input type="radio" name="p_q6" value="B">
-              <span class="opt-label">(B)</span>
-              <span>('tuple', 'p')</span>
-            </label>
-            <label class="exam-opt" id="label_q6_C">
-              <input type="radio" name="p_q6" value="C">
-              <span class="opt-label">(C)</span>
-              <span>('t', 'u', 'p', 'l', 'e', 'p')</span>
-            </label>
-            <label class="exam-opt" id="label_q6_D">
-              <input type="radio" name="p_q6" value="D">
-              <span class="opt-label">(D)</span>
-              <span>('t', 'u', 'p', 'l', 'e')</span>
-            </label>
-          </div>
-          <div class="practice-controls-row">
-            <button type="button" class="btn-reveal" onclick="toggleExplanation('q6')">Show Answer &amp; Explanation</button>
-          </div>
-          <div class="explanation-box" id="exp_q6">
-            <strong>Correct Answer: (C) ('t', 'u', 'p', 'l', 'e', 'p')</strong><br>Trailing comma makes <code>t2</code> a 1-tuple <code>('p',)</code> which concatenates to the unpacked tuple.
-          </div>
-        </div>
-        <div class="q-marks-col">
-          <span class="marks-pill">1 mark</span>
-        </div>
-      </section>
-
-      <!-- Question 07 -->
-      <section class="question-block" id="q7" data-type="mcq" data-correct="B" data-marks="1">
-        <div class="q-number-badge">07</div>
-        <div class="q-content">
-          <div>Which statement about Python dictionaries is true?</div>
-          <div class="exam-options-grid stacked">
-            <label class="exam-opt" id="label_q7_A">
-              <input type="radio" name="p_q7" value="A">
-              <span class="opt-label">(A)</span>
-              <span>A dictionary is an example of a sequence data type.</span>
-            </label>
-            <label class="exam-opt" id="label_q7_B">
-              <input type="radio" name="p_q7" value="B">
-              <span class="opt-label">(B)</span>
-              <span>A dictionary cannot have two elements with the same key.</span>
-            </label>
-            <label class="exam-opt" id="label_q7_C">
-              <input type="radio" name="p_q7" value="C">
-              <span class="opt-label">(C)</span>
-              <span>A dictionary cannot have two elements with the same value.</span>
-            </label>
-            <label class="exam-opt" id="label_q7_D">
-              <input type="radio" name="p_q7" value="D">
-              <span class="opt-label">(D)</span>
-              <span>The key and value of an element cannot be the same.</span>
-            </label>
-          </div>
-          <div class="practice-controls-row">
-            <button type="button" class="btn-reveal" onclick="toggleExplanation('q7')">Show Answer &amp; Explanation</button>
-          </div>
-          <div class="explanation-box" id="exp_q7">
-            <strong>Correct Answer: (B)</strong><br>Dictionary keys must be unique and immutable. Duplicate keys overwrite previous values.
-          </div>
-        </div>
-        <div class="q-marks-col">
-          <span class="marks-pill">1 mark</span>
-        </div>
-      </section>
-
-      <!-- Question 08 -->
-      <section class="question-block" id="q8" data-type="mcq" data-correct="B" data-marks="1">
-        <div class="q-number-badge">08</div>
-        <div class="q-content">
-          <div>If <code>L</code> is a list with 6 elements, which statement will raise an exception?</div>
-          <div class="exam-options-grid">
-            <label class="exam-opt" id="label_q8_A">
-              <input type="radio" name="p_q8" value="A">
-              <span class="opt-label">(A)</span>
-              <span>L.pop(1)</span>
-            </label>
-            <label class="exam-opt" id="label_q8_B">
-              <input type="radio" name="p_q8" value="B">
-              <span class="opt-label">(B)</span>
-              <span>L.pop(6)</span>
-            </label>
-            <label class="exam-opt" id="label_q8_C">
-              <input type="radio" name="p_q8" value="C">
-              <span class="opt-label">(C)</span>
-              <span>L.insert(1, 6)</span>
-            </label>
-            <label class="exam-opt" id="label_q8_D">
-              <input type="radio" name="p_q8" value="D">
-              <span class="opt-label">(D)</span>
-              <span>L.insert(6, 1)</span>
-            </label>
-          </div>
-          <div class="practice-controls-row">
-            <button type="button" class="btn-reveal" onclick="toggleExplanation('q8')">Show Answer &amp; Explanation</button>
-          </div>
-          <div class="explanation-box" id="exp_q8">
-            <strong>Correct Answer: (B) L.pop(6)</strong><br>A 6-element list has valid indices 0 to 5. Index 6 triggers <code>IndexError: pop index out of range</code>.
-          </div>
-        </div>
-        <div class="q-marks-col">
-          <span class="marks-pill">1 mark</span>
-        </div>
-      </section>
-
-      <!-- Question 09 -->
-      <section class="question-block" id="q9" data-type="subjective" data-marks="2">
-        <div class="q-number-badge">09</div>
-        <div class="q-content">
-          <div>
-            Write Python statements for the following:
-            <div style="margin-top:6px;"><strong>(i)</strong> Create a new list <code>L1</code> containing the elements of list <code>L</code> in ascending order, without modifying <code>L</code>.</div>
-            <div style="margin-top:4px;"><strong>(ii)</strong> Check whether a given character <code>ch</code> is an alphabet or a digit.</div>
-          </div>
-          <div class="practice-subjective-box">
-            <textarea class="practice-subjective-input" placeholder="# Type your solution code here..."></textarea>
-          </div>
-          <div class="practice-controls-row">
-            <button type="button" class="btn-reveal" onclick="toggleExplanation('q9')">Show Answer &amp; Explanation</button>
-          </div>
-          <div class="explanation-box" id="exp_q9">
-            <strong>Model Solutions:</strong><br>
-            <strong>(i)</strong> <code>L1 = sorted(L)</code><br>
-            <strong>(ii)</strong> <code>ch.isalnum()</code>
-          </div>
-        </div>
-        <div class="q-marks-col">
-          <span class="marks-pill">2 marks</span>
-        </div>
-      </section>
-
-      <!-- Question 10 -->
-      <section class="question-block" id="q10" data-type="subjective" data-marks="2">
-        <div class="q-number-badge">10</div>
-        <div class="q-content">
-          <div>
-            Assume <code>D1</code> is a dictionary. (Attempt any one part under each sub-question):
-            <div style="margin-top:6px;">
-              <strong>(i)</strong> (a) Write an expression to check if the key <code>'RNo'</code> is present in <code>D1</code>.<br>
-              <div class="or-divider">OR</div><br>
-              (b) Write an expression to check if any key in <code>D1</code> has the value <code>12</code>.
-            </div>
-            <div style="margin-top:8px;">
-              <strong>(ii)</strong> (a) Using a single built-in function, add <code>'RNo': 12</code> to <code>D1</code> if <code>'RNo'</code> isn't already a key; if it is, return its existing value.<br>
-              <div class="or-divider">OR</div><br>
-              (b) Write a single statement to delete all elements from <code>D1</code>.
+            <div class="explanation-box" id="exp_q8">
+              <strong>SQL Queries:</strong><br>
+              (i) <code>SELECT * FROM STUDENT WHERE Stream = 'Science' AND Marks &gt; 80;</code><br>
+              (ii) <code>SELECT Stream, COUNT(*) FROM STUDENT GROUP BY Stream;</code><br>
+              (iii) <code>UPDATE STUDENT SET Marks = Marks + 5 WHERE Marks &lt; 33;</code>
             </div>
           </div>
-          <div class="practice-subjective-box">
-            <textarea class="practice-subjective-input" placeholder="# Type your answers for (i) and (ii)..."></textarea>
-          </div>
-          <div class="practice-controls-row">
-            <button type="button" class="btn-reveal" onclick="toggleExplanation('q10')">Show Answer &amp; Explanation</button>
-          </div>
-          <div class="explanation-box" id="exp_q10">
-            <strong>Model Solutions:</strong><br>
-            <strong>(i)</strong> <code>'RNo' in D1</code> OR <code>12 in D1.values()</code><br>
-            <strong>(ii)</strong> <code>D1.setdefault('RNo', 12)</code> OR <code>D1.clear()</code>
-          </div>
-        </div>
-        <div class="q-marks-col">
-          <span class="marks-pill">2 marks</span>
-        </div>
-      </section>
-
-      <div class="paper-completion-strip">
-        <div class="completion-thanks">
-          <div class="badge-check">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><polyline points="20 6 9 17 4 12"/></svg>
-          </div>
-          <div>
-            <h4>Thank you for practicing!</h4>
-            <p>Review your notes or proceed to test your skills on the next available set.</p>
-          </div>
-        </div>
-        <button type="button" class="btn-next-paper" onclick="window.scrollTo({top:0,behavior:'smooth'})">
-          <span>Back to Top</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="18 15 12 9 6 15"/></svg>
-        </button>
+          <div class="q-marks-col"><span class="marks-pill">5 marks</span></div>
+        </section>
       </div>
+
+      <!-- Action Dock: Save Your Feedback -->
+      <section class="paper-action-dock" aria-label="Paper actions and feedback">
+        <div class="dock-cluster rating-cluster">
+          <div class="bubble-icon-box">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="dock-svg-bubble"><path fill-rule="evenodd" d="M4.848 2.771A49.144 49.144 0 0 1 12 2.25c2.43 0 4.817.177 7.152.52 1.328.196 2.348 1.314 2.348 2.657v7.573c0 1.343-1.02 2.46-2.348 2.656-.848.125-1.708.218-2.575.28v3.814a.75.75 0 0 1-1.28.53l-4.72-4.72a48.887 48.887 0 0 1-3.577-.078C5.678 15.26 4.5 14.12 4.5 12.776V5.428c0-1.343 1.02-2.46 2.348-2.657ZM9 7.5a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5H9Zm0 3a.75.75 0 0 0 0 1.5h3.75a.75.75 0 0 0 0-1.5H9Z" clip-rule="evenodd" /></svg>
+          </div>
+          <div class="rating-text-block">
+            <strong>Rate this paper</strong>
+            <span>Your feedback helps us improve.</span>
+          </div>
+          <div class="star-rating-row" id="starRatingRow" role="radiogroup" aria-label="Star Rating">
+            <button type="button" class="star-btn" data-rating="1" onclick="setPaperRating(1)" aria-label="1 star">★</button>
+            <button type="button" class="star-btn" data-rating="2" onclick="setPaperRating(2)" aria-label="2 stars">★</button>
+            <button type="button" class="star-btn" data-rating="3" onclick="setPaperRating(3)" aria-label="3 stars">★</button>
+            <button type="button" class="star-btn" data-rating="4" onclick="setPaperRating(4)" aria-label="4 stars">★</button>
+            <button type="button" class="star-btn" data-rating="5" onclick="setPaperRating(5)" aria-label="5 stars">★</button>
+          </div>
+        </div>
+
+        <div class="dock-sep"></div>
+
+        <div class="dock-cluster mid-cluster">
+          <button type="button" class="dock-btn btn-suggest" onclick="openFeedbackModal('Suggestion')">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="dock-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189m-1.5.189a6.01 6.01 0 0 1-1.5-.189m3.75 7.478a12.06 12.06 0 0 1-4.5 0m3.75 2.383a14.406 14.406 0 0 1-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 1 0-7.516 0c.85.493 1.509 1.333 1.509 2.316V18" /></svg>
+            <span>Suggest Improvement</span>
+          </button>
+          <button type="button" class="dock-btn btn-report" onclick="openFeedbackModal('Issue / Typo')">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="dock-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" /></svg>
+            <span>Report an Issue</span>
+          </button>
+        </div>
+
+        <div class="dock-sep"></div>
+
+        <div class="dock-cluster action-cluster">
+          <button type="button" class="dock-btn btn-dock-action" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" class="dock-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18" /></svg>
+            <span>Back to Top</span>
+          </button>
+          <button type="button" class="dock-btn btn-dock-action" onclick="openClearModal()">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" class="dock-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" /></svg>
+            <span>Reset</span>
+          </button>
+          <button type="button" class="dock-btn btn-submit-paper" onclick="openFeedbackModal('Exam Feedback')">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="dock-icon"><path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" /></svg>
+            <span>Save Your Feedback</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Live Responses Board from Google Sheet -->
+      <section class="feedback-visibility-section" id="feedbackVisibilitySection">
+        <div class="visibility-header">
+          <div class="visibility-title-row">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="vis-icon"><path d="M10 2a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 10 2Zm0 13a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 10 15Zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm5.657-1.657a.75.75 0 0 1 0 1.06l-1.06 1.061a.75.75 0 1 1-1.062-1.06l1.061-1.061a.75.75 0 0 1 1.06 0Zm-9.193 9.192a.75.75 0 0 1 0 1.061l-1.06 1.06a.75.75 0 0 1-1.061-1.06l1.06-1.061a.75.75 0 0 1 1.061 0ZM18 10a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 18 10ZM5 10a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 5 10Zm9.596 5.657a.75.75 0 0 1-1.06 0l-1.061-1.06a.75.75 0 0 1 1.06-1.062l1.061 1.061a.75.75 0 0 1 0 1.061ZM6.464 5.404a.75.75 0 0 1-1.06 0l-1.061-1.06a.75.75 0 0 1 1.06-1.062l1.061 1.061a.75.75 0 0 1 0 1.061Z" /></svg>
+            <h4>Student Submissions &amp; Paper Responses</h4>
+          </div>
+          <span class="response-count-tag" id="responseCountBadge">Loading...</span>
+        </div>
+        <div class="feedback-cards-container" id="feedbackCardsContainer">
+          <!-- Populated from Google Sheet via doGet -->
+        </div>
+      </section>
     </main>
   </div>
 
-  <footer class="site-footer" role="contentinfo">
-    <div class="footer-bottom-bar">
-      <div class="copyright-text">
-        © <span id="current-year"></span> SinghClasses.in | Designed with <span class="heart-icon" aria-label="love">❤️</span> by Rohit Singh
+  <!-- Footer -->
+  <footer class="footer-floating-wrapper">
+    <div class="unified-footer">
+      <div class="footer-brand-cluster">
+        <div class="copyright-text">
+          © <span id="current-year">2026</span>&nbsp;<strong>SinghClasses.in</strong>&nbsp;&nbsp;•&nbsp;&nbsp;Designed with <span class="heart-icon">❤️</span> by&nbsp;<strong>Rohit Singh</strong>
+        </div>
       </div>
-      <div class="footer-legal-links">
-        <a href="../../../legal/privacy.html">Privacy Policy</a>
-        <a href="../../../legal/terms-and-condition.html">Terms of Service</a>
-        <a href="../../../legal/disclaimer.html">Disclaimer</a>
+      <div class="footer-links-cluster">
+        <a href="../../../legal/privacy.html" class="footer-link">Privacy Policy</a>
+        <span class="footer-dot">•</span>
+        <a href="../../../legal/terms-and-condition.html" class="footer-link">Terms of Service</a>
+        <span class="footer-dot">•</span>
+        <a href="../../../legal/disclaimer.html" class="footer-link">Disclaimer</a>
       </div>
     </div>
   </footer>
 
   <div id="appToast" class="app-toast" role="status" aria-live="polite"></div>
-
-  <!-- External Script Files -->
-  <script src="../../../assets/js/script.js"></script>
   <script src="../../../assets/js/pyq.js"></script>
-</body>
+  <script src="../../../assets/js/script.js"></script>
+
+  </body>
 </html>
