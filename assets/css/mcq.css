@@ -27,7 +27,7 @@ h1, h2, h3, h4 { color: var(--text-color); font-weight: 800; }
 .sc-progress-fill { height: 100%; width: 0%; background: var(--primary-accent); transition: width .15s ease-out; }
 .sc-widget-container { width: 100%; max-width: 1320px; margin: 0 auto; padding: 16px; box-sizing: border-box; position: relative; background: var(--app-bg); border: 1px solid var(--border-color); border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03); }
 .sc-widget-container.sc-blur-active > :not(.custom-modal-overlay) { filter: blur(16px); opacity: 0.15; }
-.custom-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.92); display: none; justify-content: center; align-items: center; z-index: 6000; backdrop-filter: blur(10px); }
+.custom-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.92); display: none; justify-content: center; align-items: center; z-index: 6000; backdrop-filter: blur(10px); padding: 12px; box-sizing: border-box; }
 
 /* WORKSPACE HEADER */
 .unified-workspace-header { background-color: var(--header-bg); border: 1px solid #1e293b; border-radius: 8px; padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; gap: 12px; width: 100%; max-width: 1320px; box-sizing: border-box; margin-bottom: 14px; }
@@ -85,7 +85,7 @@ body.dark-mode .qhc-tag-pill { background-color: #422006; border-color: #854d0e;
 body.dark-mode .qhc-progress-track { background-color: #334155; }
 
 /* QUESTION TEXT & OPTIONS */
-.question-text { font-size: 1rem; margin-bottom: 14px; line-height: 1.55; color: var(--text-color); font-weight: 500; white-space: pre-wrap; }
+.question-text { font-size: 1rem; margin-bottom: 14px; line-height: 1.55; color: var(--text-color); font-weight: 500; white-space: pre-wrap; word-break: break-word; }
 .options { list-style-type: none; padding: 0; margin: 0; }
 .options li { margin-bottom: 8px; }
 .options label { display: flex; align-items: center; justify-content: space-between; padding: 8px 14px; background: var(--option-bg); border: 1px solid var(--option-border); border-radius: 10px; cursor: pointer; font-size: 0.95rem; font-weight: 500; transition: all 0.15s ease; min-height: 44px; position: relative; box-sizing: border-box; }
@@ -104,68 +104,14 @@ body.dark-mode .qhc-progress-track { background-color: #334155; }
 .option-status-pill.correct { background-color: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
 .option-status-pill.wrong { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
 
-/* TOP PERFORMERS: IMAGE 2 UI STYLE (CARD WITH CENTERED ROW + TWO-COLUMN GRID) */
-.toppers-image2-theme { 
-  margin: 16px auto 0 auto; 
-  padding: 12px 16px; 
-  background: #ffffff; 
-  border: 1px solid var(--border-color); 
-  border-radius: 12px; 
-  box-shadow: 0 1px 4px rgba(0,0,0,0.03); 
-  display: flex; 
-  flex-direction: column; 
-  gap: 10px; 
-  width: 100%; 
-  box-sizing: border-box; 
-}
-.toppers-hero-header { 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  gap: 12px; 
-  flex-wrap: wrap; 
-  width: 100%; 
-}
-.toppers-hero-header .shortcut-label { 
-  font-size: 0.85rem; 
-  font-weight: 700; 
-  color: #1e293b; 
-}
-.topper-user-rank-pill { 
-  display: inline-flex; 
-  align-items: center; 
-  gap: 6px; 
-  background: #eff6ff; 
-  border: 1px solid #bfdbfe; 
-  color: #1d4ed8; 
-  font-size: 0.82rem; 
-  font-weight: 600; 
-  padding: 4px 12px; 
-  border-radius: 8px; 
-}
+/* TOP PERFORMERS */
+.toppers-image2-theme { margin: 16px auto 0 auto; padding: 12px 16px; background: #ffffff; border: 1px solid var(--border-color); border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.03); display: flex; flex-direction: column; gap: 10px; width: 100%; box-sizing: border-box; }
+.toppers-hero-header { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; width: 100%; }
+.toppers-hero-header .shortcut-label { font-size: 0.85rem; font-weight: 700; color: #1e293b; }
+.topper-user-rank-pill { display: inline-flex; align-items: center; gap: 6px; background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; font-size: 0.82rem; font-weight: 600; padding: 4px 12px; border-radius: 8px; }
 .topper-user-rank-pill strong { font-weight: 800; color: #1e40af; }
-.sidebar-toppers-grid { 
-  display: grid; 
-  grid-template-columns: repeat(2, 1fr); 
-  gap: 8px; 
-  width: 100%; 
-}
-.topper-badge { 
-  padding: 6px 12px; 
-  border-radius: 8px; 
-  font-size: 0.76rem; 
-  font-weight: 500; 
-  display: inline-flex; 
-  align-items: center; 
-  justify-content: center; 
-  gap: 6px; 
-  text-align: center; 
-  box-sizing: border-box; 
-  border: 1px solid transparent; 
-  white-space: nowrap; 
-  overflow: hidden; 
-  text-overflow: ellipsis; 
-}
+.sidebar-toppers-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; width: 100%; }
+.topper-badge { padding: 6px 12px; border-radius: 8px; font-size: 0.76rem; font-weight: 500; display: inline-flex; align-items: center; justify-content: center; gap: 6px; text-align: center; box-sizing: border-box; border: 1px solid transparent; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .topper-badge.rank-1 { background: #fefce8; border-color: #fef08a; color: #854d0e; }
 .topper-badge.rank-2 { background: #f1f5f9; border-color: #e2e8f0; color: #334155; }
 .topper-badge.rank-3 { background: #fff7ed; border-color: #ffedd5; color: #9a3412; }
@@ -241,8 +187,8 @@ body.dark-mode .topper-badge.rank-default { background: #064e3b; border-color: #
 .stat-card-score { background-color: #e8f0fe; } .stat-card-score .stat-card-val { color: #1a73e8; }
 
 /* MODALS */
-.custom-modal-box { background: var(--modal-bg); color: var(--modal-text); border-radius: 18px; padding: 18px; max-width: 540px; width: 90%; border: 1px solid var(--border-color); text-align: center; box-sizing: border-box; position: relative; z-index: 6001; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2); }
-.welcome-portal-card { max-width: 680px; width: 92%; padding: 24px 26px; border-radius: 20px; background: #ffffff; position: relative; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08); box-sizing: border-box; }
+.custom-modal-box { background: var(--modal-bg); color: var(--modal-text); border-radius: 18px; padding: 18px; max-width: 540px; width: 100%; border: 1px solid var(--border-color); text-align: center; box-sizing: border-box; position: relative; z-index: 6001; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2); }
+.welcome-portal-card { max-width: 680px; width: 100%; padding: 24px 26px; border-radius: 20px; background: #ffffff; position: relative; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08); box-sizing: border-box; }
 .wp-decor-dots { position: absolute; width: 44px; height: 44px; background-image: radial-gradient(#10b981 2.2px, transparent 2.2px); background-size: 9px 9px; opacity: 0.75; }
 .wp-dots-top-left { top: 16px; left: 16px; }
 .wp-dots-bottom-right { bottom: 16px; right: 16px; }
@@ -277,7 +223,7 @@ body.dark-mode .topper-badge.rank-default { background: #064e3b; border-color: #
 .btn-portal-start:hover { background-color: #03522b; transform: translateY(-1px); }
 
 /* REGISTRATION & GUIDELINES */
-.registration-card { background: #ffffff; border-radius: 18px; padding: 24px 20px; max-width: 500px; width: 90%; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15); border: 1px solid var(--border-color); box-sizing: border-box; text-align: center; }
+.registration-card { background: #ffffff; border-radius: 18px; padding: 24px 20px; max-width: 500px; width: 100%; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15); border: 1px solid var(--border-color); box-sizing: border-box; text-align: center; }
 .topic-banner-wrapper { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 16px; width: 100%; }
 .modal-guidelines-banner { margin-bottom: 14px; }
 .banner-line { height: 1px; background-color: #046a38; flex: 1; max-width: 28px; }
@@ -544,39 +490,134 @@ body.dark-mode .comp-exp-footer-bar { background-color: #111827; border-color: #
 .footer-right-links a:hover { color: #ffffff; text-decoration: underline; }
 .footer-pipe { color: #475569; font-size: 0.8rem; }
 
-/* RESPONSIVE */
-@media (max-width: 900px) {
-  .fb-card-row-bottom { flex-direction: column; align-items: stretch; gap: 14px; }
-  .fb-row2-left { justify-content: space-between; }
-  .fb-row2-divider { display: none; }
-  .btn-save-response-image2 { width: 100%; }
-}
-@media (max-width: 850px) { 
-  .sc-widget-container { padding: 8px; }
-  .main-wrapper { flex-direction: column; }
+/* =========================================================================
+   TARGETED MOBILE OPTIMIZATION (< 640px and < 480px)
+   ========================================================================= */
+@media (max-width: 640px) {
+  body { padding: 8px 8px 16px 8px; }
+  .sc-widget-container { padding: 10px; border-radius: 10px; }
+
+  /* 1. Workspace Header Clean Spacing */
+  .unified-workspace-header { 
+    padding: 6px 10px; 
+    gap: 6px; 
+    margin-bottom: 10px; 
+  }
+  .header-left-group { gap: 6px; }
+  .header-right-group { gap: 4px; }
+  .back-btn { padding: 5px 8px; height: 32px; font-size: 0.78rem; gap: 4px; }
+  .chapter-capsule { display: none !important; }
+  .app-btn { padding: 5px 8px; height: 32px; font-size: 0.78rem; gap: 4px; }
+  .app-btn-share, .app-btn-fs { padding: 5px 6px; min-width: 32px; }
+  .app-btn span:not(.share-copied-badge) { display: inline-block; }
+
+  /* 2. Unified Navigation & Timer Alignment */
+  .unified-nav { margin-bottom: 12px; }
+  .current-paper-label { padding: 8px 12px; font-size: 0.85rem; }
+  .year-tab { padding: 8px 12px; font-size: 0.85rem; }
+  .unified-nav .timer { padding: 4px 10px; font-size: 0.90rem; }
+  .nav-right-hud { gap: 6px; padding-right: 6px; }
+  .eye-ball { width: 16px; height: 16px; }
+  .pupil { width: 5px; height: 5px; }
+
+  /* 3. CBT Container and Question Palette Single Column */
+  .main-wrapper { flex-direction: column; gap: 12px; }
   .cbt-container, .palette-container { width: 100%; }
-  .chapter-capsule { display: none; }
-  .wp-cards-grid.single-row-cards { grid-template-columns: repeat(2, 1fr); }
-  .ssc-two-col-grid { grid-template-columns: 1fr; }
-  .rs-stats-grid-4col { grid-template-columns: repeat(2, 1fr); }
-  .dashboard-action-row { grid-template-columns: 1fr; }
-  .footer-content-inner { flex-direction: column; gap: 10px; text-align: center; }
-  .ssc-appr-instructor-row { flex-direction: column; align-items: flex-start; }
-  .ssc-inst-reply-bubble { width: 100%; }
-  .ssc-wave-header-hero { flex-direction: column; gap: 14px; min-height: auto; }
-  .ssc-pill-total-response { position: static; transform: none; margin-top: 4px; }
-  .sidebar-toppers-grid { grid-template-columns: 1fr; }
+  .content { padding: 12px 14px; }
+  .palette-container { padding: 12px; align-self: stretch; }
+
+  /* 4. Question Text & Options Responsive Hit Targets */
+  .cbt-question-header-card { padding: 8px 10px 10px 10px; margin-bottom: 12px; gap: 8px; }
+  .qhc-title-text { font-size: 0.92rem; }
+  .question-text { font-size: 0.94rem; margin-bottom: 10px; }
+  .options label { 
+    padding: 10px 12px; 
+    font-size: 0.88rem; 
+    min-height: 42px; 
+  }
+  .option-letter { width: 22px; height: 22px; margin-right: 8px; font-size: 10px; }
+  .option-status-pill { font-size: 0.72rem; padding: 2px 6px; margin-left: 6px; }
+
+  /* 5. Top Performers in Image 2 Layout */
+  .toppers-image2-theme { padding: 10px 12px; }
+  .sidebar-toppers-grid { grid-template-columns: 1fr; gap: 6px; }
+  .topper-badge { width: 100%; max-width: 100%; font-size: 0.74rem; padding: 6px 10px; justify-content: flex-start; }
   .topper-badge.rank-centered-last { max-width: 100%; }
+  .toppers-hero-header { flex-direction: column; gap: 6px; }
+
+  /* 6. Feedback & Rating Section Responsiveness */
+  .fb-card-row-top { padding: 10px 12px; }
+  .fb-card-row-bottom { 
+    flex-direction: column; 
+    align-items: stretch; 
+    gap: 12px; 
+    padding: 12px; 
+  }
+  .fb-row2-left { 
+    justify-content: space-between; 
+    width: 100%; 
+  }
+  .fb-row2-divider { display: none; }
+  .fb-type-selection-wrapper { 
+    width: 100%; 
+    justify-content: space-between; 
+    border-radius: 10px; 
+    padding: 6px 10px; 
+    box-sizing: border-box; 
+  }
+  .btn-save-response-image2 { 
+    width: 100%; 
+    height: 42px; 
+  }
+
+  /* 7. Submissions Showcase Layout */
+  .ssc-two-col-grid { grid-template-columns: 1fr; padding: 12px 10px 0 10px; gap: 14px; }
+  .ssc-wave-header-hero { flex-direction: column; gap: 12px; padding: 14px 12px; text-align: center; }
+  .ssc-pill-total-response { position: static; transform: none; margin-top: 4px; }
+  .ssc-title-bracket-row { gap: 8px; }
+  .ssc-header-wing-line { width: 20px; }
+  .ssc-wave-title { font-size: 1.15rem; }
+  .ssc-appr-body-thread { margin-top: 6px; }
+  .ssc-thread-line-track { width: 18px; }
+  .ssc-thread-stem { left: 8px; }
+  .ssc-thread-node-dot { left: 14px; }
+  .ssc-appr-content-area { padding-left: 4px; }
+  .ssc-appr-instructor-row { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .ssc-inst-reply-bubble { width: 100%; }
+
+  /* 8. Modals & Stepper Full Viewport Fit */
+  .custom-modal-overlay { padding: 10px; }
+  .custom-modal-box, .welcome-portal-card, .registration-card { 
+    padding: 16px 14px; 
+    width: 100%; 
+    max-height: 90vh; 
+    overflow-y: auto; 
+    box-sizing: border-box; 
+  }
+  .wp-single-line-title { font-size: 1.25rem; flex-wrap: wrap; }
+  .wp-single-line-title .wp-brand-part { font-size: 1.35rem; }
+  .wp-cards-grid.single-row-cards { grid-template-columns: 1fr; gap: 8px; margin-bottom: 14px; }
+  .wp-card { padding: 10px 8px; }
+  .wp-icon-ring { width: 30px; height: 30px; margin-bottom: 4px; }
+  .wp-card-title { font-size: 0.78rem; }
+  .wp-card-desc { font-size: 0.65rem; }
+  .input-row-half { flex-direction: column; gap: 10px; }
+  .modal-stepper { margin-bottom: 12px; }
+  .step-badge { width: 22px; height: 22px; font-size: 10px; }
+  .step-text { font-size: 11px; }
+
+  /* 9. Result Screen Cards */
+  .rs-stats-grid-4col { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .dashboard-action-row { grid-template-columns: 1fr; gap: 8px; }
+  .footer-content-inner { flex-direction: column; gap: 8px; text-align: center; padding: 14px; }
 }
-@media (max-width: 480px) { 
-  .wp-cards-grid.single-row-cards { grid-template-columns: 1fr; }
-  .wp-single-line-title { font-size: 1.22rem; }
-  .wp-single-line-title .wp-brand-part { font-size: 1.30rem; }
-  .ssc-appr-header-row { flex-direction: column; align-items: flex-start; gap: 8px; }
-  .ssc-appr-right-hud { width: 100%; justify-content: space-between; }
-  .fb-type-selection-wrapper { border-radius: 12px; width: 100%; justify-content: space-between; }
+
+@media (max-width: 400px) {
+  .app-btn span:not(.share-copied-badge) { display: none; }
+  .app-btn { padding: 6px 8px; }
   .qhc-top-row { flex-direction: column; align-items: flex-start; gap: 6px; }
   .qhc-right-group { width: 100%; justify-content: space-between; }
-  .ssc-wave-title { font-size: 1.15rem; }
-  .ssc-header-wing-line { width: 22px; }
+  .palette-grid { grid-template-columns: repeat(4, 1fr); }
+  .fb-type-pills-row { gap: 4px; }
+  .fb-radio-pill-exact { padding: 4px 8px; font-size: 0.74rem; }
 }
