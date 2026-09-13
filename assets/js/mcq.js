@@ -21,7 +21,8 @@ window.CBTState = {
   studentNameVal: "", studentClassVal: "Class 12", studentSectionVal: "A", schoolNameVal: "", studentName: "",
   userAnswers: [], visitedQuestions: [], lockedAnswers: [], sectionTimes: [], timerInterval: null, isTimerPaused: true,
   securityWarnings: 0, isExamActive: false, currentFilter: 'all', globalFormPayload: null, activeResourceUrl: "",
-  lastWT: 0, lastSpacePressTime: 0, sectionToppersFetched: [], pendingRestoreData: null, feedbackRating: 5,
+  lastWT: 0, lastSpacePressTime: 0, sectionToppersFetched: [], pendingRestoreData: null, 
+  feedbackRating: 1.5, /* Default Rating set to 1.5 */
   feedbackCategory: "Suggestion", feedbackDataStore: [], hasAnimatedStars: false, isExpandedSubmissions: false,
   allFetchedRecords: []
 };
@@ -100,7 +101,9 @@ function restoreSession(data) {
   document.body.classList.add('exam-in-progress');
   if ($('quiz-screen')) $('quiz-screen').style.display = 'block';
   if ($('unified-nav')) $('unified-nav').style.display = 'flex';
-  buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion(); triggerFeedbackSectionAnimation();
+  buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion();
+  
+  if (CBTState.userAnswers.some(ans => ans !== null)) triggerFeedbackSectionAnimation();
   showToastAlert("Previous exam attempt restored successfully!");
 }
 
@@ -175,11 +178,9 @@ async function loadQuestionsFromSheet(retries = 3) {
   CBTState.isQuestionsLoading = false;
 }
 
-/* TOP PERFORMERS & FUNCTIONAL DYNAMIC RANKING (IMAGE 2 DESIGN SYSTEM) */
 async function fetchAndRenderSidebarToppers() {
   const fetchRecordUrl = getFetchRecordOfCBT(), container = $('sidebar-toppers');
   if (!fetchRecordUrl) return;
-  if (container) container.classList.add('fetching-pulse');
   try {
     const testName = getTestName(), sec = CBTState.sections[CBTState.currentYearIndex];
     const currentSection = sec ? `${sec.year} - ${sec.title}` : "";
@@ -190,7 +191,6 @@ async function fetchAndRenderSidebarToppers() {
     if (recordsList.length > 0) { renderSidebarToppers(recordsList); updateUserDynamicRank(); }
     else if (container) container.style.display = 'none';
   } catch (err) { console.warn("Toppers sync error:", err); }
-  finally { if (container) container.classList.remove('fetching-pulse'); }
 }
 
 function renderSidebarToppers(toppersArray) { 
@@ -209,7 +209,6 @@ function renderSidebarToppers(toppersArray) {
     if (rank === 1) { rankClass = 'rank-1'; iconStr = '🥇'; }
     else if (rank === 2) { rankClass = 'rank-2'; iconStr = '🥈'; }
     else if (rank === 3) { rankClass = 'rank-3'; iconStr = '🥉'; }
-    else if (rank === 4) { rankClass = 'rank-4'; iconStr = '#4'; }
     
     const isCentered = (rank === 7) ? ' rank-centered-last' : '';
     const name = escapeHTML(t.studentName || t.name || 'Student');
@@ -256,7 +255,11 @@ function shuffleArray(a) { for (let i = a.length - 1; i > 0; i--) { const j = Ma
 
 function showToastAlert(m) { 
   let t = $('custom-alert-toast'), txt = $('custom-alert-text'); 
-  if (t && txt) { txt.innerHTML = `${ICON_ALERT} ${m}`; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 4000); } 
+  if (t && txt) { 
+    txt.innerHTML = `${ICON_ALERT} ${m}`; 
+    t.classList.add('show'); 
+    setTimeout(() => t.classList.remove('show'), 3500); 
+  } 
 }
 
 function triggerVerifyModal(type) { 
@@ -273,96 +276,15 @@ function triggerVerifyModal(type) {
 function closeVerifyModal() { if ($('verify-resource-modal')) $('verify-resource-modal').style.display = 'none'; }
 function goToHome() { window.location.href = getHomeUrl(); }
 
+/* =========================================================================
+   RESTORED SECURITY / PROCTORING MODAL LOGIC (IMAGE 3)
+   ========================================================================= */
 window.closeSecurityModal = () => { 
   if ($('modal-security')) $('modal-security').style.display = 'none'; 
   const widget = document.querySelector('.sc-widget-container');
   if (widget) widget.classList.remove('sc-blur-active'); 
   CBTState.isTimerPaused = false; 
 };
-
-['contextmenu', 'copy', 'cut', 'dragstart'].forEach(ev => document.addEventListener(ev, e => { if (isProctoringEnabled() && CBTState.isExamActive) e.preventDefault(); }));
-document.addEventListener('keydown', e => {
-  if (!CBTState.isExamActive || !isProctoringEnabled() || CBTState.isTimerPaused) return;
-  const key = e.key ? e.key.toLowerCase() : "", code = e.code ? e.code.toLowerCase() : "";
-  if (key === 'printscreen' || code === 'printscreen' || e.keyCode === 44 || ((e.metaKey || e.ctrlKey) && e.shiftKey && ['3','4','5','s'].includes(key))) {
-    const w = document.querySelector('.sc-widget-container');
-    if (w) w.classList.add('sc-blur-active');
-    e.preventDefault();
-    try { navigator.clipboard.writeText(''); } catch (err) {}
-    applySecurityPenalty();
-  }
-});
-
-document.addEventListener('keyup', e => { if (CBTState.isExamActive && isProctoringEnabled() && (e.key === 'PrintScreen' || e.keyCode === 44) && !CBTState.isTimerPaused) applySecurityPenalty(); });
-document.addEventListener('keydown', e => { 
-  if (!CBTState.isExamActive || !isProctoringEnabled()) return;
-  let k = e.key.toLowerCase(), ic = e.ctrlKey || e.metaKey; 
-  if (e.key === 'F12' || e.keyCode === 123 || (ic && e.shiftKey && ['i', 'j', 'c'].includes(k)) || (ic && ['u', 'p', 's', 'r'].includes(k)) || e.key === 'F5') { e.preventDefault(); if (!CBTState.isTimerPaused) applySecurityPenalty(); return false; } 
-});
-
-document.addEventListener('keydown', e => { 
-  if (!CBTState.isExamActive || (CBTState.sections[CBTState.currentYearIndex]?.submitted)) return; 
-  if (e.code === 'Space' && !['INPUT', 'TEXTAREA'].includes(e.target?.tagName)) { 
-    e.preventDefault(); 
-    const cur = Date.now(); 
-    if (cur - CBTState.lastSpacePressTime < 400) { CBTState.isTimerPaused = !CBTState.isTimerPaused; CBTState.lastSpacePressTime = 0; } 
-    else CBTState.lastSpacePressTime = cur; 
-  } 
-});
-
-document.addEventListener('keydown', e => { 
-  if (!CBTState.isExamActive || CBTState.isTimerPaused || ['INPUT', 'TEXTAREA'].includes(e.target?.tagName)) return; 
-  let s = CBTState.sections[CBTState.currentYearIndex], k = e.key.toLowerCase(), isl = CBTState.lockedAnswers[CBTState.currentQuestion] || s.submitted; 
-  if (!isl) { 
-    if (['1','2','3','4'].includes(k)) { e.preventDefault(); saveAnswer(parseInt(k) - 1); } 
-    else if (['a','b','c','d','e'].includes(k)) { e.preventDefault(); saveAnswer({ 'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4 }[k]); } 
-    else if (k === 'backspace' || k === 'delete') { e.preventDefault(); clearResponse(); } 
-  } 
-  if (k === 'enter') { 
-    e.preventDefault(); 
-    if (!s.submitted && CBTState.currentQuestion === s.end - 1) showSubmitModal(); 
-    else if (!s.submitted || CBTState.currentQuestion < s.end - 1) nextQuestion(); 
-  } 
-});
-
-function handleBlurOrHide() { 
-  if (!CBTState.isExamActive || !isProctoringEnabled() || CBTState.isTimerPaused) return; 
-  if (document.visibilityState === 'hidden' || !document.hasFocus()) {
-    const w = document.querySelector('.sc-widget-container');
-    if (w) w.classList.add('sc-blur-active');
-    applySecurityPenalty();
-  }
-}
-document.addEventListener("visibilitychange", () => { if (document.visibilityState === 'hidden') handleBlurOrHide(); });
-window.addEventListener("blur", handleBlurOrHide);
-
-window.addEventListener("beforeunload", () => { 
-  if (CBTState.isExamActive && CBTState.sections[CBTState.currentYearIndex] && !CBTState.sections[CBTState.currentYearIndex].submitted) { 
-    let s = CBTState.sections[CBTState.currentYearIndex], c = 0, ic = 0, l = 0, sc = 0, tot = s.end - s.start; 
-    for (let i = s.start; i < s.end; i++) { 
-      if (CBTState.userAnswers[i] !== null) { if (isAnswerCorrect(i)) { c++; sc += getCorrectMarks(); } else { ic++; sc -= getIncorrectMarks(); } } 
-      else l++; 
-    } 
-    sc = Number((sc - (CBTState.securityWarnings * getPenaltyMarks())).toFixed(2)); 
-    let p = new URLSearchParams(); 
-    p.append("timestamp", getFormattedTimestamp()); 
-    p.append("studentName", (CBTState.studentNameVal || "AGYAT") + " (Reload Dropout)"); 
-    p.append("studentClass", CBTState.studentClassVal?.toString().startsWith("Class") ? CBTState.studentClassVal : `Class ${CBTState.studentClassVal || "12"}`); 
-    p.append("studentSection", CBTState.studentSectionVal); 
-    p.append("schoolName", CBTState.schoolNameVal); 
-    p.append("testName", getTestName()); 
-    p.append("currentSection", s.year + " - " + s.title); 
-    p.append("obtainedScore", sc); 
-    p.append("correctAnswers", c); 
-    p.append("incorrectAnswers", ic); 
-    p.append("unattemptQuestions", l); 
-    p.append("accuracy", tot > 0 ? ((c / tot) * 100).toFixed(2) + "%" : "0.00%"); 
-    p.append("avgTimePerQuestion", (tot > 0 ? (s.timeSpent / tot).toFixed(1) : 0) + "s"); 
-    p.append("proctoringWarnings", CBTState.securityWarnings); 
-    p.append("activeTimeTaken", `${Math.floor(s.timeSpent / 60)}m ${s.timeSpent % 60}s`); 
-    navigator.sendBeacon(getSaveRecordOfCBT(), p); 
-  } 
-});
 
 function applySecurityPenalty() { 
   if (!isProctoringEnabled() || Date.now() - CBTState.lastWT < 1000) return; 
@@ -376,6 +298,37 @@ function applySecurityPenalty() {
   updatePalette(); 
   saveSessionToLocalStorage(); 
 }
+
+// Right-click and cut/copy lockdown
+['contextmenu', 'copy', 'cut', 'dragstart'].forEach(ev => document.addEventListener(ev, e => { if (isProctoringEnabled() && CBTState.isExamActive) e.preventDefault(); }));
+
+// Key listeners for DevTools & PrintScreen interception
+document.addEventListener('keydown', e => {
+  if (!CBTState.isExamActive || !isProctoringEnabled()) return;
+  const key = e.key ? e.key.toLowerCase() : "", code = e.code ? e.code.toLowerCase() : "";
+  if (key === 'printscreen' || code === 'printscreen' || e.keyCode === 44 || ((e.metaKey || e.ctrlKey) && e.shiftKey && ['3','4','5','s'].includes(key))) {
+    e.preventDefault();
+    try { navigator.clipboard.writeText(''); } catch (err) {}
+    applySecurityPenalty();
+    return false;
+  }
+  let ic = e.ctrlKey || e.metaKey; 
+  if (e.key === 'F12' || e.keyCode === 123 || (ic && e.shiftKey && ['i', 'j', 'c'].includes(key)) || (ic && ['u', 'p', 's', 'r'].includes(key)) || e.key === 'F5') { 
+    e.preventDefault(); 
+    applySecurityPenalty(); 
+    return false; 
+  }
+});
+
+// Window blur & tab switch proctoring
+function handleBlurOrHide() { 
+  if (!CBTState.isExamActive || !isProctoringEnabled() || CBTState.isTimerPaused) return; 
+  if (document.visibilityState === 'hidden' || !document.hasFocus()) {
+    applySecurityPenalty();
+  }
+}
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === 'hidden') handleBlurOrHide(); });
+window.addEventListener("blur", handleBlurOrHide);
 
 window.proceedToRegisterStep = () => {
   if ($('welcome-step-intro')) $('welcome-step-intro').style.display = 'none';
@@ -423,12 +376,14 @@ window.beginExam = async () => {
   CBTState.isTimerPaused = false; 
   if ($('quiz-screen')) $('quiz-screen').style.display = 'block'; 
   if ($('unified-nav')) $('unified-nav').style.display = 'flex'; 
-  buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion(); triggerFeedbackSectionAnimation(); saveSessionToLocalStorage(); 
+  buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion(); saveSessionToLocalStorage(); 
 };
 
 function triggerFeedbackSectionAnimation() {
   const container = $('cbt-interactive-feedback-wrapper');
-  if (container) setTimeout(() => container.classList.add('section-entered'), 280);
+  if (container && !container.classList.contains('section-entered')) {
+    container.classList.add('section-entered');
+  }
 }
 
 function isAnswerCorrect(qIdx) { 
@@ -442,7 +397,6 @@ function getCorrectIndex(qIdx) { return textToIndex(CBTState.questions[qIdx].cor
 function updateTimerDisplay() { 
   let t = CBTState.sectionTimes[CBTState.currentYearIndex] || 0, m = Math.floor(t / 60), s = t % 60, timeStr = `${m}:${s < 10 ? '0' : ''}${s}`; 
   if ($('time-left')) $('time-left').innerText = timeStr; 
-  if ($('time-left-mobile')) $('time-left-mobile').innerText = timeStr; 
 }
 
 function startTimer() { 
@@ -538,6 +492,9 @@ window.loadQuestion = () => {
 window.saveAnswer = i => { 
   if (CBTState.lockedAnswers[CBTState.currentQuestion] || CBTState.sections[CBTState.currentYearIndex].submitted) return; 
   CBTState.userAnswers[CBTState.currentQuestion] = i; 
+  
+  triggerFeedbackSectionAnimation();
+
   if ($('btn-clear')) $('btn-clear').disabled = false; 
   if (!CBTState.sectionToppersFetched[CBTState.currentYearIndex]) {
     CBTState.sectionToppersFetched[CBTState.currentYearIndex] = true;
@@ -704,7 +661,7 @@ window.processSectionSubmission = async function() {
   let b = $('btn-dashboard-main-trigger'); 
   if (b) { 
     b.disabled = false; b.style.opacity = '1'; 
-    b.innerHTML = (CBTState.currentYearIndex < CBTState.sections.length - 1) ? `CONTINUE TO ${(CBTState.sections[CBTState.currentYearIndex + 1].year || 'PART B').toUpperCase()} →` : `COMPLETE EVALUATION`;
+    b.innerHTML = (CBTState.currentYearIndex < CBTState.sections.length - 1) ? `CONTINUE TO NEXT SECTION →` : `COMPLETE EVALUATION`;
   } 
 };
 
@@ -729,11 +686,10 @@ window.buildYearNav = () => {
   let c = $('year-nav-container'); 
   if (!c) return; 
   c.innerHTML = ''; 
-  if ($('current-paper-label') && CBTState.sections[CBTState.currentYearIndex]) $('current-paper-label').innerHTML = `<span>${CBTState.sections[CBTState.currentYearIndex].year}</span>${CBTState.sections[CBTState.currentYearIndex].title}`; 
   CBTState.sections.forEach((p, idx) => { 
     let t = document.createElement('div'); 
     t.className = `year-tab ${idx === CBTState.currentYearIndex ? 'active' : ''}`; 
-    t.innerHTML = `<span style="font-size:.7em;text-transform:uppercase;color:var(--tab-${idx === CBTState.currentYearIndex ? 'active' : 'inactive'}-lbl);font-weight:600;">${p.year}</span><span style="font-size:.95em;font-weight:700;color:var(--tab-${idx === CBTState.currentYearIndex ? 'active' : 'inactive'}-val);">${p.title}</span>`; 
+    t.innerHTML = `<span style="font-size:.7em;text-transform:uppercase;color:var(--tab-${idx === CBTState.currentYearIndex ? 'active' : 'inactive'}-lbl);font-weight:600;">${p.year}</span><span style="font-size:.92em;font-weight:700;color:var(--tab-${idx === CBTState.currentYearIndex ? 'active' : 'inactive'}-val);">${p.title}</span>`; 
     t.onclick = async () => { 
       if (CBTState.sections[idx].submitted || idx === CBTState.currentYearIndex) { 
         CBTState.currentYearIndex = idx; CBTState.currentQuestion = CBTState.sections[idx].start; 
@@ -752,9 +708,9 @@ function triggerSlowMotionStarsAnimation() {
       star.classList.add('auto-pulse', 'active');
       setTimeout(() => {
         star.classList.remove('auto-pulse');
-        if (parseInt(star.getAttribute('data-val')) > CBTState.feedbackRating) star.classList.remove('active');
+        setFeedbackRating(CBTState.feedbackRating, false);
       }, 400);
-    }, index * 160);
+    }, index * 140);
   });
 }
 
@@ -764,21 +720,32 @@ function setupStarScrollObserver() {
   new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) triggerSlowMotionStarsAnimation(); }); }, { threshold: 0.25 }).observe(target);
 }
 
-window.previewStars = function(rating) { document.querySelectorAll('#fb-stars-group .fb-star').forEach(s => s.classList.toggle('hovered', parseInt(s.getAttribute('data-val')) <= rating)); };
-window.resetStarsPreview = function() { document.querySelectorAll('#fb-stars-group .fb-star').forEach(s => s.classList.remove('hovered')); };
+window.previewStars = function(rating) { 
+  document.querySelectorAll('#fb-stars-group .fb-star').forEach(s => {
+    const val = parseInt(s.getAttribute('data-val'));
+    s.classList.remove('half-active');
+    s.classList.toggle('hovered', val <= rating);
+  }); 
+};
 
+window.resetStarsPreview = function() { 
+  document.querySelectorAll('#fb-stars-group .fb-star').forEach(s => s.classList.remove('hovered'));
+  setFeedbackRating(CBTState.feedbackRating, false);
+};
+
+/* Fractional 1.5 star renderer */
 window.setFeedbackRating = function(rating, isUserAction = false) {
   CBTState.feedbackRating = rating;
-  document.querySelectorAll('#fb-stars-group .fb-star').forEach(s => s.classList.toggle('active', parseInt(s.getAttribute('data-val')) <= rating));
-  if (isUserAction) {
-    const saveBtn = $('btn-save-feedback');
-    if (saveBtn) {
-      saveBtn.classList.remove('btn-bounce-nudge');
-      void saveBtn.offsetWidth; 
-      saveBtn.classList.add('btn-bounce-nudge');
-      setTimeout(() => saveBtn.classList.remove('btn-bounce-nudge'), 1000);
+  document.querySelectorAll('#fb-stars-group .fb-star').forEach(s => {
+    const val = parseInt(s.getAttribute('data-val'));
+    s.classList.remove('half-active', 'active');
+    if (rating === 1.5) {
+      if (val === 1) s.classList.add('active');
+      else if (val === 2) s.classList.add('half-active');
+    } else {
+      if (val <= rating) s.classList.add('active');
     }
-  }
+  });
 };
 
 window.updateFbCharCount = function(textarea) { if ($('fb-char-counter')) $('fb-char-counter').innerText = `${textarea.value.length}/500`; };
@@ -837,10 +804,16 @@ function renderSubmissionsShowcase(dataList) {
   }
 
   const buildStars = ratingRaw => {
-    let num = parseInt(ratingRaw) || 5, starsStr = '';
-    for (let i = 1; i <= 5; i++) starsStr += `<svg class="ssc-star-svg ${i <= num ? 'filled' : ''}" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
+    let num = parseFloat(ratingRaw) || 5, starsStr = '';
+    for (let i = 1; i <= 5; i++) {
+      if (i <= Math.floor(num)) starsStr += `<svg class="ssc-star-svg filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
+      else if (i === Math.ceil(num) && num % 1 !== 0) starsStr += `<svg class="ssc-star-svg" style="fill:url(#half-fill-grad);stroke:#f59e0b;" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
+      else starsStr += `<svg class="ssc-star-svg" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
+    }
     return `<div class="ssc-appr-stars">${starsStr}</div>`;
   };
+
+  const BOT_AVATAR_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="#15803d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4" r="1.5" fill="#15803d"></circle><line x1="12" y1="5.5" x2="12" y2="8"></line><rect x="4" y="8" width="16" height="12" rx="4" fill="#ffffff"></rect><ellipse cx="8.5" cy="13.5" rx="1.5" ry="2" fill="#1e3a8a"></ellipse><ellipse cx="15.5" cy="13.5" rx="1.5" ry="2" fill="#1e3a8a"></ellipse><line x1="10" y1="17.5" x2="14" y2="17.5"></line></svg>`;
 
   if (streamApproved) {
     streamApproved.innerHTML = approved.length === 0 ? `<div class="ssc-empty-note">No approved comments yet for this topic.</div>` : approvedToShow.map(item => {
@@ -848,16 +821,23 @@ function renderSubmissionsShowcase(dataList) {
       return `
       <div class="ssc-approved-image1-card">
         <div class="ssc-appr-header-row">
-          <div class="ssc-appr-user-meta"><div class="ssc-appr-avatar-blue">${firstLetter}</div><span class="ssc-appr-name">${studentName}</span><span class="ssc-appr-class-tag">${escapeHTML(item.studentClass || 'Class XII')}</span><span class="ssc-appr-date"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>${escapeHTML(item.timestamp || 'Sep 03, 2026')}</span></div>
+          <div class="ssc-appr-user-meta"><div class="ssc-appr-avatar-blue">${firstLetter}</div><span class="ssc-appr-name">${studentName}</span><span class="ssc-appr-class-tag">${escapeHTML(item.studentClass || 'Class 12')}</span><span class="ssc-appr-date"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>${escapeHTML(item.timestamp || 'Sep 01, 2026')}</span></div>
           <div class="ssc-appr-right-hud">${buildStars(item.rating)}<button type="button" class="ssc-dots-menu-btn" title="Options"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"></circle><circle cx="12" cy="12" r="2"></circle><circle cx="12" cy="19" r="2"></circle></svg></button></div>
         </div>
         <div class="ssc-appr-body-thread">
           <div class="ssc-thread-line-track"><div class="ssc-thread-stem"></div><div class="ssc-thread-node-dot"></div></div>
           <div class="ssc-appr-content-area">
-            <div class="ssc-appr-user-bubble">${escapeHTML(item.message || 'Could you add more practice questions on merge and join?')}</div>
+            <div class="ssc-appr-user-bubble">${escapeHTML(item.message || 'This chapter was very clear, loved the examples!')}</div>
             <div class="ssc-appr-instructor-row">
-              <div class="ssc-inst-profile"><div class="ssc-inst-bot-avatar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"></rect><circle cx="12" cy="5" r="2"></circle><path d="M12 7v4"></path><line x1="8" y1="16" x2="8" y2="16"></line><line x1="16" y1="16" x2="16" y2="16"></line></svg></div><span class="ssc-inst-name">Rohit Singh</span></div>
-              <div class="ssc-inst-reply-bubble">👍 ${escapeHTML(item.reply || 'Sure, adding 5 more practice questions this week.')}</div>
+              <div class="ssc-inst-top-bar">
+                <div class="ssc-inst-profile">
+                  <div class="ssc-inst-bot-avatar">${BOT_AVATAR_SVG}</div>
+                  <span class="ssc-inst-name">Rohit Singh</span>
+                  <span class="ssc-admin-tag-pill">Admin</span>
+                </div>
+                <span class="ssc-inst-date">${escapeHTML(item.replyDate || item.timestamp || 'Sep 01, 2026')}</span>
+              </div>
+              <div class="ssc-inst-reply-bubble">👍 ${escapeHTML(item.reply || 'Thank you Aarav, glad it helped!')}</div>
             </div>
           </div>
         </div>
@@ -871,7 +851,7 @@ function renderSubmissionsShowcase(dataList) {
       return `
       <div class="ssc-pending-image6-card">
         <div class="ssc-pending-top-row">
-          <div class="ssc-pending-user-info"><div class="ssc-pending-avatar-cyan">${firstLetter}</div><span class="ssc-pending-name">${studentName}</span><span class="ssc-pending-class-tag">${escapeHTML(item.studentClass || 'Class XII')}</span><span class="ssc-pending-date"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>${escapeHTML(item.timestamp || 'Sep 13, 2026')}</span></div>
+          <div class="ssc-pending-user-info"><div class="ssc-pending-avatar-cyan">${firstLetter}</div><span class="ssc-pending-name">${studentName}</span><span class="ssc-pending-class-tag">${escapeHTML(item.studentClass || 'Class 12')}</span><span class="ssc-pending-date"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>${escapeHTML(item.timestamp || 'Sep 02, 2026')}</span></div>
           <div class="ssc-pending-badge-pill"><span>⏳</span><span>Pending</span></div>
         </div>
         <div class="ssc-pending-blur-content">${escapeHTML(item.message || 'Student response undergoing moderation.')}</div>
@@ -893,7 +873,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if ($('welcome-correct-lbl')) $('welcome-correct-lbl').innerText = `+${getCorrectMarks()} Correct`;
   if ($('welcome-incorrect-lbl')) $('welcome-incorrect-lbl').innerText = `-${getIncorrectMarks()} Incorrect`;
 
-  setFeedbackRating(5, false);
+  setFeedbackRating(1.5, false); /* Explicitly initialized to 1.5 stars */
   setupStarScrollObserver();
 
   const saved = getSavedSession();
