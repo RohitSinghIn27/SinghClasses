@@ -22,7 +22,7 @@ window.CBTState = {
   userAnswers: [], visitedQuestions: [], lockedAnswers: [], sectionTimes: [], timerInterval: null, isTimerPaused: true,
   securityWarnings: 0, isExamActive: false, currentFilter: 'all', globalFormPayload: null, activeResourceUrl: "",
   lastWT: 0, lastSpacePressTime: 0, sectionToppersFetched: [], pendingRestoreData: null, 
-  feedbackRating: 1.5, /* Default Rating set to 1.5 */
+  feedbackRating: 1.5,
   feedbackCategory: "Suggestion", feedbackDataStore: [], hasAnimatedStars: false, isExpandedSubmissions: false,
   allFetchedRecords: []
 };
@@ -276,9 +276,7 @@ function triggerVerifyModal(type) {
 function closeVerifyModal() { if ($('verify-resource-modal')) $('verify-resource-modal').style.display = 'none'; }
 function goToHome() { window.location.href = getHomeUrl(); }
 
-/* =========================================================================
-   RESTORED SECURITY / PROCTORING MODAL LOGIC (IMAGE 3)
-   ========================================================================= */
+/* PROCTORING AND SECURITY */
 window.closeSecurityModal = () => { 
   if ($('modal-security')) $('modal-security').style.display = 'none'; 
   const widget = document.querySelector('.sc-widget-container');
@@ -299,10 +297,8 @@ function applySecurityPenalty() {
   saveSessionToLocalStorage(); 
 }
 
-// Right-click and cut/copy lockdown
 ['contextmenu', 'copy', 'cut', 'dragstart'].forEach(ev => document.addEventListener(ev, e => { if (isProctoringEnabled() && CBTState.isExamActive) e.preventDefault(); }));
 
-// Key listeners for DevTools & PrintScreen interception
 document.addEventListener('keydown', e => {
   if (!CBTState.isExamActive || !isProctoringEnabled()) return;
   const key = e.key ? e.key.toLowerCase() : "", code = e.code ? e.code.toLowerCase() : "";
@@ -320,7 +316,6 @@ document.addEventListener('keydown', e => {
   }
 });
 
-// Window blur & tab switch proctoring
 function handleBlurOrHide() { 
   if (!CBTState.isExamActive || !isProctoringEnabled() || CBTState.isTimerPaused) return; 
   if (document.visibilityState === 'hidden' || !document.hasFocus()) {
@@ -431,6 +426,62 @@ window.toggleExplanation = function() {
   if (wrapper) wrapper.classList.toggle('has-open-content', !isOpen);
 };
 
+/* Responsive button repositioning: places matrix under explanation on mobile, in palette on desktop */
+function placeActionMatrix() {
+  const matrix = $('action-matrix-slot'), contentArea = $('question-content'), palette = $('palette-column-container');
+  if (!matrix || !contentArea || !palette) return;
+  if (window.innerWidth <= 640) {
+    const toppers = $('sidebar-toppers');
+    if (toppers && toppers.parentNode === contentArea) contentArea.insertBefore(matrix, toppers);
+    else contentArea.appendChild(matrix);
+  } else {
+    palette.appendChild(matrix);
+  }
+}
+window.addEventListener('resize', placeActionMatrix);
+
+/* Touch gesture handling: Swipes for prev/next and double tap for instant answer selection */
+let touchStartX = 0, touchStartY = 0, lastOptionTapTime = 0, lastTappedIndex = -1;
+
+function setupMobileGestures() {
+  const contentArea = $('question-content');
+  if (!contentArea) return;
+
+  contentArea.addEventListener('touchstart', e => {
+    if (window.innerWidth > 640) return;
+    touchStartX = e.changedTouches[0].clientX;
+    touchStartY = e.changedTouches[0].clientY;
+  }, { passive: true });
+
+  contentArea.addEventListener('touchend', e => {
+    if (window.innerWidth > 640 || !CBTState.isExamActive) return;
+    const diffX = e.changedTouches[0].clientX - touchStartX;
+    const diffY = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(diffX) > 55 && Math.abs(diffX) > Math.abs(diffY) * 1.5) {
+      if (diffX < 0) nextQuestion(); // Swipe left -> Next
+      else prevQuestion();          // Swipe right -> Previous
+    }
+  }, { passive: true });
+}
+
+window.handleOptionDoubleTap = function(e, idx) {
+  if (window.innerWidth > 640) return;
+  const currentTime = Date.now();
+  if (currentTime - lastOptionTapTime < 350 && lastTappedIndex === idx) {
+    e.preventDefault();
+    if (!CBTState.lockedAnswers[CBTState.currentQuestion] && !CBTState.sections[CBTState.currentYearIndex].submitted) {
+      saveAnswer(idx);
+      CBTState.lockedAnswers[CBTState.currentQuestion] = true;
+      loadQuestion();
+    }
+    lastOptionTapTime = 0;
+    lastTappedIndex = -1;
+  } else {
+    lastOptionTapTime = currentTime;
+    lastTappedIndex = idx;
+  }
+};
+
 window.loadQuestion = () => { 
   CBTState.visitedQuestions[CBTState.currentQuestion] = true; 
   let s = CBTState.sections[CBTState.currentYearIndex], qy = CBTState.currentQuestion - s.start, tot = s.end - s.start;
@@ -459,7 +510,7 @@ window.loadQuestion = () => {
         else cls = "disabled-label";
       } else if (userChoice === i) cls = "selected" + (isL ? " disabled-label" : ""); 
       else if (isL) cls = "disabled-label"; 
-      ol.innerHTML += `<li><label class="${cls}"><div class="option-left-content"><input type="radio" name="option" value="${i}" ${userChoice === i ? "checked" : ""} ${isL ? "disabled" : ""} onchange="saveAnswer(${i})"><span class="option-letter">${lt[i]}</span><span class="option-text">${escapeHTML(opt)}</span></div>${badgeHtml}</label></li>`; 
+      ol.innerHTML += `<li><label class="${cls}" ontouchend="handleOptionDoubleTap(event, ${i})"><div class="option-left-content"><input type="radio" name="option" value="${i}" ${userChoice === i ? "checked" : ""} ${isL ? "disabled" : ""} onchange="saveAnswer(${i})"><span class="option-letter">${lt[i]}</span><span class="option-text">${escapeHTML(opt)}</span></div>${badgeHtml}</label></li>`; 
     }); 
   }
 
@@ -486,6 +537,7 @@ window.loadQuestion = () => {
   }
   updatePalette(); 
   updateUserDynamicRank();
+  placeActionMatrix();
   saveSessionToLocalStorage(); 
 };
 
@@ -546,9 +598,12 @@ function updatePalette() {
     } 
     g.innerHTML += `<button type="button" class="palette-btn dsp-${dsp}${i === CBTState.currentQuestion ? ' current-question' : ''}${flt ? ' filtered-out' : ''}" onclick="jumpToQuestion(${i})">${(i - s.start) + 1}${isEvaluatedWrong ? `<span class="badge-status-cross">✕</span>` : ''}</button>`; 
   } 
+  
+  // Apply warning penalty directly onto visible score board
+  let calculatedScore = Number((sc - (CBTState.securityWarnings * getPenaltyMarks())).toFixed(2));
   if ($('stat-right')) $('stat-right').innerText = rc; 
   if ($('stat-wrong')) $('stat-wrong').innerText = wc; 
-  if ($('stat-score')) $('stat-score').innerText = sc; 
+  if ($('stat-score')) $('stat-score').innerText = calculatedScore; 
 }
 
 window.showSubmitModal = () => { 
@@ -733,7 +788,6 @@ window.resetStarsPreview = function() {
   setFeedbackRating(CBTState.feedbackRating, false);
 };
 
-/* Fractional 1.5 star renderer */
 window.setFeedbackRating = function(rating, isUserAction = false) {
   CBTState.feedbackRating = rating;
   document.querySelectorAll('#fb-stars-group .fb-star').forEach(s => {
@@ -873,8 +927,10 @@ document.addEventListener('DOMContentLoaded', () => {
   if ($('welcome-correct-lbl')) $('welcome-correct-lbl').innerText = `+${getCorrectMarks()} Correct`;
   if ($('welcome-incorrect-lbl')) $('welcome-incorrect-lbl').innerText = `-${getIncorrectMarks()} Incorrect`;
 
-  setFeedbackRating(1.5, false); /* Explicitly initialized to 1.5 stars */
+  setFeedbackRating(1.5, false);
   setupStarScrollObserver();
+  setupMobileGestures();
+  placeActionMatrix();
 
   const saved = getSavedSession();
   if (saved) { CBTState.pendingRestoreData = saved; if ($('modal-resume')) $('modal-resume').style.display = 'flex'; }
@@ -885,6 +941,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const eyes = document.querySelectorAll('.desktop-eyes .eye-ball'), pupils = document.querySelectorAll('.desktop-eyes .pupil'); 
   document.addEventListener('mousemove', e => { 
+    if (window.innerWidth <= 640) return;
     eyes.forEach((eye, index) => { 
       const pupil = pupils[index]; 
       if (!pupil) return; 
@@ -897,7 +954,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const scheduleBlink = () => { 
     setTimeout(() => { 
-      eyes.forEach(eye => { eye.style.transform = 'scaleY(0.06)'; setTimeout(() => eye.style.transform = 'scaleY(1)', 110); }); 
+      // Only execute blinking animation on desktop/tablet devices (> 640px)
+      if (window.innerWidth > 640) {
+        eyes.forEach(eye => { 
+          eye.style.transform = 'scaleY(0.06)'; 
+          setTimeout(() => eye.style.transform = 'scaleY(1)', 110); 
+        }); 
+      }
       scheduleBlink(); 
     }, 3000 + Math.random() * 4000); 
   }; 
