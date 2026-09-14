@@ -26,11 +26,13 @@ window.CBT_CONFIG = {
   MARKS_CORRECT: 1,
   MARKS_INCORRECT: 0.25,
   PENALTY_WARNING: 2,
+  CHAPTER_NUMBER: "02",
   TEST_NAME: "DataFrame in Python Pandas",
+  CHAPTER_WEIGHTAGE: "15 Marks",
   FetchQuestionsOfCBT: "https://script.google.com/macros/s/AKfycbyziitjM4s84hkcZwCLYTs86Ha5Zpv6Tru5ewg0cRvhFRpwVDtZDFhtXpBk9kYCmOpLGw/exec",
-  SaveRecordOfCBT: "https://script.google.com/macros/s/AKfycbzNq2Q4qL1w3DjqqYJlHxRTI3OTqGETqsyb4q3SCJRIRFWzzSvpwW7_2lDDN8b3oA0ikA/exec",
   FetchRecordOfCBT: "https://script.google.com/macros/s/AKfycbwpK6z8HC87ZKvQFnGX78Prnv4sVPxF7tAER1uZkRl-jeMxhaSOcSoIkdKJf4ak1VGwQw/exec",
   FeedbackScriptURL: "https://script.google.com/macros/s/AKfycbw5U7BXWluNqNujrVCZw2QbyMbxVoaEcSqUy9ykryVLQznnpyJoV_bMN7rqfNdNZnLGhQ/exec",
+  SaveRecordOfCBT: "https://script.google.com/macros/s/AKfycbzNq2Q4qL1w3DjqqYJlHxRTI3OTqGETqsyb4q3SCJRIRFWzzSvpwW7_2lDDN8b3oA0ikA/exec",
   HOME_URL: "https://www.singhclasses.in/",
   YOUTUBE_URL: "https://youtu.be/cqiM2VVs-HM",
   NOTES_URL: "https://singhclasses.in/computer-science/class-12/notes/working-with-functions-in-python.html"
@@ -38,7 +40,6 @@ window.CBT_CONFIG = {
 </script>
 </head>
 <body>
-<!-- Global SVG Defs for Fractional Stars & 3D Database Icon -->
 <svg style="display:none;" width="0" height="0">
   <defs>
     <linearGradient id="half-fill-grad" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -58,39 +59,49 @@ window.CBT_CONFIG = {
   </defs>
 </svg>
 
-<header class="unified-workspace-header" role="banner">
-  <div class="header-left-group">
-    <button class="back-btn" onclick="goToHome()" aria-label="Go Back to Home">
-      <svg class="btn-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+<header class="img5-modern-header" role="banner">
+  <div class="img5-header-left">
+    <button class="img5-nav-btn img5-back-btn" onclick="triggerVerifyModal('back')" aria-label="Go Back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
       <span>Back</span>
     </button>
-    <div class="chapter-capsule" id="current-chapter">DataFrame in Python Pandas</div>
+   <!-- In python-pandas-dataframe.html, update the capsule block: -->
+<div class="img5-chapter-capsule">
+  <span class="img5-ch-num" id="header-ch-num">Ch 02</span>
+  <div class="nav-hud-divider"></div>
+  <span class="img5-ch-title" id="header-ch-title">DataFrame in Python Pandas</span>
+  <span class="img5-weight-pill" id="header-ch-weightage">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+    <span id="header-weight-text">15 Marks</span>
+  </span>
+</div>
   </div>
-  <div class="header-right-group">
-    <button class="app-btn app-btn-share" id="btn-share-page" onclick="sharePage()" aria-label="Copy Page Link" title="Copy Page Link">
-      <svg class="btn-icon" id="share-icon-svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+
+  <div class="img5-header-right">
+    <button class="img5-action-btn img5-share-btn" id="btn-share-page" onclick="sharePage()" title="Copy Page Link" aria-label="Share">
+      <svg id="share-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
       <span class="share-copied-badge" id="share-copied-badge">Copied!</span>
     </button>
-    <button class="app-btn app-btn-notes" onclick="triggerVerifyModal('notes')" aria-label="Open Notes">
-      <svg class="btn-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+    <button class="img5-action-btn img5-notes-btn" onclick="triggerVerifyModal('notes')" aria-label="Notes">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
       <span>Notes</span>
     </button>
-    <button class="app-btn app-btn-yt" id="yt-trigger-btn" onclick="triggerVerifyModal('yt')" aria-label="Watch Video Lesson">
-      <svg class="btn-icon desktop-yt-icon" width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.377.55a3.016 3.016 0 0 0-2.122 2.136C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.55 9.376.55 9.376.55s7.505 0 9.377-.55a3.016 3.016 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+    <button class="img5-action-btn img5-oneshot-btn" id="yt-trigger-btn" onclick="triggerVerifyModal('yt')" aria-label="OneShot Video">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.377.55a3.016 3.016 0 0 0-2.122 2.136C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.55 9.376.55 9.376.55s7.505 0 9.377-.55a3.016 3.016 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
       <span>OneShot</span>
     </button>
-    <button class="app-btn app-btn-fs" id="fullscreen-toggle-btn" onclick="toggleFullScreen()" aria-label="Toggle Fullscreen Mode" title="Fullscreen">
-      <svg class="btn-icon" id="fs-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><polyline points="9 21 3 21 3 15"></polyline><line x1="3" y1="21" x2="10" y2="14"></line><polyline points="21 15 21 21 15 21"></polyline><line x1="21" y1="21" x2="14" y2="14"></line><polyline points="3 9 3 3 9 3"></polyline><line x1="3" y1="3" x2="10" y2="10"></line></svg>
+    <button class="img5-action-btn img5-fs-btn" id="fullscreen-toggle-btn" onclick="toggleFullScreen()" title="Fullscreen" aria-label="Fullscreen">
+      <svg id="fs-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><polyline points="9 21 3 21 3 15"></polyline><line x1="3" y1="21" x2="10" y2="14"></line></svg>
     </button>
   </div>
 </header>
+
 <main class="main-content container-inner">
 <h1 style="display:none;">Class XII Informatics Practices (065) - DataFrame in Python Pandas MCQs</h1>
 <div class="sc-widget-container">
-<div id="custom-alert-toast" class="sc-custom-alert"><span id="custom-alert-text">Please answer at least one question before saving progress.</span></div>
+<div id="custom-alert-toast" class="sc-custom-alert"><span id="custom-alert-text">Notification</span></div>
 <div class="sc-progress-wrapper"><div class="sc-progress-fill" id="scProgressBar"></div></div>
 
-<!-- UNIFIED NAV BAR (IMAGE 1 UI STYLE) -->
 <div class="unified-nav" id="unified-nav" style="display:none;">
   <div class="year-nav-bar" id="year-nav-container"></div>
   <div class="nav-right-hud">
@@ -106,7 +117,6 @@ window.CBT_CONFIG = {
   </div>
 </div>
 
-<!-- RESUME ATTEMPT MODAL -->
 <div id="modal-resume" class="custom-modal-overlay">
   <div class="custom-modal-box registration-card">
     <div class="topic-banner-wrapper">
@@ -118,7 +128,7 @@ window.CBT_CONFIG = {
       <div class="banner-line"></div>
     </div>
     <div style="font-size:1.15rem;font-weight:700;color:#0f172a;margin-bottom:6px;">Resume Previous Attempt?</div>
-    <p style="font-size:0.88rem;color:#64748b;margin:0 0 20px 0;line-height:1.5;text-align:center;" id="resume-modal-subtext">An unfinished attempt was detected. Would you like to resume where you left off?</p>
+    <p style="font-size:0.88rem;color:#64748b;margin:0 0 20px 0;line-height:1.5;text-align:center;" id="resume-modal-subtext">Unfinished attempt detected. Resume where you left off?</p>
     <div class="modal-btn-row" style="flex-direction:column;gap:10px;">
       <button type="button" class="btn-green-submit" onclick="confirmResumeSession()">RESUME SESSION →</button>
       <button type="button" class="btn-back-home" style="border-radius:10px;height:46px;font-weight:700;width:100%;" onclick="dismissResumeSession()">START FRESH ATTEMPT</button>
@@ -126,7 +136,6 @@ window.CBT_CONFIG = {
   </div>
 </div>
 
-<!-- INTRO MODAL -->
 <div id="modal-welcome" class="custom-modal-overlay">
   <div id="welcome-step-intro" class="custom-modal-box welcome-portal-card">
     <div class="wp-decor-dots wp-dots-top-left"></div><div class="wp-decor-dots wp-dots-bottom-right"></div>
@@ -137,19 +146,18 @@ window.CBT_CONFIG = {
       <div class="wp-powered-container"><div class="wp-powered-line"></div><div class="wp-powered-badge"><span>Powered by <strong>www.SinghClasses.in</strong></span></div><div class="wp-powered-line"></div></div>
     </div>
     <div class="wp-cards-grid single-row-cards">
-      <div class="wp-card wp-card-green"><div class="wp-icon-ring"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></div><div class="wp-card-title">Exam Pattern</div><div class="wp-card-desc">Prepare for Real Exam</div></div>
+      <div class="wp-card wp-card-green"><div class="wp-icon-ring"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></div><div class="wp-card-title">Real Exam Pattern</div><div class="wp-card-desc">Practice Like the Exam</div></div>
       <div class="wp-card wp-card-yellow"><div class="wp-icon-ring"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15 15"></polyline></svg></div><div class="wp-card-title">Instant Results</div><div class="wp-card-desc">Get scores quickly</div></div>
       <div class="wp-card wp-card-blue"><div class="wp-icon-ring"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg></div><div class="wp-card-title">Detailed Analysis</div><div class="wp-card-desc">Know your strengths</div></div>
       <div class="wp-card wp-card-purple"><div class="wp-icon-ring"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="5"></circle><circle cx="12" cy="12" r="1.5"></circle></svg></div><div class="wp-card-title">Improve Score</div><div class="wp-card-desc">Practice smarter</div></div>
     </div>
     <div class="wp-action-wrapper">
       <div class="wp-btn-line"></div>
-      <button type="button" class="btn-portal-start" onclick="proceedToRegisterStep()"><span>Start the CBT Mock Test</span><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
+      <button type="button" class="btn-portal-start" onclick="proceedToRegisterStep()"><span>Start Your CBT Mock Test</span><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
       <div class="wp-btn-line"></div>
     </div>
   </div>
 
-  <!-- REGISTRATION STEP -->
   <div id="welcome-step-1" class="custom-modal-box registration-card" style="display:none;">
     <div class="topic-banner-wrapper">
       <div class="banner-line"></div>
@@ -172,7 +180,6 @@ window.CBT_CONFIG = {
     </div>
   </div>
 
-  <!-- GUIDELINES STEP -->
   <div id="welcome-step-2" class="custom-modal-box registration-card" style="display:none;">
     <div class="modal-stepper" style="margin-bottom:14px;">
       <div class="step-item"><span class="step-badge">1</span><span class="step-text">Details</span></div><div class="step-divider"></div>
@@ -187,8 +194,8 @@ window.CBT_CONFIG = {
       </div>
       <ul class="instructions-list">
         <li><strong>Time Limit:</strong> 1 minute per question</li>
-        <li>Switching tabs or windows will be logged as a warning.</li>
         <li><strong>Marking Scheme:</strong> <span id="welcome-correct-lbl" style="color:var(--color-correct);font-weight:700;">+1 Correct</span> | <span id="welcome-incorrect-lbl" style="color:var(--color-wrong);font-weight:700;">-0.25 Incorrect</span> | <span style="color:var(--stat-lbl-color);font-weight:700;">0 Unattempted</span></li>
+        <li><strong>Tab switching may incur a penalty.</strong></li>
       </ul>
       <div class="palette-legend centered-legend">
         <div style="font-weight:bold;color:var(--q-num-color);font-size:0.82em;">Status:</div>
@@ -201,7 +208,6 @@ window.CBT_CONFIG = {
   </div>
 </div>
 
-<!-- FUNCTIONAL SECURITY WARNING MODAL -->
 <div id="modal-security" class="custom-modal-overlay">
   <div class="custom-modal-box security-box">
     <div class="security-title">Security Warning</div>
@@ -214,7 +220,16 @@ window.CBT_CONFIG = {
   </div>
 </div>
 
-<div id="modal-submit" class="custom-modal-overlay"><div class="custom-modal-box"><div id="submit-modal-text" style="color:var(--text-color);margin-bottom:20px;font-size:1.1em;"></div><div class="modal-btn-row"><button type="button" class="modal-btn modal-btn-secondary" onclick="closeSubmitModal()">Cancel</button><button type="button" class="modal-btn modal-btn-success" onclick="confirmSubmitExam()">Yes, Submit</button></div></div></div>
+<div id="modal-submit" class="custom-modal-overlay">
+  <div class="custom-modal-box">
+    <div id="submit-modal-text" style="color:var(--text-color);margin-bottom:20px;font-size:1.15em;font-weight:700;"></div>
+    <div class="modal-actions-confirm-row">
+      <button type="button" class="modal-btn-confirm-cancel" onclick="closeSubmitModal()">Cancel</button>
+      <button type="button" class="modal-btn-confirm-submit" onclick="confirmSubmitExam()">Yes, Submit</button>
+    </div>
+  </div>
+</div>
+
 <div id="modal-timeout" class="custom-modal-overlay"><div class="custom-modal-box" style="border:3px solid var(--color-danger);"><div class="modal-title" style="color:var(--color-danger);display:flex;align-items:center;justify-content:center;gap:8px;"><svg class="sc-svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 16 14"></polyline></svg>Time's Up!</div><div style="font-size:1.25em;font-weight:700;margin:20px 0;">Section timer expired! Saving responses safely...</div></div></div>
 <div id="quiz-loading-overlay" style="display:none;flex-direction:column;align-items:center;justify-content:center;padding:40px;text-align:center;min-height:350px;"><div class="fetch-spinner"></div><div style="margin-top:20px;font-size:var(--text-base);font-weight:700;color:var(--stat-lbl-color);">Loading questions, please wait...</div></div>
 
@@ -225,11 +240,10 @@ window.CBT_CONFIG = {
     <div class="cbt-question-header-card">
       <div class="qhc-top-row">
         <div class="qhc-left-group">
-          <!-- DATABASE ICON FROM IMAGE 2 FOR QUESTION BADGE -->
           <button type="button" class="qhc-hamburger-badge" aria-label="Question Information">
             <svg class="qhc-db-badge-svg" width="17" height="17" viewBox="0 0 24 24"><use href="#db-icon-3d"></use></svg>
           </button>
-          <span class="qhc-title-text" id="q-number">Question 1 of 20</span>
+          <span class="qhc-title-text" id="q-number">Question 1 of 29</span>
         </div>
         <div class="qhc-right-group">
           <span class="qhc-brand-url">www.SinghClasses.in</span>
@@ -241,7 +255,7 @@ window.CBT_CONFIG = {
     </div>
     <div class="question-text" id="q-text"></div>
     <ul class="options" id="q-options"></ul>
-    <!-- EXPLANATION DRAWER -->
+
     <div id="q-explanation-wrapper" class="comp-exp-container">
       <button type="button" id="btn-toggle-exp" class="comp-exp-header-btn disabled" onclick="toggleExplanation()">
         <span class="comp-exp-header-center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg><span id="btn-exp-label">View Explanation</span></span>
@@ -259,27 +273,30 @@ window.CBT_CONFIG = {
       </div>
     </div>
 
-    <!-- ACTION CONTROLS -->
     <div class="sidebar-actions-control-matrix" id="action-matrix-slot">
       <div class="matrix-row-primary"><button type="button" class="btn-next" id="btn-next" onclick="nextQuestion()"><span>SAVE & NEXT →</span></button></div>
       <div class="matrix-row-secondary"><button type="button" class="btn-prev" id="btn-prev" onclick="prevQuestion()"><span>← PREVIOUS</span></button><button type="button" class="btn-clear" id="btn-clear" onclick="clearResponse()"><svg class="btn-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg><span>CLEAR ANSWER</span></button></div>
       <div class="matrix-divider"></div>
       <button type="button" class="btn-submit" id="main-section-submit-btn" onclick="showSubmitModal()"><span>SUBMIT SECTION →</span></button>
-      <div class="submit-warning-notice"><svg class="warning-shield-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg><span>You cannot review or edit answers after submitting this section.</span></div>
+      <div class="submit-warning-notice"><svg class="warning-shield-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg><span>You cannot edit after submitting </span></div>
     </div>
 
-    <!-- TOP PERFORMERS -->
-    <div id="sidebar-toppers" class="sidebar-toppers-container toppers-image2-theme" style="display:none;">
+    <!-- COMPACT TOP PERFORMERS -->
+    <div id="sidebar-toppers" class="sidebar-toppers-container toppers-img6-compact" style="display:none;">
       <div class="toppers-hero-header">
-        <span class="shortcut-label">🏆 Top Performers:</span>
+        <div class="toppers-title-group">
+          <span class="toppers-vertical-accent"></span>
+          <h3 class="shortcut-label">Top Performers</h3>
+        </div>
         <span id="user-current-rank-badge" class="topper-user-rank-pill" style="display:none;">
-          <span class="rank-trophy">🏆</span> Your current rank: <strong id="user-current-rank-text">-</strong>
+          Your current rank: <strong id="user-current-rank-text">-</strong>
         </span>
       </div>
-      <div id="sidebar-toppers-list" class="sidebar-toppers-grid"></div>
+      <div id="sidebar-toppers-list" class="sidebar-toppers-grid-img6"></div>
     </div>
   </div>
 </div>
+
 <div class="palette-container" id="palette-column-container">
   <div class="palette-title" id="palette-section-title">Question Palette</div>
   <div class="palette-filter-bar">
@@ -299,12 +316,13 @@ window.CBT_CONFIG = {
 </div>
 
 <div id="result-screen" style="display:none;">
-  <div id="processing-loader-box" class="processing-container-box" style="display:none;">
-    <div class="processing-spinner-ring"></div>
-    <div class="processing-title">Saving Section Responses</div>
-    <div class="processing-subtext">Please wait while we sync and safely save your responses...</div>
-    <div class="processing-progress-dots"><div class="processing-dot"></div><div class="processing-dot"></div><div class="processing-dot"></div></div>
+  <div id="processing-loader-box" class="img3-saving-container" style="display:none;">
+    <div class="img3-circle-spinner"></div>
+    <h2 class="img3-saving-title">Saving Section Responses</h2>
+    <p class="img3-saving-subtext">Please wait while we sync and safely save your responses...</p>
+    <div class="img3-loading-dot"></div>
   </div>
+
   <div id="capture-scorecard-frame" class="target-result-outer-container" style="display:none;">
     <div class="rs-hero-banner">
       <div class="rs-hero-title-group"><span class="rs-hero-trophy-icon">🏆</span><h2 class="rs-hero-title"><span id="lbl-section-title">Part A Completed,</span> <strong id="lbl-user-greeting"></strong>!</h2></div>
@@ -321,33 +339,42 @@ window.CBT_CONFIG = {
       <div class="rs-stat-box-card"><div class="rs-stat-box-icon correct"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div><span class="rs-stat-box-val" id="lbl-stat-correct-val">0</span><span class="rs-stat-box-lbl">CORRECT</span></div>
       <div class="rs-stat-box-card"><div class="rs-stat-box-icon incorrect"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg></div><span class="rs-stat-box-val" id="lbl-stat-incorrect-val">0</span><span class="rs-stat-box-lbl">INCORRECT</span></div>
       <div class="rs-stat-box-card"><div class="rs-stat-box-icon unattempted"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div><span class="rs-stat-box-val" id="lbl-stat-unattempted-val">0</span><span class="rs-stat-box-lbl">UNATTEMPTED</span></div>
-      <div class="rs-stat-box-card"><div class="rs-stat-box-icon timetaken"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div><span class="rs-stat-box-val" id="lbl-stat-time-val">00:00</span><span class="rs-stat-box-lbl">TIME TAKEN</span></div>
+      <div class="rs-stat-box-card"><div class="rs-stat-box-icon timetaken"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 16 14"></polyline></svg></div><span class="rs-stat-box-val" id="lbl-stat-time-val">00:00</span><span class="rs-stat-box-lbl">TIME TAKEN</span></div>
     </div>
     <div class="dashboard-action-row">
       <button type="button" class="btn-proceed-green" id="btn-dashboard-main-trigger" onclick="handleSectionProgression()">CONTINUE TO NEXT SECTION →</button>
       <button type="button" class="btn-back-home" onclick="goToHome()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>BACK TO HOME</button>
     </div>
   </div>
-  <div id="cumulative-matrix-container" class="cumulative-summary-card" style="display:none;">
-    <div class="summary-card-header">
-      <div class="summary-title-icon-box"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg></div>
-      <h2>Final Cumulative Evaluation Summary</h2>
-    </div>
-    <div class="summary-matrix-wrapper">
-      <div class="summary-matrix-header-row">
-        <div class="smh-cell smh-section"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>SECTION</div>
-        <div class="smh-cell smh-marks"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.5"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path></svg>MARKS</div>
-        <div class="smh-cell smh-correct"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>CORRECT</div>
-        <div class="smh-cell smh-incorrect"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><path d="m15 9-6 6"></path><path d="m9 9 6 6"></path></svg>INCORRECT</div>
-        <div class="smh-cell smh-unattempted"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>UNATTEMPTED</div>
+
+  <div id="cumulative-matrix-container" class="img4-summary-card" style="display:none;">
+    <div class="img4-summary-top-header">
+      <div class="img4-icon-bubble">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
       </div>
-      <div class="summary-matrix-body" id="table-body-matrix-target"></div>
+      <h2 class="img4-summary-title">Final Cumulative Evaluation Summary</h2>
     </div>
-    <div style="margin-top:24px;text-align:center;"><button type="button" class="btn-summary-home" onclick="goToHome()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>BACK TO HOME</button></div>
+
+    <div class="img4-table-card">
+      <div class="img4-navy-head-row">
+        <div class="img4-th img4-th-sec"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg><span>SECTION</span></div>
+        <div class="img4-th"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path></svg><span>MARKS</span></div>
+        <div class="img4-th"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg><span>CORRECT</span></div>
+        <div class="img4-th"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><path d="m15 9-6 6"></path><path d="m9 9 6 6"></path></svg><span>INCORRECT</span></div>
+        <div class="img4-th"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg><span>UNATTEMPTED</span></div>
+      </div>
+      <div class="img4-table-body" id="table-body-matrix-target"></div>
+    </div>
+
+    <div class="img4-btn-wrapper">
+      <button type="button" class="img4-green-home-btn" onclick="goToHome()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        <span>BACK TO HOME</span>
+      </button>
+    </div>
   </div>
 </div>
 
-<!-- INTERACTIVE FEEDBACK WRAPPER -->
 <div id="cbt-interactive-feedback-wrapper" class="interactive-feedback-showcase-flow">
   <section class="feedback-input-container" id="feedback-rating-section">
     <div class="fb-two-row-card">
@@ -382,19 +409,15 @@ window.CBT_CONFIG = {
     </div>
   </section>
 
-  <!-- SUBMISSIONS SHOWCASE (BEAUTIFUL DESKTOP SHAPES; MOBILE DB BADGE) -->
   <section class="submissions-showcase-container">
     <div class="ssc-wave-header-hero">
-      <!-- DECORATIVE SHAPES FOR DESKTOP VIEW -->
       <div class="ssc-decor-shapes-layer">
         <div class="ssc-hero-decor-ring ring-left"></div>
         <div class="ssc-hero-decor-diamond diamond-left"></div>
         <div class="ssc-hero-decor-ring ring-right"></div>
         <div class="ssc-hero-decor-diamond diamond-right"></div>
       </div>
-
       <div class="ssc-hero-center-content">
-        <!-- DB ICON: PRESENT FOR MOBILE, HIDDEN ON DESKTOP VIA CSS -->
         <div class="ssc-top-db-badge">
           <svg width="24" height="24" viewBox="0 0 24 24"><use href="#db-icon-3d"></use></svg>
         </div>
@@ -439,7 +462,7 @@ window.CBT_CONFIG = {
     <p id="verify-modal-text">Description Text</p>
     <div class="verify-actions">
       <button type="button" class="v-btn v-btn-outline" onclick="closeVerifyModal()">Stay Here</button>
-      <button type="button" id="verify-proceed-action-btn" class="v-btn">Open Link</button>
+      <button type="button" id="verify-proceed-action-btn" class="v-btn">Confirm</button>
     </div>
   </div>
 </div>
