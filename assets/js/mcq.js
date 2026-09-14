@@ -46,6 +46,12 @@ window.toggleFullScreen = function() {
   else if (document.exitFullscreen) document.exitFullscreen();
 };
 
+function enableDesktopFullscreen() {
+  if (window.innerWidth > 640 && !document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  }
+}
+
 function updateFullscreenIconState() {
   const icon = $('fs-icon'), btn = $('fullscreen-toggle-btn');
   if (!icon) return;
@@ -101,6 +107,7 @@ function restoreSession(data) {
   document.body.classList.add('exam-in-progress');
   if ($('quiz-screen')) $('quiz-screen').style.display = 'block';
   if ($('unified-nav')) $('unified-nav').style.display = 'flex';
+  enableDesktopFullscreen();
   buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion();
   
   if (CBTState.userAnswers.some(ans => ans !== null)) triggerFeedbackSectionAnimation();
@@ -271,10 +278,25 @@ function triggerVerifyModal(type) {
     if (heading) heading.innerText = "Watch Video Lesson?"; 
     if (text) text.innerText = "Open educational video tutorial in a new tab?"; 
     if (actionBtn) { actionBtn.innerText = "Watch Video"; actionBtn.onclick = () => { window.open(CBTState.activeResourceUrl, '_blank'); closeVerifyModal(); }; }
-  } 
+  } else if (type === 'notes') {
+    CBTState.activeResourceUrl = getNotesUrl();
+    if (heading) heading.innerText = "Open Study Notes?";
+    if (text) text.innerText = "Open study notes in a new tab while keeping your exam active?";
+    if (actionBtn) { actionBtn.innerText = "Open Notes"; actionBtn.onclick = () => { window.open(CBTState.activeResourceUrl, '_blank'); closeVerifyModal(); }; }
+  } else if (type === 'back') {
+    if (heading) heading.innerText = "Leave Exam?";
+    if (text) text.innerText = "Are you sure you want to return to Home? Your active exam session progress will be preserved.";
+    if (actionBtn) { actionBtn.innerText = "Leave Exam"; actionBtn.onclick = () => { closeVerifyModal(); goToHome(); }; }
+  }
 }
 function closeVerifyModal() { if ($('verify-resource-modal')) $('verify-resource-modal').style.display = 'none'; }
-function goToHome() { window.location.href = getHomeUrl(); }
+function goToHome() { 
+  if (CBTState.isExamActive) {
+    triggerVerifyModal('back');
+    return;
+  }
+  window.location.href = getHomeUrl(); 
+}
 
 /* PROCTORING AND SECURITY */
 window.closeSecurityModal = () => { 
@@ -371,6 +393,7 @@ window.beginExam = async () => {
   CBTState.isTimerPaused = false; 
   if ($('quiz-screen')) $('quiz-screen').style.display = 'block'; 
   if ($('unified-nav')) $('unified-nav').style.display = 'flex'; 
+  enableDesktopFullscreen();
   buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion(); saveSessionToLocalStorage(); 
 };
 
@@ -482,11 +505,22 @@ window.handleOptionDoubleTap = function(e, idx) {
   }
 };
 
+window.handleOptionDesktopDblClick = function(e, idx) {
+  if (window.innerWidth <= 640) return;
+  if (!CBTState.lockedAnswers[CBTState.currentQuestion] && !CBTState.sections[CBTState.currentYearIndex].submitted) {
+    saveAnswer(idx);
+    CBTState.lockedAnswers[CBTState.currentQuestion] = true;
+    loadQuestion();
+  }
+};
+
 window.loadQuestion = () => { 
   CBTState.visitedQuestions[CBTState.currentQuestion] = true; 
   let s = CBTState.sections[CBTState.currentYearIndex], qy = CBTState.currentQuestion - s.start, tot = s.end - s.start;
   let curQ = CBTState.questions[CBTState.currentQuestion];
-  if ($('q-number')) $('q-number').innerText = `Question ${qy + 1} of ${tot}`; 
+  if ($('q-number')) {
+    $('q-number').innerText = (window.innerWidth <= 640) ? `Q${qy + 1} of ${tot}` : `Question ${qy + 1} of ${tot}`;
+  }
   
   const tagEl = $('q-tag-pill');
   if (tagEl) tagEl.innerText = (curQ && curQ.tag?.trim().length > 0) ? curQ.tag.trim().toUpperCase() : "CBSE";
@@ -510,7 +544,7 @@ window.loadQuestion = () => {
         else cls = "disabled-label";
       } else if (userChoice === i) cls = "selected" + (isL ? " disabled-label" : ""); 
       else if (isL) cls = "disabled-label"; 
-      ol.innerHTML += `<li><label class="${cls}" ontouchend="handleOptionDoubleTap(event, ${i})"><div class="option-left-content"><input type="radio" name="option" value="${i}" ${userChoice === i ? "checked" : ""} ${isL ? "disabled" : ""} onchange="saveAnswer(${i})"><span class="option-letter">${lt[i]}</span><span class="option-text">${escapeHTML(opt)}</span></div>${badgeHtml}</label></li>`; 
+      ol.innerHTML += `<li><label class="${cls}" ontouchend="handleOptionDoubleTap(event, ${i})" ondblclick="handleOptionDesktopDblClick(event, ${i})"><div class="option-left-content"><input type="radio" name="option" value="${i}" ${userChoice === i ? "checked" : ""} ${isL ? "disabled" : ""} onchange="saveAnswer(${i})"><span class="option-letter">${lt[i]}</span><span class="option-text">${escapeHTML(opt)}</span></div>${badgeHtml}</label></li>`; 
     }); 
   }
 
@@ -599,7 +633,6 @@ function updatePalette() {
     g.innerHTML += `<button type="button" class="palette-btn dsp-${dsp}${i === CBTState.currentQuestion ? ' current-question' : ''}${flt ? ' filtered-out' : ''}" onclick="jumpToQuestion(${i})">${(i - s.start) + 1}${isEvaluatedWrong ? `<span class="badge-status-cross">✕</span>` : ''}</button>`; 
   } 
   
-  // Apply warning penalty directly onto visible score board
   let calculatedScore = Number((sc - (CBTState.securityWarnings * getPenaltyMarks())).toFixed(2));
   if ($('stat-right')) $('stat-right').innerText = rc; 
   if ($('stat-wrong')) $('stat-wrong').innerText = wc; 
@@ -641,7 +674,7 @@ window.processSectionSubmission = async function() {
     } else secUnattempted++;
   }
 
-  secMarks = Number((secMarks - (CBTState.securityWarnings * getPenaltyMarks())).toFixed(2));
+  secMarks = Number(secMarks.toFixed(2));
   let formattedTime = `${Math.floor(sec.timeSpent / 60).toString().padStart(2, '0')}:${(sec.timeSpent % 60).toString().padStart(2, '0')}`;
   if ($('lbl-score-obtained')) $('lbl-score-obtained').innerText = (secMarks % 1 === 0) ? secMarks : secMarks.toFixed(2); 
   if ($('lbl-score-total')) $('lbl-score-total').innerText = (totalSectionMarks % 1 === 0) ? totalSectionMarks : totalSectionMarks.toFixed(2); 
@@ -744,7 +777,7 @@ window.buildYearNav = () => {
   CBTState.sections.forEach((p, idx) => { 
     let t = document.createElement('div'); 
     t.className = `year-tab ${idx === CBTState.currentYearIndex ? 'active' : ''}`; 
-    t.innerHTML = `<span style="font-size:.7em;text-transform:uppercase;color:var(--tab-${idx === CBTState.currentYearIndex ? 'active' : 'inactive'}-lbl);font-weight:600;">${p.year}</span><span style="font-size:.92em;font-weight:700;color:var(--tab-${idx === CBTState.currentYearIndex ? 'active' : 'inactive'}-val);">${p.title}</span>`; 
+    t.innerHTML = `<span class="year-tab-badge-lbl">${escapeHTML(p.year)}</span><span class="year-tab-title-text">${escapeHTML(p.title)}</span>`; 
     t.onclick = async () => { 
       if (CBTState.sections[idx].submitted || idx === CBTState.currentYearIndex) { 
         CBTState.currentYearIndex = idx; CBTState.currentQuestion = CBTState.sections[idx].start; 
@@ -820,7 +853,7 @@ window.submitUserFeedback = async function() {
     if (msgEl) { msgEl.value = ""; updateFbCharCount(msgEl); }
     await fetchFeedbackSubmissions();
   } catch (err) { showToastAlert("Response saved successfully!"); }
-  finally { if (btn) { btn.disabled = false; btn.innerHTML = `<span>Save Your Response</span>`; } }
+  finally { if (btn) { btn.disabled = false; btn.innerHTML = `<svg class="send-paper-plane-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg><span>Save Your Response</span>`; } }
 };
 
 async function fetchFeedbackSubmissions() {
@@ -954,7 +987,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const scheduleBlink = () => { 
     setTimeout(() => { 
-      // Only execute blinking animation on desktop/tablet devices (> 640px)
       if (window.innerWidth > 640) {
         eyes.forEach(eye => { 
           eye.style.transform = 'scaleY(0.06)'; 
