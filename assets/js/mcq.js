@@ -3,28 +3,29 @@ const isProctoringEnabled    = () => window.CBT_CONFIG?.ENABLE_PROCTORING ?? tru
 const getCorrectMarks        = () => Number(window.CBT_CONFIG?.MARKS_CORRECT ?? 1);
 const getIncorrectMarks      = () => Number(window.CBT_CONFIG?.MARKS_INCORRECT ?? 0.25);
 const getPenaltyMarks        = () => Number(window.CBT_CONFIG?.PENALTY_WARNING ?? 2);
+const getChapterNumber       = () => window.CBT_CONFIG?.CHAPTER_NUMBER ?? "02";
 const getTestName            = () => window.CBT_CONFIG?.TEST_NAME ?? "Online Test";
+const getChapterWeightage    = () => window.CBT_CONFIG?.CHAPTER_WEIGHTAGE ?? "15 Marks";
 const getFetchQuestionsOfCBT = () => window.CBT_CONFIG?.FetchQuestionsOfCBT ?? "";
-const getSaveRecordOfCBT     = () => window.CBT_CONFIG?.SaveRecordOfCBT ?? "";
 const getFetchRecordOfCBT    = () => window.CBT_CONFIG?.FetchRecordOfCBT ?? "";
 const getFeedbackScriptURL   = () => window.CBT_CONFIG?.FeedbackScriptURL ?? "";
+const getSaveRecordOfCBT     = () => window.CBT_CONFIG?.SaveRecordOfCBT ?? "";
 const getHomeUrl             = () => window.CBT_CONFIG?.HOME_URL ?? "https://www.singhclasses.in/";
 const getYoutubeUrl          = () => window.CBT_CONFIG?.YOUTUBE_URL ?? "https://www.youtube.com/@SinghClasses";
 const getNotesUrl            = () => window.CBT_CONFIG?.NOTES_URL ?? "#";
 
 const ICON_ALERT = `<svg class="sc-svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`;
-const ICON_FULLSCREEN = `<polyline points="15 3 21 3 21 9"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><polyline points="9 21 3 21 3 15"></polyline><line x1="3" y1="21" x2="10" y2="14"></line><polyline points="21 15 21 21 15 21"></polyline><line x1="21" y1="21" x2="14" y2="14"></line><polyline points="3 9 3 3 9 3"></polyline><line x1="3" y1="3" x2="10" y2="10"></line>`;
-const ICON_MINIMIZE = `<polyline points="4 14 10 14 10 20"></polyline><line x1="10" y1="14" x2="3" y2="21"></line><polyline points="20 10 14 10 14 4"></polyline><line x1="14" y1="10" x2="21" y2="3"></line><polyline points="14 20 14 14 20 14"></polyline><line x1="14" y1="14" x2="21" y2="21"></line><polyline points="10 4 10 10 4 10"></polyline><line x1="10" y1="10" x2="3" y2="3"></line>`;
+const ICON_FULLSCREEN = `<polyline points="15 3 21 3 21 9"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><polyline points="9 21 3 21 3 15"></polyline><line x1="3" y1="21" x2="10" y2="14"></line>`;
+const ICON_MINIMIZE = `<polyline points="4 14 10 14 10 20"></polyline><line x1="10" y1="14" x2="3" y2="21"></line><polyline points="20 10 14 10 14 4"></polyline><line x1="14" y1="10" x2="21" y2="3"></line>`;
 
 window.CBTState = {
   listExamPapers: [], isQuestionsLoading: false, questions: [], sections: [], currentYearIndex: 0, currentQuestion: 0,
   studentNameVal: "", studentClassVal: "Class 12", studentSectionVal: "A", schoolNameVal: "", studentName: "",
   userAnswers: [], visitedQuestions: [], lockedAnswers: [], sectionTimes: [], timerInterval: null, isTimerPaused: true,
-  securityWarnings: 0, isExamActive: false, currentFilter: 'all', globalFormPayload: null, activeResourceUrl: "",
+  securityWarnings: 0, isExamActive: false, currentFilter: 'all', activeResourceUrl: "",
   lastWT: 0, lastSpacePressTime: 0, sectionToppersFetched: [], pendingRestoreData: null, 
-  feedbackRating: 1.5,
-  feedbackCategory: "Suggestion", feedbackDataStore: [], hasAnimatedStars: false, isExpandedSubmissions: false,
-  allFetchedRecords: []
+  feedbackRating: 1.5, feedbackCategory: "Suggestion", feedbackDataStore: [], hasAnimatedStars: false,
+  isExpandedSubmissions: false, allFetchedRecords: []
 };
 
 function getFormattedTimestamp() {
@@ -33,12 +34,45 @@ function getFormattedTimestamp() {
 }
 
 window.sharePage = async function() {
-  const currentUrl = window.location.href, btn = $('btn-share-page');
-  const showFeedback = () => { if (btn) { btn.classList.add('copied-active'); setTimeout(() => btn.classList.remove('copied-active'), 1500); } };
+  const currentUrl = window.location.href;
+  const btn = $('btn-share-page');
+  const badge = $('share-copied-badge');
+  const icon = $('share-icon-svg');
+  
+  const showFeedback = () => {
+    if (badge) {
+      badge.innerText = "Copied!";
+      badge.style.display = "inline-block";
+    }
+    if (icon) icon.style.display = "none";
+    if (btn) btn.classList.add('copied-active');
+    
+    setTimeout(() => {
+      if (badge) {
+        badge.innerText = "";
+        badge.style.display = "none";
+      }
+      if (icon) icon.style.display = "inline-block";
+      if (btn) btn.classList.remove('copied-active');
+    }, 1800);
+  };
+
   try {
-    if (navigator.clipboard && navigator.clipboard.writeText) { await navigator.clipboard.writeText(currentUrl); showFeedback(); }
-    else { const t = document.createElement('input'); t.value = currentUrl; document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t); showFeedback(); }
-  } catch (e) { console.warn("Share copy fallback:", e); }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(currentUrl);
+      showFeedback();
+    } else {
+      const t = document.createElement('input');
+      t.value = currentUrl;
+      document.body.appendChild(t);
+      t.select();
+      document.execCommand('copy');
+      document.body.removeChild(t);
+      showFeedback();
+    }
+  } catch (e) {
+    showFeedback();
+  }
 };
 
 window.toggleFullScreen = function() {
@@ -94,8 +128,8 @@ function restoreSession(data) {
     currentYearIndex: data.currentYearIndex || 0, currentQuestion: data.currentQuestion || 0, userAnswers: data.userAnswers || [],
     visitedQuestions: data.visitedQuestions || [], lockedAnswers: data.lockedAnswers || [], sectionTimes: data.sectionTimes || [],
     securityWarnings: data.securityWarnings || 0, questions: data.questions || [], sections: data.sections || [],
-    studentNameVal: data.studentNameVal || "AGYAT", studentClassVal: restoredClass, studentSectionVal: data.studentSectionVal || "A",
-    schoolNameVal: data.schoolNameVal || "SPS", studentName: data.studentName || "", sectionToppersFetched: data.sectionToppersFetched || [],
+    studentNameVal: data.studentNameVal || "", studentClassVal: restoredClass, studentSectionVal: data.studentSectionVal || "A",
+    schoolNameVal: data.schoolNameVal || "", studentName: data.studentName || "", sectionToppersFetched: data.sectionToppersFetched || [],
     isExamActive: true, isTimerPaused: false
   });
   if ($('student-name-input')) $('student-name-input').value = CBTState.studentNameVal;
@@ -135,6 +169,7 @@ function textToIndex(correctText, optionsArray) {
   return idx !== -1 ? idx : 0; 
 }
 
+/* 1. FetchQuestionsOfCBT */
 async function loadQuestionsFromSheet(retries = 3) {
   if (CBTState.isQuestionsLoading || CBTState.listExamPapers.length > 0) return;
   CBTState.isQuestionsLoading = true;
@@ -185,45 +220,92 @@ async function loadQuestionsFromSheet(retries = 3) {
   CBTState.isQuestionsLoading = false;
 }
 
+/* 2. FetchRecordOfCBT - Robust real-data sync without fabricated fallbacks */
 async function fetchAndRenderSidebarToppers() {
-  const fetchRecordUrl = getFetchRecordOfCBT(), container = $('sidebar-toppers');
+  const fetchRecordUrl = getFetchRecordOfCBT();
+  const container = $('sidebar-toppers');
   if (!fetchRecordUrl) return;
   try {
-    const testName = getTestName(), sec = CBTState.sections[CBTState.currentYearIndex];
+    const testName = getTestName();
+    const sec = CBTState.sections[CBTState.currentYearIndex];
     const currentSection = sec ? `${sec.year} - ${sec.title}` : "";
     const res = await fetch(`${fetchRecordUrl}?testName=${encodeURIComponent(testName)}&currentSection=${encodeURIComponent(currentSection)}&_t=${Date.now()}`);
     const data = await res.json();
-    const recordsList = data ? (data.records || data.top7 || data.top5 || data.toppers || (Array.isArray(data) ? data : [])) : [];
-    CBTState.allFetchedRecords = recordsList;
-    if (recordsList.length > 0) { renderSidebarToppers(recordsList); updateUserDynamicRank(); }
-    else if (container) container.style.display = 'none';
-  } catch (err) { console.warn("Toppers sync error:", err); }
+    let recordsList = data ? (data.records || data.top7 || data.top5 || data.toppers || (Array.isArray(data) ? data : [])) : [];
+    
+    // If exact section yielded no results, fetch broad records for this test topic
+    if ((!recordsList || recordsList.length === 0) && currentSection) {
+      try {
+        const broadRes = await fetch(`${fetchRecordUrl}?testName=${encodeURIComponent(testName)}&_t=${Date.now()}`);
+        const broadData = await broadRes.json();
+        recordsList = broadData ? (broadData.records || broadData.top7 || broadData.top5 || broadData.toppers || (Array.isArray(broadData) ? broadData : [])) : [];
+      } catch (e) {}
+    }
+
+    CBTState.allFetchedRecords = recordsList || [];
+    if (recordsList && recordsList.length > 0) {
+      renderSidebarToppers(recordsList);
+      updateUserDynamicRank();
+    } else if (container) {
+      container.style.display = 'none';
+    }
+  } catch (err) {
+    if (container) container.style.display = 'none';
+  }
 }
 
+/* Top Performers Structure in 1 / 2 3 / 4 5 6 7 order without artificial stretch */
 function renderSidebarToppers(toppersArray) { 
   const container = $('sidebar-toppers'), listEl = $('sidebar-toppers-list');
   if (!container || !listEl) return;
-  let realToppers = toppersArray.filter(t => t && (t.studentName || t.name) && (t.studentName !== "Awaiting..." && t.name !== "Awaiting..."));
-  if (realToppers.length === 0) { container.style.display = 'none'; return; }
+  
+  let realToppers = (toppersArray || []).filter(t => t && (t.studentName || t.name) && String(t.studentName || t.name).trim() !== "" && String(t.studentName || t.name).toLowerCase() !== "awaiting...");
+  if (realToppers.length === 0) {
+    container.style.display = 'none';
+    return;
+  }
+  
   const getMarks = t => parseFloat(t.obtainedScore ?? t.score ?? t.totalMarks ?? t.marks ?? 0) || 0; 
   const getAccuracy = t => parseFloat((t.accuracy || "0").toString().replace("%", "")) || 0; 
   realToppers.sort((a, b) => (getMarks(b) - getMarks(a)) || (getAccuracy(b) - getAccuracy(a))); 
   const top7 = realToppers.slice(0, 7);
   
-  listEl.innerHTML = top7.map((t, idx) => {
+  const buildCardHTML = (t, idx) => {
     const rank = idx + 1;
-    let rankClass = 'rank-default', iconStr = `#${rank}`;
-    if (rank === 1) { rankClass = 'rank-1'; iconStr = '🥇'; }
-    else if (rank === 2) { rankClass = 'rank-2'; iconStr = '🥈'; }
-    else if (rank === 3) { rankClass = 'rank-3'; iconStr = '🥉'; }
+    let cardTheme = 'rank-rest', badgeText = `#${rank}`;
+    if (rank === 1) { cardTheme = 'rank-1'; badgeText = '1'; }
+    else if (rank === 2) { cardTheme = 'rank-2'; badgeText = '2'; }
+    else if (rank === 3) { cardTheme = 'rank-3'; badgeText = '3'; }
     
-    const isCentered = (rank === 7) ? ' rank-centered-last' : '';
-    const name = escapeHTML(t.studentName || t.name || 'Student');
-    const marks = getMarks(t);
-    const clsSec = (t.studentClass || t.classVal ? (t.studentClass || t.classVal) : '') + (t.studentSection || t.sectionVal ? (t.studentSection || t.sectionVal) : '');
-    const school = (t.schoolName || t.school) ? ` ${t.schoolName || t.school}` : '';
-    return `<div class="topper-badge ${rankClass}${isCentered}">${iconStr} <strong>${name}</strong> · ${marks}M${clsSec ? ` (${clsSec})` : ''}${school}</div>`;
-  }).join(''); 
+    let rawName = (t.studentName || t.name || '').replace(/\s*\(Reload\s*Dropout\)/gi, '').trim();
+    const name = escapeHTML(rawName);
+    const marksVal = getMarks(t);
+    const marksText = `${marksVal} ${marksVal === 1 ? 'Mark' : 'Marks'}`;
+    
+    let cls = (t.studentClass || t.classVal || "").toString().replace(/^Class\s*/i, '').trim();
+    let sec = (t.studentSection || t.sectionVal || "").toString().replace(/^Sec\s*/i, '').trim();
+    const clsSec = (cls && sec) ? `${cls}-${sec}` : (cls || sec || "");
+    const school = escapeHTML((t.schoolName || t.school || "").toString().trim());
+
+    return `
+      <div class="tp6-compact-card ${cardTheme}">
+        <span class="tp6-badge-shape">${badgeText}</span>
+        <span class="tp6-name-text">${name}</span>
+        ${marksText ? `<span class="tp6-pipe">|</span><span class="tp6-score-text">${marksText}</span>` : ''}
+        ${clsSec ? `<span class="tp6-pipe">|</span><span class="tp6-class-text">${clsSec}</span>` : ''}
+        ${school ? `<span class="tp6-school-tag">${school}</span>` : ''}
+      </div>`;
+  };
+
+  let row1 = top7.slice(0, 1).map((t, i) => buildCardHTML(t, i)).join('');
+  let row2 = top7.slice(1, 3).map((t, i) => buildCardHTML(t, i + 1)).join('');
+  let row3 = top7.slice(3, 7).map((t, i) => buildCardHTML(t, i + 3)).join('');
+
+  listEl.innerHTML = `
+    <div class="tp6-row tp6-row-1">${row1}</div>
+    ${row2 ? `<div class="tp6-row tp6-row-2">${row2}</div>` : ''}
+    ${row3 ? `<div class="tp6-row tp6-row-3">${row3}</div>` : ''}
+  `;
   container.style.display = 'flex';
 }
 
@@ -245,6 +327,7 @@ function updateUserDynamicRank() {
   const currentScore = calculateCurrentExamScore();
   const getMarks = t => parseFloat(t.obtainedScore ?? t.score ?? t.totalMarks ?? t.marks ?? 0) || 0;
   const validScores = CBTState.allFetchedRecords.filter(t => t && (t.studentName || t.name)).map(getMarks);
+  if (validScores.length === 0) return;
   let higherCount = 0;
   validScores.forEach(score => { if (score > currentScore) higherCount++; });
   const rankStr = `${higherCount + 1} / ${validScores.length + 1}`;
@@ -269,6 +352,7 @@ function showToastAlert(m) {
   } 
 }
 
+/* Modal and Navigation System */
 function triggerVerifyModal(type) { 
   const modal = $('verify-resource-modal'), heading = $('verify-modal-heading'), text = $('verify-modal-text'), actionBtn = $('verify-proceed-action-btn'); 
   if (!modal) return;
@@ -284,21 +368,22 @@ function triggerVerifyModal(type) {
     if (text) text.innerText = "Open study notes in a new tab while keeping your exam active?";
     if (actionBtn) { actionBtn.innerText = "Open Notes"; actionBtn.onclick = () => { window.open(CBTState.activeResourceUrl, '_blank'); closeVerifyModal(); }; }
   } else if (type === 'back') {
-    if (heading) heading.innerText = "Leave Exam?";
-    if (text) text.innerText = "Are you sure you want to return to Home? Your active exam session progress will be preserved.";
-    if (actionBtn) { actionBtn.innerText = "Leave Exam"; actionBtn.onclick = () => { closeVerifyModal(); goToHome(); }; }
+    if (heading) heading.innerText = "Leave Exam Session?";
+    if (text) text.innerText = "Are you sure you want to go back? Your current progress is saved.";
+    if (actionBtn) { 
+      actionBtn.innerText = "Leave"; 
+      actionBtn.onclick = () => { 
+        closeVerifyModal(); 
+        if (window.history.length > 1) window.history.back();
+        else window.location.href = getHomeUrl();
+      }; 
+    }
   }
 }
 function closeVerifyModal() { if ($('verify-resource-modal')) $('verify-resource-modal').style.display = 'none'; }
-function goToHome() { 
-  if (CBTState.isExamActive) {
-    triggerVerifyModal('back');
-    return;
-  }
-  window.location.href = getHomeUrl(); 
-}
+function goToHome() { triggerVerifyModal('back'); }
 
-/* PROCTORING AND SECURITY */
+/* Proctoring and Security Warnings */
 window.closeSecurityModal = () => { 
   if ($('modal-security')) $('modal-security').style.display = 'none'; 
   const widget = document.querySelector('.sc-widget-container');
@@ -321,17 +406,61 @@ function applySecurityPenalty() {
 
 ['contextmenu', 'copy', 'cut', 'dragstart'].forEach(ev => document.addEventListener(ev, e => { if (isProctoringEnabled() && CBTState.isExamActive) e.preventDefault(); }));
 
+/* Keyboard Shortcuts - Prevent Spacebar page shift */
 document.addEventListener('keydown', e => {
+  const activeEl = document.activeElement;
+  const isTextInput = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.tagName === 'SELECT' || activeEl.isContentEditable);
+
+  if (e.code === 'Space' && !isTextInput && CBTState.isExamActive) {
+    e.preventDefault();
+    const now = Date.now();
+    if (now - CBTState.lastSpacePressTime < 350) {
+      CBTState.isTimerPaused = !CBTState.isTimerPaused;
+      CBTState.lastSpacePressTime = 0;
+      return;
+    }
+    CBTState.lastSpacePressTime = now;
+  }
+
+  if (isTextInput) return;
+
+  if (CBTState.isExamActive && $('quiz-screen')?.style.display === 'block') {
+    const key = e.key ? e.key.toUpperCase() : "";
+    const keyMap = { 'A': 0, '1': 0, 'B': 1, '2': 1, 'C': 2, '3': 2, 'D': 3, '4': 3 };
+    if (key in keyMap) {
+      e.preventDefault();
+      const optionIndex = keyMap[key];
+      const curQ = CBTState.questions[CBTState.currentQuestion];
+      if (curQ && curQ.options && optionIndex < curQ.options.length) saveAnswer(optionIndex);
+      return;
+    }
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      nextQuestion();
+      return;
+    }
+    if (e.key === 'Backspace') {
+      e.preventDefault();
+      prevQuestion();
+      return;
+    }
+    if (e.key === 'Delete') {
+      e.preventDefault();
+      clearResponse();
+      return;
+    }
+  }
+
   if (!CBTState.isExamActive || !isProctoringEnabled()) return;
-  const key = e.key ? e.key.toLowerCase() : "", code = e.code ? e.code.toLowerCase() : "";
-  if (key === 'printscreen' || code === 'printscreen' || e.keyCode === 44 || ((e.metaKey || e.ctrlKey) && e.shiftKey && ['3','4','5','s'].includes(key))) {
+  const keyLow = e.key ? e.key.toLowerCase() : "", codeLow = e.code ? e.code.toLowerCase() : "";
+  if (keyLow === 'printscreen' || codeLow === 'printscreen' || e.keyCode === 44 || ((e.metaKey || e.ctrlKey) && e.shiftKey && ['3','4','5','s'].includes(keyLow))) {
     e.preventDefault();
     try { navigator.clipboard.writeText(''); } catch (err) {}
     applySecurityPenalty();
     return false;
   }
   let ic = e.ctrlKey || e.metaKey; 
-  if (e.key === 'F12' || e.keyCode === 123 || (ic && e.shiftKey && ['i', 'j', 'c'].includes(key)) || (ic && ['u', 'p', 's', 'r'].includes(key)) || e.key === 'F5') { 
+  if (e.key === 'F12' || e.keyCode === 123 || (ic && e.shiftKey && ['i', 'j', 'c'].includes(keyLow)) || (ic && ['u', 'p', 's', 'r'].includes(keyLow)) || e.key === 'F5') { 
     e.preventDefault(); 
     applySecurityPenalty(); 
     return false; 
@@ -340,9 +469,7 @@ document.addEventListener('keydown', e => {
 
 function handleBlurOrHide() { 
   if (!CBTState.isExamActive || !isProctoringEnabled() || CBTState.isTimerPaused) return; 
-  if (document.visibilityState === 'hidden' || !document.hasFocus()) {
-    applySecurityPenalty();
-  }
+  if (document.visibilityState === 'hidden' || !document.hasFocus()) applySecurityPenalty(); 
 }
 document.addEventListener("visibilitychange", () => { if (document.visibilityState === 'hidden') handleBlurOrHide(); });
 window.addEventListener("blur", handleBlurOrHide);
@@ -354,11 +481,11 @@ window.proceedToRegisterStep = () => {
 
 window.goToGuidelinesStep = () => { 
   const nameInput = $('student-name-input');
-  CBTState.studentNameVal = (nameInput ? nameInput.value.trim() : "").toUpperCase() || "AGYAT"; 
+  CBTState.studentNameVal = (nameInput ? nameInput.value.trim() : "").toUpperCase(); 
   const rawClass = $('student-class-input') ? $('student-class-input').value : "Class 12";
   CBTState.studentClassVal = (rawClass.toString().startsWith("Class") || rawClass === "OTHER") ? rawClass : `Class ${rawClass}`;
   CBTState.studentSectionVal = $('student-section-input') ? $('student-section-input').value : "A"; 
-  CBTState.schoolNameVal = ($('student-school-input') ? $('student-school-input').value.trim() : "").toUpperCase() || "SPS"; 
+  CBTState.schoolNameVal = ($('student-school-input') ? $('student-school-input').value.trim() : "").toUpperCase(); 
   CBTState.studentName = `${CBTState.studentNameVal} | ${CBTState.studentClassVal} | SEC: ${CBTState.studentSectionVal} | ${CBTState.schoolNameVal}`; 
   if ($('welcome-step-1')) $('welcome-step-1').style.display = 'none'; 
   if ($('welcome-step-2')) $('welcome-step-2').style.display = 'block'; 
@@ -395,6 +522,8 @@ window.beginExam = async () => {
   if ($('unified-nav')) $('unified-nav').style.display = 'flex'; 
   enableDesktopFullscreen();
   buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion(); saveSessionToLocalStorage(); 
+  
+  fetchAndRenderSidebarToppers();
 };
 
 function triggerFeedbackSectionAnimation() {
@@ -449,7 +578,6 @@ window.toggleExplanation = function() {
   if (wrapper) wrapper.classList.toggle('has-open-content', !isOpen);
 };
 
-/* Responsive button repositioning: places matrix under explanation on mobile, in palette on desktop */
 function placeActionMatrix() {
   const matrix = $('action-matrix-slot'), contentArea = $('question-content'), palette = $('palette-column-container');
   if (!matrix || !contentArea || !palette) return;
@@ -463,13 +591,11 @@ function placeActionMatrix() {
 }
 window.addEventListener('resize', placeActionMatrix);
 
-/* Touch gesture handling: Swipes for prev/next and double tap for instant answer selection */
 let touchStartX = 0, touchStartY = 0, lastOptionTapTime = 0, lastTappedIndex = -1;
 
 function setupMobileGestures() {
   const contentArea = $('question-content');
   if (!contentArea) return;
-
   contentArea.addEventListener('touchstart', e => {
     if (window.innerWidth > 640) return;
     touchStartX = e.changedTouches[0].clientX;
@@ -478,11 +604,10 @@ function setupMobileGestures() {
 
   contentArea.addEventListener('touchend', e => {
     if (window.innerWidth > 640 || !CBTState.isExamActive) return;
-    const diffX = e.changedTouches[0].clientX - touchStartX;
-    const diffY = e.changedTouches[0].clientY - touchStartY;
+    const diffX = e.changedTouches[0].clientX - touchStartX, diffY = e.changedTouches[0].clientY - touchStartY;
     if (Math.abs(diffX) > 55 && Math.abs(diffX) > Math.abs(diffY) * 1.5) {
-      if (diffX < 0) nextQuestion(); // Swipe left -> Next
-      else prevQuestion();          // Swipe right -> Previous
+      if (diffX < 0) nextQuestion();
+      else prevQuestion();
     }
   }, { passive: true });
 }
@@ -527,7 +652,7 @@ window.loadQuestion = () => {
   const pBar = $('qhc-progress-bar');
   if (pBar && tot > 0) pBar.style.width = `${Math.round(((qy + 1) / tot) * 100)}%`;
   
-  let baseText = `<span style="font-weight:700;color:var(--q-num-color);margin-right:6px;">Q${qy + 1}.</span>` + escapeHTML(curQ.question); 
+  let baseText = `<span style="font-weight:800;color:var(--q-num-color);margin-right:6px;">Q${qy + 1}.</span>` + escapeHTML(curQ.question); 
   if (curQ.image) baseText += `<div class="question-image-wrap" style="margin:0 0 12px 0;text-align:left;max-width:100%;"><img src="${curQ.image}" alt="Question Image" style="max-width:100%;max-height:220px;border-radius:8px;border:1px solid var(--border-color);object-fit:contain;display:block;"></div>`; 
   if ($('q-text')) $('q-text').innerHTML = baseText; 
 
@@ -648,6 +773,7 @@ window.showSubmitModal = () => {
 window.closeSubmitModal = () => { if ($('modal-submit')) $('modal-submit').style.display = 'none'; CBTState.isTimerPaused = false; };
 window.confirmSubmitExam = () => { if ($('modal-submit')) $('modal-submit').style.display = 'none'; CBTState.isTimerPaused = false; window.processSectionSubmission(); };
 
+/* 4. SaveRecordOfCBT */
 window.processSectionSubmission = async function() { 
   let sec = CBTState.sections[CBTState.currentYearIndex]; 
   sec.submitted = true; 
@@ -662,7 +788,7 @@ window.processSectionSubmission = async function() {
   if (scFrame) scFrame.style.display = 'none'; 
   if (sumCard) sumCard.style.display = 'none'; 
 
-  if ($('lbl-user-greeting')) $('lbl-user-greeting').innerText = CBTState.studentNameVal || "AGYAT";
+  if ($('lbl-user-greeting')) $('lbl-user-greeting').innerText = CBTState.studentNameVal || "";
   if ($('lbl-section-title')) $('lbl-section-title').innerText = `${sec.year} Completed,`;
 
   let secCorrect = 0, secIncorrect = 0, secUnattempted = 0, secMarks = 0;
@@ -689,8 +815,8 @@ window.processSectionSubmission = async function() {
   if (tg) {
     tg.innerHTML = '';
     let cM = 0, aS = 0, rC = 0, rI = 0, rL = 0, totalExamQ = 0;
-    const themeColors = ['blue', 'green', 'amber'], fmtPct = v => (v % 1 === 0 ? v.toFixed(0) : v.toFixed(2)) + '%';
-    CBTState.sections.forEach((s, sIdx) => {
+    const fmtPct = v => (v % 1 === 0 ? v.toFixed(0) : v.toFixed(2)) + '%';
+    CBTState.sections.forEach((s) => {
       let sC = 0, sI = 0, sL = 0, sS = 0, sT = s.end - s.start, sM = sT * getCorrectMarks();
       cM += sM; totalExamQ += sT;
       for (let i = s.start; i < s.end; i++) {
@@ -701,24 +827,61 @@ window.processSectionSubmission = async function() {
       }
       aS += sS; rC += sC; rI += sI; rL += sL;
       let pR = sM > 0 && sS > 0 && s.submitted ? Math.round((sS / sM) * 100) : 0;
-      let theme = themeColors[sIdx % themeColors.length];
       tg.innerHTML += `
-        <div class="summary-row-card row-theme-${theme}">
-          <div class="sm-col sm-col-section"><div class="sec-card-icon-box ${theme}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></div><div class="sec-card-title-group"><span class="sec-card-title">${escapeHTML(s.year)}</span><span class="sec-card-subtitle">${sT} Ques.</span></div></div>
-          <div class="sm-col"><span class="badge-pct-pill green">${s.submitted ? pR : 0}%</span><span class="sm-subtext">(${s.submitted ? (sS % 1 === 0 ? sS : sS.toFixed(2)) : 0} / ${sM % 1 === 0 ? sM : sM.toFixed(2)})</span></div>
-          <div class="sm-col"><span class="stat-circle-badge correct">${s.submitted ? sC : '0'}</span><span class="sm-subtext">${fmtPct(sT > 0 && s.submitted ? ((sC / sT) * 100) : 0)}</span></div>
-          <div class="sm-col"><span class="stat-circle-badge incorrect">${s.submitted ? sI : '0'}</span><span class="sm-subtext">${fmtPct(sT > 0 && s.submitted ? ((sI / sT) * 100) : 0)}</span></div>
-          <div class="sm-col"><span class="stat-circle-badge unattempted">${s.submitted ? sL : sT}</span><span class="sm-subtext">${fmtPct(sT > 0 ? (((s.submitted ? sL : sT) / sT) * 100) : 0)}</span></div>
+        <div class="img4-row">
+          <div class="img4-sec-col">
+            <div class="img4-file-icon-box">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            </div>
+            <div class="img4-sec-titles">
+              <span class="img4-sec-name">${escapeHTML(s.year)}</span>
+              <span class="img4-sec-ques">${sT} Ques.</span>
+            </div>
+          </div>
+          <div class="img4-cell-stat">
+            <span class="img4-pill-badge green">${s.submitted ? pR : 0}%</span>
+            <span class="img4-sub-ratio">(${s.submitted ? (sS % 1 === 0 ? sS : sS.toFixed(2)) : 0} / ${sM % 1 === 0 ? sM : sM.toFixed(2)})</span>
+          </div>
+          <div class="img4-cell-stat">
+            <span class="img4-stat-num correct">${s.submitted ? sC : '0'}</span>
+            <span class="img4-sub-ratio">${fmtPct(sT > 0 && s.submitted ? ((sC / sT) * 100) : 0)}</span>
+          </div>
+          <div class="img4-cell-stat">
+            <span class="img4-stat-num incorrect">${s.submitted ? sI : '0'}</span>
+            <span class="img4-sub-ratio">${fmtPct(sT > 0 && s.submitted ? ((sI / sT) * 100) : 0)}</span>
+          </div>
+          <div class="img4-cell-stat">
+            <span class="img4-stat-num unattempted">${s.submitted ? sL : sT}</span>
+            <span class="img4-sub-ratio">${fmtPct(sT > 0 ? (((s.submitted ? sL : sT) / sT) * 100) : 0)}</span>
+          </div>
         </div>`;
     });
     aS = Number((aS - (CBTState.securityWarnings * getPenaltyMarks())).toFixed(2));
     tg.innerHTML += `
-      <div class="summary-row-card row-theme-purple total-row">
-        <div class="sm-col sm-col-section"><div class="sec-card-icon-box purple" style="font-weight:900;font-size:1.15rem;">Σ</div><div class="sec-card-title-group"><span class="sec-card-title">TOTAL</span><span class="sec-card-subtitle">${totalExamQ} Ques.</span></div></div>
-        <div class="sm-col"><span class="badge-pct-pill blue">${cM > 0 ? Math.round((aS / cM) * 100) : 0}%</span><span class="sm-subtext">(${aS % 1 === 0 ? aS : aS.toFixed(2)} / ${cM % 1 === 0 ? cM : cM.toFixed(2)})</span></div>
-        <div class="sm-col"><span class="stat-circle-badge correct">${rC}</span><span class="sm-subtext">${fmtPct(totalExamQ > 0 ? ((rC / totalExamQ) * 100) : 0)}</span></div>
-        <div class="sm-col"><span class="stat-circle-badge incorrect">${rI}</span><span class="sm-subtext">${fmtPct(totalExamQ > 0 ? ((rI / totalExamQ) * 100) : 0)}</span></div>
-        <div class="sm-col"><span class="stat-circle-badge unattempted">${rL}</span><span class="sm-subtext">${fmtPct(totalExamQ > 0 ? ((rL / totalExamQ) * 100) : 0)}</span></div>
+      <div class="img4-row total-row">
+        <div class="img4-sec-col">
+          <div class="img4-file-icon-box" style="font-weight:900;font-size:1.15rem;color:#1e3a8a;">Σ</div>
+          <div class="img4-sec-titles">
+            <span class="img4-sec-name">TOTAL</span>
+            <span class="img4-sec-ques">${totalExamQ} Ques.</span>
+          </div>
+        </div>
+        <div class="img4-cell-stat">
+          <span class="img4-pill-badge blue">${cM > 0 ? Math.round((aS / cM) * 100) : 0}%</span>
+          <span class="img4-sub-ratio">(${aS % 1 === 0 ? aS : aS.toFixed(2)} / ${cM % 1 === 0 ? cM : cM.toFixed(2)})</span>
+        </div>
+        <div class="img4-cell-stat">
+          <span class="img4-stat-num correct">${rC}</span>
+          <span class="img4-sub-ratio">${fmtPct(totalExamQ > 0 ? ((rC / totalExamQ) * 100) : 0)}</span>
+        </div>
+        <div class="img4-cell-stat">
+          <span class="img4-stat-num incorrect">${rI}</span>
+          <span class="img4-sub-ratio">${fmtPct(totalExamQ > 0 ? ((rI / totalExamQ) * 100) : 0)}</span>
+        </div>
+        <div class="img4-cell-stat">
+          <span class="img4-stat-num unattempted">${rL}</span>
+          <span class="img4-sub-ratio">${fmtPct(totalExamQ > 0 ? ((rL / totalExamQ) * 100) : 0)}</span>
+        </div>
       </div>`;
   }
 
@@ -726,8 +889,8 @@ window.processSectionSubmission = async function() {
   if (saveUrl) {
     const params = new URLSearchParams();
     params.append("timestamp", getFormattedTimestamp());
-    params.append("studentName", CBTState.studentNameVal || "AGYAT");
-    params.append("studentClass", CBTState.studentClassVal?.toString().startsWith("Class") ? CBTState.studentClassVal : `Class ${CBTState.studentClassVal || "12"}`);
+    params.append("studentName", CBTState.studentNameVal || "");
+    params.append("studentClass", CBTState.studentClassVal?.toString().startsWith("Class") ? CBTState.studentClassVal : `Class ${CBTState.studentClassVal || ""}`);
     params.append("studentSection", CBTState.studentSectionVal);
     params.append("schoolName", CBTState.schoolNameVal);
     params.append("testName", getTestName());
@@ -743,7 +906,7 @@ window.processSectionSubmission = async function() {
     try { await fetch(saveUrl, { method: "POST", body: params }); } catch (err) { console.warn("Save sync error:", err); }
   }
 
-  await new Promise(res => setTimeout(res, 850));
+  await new Promise(res => setTimeout(res, 900));
   if (loaderBox) loaderBox.style.display = 'none';
   if (scFrame) scFrame.style.display = 'flex';
   let b = $('btn-dashboard-main-trigger'); 
@@ -756,7 +919,10 @@ window.processSectionSubmission = async function() {
 function showFinalCumulativeEvaluation() {
   clearSessionLocalStorage(); 
   if ($('capture-scorecard-frame')) $('capture-scorecard-frame').style.display = 'none';
-  if ($('cumulative-matrix-container')) { $('cumulative-matrix-container').style.display = 'block'; $('cumulative-matrix-container').scrollIntoView({ behavior: 'smooth' }); }
+  if ($('cumulative-matrix-container')) { 
+    $('cumulative-matrix-container').style.display = 'block'; 
+    $('cumulative-matrix-container').scrollIntoView({ behavior: 'smooth' }); 
+  }
 }
 
 function executeProgressionAdvance() { 
@@ -842,11 +1008,12 @@ window.toggleFeedbackPill = function(radioInput) {
   radioInput.closest('.fb-radio-pill-exact').classList.add('active');
 };
 
+/* 3. FeedbackScriptURL */
 window.submitUserFeedback = async function() {
   const msgEl = $('feedback-user-message'), rawMessage = msgEl ? msgEl.value.trim() : "", finalMessage = rawMessage || "(Rating Submitted)";
   const btn = $('btn-save-feedback');
   if (btn) { btn.disabled = true; btn.innerHTML = `<span>Saving...</span>`; }
-  const payload = { chapter: getTestName(), studentClass: CBTState.studentClassVal || "Class XII", category: CBTState.feedbackCategory, name: CBTState.studentNameVal || "AGYAT", rating: `${CBTState.feedbackRating} Stars`, message: finalMessage };
+  const payload = { chapter: getTestName(), studentClass: CBTState.studentClassVal || "Class XII", category: CBTState.feedbackCategory, name: CBTState.studentNameVal || "", rating: `${CBTState.feedbackRating} Stars`, message: finalMessage };
   try {
     await fetch(getFeedbackScriptURL(), { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) });
     showToastAlert("Thank you! Your response has been saved.");
@@ -904,17 +1071,17 @@ function renderSubmissionsShowcase(dataList) {
 
   if (streamApproved) {
     streamApproved.innerHTML = approved.length === 0 ? `<div class="ssc-empty-note">No approved comments yet for this topic.</div>` : approvedToShow.map(item => {
-      const studentName = escapeHTML(item.name || 'Rohan Gupta'), firstLetter = studentName.charAt(0).toUpperCase() || 'R';
+      const studentName = escapeHTML(item.name || ''), firstLetter = studentName ? studentName.charAt(0).toUpperCase() : 'U';
       return `
       <div class="ssc-approved-image1-card">
         <div class="ssc-appr-header-row">
-          <div class="ssc-appr-user-meta"><div class="ssc-appr-avatar-blue">${firstLetter}</div><span class="ssc-appr-name">${studentName}</span><span class="ssc-appr-class-tag">${escapeHTML(item.studentClass || 'Class 12')}</span><span class="ssc-appr-date"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>${escapeHTML(item.timestamp || 'Sep 01, 2026')}</span></div>
+          <div class="ssc-appr-user-meta"><div class="ssc-appr-avatar-blue">${firstLetter}</div><span class="ssc-appr-name">${studentName}</span><span class="ssc-appr-class-tag">${escapeHTML(item.studentClass || 'Class 12')}</span><span class="ssc-appr-date"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>${escapeHTML(item.timestamp || '')}</span></div>
           <div class="ssc-appr-right-hud">${buildStars(item.rating)}<button type="button" class="ssc-dots-menu-btn" title="Options"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"></circle><circle cx="12" cy="12" r="2"></circle><circle cx="12" cy="19" r="2"></circle></svg></button></div>
         </div>
         <div class="ssc-appr-body-thread">
           <div class="ssc-thread-line-track"><div class="ssc-thread-stem"></div><div class="ssc-thread-node-dot"></div></div>
           <div class="ssc-appr-content-area">
-            <div class="ssc-appr-user-bubble">${escapeHTML(item.message || 'This chapter was very clear, loved the examples!')}</div>
+            <div class="ssc-appr-user-bubble">${escapeHTML(item.message || '')}</div>
             <div class="ssc-appr-instructor-row">
               <div class="ssc-inst-top-bar">
                 <div class="ssc-inst-profile">
@@ -922,9 +1089,9 @@ function renderSubmissionsShowcase(dataList) {
                   <span class="ssc-inst-name">Rohit Singh</span>
                   <span class="ssc-admin-tag-pill">Admin</span>
                 </div>
-                <span class="ssc-inst-date">${escapeHTML(item.replyDate || item.timestamp || 'Sep 01, 2026')}</span>
+                <span class="ssc-inst-date">${escapeHTML(item.replyDate || item.timestamp || '')}</span>
               </div>
-              <div class="ssc-inst-reply-bubble">👍 ${escapeHTML(item.reply || 'Thank you Aarav, glad it helped!')}</div>
+              <div class="ssc-inst-reply-bubble">👍 ${escapeHTML(item.reply || 'Thank you!')}</div>
             </div>
           </div>
         </div>
@@ -934,11 +1101,11 @@ function renderSubmissionsShowcase(dataList) {
 
   if (streamPending) {
     streamPending.innerHTML = pending.length === 0 ? `<div class="ssc-empty-note">No pending reviews.</div>` : pendingToShow.map(item => {
-      const studentName = escapeHTML(item.name || 'ROHIT'), firstLetter = studentName.charAt(0).toUpperCase() || 'R';
+      const studentName = escapeHTML(item.name || ''), firstLetter = studentName ? studentName.charAt(0).toUpperCase() : 'U';
       return `
       <div class="ssc-pending-image6-card">
         <div class="ssc-pending-top-row">
-          <div class="ssc-pending-user-info"><div class="ssc-pending-avatar-cyan">${firstLetter}</div><span class="ssc-pending-name">${studentName}</span><span class="ssc-pending-class-tag">${escapeHTML(item.studentClass || 'Class 12')}</span><span class="ssc-pending-date"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>${escapeHTML(item.timestamp || 'Sep 02, 2026')}</span></div>
+          <div class="ssc-pending-user-info"><div class="ssc-pending-avatar-cyan">${firstLetter}</div><span class="ssc-pending-name">${studentName}</span><span class="ssc-pending-class-tag">${escapeHTML(item.studentClass || 'Class 12')}</span><span class="ssc-pending-date"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>${escapeHTML(item.timestamp || '')}</span></div>
           <div class="ssc-pending-badge-pill"><span>⏳</span><span>Pending</span></div>
         </div>
         <div class="ssc-pending-blur-content">${escapeHTML(item.message || 'Student response undergoing moderation.')}</div>
@@ -952,9 +1119,15 @@ window.toggleAllSubmissions = function() {
   renderSubmissionsShowcase(CBTState.feedbackDataStore);
 };
 
-document.addEventListener('DOMContentLoaded', () => {
+/* DOM Initialization Sequence */
+document.addEventListener('DOMContentLoaded', async () => {
   const activeName = getTestName(); 
-  if ($('current-chapter')) $('current-chapter').innerText = activeName; 
+  const chNum = getChapterNumber();
+  const weight = getChapterWeightage();
+
+  if ($('header-ch-num')) $('header-ch-num').innerText = `Ch ${chNum}`;
+  if ($('header-ch-title')) $('header-ch-title').innerText = activeName;
+  if ($('header-weight-text')) $('header-weight-text').innerText = weight;
   document.querySelectorAll('.topic-text').forEach(node => node.innerText = activeName);
 
   if ($('welcome-correct-lbl')) $('welcome-correct-lbl').innerText = `+${getCorrectMarks()} Correct`;
@@ -966,11 +1139,16 @@ document.addEventListener('DOMContentLoaded', () => {
   placeActionMatrix();
 
   const saved = getSavedSession();
-  if (saved) { CBTState.pendingRestoreData = saved; if ($('modal-resume')) $('modal-resume').style.display = 'flex'; }
-  else if ($('modal-welcome')) $('modal-welcome').style.display = 'flex';
+  if (saved) { 
+    CBTState.pendingRestoreData = saved; 
+    if ($('modal-resume')) $('modal-resume').style.display = 'flex'; 
+  } else if ($('modal-welcome')) {
+    $('modal-welcome').style.display = 'flex';
+  }
 
-  loadQuestionsFromSheet(); 
-  fetchFeedbackSubmissions();
+  await loadQuestionsFromSheet(); 
+  await fetchAndRenderSidebarToppers();
+  await fetchFeedbackSubmissions();
 
   const eyes = document.querySelectorAll('.desktop-eyes .eye-ball'), pupils = document.querySelectorAll('.desktop-eyes .pupil'); 
   document.addEventListener('mousemove', e => { 
