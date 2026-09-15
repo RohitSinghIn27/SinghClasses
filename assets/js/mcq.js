@@ -11,7 +11,7 @@ const getFetchRecordOfCBT    = () => window.CBT_CONFIG?.FetchRecordOfCBT ?? "";
 const getFeedbackScriptURL   = () => window.CBT_CONFIG?.FeedbackScriptURL ?? "";
 const getSaveRecordOfCBT     = () => window.CBT_CONFIG?.SaveRecordOfCBT ?? "";
 const getHomeUrl             = () => window.CBT_CONFIG?.HOME_URL ?? "https://www.singhclasses.in/";
-const getYoutubeUrl          = () => window.CBT_CONFIG?.YOUTUBE_URL ?? "https://www.youtube.com/@SinghClasses";
+const getYoutubeUrl          = () => window.CBT_CONFIG?.YOUTUBE_URL ?? "https://youtu.be/cqiM2VVs-HM";
 const getNotesUrl            = () => window.CBT_CONFIG?.NOTES_URL ?? "#";
 
 const ICON_ALERT = `<svg class="sc-svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`;
@@ -22,11 +22,21 @@ window.CBTState = {
   listExamPapers: [], isQuestionsLoading: false, questions: [], sections: [], currentYearIndex: 0, currentQuestion: 0,
   studentNameVal: "", studentClassVal: "Class 12", studentSectionVal: "A", schoolNameVal: "", studentName: "",
   userAnswers: [], visitedQuestions: [], lockedAnswers: [], sectionTimes: [], timerInterval: null, isTimerPaused: true,
-  securityWarnings: 0, isExamActive: false, currentFilter: 'all', activeResourceUrl: "",
-  lastWT: 0, lastSpacePressTime: 0, sectionToppersFetched: [], pendingRestoreData: null, 
+  isExamPausedByUser: false, securityWarnings: 0, isExamActive: false, currentFilter: 'all', activeResourceUrl: "",
+  lastWT: 0, sectionToppersFetched: [], pendingRestoreData: null, 
   feedbackRating: 1.5, feedbackCategory: "Suggestion", feedbackDataStore: [], hasAnimatedStars: false,
-  isExpandedSubmissions: false, allFetchedRecords: []
+  isExpandedSubmissions: false, allFetchedRecords: [], hasFetchedFeedback: false
 };
+
+let spacePressTimestamps = [];
+
+function debounce(fn, delay = 150) {
+  let timer = null;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(this, args), delay);
+  };
+}
 
 function getFormattedTimestamp() {
   const now = new Date(), pad = n => (n < 10 ? '0' + n : n);
@@ -130,7 +140,7 @@ function restoreSession(data) {
     securityWarnings: data.securityWarnings || 0, questions: data.questions || [], sections: data.sections || [],
     studentNameVal: data.studentNameVal || "", studentClassVal: restoredClass, studentSectionVal: data.studentSectionVal || "A",
     schoolNameVal: data.schoolNameVal || "", studentName: data.studentName || "", sectionToppersFetched: data.sectionToppersFetched || [],
-    isExamActive: true, isTimerPaused: false
+    isExamActive: true, isTimerPaused: false, isExamPausedByUser: false
   });
   if ($('student-name-input')) $('student-name-input').value = CBTState.studentNameVal;
   if ($('student-class-input')) $('student-class-input').value = CBTState.studentClassVal;
@@ -405,26 +415,58 @@ function applySecurityPenalty() {
   saveSessionToLocalStorage(); 
 }
 
+/* SPACE BAR EXAM PAUSE / RESUME */
+window.pauseExamByUser = function() {
+  if (!CBTState.isExamActive || CBTState.sections[CBTState.currentYearIndex]?.submitted) return;
+  CBTState.isExamPausedByUser = true;
+  CBTState.isTimerPaused = true;
+  const widget = document.querySelector('.sc-widget-container');
+  if (widget) widget.classList.add('sc-blur-active');
+  const modal = $('modal-paused');
+  if (modal) modal.style.display = 'flex';
+};
+
+window.resumeExamFromPause = function() {
+  CBTState.isExamPausedByUser = false;
+  CBTState.isTimerPaused = false;
+  const widget = document.querySelector('.sc-widget-container');
+  if (widget) widget.classList.remove('sc-blur-active');
+  const modal = $('modal-paused');
+  if (modal) modal.style.display = 'none';
+};
+
+function handleSpaceBarTripleTap() {
+  const now = Date.now();
+  spacePressTimestamps.push(now);
+  spacePressTimestamps = spacePressTimestamps.filter(t => now - t <= 1200);
+  if (spacePressTimestamps.length >= 3) {
+    spacePressTimestamps = [];
+    if (CBTState.isExamPausedByUser) {
+      resumeExamFromPause();
+    } else {
+      pauseExamByUser();
+    }
+  }
+}
+
 ['contextmenu', 'copy', 'cut', 'dragstart'].forEach(ev => document.addEventListener(ev, e => { if (isProctoringEnabled() && CBTState.isExamActive) e.preventDefault(); }));
 
 document.addEventListener('keydown', e => {
   const activeEl = document.activeElement;
   const isTextInput = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.tagName === 'SELECT' || activeEl.isContentEditable);
 
-  if (e.code === 'Space' && !isTextInput && CBTState.isExamActive) {
-    e.preventDefault();
-    const now = Date.now();
-    if (now - CBTState.lastSpacePressTime < 350) {
-      CBTState.isTimerPaused = !CBTState.isTimerPaused;
-      CBTState.lastSpacePressTime = 0;
-      return;
-    }
-    CBTState.lastSpacePressTime = now;
-  }
-
   if (isTextInput) return;
 
-  if (CBTState.isExamActive && $('quiz-screen')?.style.display === 'block') {
+  // Space bar: prevent scrolling & detect 3 consecutive presses to pause/resume
+  if (e.code === 'Space' || e.key === ' ' || e.keyCode === 32) {
+    if (CBTState.isExamActive && ($('quiz-screen')?.style.display === 'block' || CBTState.isExamPausedByUser)) {
+      e.preventDefault();
+      handleSpaceBarTripleTap();
+      return;
+    }
+  }
+
+  if (CBTState.isExamActive && $('quiz-screen')?.style.display === 'block' && !CBTState.isExamPausedByUser) {
     const key = e.key ? e.key.toUpperCase() : "";
     const keyMap = { 'A': 0, '1': 0, 'B': 1, '2': 1, 'C': 2, '3': 2, 'D': 3, '4': 3 };
     if (key in keyMap) {
@@ -518,6 +560,7 @@ window.beginExam = async () => {
   CBTState.sectionTimes = CBTState.sections.map(s => (s.end - s.start) * 60); 
   CBTState.currentYearIndex = 0; CBTState.currentQuestion = CBTState.sections[0].start; 
   CBTState.isTimerPaused = false; 
+  CBTState.isExamPausedByUser = false;
   if ($('quiz-screen')) $('quiz-screen').style.display = 'block'; 
   if ($('unified-nav')) $('unified-nav').style.display = 'flex'; 
   enableDesktopFullscreen();
@@ -526,11 +569,30 @@ window.beginExam = async () => {
   fetchAndRenderSidebarToppers();
 };
 
+/* DEFERRED RESPONSE FETCHING (Triggered when feedback area appears) */
 function triggerFeedbackSectionAnimation() {
   const container = $('cbt-interactive-feedback-wrapper');
   if (container && !container.classList.contains('section-entered')) {
     container.classList.add('section-entered');
+    if (!CBTState.hasFetchedFeedback) {
+      CBTState.hasFetchedFeedback = true;
+      fetchFeedbackSubmissions();
+    }
   }
+}
+
+function setupFeedbackSectionObserver() {
+  const container = $('cbt-interactive-feedback-wrapper');
+  if (!container) return;
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !CBTState.hasFetchedFeedback) {
+        CBTState.hasFetchedFeedback = true;
+        fetchFeedbackSubmissions();
+      }
+    });
+  }, { threshold: 0.1 });
+  observer.observe(container);
 }
 
 function isAnswerCorrect(qIdx) { 
@@ -589,12 +651,15 @@ function placeActionMatrix() {
     palette.appendChild(matrix);
   }
 }
-window.addEventListener('resize', placeActionMatrix);
-window.addEventListener('resize', () => {
+
+const handleAppResize = debounce(() => {
+  placeActionMatrix();
   if (CBTState.allFetchedRecords && CBTState.allFetchedRecords.length > 0) {
     renderSidebarToppers(CBTState.allFetchedRecords);
   }
-});
+}, 150);
+
+window.addEventListener('resize', handleAppResize);
 
 let touchStartX = 0, touchStartY = 0, lastOptionTapTime = 0, lastTappedIndex = -1;
 
@@ -608,7 +673,7 @@ function setupMobileGestures() {
   }, { passive: true });
 
   contentArea.addEventListener('touchend', e => {
-    if (window.innerWidth > 640 || !CBTState.isExamActive) return;
+    if (window.innerWidth > 640 || !CBTState.isExamActive || CBTState.isExamPausedByUser) return;
     const diffX = e.changedTouches[0].clientX - touchStartX, diffY = e.changedTouches[0].clientY - touchStartY;
     if (Math.abs(diffX) > 55 && Math.abs(diffX) > Math.abs(diffY) * 1.5) {
       if (diffX < 0) nextQuestion();
@@ -618,7 +683,7 @@ function setupMobileGestures() {
 }
 
 window.handleOptionDoubleTap = function(e, idx) {
-  if (window.innerWidth > 640) return;
+  if (window.innerWidth > 640 || CBTState.isExamPausedByUser) return;
   const currentTime = Date.now();
   if (currentTime - lastOptionTapTime < 350 && lastTappedIndex === idx) {
     e.preventDefault();
@@ -636,7 +701,7 @@ window.handleOptionDoubleTap = function(e, idx) {
 };
 
 window.handleOptionDesktopDblClick = function(e, idx) {
-  if (window.innerWidth <= 640) return;
+  if (window.innerWidth <= 640 || CBTState.isExamPausedByUser) return;
   if (!CBTState.lockedAnswers[CBTState.currentQuestion] && !CBTState.sections[CBTState.currentYearIndex].submitted) {
     saveAnswer(idx);
     CBTState.lockedAnswers[CBTState.currentQuestion] = true;
@@ -706,7 +771,7 @@ window.loadQuestion = () => {
 };
 
 window.saveAnswer = i => { 
-  if (CBTState.lockedAnswers[CBTState.currentQuestion] || CBTState.sections[CBTState.currentYearIndex].submitted) return; 
+  if (CBTState.lockedAnswers[CBTState.currentQuestion] || CBTState.sections[CBTState.currentYearIndex].submitted || CBTState.isExamPausedByUser) return; 
   CBTState.userAnswers[CBTState.currentQuestion] = i; 
   
   triggerFeedbackSectionAnimation();
@@ -720,19 +785,27 @@ window.saveAnswer = i => {
 };
 
 window.clearResponse = () => { 
-  if (CBTState.lockedAnswers[CBTState.currentQuestion] || CBTState.sections[CBTState.currentYearIndex].submitted) return; 
+  if (CBTState.lockedAnswers[CBTState.currentQuestion] || CBTState.sections[CBTState.currentYearIndex].submitted || CBTState.isExamPausedByUser) return; 
   CBTState.userAnswers[CBTState.currentQuestion] = null; 
   loadQuestion(); 
 };
 
 window.nextQuestion = () => { 
+  if (CBTState.isExamPausedByUser) return;
   if (CBTState.userAnswers[CBTState.currentQuestion] !== null && !CBTState.sections[CBTState.currentYearIndex].submitted) CBTState.lockedAnswers[CBTState.currentQuestion] = true; 
   if (CBTState.currentQuestion < CBTState.sections[CBTState.currentYearIndex].end - 1) { CBTState.currentQuestion++; loadQuestion(); } 
   else if (!CBTState.sections[CBTState.currentYearIndex].submitted) showSubmitModal(); 
 };
 
-window.prevQuestion = () => { if (CBTState.currentQuestion > CBTState.sections[CBTState.currentYearIndex].start) { CBTState.currentQuestion--; loadQuestion(); } };
-window.jumpToQuestion = i => { CBTState.currentQuestion = i; loadQuestion(); };
+window.prevQuestion = () => { 
+  if (CBTState.isExamPausedByUser) return;
+  if (CBTState.currentQuestion > CBTState.sections[CBTState.currentYearIndex].start) { CBTState.currentQuestion--; loadQuestion(); } 
+};
+window.jumpToQuestion = i => { 
+  if (CBTState.isExamPausedByUser) return;
+  CBTState.currentQuestion = i; 
+  loadQuestion(); 
+};
 
 window.filterPalette = type => { 
   CBTState.currentFilter = type; 
@@ -979,16 +1052,36 @@ function setupStarScrollObserver() {
   new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) triggerSlowMotionStarsAnimation(); }); }, { threshold: 0.25 }).observe(target);
 }
 
+/* HALF-STAR HOVER AND CLICK SYSTEM */
+window.handleStarHover = function(e, starVal) {
+  const rect = e.currentTarget.getBoundingClientRect();
+  const isLeftHalf = (e.clientX - rect.left) < (rect.width / 2);
+  const rating = isLeftHalf ? (starVal - 0.5) : starVal;
+  previewStars(rating);
+};
+
+window.handleStarClick = function(e, starVal) {
+  const rect = e.currentTarget.getBoundingClientRect();
+  const isLeftHalf = (e.clientX - rect.left) < (rect.width / 2);
+  const rating = isLeftHalf ? (starVal - 0.5) : starVal;
+  setFeedbackRating(rating, true);
+};
+
 window.previewStars = function(rating) { 
   document.querySelectorAll('#fb-stars-group .fb-star').forEach(s => {
     const val = parseInt(s.getAttribute('data-val'));
-    s.classList.remove('half-active');
-    s.classList.toggle('hovered', val <= rating);
+    s.classList.remove('hovered', 'hovered-half');
+    if (val < Math.ceil(rating)) {
+      s.classList.add('hovered');
+    } else if (val === Math.ceil(rating)) {
+      if (rating % 1 !== 0) s.classList.add('hovered-half');
+      else s.classList.add('hovered');
+    }
   }); 
 };
 
 window.resetStarsPreview = function() { 
-  document.querySelectorAll('#fb-stars-group .fb-star').forEach(s => s.classList.remove('hovered'));
+  document.querySelectorAll('#fb-stars-group .fb-star').forEach(s => s.classList.remove('hovered', 'hovered-half'));
   setFeedbackRating(CBTState.feedbackRating, false);
 };
 
@@ -996,12 +1089,12 @@ window.setFeedbackRating = function(rating, isUserAction = false) {
   CBTState.feedbackRating = rating;
   document.querySelectorAll('#fb-stars-group .fb-star').forEach(s => {
     const val = parseInt(s.getAttribute('data-val'));
-    s.classList.remove('half-active', 'active');
-    if (rating === 1.5) {
-      if (val === 1) s.classList.add('active');
-      else if (val === 2) s.classList.add('half-active');
-    } else {
-      if (val <= rating) s.classList.add('active');
+    s.classList.remove('half-active', 'active', 'hovered', 'hovered-half');
+    if (val < Math.ceil(rating)) {
+      s.classList.add('active');
+    } else if (val === Math.ceil(rating)) {
+      if (rating % 1 !== 0) s.classList.add('half-active');
+      else s.classList.add('active');
     }
   });
 };
@@ -1066,7 +1159,7 @@ function renderSubmissionsShowcase(dataList) {
     let num = parseFloat(ratingRaw) || 5, starsStr = '';
     for (let i = 1; i <= 5; i++) {
       if (i <= Math.floor(num)) starsStr += `<svg class="ssc-star-svg filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
-      else if (i === Math.ceil(num) && num % 1 !== 0) starsStr += `<svg class="ssc-star-svg" style="fill:url(#half-fill-grad);stroke:#f59e0b;" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
+      else if (i === Math.ceil(num) && num % 1 !== 0) starsStr += `<svg class="ssc-star-svg" style="fill:url(#half-fill-grad);stroke:url(#half-stroke-grad);" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
       else starsStr += `<svg class="ssc-star-svg" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
     }
     return `<div class="ssc-appr-stars">${starsStr}</div>`;
@@ -1140,6 +1233,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   setFeedbackRating(1.5, false);
   setupStarScrollObserver();
+  setupFeedbackSectionObserver();
   setupMobileGestures();
   placeActionMatrix();
 
@@ -1148,12 +1242,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     CBTState.pendingRestoreData = saved; 
     if ($('modal-resume')) $('modal-resume').style.display = 'flex'; 
   } else if ($('modal-welcome')) {
-    $('modal-welcome').style.display = 'flex';
+    $('modal-welcome').style.display = 'flex'; 
   }
 
   await loadQuestionsFromSheet(); 
   await fetchAndRenderSidebarToppers();
-  await fetchFeedbackSubmissions();
 
   const eyes = document.querySelectorAll('.desktop-eyes .eye-ball'), pupils = document.querySelectorAll('.desktop-eyes .pupil'); 
   document.addEventListener('mousemove', e => { 
