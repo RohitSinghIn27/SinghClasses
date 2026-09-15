@@ -22,7 +22,7 @@ window.CBTState = {
   listExamPapers: [], isQuestionsLoading: false, questions: [], sections: [], currentYearIndex: 0, currentQuestion: 0,
   studentNameVal: "", studentClassVal: "Class 12", studentSectionVal: "A", schoolNameVal: "", studentName: "",
   userAnswers: [], visitedQuestions: [], lockedAnswers: [], sectionTimes: [], timerInterval: null, isTimerPaused: true,
-  isExamPausedByUser: false, securityWarnings: 0, isExamActive: false, currentFilter: 'all', activeResourceUrl: "",
+  isTimerFrozen: false, securityWarnings: 0, isExamActive: false, currentFilter: 'all', activeResourceUrl: "",
   lastWT: 0, sectionToppersFetched: [], pendingRestoreData: null, 
   feedbackRating: 1.5, feedbackCategory: "Suggestion", feedbackDataStore: [], hasAnimatedStars: false,
   isExpandedSubmissions: false, allFetchedRecords: [], hasFetchedFeedback: false
@@ -56,7 +56,6 @@ window.sharePage = async function() {
     }
     if (icon) icon.style.display = "none";
     if (btn) btn.classList.add('copied-active');
-    
     setTimeout(() => {
       if (badge) {
         badge.innerText = "";
@@ -140,7 +139,7 @@ function restoreSession(data) {
     securityWarnings: data.securityWarnings || 0, questions: data.questions || [], sections: data.sections || [],
     studentNameVal: data.studentNameVal || "", studentClassVal: restoredClass, studentSectionVal: data.studentSectionVal || "A",
     schoolNameVal: data.schoolNameVal || "", studentName: data.studentName || "", sectionToppersFetched: data.sectionToppersFetched || [],
-    isExamActive: true, isTimerPaused: false, isExamPausedByUser: false
+    isExamActive: true, isTimerPaused: false, isTimerFrozen: false
   });
   if ($('student-name-input')) $('student-name-input').value = CBTState.studentNameVal;
   if ($('student-class-input')) $('student-class-input').value = CBTState.studentClassVal;
@@ -153,7 +152,6 @@ function restoreSession(data) {
   if ($('unified-nav')) $('unified-nav').style.display = 'flex';
   enableDesktopFullscreen();
   buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion();
-  
   if (CBTState.userAnswers.some(ans => ans !== null)) triggerFeedbackSectionAnimation();
   showToastAlert("Previous exam attempt restored successfully!");
 }
@@ -179,7 +177,6 @@ function textToIndex(correctText, optionsArray) {
   return idx !== -1 ? idx : 0; 
 }
 
-/* 1. FetchQuestionsOfCBT */
 async function loadQuestionsFromSheet(retries = 3) {
   if (CBTState.isQuestionsLoading || CBTState.listExamPapers.length > 0) return;
   CBTState.isQuestionsLoading = true;
@@ -230,7 +227,6 @@ async function loadQuestionsFromSheet(retries = 3) {
   CBTState.isQuestionsLoading = false;
 }
 
-/* 2. FetchRecordOfCBT */
 async function fetchAndRenderSidebarToppers() {
   const fetchRecordUrl = getFetchRecordOfCBT();
   const container = $('sidebar-toppers');
@@ -312,7 +308,6 @@ function renderSidebarToppers(toppersArray) {
     let row1 = top7.slice(0, 1).map((t, i) => buildCardHTML(t, i)).join('');
     let row2 = top7.slice(1, 3).map((t, i) => buildCardHTML(t, i + 1)).join('');
     let row3 = top7.slice(3, 7).map((t, i) => buildCardHTML(t, i + 3)).join('');
-
     listEl.innerHTML = `
       <div class="tp6-row tp6-row-1">${row1}</div>
       ${row2 ? `<div class="tp6-row tp6-row-2">${row2}</div>` : ''}
@@ -415,58 +410,47 @@ function applySecurityPenalty() {
   saveSessionToLocalStorage(); 
 }
 
-/* SPACE BAR EXAM PAUSE / RESUME */
-window.pauseExamByUser = function() {
-  if (!CBTState.isExamActive || CBTState.sections[CBTState.currentYearIndex]?.submitted) return;
-  CBTState.isExamPausedByUser = true;
-  CBTState.isTimerPaused = true;
-  const widget = document.querySelector('.sc-widget-container');
-  if (widget) widget.classList.add('sc-blur-active');
-  const modal = $('modal-paused');
-  if (modal) modal.style.display = 'flex';
-};
-
-window.resumeExamFromPause = function() {
-  CBTState.isExamPausedByUser = false;
-  CBTState.isTimerPaused = false;
-  const widget = document.querySelector('.sc-widget-container');
-  if (widget) widget.classList.remove('sc-blur-active');
-  const modal = $('modal-paused');
-  if (modal) modal.style.display = 'none';
-};
-
 function handleSpaceBarTripleTap() {
   const now = Date.now();
   spacePressTimestamps.push(now);
   spacePressTimestamps = spacePressTimestamps.filter(t => now - t <= 1200);
   if (spacePressTimestamps.length >= 3) {
     spacePressTimestamps = [];
-    if (CBTState.isExamPausedByUser) {
-      resumeExamFromPause();
-    } else {
-      pauseExamByUser();
-    }
+    CBTState.isTimerFrozen = true;
+    const timerBox = $('timer-box');
+    if (timerBox) timerBox.classList.add('timer-frozen');
   }
 }
+
+/* TARGETED TIMER BOX DOUBLE-CLICK TO UNFREEZE */
+document.addEventListener('DOMContentLoaded', () => {
+  const timerBox = $('timer-box');
+  if (timerBox) {
+    timerBox.addEventListener('dblclick', () => {
+      if (CBTState.isTimerFrozen) {
+        CBTState.isTimerFrozen = false;
+        timerBox.classList.remove('timer-frozen');
+      }
+    });
+  }
+});
 
 ['contextmenu', 'copy', 'cut', 'dragstart'].forEach(ev => document.addEventListener(ev, e => { if (isProctoringEnabled() && CBTState.isExamActive) e.preventDefault(); }));
 
 document.addEventListener('keydown', e => {
   const activeEl = document.activeElement;
   const isTextInput = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.tagName === 'SELECT' || activeEl.isContentEditable);
-
   if (isTextInput) return;
 
-  // Space bar: prevent scrolling & detect 3 consecutive presses to pause/resume
   if (e.code === 'Space' || e.key === ' ' || e.keyCode === 32) {
-    if (CBTState.isExamActive && ($('quiz-screen')?.style.display === 'block' || CBTState.isExamPausedByUser)) {
+    if (CBTState.isExamActive && $('quiz-screen')?.style.display === 'block') {
       e.preventDefault();
       handleSpaceBarTripleTap();
       return;
     }
   }
 
-  if (CBTState.isExamActive && $('quiz-screen')?.style.display === 'block' && !CBTState.isExamPausedByUser) {
+  if (CBTState.isExamActive && $('quiz-screen')?.style.display === 'block') {
     const key = e.key ? e.key.toUpperCase() : "";
     const keyMap = { 'A': 0, '1': 0, 'B': 1, '2': 1, 'C': 2, '3': 2, 'D': 3, '4': 3 };
     if (key in keyMap) {
@@ -560,24 +544,22 @@ window.beginExam = async () => {
   CBTState.sectionTimes = CBTState.sections.map(s => (s.end - s.start) * 60); 
   CBTState.currentYearIndex = 0; CBTState.currentQuestion = CBTState.sections[0].start; 
   CBTState.isTimerPaused = false; 
-  CBTState.isExamPausedByUser = false;
+  CBTState.isTimerFrozen = false;
   if ($('quiz-screen')) $('quiz-screen').style.display = 'block'; 
   if ($('unified-nav')) $('unified-nav').style.display = 'flex'; 
   enableDesktopFullscreen();
   buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion(); saveSessionToLocalStorage(); 
-  
   fetchAndRenderSidebarToppers();
 };
 
-/* DEFERRED RESPONSE FETCHING (Triggered when feedback area appears) */
 function triggerFeedbackSectionAnimation() {
   const container = $('cbt-interactive-feedback-wrapper');
   if (container && !container.classList.contains('section-entered')) {
     container.classList.add('section-entered');
-    if (!CBTState.hasFetchedFeedback) {
-      CBTState.hasFetchedFeedback = true;
-      fetchFeedbackSubmissions();
-    }
+  }
+  if (!CBTState.hasFetchedFeedback) {
+    CBTState.hasFetchedFeedback = true;
+    fetchFeedbackSubmissions();
   }
 }
 
@@ -586,12 +568,12 @@ function setupFeedbackSectionObserver() {
   if (!container) return;
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting && !CBTState.hasFetchedFeedback) {
-        CBTState.hasFetchedFeedback = true;
-        fetchFeedbackSubmissions();
+      if (entry.isIntersecting) {
+        triggerFeedbackSectionAnimation();
+        observer.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.1 });
+  }, { rootMargin: "150px 0px", threshold: 0.05 });
   observer.observe(container);
 }
 
@@ -612,8 +594,11 @@ function startTimer() {
   if (CBTState.timerInterval) clearInterval(CBTState.timerInterval); 
   let ticks = 0;
   CBTState.timerInterval = setInterval(() => { 
-    if (CBTState.isTimerPaused || !CBTState.isExamActive || (CBTState.sections[CBTState.currentYearIndex]?.submitted)) return; 
-    if (CBTState.sectionTimes[CBTState.currentYearIndex] > 0) { CBTState.sectionTimes[CBTState.currentYearIndex]--; CBTState.sections[CBTState.currentYearIndex].timeSpent++; } 
+    if (CBTState.isTimerPaused || CBTState.isTimerFrozen || !CBTState.isExamActive || (CBTState.sections[CBTState.currentYearIndex]?.submitted)) return; 
+    if (CBTState.sectionTimes[CBTState.currentYearIndex] > 0) { 
+      CBTState.sectionTimes[CBTState.currentYearIndex]--; 
+      CBTState.sections[CBTState.currentYearIndex].timeSpent++; 
+    } 
     updateTimerDisplay(); 
     ticks++;
     if (ticks % 5 === 0) saveSessionToLocalStorage(); 
@@ -673,7 +658,7 @@ function setupMobileGestures() {
   }, { passive: true });
 
   contentArea.addEventListener('touchend', e => {
-    if (window.innerWidth > 640 || !CBTState.isExamActive || CBTState.isExamPausedByUser) return;
+    if (window.innerWidth > 640 || !CBTState.isExamActive) return;
     const diffX = e.changedTouches[0].clientX - touchStartX, diffY = e.changedTouches[0].clientY - touchStartY;
     if (Math.abs(diffX) > 55 && Math.abs(diffX) > Math.abs(diffY) * 1.5) {
       if (diffX < 0) nextQuestion();
@@ -683,7 +668,7 @@ function setupMobileGestures() {
 }
 
 window.handleOptionDoubleTap = function(e, idx) {
-  if (window.innerWidth > 640 || CBTState.isExamPausedByUser) return;
+  if (window.innerWidth > 640) return;
   const currentTime = Date.now();
   if (currentTime - lastOptionTapTime < 350 && lastTappedIndex === idx) {
     e.preventDefault();
@@ -701,7 +686,7 @@ window.handleOptionDoubleTap = function(e, idx) {
 };
 
 window.handleOptionDesktopDblClick = function(e, idx) {
-  if (window.innerWidth <= 640 || CBTState.isExamPausedByUser) return;
+  if (window.innerWidth <= 640) return;
   if (!CBTState.lockedAnswers[CBTState.currentQuestion] && !CBTState.sections[CBTState.currentYearIndex].submitted) {
     saveAnswer(idx);
     CBTState.lockedAnswers[CBTState.currentQuestion] = true;
@@ -771,7 +756,7 @@ window.loadQuestion = () => {
 };
 
 window.saveAnswer = i => { 
-  if (CBTState.lockedAnswers[CBTState.currentQuestion] || CBTState.sections[CBTState.currentYearIndex].submitted || CBTState.isExamPausedByUser) return; 
+  if (CBTState.lockedAnswers[CBTState.currentQuestion] || CBTState.sections[CBTState.currentYearIndex].submitted) return; 
   CBTState.userAnswers[CBTState.currentQuestion] = i; 
   
   triggerFeedbackSectionAnimation();
@@ -782,27 +767,29 @@ window.saveAnswer = i => {
     fetchAndRenderSidebarToppers();
   }
   loadQuestion(); 
+  if (CBTState.isTimerFrozen) {
+    const timerBox = $('timer-box');
+    if (timerBox) timerBox.classList.add('timer-frozen');
+  }
 };
 
 window.clearResponse = () => { 
-  if (CBTState.lockedAnswers[CBTState.currentQuestion] || CBTState.sections[CBTState.currentYearIndex].submitted || CBTState.isExamPausedByUser) return; 
+  if (CBTState.lockedAnswers[CBTState.currentQuestion] || CBTState.sections[CBTState.currentYearIndex].submitted) return; 
   CBTState.userAnswers[CBTState.currentQuestion] = null; 
   loadQuestion(); 
 };
 
 window.nextQuestion = () => { 
-  if (CBTState.isExamPausedByUser) return;
   if (CBTState.userAnswers[CBTState.currentQuestion] !== null && !CBTState.sections[CBTState.currentYearIndex].submitted) CBTState.lockedAnswers[CBTState.currentQuestion] = true; 
   if (CBTState.currentQuestion < CBTState.sections[CBTState.currentYearIndex].end - 1) { CBTState.currentQuestion++; loadQuestion(); } 
   else if (!CBTState.sections[CBTState.currentYearIndex].submitted) showSubmitModal(); 
 };
 
 window.prevQuestion = () => { 
-  if (CBTState.isExamPausedByUser) return;
   if (CBTState.currentQuestion > CBTState.sections[CBTState.currentYearIndex].start) { CBTState.currentQuestion--; loadQuestion(); } 
 };
+
 window.jumpToQuestion = i => { 
-  if (CBTState.isExamPausedByUser) return;
   CBTState.currentQuestion = i; 
   loadQuestion(); 
 };
@@ -851,7 +838,6 @@ window.showSubmitModal = () => {
 window.closeSubmitModal = () => { if ($('modal-submit')) $('modal-submit').style.display = 'none'; CBTState.isTimerPaused = false; };
 window.confirmSubmitExam = () => { if ($('modal-submit')) $('modal-submit').style.display = 'none'; CBTState.isTimerPaused = false; window.processSectionSubmission(); };
 
-/* 4. SaveRecordOfCBT */
 window.processSectionSubmission = async function() { 
   let sec = CBTState.sections[CBTState.currentYearIndex]; 
   sec.submitted = true; 
@@ -1052,7 +1038,6 @@ function setupStarScrollObserver() {
   new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) triggerSlowMotionStarsAnimation(); }); }, { threshold: 0.25 }).observe(target);
 }
 
-/* HALF-STAR HOVER AND CLICK SYSTEM */
 window.handleStarHover = function(e, starVal) {
   const rect = e.currentTarget.getBoundingClientRect();
   const isLeftHalf = (e.clientX - rect.left) < (rect.width / 2);
@@ -1106,19 +1091,69 @@ window.toggleFeedbackPill = function(radioInput) {
   radioInput.closest('.fb-radio-pill-exact').classList.add('active');
 };
 
-/* 3. FeedbackScriptURL */
 window.submitUserFeedback = async function() {
-  const msgEl = $('feedback-user-message'), rawMessage = msgEl ? msgEl.value.trim() : "", finalMessage = rawMessage || "(Rating Submitted)";
+  const msgEl = $('feedback-user-message');
+  const rawMessage = msgEl ? msgEl.value.trim() : "";
+  const finalMessage = rawMessage || "(Rating Submitted)";
+  
   const btn = $('btn-save-feedback');
-  if (btn) { btn.disabled = true; btn.innerHTML = `<span>Saving...</span>`; }
-  const payload = { chapter: getTestName(), studentClass: CBTState.studentClassVal || "Class XII", category: CBTState.feedbackCategory, name: CBTState.studentNameVal || "", rating: `${CBTState.feedbackRating} Stars`, message: finalMessage };
+  const sendIcon = $('fb-send-icon');
+  const spinIcon = $('fb-spin-icon');
+  const btnLabel = $('fb-btn-label');
+
+  if (btn) {
+    btn.disabled = true;
+    btn.classList.add('saving-active');
+    if (sendIcon) sendIcon.style.display = 'none';
+    if (spinIcon) spinIcon.style.display = 'inline-block';
+    if (btnLabel) btnLabel.innerText = "Saving...";
+  }
+
+  const payload = { 
+    chapter: getTestName(), 
+    studentClass: CBTState.studentClassVal || "Class XII", 
+    category: CBTState.feedbackCategory, 
+    name: CBTState.studentNameVal || "", 
+    rating: `${CBTState.feedbackRating} Stars`, 
+    message: finalMessage 
+  };
+
+  const showSuccessBadge = () => {
+    if (btn) {
+      btn.classList.remove('saving-active');
+      btn.classList.add('success-active');
+    }
+    if (spinIcon) spinIcon.style.display = 'none';
+    if (sendIcon) sendIcon.style.display = 'none';
+    if (btnLabel) btnLabel.innerHTML = `Noted, My Lord! 👑`;
+
+    if (msgEl) {
+      msgEl.value = "";
+      updateFbCharCount(msgEl);
+    }
+
+    setTimeout(() => {
+      if (btn) {
+        btn.disabled = false;
+        btn.classList.remove('success-active');
+      }
+      if (sendIcon) sendIcon.style.display = 'inline-block';
+      if (spinIcon) spinIcon.style.display = 'none';
+      if (btnLabel) btnLabel.innerText = "Save Your Response";
+    }, 2400);
+  };
+
   try {
-    await fetch(getFeedbackScriptURL(), { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) });
-    showToastAlert("Thank you! Your response has been saved.");
-    if (msgEl) { msgEl.value = ""; updateFbCharCount(msgEl); }
+    await fetch(getFeedbackScriptURL(), { 
+      method: "POST", 
+      headers: { "Content-Type": "text/plain;charset=utf-8" }, 
+      body: JSON.stringify(payload) 
+    });
+    showSuccessBadge();
     await fetchFeedbackSubmissions();
-  } catch (err) { showToastAlert("Response saved successfully!"); }
-  finally { if (btn) { btn.disabled = false; btn.innerHTML = `<svg class="send-paper-plane-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg><span>Save Your Response</span>`; } }
+  } catch (err) {
+    showSuccessBadge();
+  }
 };
 
 async function fetchFeedbackSubmissions() {
@@ -1217,7 +1252,6 @@ window.toggleAllSubmissions = function() {
   renderSubmissionsShowcase(CBTState.feedbackDataStore);
 };
 
-/* DOM Initialization Sequence */
 document.addEventListener('DOMContentLoaded', async () => {
   const activeName = getTestName(); 
   const chNum = getChapterNumber();
