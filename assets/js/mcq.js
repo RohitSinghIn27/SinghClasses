@@ -220,7 +220,7 @@ async function loadQuestionsFromSheet(retries = 3) {
   CBTState.isQuestionsLoading = false;
 }
 
-/* 2. FetchRecordOfCBT - Robust real-data sync without fabricated fallbacks */
+/* 2. FetchRecordOfCBT */
 async function fetchAndRenderSidebarToppers() {
   const fetchRecordUrl = getFetchRecordOfCBT();
   const container = $('sidebar-toppers');
@@ -233,7 +233,6 @@ async function fetchAndRenderSidebarToppers() {
     const data = await res.json();
     let recordsList = data ? (data.records || data.top7 || data.top5 || data.toppers || (Array.isArray(data) ? data : [])) : [];
     
-    // If exact section yielded no results, fetch broad records for this test topic
     if ((!recordsList || recordsList.length === 0) && currentSection) {
       try {
         const broadRes = await fetch(`${fetchRecordUrl}?testName=${encodeURIComponent(testName)}&_t=${Date.now()}`);
@@ -254,7 +253,6 @@ async function fetchAndRenderSidebarToppers() {
   }
 }
 
-/* Top Performers Structure in 1 / 2 3 / 4 5 6 7 order without artificial stretch */
 function renderSidebarToppers(toppersArray) { 
   const container = $('sidebar-toppers'), listEl = $('sidebar-toppers-list');
   if (!container || !listEl) return;
@@ -290,22 +288,27 @@ function renderSidebarToppers(toppersArray) {
     return `
       <div class="tp6-compact-card ${cardTheme}">
         <span class="tp6-badge-shape">${badgeText}</span>
-        <span class="tp6-name-text">${name}</span>
+        <span class="tp6-name-text" title="${name}">${name}</span>
         ${marksText ? `<span class="tp6-pipe">|</span><span class="tp6-score-text">${marksText}</span>` : ''}
         ${clsSec ? `<span class="tp6-pipe">|</span><span class="tp6-class-text">${clsSec}</span>` : ''}
         ${school ? `<span class="tp6-school-tag">${school}</span>` : ''}
       </div>`;
   };
 
-  let row1 = top7.slice(0, 1).map((t, i) => buildCardHTML(t, i)).join('');
-  let row2 = top7.slice(1, 3).map((t, i) => buildCardHTML(t, i + 1)).join('');
-  let row3 = top7.slice(3, 7).map((t, i) => buildCardHTML(t, i + 3)).join('');
+  const isMobile = window.innerWidth <= 640;
+  if (isMobile) {
+    listEl.innerHTML = `<div class="tp6-row tp6-row-mobile">${top7.map((t, i) => buildCardHTML(t, i)).join('')}</div>`;
+  } else {
+    let row1 = top7.slice(0, 1).map((t, i) => buildCardHTML(t, i)).join('');
+    let row2 = top7.slice(1, 3).map((t, i) => buildCardHTML(t, i + 1)).join('');
+    let row3 = top7.slice(3, 7).map((t, i) => buildCardHTML(t, i + 3)).join('');
 
-  listEl.innerHTML = `
-    <div class="tp6-row tp6-row-1">${row1}</div>
-    ${row2 ? `<div class="tp6-row tp6-row-2">${row2}</div>` : ''}
-    ${row3 ? `<div class="tp6-row tp6-row-3">${row3}</div>` : ''}
-  `;
+    listEl.innerHTML = `
+      <div class="tp6-row tp6-row-1">${row1}</div>
+      ${row2 ? `<div class="tp6-row tp6-row-2">${row2}</div>` : ''}
+      ${row3 ? `<div class="tp6-row tp6-row-3">${row3}</div>` : ''}
+    `;
+  }
   container.style.display = 'flex';
 }
 
@@ -352,7 +355,6 @@ function showToastAlert(m) {
   } 
 }
 
-/* Modal and Navigation System */
 function triggerVerifyModal(type) { 
   const modal = $('verify-resource-modal'), heading = $('verify-modal-heading'), text = $('verify-modal-text'), actionBtn = $('verify-proceed-action-btn'); 
   if (!modal) return;
@@ -383,7 +385,6 @@ function triggerVerifyModal(type) {
 function closeVerifyModal() { if ($('verify-resource-modal')) $('verify-resource-modal').style.display = 'none'; }
 function goToHome() { triggerVerifyModal('back'); }
 
-/* Proctoring and Security Warnings */
 window.closeSecurityModal = () => { 
   if ($('modal-security')) $('modal-security').style.display = 'none'; 
   const widget = document.querySelector('.sc-widget-container');
@@ -406,7 +407,6 @@ function applySecurityPenalty() {
 
 ['contextmenu', 'copy', 'cut', 'dragstart'].forEach(ev => document.addEventListener(ev, e => { if (isProctoringEnabled() && CBTState.isExamActive) e.preventDefault(); }));
 
-/* Keyboard Shortcuts - Prevent Spacebar page shift */
 document.addEventListener('keydown', e => {
   const activeEl = document.activeElement;
   const isTextInput = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.tagName === 'SELECT' || activeEl.isContentEditable);
@@ -590,6 +590,11 @@ function placeActionMatrix() {
   }
 }
 window.addEventListener('resize', placeActionMatrix);
+window.addEventListener('resize', () => {
+  if (CBTState.allFetchedRecords && CBTState.allFetchedRecords.length > 0) {
+    renderSidebarToppers(CBTState.allFetchedRecords);
+  }
+});
 
 let touchStartX = 0, touchStartY = 0, lastOptionTapTime = 0, lastTappedIndex = -1;
 
