@@ -64,38 +64,43 @@ h1, h2, h3, h4 { color: var(--text-color); font-weight: 800; }
 #verify-proceed-action-btn { background: var(--color-danger); color: #ffffff; }
 
 /* WELCOME CARD */
-.welcome-portal-card { max-width: 680px; width: 100%; padding: 28px 24px; border-radius: 20px; background: #ffffff; position: relative; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08); }
-.wp-decor-dots { position: absolute; width: 36px; height: 36px; background-image: radial-gradient(#10b981 2px, transparent 2px); background-size: 8px 8px; opacity: 0.45; pointer-events: none; }
-.wp-dots-top-left { top: 8px; left: 8px; }
-.wp-dots-bottom-right { bottom: 8px; right: 8px; }
-.wp-decor-triangles-top-right { position: absolute; top: 12px; right: 14px; display: flex; align-items: center; gap: 3px; pointer-events: none; }
-.wp-decor-triangles-bottom-left { position: absolute; bottom: 12px; left: 14px; display: flex; align-items: center; gap: 3px; pointer-events: none; }
-.wp-chevron-dark { width: 0; height: 0; border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-left: 9px solid #046a38; }
-.wp-chevron-light { width: 0; height: 0; border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-left: 9px solid #34d399; }
-.wp-header-block { text-align: center; margin-bottom: 18px; position: relative; z-index: 2; }
-.wp-single-line-title { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 1.6rem; font-weight: 800; color: #0f172a; margin: 0 0 6px 0; line-height: 1.35; }
+.welcome-portal-card { max-width: 560px; width: 100%; padding: 20px 24px 18px 24px; border-radius: 20px; background: #ffffff; position: relative; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08); }
+.welcome-portal-card::before { content: ''; position: absolute; top: -32px; right: -32px; width: 130px; height: 130px; border-radius: 50%; border: 1.5px solid rgba(110, 231, 183, 0.45); background: radial-gradient(circle, rgba(209, 250, 229, 0.5) 0%, rgba(236, 253, 245, 0.15) 60%, transparent 75%); pointer-events: none; z-index: 1; }
+.welcome-portal-card::after { content: ''; position: absolute; bottom: -28px; left: -28px; width: 105px; height: 105px; border-radius: 50%; border: 1.5px solid rgba(167, 243, 208, 0.55); background: radial-gradient(circle, rgba(236, 253, 245, 0.45) 0%, transparent 70%); pointer-events: none; z-index: 1; }
+.wp-decor-dots { position: absolute; width: 34px; height: 34px; background-image: radial-gradient(#6ee7b7 2px, transparent 2px); background-size: 8px 8px; opacity: 0.65; pointer-events: none; z-index: 1; }
+.wp-dots-top-left { top: 12px; left: 14px; }
+.wp-dots-bottom-right { bottom: 12px; right: 14px; }
+.wp-decor-triangles-top-right, .wp-decor-triangles-bottom-left { display: none !important; }
+.wp-header-block { text-align: center; margin-bottom: 12px; position: relative; z-index: 2; }
+.wp-header-block::before { content: ''; position: absolute; top: -2px; left: 30px; width: 20px; height: 20px; border-radius: 50%; border: 2px solid #fde047; pointer-events: none; z-index: 1; }
+.wp-header-block::after { content: ''; position: absolute; top: 0px; right: 20px; width: 20px; height: 20px; border-radius: 50%; background-color: #a7f3d0; pointer-events: none; z-index: 1; }
+.wp-single-line-title { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 1.45rem; font-weight: 800; color: #0f172a; margin: 0 0 3px 0; line-height: 1.25; }
 .wp-heading-welcome { color: #0f172a; font-weight: 800; }
-.wp-single-line-title .wp-brand-part { color: #046a38; font-weight: 900; font-size: 1.7rem; }
-.wp-powered-container { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 4px; }
-.wp-powered-line { width: 32px; height: 1px; background-color: #046a38; }
-.wp-powered-badge { display: inline-flex; padding: 3px 14px; background: #f0fdf4; border-radius: 999px; border: 1px solid #86efac; color: #166534; font-size: 0.78rem; font-weight: 600; }
-.wp-cards-grid.single-row-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; width: 100%; position: relative; z-index: 2; }
-.wp-card { padding: 14px 8px; border-radius: 12px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #ffffff; border: 1px solid var(--border-color); transition: transform 0.15s ease; }
-.wp-card:hover { transform: translateY(-2px); }
-.wp-card-green { border-color: #a7f3d0; background-color: #f0fdf4; }
-.wp-card-yellow { border-color: #fde68a; background-color: #fefce8; }
+.wp-single-line-title .wp-brand-part { color: #046a38; font-weight: 900; font-size: 1.55rem; }
+.wp-powered-container { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 2px; }
+.wp-powered-line { width: 28px; height: 1px; background-color: #046a38; }
+.wp-powered-badge { display: inline-flex; padding: 2px 14px; background: #f0fdf4; border-radius: 999px; border: 1px solid #86efac; color: #166534; font-size: 0.76rem; font-weight: 600; }
+.wp-cards-grid.single-row-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 12px; margin-bottom: 16px; width: 100%; position: relative; z-index: 2; }
+.wp-cards-grid::after { content: ''; position: absolute; bottom: -8px; left: 10px; width: 14px; height: 14px; border-radius: 50%; background-color: #86efac; opacity: 0.85; pointer-events: none; z-index: 1; }
+.wp-card { padding: 9px 12px; min-height: 64px; border-radius: 14px; display: grid; grid-template-columns: 38px 1fr; grid-template-rows: auto auto; grid-template-areas: "icon title" "icon desc"; column-gap: 12px; row-gap: 2px; align-items: center; text-align: left; background: #ffffff; border: 1px solid var(--border-color); transition: transform 0.15s ease, box-shadow 0.15s ease; position: relative; z-index: 2; }
+.wp-card:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); }
+.wp-card-green { border-color: #bbf7d0; background-color: #f0fdf4; }
+.wp-card-yellow { border-color: #fef08a; background-color: #fefce8; }
 .wp-card-blue { border-color: #bfdbfe; background-color: #eff6ff; }
 .wp-card-purple { border-color: #e9d5ff; background-color: #faf5ff; }
-.wp-icon-ring { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 6px; background: #ffffff; border: 1px solid var(--border-color); }
-.wp-card-green .wp-icon-ring { border-color: #86efac; color: #16a34a; }
-.wp-card-yellow .wp-icon-ring { border-color: #fde68a; color: #d97706; }
-.wp-card-blue .wp-icon-ring { border-color: #bfdbfe; color: #2563eb; }
-.wp-card-purple .wp-icon-ring { border-color: #e9d5ff; color: #7c3aed; }
-.wp-card-title { font-size: 0.84rem; font-weight: 700; color: #0f172a; margin-bottom: 2px; }
-.wp-card-desc { font-size: 0.70rem; color: #64748b; font-weight: 500; line-height: 1.35; }
-.wp-action-wrapper { display: flex; align-items: center; justify-content: center; gap: 14px; position: relative; z-index: 2; }
-.wp-btn-line { width: 36px; height: 1px; background-color: #046a38; }
-.btn-portal-start { background-color: #046a38; color: #ffffff; border: 1px solid #046a38; padding: 10px 28px; border-radius: 999px; font-size: 0.95rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(4, 106, 56, 0.25); display: inline-flex; align-items: center; gap: 8px; }
+.wp-icon-ring { grid-area: icon; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 0; background: #ffffff; border: 1.5px solid transparent; }
+.wp-icon-ring svg { width: 17px; height: 17px; }
+.wp-card-green .wp-icon-ring { border-color: #86efac; color: #16a34a; background-color: #dcfce7; }
+.wp-card-yellow .wp-icon-ring { border-color: #fde68a; color: #d97706; background-color: #fef3c7; }
+.wp-card-blue .wp-icon-ring { border-color: #bfdbfe; color: #2563eb; background-color: #dbeafe; }
+.wp-card-purple .wp-icon-ring { border-color: #e9d5ff; color: #7c3aed; background-color: #f3e8ff; }
+.wp-card-title { grid-area: title; font-size: 0.85rem; font-weight: 800; color: #0f172a; margin: 0; line-height: 1.2; align-self: end; }
+.wp-card-desc { grid-area: desc; font-size: 0.70rem; color: #64748b; font-weight: 500; line-height: 1.25; align-self: start; }
+.wp-action-wrapper { display: flex; align-items: center; justify-content: center; gap: 12px; position: relative; z-index: 2; }
+.wp-btn-line { width: 32px; height: 1px; background-color: #046a38; }
+.btn-portal-start { background-color: #046a38; color: #ffffff; border: 1px solid #046a38; padding: 8px 24px; border-radius: 999px; font-size: 0.90rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(4, 106, 56, 0.22); display: inline-flex; align-items: center; justify-content: center; }
+.btn-portal-start:hover { background-color: #03532c; }
+.btn-portal-start svg { display: none !important; }
 
 /* REGISTRATION CARD */
 .registration-card { background: #ffffff; border-radius: 18px; padding: 24px 20px; max-width: 500px; width: 100%; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15); border: 1px solid var(--border-color); text-align: center; }
@@ -204,6 +209,8 @@ h1, h2, h3, h4 { color: var(--text-color); font-weight: 800; }
   font-weight: 700;
   font-size: 0.90rem;
 }
+
+/* MARKS INDICATOR & PULSING NAVY DOT */
 .img5-weight-pill {
   background: rgba(30, 58, 138, 0.45);
   border: 1px solid #2563eb;
@@ -214,8 +221,36 @@ h1, h2, h3, h4 { color: var(--text-color); font-weight: 800; }
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 }
+.weight-pulse-dot {
+  width: 7px;
+  height: 7px;
+  background-color: #1e3a8a;
+  border: 1px solid #3b82f6;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+  animation: subtlePulse 4.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+@keyframes subtlePulse {
+  0%, 75%, 100% {
+    transform: scale(1);
+    opacity: 0.85;
+    box-shadow: 0 0 0 0 rgba(30, 58, 138, 0.4);
+  }
+  85% {
+    transform: scale(1.22);
+    opacity: 1;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.25);
+  }
+  92% {
+    transform: scale(1);
+    opacity: 0.9;
+    box-shadow: 0 0 0 1px rgba(30, 58, 138, 0);
+  }
+}
+
 .img5-header-right {
   display: flex;
   align-items: center;
@@ -612,11 +647,14 @@ h1, h2, h3, h4 { color: var(--text-color); font-weight: 800; }
 .fb-row-badge-icon { width: 34px; height: 34px; border-radius: 50%; background: #eff6ff; border: 1px solid #dbeafe; display: flex; align-items: center; justify-content: center; color: #2563eb; flex-shrink: 0; }
 .fb-rate-label-group { display: flex; flex-direction: column; }
 .fb-rate-title { font-size: 0.94rem; font-weight: 800; color: #0f172a; line-height: 1.2; }
+
+/* HALF-STAR INTERACTION SYSTEM */
 .fb-stars-picker-row2 { display: inline-flex; align-items: center; gap: 5px; margin-left: 6px; }
-.fb-stars-picker-row2 .fb-star { cursor: pointer; display: inline-flex; align-items: center; }
-.fb-stars-picker-row2 .fb-star svg { width: 20px; height: 20px; fill: #e2e8f0; stroke: #cbd5e1; stroke-width: 1px; transition: fill 0.2s ease, stroke 0.2s ease; }
+.fb-stars-picker-row2 .fb-star { cursor: pointer; display: inline-flex; align-items: center; position: relative; padding: 2px 1px; }
+.fb-stars-picker-row2 .fb-star svg { width: 20px; height: 20px; fill: #e2e8f0; stroke: #cbd5e1; stroke-width: 1px; transition: fill 0.15s ease, stroke 0.15s ease; pointer-events: none; }
 .fb-stars-picker-row2 .fb-star.active svg, .fb-stars-picker-row2 .fb-star.hovered svg { fill: #f59e0b; stroke: #f59e0b; }
-.fb-stars-picker-row2 .fb-star.half-active svg { fill: url(#half-fill-grad); stroke: #f59e0b; }
+.fb-stars-picker-row2 .fb-star.half-active svg, .fb-stars-picker-row2 .fb-star.hovered-half svg { fill: url(#half-fill-grad) !important; stroke: url(#half-stroke-grad) !important; }
+
 .fb-row2-divider { width: 1px; height: 28px; background-color: var(--border-color); }
 .fb-type-selection-wrapper { display: inline-flex; align-items: center; gap: 10px; padding: 5px 12px; border: 1px solid var(--border-color); border-radius: 999px; background: #f8fafc; }
 .fb-type-heading { font-size: 0.86rem; font-weight: 800; color: #1e293b; }
@@ -673,29 +711,11 @@ h1, h2, h3, h4 { color: var(--text-color); font-weight: 800; }
 .ssc-header-wing-line { width: 38px; height: 1.5px; background-color: #cbd5e1; display: inline-block; }
 .ssc-wave-title { font-size: 1.30rem; font-weight: 800; color: #0b1a3d; margin: 0; letter-spacing: -0.01em; }
 .ssc-wave-desc { font-size: 0.86rem; color: #64748b; font-weight: 500; margin: 5px 0 8px 0; }
-.ssc-accent-dot-rule { display: inline-flex; align-items: center; gap: 5px; margin-bottom: 10px; }
+.ssc-accent-dot-rule { display: inline-flex; align-items: center; gap: 5px; margin-bottom: 0px; }
 .ssc-rule-bar { width: 34px; height: 2.5px; background-color: #2563eb; border-radius: 999px; }
 .ssc-rule-dot { width: 4.5px; height: 4.5px; background-color: #3b82f6; border-radius: 50%; }
 
-.ssc-badge-center-row { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
-.ssc-flank-diamond { color: #93c5fd; font-size: 0.72rem; line-height: 1; }
-.ssc-flank-diamond.small { font-size: 0.55rem; }
-.ssc-pill-total-response { 
-  display: inline-flex; 
-  align-items: center; 
-  gap: 6px; 
-  padding: 6px 16px; 
-  border-radius: 999px; 
-  background: #ffffff; 
-  border: 1px solid #bfdbfe; 
-  color: #1d4ed8; 
-  font-size: 0.86rem; 
-  font-weight: 800; 
-  white-space: nowrap; 
-  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.08);
-}
-
-.ssc-two-col-grid { display: grid; grid-template-columns: 1.55fr 1fr; gap: 12px; padding: 14px 16px 0 16px; }
+.ssc-two-col-grid { display: grid; grid-template-columns: 1.55fr 1.45fr; gap: 12px; padding: 14px 16px 0 16px; }
 .ssc-col-banner { display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; border-radius: 8px; margin-bottom: 8px; }
 .approved-banner { background: #f0fdf4; border: 1px solid #bbf7d0; }
 .pending-banner { background: #fffdf2; border: 1px solid #fde68a; }
@@ -709,6 +729,35 @@ h1, h2, h3, h4 { color: var(--text-color); font-weight: 800; }
 .pending-banner .ssc-col-count { color: #d97706; }
 .ssc-cards-stream { display: flex; flex-direction: column; gap: 6px; }
 
+/* COMPACT TWO RESPONSES PER ROW IN PENDING AREA */
+.compact-pending-stream {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  align-items: stretch;
+}
+.ssc-pending-image6-card { 
+  padding: 5px 6px; 
+  border-radius: 7px; 
+  border: 1px solid #fef08a; 
+  background: #fffdf5; 
+  display: flex; 
+  flex-direction: column; 
+  justify-content: space-between;
+  gap: 2px; 
+  min-width: 0;
+  box-sizing: border-box;
+}
+.ssc-pending-top-row { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 4px; }
+.ssc-pending-user-info { display: flex; align-items: center; gap: 4px; min-width: 0; flex: 1; }
+.ssc-pending-avatar-cyan { width: 18px; height: 18px; background: #0284c7; color: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; font-weight: 700; flex-shrink: 0; }
+.ssc-pending-name { font-size: 0.74rem; font-weight: 700; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70px; }
+.ssc-pending-class-tag { background: #eff6ff; color: #2563eb; border: 1px solid #dbeafe; font-size: 0.58rem; font-weight: 600; padding: 1px 3px; border-radius: 3px; flex-shrink: 0; }
+.ssc-pending-date { display: inline-flex; align-items: center; gap: 2px; font-size: 0.58rem; color: #64748b; white-space: nowrap; }
+.ssc-pending-badge-pill { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; border-radius: 4px; padding: 1px 4px; font-size: 0.58rem; font-weight: 700; display: inline-flex; align-items: center; gap: 2px; flex-shrink: 0; }
+.ssc-pending-blur-content { font-size: 0.65rem; line-height: 1.25; color: #94a3b8; filter: blur(2.5px); user-select: none; opacity: 0.7; padding-left: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* APPROVED CARDS */
 .ssc-approved-image1-card { background: #ffffff; border: 1px solid var(--border-color); border-radius: 10px; padding: 9px 12px; display: flex; flex-direction: column; box-shadow: 0 1px 2px rgba(0,0,0,0.02); }
 .ssc-appr-header-row { display: flex; align-items: center; justify-content: space-between; width: 100%; }
 .ssc-appr-user-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
@@ -742,17 +791,7 @@ h1, h2, h3, h4 { color: var(--text-color); font-weight: 800; }
 .ssc-inst-date { font-size: 0.70rem; color: #64748b; font-weight: 500; }
 .ssc-inst-reply-bubble { background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 7px; padding: 6px 10px; font-size: 0.84rem; color: #166534; line-height: 1.35; display: inline-flex; align-items: center; gap: 5px; width: 100%; box-sizing: border-box; }
 
-.ssc-pending-image6-card { padding: 6px 8px; border-radius: 7px; border: 1px solid #fef08a; background: #fffdf5; display: flex; flex-direction: column; gap: 2px; }
-.ssc-pending-top-row { display: flex; align-items: center; justify-content: space-between; width: 100%; }
-.ssc-pending-user-info { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
-.ssc-pending-avatar-cyan { width: 20px; height: 20px; background: #0284c7; color: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.74rem; font-weight: 700; }
-.ssc-pending-name { font-size: 0.80rem; font-weight: 700; color: #0f172a; }
-.ssc-pending-class-tag { background: #eff6ff; color: #2563eb; border: 1px solid #dbeafe; font-size: 0.66rem; font-weight: 600; padding: 1px 4px; border-radius: 3px; }
-.ssc-pending-date { display: inline-flex; align-items: center; gap: 2px; font-size: 0.66rem; color: #64748b; }
-.ssc-pending-badge-pill { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; border-radius: 4px; padding: 1px 6px; font-size: 0.66rem; font-weight: 700; display: inline-flex; align-items: center; gap: 2px; }
-.ssc-pending-blur-content { font-size: 0.72rem; line-height: 1.3; color: #94a3b8; filter: blur(3px); user-select: none; opacity: 0.7; padding-left: 24px; }
-
-/* IMAGE 3: SAVING RESPONSES COMPACT CARD */
+/* SAVING RESPONSES COMPACT CARD */
 .img3-saving-container {
   width: 100%;
   max-width: 640px;
@@ -801,7 +840,7 @@ h1, h2, h3, h4 { color: var(--text-color); font-weight: 800; }
   background-color: #2563eb;
 }
 
-/* IMAGE 4: FINAL CUMULATIVE EVALUATION SUMMARY */
+/* FINAL CUMULATIVE EVALUATION SUMMARY */
 .img4-summary-card {
   width: 100%;
   max-width: 1040px;
@@ -1043,53 +1082,54 @@ h1, h2, h3, h4 { color: var(--text-color); font-weight: 800; }
   .year-tab-title-text { font-size: 0.82rem; }
 
   /* COMPACT WELCOME CARD FOR MOBILE */
-  .welcome-portal-card { padding: 18px 14px 16px 14px; border-radius: 16px; }
-  .wp-header-block { margin-bottom: 12px; }
-  .wp-single-line-title { font-size: 1.18rem; flex-wrap: wrap; gap: 4px; line-height: 1.25; margin-bottom: 4px; }
-  .wp-single-line-title .wp-brand-part { font-size: 1.28rem; }
+  .welcome-portal-card { padding: 16px 12px 14px 12px; border-radius: 16px; }
+  .welcome-portal-card::before, .welcome-portal-card::after, .wp-header-block::before, .wp-header-block::after, .wp-cards-grid::after { display: none !important; }
+  .wp-header-block { margin-bottom: 10px; }
+  .wp-single-line-title { font-size: 1.15rem; flex-wrap: wrap; gap: 4px; line-height: 1.25; margin-bottom: 3px; }
+  .wp-single-line-title .wp-brand-part { font-size: 1.22rem; }
   .wp-powered-container { gap: 8px; margin-top: 2px; }
-  .wp-powered-line { width: 22px; }
+  .wp-powered-line { width: 20px; }
   .wp-powered-badge { padding: 2px 10px; font-size: 0.70rem; }
 
   /* 2x2 Grid compact structure */
   .wp-cards-grid.single-row-cards { 
     grid-template-columns: repeat(2, 1fr) !important; 
-    gap: 8px;
-    margin-bottom: 14px;
+    gap: 6px;
+    margin-bottom: 12px;
   }
   .wp-card { 
-    padding: 10px 6px;
-    min-height: 98px;
+    padding: 6px 8px;
+    min-height: 54px;
     border-radius: 10px;
+    gap: 6px;
+    grid-template-columns: 28px 1fr;
   }
   .wp-icon-ring { 
-    width: 32px; 
-    height: 32px; 
-    margin-bottom: 4px; 
+    width: 28px; 
+    height: 28px; 
   }
   .wp-icon-ring svg { 
-    width: 15px; 
-    height: 15px; 
+    width: 13px; 
+    height: 13px; 
   }
   .wp-card-title { 
-    font-size: 0.78rem; 
+    font-size: 0.74rem; 
     margin-bottom: 1px; 
-    line-height: 1.2;
+    line-height: 1.15;
   }
   .wp-card-desc { 
-    font-size: 0.65rem; 
-    line-height: 1.2;
+    font-size: 0.62rem; 
+    line-height: 1.15;
   }
-  .wp-action-wrapper { gap: 10px; }
-  .wp-btn-line { width: 24px; }
+  .wp-action-wrapper { gap: 8px; }
+  .wp-btn-line { width: 20px; }
   .btn-portal-start { 
-    padding: 8px 18px; 
-    font-size: 0.84rem; 
-    gap: 6px; 
+    padding: 7px 16px; 
+    font-size: 0.80rem; 
+    gap: 5px; 
   }
   .btn-portal-start svg {
-    width: 14px;
-    height: 14px;
+    display: none !important;
   }
 
   /* REGISTRATION & INSTRUCTIONS STEP */
@@ -1198,12 +1238,12 @@ h1, h2, h3, h4 { color: var(--text-color); font-weight: 800; }
   .fb-type-selection-wrapper { width: 100%; justify-content: space-between; }
   .btn-save-response-image2 { width: 100%; justify-content: center; font-size: 0.82rem; padding: 8px 16px; }
 
+  .compact-pending-stream { grid-template-columns: repeat(2, 1fr); gap: 5px; }
   .ssc-two-col-grid { grid-template-columns: 1fr; gap: 12px; padding: 10px 8px 0 8px; }
   .ssc-title-bracket-row { gap: 6px; }
   .ssc-header-wing-line { width: 16px; }
   .ssc-wave-title { font-size: 0.98rem; }
   .ssc-wave-desc { font-size: 0.74rem; margin: 3px 0 6px 0; }
-  .ssc-pill-total-response { padding: 4px 12px; font-size: 0.76rem; }
 
   /* SUMMARY & RESULTS CARD */
   .img4-summary-card { padding: 16px 12px; border-radius: 14px; }
