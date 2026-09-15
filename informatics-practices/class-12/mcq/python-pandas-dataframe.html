@@ -37,11 +37,9 @@ window.CBT_CONFIG = {
   NOTES_URL: "https://singhclasses.in/informatics-practices/class-12/notes/python-pandas-dataframe.html"
 };
 </script>
-  
 </head>
 <body>
-<!-- Global SVG Definitions (Rendered without display:none to preserve gradient referencing) -->
-<svg aria-hidden="true" focusable="false" style="position: absolute; width: 0; height: 0; overflow: hidden; pointer-events: none;">
+<svg aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden;pointer-events:none;">
   <defs>
     <linearGradient id="half-fill-grad" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="50%" stop-color="#f59e0b" />
@@ -109,7 +107,7 @@ window.CBT_CONFIG = {
 <div class="unified-nav" id="unified-nav" style="display:none;">
   <div class="year-nav-bar" id="year-nav-container"></div>
   <div class="nav-right-hud">
-    <div class="timer" id="timer-box">
+    <div class="timer" id="timer-box" title="Double click to unfreeze timer">
       <span class="timer-sand-icon">⏳</span>
       <span id="time-left">00:00</span>
     </div>
@@ -221,18 +219,6 @@ window.CBT_CONFIG = {
     </div>
     <div id="warning-count-display">Total Warnings: 1 (Penalty: -2 Marks)</div>
     <div class="modal-btn-row"><button type="button" class="modal-btn modal-btn-danger" onclick="closeSecurityModal()">Continue Exam</button></div>
-  </div>
-</div>
-
-<div id="modal-paused" class="custom-modal-overlay">
-  <div class="custom-modal-box security-box">
-    <div class="security-title">Exam Paused</div>
-    <div class="security-text">
-      <span style="font-size:1.5rem;margin-right:6px;">⏸️</span>
-      <span>Your test and timer are temporarily paused</span>
-    </div>
-    <p style="font-size:0.88rem;color:#64748b;margin:6px 0 18px 0;line-height:1.5;">Press the Space bar 3 times or click below to resume your test.</p>
-    <div class="modal-btn-row"><button type="button" class="btn-green-submit" onclick="resumeExamFromPause()">Resume Exam</button></div>
   </div>
 </div>
 
@@ -417,8 +403,9 @@ window.CBT_CONFIG = {
           </div>
         </div>
         <button type="button" class="btn-save-response-image2" id="btn-save-feedback" onclick="submitUserFeedback()">
-          <svg class="send-paper-plane-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-          <span>Submit Response</span>
+          <svg class="send-paper-plane-icon" id="fb-send-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+          <svg class="spin-refresh-icon" id="fb-spin-icon" style="display:none;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+          <span id="fb-btn-label">Save Your Response</span>
         </button>
       </div>
     </div>
