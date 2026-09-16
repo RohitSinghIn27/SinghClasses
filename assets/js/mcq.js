@@ -189,31 +189,36 @@ async function loadQuestionsFromSheet(retries = 3) {
       const raw = await response.json();
       if (!Array.isArray(raw) || raw.length === 0) throw new Error("Empty response.");
       if (raw[0] && Array.isArray(raw[0].questions)) {
-        CBTState.listExamPapers = raw.map(paper => ({
-          title: getVerbatim(paper, ['title', 'Title', 'sectiontitle', 'SectionTitle'], "Section"),
-          year: getVerbatim(paper, ['year', 'Year', 'section', 'Section'], "Set"),
-          questions: (paper.questions || []).map(q => {
-            let cleanOpts = (Array.isArray(q.options) ? q.options : [getVerbatim(q, ['optiona', 'OptionA', 'option1', '0'], ""), getVerbatim(q, ['optionb', 'OptionB', 'option2', '1'], ""), getVerbatim(q, ['optionc', 'OptionC', 'option3', '2'], ""), getVerbatim(q, ['optiond', 'OptionD', 'option4', '3'], "")]).map(o => (o ?? "").toString());
-            return {
-              text: getVerbatim(q, ['text', 'Text', 'question', 'Question'], "").toString(),
-              tag: getVerbatim(q, ['tag', 'Tag', 'TAG', 'column', 'info', 'Info', 'metadata'], "CBSE").toString().trim(),
-              options: cleanOpts, image: getVerbatim(q, ['image', 'Image', 'imageurl'], "").toString(),
-              explanation: getVerbatim(q, ['explanation', 'Explanation', 'exp', 'Exp', 'solution'], "").toString(),
-              correctAnswerText: resolveCorrectText(getVerbatim(q, ['correctIndex', 'correct', 'answer', 'ans', '4'], "A"), cleanOpts)
-            };
-          }).filter(q => q.text !== "")
-        }));
+        CBTState.listExamPapers = raw.map(paper => {
+          let sTitle = getVerbatim(paper, ['sectiontitle', 'SectionTitle', 'title', 'Title'], "Section");
+          let sNum = getVerbatim(paper, ['section', 'Section', 'year', 'Year'], "1");
+          return {
+            title: sTitle,
+            year: sNum,
+            questions: (paper.questions || []).map(q => {
+              let cleanOpts = (Array.isArray(q.options) ? q.options : [getVerbatim(q, ['optiona', 'OptionA', 'option1', '0'], ""), getVerbatim(q, ['optionb', 'OptionB', 'option2', '1'], ""), getVerbatim(q, ['optionc', 'OptionC', 'option3', '2'], ""), getVerbatim(q, ['optiond', 'OptionD', 'option4', '3'], "")]).map(o => (o ?? "").toString());
+              return {
+                text: getVerbatim(q, ['text', 'Text', 'question', 'Question'], "").toString(),
+                tag: getVerbatim(q, ['tag', 'Tag', 'TAG', 'column', 'info', 'Info', 'metadata'], "CBSE").toString().trim(),
+                options: cleanOpts, image: getVerbatim(q, ['image', 'Image', 'imageurl'], "").toString(),
+                explanation: getVerbatim(q, ['explanation', 'Explanation', 'exp', 'Exp', 'solution'], "").toString(),
+                correctAnswerText: resolveCorrectText(getVerbatim(q, ['correctIndex', 'correct', 'answer', 'ans', '4'], "A"), cleanOpts)
+              };
+            }).filter(q => q.text !== "")
+          };
+        });
       } else {
         const sectionsMap = {};
         raw.forEach(row => {
           const r = {};
           Object.keys(row).forEach(k => { r[k.toLowerCase().replace(/[^a-z0-9]/g, '')] = row[k]; });
-          let sectionLabel = getVerbatim(r, ['section', 'year', 'set'], "Section A").toString().trim();
+          let sNum = getVerbatim(r, ['section', 'set'], "1").toString().trim();
+          let sTitle = getVerbatim(r, ['sectiontitle', 'title', 'label'], "Part A").toString().trim();
           let qText = getVerbatim(r, ['question', 'questions', 'questiontext', 'text', 'q'], null);
           if (!qText) return;
           const options = [getVerbatim(r, ['optiona', 'option1', 'a'], ""), getVerbatim(r, ['optionb', 'option2', 'b'], ""), getVerbatim(r, ['optionc', 'option3', 'c'], ""), getVerbatim(r, ['optiond', 'option4', 'd'], "")].map(o => o.toString());
-          if (!sectionsMap[sectionLabel]) sectionsMap[sectionLabel] = { title: getVerbatim(r, ['sectiontitle', 'title', 'label'], sectionLabel).toString().trim(), year: sectionLabel, questions: [] };
-          sectionsMap[sectionLabel].questions.push({ text: qText.toString(), tag: getVerbatim(r, ['tag', 'tagname', 'info', 'metadata'], "CBSE").toString().trim(), options, correctAnswerText: resolveCorrectText(getVerbatim(r, ['correct', 'correctanswer', 'correctindex', 'answer', 'ans'], "A"), options), image: getVerbatim(r, ['image', 'imageurl', 'img'], "").toString(), explanation: getVerbatim(r, ['explanation', 'exp', 'solution'], "").toString() });
+          if (!sectionsMap[sNum]) sectionsMap[sNum] = { title: sTitle, year: sNum, questions: [] };
+          sectionsMap[sNum].questions.push({ text: qText.toString(), tag: getVerbatim(r, ['tag', 'tagname', 'info', 'metadata'], "CBSE").toString().trim(), options, correctAnswerText: resolveCorrectText(getVerbatim(r, ['correct', 'correctanswer', 'correctindex', 'answer', 'ans'], "A"), options), image: getVerbatim(r, ['image', 'imageurl', 'img'], "").toString(), explanation: getVerbatim(r, ['explanation', 'exp', 'solution'], "").toString() });
         });
         CBTState.listExamPapers = Object.values(sectionsMap);
       }
@@ -243,7 +248,7 @@ async function fetchAndRenderSidebarToppers() {
       try {
         const broadRes = await fetch(`${fetchRecordUrl}?testName=${encodeURIComponent(testName)}&_t=${Date.now()}`);
         const broadData = await broadRes.json();
-        recordsList = broadData ? (broadData.records || broadData.top7 || broadData.top5 || broadData.toppers || (Array.isArray(broadData) ? broadData : [])) : [];
+        recordsList = broadData ? (broadData.records || broadData.top7 || broadData.top5 || broadData.toppers || (Array.isArray(broadData) ? data : [])) : [];
       } catch (e) {}
     }
 
@@ -422,7 +427,6 @@ function handleSpaceBarTripleTap() {
   }
 }
 
-/* TARGETED TIMER BOX DOUBLE-CLICK TO UNFREEZE */
 document.addEventListener('DOMContentLoaded', () => {
   const timerBox = $('timer-box');
   if (timerBox) {
@@ -853,7 +857,7 @@ window.processSectionSubmission = async function() {
   if (sumCard) sumCard.style.display = 'none'; 
 
   if ($('lbl-user-greeting')) $('lbl-user-greeting').innerText = CBTState.studentNameVal || "";
-  if ($('lbl-section-title')) $('lbl-section-title').innerText = `${sec.year} Completed,`;
+  if ($('lbl-section-title')) $('lbl-section-title').innerText = `${sec.title} Completed,`;
 
   let secCorrect = 0, secIncorrect = 0, secUnattempted = 0, secMarks = 0;
   let totalQuestions = sec.end - sec.start, totalSectionMarks = totalQuestions * getCorrectMarks();
@@ -898,7 +902,7 @@ window.processSectionSubmission = async function() {
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
             </div>
             <div class="img4-sec-titles">
-              <span class="img4-sec-name">${escapeHTML(s.year)}</span>
+              <span class="img4-sec-name">${escapeHTML(s.title)}</span>
               <span class="img4-sec-ques">${sT} Ques.</span>
             </div>
           </div>
@@ -970,7 +974,7 @@ window.processSectionSubmission = async function() {
     try { await fetch(saveUrl, { method: "POST", body: params }); } catch (err) { console.warn("Save sync error:", err); }
   }
 
-  await new Promise(res => setTimeout(res, 900));
+  await new Response(res => setTimeout(res, 900));
   if (loaderBox) loaderBox.style.display = 'none';
   if (scFrame) scFrame.style.display = 'flex';
   let b = $('btn-dashboard-main-trigger'); 
@@ -1004,36 +1008,42 @@ window.buildYearNav = () => {
   let c = $('year-nav-container'); 
   if (!c) return; 
   c.innerHTML = ''; 
-  
-  const icons = [
-    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>`,
-    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`,
-    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>`,
-    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>`
-  ];
 
   CBTState.sections.forEach((p, idx) => { 
     let t = document.createElement('div'); 
     t.className = `year-tab ${idx === CBTState.currentYearIndex ? 'active' : ''}`; 
     
-    let iconSvg = icons[idx % icons.length];
+    const numBadge = String(idx + 1).padStart(2, '0');
+    const rawLabel = (p.title || "").trim();
+    const match = rawLabel.match(/^(.*?)[\s\-_]+(\b[A-Za-z0-9]+)$/);
+    
+    let mainLabel = rawLabel;
+    let accentLabel = "";
+
+    if (match && match[1].trim()) {
+      mainLabel = match[1].trim().toUpperCase();
+      accentLabel = match[2].trim().toUpperCase();
+    } else {
+      mainLabel = rawLabel.toUpperCase();
+    }
     
     t.innerHTML = `
-      <div class="yt-icon-circle">${iconSvg}</div>
-      <div class="yt-text-stack">
-        <span class="year-tab-badge-lbl">${escapeHTML(p.year)}</span>
-        <span class="year-tab-title-text">${escapeHTML(p.title)}</span>
-      </div>
-      <div class="yt-chevron">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      <div class="yt-icon-circle">${numBadge}</div>
+      <div class="yt-title-group">
+        <span class="yt-title-main">${escapeHTML(mainLabel)}</span>${accentLabel ? ` <span class="yt-title-accent">${escapeHTML(accentLabel)}</span>` : ''}
       </div>
     `; 
     
     t.onclick = async () => { 
       if (CBTState.sections[idx].submitted || idx === CBTState.currentYearIndex) { 
-        CBTState.currentYearIndex = idx; CBTState.currentQuestion = CBTState.sections[idx].start; 
-        buildYearNav(); updateTimerDisplay(); loadQuestion(); 
-      } else showToastAlert("Submit your current section to unlock the next section."); 
+        CBTState.currentYearIndex = idx; 
+        CBTState.currentQuestion = CBTState.sections[idx].start; 
+        buildYearNav(); 
+        updateTimerDisplay(); 
+        loadQuestion(); 
+      } else {
+        showToastAlert("Submit your current section to unlock the next section."); 
+      }
     }; 
     c.appendChild(t); 
   }); 
