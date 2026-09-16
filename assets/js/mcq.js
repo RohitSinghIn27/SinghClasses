@@ -1139,7 +1139,7 @@ window.submitUserFeedback = async function() {
       }
       if (sendIcon) sendIcon.style.display = 'inline-block';
       if (spinIcon) spinIcon.style.display = 'none';
-      if (btnLabel) btnLabel.innerText = "Save Your Response";
+      if (btnLabel) btnLabel.innerText = "Submit Response";
     }, 2400);
   };
 
