@@ -548,8 +548,8 @@ h1, h2, h3, h4 { color: var(--text-color); font-weight: 800; }
   flex-shrink: 0; 
 }
 .qhc-brand-url { 
-  font-size: 0.88rem; 
-  font-weight: 800; 
+  font-size: 0.8rem; 
+  font-weight: 750; 
   color: #0a2540; 
   letter-spacing: -0.01em;
   white-space: nowrap; 
