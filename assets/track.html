@@ -12,8 +12,13 @@
   --c-school:#2563eb;--c-tuition:#f59e0b;--c-study:#8b5cf6;
   --bg:#f1f5f9;--surface:#ffffff;--text:#1e293b;--text-sub:#64748b;--border:#cbd5e1;
 }
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);min-height:100vh;padding:12px;color:var(--text);font-size:14px;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);min-height:100vh;padding:14px;color:var(--text);font-size:14px;-webkit-tap-highlight-color:transparent}
 .container{max-width:1400px;margin:0 auto;display:flex;flex-direction:column;gap:14px;padding-bottom:30px}
+
+/* Print Header (Visible only on print) */
+.print-only-header{display:none}
+
+/* Screen Header */
 .merged-header{display:flex;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;flex-wrap:wrap;box-shadow:0 1px 3px rgba(0,0,0,0.02)}
 .brand-title{font-size:16px;font-weight:800;padding:12px 18px;border-right:1px solid var(--border);display:flex;align-items:center;gap:6px}
 .date-display{padding:12px 16px;color:var(--text-sub);font-weight:600;font-size:12px;white-space:nowrap}
@@ -25,6 +30,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .tab-btn:last-child{border-right:none}
 .tab-btn.active{color:var(--primary);background:var(--primary-light);box-shadow:inset 0 -2px 0 var(--primary)}
 .tab-content{display:none;opacity:0;transition:opacity .2s}.tab-content.active{display:block;opacity:1}
+
+/* Dashboard & Stats */
 .merged-dashboard{display:flex;flex-wrap:wrap;gap:12px;align-items:stretch}
 .timeline-container{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;gap:10px;flex:1 1 360px}
 .timeline-header-row{display:flex;justify-content:space-between;align-items:center;gap:8px}
@@ -43,31 +50,43 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .card-tuition{border-color:#fde047}.card-tuition .stat-val{color:var(--c-tuition)}
 .card-study{border-color:#ddd6fe}.card-study .stat-val{color:var(--c-study)}
 .card-completed{border-color:#a7f3d0}.card-completed .stat-val{color:var(--success)}
+
+/* Tables Layout (Zero Scrollbar Architecture) */
 .schedule-wrapper{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
 .schedule-container{background:var(--surface);border-radius:12px;overflow:hidden;border:1px solid var(--border);box-shadow:0 2px 4px rgba(0,0,0,0.02)}
-.shift-title{padding:12px 16px;background:#f8fafc;border-bottom:1px solid var(--border);font-size:13px;font-weight:800;display:flex;justify-content:space-between;align-items:center}
-.table-responsive{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.schedule-table{width:100%;border-collapse:collapse;min-width:540px}
-.schedule-table th{padding:10px 6px;font-weight:800;font-size:11px;text-transform:uppercase;color:var(--text-sub);border:1px solid var(--border);background:#fff;text-align:center}
-.schedule-table td{padding:8px 6px;border:1px solid var(--border);vertical-align:middle;text-align:center;background:#fff}
+.shift-title{padding:12px 14px;background:#f8fafc;border-bottom:1px solid var(--border);font-size:13px;font-weight:800;display:flex;justify-content:space-between;align-items:center}
+.table-responsive{width:100%;overflow-x:hidden}
+.schedule-table{width:100%;border-collapse:collapse;table-layout:fixed}
+.schedule-table th{padding:10px 4px;font-weight:800;font-size:11px;text-transform:uppercase;color:var(--text-sub);border:1px solid var(--border);background:#fff;text-align:center}
+.schedule-table td{padding:6px 4px;border:1px solid var(--border);vertical-align:middle;text-align:center;background:#fff}
 .schedule-table tbody tr:hover td{background:#f8fafc}
 .schedule-table tbody tr.is-completed td{background:#f8fafc}
 .schedule-table tbody tr.is-completed .task-cell input{text-decoration:line-through;color:var(--text-sub)}
 .schedule-table tbody tr.live-now td{background:#eff6ff!important;border-top:2px solid var(--primary);border-bottom:2px solid var(--primary)}
-.col-check{width:8%}.col-time{width:32%}.col-hrs{width:12%}.col-cat{width:20%}.col-task{width:22%}.col-del{width:6%}
-.checkbox-cell label{display:flex;align-items:center;justify-content:center;min-height:36px;cursor:pointer}
+
+/* Explicit Column Widths matching proportions */
+.col-check{width:36px}
+.col-time{width:142px}
+.col-hrs{width:46px}
+.col-cat{width:82px}
+.col-task{width:auto}
+.col-del{width:30px}
+
+.checkbox-cell label{display:flex;align-items:center;justify-content:center;min-height:32px;cursor:pointer}
 .checkbox-cell input{width:18px;height:18px;accent-color:var(--success);cursor:pointer}
-.time-cell input,.hrs-cell input,.task-cell input{width:100%;border:1px solid transparent;background:transparent;font-family:inherit;color:var(--text);font-size:13px;outline:none;padding:6px 2px;text-align:center;border-radius:4px}
+.time-cell input,.hrs-cell input,.task-cell input{width:100%;border:1px solid transparent;background:transparent;font-family:inherit;color:var(--text);font-size:12.5px;outline:none;padding:5px 2px;text-align:center;border-radius:4px}
 .time-cell input:focus,.task-cell input:focus{border-color:#bfdbfe;background:#eff6ff}
 .hrs-cell input::-webkit-outer-spin-button,.hrs-cell input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-.hrs-cell input[type=number]{-moz-appearance:textfield;appearance:textfield;font-weight:700;color:var(--c-school);font-size:14px}
-.cat-select{padding:4px 6px;border-radius:4px;font-size:11px;font-weight:800;border:none;color:#fff;cursor:pointer;outline:none;width:100%;text-align-last:center}
+.hrs-cell input[type=number]{-moz-appearance:textfield;appearance:textfield;font-weight:700;color:var(--c-school);font-size:13.5px}
+.cat-select{padding:4px 2px;border-radius:4px;font-size:10.5px;font-weight:800;border:none;color:#fff;cursor:pointer;outline:none;width:100%;text-align-last:center}
 .cat-select.School{background:var(--c-school)}.cat-select.Tuition{background:var(--c-tuition)}.cat-select.Study{background:var(--c-study)}
 .live-badge{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--primary);margin-right:4px;animation:pulse 1.5s infinite}
 @keyframes pulse{0%{opacity:1}50%{opacity:.3}100%{opacity:1}}
-.del-btn{background:transparent;border:none;color:#cbd5e1;cursor:pointer;font-size:14px;font-weight:700;padding:4px 6px;border-radius:4px}
+.del-btn{background:transparent;border:none;color:#cbd5e1;cursor:pointer;font-size:13px;font-weight:700;padding:2px 4px;border-radius:4px}
 .del-btn:hover{color:var(--danger);background:#fee2e2}
 .empty-row-cell{padding:24px!important;color:var(--text-sub);font-style:italic;font-size:13px}
+
+/* Timetables & Analytics Grids */
 .timetable-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
 .timetable-card{border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#fff}
 .timetable-card.active-day{border-left:4px solid var(--primary)}
@@ -80,31 +99,120 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .chart-container{background:#fff;border-radius:10px;padding:14px;border:1px solid var(--border)}
 .chart-title{font-size:12px;font-weight:800;color:var(--text-sub);margin-bottom:10px;text-align:center;text-transform:uppercase}
 .chart-wrapper{position:relative;height:210px;width:100%}
-.backup-alert{position:relative;display:inline-block}
-.backup-alert::after{content:'';position:absolute;top:2px;right:2px;width:6px;height:6px;background:var(--danger);border-radius:50%}
-@media(max-width:1024px){.schedule-wrapper{grid-template-columns:1fr}}
+
+/* Responsive Screen Breakpoints */
+@media(max-width:960px){
+  .schedule-wrapper{grid-template-columns:1fr}
+}
 @media(max-width:768px){
   .merged-header{flex-direction:column;align-items:stretch}
   .brand-title{border-right:none;border-bottom:1px solid var(--border);padding:10px 14px}
   .date-display{border-bottom:1px solid var(--border);padding:8px 14px}
-  .header-actions{width:100%;border-bottom:1px solid var(--border);justify-content:flex-start;overflow-x:auto}
+  .header-actions{width:100%;border-bottom:1px solid var(--border);justify-content:flex-start}
   .tab-navigation{border-left:none;width:100%}
   .tab-btn{flex:1;justify-content:center;padding:12px 6px}
   .stats-grid{display:grid;grid-template-columns:1fr 1fr}
 }
-@media screen and (max-width:600px){.time-cell input,.hrs-cell input,.task-cell input,.timetable-input{font-size:16px!important}}
-@media print{.merged-header,.header-actions,.icon-btn,.del-btn,.day-selector,.week-nav{display:none!important}.schedule-wrapper{grid-template-columns:1fr 1fr!important}}
+@media screen and (max-width:560px){
+  .table-responsive{overflow-x:auto}
+  .schedule-table{min-width:480px}
+}
+
+/* ===================================================
+   PERFECT A4/LETTER PRINT STYLESHEET
+   =================================================== */
+@media print{
+  @page{size:A4 portrait;margin:8mm 8mm 10mm 8mm}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  body{background:#fff!important;padding:0!important;font-size:11px!important;color:#000!important}
+  .container{max-width:100%!important;width:100%!important;gap:8px!important;padding:0!important}
+  
+  /* Show dedicated print header */
+  .print-only-header{
+    display:flex!important;justify-content:space-between;align-items:flex-end;
+    border-bottom:2px solid #0f172a;padding-bottom:6px;margin-bottom:8px;
+  }
+  .print-brand{font-size:18px;font-weight:900;color:#0f172a;letter-spacing:0.5px}
+  .print-meta{font-size:12px;font-weight:700;color:#475569;text-align:right}
+
+  /* Hide navigation, tabs, inputs & action controls */
+  .merged-header,.timeline-container,.shift-title button,.del-btn,.col-del,
+  .header-actions,.tab-navigation,#daySelector,.week-nav,.icon-btn{
+    display:none!important;
+  }
+
+  /* Stats cards in print */
+  .merged-dashboard{display:block!important;margin:0 0 6px 0!important}
+  .stats-grid{display:flex!important;width:100%!important;gap:8px!important}
+  .stat-card{
+    padding:6px 4px!important;border-radius:6px!important;border:1px solid #cbd5e1!important;
+    break-inside:avoid;page-break-inside:avoid;
+  }
+  .stat-label{font-size:9px!important}
+  .stat-val{font-size:16px!important;margin-top:2px!important}
+
+  /* Two column side-by-side print grid */
+  .schedule-wrapper{
+    display:grid!important;grid-template-columns:1fr 1fr!important;gap:10px!important;margin-top:6px!important;
+  }
+  .schedule-container{
+    border:1px solid #94a3b8!important;border-radius:6px!important;box-shadow:none!important;
+    break-inside:avoid;page-break-inside:avoid;
+  }
+  .shift-title{padding:6px 10px!important;font-size:11px!important;background:#f1f5f9!important}
+
+  /* Full table width without horizontal clipping */
+  .table-responsive{overflow:visible!important;width:100%!important}
+  .schedule-table{width:100%!important;min-width:0!important;table-layout:fixed!important;border-collapse:collapse!important}
+  .schedule-table th{padding:5px 2px!important;font-size:9px!important;background:#f8fafc!important;border:1px solid #cbd5e1!important}
+  .schedule-table td{padding:4px 2px!important;font-size:10px!important;border:1px solid #cbd5e1!important}
+
+  /* Strict column sizing fitting A4 width (~95mm per table) */
+  .col-check{width:22px!important}
+  .col-time{width:104px!important}
+  .col-hrs{width:34px!important}
+  .col-cat{width:56px!important}
+  .col-task{width:auto!important}
+
+  /* Clean print view of form inputs */
+  .time-cell input,.hrs-cell input,.task-cell input{
+    border:none!important;background:transparent!important;font-size:9.5px!important;
+    padding:1px 0!important;color:#000!important;text-align:center!important;
+  }
+  .hrs-cell input{font-weight:800!important;color:#2563eb!important}
+  .checkbox-cell label{min-height:auto!important}
+  .checkbox-cell input{width:12px!important;height:12px!important}
+  .cat-select{
+    -webkit-appearance:none!important;-moz-appearance:none!important;appearance:none!important;
+    font-size:8.5px!important;padding:2px 0!important;border-radius:3px!important;
+    color:#fff!important;font-weight:800!important;text-align:center!important;border:none!important;
+  }
+  .cat-select.School{background:#2563eb!important}
+  .cat-select.Tuition{background:#f59e0b!important}
+  .cat-select.Study{background:#8b5cf6!important}
+  .live-badge{display:none!important}
+}
 </style>
 </head>
 <body>
 <div class="container">
+  
+  <!-- Printable Clean Header -->
+  <div class="print-only-header">
+    <div>
+      <div class="print-brand">📚 PLANNER & SCHEDULE</div>
+      <div style="font-size:10px;color:#64748b;font-weight:600">Daily Academic & Class Tracker</div>
+    </div>
+    <div class="print-meta" id="printDateMeta"></div>
+  </div>
+
   <div class="merged-header">
     <div class="brand-title">📚 PLANNER</div>
     <div class="date-display" id="currentDateDisplay" aria-live="polite"></div>
     <div class="header-actions">
       <button class="icon-btn" id="exportBtn" onclick="exportBackup()" aria-label="Export backup file">💾 Export</button>
       <button class="icon-btn" onclick="document.getElementById('importFile').click()" aria-label="Import backup file">📂 Import</button>
-      <button class="icon-btn" onclick="window.print()" aria-label="Print timetable">🖨️ Print</button>
+      <button class="icon-btn" onclick="triggerPrint()" aria-label="Print timetable">🖨️ Print</button>
       <input type="file" id="importFile" style="display:none" accept=".json" onchange="importBackup(event)">
     </div>
     <div class="tab-navigation" role="tablist">
@@ -308,6 +416,15 @@ function renderAll(){
   calculateWeeklyStats();
   updateProgress();
   renderTimetables();
+  updatePrintDate();
+}
+
+function updatePrintDate(){
+  const [y,m,d]=state.activeDateStr.split('-');
+  const dt=new Date(y,m-1,d);
+  const formatted=dt.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  const target=document.getElementById('printDateMeta');
+  if(target)target.textContent=formatted;
 }
 
 function renderDaySelector(){
@@ -331,6 +448,7 @@ function selectDate(isoStr){
   calculateWeeklyStats();
   updateProgress();
   renderDaySelector();
+  updatePrintDate();
 }
 function shiftWeek(dir){
   state.viewMondayStr=addDays(state.viewMondayStr,dir*7);
@@ -352,10 +470,10 @@ function renderTables(){
     tbody.innerHTML='';
     const items=dayData[sec]||[];
     if(!items.length){
-      tbody.innerHTML=`<tr><td colspan="6" class="empty-row-cell">No tasks logged for ${getDayName(state.activeDateStr)}, ${state.activeDateStr}</td></tr>`;
+      tbody.innerHTML=`<tr><td colspan="6" class="empty-row-cell">No tasks scheduled for ${getDayName(state.activeDateStr)}, ${state.activeDateStr}</td></tr>`;
       return;
     }
-    items.forEach((item,idx)=>{
+    items.forEach((item)=>{
       const isLive=isTimeActive(item.time,state.activeDateStr);
       const row=document.createElement('tr');
       if(item.completed)row.classList.add('is-completed');
@@ -552,6 +670,12 @@ function updateCurrentDate(){
   document.getElementById('currentDateDisplay').innerHTML=`📅 ${n.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})} ${n.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}`;
   renderTables();
   renderDaySelector();
+  updatePrintDate();
+}
+
+function triggerPrint(){
+  updatePrintDate();
+  window.print();
 }
 
 function exportBackup(){
