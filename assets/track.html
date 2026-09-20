@@ -10,45 +10,46 @@
 :root{
   --primary:#2563eb;--primary-light:#eff6ff;--success:#10b981;--danger:#ef4444;
   --c-school:#2563eb;--c-tuition:#f59e0b;--c-study:#8b5cf6;
-  --bg:#f1f5f9;--surface:#ffffff;--text:#1e293b;--text-sub:#64748b;--border:#cbd5e1;--radius:10px;
+  --bg:#f1f5f9;--surface:#ffffff;--text:#1e293b;--text-sub:#64748b;--border:#cbd5e1;
 }
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);min-height:100vh;padding:12px;color:var(--text);font-size:14px;-webkit-tap-highlight-color:transparent}
-.container{max-width:1400px;margin:0 auto;display:flex;flex-direction:column;gap:14px;padding-bottom:40px}
+.container{max-width:1400px;margin:0 auto;display:flex;flex-direction:column;gap:14px;padding-bottom:30px}
 .merged-header{display:flex;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;flex-wrap:wrap;box-shadow:0 1px 3px rgba(0,0,0,0.02)}
-.brand-title{font-size:17px;font-weight:800;padding:12px 18px;border-right:1px solid var(--border);display:flex;align-items:center;gap:6px}
+.brand-title{font-size:16px;font-weight:800;padding:12px 18px;border-right:1px solid var(--border);display:flex;align-items:center;gap:6px}
 .date-display{padding:12px 16px;color:var(--text-sub);font-weight:600;font-size:12px;white-space:nowrap}
 .header-actions{display:flex;align-items:center;gap:6px;margin-left:auto;padding:8px 12px}
-.icon-btn{background:var(--surface);border:1px solid var(--border);padding:6px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;color:var(--text)}
+.icon-btn{background:var(--surface);border:1px solid var(--border);padding:6px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;color:var(--text);transition:all .15s}
 .icon-btn:hover{background:#f8fafc;border-color:var(--text-sub)}
-.tab-navigation{display:flex;margin-left:auto;border-left:1px solid var(--border);height:100%}
+.tab-navigation{display:flex;border-left:1px solid var(--border);height:100%}
 .tab-btn{padding:14px 18px;border:none;background:transparent;color:var(--text-sub);cursor:pointer;font-weight:700;font-size:12px;border-right:1px solid var(--border);display:flex;align-items:center;gap:5px;white-space:nowrap}
 .tab-btn:last-child{border-right:none}
 .tab-btn.active{color:var(--primary);background:var(--primary-light);box-shadow:inset 0 -2px 0 var(--primary)}
 .tab-content{display:none;opacity:0;transition:opacity .2s}.tab-content.active{display:block;opacity:1}
 .merged-dashboard{display:flex;flex-wrap:wrap;gap:12px;align-items:stretch}
-.timeline-container{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;gap:12px;flex:1 1 340px}
-.timeline-header-row{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.timeline-title{font-weight:800;font-size:12px;color:var(--text);display:flex;align-items:center;gap:6px;letter-spacing:.5px}
+.timeline-container{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;gap:10px;flex:1 1 360px}
+.timeline-header-row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.week-nav{display:flex;align-items:center;gap:4px}
 .day-selector{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .day-selector::-webkit-scrollbar{display:none}
-.day-button{flex:1 0 auto;min-width:42px;height:38px;border:1px solid var(--border);border-radius:8px;background:var(--surface);font-weight:700;font-size:12px;cursor:pointer;color:var(--text);display:flex;align-items:center;justify-content:center}
+.day-button{flex:1 0 auto;min-width:44px;height:40px;border:1px solid var(--border);border-radius:8px;background:var(--surface);font-weight:700;font-size:11px;cursor:pointer;color:var(--text);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2}
+.day-button span.d-num{font-size:13px;font-weight:800}
 .day-button.active{background:var(--primary);border-color:var(--primary);color:#fff}
 .day-button.today:not(.active){border:2px solid var(--primary);color:var(--primary)}
-.stats-section{flex:2 1 440px;display:flex;gap:10px}
-.stat-card-new{flex:1 1 0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 6px;border-radius:12px;background:var(--surface);border:1px solid var(--border);min-width:0}
-.stat-label-new{font-size:10px;font-weight:800;letter-spacing:.5px;color:var(--text-sub);text-transform:uppercase}
-.stat-val-new{font-size:22px;font-weight:800;white-space:nowrap;margin-top:4px}
-.school-card{border-color:#bfdbfe}.school-card .stat-val-new{color:var(--c-school)}
-.tuition-card{border-color:#fde047}.tuition-card .stat-val-new{color:var(--c-tuition)}
-.study-card{border-color:#ddd6fe}.study-card .stat-val-new{color:var(--c-study)}
-.completed-card{border-color:#a7f3d0}.completed-card .stat-val-new{color:var(--success)}
-.schedule-wrapper{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.stats-grid{display:flex;gap:10px;flex:2 1 440px}
+.stat-card{flex:1 1 0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 6px;border-radius:12px;background:var(--surface);border:1px solid var(--border);min-width:0;text-align:center}
+.stat-label{font-size:10px;font-weight:800;letter-spacing:.5px;color:var(--text-sub);text-transform:uppercase}
+.stat-val{font-size:22px;font-weight:800;white-space:nowrap;margin-top:4px}
+.card-school{border-color:#bfdbfe}.card-school .stat-val{color:var(--c-school)}
+.card-tuition{border-color:#fde047}.card-tuition .stat-val{color:var(--c-tuition)}
+.card-study{border-color:#ddd6fe}.card-study .stat-val{color:var(--c-study)}
+.card-completed{border-color:#a7f3d0}.card-completed .stat-val{color:var(--success)}
+.schedule-wrapper{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
 .schedule-container{background:var(--surface);border-radius:12px;overflow:hidden;border:1px solid var(--border);box-shadow:0 2px 4px rgba(0,0,0,0.02)}
 .shift-title{padding:12px 16px;background:#f8fafc;border-bottom:1px solid var(--border);font-size:13px;font-weight:800;display:flex;justify-content:space-between;align-items:center}
 .table-responsive{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.schedule-table{width:100%;border-collapse:collapse;min-width:520px}
+.schedule-table{width:100%;border-collapse:collapse;min-width:540px}
 .schedule-table th{padding:10px 6px;font-weight:800;font-size:11px;text-transform:uppercase;color:var(--text-sub);border:1px solid var(--border);background:#fff;text-align:center}
-.schedule-table td{padding:8px 6px;border:1px solid var(--border);vertical-align:middle;text-align:center;background:#fff;transition:background .2s}
+.schedule-table td{padding:8px 6px;border:1px solid var(--border);vertical-align:middle;text-align:center;background:#fff}
 .schedule-table tbody tr:hover td{background:#f8fafc}
 .schedule-table tbody tr.is-completed td{background:#f8fafc}
 .schedule-table tbody tr.is-completed .task-cell input{text-decoration:line-through;color:var(--text-sub)}
@@ -60,10 +61,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .time-cell input:focus,.task-cell input:focus{border-color:#bfdbfe;background:#eff6ff}
 .hrs-cell input::-webkit-outer-spin-button,.hrs-cell input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .hrs-cell input[type=number]{-moz-appearance:textfield;appearance:textfield;font-weight:700;color:var(--c-school);font-size:14px}
-.cat-select{padding:4px 8px;border-radius:4px;font-size:11px;font-weight:800;border:none;color:#fff;cursor:pointer;text-align:center;text-align-last:center;outline:none}
+.cat-select{padding:4px 6px;border-radius:4px;font-size:11px;font-weight:800;border:none;color:#fff;cursor:pointer;outline:none;width:100%;text-align-last:center}
 .cat-select.School{background:var(--c-school)}.cat-select.Tuition{background:var(--c-tuition)}.cat-select.Study{background:var(--c-study)}
 .live-badge{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--primary);margin-right:4px;animation:pulse 1.5s infinite}
-@keyframes pulse{0%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.3)}100%{opacity:1;transform:scale(1)}}
+@keyframes pulse{0%{opacity:1}50%{opacity:.3}100%{opacity:1}}
 .del-btn{background:transparent;border:none;color:#cbd5e1;cursor:pointer;font-size:14px;font-weight:700;padding:4px 6px;border-radius:4px}
 .del-btn:hover{color:var(--danger);background:#fee2e2}
 .empty-row-cell{padding:24px!important;color:var(--text-sub);font-style:italic;font-size:13px}
@@ -71,75 +72,78 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .timetable-card{border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#fff}
 .timetable-card.active-day{border-left:4px solid var(--primary)}
 .timetable-header{padding:10px 14px;background:#f8fafc;border-bottom:1px solid var(--border);font-weight:800;font-size:12px;display:flex;justify-content:space-between;align-items:center}
-.time-slot{padding:10px 14px;border-bottom:1px solid #f1f5f9;min-height:38px;display:flex;align-items:center;font-size:13px}
+.time-slot{padding:8px 14px;border-bottom:1px solid #f1f5f9;min-height:36px;display:flex;align-items:center;font-size:12px}
 .time-slot:last-child{border-bottom:none}
 .time-slot.edit-mode{flex-direction:column;align-items:flex-start}
-.timetable-input{width:100%;padding:6px;border:1px solid var(--border);border-radius:4px;font-size:13px;resize:vertical;min-height:40px}
+.timetable-input{width:100%;padding:6px;border:1px solid var(--border);border-radius:4px;font-size:12px;resize:vertical;min-height:40px}
 .charts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
 .chart-container{background:#fff;border-radius:10px;padding:14px;border:1px solid var(--border)}
 .chart-title{font-size:12px;font-weight:800;color:var(--text-sub);margin-bottom:10px;text-align:center;text-transform:uppercase}
 .chart-wrapper{position:relative;height:210px;width:100%}
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:14px}
-.stat-card{background:#fff;border-radius:10px;padding:14px;border:1px solid var(--border);text-align:center}
-.stat-value{font-size:22px;font-weight:800;color:var(--primary);margin:4px 0}
-.stat-label{font-size:11px;color:var(--text-sub);text-transform:uppercase;font-weight:800}
+.backup-alert{position:relative;display:inline-block}
+.backup-alert::after{content:'';position:absolute;top:2px;right:2px;width:6px;height:6px;background:var(--danger);border-radius:50%}
 @media(max-width:1024px){.schedule-wrapper{grid-template-columns:1fr}}
 @media(max-width:768px){
   .merged-header{flex-direction:column;align-items:stretch}
   .brand-title{border-right:none;border-bottom:1px solid var(--border);padding:10px 14px}
   .date-display{border-bottom:1px solid var(--border);padding:8px 14px}
-  .header-actions{width:100%;border-bottom:1px solid var(--border);justify-content:flex-start}
+  .header-actions{width:100%;border-bottom:1px solid var(--border);justify-content:flex-start;overflow-x:auto}
   .tab-navigation{border-left:none;width:100%}
   .tab-btn{flex:1;justify-content:center;padding:12px 6px}
-  .stats-section{display:grid;grid-template-columns:1fr 1fr}
+  .stats-grid{display:grid;grid-template-columns:1fr 1fr}
 }
 @media screen and (max-width:600px){.time-cell input,.hrs-cell input,.task-cell input,.timetable-input{font-size:16px!important}}
-@media print{.merged-header,.header-actions,.add-row-btn,.del-btn,.day-selector,.reset-btn,.timeline-header-row{display:none!important}.schedule-wrapper{grid-template-columns:1fr 1fr!important}}
+@media print{.merged-header,.header-actions,.icon-btn,.del-btn,.day-selector,.week-nav{display:none!important}.schedule-wrapper{grid-template-columns:1fr 1fr!important}}
 </style>
 </head>
 <body>
 <div class="container">
   <div class="merged-header">
     <div class="brand-title">📚 PLANNER</div>
-    <div class="date-display" id="currentDateDisplay"></div>
+    <div class="date-display" id="currentDateDisplay" aria-live="polite"></div>
     <div class="header-actions">
-      <button class="icon-btn" onclick="exportBackup()">💾 Export</button>
-      <button class="icon-btn" onclick="document.getElementById('importFile').click()">📂 Import</button>
-      <button class="icon-btn" onclick="window.print()">🖨️ Print</button>
+      <button class="icon-btn" id="exportBtn" onclick="exportBackup()" aria-label="Export backup file">💾 Export</button>
+      <button class="icon-btn" onclick="document.getElementById('importFile').click()" aria-label="Import backup file">📂 Import</button>
+      <button class="icon-btn" onclick="window.print()" aria-label="Print timetable">🖨️ Print</button>
       <input type="file" id="importFile" style="display:none" accept=".json" onchange="importBackup(event)">
     </div>
-    <div class="tab-navigation">
-      <button class="tab-btn active" onclick="switchTab('planner', this)">📅 Planner</button>
-      <button class="tab-btn" onclick="switchTab('timetables', this)">⏰ Timetables</button>
-      <button class="tab-btn" onclick="switchTab('analytics', this)">📊 Analytics</button>
+    <div class="tab-navigation" role="tablist">
+      <button class="tab-btn active" role="tab" onclick="switchTab('planner', this)">📅 Planner</button>
+      <button class="tab-btn" role="tab" onclick="switchTab('timetables', this)">⏰ Timetables</button>
+      <button class="tab-btn" role="tab" onclick="switchTab('analytics', this)">📊 Analytics</button>
     </div>
   </div>
 
-  <div id="planner" class="tab-content active">
+  <div id="planner" class="tab-content active" role="tabpanel">
     <div class="merged-dashboard">
       <div class="timeline-container">
         <div class="timeline-header-row">
-          <div class="timeline-title"><span>📅</span> SELECT TIMELINE</div>
-          <div style="display:flex;gap:6px">
-            <button onclick="clearTodayChecks()" class="icon-btn" title="Uncheck all for current day">☑️ Clear</button>
-            <button onclick="resetData()" class="icon-btn" style="color:var(--danger)">🔄 Reset</button>
+          <div class="week-nav">
+            <button class="icon-btn" onclick="shiftWeek(-1)" aria-label="Previous week">◀</button>
+            <button class="icon-btn" onclick="jumpToday()" aria-label="Current week">Today</button>
+            <button class="icon-btn" onclick="shiftWeek(1)" aria-label="Next week">▶</button>
+            <span id="weekLabel" style="font-weight:700;font-size:11px;margin-left:4px;color:var(--text-sub)"></span>
+          </div>
+          <div style="display:flex;gap:4px">
+            <button onclick="clearTodayChecks()" class="icon-btn" title="Uncheck tasks for selected day" aria-label="Clear tasks">☑️ Clear</button>
+            <button onclick="resetData()" class="icon-btn" style="color:var(--danger)" aria-label="Reset all data">🔄 Reset</button>
           </div>
         </div>
         <div class="day-selector" id="daySelector"></div>
       </div>
-      <div class="stats-section">
-        <div class="stat-card-new school-card"><span class="stat-label-new">SCHOOL</span><span class="stat-val-new"><span id="totalSchool">0.0</span> H</span></div>
-        <div class="stat-card-new tuition-card"><span class="stat-label-new">TUITION</span><span class="stat-val-new"><span id="totalTuition">0.0</span> H</span></div>
-        <div class="stat-card-new study-card"><span class="stat-label-new">STUDY</span><span class="stat-val-new"><span id="totalStudy">0.0</span> H</span></div>
-        <div class="stat-card-new completed-card"><span class="stat-label-new">COMPLETED</span><span class="stat-val-new"><span id="completedCount">0</span> / <span id="totalCount">0</span></span></div>
+      <div class="stats-grid">
+        <div class="stat-card card-school"><span class="stat-label">SCHOOL</span><span class="stat-val"><span id="totalSchool">0.0</span> H</span></div>
+        <div class="stat-card card-tuition"><span class="stat-label">TUITION</span><span class="stat-val"><span id="totalTuition">0.0</span> H</span></div>
+        <div class="stat-card card-study"><span class="stat-label">STUDY</span><span class="stat-val"><span id="totalStudy">0.0</span> H</span></div>
+        <div class="stat-card card-completed"><span class="stat-label">COMPLETED</span><span class="stat-val"><span id="completedCount">0</span> / <span id="totalCount">0</span></span></div>
       </div>
     </div>
 
-    <div class="schedule-wrapper" style="margin-top:14px">
+    <div class="schedule-wrapper">
       <div class="schedule-container">
         <div class="shift-title">
           <span>🏫 SCHOOL CLASSES</span>
-          <button class="icon-btn" style="color:var(--primary)" onclick="addRow('school')">+ Add Class</button>
+          <button class="icon-btn" style="color:var(--primary)" onclick="addRow('school')" aria-label="Add class">+ Add Class</button>
         </div>
         <div class="table-responsive">
           <table class="schedule-table">
@@ -154,7 +158,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
       <div class="schedule-container">
         <div class="shift-title">
           <span>👨‍🏫 TUITION & STUDY</span>
-          <button class="icon-btn" style="color:var(--primary)" onclick="addRow('tuition_study')">+ Add Task</button>
+          <button class="icon-btn" style="color:var(--primary)" onclick="addRow('tuition_study')" aria-label="Add tuition or study task">+ Add Task</button>
         </div>
         <div class="table-responsive">
           <table class="schedule-table">
@@ -168,60 +172,429 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
     </div>
   </div>
 
-  <div id="timetables" class="tab-content">
+  <div id="timetables" class="tab-content" role="tabpanel">
     <div style="display:flex;flex-direction:column;gap:20px">
-      <div><h2 style="font-size:15px;font-weight:800;margin-bottom:10px;text-transform:uppercase">🏫 School Timetable</h2><div class="timetable-grid" id="schoolTimetable"></div></div>
-      <div><h2 style="font-size:15px;font-weight:800;margin-bottom:10px;text-transform:uppercase">👨‍🏫 Tuition Schedule</h2><div class="timetable-grid" id="tuitionTimetable"></div></div>
-      <div><h2 style="font-size:15px;font-weight:800;margin-bottom:10px;text-transform:uppercase">📖 Daily Study Plan</h2><div class="timetable-grid" id="studyTimetable"></div></div>
+      <div><h2 style="font-size:14px;font-weight:800;margin-bottom:10px;text-transform:uppercase">🏫 School Timetable (Template)</h2><div class="timetable-grid" id="schoolTimetable"></div></div>
+      <div><h2 style="font-size:14px;font-weight:800;margin-bottom:10px;text-transform:uppercase">👨‍🏫 Tuition Schedule (Template)</h2><div class="timetable-grid" id="tuitionTimetable"></div></div>
+      <div><h2 style="font-size:14px;font-weight:800;margin-bottom:10px;text-transform:uppercase">📖 Daily Study Plan (Template)</h2><div class="timetable-grid" id="studyTimetable"></div></div>
     </div>
   </div>
 
-  <div id="analytics" class="tab-content">
-    <div class="stats-grid" id="statsGrid"></div>
+  <div id="analytics" class="tab-content" role="tabpanel">
+    <div class="stats-grid" id="statsGrid" style="margin-bottom:14px"></div>
     <div class="charts-grid">
-      <div class="chart-container"><div class="chart-title">Category Breakdown (Hours)</div><div class="chart-wrapper"><canvas id="categoryChart"></canvas></div></div>
-      <div class="chart-container"><div class="chart-title">Category Completion Rate</div><div class="chart-wrapper"><canvas id="completionChart"></canvas></div></div>
+      <div class="chart-container"><div class="chart-title">Weekly Breakdown (Hours)</div><div class="chart-wrapper"><canvas id="categoryChart"></canvas></div></div>
+      <div class="chart-container"><div class="chart-title">Category Completion Rate (%)</div><div class="chart-wrapper"><canvas id="completionChart"></canvas></div></div>
       <div class="chart-container"><div class="chart-title">Daily Hours Trend</div><div class="chart-wrapper"><canvas id="trendChart"></canvas></div></div>
-      <div class="chart-container"><div class="chart-title">Daily Completion Trend</div><div class="chart-wrapper"><canvas id="completionTrendChart"></canvas></div></div>
+      <div class="chart-container"><div class="chart-title">Daily Completion Trend (%)</div><div class="chart-wrapper"><canvas id="completionTrendChart"></canvas></div></div>
     </div>
   </div>
 </div>
 
 <script>
 const DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-let currentDate=new Date(),currentDay=DAYS[currentDate.getDay()===0?6:currentDate.getDay()-1],todayDay=currentDay,yearlyData={},charts={},editMode={school:false,tuition:false,study:false};
-let schoolTimetable={'Mon':['08:40 AM-09:15 AM XI C','09:25 AM-10:00 AM XI C','10:35 AM-11:10 AM XIII C','11:40 AM-12:20 PM XII C','12:20 PM-12:55 PM XI D','12:55 PM-01:30 PM XIII D','01:30 PM-02:00 PM XIII D'],'Tue':['08:40 AM-09:15 AM XI C','09:25 AM-10:00 AM XI C','10:35 AM-11:10 AM XII C','11:40 AM-12:20 PM XII C','12:20 PM-12:55 PM XI D','12:55 PM-01:30 PM XIII D','01:30 PM-02:00 PM XIII D'],'Wed':['08:40 AM-09:15 AM XI C','09:25 AM-10:00 AM X C','10:35 AM-11:10 AM XII C','11:40 AM-12:20 PM XI D','12:20 PM-12:55 PM XI D','12:55 PM-01:30 PM XIII D','01:30 PM-02:00 PM IX C'],'Thu':['08:40 AM-09:15 AM XI C','09:25 AM-10:00 AM X C','10:35 AM-11:10 AM XII C','11:40 AM-12:20 PM XI D','12:55 PM-01:30 PM XIII D','01:30 PM-02:00 PM X B'],'Fri':['08:40 AM-09:15 AM XI C','09:25 AM-10:00 AM X B','10:35 AM-11:10 AM XII C','11:40 AM-12:20 PM XI D','12:20 PM-12:55 PM X C','12:55 PM-01:30 PM XIII D','01:30 PM-02:00 PM IX C'],'Sat':['08:40 AM-09:15 AM XI C','09:25 AM-10:00 AM X B','10:35 AM-11:10 AM XII C','11:40 AM-12:20 PM XI D','12:20 PM-12:55 PM XI D','12:55 PM-01:30 PM XIII D','01:30 PM-02:00 PM IX C'],'Sun':[]};
-let tuitionSchedule={'Mon':['04:00 PM-05:10 PM XII IP Sant Ngr','05:10 PM-06:20 PM XII IP SICS','07:15 PM-08:30 PM XII CS Sant Ngr'],'Tue':['04:00 PM-05:30 PM XI IP/CS Sant Ngr','05:30 PM-06:20 PM XI AI SICS','06:20 PM-07:30 PM XI IP/CS SICS'],'Wed':['04:00 PM-05:10 PM XII IP Sant Ngr','05:10 PM-06:20 PM XII IP SICS','07:15 PM-08:30 PM XII CS Sant Ngr'],'Thu':['04:00 PM-05:30 PM XI IP/CS Sant Ngr','05:30 PM-06:20 PM XI AI SICS','06:20 PM-07:30 PM XI IP/CS SICS'],'Fri':['04:00 PM-05:10 PM XII IP Sant Ngr','05:10 PM-06:20 PM XII IP SICS','07:15 PM-08:30 PM XII CS Sant Ngr'],'Sat':['04:00 PM-05:30 PM XI IP/CS Sant Ngr','05:30 PM-06:20 PM XI AI SICS','06:20 PM-07:30 PM XI IP/CS SICS'],'Sun':[]};
-let studySchedule={'Mon':['10:00 PM-11:30 PM Mathematics'],'Tue':['10:00 PM-11:30 PM English'],'Wed':['10:00 PM-11:30 PM Reasoning'],'Thu':['10:00 PM-11:30 PM Hindi'],'Fri':['10:00 PM-11:30 PM Computer Science'],'Sat':['10:00 PM-11:30 PM Computer Science'],'Sun':['10:00 PM-11:30 PM CS + Teaching Aptitude']};
+const STORE_KEY='singhPlanner_v5';
+let state={activeDateStr:getTodayISO(),viewMondayStr:getMondayISO(new Date()),days:{},timetables:{school:{},tuition:{},study:{}},lastBackup:null};
+let charts={},editMode={school:false,tuition:false,study:false};
 
-function initializeData(){const y=new Date().getFullYear();yearlyData[y]={};DAYS.forEach(d=>yearlyData[y][d]={school:[],tuition_study:[]});}
-function parseMinutes(t,fallbackMod){let c=t.toUpperCase().replace(/\s+/g,''),mod=c.includes('PM')?'PM':(c.includes('AM')?'AM':fallbackMod),p=c.replace('AM','').replace('PM',''),[h,min]=p.split(':').map(Number);if(isNaN(h))return 0;if(isNaN(min))min=0;if(mod==='PM'&&h!==12)h+=12;if(mod==='AM'&&h===12)h=0;return h*60+min;}
-function extractTimeAndCalculateHrs(text){const m=text.match(/(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)\s*-\s*(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)/i);if(m){let s=m[1].trim(),e=m[2].trim(),emod=e.toUpperCase().includes('PM')?'PM':(e.toUpperCase().includes('AM')?'AM':'PM'),smod=s.toUpperCase().includes('AM')?'AM':(s.toUpperCase().includes('PM')?'PM':emod);let sm=parseMinutes(s,smod),em=parseMinutes(e,emod);if(em<sm)em+=1440;return{timeStr:`${s} - ${e}`,hrs:parseFloat(((em-sm)/60).toFixed(2)),cleanTask:text.replace(m[0],'').replace(/[()]/g,'').trim()}}return null;}
-function isTimeActive(timeStr){if(currentDay!==todayDay)return false;const m=timeStr.match(/(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)\s*-\s*(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)/i);if(!m)return false;let s=m[1].trim(),e=m[2].trim(),emod=e.toUpperCase().includes('PM')?'PM':'AM',smod=s.toUpperCase().includes('AM')?'AM':emod;let now=new Date(),curM=now.getHours()*60+now.getMinutes(),sm=parseMinutes(s,smod),em=parseMinutes(e,emod);if(em<sm)em+=1440;return curM>=sm&&curM<=em;}
-function loadState(){const saved=localStorage.getItem('singhYearlyPlanner2026_v4'),savedTT=localStorage.getItem('singhTimetables2026_v4');if(saved)yearlyData=JSON.parse(saved);else initializeData();if(savedTT){const tt=JSON.parse(savedTT);schoolTimetable=tt.school||schoolTimetable;tuitionSchedule=tt.tuition||tuitionSchedule;studySchedule=tt.study||studySchedule;}syncTasksFromTimetable(currentDay);selectDay(currentDay);renderTimetables();}
-function saveState(){const y=new Date().getFullYear();if(!yearlyData[y])initializeData();localStorage.setItem('singhYearlyPlanner2026_v4',JSON.stringify(yearlyData));}
-function saveTimetables(){localStorage.setItem('singhTimetables2026_v4',JSON.stringify({school:schoolTimetable,tuition:tuitionSchedule,study:studySchedule}));}
-function syncTasksFromTimetable(day,forceSync=false){const y=new Date().getFullYear();if(!yearlyData[y])initializeData();let sTasks=[],tsTasks=[];(schoolTimetable[day]||[]).forEach(cls=>{if(!cls.trim())return;const p=extractTimeAndCalculateHrs(cls);sTasks.push({time:p?p.timeStr:'',hrs:p?p.hrs:0.5,cat:'School',task:p?p.cleanTask:cls.trim(),completed:false});});(tuitionSchedule[day]||[]).forEach(t=>{if(!t.trim())return;const p=extractTimeAndCalculateHrs(t);tsTasks.push({time:p?p.timeStr:'',hrs:p?p.hrs:1,cat:'Tuition',task:p?p.cleanTask:t.trim(),completed:false});});(studySchedule[day]||[]).forEach(st=>{if(!st.trim())return;const p=extractTimeAndCalculateHrs(st);tsTasks.push({time:p?p.timeStr:'',hrs:p?p.hrs:1.5,cat:'Study',task:p?p.cleanTask:st.trim(),completed:false});});const dayData=yearlyData[y][day];const merge=(gen,ext)=>{let res=gen.map(gt=>{let m=ext.find(et=>et.task===gt.task&&et.cat===gt.cat);return m?{...gt,completed:m.completed}:gt;});ext.forEach(et=>{if(!gen.find(gt=>gt.task===et.task&&gt.cat===et.cat))res.push(et);});return res;};if(!dayData.school||!dayData.school.length||forceSync)dayData.school=(forceSync&&dayData.school)?merge(sTasks,dayData.school):sTasks;if(!dayData.tuition_study||!dayData.tuition_study.length||forceSync)dayData.tuition_study=(forceSync&&dayData.tuition_study)?merge(tsTasks,dayData.tuition_study):tsTasks;saveState();}
-function switchTab(tab,btn){document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.getElementById(tab).classList.add('active');if(btn)btn.classList.add('active');if(tab==='analytics')setTimeout(updateAnalytics,80);if(tab==='timetables')renderTimetables();}
-function selectDay(d){currentDay=d;syncTasksFromTimetable(d);renderTables();calculateWeeklyStats();updateProgress();}
-function renderTables(){document.getElementById('daySelector').innerHTML=DAYS.map(d=>`<button class="day-button ${d===currentDay?'active':''} ${d===todayDay?'today':''}" onclick="selectDay('${d}')">${d}</button>`).join('');const y=new Date().getFullYear();if(!yearlyData[y])initializeData();const dayData=yearlyData[y][currentDay]||{school:[],tuition_study:[]};['school','tuition_study'].forEach(sec=>{const tbody=document.getElementById(sec==='school'?'schoolBody':'tuitionStudyBody');tbody.innerHTML='';const items=dayData[sec]||[];if(!items.length){tbody.innerHTML=`<tr><td colspan="6" class="empty-row-cell">No tasks scheduled for ${currentDay}</td></tr>`;return;}items.forEach((item,idx)=>{const isLive=isTimeActive(item.time);const row=document.createElement('tr');if(item.completed)row.classList.add('is-completed');if(isLive)row.classList.add('live-now');row.innerHTML=`<td class="col-check checkbox-cell"><label><input type="checkbox" ${item.completed?'checked':''} onchange="updateCheckbox(${idx},'${sec}')"></label></td><td class="col-time time-cell">${isLive?'<span class="live-badge"></span>':''}<input value="${item.time}" placeholder="08:00 AM - 09:00 AM" onchange="updateTask(${idx},'time',this.value,'${sec}')"></td><td class="col-hrs hrs-cell"><input type="number" step="0.1" value="${item.hrs}" onchange="updateTask(${idx},'hrs',this.value,'${sec}')"></td><td class="col-cat cat-cell"><select class="cat-select ${item.cat}" onchange="updateTask(${idx},'cat',this.value,'${sec}')"><option value="School" ${item.cat==='School'?'selected':''}>School</option><option value="Tuition" ${item.cat==='Tuition'?'selected':''}>Tuition</option><option value="Study" ${item.cat==='Study'?'selected':''}>Study</option></select></td><td class="col-task task-cell"><input value="${item.task}" placeholder="Task name" onchange="updateTask(${idx},'task',this.value,'${sec}')"></td><td class="col-del"><button class="del-btn" title="Delete Task" onclick="deleteRow('${sec}',${idx})">✕</button></td>`;tbody.appendChild(row);});});}
-function addRow(sec){const isSch=sec==='school';const newTask={time:isSch?'08:40 AM - 09:15 AM':'04:00 PM - 05:00 PM',hrs:isSch?0.6:1.0,cat:isSch?'School':'Study',task:'',completed:false};const y=new Date().getFullYear();yearlyData[y][currentDay][sec].push(newTask);saveState();renderTables();calculateWeeklyStats();updateProgress();}
-function deleteRow(sec,idx){const y=new Date().getFullYear();yearlyData[y][currentDay][sec].splice(idx,1);saveState();renderTables();calculateWeeklyStats();updateProgress();}
-function updateTask(idx,field,val,sec){const y=new Date().getFullYear();const item=yearlyData[y][currentDay][sec][idx];if(!item)return;if(field==='hrs')item.hrs=parseFloat(val)||0;else if(field==='time'){item.time=val;const p=extractTimeAndCalculateHrs(val);if(p){item.hrs=p.hrs;const row=document.querySelector(`#${sec==='school'?'schoolBody':'tuitionStudyBody'} tr:nth-child(${idx+1}) .hrs-cell input`);if(row)row.value=p.hrs;}}else if(field==='cat'){item.cat=val;renderTables();}else item[field]=val;saveState();calculateWeeklyStats();}
-function updateCheckbox(idx,sec){const y=new Date().getFullYear();const item=yearlyData[y][currentDay][sec][idx];if(!item)return;item.completed=!item.completed;saveState();updateProgress();calculateWeeklyStats();const row=document.querySelector(`#${sec==='school'?'schoolBody':'tuitionStudyBody'} tr:nth-child(${idx+1})`);if(row)row.classList.toggle('is-completed',item.completed);}
-function clearTodayChecks(){const y=new Date().getFullYear(),data=yearlyData[y][currentDay];if(data){['school','tuition_study'].forEach(s=>(data[s]||[]).forEach(t=>t.completed=false));saveState();renderTables();updateProgress();calculateWeeklyStats();}}
-function calculateWeeklyStats(){const totals={school:0,tuition:0,study:0},y=new Date().getFullYear(),d=yearlyData[y][currentDay]||{school:[],tuition_study:[]};[...(d.school||[]),...(d.tuition_study||[])].forEach(i=>{const h=parseFloat(i.hrs)||0;if(i.cat==='School')totals.school+=h;if(i.cat==='Tuition')totals.tuition+=h;if(i.cat==='Study')totals.study+=h;});document.getElementById('totalSchool').textContent=totals.school.toFixed(1);document.getElementById('totalTuition').textContent=totals.tuition.toFixed(1);document.getElementById('totalStudy').textContent=totals.study.toFixed(1);}
-function updateProgress(){const cbs=document.querySelectorAll('.checkbox-cell input');const chk=Array.from(cbs).filter(c=>c.checked).length;document.getElementById('completedCount').textContent=chk;document.getElementById('totalCount').textContent=cbs.length;}
-function exportBackup(){const data={yearlyData,timetables:{school:schoolTimetable,tuition:tuitionSchedule,study:studySchedule}};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download=`planner_backup_${new Date().toISOString().slice(0,10)}.json`;a.click();}
-function importBackup(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=(evt)=>{try{const d=JSON.parse(evt.target.result);if(d.yearlyData)yearlyData=d.yearlyData;if(d.timetables){schoolTimetable=d.timetables.school||schoolTimetable;tuitionSchedule=d.timetables.tuition||tuitionSchedule;studySchedule=d.timetables.study||studySchedule;}saveState();saveTimetables();selectDay(currentDay);renderTimetables();alert('Backup restored!');}catch(err){alert('Invalid backup file!');}};r.readAsText(f);}
-function renderTimetables(){const renderGrid=(type,obj)=>DAYS.map(d=>`<div class="timetable-card ${d===currentDay?'active-day':''}"><div class="timetable-header"><span>${d}</span><button class="icon-btn" onclick="toggleEditMode('${type}')">${editMode[type]?'💾 Save':'✏️ Edit'}</button></div><div class="timetable-body">${(obj[d]||[]).map((it,i)=>editMode[type]?`<div class="time-slot edit-mode"><textarea class="timetable-input ${type}-slot-${d}">${it}</textarea><button class="icon-btn" style="color:var(--danger);margin-top:4px" onclick="deleteSlot('${type}','${d}',${i})">Delete</button></div>`:`<div class="time-slot">${it||'<span style=\"color:#94a3b8;font-style:italic\">No class</span>'}</div>`).join('')}${editMode[type]?`<div class="time-slot"><button class="icon-btn" style="color:var(--success);width:100%" onclick="addNewSlot('${type}','${d}')">+ Add Slot</button></div>`:''}</div></div>`).join('');document.getElementById('schoolTimetable').innerHTML=renderGrid('school',schoolTimetable);document.getElementById('tuitionTimetable').innerHTML=renderGrid('tuition',tuitionSchedule);document.getElementById('studyTimetable').innerHTML=renderGrid('study',studySchedule);}
-function toggleEditMode(t){editMode[t]=!editMode[t];if(!editMode[t]){const obj=t==='school'?schoolTimetable:(t==='tuition'?tuitionSchedule:studySchedule);DAYS.forEach(d=>{const s=[];document.querySelectorAll(`.${t}-slot-${d}`).forEach(el=>{if(el.value.trim())s.push(el.value.trim());});obj[d]=s;});saveTimetables();DAYS.forEach(d=>syncTasksFromTimetable(d,true));selectDay(currentDay);}renderTimetables();}
-function addNewSlot(t,d){(t==='school'?schoolTimetable:(t==='tuition'?tuitionSchedule:studySchedule))[d].push('');renderTimetables();}
-function deleteSlot(t,d,i){(t==='school'?schoolTimetable:(t==='tuition'?tuitionSchedule:studySchedule))[d].splice(i,1);renderTimetables();}
-function updateAnalytics(){const y=new Date().getFullYear();let hrs=0,comp=0,tot=0,cH={School:0,Tuition:0,Study:0},cT={School:0,Tuition:0,Study:0},cC={School:0,Tuition:0,Study:0},dH=[],dC=[];DAYS.forEach(d=>{let dh=0,dc=0,dt=0;const dat=yearlyData[y][d]||{school:[],tuition_study:[]};[...(dat.school||[]),...(dat.tuition_study||[])].forEach(t=>{let h=parseFloat(t.hrs)||0;hrs+=h;dh+=h;tot++;dt++;if(cH[t.cat]!==undefined)cH[t.cat]+=h;if(cT[t.cat]!==undefined)cT[t.cat]++;if(t.completed){comp++;dc++;if(cC[t.cat]!==undefined)cC[t.cat]++;}});dH.push(dh);dC.push(dt>0?(dc/dt)*100:0);});const rate=tot>0?((comp/tot)*100).toFixed(1):0;document.getElementById('statsGrid').innerHTML=`<div class="stat-card"><div class="stat-label">Total Hours</div><div class="stat-value">${hrs.toFixed(1)}</div></div><div class="stat-card"><div class="stat-label">Tasks Done</div><div class="stat-value">${comp}/${tot}</div></div><div class="stat-card"><div class="stat-label">Completion</div><div class="stat-value" style="color:${rate>70?'#10b981':'#f59e0b'}">${rate}%</div></div>`;Chart.defaults.color='#475569';Chart.defaults.font.size=11;if(charts.cat)charts.cat.destroy();charts.cat=new Chart(document.getElementById('categoryChart'),{type:'doughnut',data:{labels:['School','Tuition','Study'],datasets:[{data:[cH.School,cH.Tuition,cH.Study],backgroundColor:['#2563eb','#f59e0b','#8b5cf6'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{padding:10}}}}});if(charts.comp)charts.comp.destroy();charts.comp=new Chart(document.getElementById('completionChart'),{type:'bar',data:{labels:['School','Tuition','Study'],datasets:[{data:[cT.School?(cC.School/cT.School)*100:0,cT.Tuition?(cC.Tuition/cT.Tuition)*100:0,cT.Study?(cC.Study/cT.Study)*100:0],backgroundColor:['#2563eb','#f59e0b','#8b5cf6'],borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:100}}}});if(charts.tr)charts.tr.destroy();charts.tr=new Chart(document.getElementById('trendChart'),{type:'line',data:{labels:DAYS,datasets:[{label:'Hours',data:dH,borderColor:'#2563eb',tension:0.3,fill:true,backgroundColor:'rgba(37,99,235,0.05)'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});if(charts.ctr)charts.ctr.destroy();charts.ctr=new Chart(document.getElementById('completionTrendChart'),{type:'line',data:{labels:DAYS,datasets:[{label:'%',data:dC,borderColor:'#10b981',tension:0.3,fill:true,backgroundColor:'rgba(16,185,129,0.05)'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:100}}}});}
-function updateCurrentDate(){const n=new Date();document.getElementById('currentDateDisplay').innerHTML=`📅 ${n.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})} ${n.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}`;}
-function resetData(){if(confirm("Reset all planner and timetable data?")){localStorage.removeItem('singhYearlyPlanner2026_v4');localStorage.removeItem('singhTimetables2026_v4');location.reload();}}
-window.addEventListener('load',()=>{loadState();updateCurrentDate();setInterval(updateCurrentDate,60000);setInterval(renderTables,60000);});
+const defaultTimetables={
+  school:{'Mon':['08:40 AM-09:15 AM XI C','09:25 AM-10:00 AM XI C','10:35 AM-11:10 AM XIII C','11:40 AM-12:20 PM XII C','12:20 PM-12:55 PM XI D','12:55 PM-01:30 PM XIII D','01:30 PM-02:00 PM XIII D'],'Tue':['08:40 AM-09:15 AM XI C','09:25 AM-10:00 AM XI C','10:35 AM-11:10 AM XII C','11:40 AM-12:20 PM XII C','12:20 PM-12:55 PM XI D','12:55 PM-01:30 PM XIII D','01:30 PM-02:00 PM XIII D'],'Wed':['08:40 AM-09:15 AM XI C','09:25 AM-10:00 AM X C','10:35 AM-11:10 AM XII C','11:40 AM-12:20 PM XI D','12:20 PM-12:55 PM XI D','12:55 PM-01:30 PM XIII D','01:30 PM-02:00 PM IX C'],'Thu':['08:40 AM-09:15 AM XI C','09:25 AM-10:00 AM X C','10:35 AM-11:10 AM XII C','11:40 AM-12:20 PM XI D','12:55 PM-01:30 PM XIII D','01:30 PM-02:00 PM X B'],'Fri':['08:40 AM-09:15 AM XI C','09:25 AM-10:00 AM X B','10:35 AM-11:10 AM XII C','11:40 AM-12:20 PM XI D','12:20 PM-12:55 PM X C','12:55 PM-01:30 PM XIII D','01:30 PM-02:00 PM IX C'],'Sat':['08:40 AM-09:15 AM XI C','09:25 AM-10:00 AM X B','10:35 AM-11:10 AM XII C','11:40 AM-12:20 PM XI D','12:20 PM-12:55 PM XI D','12:55 PM-01:30 PM XIII D','01:30 PM-02:00 PM IX C'],'Sun':[]},
+  tuition:{'Mon':['04:00 PM-05:10 PM XII IP Sant Ngr','05:10 PM-06:20 PM XII IP SICS','07:15 PM-08:30 PM XII CS Sant Ngr'],'Tue':['04:00 PM-05:30 PM XI IP/CS Sant Ngr','05:30 PM-06:20 PM XI AI SICS','06:20 PM-07:30 PM XI IP/CS SICS'],'Wed':['04:00 PM-05:10 PM XII IP Sant Ngr','05:10 PM-06:20 PM XII IP SICS','07:15 PM-08:30 PM XII CS Sant Ngr'],'Thu':['04:00 PM-05:30 PM XI IP/CS Sant Ngr','05:30 PM-06:20 PM XI AI SICS','06:20 PM-07:30 PM XI IP/CS SICS'],'Fri':['04:00 PM-05:10 PM XII IP Sant Ngr','05:10 PM-06:20 PM XII IP SICS','07:15 PM-08:30 PM XII CS Sant Ngr'],'Sat':['04:00 PM-05:30 PM XI IP/CS Sant Ngr','05:30 PM-06:20 PM XI AI SICS','06:20 PM-07:30 PM XI IP/CS SICS'],'Sun':[]},
+  study:{'Mon':['10:00 PM-11:30 PM Mathematics'],'Tue':['10:00 PM-11:30 PM English'],'Wed':['10:00 PM-11:30 PM Reasoning'],'Thu':['10:00 PM-11:30 PM Hindi'],'Fri':['10:00 PM-11:30 PM Computer Science'],'Sat':['10:00 PM-11:30 PM Computer Science'],'Sun':['10:00 PM-11:30 PM CS + Teaching Aptitude']}
+};
+
+function escapeHtml(str){
+  if(str==null)return'';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function uid(){return 't_'+Math.random().toString(36).slice(2,8)+Date.now().toString(36);}
+function getTodayISO(){const n=new Date();return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')}`;}
+function getMondayISO(refDate){
+  const d=new Date(refDate);
+  const day=d.getDay(),diff=d.getDate()-day+(day===0?-6:1);
+  d.setDate(diff);
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function addDays(isoStr,num){
+  const [y,m,d]=isoStr.split('-').map(Number);
+  const dt=new Date(y,m-1,d+num);
+  return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;
+}
+function getDayName(isoStr){
+  const [y,m,d]=isoStr.split('-').map(Number);
+  const idx=new Date(y,m-1,d).getDay();
+  return DAYS[idx===0?6:idx-1];
+}
+
+function parseMinutes(t,fallbackMod){
+  let c=t.toUpperCase().replace(/\s+/g,''),mod=c.includes('PM')?'PM':(c.includes('AM')?'AM':fallbackMod),p=c.replace('AM','').replace('PM',''),[h,min]=p.split(':').map(Number);
+  if(isNaN(h))return 0;if(isNaN(min))min=0;
+  if(mod==='PM'&&h!==12)h+=12;if(mod==='AM'&&h===12)h=0;
+  return h*60+min;
+}
+function extractTimeAndCalculateHrs(text){
+  const m=text.match(/(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)\s*-\s*(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)/i);
+  if(m){
+    let s=m[1].trim(),e=m[2].trim(),emod=e.toUpperCase().includes('PM')?'PM':(e.toUpperCase().includes('AM')?'AM':'PM'),smod=s.toUpperCase().includes('AM')?'AM':(s.toUpperCase().includes('PM')?'PM':emod);
+    let sm=parseMinutes(s,smod),em=parseMinutes(e,emod);
+    if(em<sm)em+=1440;
+    return{timeStr:`${s} - ${e}`,hrs:parseFloat(((em-sm)/60).toFixed(2)),cleanTask:text.replace(m[0],'').replace(/[()]/g,'').trim()};
+  }
+  return null;
+}
+function isTimeActive(timeStr,dateStr){
+  if(dateStr!==getTodayISO())return false;
+  const m=timeStr.match(/(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)\s*-\s*(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)/i);
+  if(!m)return false;
+  let s=m[1].trim(),e=m[2].trim(),emod=e.toUpperCase().includes('PM')?'PM':'AM',smod=s.toUpperCase().includes('AM')?'AM':emod;
+  let now=new Date(),curM=now.getHours()*60+now.getMinutes(),sm=parseMinutes(s,smod),em=parseMinutes(e,emod);
+  if(em<sm)em+=1440;
+  return curM>=sm&&curM<=em;
+}
+
+function loadState(){
+  const raw=localStorage.getItem(STORE_KEY);
+  if(raw){
+    try{state=JSON.parse(raw);}catch(e){initState();}
+  }else{
+    const oldV4=localStorage.getItem('singhYearlyPlanner2026_v4');
+    const oldTT=localStorage.getItem('singhTimetables2026_v4');
+    initState();
+    if(oldTT){try{state.timetables=JSON.parse(oldTT);}catch(e){}}
+    if(oldV4){
+      try{
+        const parsed=JSON.parse(oldV4);const curY=new Date().getFullYear();
+        if(parsed[curY]){
+          DAYS.forEach((dName,i)=>{
+            const iso=addDays(state.viewMondayStr,i);
+            if(parsed[curY][dName])state.days[iso]=parsed[curY][dName];
+          });
+        }
+      }catch(e){}
+    }
+  }
+  ensureDayPopulated(state.activeDateStr);
+  saveState();
+  renderAll();
+  checkBackupStatus();
+}
+function initState(){
+  state={activeDateStr:getTodayISO(),viewMondayStr:getMondayISO(new Date()),days:{},timetables:JSON.parse(JSON.stringify(defaultTimetables)),lastBackup:null};
+}
+function saveState(){localStorage.setItem(STORE_KEY,JSON.stringify(state));}
+
+function ensureDayPopulated(dateStr){
+  if(state.days[dateStr])return;
+  const dName=getDayName(dateStr);
+  const sTasks=[],tsTasks=[];
+  (state.timetables.school[dName]||[]).forEach((cls,idx)=>{
+    if(!cls.trim())return;const p=extractTimeAndCalculateHrs(cls);
+    sTasks.push({id:uid(),slotKey:`sch_${dName}_${idx}`,time:p?p.timeStr:'',hrs:p?p.hrs:0.5,cat:'School',task:p?p.cleanTask:cls.trim(),completed:false});
+  });
+  (state.timetables.tuition[dName]||[]).forEach((t,idx)=>{
+    if(!t.trim())return;const p=extractTimeAndCalculateHrs(t);
+    tsTasks.push({id:uid(),slotKey:`tui_${dName}_${idx}`,time:p?p.timeStr:'',hrs:p?p.hrs:1,cat:'Tuition',task:p?p.cleanTask:t.trim(),completed:false});
+  });
+  (state.timetables.study[dName]||[]).forEach((st,idx)=>{
+    if(!st.trim())return;const p=extractTimeAndCalculateHrs(st);
+    tsTasks.push({id:uid(),slotKey:`stu_${dName}_${idx}`,time:p?p.timeStr:'',hrs:p?p.hrs:1.5,cat:'Study',task:p?p.cleanTask:st.trim(),completed:false});
+  });
+  state.days[dateStr]={school:sTasks,tuition_study:tsTasks};
+}
+
+function renderAll(){
+  renderDaySelector();
+  renderTables();
+  calculateWeeklyStats();
+  updateProgress();
+  renderTimetables();
+}
+
+function renderDaySelector(){
+  const today=getTodayISO();
+  document.getElementById('daySelector').innerHTML=DAYS.map((dName,i)=>{
+    const dIso=addDays(state.viewMondayStr,i);
+    const dNum=dIso.split('-')[2];
+    return `<button class="day-button ${dIso===state.activeDateStr?'active':''} ${dIso===today?'today':''}" onclick="selectDate('${dIso}')" aria-label="${dName} ${dIso}"><span>${dName}</span><span class="d-num">${dNum}</span></button>`;
+  }).join('');
+  const [sy,sm,sd]=state.viewMondayStr.split('-');
+  const endIso=addDays(state.viewMondayStr,6);
+  const [ey,em,ed]=endIso.split('-');
+  document.getElementById('weekLabel').textContent=`${sm}/${sd} - ${em}/${ed}`;
+}
+
+function selectDate(isoStr){
+  state.activeDateStr=isoStr;
+  ensureDayPopulated(isoStr);
+  saveState();
+  renderTables();
+  calculateWeeklyStats();
+  updateProgress();
+  renderDaySelector();
+}
+function shiftWeek(dir){
+  state.viewMondayStr=addDays(state.viewMondayStr,dir*7);
+  renderDaySelector();
+}
+function jumpToday(){
+  const t=getTodayISO();
+  state.activeDateStr=t;
+  state.viewMondayStr=getMondayISO(new Date());
+  ensureDayPopulated(t);
+  saveState();
+  renderAll();
+}
+
+function renderTables(){
+  const dayData=state.days[state.activeDateStr]||{school:[],tuition_study:[]};
+  ['school','tuition_study'].forEach(sec=>{
+    const tbody=document.getElementById(sec==='school'?'schoolBody':'tuitionStudyBody');
+    tbody.innerHTML='';
+    const items=dayData[sec]||[];
+    if(!items.length){
+      tbody.innerHTML=`<tr><td colspan="6" class="empty-row-cell">No tasks logged for ${getDayName(state.activeDateStr)}, ${state.activeDateStr}</td></tr>`;
+      return;
+    }
+    items.forEach((item,idx)=>{
+      const isLive=isTimeActive(item.time,state.activeDateStr);
+      const row=document.createElement('tr');
+      if(item.completed)row.classList.add('is-completed');
+      if(isLive)row.classList.add('live-now');
+      row.innerHTML=`
+        <td class="col-check checkbox-cell"><label><input type="checkbox" ${item.completed?'checked':''} onchange="updateCheckbox('${item.id}','${sec}')" aria-label="Mark task done"></label></td>
+        <td class="col-time time-cell">${isLive?'<span class="live-badge"></span>':''}<input value="${escapeHtml(item.time)}" placeholder="08:00 AM - 09:00 AM" onchange="updateTask('${item.id}','time',this.value,'${sec}')" aria-label="Time"></td>
+        <td class="col-hrs hrs-cell"><input type="number" min="0" step="0.1" value="${escapeHtml(item.hrs)}" onchange="updateTask('${item.id}','hrs',this.value,'${sec}')" aria-label="Hours"></td>
+        <td class="col-cat cat-cell">
+          <select class="cat-select ${escapeHtml(item.cat)}" onchange="updateTask('${item.id}','cat',this.value,'${sec}')" aria-label="Category">
+            <option value="School" ${item.cat==='School'?'selected':''}>School</option>
+            <option value="Tuition" ${item.cat==='Tuition'?'selected':''}>Tuition</option>
+            <option value="Study" ${item.cat==='Study'?'selected':''}>Study</option>
+          </select>
+        </td>
+        <td class="col-task task-cell"><input value="${escapeHtml(item.task)}" placeholder="Task description" onchange="updateTask('${item.id}','task',this.value,'${sec}')" aria-label="Task name"></td>
+        <td class="col-del"><button class="del-btn" title="Delete Task" onclick="deleteRow('${sec}','${item.id}')" aria-label="Delete">✕</button></td>`;
+      tbody.appendChild(row);
+    });
+  });
+}
+
+function addRow(sec){
+  const isSch=sec==='school';
+  const newTask={id:uid(),time:isSch?'08:40 AM - 09:15 AM':'04:00 PM - 05:00 PM',hrs:isSch?0.6:1.0,cat:isSch?'School':'Study',task:'',completed:false};
+  if(!state.days[state.activeDateStr])state.days[state.activeDateStr]={school:[],tuition_study:[]};
+  state.days[state.activeDateStr][sec].push(newTask);
+  saveState();
+  renderTables();
+  calculateWeeklyStats();
+  updateProgress();
+}
+function deleteRow(sec,taskId){
+  if(!confirm('Delete this task?'))return;
+  const list=state.days[state.activeDateStr][sec];
+  const idx=list.findIndex(t=>t.id===taskId);
+  if(idx!==-1){
+    list.splice(idx,1);
+    saveState();
+    renderTables();
+    calculateWeeklyStats();
+    updateProgress();
+  }
+}
+function updateTask(taskId,field,val,sec){
+  const item=state.days[state.activeDateStr][sec].find(t=>t.id===taskId);
+  if(!item)return;
+  if(field==='hrs'){
+    item.hrs=Math.max(0,parseFloat(val)||0);
+  }else if(field==='time'){
+    item.time=val;
+    const p=extractTimeAndCalculateHrs(val);
+    if(p){
+      item.hrs=p.hrs;
+      renderTables();
+    }
+  }else if(field==='cat'){
+    item.cat=val;
+    renderTables();
+  }else{
+    item[field]=val;
+  }
+  saveState();
+  calculateWeeklyStats();
+}
+function updateCheckbox(taskId,sec){
+  const item=state.days[state.activeDateStr][sec].find(t=>t.id===taskId);
+  if(!item)return;
+  item.completed=!item.completed;
+  saveState();
+  updateProgress();
+  calculateWeeklyStats();
+  renderTables();
+}
+function clearTodayChecks(){
+  const d=state.days[state.activeDateStr];
+  if(!d)return;
+  ['school','tuition_study'].forEach(s=>(d[s]||[]).forEach(t=>t.completed=false));
+  saveState();
+  renderTables();
+  updateProgress();
+  calculateWeeklyStats();
+}
+
+function calculateWeeklyStats(){
+  const totals={school:0,tuition:0,study:0};
+  const d=state.days[state.activeDateStr]||{school:[],tuition_study:[]};
+  [...(d.school||[]),...(d.tuition_study||[])].forEach(i=>{
+    const h=parseFloat(i.hrs)||0;
+    if(i.cat==='School')totals.school+=h;
+    if(i.cat==='Tuition')totals.tuition+=h;
+    if(i.cat==='Study')totals.study+=h;
+  });
+  document.getElementById('totalSchool').textContent=totals.school.toFixed(1);
+  document.getElementById('totalTuition').textContent=totals.tuition.toFixed(1);
+  document.getElementById('totalStudy').textContent=totals.study.toFixed(1);
+}
+function updateProgress(){
+  const d=state.days[state.activeDateStr]||{school:[],tuition_study:[]};
+  const all=[...(d.school||[]),...(d.tuition_study||[])];
+  const comp=all.filter(t=>t.completed).length;
+  document.getElementById('completedCount').textContent=comp;
+  document.getElementById('totalCount').textContent=all.length;
+}
+
+function renderTimetables(){
+  const renderGrid=(type,obj)=>DAYS.map(d=>`
+    <div class="timetable-card ${d===getDayName(state.activeDateStr)?'active-day':''}">
+      <div class="timetable-header"><span>${d}</span><button class="icon-btn" onclick="toggleEditMode('${type}')">${editMode[type]?'💾 Save':'✏️ Edit'}</button></div>
+      <div class="timetable-body">
+        ${(obj[d]||[]).map((it,i)=>editMode[type]?`<div class="time-slot edit-mode"><textarea class="timetable-input ${type}-slot-${d}">${escapeHtml(it)}</textarea><button class="icon-btn" style="color:var(--danger);margin-top:4px" onclick="deleteSlot('${type}','${d}',${i})">Delete</button></div>`:`<div class="time-slot">${escapeHtml(it)||'<span style=\"color:#94a3b8;font-style:italic\">No class</span>'}</div>`).join('')}
+        ${editMode[type]?`<div class="time-slot"><button class="icon-btn" style="color:var(--success);width:100%" onclick="addNewSlot('${type}','${d}')">+ Add Slot</button></div>`:''}
+      </div>
+    </div>`).join('');
+  document.getElementById('schoolTimetable').innerHTML=renderGrid('school',state.timetables.school);
+  document.getElementById('tuitionTimetable').innerHTML=renderGrid('tuition',state.timetables.tuition);
+  document.getElementById('studyTimetable').innerHTML=renderGrid('study',state.timetables.study);
+}
+function toggleEditMode(t){
+  editMode[t]=!editMode[t];
+  if(!editMode[t]){
+    const obj=state.timetables[t];
+    DAYS.forEach(d=>{
+      const s=[];
+      document.querySelectorAll(`.${t}-slot-${d}`).forEach(el=>{if(el.value.trim())s.push(el.value.trim());});
+      obj[d]=s;
+    });
+    saveState();
+  }
+  renderTimetables();
+}
+function addNewSlot(t,d){state.timetables[t][d].push('');renderTimetables();}
+function deleteSlot(t,d,i){
+  if(!confirm('Delete this timetable entry?'))return;
+  state.timetables[t][d].splice(i,1);
+  saveState();
+  renderTimetables();
+}
+
+function updateAnalytics(){
+  let weekHours=0,weekComp=0,weekTot=0;
+  let cH={School:0,Tuition:0,Study:0},cT={School:0,Tuition:0,Study:0},cC={School:0,Tuition:0,Study:0};
+  let dH=[],dC=[],labels=[];
+
+  for(let i=0;i<7;i++){
+    const dIso=addDays(state.viewMondayStr,i);
+    const dayName=DAYS[i];
+    labels.push(`${dayName} ${dIso.slice(8)}`);
+    let dayH=0,dayComp=0,dayTot=0;
+    const d=state.days[dIso];
+    if(d){
+      [...(d.school||[]),...(d.tuition_study||[])].forEach(t=>{
+        const h=parseFloat(t.hrs)||0;
+        dayH+=h;dayTot++;weekTot++;weekHours+=h;
+        if(cH[t.cat]!==undefined)cH[t.cat]+=h;
+        if(cT[t.cat]!==undefined)cT[t.cat]++;
+        if(t.completed){
+          dayComp++;weekComp++;
+          if(cC[t.cat]!==undefined)cC[t.cat]++;
+        }
+      });
+    }
+    dH.push(dayH);
+    dC.push(dayTot>0?parseFloat(((dayComp/dayTot)*100).toFixed(1)):0);
+  }
+  const rate=weekTot>0?((weekComp/weekTot)*100).toFixed(1):0;
+  document.getElementById('statsGrid').innerHTML=`
+    <div class="stat-card"><span class="stat-label">Weekly Hours</span><span class="stat-val">${weekHours.toFixed(1)}</span></div>
+    <div class="stat-card"><span class="stat-label">Tasks Done</span><span class="stat-val">${weekComp}/${weekTot}</span></div>
+    <div class="stat-card"><span class="stat-label">Completion</span><span class="stat-val" style="color:${rate>70?'#10b981':'#f59e0b'}">${rate}%</span></div>`;
+
+  Chart.defaults.color='#64748b';Chart.defaults.font.size=11;
+  if(charts.cat)charts.cat.destroy();
+  charts.cat=new Chart(document.getElementById('categoryChart'),{type:'doughnut',data:{labels:['School','Tuition','Study'],datasets:[{data:[cH.School,cH.Tuition,cH.Study],backgroundColor:['#2563eb','#f59e0b','#8b5cf6'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{padding:8}}}}});
+  if(charts.comp)charts.comp.destroy();
+  charts.comp=new Chart(document.getElementById('completionChart'),{type:'bar',data:{labels:['School','Tuition','Study'],datasets:[{data:[cT.School?Math.round((cC.School/cT.School)*100):0,cT.Tuition?Math.round((cC.Tuition/cT.Tuition)*100):0,cT.Study?Math.round((cC.Study/cT.Study)*100):0],backgroundColor:['#2563eb','#f59e0b','#8b5cf6'],borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:100}}}});
+  if(charts.trend)charts.trend.destroy();
+  charts.trend=new Chart(document.getElementById('trendChart'),{type:'line',data:{labels,datasets:[{label:'Hours',data:dH,borderColor:'#2563eb',tension:0.3,fill:true,backgroundColor:'rgba(37,99,235,0.05)'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+  if(charts.compTrend)charts.compTrend.destroy();
+  charts.compTrend=new Chart(document.getElementById('completionTrendChart'),{type:'line',data:{labels,datasets:[{label:'%',data:dC,borderColor:'#10b981',tension:0.3,fill:true,backgroundColor:'rgba(16,185,129,0.05)'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:100}}}});
+}
+
+function switchTab(tabId,btn){
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  if(btn)btn.classList.add('active');
+  if(tabId==='analytics')setTimeout(updateAnalytics,80);
+  if(tabId==='timetables')renderTimetables();
+}
+
+function updateCurrentDate(){
+  const n=new Date();
+  document.getElementById('currentDateDisplay').innerHTML=`📅 ${n.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})} ${n.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}`;
+  renderTables();
+  renderDaySelector();
+}
+
+function exportBackup(){
+  state.lastBackup=Date.now();
+  saveState();
+  checkBackupStatus();
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`planner_backup_${getTodayISO()}.json`;
+  a.click();
+}
+function importBackup(e){
+  const f=e.target.files[0];
+  if(!f)return;
+  const r=new FileReader();
+  r.onload=(evt)=>{
+    try{
+      const d=JSON.parse(evt.target.result);
+      if(d.timetables&&d.days){state=d;saveState();loadState();alert('Backup restored successfully!');}
+      else throw new Error();
+    }catch(err){alert('Invalid backup file schema.');}
+  };
+  r.readAsText(f);
+}
+function checkBackupStatus(){
+  const btn=document.getElementById('exportBtn');
+  const weekMs=7*86400000;
+  if(!state.lastBackup||Date.now()-state.lastBackup>weekMs)btn.classList.add('backup-alert');
+  else btn.classList.remove('backup-alert');
+}
+function resetData(){
+  if(confirm('Reset all schedules, history, and templates? This cannot be undone.')){
+    localStorage.removeItem(STORE_KEY);
+    location.reload();
+  }
+}
+
+window.addEventListener('load',()=>{
+  loadState();
+  updateCurrentDate();
+  setInterval(updateCurrentDate,60000);
+});
 </script>
 </body>
 </html>
