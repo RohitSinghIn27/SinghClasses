@@ -63,276 +63,308 @@ body { -webkit-tap-highlight-color: transparent; }
 /* Mobile Table Card View (< 640px) */
 @media screen and (max-width: 640px) {
   .mobile-table thead { display: none !important; }
-  .mobile-table, .mobile-table tbody { display: flex !important; flex-direction: column !important; width: 100% !important; gap: 8px !important; padding: 4px !important; }
+  .mobile-table, .mobile-table tbody { display: flex !important; flex-direction: column !important; width: 100% !important; gap: 6px !important; padding: 2px !important; }
   .mobile-table tr {
     display: grid !important;
-    grid-template-columns: 28px 1fr auto auto 36px !important;
+    grid-template-columns: 26px 1fr auto auto !important;
     grid-template-areas:
-      "cb tm cat hr del"
-      "cb tk tk tk tk" !important;
-    gap: 8px 6px !important;
+      "cb tm cat hr"
+      "cb tk tk tk" !important;
+    gap: 6px 6px !important;
     align-items: center !important;
     background: #ffffff !important;
     border: 1px solid #e2e8f0 !important;
-    border-radius: 12px !important;
-    padding: 10px !important;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.03) !important;
+    border-radius: 10px !important;
+    padding: 8px !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03) !important;
   }
-  .mobile-table tr.empty-row { display: block !important; padding: 16px !important; text-align: center !important; }
+  .mobile-table tr.empty-row { display: block !important; padding: 12px !important; text-align: center !important; }
   .mobile-table td { display: flex !important; align-items: center !important; border: none !important; padding: 0 !important; }
   .col-cb { grid-area: cb !important; width: auto !important; }
   .col-tm { grid-area: tm !important; width: 100% !important; }
-  .col-tm input { text-align: left !important; font-size: 12px !important; padding: 4px 6px !important; background: #f8fafc !important; border-radius: 6px !important; }
+  .col-tm input { text-align: left !important; font-size: 11.5px !important; padding: 3px 5px !important; background: #f8fafc !important; border-radius: 6px !important; }
   .col-cat { grid-area: cat !important; width: auto !important; }
-  .col-cat select { padding: 4px 8px !important; font-size: 10.5px !important; }
+  .col-cat select { padding: 3px 6px !important; font-size: 10px !important; }
   .col-hr { grid-area: hr !important; width: auto !important; }
-  .col-hr input { width: 44px !important; font-size: 12px !important; padding: 4px !important; text-align: center !important; background: #eff6ff !important; border-radius: 6px !important; }
-  .col-del { grid-area: del !important; width: auto !important; justify-content: flex-end !important; }
+  .col-hr input { width: 40px !important; font-size: 11.5px !important; padding: 3px !important; text-align: center !important; background: #eff6ff !important; border-radius: 6px !important; }
   .col-tk { grid-area: tk !important; width: 100% !important; }
-  .col-tk input { width: 100% !important; font-size: 13.5px !important; padding: 7px 10px !important; border-radius: 8px !important; }
+  .col-tk input { width: 100% !important; font-size: 12.5px !important; padding: 6px 8px !important; border-radius: 8px !important; }
 }
 
 /* Print Stylesheet (A4 Portrait) */
 @media print {
-  @page { size: A4 portrait; margin: 8mm 8mm 10mm 8mm; }
+  @page { size: A4 portrait; margin: 6mm; }
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  body { background: #ffffff !important; padding: 0 !important; font-size: 11px !important; color: #000000 !important; }
+  body { background: #ffffff !important; padding: 0 !important; font-size: 10px !important; color: #000000 !important; }
   .print-hide { display: none !important; }
-  .print-only-header { display: flex !important; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #0f172a; padding-bottom: 6px; margin-bottom: 8px; }
-  .schedule-container-card { break-inside: avoid; page-break-inside: avoid; border: 1px solid #94a3b8 !important; border-radius: 6px !important; margin-bottom: 10px !important; }
-  .schedule-container-card header { background: #0f172a !important; padding: 6px 10px !important; }
+  .print-only-header { display: flex !important; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #0f172a; padding-bottom: 4px; margin-bottom: 6px; }
+  .schedule-container-card { break-inside: avoid; page-break-inside: avoid; border: 1px solid #94a3b8 !important; border-radius: 6px !important; margin-bottom: 8px !important; }
+  .schedule-container-card header { background: #0f172a !important; padding: 5px 8px !important; }
   .mobile-table { width: 100% !important; display: table !important; border-collapse: collapse !important; }
   .mobile-table thead { display: table-header-group !important; }
   .mobile-table tbody { display: table-row-group !important; }
   .mobile-table tr { display: table-row !important; border-bottom: 1px solid #cbd5e1 !important; }
-  .mobile-table th { display: table-cell !important; padding: 4px 2px !important; font-size: 9px !important; background: #f8fafc !important; border: 1px solid #cbd5e1 !important; }
-  .mobile-table td { display: table-cell !important; padding: 4px 2px !important; font-size: 9.5px !important; border: 1px solid #cbd5e1 !important; text-align: center !important; }
-  .col-del { display: none !important; }
-  .mobile-table input { border: none !important; background: transparent !important; padding: 0 !important; font-size: 9.5px !important; text-align: center !important; }
+  .mobile-table th { display: table-cell !important; padding: 3px 2px !important; font-size: 8.5px !important; background: #f8fafc !important; border: 1px solid #cbd5e1 !important; }
+  .mobile-table td { display: table-cell !important; padding: 3px 2px !important; font-size: 9px !important; border: 1px solid #cbd5e1 !important; text-align: center !important; }
+  .mobile-table input { border: none !important; background: transparent !important; padding: 0 !important; font-size: 9px !important; text-align: center !important; }
   .col-tk input { text-align: left !important; }
-  .cat-pill { -webkit-appearance: none !important; appearance: none !important; border-radius: 4px !important; font-size: 8px !important; padding: 1px 4px !important; }
+  .cat-pill { -webkit-appearance: none !important; appearance: none !important; border-radius: 4px !important; font-size: 7.5px !important; padding: 1px 3px !important; }
 }
 </style>
 </head>
-<body class="bg-[#f0f4f9] text-slate-800 p-2 sm:p-4 min-h-screen">
+<body class="bg-[#f0f4f9] text-slate-800 p-2 sm:p-3 min-h-screen">
 
 <!-- Global Toast Container -->
-<div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+<div id="toastContainer" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
 <!-- Global Custom Confirmation Modal -->
-<div id="customModal" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-  <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 overflow-hidden transform transition-all">
-    <div class="p-5 border-b border-slate-100 flex items-center justify-between">
-      <h3 id="modalTitle" class="text-base font-black text-slate-900">Confirm Action</h3>
+<div id="customModal" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-3 hidden">
+  <div class="bg-white w-full max-w-sm rounded-xl shadow-2xl border border-slate-200 overflow-hidden transform transition-all">
+    <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+      <h3 id="modalTitle" class="text-sm font-black text-slate-900">Confirm Action</h3>
       <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
         <i data-lucide="x" class="w-4 h-4"></i>
       </button>
     </div>
-    <div class="p-5 space-y-3">
-      <p id="modalMessage" class="text-sm text-slate-600 leading-relaxed"></p>
+    <div class="p-4 space-y-2.5">
+      <p id="modalMessage" class="text-xs text-slate-600 leading-relaxed"></p>
       <div id="modalInputContainer" class="hidden">
-        <label class="block text-xs font-bold text-slate-700 mb-1" id="modalInputLabel">Type confirmation:</label>
-        <input type="text" id="modalInputField" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm font-semibold text-slate-800 uppercase focus:outline-none focus:ring-2 focus:ring-rose-500">
+        <label class="block text-[11px] font-bold text-slate-700 mb-1" id="modalInputLabel">Type confirmation:</label>
+        <input type="text" id="modalInputField" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs font-semibold text-slate-800 uppercase focus:outline-none focus:ring-2 focus:ring-rose-500">
       </div>
     </div>
-    <div class="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-2.5">
-      <button onclick="closeModal()" class="px-4 py-2 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-bold text-xs rounded-xl transition">Cancel</button>
-      <button id="modalConfirmBtn" class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl transition shadow-sm">Confirm</button>
+    <div class="p-3 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-2">
+      <button onclick="closeModal()" class="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-bold text-xs rounded-lg transition">Cancel</button>
+      <button id="modalConfirmBtn" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-lg transition shadow-sm">Confirm</button>
     </div>
   </div>
 </div>
 
-<div class="max-w-[1600px] mx-auto flex flex-col gap-4 min-h-screen">
+<div class="max-w-[1600px] mx-auto flex flex-col gap-2.5 min-h-screen">
 
   <!-- ================= TOP HEADER BAR ================= -->
-  <header class="bg-brandNavy text-white rounded-2xl p-2.5 sm:px-4 flex flex-wrap items-center justify-between gap-3 shadow-xl border border-slate-800/80 print-hide">
+  <header class="bg-brandNavy text-white rounded-xl px-3 py-2 sm:px-4 flex flex-wrap items-center justify-between gap-2.5 shadow-lg border border-slate-800/80 print-hide">
     <!-- Left: Brand + Subtitle -->
-    <div class="flex items-center gap-3">
-      <div class="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-blue-500/30 shrink-0">
-        <i data-lucide="layout-grid" class="w-5 h-5"></i>
+    <div class="flex items-center gap-2.5">
+      <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white shadow-md shadow-blue-500/30 shrink-0">
+        <i data-lucide="layout-grid" class="w-4 h-4"></i>
       </div>
       <div>
-        <h1 class="text-sm sm:text-base font-black tracking-wider leading-none text-white">PLANNER</h1>
-        <p class="text-[10.5px] font-medium text-slate-400 mt-0.5 leading-tight">Plan Today &bull; Achieve Tomorrow</p>
+        <h1 class="text-sm font-black tracking-wider leading-none text-white">PLANNER</h1>
+        <p class="text-[10px] font-medium text-slate-400 mt-0.5 leading-tight">Plan Today &bull; Achieve Tomorrow</p>
       </div>
     </div>
 
     <!-- Center: Date & Time Pill -->
-    <div class="bg-white/[0.06] border border-white/10 px-4 py-1.5 rounded-xl text-xs font-semibold text-slate-200 flex items-center gap-2.5 shadow-inner" id="currentDateDisplay" aria-live="polite">
-      <i data-lucide="calendar" class="w-4 h-4 text-amber-300"></i>
+    <div class="bg-white/[0.06] border border-white/10 px-3 py-1 rounded-lg text-[11px] font-semibold text-slate-200 flex items-center gap-2 shadow-inner" id="currentDateDisplay" aria-live="polite">
+      <i data-lucide="calendar" class="w-3.5 h-3.5 text-amber-300"></i>
       <span>Loading date...</span>
       <span class="text-slate-500 font-light">|</span>
-      <i data-lucide="clock" class="w-4 h-4 text-slate-400"></i>
+      <i data-lucide="clock" class="w-3.5 h-3.5 text-slate-400"></i>
       <span>Loading time...</span>
     </div>
 
-    <!-- Right: Actions, Warning, Active Tab & Profile -->
-    <div class="flex flex-wrap items-center gap-2">
-      <div class="flex items-center gap-1.5">
-        <button onclick="exportBackup()" id="exportBtn" class="bg-white text-slate-700 hover:bg-slate-50 font-bold text-xs px-3 py-1.5 rounded-xl flex items-center gap-1.5 shadow-sm transition active:scale-95" aria-label="Export backup">
-          <i data-lucide="download" class="w-3.5 h-3.5 text-blue-600"></i>
+    <!-- Right: Actions, Reset, Active Tab & Profile -->
+    <div class="flex flex-wrap items-center gap-1.5">
+      <div class="flex items-center gap-1">
+        <button onclick="exportBackup()" id="exportBtn" class="bg-white text-slate-700 hover:bg-slate-50 font-bold text-xs px-2.5 py-1 rounded-lg flex items-center gap-1 shadow-sm transition active:scale-95" aria-label="Export backup">
+          <i data-lucide="download" class="w-3 h-3 text-blue-600"></i>
           <span>Export</span>
         </button>
-        <button onclick="document.getElementById('importFile').click()" class="bg-white text-slate-700 hover:bg-slate-50 font-bold text-xs px-3 py-1.5 rounded-xl flex items-center gap-1.5 shadow-sm transition active:scale-95" aria-label="Import backup">
-          <i data-lucide="upload" class="w-3.5 h-3.5 text-amber-500"></i>
+        <button onclick="document.getElementById('importFile').click()" class="bg-white text-slate-700 hover:bg-slate-50 font-bold text-xs px-2.5 py-1 rounded-lg flex items-center gap-1 shadow-sm transition active:scale-95" aria-label="Import backup">
+          <i data-lucide="upload" class="w-3 h-3 text-amber-500"></i>
           <span>Import</span>
         </button>
-        <button onclick="triggerPrint()" class="bg-white text-slate-700 hover:bg-slate-50 font-bold text-xs px-3 py-1.5 rounded-xl flex items-center gap-1.5 shadow-sm transition active:scale-95" aria-label="Print schedule">
-          <i data-lucide="printer" class="w-3.5 h-3.5 text-purple-600"></i>
+        <button onclick="triggerPrint()" class="bg-white text-slate-700 hover:bg-slate-50 font-bold text-xs px-2.5 py-1 rounded-lg flex items-center gap-1 shadow-sm transition active:scale-95" aria-label="Print schedule">
+          <i data-lucide="printer" class="w-3 h-3 text-purple-600"></i>
           <span>Print</span>
         </button>
         <input type="file" id="importFile" class="hidden" accept=".json" onchange="importBackup(event)">
 
-        <button onclick="promptResetData()" class="p-2 bg-[#1a1730] hover:bg-rose-950/60 border border-rose-800/40 text-rose-400 hover:text-rose-300 rounded-xl transition active:scale-95 shadow-sm" title="Reset All Data" aria-label="Reset all data">
-          <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i>
+        <button onclick="promptResetData()" class="p-1.5 bg-[#1a1730] hover:bg-rose-950/60 border border-rose-800/40 text-rose-400 hover:text-rose-300 rounded-lg transition active:scale-95 shadow-sm" title="Reset All Data" aria-label="Reset all data">
+          <i data-lucide="alert-triangle" class="w-3 h-3"></i>
         </button>
       </div>
 
       <!-- Active Tab: Planner -->
-      <button onclick="switchTab('planner', this)" class="bg-accentYellow hover:bg-accentYellowHover text-slate-950 font-black text-xs px-3.5 py-1.5 rounded-xl flex items-center gap-1.5 shadow-sm transition active:scale-95">
-        <i data-lucide="calendar-check" class="w-3.5 h-3.5"></i>
+      <button onclick="switchTab('planner', this)" class="bg-accentYellow hover:bg-accentYellowHover text-slate-950 font-black text-xs px-3 py-1 rounded-lg flex items-center gap-1 shadow-sm transition active:scale-95">
+        <i data-lucide="calendar-check" class="w-3 h-3"></i>
         <span>Planner</span>
       </button>
 
       <!-- Profile Pill -->
-      <div class="flex items-center gap-2 bg-white/[0.06] hover:bg-white/10 border border-white/10 px-3 py-1 rounded-2xl cursor-pointer transition select-none">
-        <div class="w-6 h-6 rounded-full bg-blue-600 text-white font-black text-[10px] flex items-center justify-center shrink-0">
+      <div class="flex items-center gap-1.5 bg-white/[0.06] hover:bg-white/10 border border-white/10 px-2.5 py-0.5 rounded-xl cursor-pointer transition select-none">
+        <div class="w-5 h-5 rounded-full bg-blue-600 text-white font-black text-[9px] flex items-center justify-center shrink-0">
           RS
         </div>
-        <span class="text-xs font-bold text-slate-100">Rohit Singh</span>
-        <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
+        <span class="text-[11px] font-bold text-slate-100">Rohit Singh</span>
+        <i data-lucide="chevron-down" class="w-3 h-3 text-slate-400"></i>
       </div>
     </div>
   </header>
 
   <!-- ================= MAIN BODY: SIDEBAR + CONTENT ================= -->
-  <div class="flex flex-col lg:flex-row items-start gap-4 flex-1">
+  <div class="flex flex-col lg:flex-row items-start gap-3 flex-1">
 
     <!-- LEFT SIDEBAR -->
-    <aside class="w-full lg:w-64 xl:w-72 bg-sidebarNavy text-white rounded-3xl p-4 flex flex-col gap-5 shrink-0 shadow-xl print-hide">
-      <!-- Navigation Menu (Dashboard and Settings removed per image 11) -->
-      <nav class="flex flex-col gap-1.5" role="tablist">
-        <button onclick="scrollToSection('schoolClassesSec')" class="nav-btn active w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-slate-300 hover:text-white hover:bg-white/5 transition">
-          <i data-lucide="graduation-cap" class="w-4 h-4"></i>
+    <aside class="w-full lg:w-60 xl:w-64 bg-sidebarNavy text-white rounded-2xl p-3 flex flex-col gap-3 shrink-0 shadow-lg print-hide">
+      
+      <!-- Navigation Menu -->
+      <nav class="flex flex-col gap-1" role="tablist">
+        <button onclick="scrollToSection('schoolClassesSec')" class="nav-btn active w-full flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white hover:bg-white/5 transition">
+          <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>
           <span>School Classes</span>
         </button>
-        <button onclick="scrollToSection('tuitionStudySec')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-slate-300 hover:text-white hover:bg-white/5 transition">
-          <i data-lucide="book-marked" class="w-4 h-4"></i>
+        <button onclick="scrollToSection('tuitionStudySec')" class="nav-btn w-full flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white hover:bg-white/5 transition">
+          <i data-lucide="book-marked" class="w-3.5 h-3.5"></i>
           <span>Tuition & Study</span>
         </button>
-        <button onclick="switchTab('timetables', this)" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-slate-300 hover:text-white hover:bg-white/5 transition">
-          <i data-lucide="clock" class="w-4 h-4"></i>
+        <button onclick="switchTab('timetables', this)" class="nav-btn w-full flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white hover:bg-white/5 transition">
+          <i data-lucide="clock" class="w-3.5 h-3.5"></i>
           <span>Timetables</span>
         </button>
-        <button onclick="switchTab('analytics', this)" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-slate-300 hover:text-white hover:bg-white/5 transition">
-          <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
+        <button onclick="switchTab('analytics', this)" class="nav-btn w-full flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white hover:bg-white/5 transition">
+          <i data-lucide="bar-chart-2" class="w-3.5 h-3.5"></i>
           <span>Analytics</span>
         </button>
       </nav>
 
-      <!-- Date & Week Widget (Yellow border instead of yellow dot) -->
-      <div class="bg-white text-slate-800 rounded-2xl p-3.5 shadow-sm space-y-3">
-        <div class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Date & Week</div>
+      <!-- ================= DATE & WEEK WIDGET ================= -->
+      <div class="bg-white text-slate-800 rounded-2xl p-2.5 shadow-sm space-y-2 relative overflow-hidden border border-slate-100">
         
-        <div class="flex items-center justify-between gap-1 text-xs">
-          <button onclick="shiftWeek(-1)" class="p-1 hover:bg-slate-100 rounded text-slate-600 transition" aria-label="Previous week">
-            <i data-lucide="chevron-left" class="w-4 h-4"></i>
+        <!-- Decorative Background Colored Blobs -->
+        <div class="absolute -top-6 -left-6 w-16 h-16 bg-blue-200/50 rounded-full blur-xl pointer-events-none"></div>
+        <div class="absolute -top-6 -right-6 w-20 h-20 bg-amber-200/60 rounded-full blur-xl pointer-events-none"></div>
+        <div class="absolute -bottom-6 -left-6 w-16 h-16 bg-purple-200/50 rounded-full blur-xl pointer-events-none"></div>
+        <div class="absolute -bottom-6 -right-6 w-16 h-16 bg-emerald-100/50 rounded-full blur-xl pointer-events-none"></div>
+
+        <!-- Top Right Dot Shape -->
+        <div class="absolute top-2 right-2.5 opacity-25 pointer-events-none">
+          <svg class="w-5 h-5 text-slate-600" viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="4" cy="4" r="1.8"/><circle cx="12" cy="4" r="1.8"/><circle cx="20" cy="4" r="1.8"/>
+            <circle cx="4" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="20" cy="12" r="1.8"/>
+            <circle cx="4" cy="20" r="1.8"/><circle cx="12" cy="20" r="1.8"/><circle cx="20" cy="20" r="1.8"/>
+          </svg>
+        </div>
+
+        <!-- Navigation: Left Arrow + Today Pill + Right Arrow -->
+        <div class="flex items-center justify-between gap-1 text-xs relative z-10">
+          <button onclick="shiftWeek(-1)" class="w-6 h-6 rounded-full bg-blue-50 hover:bg-blue-100 text-slate-700 flex items-center justify-center transition" aria-label="Previous week">
+            <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
           </button>
-          <button onclick="jumpToday()" class="px-2 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded transition">
+          <button onclick="jumpToday()" class="px-3.5 py-0.5 bg-blue-50 hover:bg-blue-100 text-slate-800 font-extrabold text-[11px] rounded-full shadow-sm transition">
             Today
           </button>
-          <button onclick="shiftWeek(1)" class="p-1 hover:bg-slate-100 rounded text-slate-600 transition" aria-label="Next week">
-            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+          <button onclick="shiftWeek(1)" class="w-6 h-6 rounded-full bg-blue-50 hover:bg-blue-100 text-slate-700 flex items-center justify-center transition" aria-label="Next week">
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
           </button>
         </div>
-        <div class="text-center font-extrabold text-xs text-slate-600" id="sidebarWeekLabel">09/14 - 09/20</div>
 
-        <!-- Days Grid -->
-        <div class="grid grid-cols-3 gap-1.5" id="sidebarDayGrid"></div>
+        <!-- Week Range Display -->
+        <div class="text-center font-black text-xs text-slate-900 tracking-wide relative z-10" id="sidebarWeekLabel">09/14 - 09/20</div>
+
+        <!-- 2-Column Days Grid -->
+        <div class="grid grid-cols-2 gap-1.5 relative z-10" id="sidebarDayGrid"></div>
 
         <!-- Uncheck All Button -->
-        <button onclick="clearTodayChecks()" class="w-full py-2 bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 transition active:scale-95">
+        <button onclick="clearTodayChecks()" class="w-full py-1.5 bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 font-bold text-[11px] rounded-xl flex items-center justify-center gap-1.5 transition active:scale-95 shadow-sm relative z-10">
           <i data-lucide="check-square" class="w-3.5 h-3.5"></i>
-          Uncheck All
+          <span>Uncheck All</span>
         </button>
       </div>
 
-      <!-- Study Summary Widget (Compact 2x2 Ratio Card UI with Completed & Pending) -->
-      <div class="space-y-2">
-        <div class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider px-1">Study Summary</div>
+      <!-- ================= STUDY SUMMARY WIDGET ================= -->
+      <div class="bg-white text-slate-800 rounded-2xl p-2.5 shadow-sm space-y-1.5 relative overflow-hidden border border-slate-100">
         
-        <div class="grid grid-cols-2 gap-2">
-          <!-- School Card -->
-          <div class="bg-white rounded-xl p-2.5 flex flex-col items-center justify-center text-center shadow-sm border border-slate-100">
-            <div class="w-7 h-7 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mb-1">
-              <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>
+        <!-- Decorative Floating Shapes -->
+        <div class="absolute -top-6 -left-6 w-16 h-16 bg-blue-100/50 rounded-full blur-xl pointer-events-none"></div>
+        <div class="absolute -top-6 -right-6 w-20 h-20 bg-amber-100/60 rounded-full blur-xl pointer-events-none"></div>
+        <div class="absolute -bottom-6 -left-6 w-16 h-16 bg-purple-100/50 rounded-full blur-xl pointer-events-none"></div>
+        <div class="absolute -bottom-6 -right-6 w-16 h-16 bg-emerald-100/50 rounded-full blur-xl pointer-events-none"></div>
+
+        <!-- Header -->
+        <div class="text-center relative z-10 pt-0.5">
+          <h3 class="text-xs font-black text-blue-900 tracking-wider uppercase">STUDY SUMMARY</h3>
+          <p class="text-[10px] font-medium text-slate-400 leading-tight">Your progress this week</p>
+        </div>
+
+        <!-- 2x2 Ratio Cards Grid -->
+        <div class="grid grid-cols-2 gap-1.5 relative z-10 pt-0.5">
+          <!-- 1. School Card -->
+          <div class="bg-white/90 backdrop-blur-sm border border-slate-100 rounded-xl p-2 flex flex-col items-center justify-center text-center shadow-xs">
+            <div class="w-5 h-5 text-blue-600 flex items-center justify-center mb-0.5">
+              <i data-lucide="graduation-cap" class="w-4 h-4"></i>
             </div>
-            <div class="text-[9px] font-extrabold text-slate-400 uppercase">SCHOOL</div>
-            <div class="text-sm font-black text-blue-600 mt-0.5"><span id="totalSchool">0.0</span> H</div>
+            <div class="text-[8.5px] font-extrabold text-slate-400 uppercase tracking-wide">SCHOOL</div>
+            <div class="text-xs sm:text-sm font-black text-blue-600 mt-0.5 leading-none"><span id="totalSchool">0.0</span>H</div>
+            <div class="text-[8.5px] font-medium text-slate-400 mt-0.5">This Week</div>
           </div>
 
-          <!-- Tuition Card -->
-          <div class="bg-white rounded-xl p-2.5 flex flex-col items-center justify-center text-center shadow-sm border border-slate-100">
-            <div class="w-7 h-7 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center mb-1">
-              <i data-lucide="users" class="w-3.5 h-3.5"></i>
+          <!-- 2. Tuition Card -->
+          <div class="bg-white/90 backdrop-blur-sm border border-slate-100 rounded-xl p-2 flex flex-col items-center justify-center text-center shadow-xs">
+            <div class="w-5 h-5 text-orange-500 flex items-center justify-center mb-0.5">
+              <i data-lucide="users" class="w-4 h-4"></i>
             </div>
-            <div class="text-[9px] font-extrabold text-slate-400 uppercase">TUITION</div>
-            <div class="text-sm font-black text-orange-500 mt-0.5"><span id="totalTuition">0.0</span> H</div>
+            <div class="text-[8.5px] font-extrabold text-slate-400 uppercase tracking-wide">TUITION</div>
+            <div class="text-xs sm:text-sm font-black text-orange-500 mt-0.5 leading-none"><span id="totalTuition">0.0</span>H</div>
+            <div class="text-[8.5px] font-medium text-slate-400 mt-0.5">This Week</div>
           </div>
 
-          <!-- Study Card -->
-          <div class="bg-white rounded-xl p-2.5 flex flex-col items-center justify-center text-center shadow-sm border border-slate-100">
-            <div class="w-7 h-7 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center mb-1">
-              <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+          <!-- 3. Study Card -->
+          <div class="bg-white/90 backdrop-blur-sm border border-slate-100 rounded-xl p-2 flex flex-col items-center justify-center text-center shadow-xs">
+            <div class="w-5 h-5 text-purple-600 flex items-center justify-center mb-0.5">
+              <i data-lucide="book-open" class="w-4 h-4"></i>
             </div>
-            <div class="text-[9px] font-extrabold text-slate-400 uppercase">STUDY</div>
-            <div class="text-sm font-black text-purple-600 mt-0.5"><span id="totalStudy">0.0</span> H</div>
+            <div class="text-[8.5px] font-extrabold text-slate-400 uppercase tracking-wide">STUDY</div>
+            <div class="text-xs sm:text-sm font-black text-purple-600 mt-0.5 leading-none"><span id="totalStudy">0.0</span> H</div>
+            <div class="text-[8.5px] font-medium text-slate-400 mt-0.5">This Week</div>
           </div>
 
-          <!-- Completed / Pending Card -->
-          <div id="sidebarCompletedCard" class="bg-white rounded-xl p-2.5 flex flex-col items-center justify-center text-center shadow-sm border border-slate-100 transition">
-            <div id="sidebarCompletedIcon" class="w-7 h-7 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mb-1 transition">
-              <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
+          <!-- 4. Completed / Pending Card -->
+          <div id="sidebarCompletedCard" class="bg-white/90 backdrop-blur-sm border border-slate-100 rounded-xl p-2 flex flex-col items-center justify-center text-center shadow-xs transition">
+            <div id="sidebarCompletedIcon" class="w-5 h-5 text-emerald-500 flex items-center justify-center mb-0.5 transition">
+              <i data-lucide="check-circle-2" class="w-4 h-4"></i>
             </div>
-            <div class="text-[9px] font-extrabold text-slate-400 uppercase">COMPLETED</div>
-            <div id="sidebarCompletedText" class="text-sm font-black text-slate-700 mt-0.5 transition">
+            <div class="text-[8.5px] font-extrabold text-slate-400 uppercase tracking-wide">COMPLETED</div>
+            <div id="sidebarCompletedText" class="text-xs sm:text-sm font-black text-slate-800 mt-0.5 leading-none transition">
               <span id="completedCount">0</span> / <span id="totalCount">0</span>
             </div>
-            <div class="text-[9.5px] font-bold text-amber-600 mt-0.5" id="pendingLabel"><span id="pendingCount">0</span> Pending</div>
+            <div class="text-[8.5px] font-bold text-orange-500 mt-0.5" id="pendingLabel"><span id="pendingCount">0</span> Pending</div>
           </div>
         </div>
       </div>
+
     </aside>
 
     <!-- RIGHT MAIN WORKSPACE -->
-    <main class="flex-1 w-full space-y-4">
+    <main class="flex-1 w-full space-y-3">
 
       <!-- Print Only Header -->
       <div class="hidden print-only-header">
         <div>
-          <div class="text-xl font-black text-slate-900 tracking-wide">PLANNER & SCHEDULE</div>
-          <div class="text-xs text-slate-500 font-semibold">Daily Academic & Class Tracker</div>
+          <div class="text-lg font-black text-slate-900 tracking-wide">PLANNER & SCHEDULE</div>
+          <div class="text-[11px] text-slate-500 font-semibold">Daily Academic & Class Tracker</div>
         </div>
-        <div class="text-xs font-bold text-slate-600 text-right" id="printDateMeta"></div>
+        <div class="text-[11px] font-bold text-slate-600 text-right" id="printDateMeta"></div>
       </div>
 
       <!-- ================= TAB: PLANNER ================= -->
-      <div id="planner" class="tab-content active space-y-4" role="tabpanel">
+      <div id="planner" class="tab-content active space-y-3" role="tabpanel">
 
-        <!-- 1. SCHOOL CLASSES (Full Width) -->
-        <section id="schoolClassesSec" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden schedule-container-card">
-          <header class="bg-cardNavy text-white px-4 sm:px-6 py-3 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-accentYellow flex items-center justify-center">
-                <i data-lucide="school" class="w-5 h-5"></i>
+        <!-- 1. SCHOOL CLASSES (Compact, Delete Removed) -->
+        <section id="schoolClassesSec" class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden schedule-container-card">
+          <header class="bg-cardNavy text-white px-3.5 sm:px-4 py-2 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <div class="w-7 h-7 rounded-lg bg-blue-500/20 text-accentYellow flex items-center justify-center">
+                <i data-lucide="school" class="w-4 h-4"></i>
               </div>
               <div>
-                <h2 class="text-sm sm:text-base font-extrabold tracking-wide text-white">SCHOOL CLASSES</h2>
-                <p class="text-[11px] text-slate-300 font-medium">Manage your daily school timetable and periods</p>
+                <h2 class="text-xs sm:text-sm font-extrabold tracking-wide text-white">SCHOOL CLASSES</h2>
+                <p class="text-[10px] text-slate-300 font-medium">Manage your daily school timetable and periods</p>
               </div>
             </div>
-            <button onclick="addRow('school')" class="bg-accentYellow hover:bg-accentYellowHover text-slate-900 font-black text-xs px-3.5 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm transition active:scale-95 print-hide" aria-label="Add school class">
-              <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+            <button onclick="addRow('school')" class="bg-accentYellow hover:bg-accentYellowHover text-slate-900 font-black text-xs px-3 py-1 rounded-lg flex items-center gap-1 shadow-sm transition active:scale-95 print-hide" aria-label="Add school class">
+              <i data-lucide="plus" class="w-3 h-3"></i>
               Add Class
             </button>
           </header>
@@ -340,34 +372,33 @@ body { -webkit-tap-highlight-color: transparent; }
           <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse mobile-table">
               <thead>
-                <tr class="bg-slate-50 text-slate-500 text-[11px] font-black uppercase tracking-wider border-b border-slate-200 text-center">
-                  <th class="py-3 px-2 w-10"></th>
-                  <th class="py-3 px-2 w-52 text-center"><span class="flex items-center justify-center gap-1"><i data-lucide="clock" class="w-3.5 h-3.5 text-slate-400"></i> TIME</span></th>
-                  <th class="py-3 px-2 w-28 text-center"><span class="flex items-center justify-center gap-1"><i data-lucide="hourglass" class="w-3.5 h-3.5 text-slate-400"></i> <span class="hidden sm:inline">HOURS</span><span class="sm:hidden">HRS</span></span></th>
-                  <th class="py-3 px-2 w-32 text-center"><span class="flex items-center justify-center gap-1"><i data-lucide="tag" class="w-3.5 h-3.5 text-slate-400"></i> CATEGORY</span></th>
-                  <th class="py-3 px-4 text-left"><span class="flex items-center gap-1"><i data-lucide="file-text" class="w-3.5 h-3.5 text-slate-400"></i> TASK / SUBJECT</span></th>
-                  <th class="py-3 px-2 w-12 text-center col-del"></th>
+                <tr class="bg-slate-50 text-slate-500 text-[10.5px] font-black uppercase tracking-wider border-b border-slate-200 text-center">
+                  <th class="py-2 px-2 w-9"></th>
+                  <th class="py-2 px-2 w-48 text-center"><span class="flex items-center justify-center gap-1"><i data-lucide="clock" class="w-3 h-3 text-slate-400"></i> TIME</span></th>
+                  <th class="py-2 px-2 w-24 text-center"><span class="flex items-center justify-center gap-1"><i data-lucide="hourglass" class="w-3 h-3 text-slate-400"></i> <span class="hidden sm:inline">HOURS</span><span class="sm:hidden">HRS</span></span></th>
+                  <th class="py-2 px-2 w-28 text-center"><span class="flex items-center justify-center gap-1"><i data-lucide="tag" class="w-3 h-3 text-slate-400"></i> CATEGORY</span></th>
+                  <th class="py-2 px-3 text-left"><span class="flex items-center gap-1"><i data-lucide="file-text" class="w-3 h-3 text-slate-400"></i> TASK / SUBJECT</span></th>
                 </tr>
               </thead>
-              <tbody id="schoolBody" class="divide-y divide-slate-100 text-sm"></tbody>
+              <tbody id="schoolBody" class="divide-y divide-slate-100 text-xs"></tbody>
             </table>
           </div>
         </section>
 
-        <!-- 2. TUITION & STUDY (Shifted After School Classes, Full Width) -->
-        <section id="tuitionStudySec" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden schedule-container-card">
-          <header class="bg-cardNavy text-white px-4 sm:px-6 py-3 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="w-8 h-8 rounded-lg bg-orange-500/20 text-accentYellow flex items-center justify-center">
-                <i data-lucide="book-marked" class="w-5 h-5"></i>
+        <!-- 2. TUITION & STUDY (Compact, Delete Removed) -->
+        <section id="tuitionStudySec" class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden schedule-container-card">
+          <header class="bg-cardNavy text-white px-3.5 sm:px-4 py-2 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <div class="w-7 h-7 rounded-lg bg-orange-500/20 text-accentYellow flex items-center justify-center">
+                <i data-lucide="book-marked" class="w-4 h-4"></i>
               </div>
               <div>
-                <h2 class="text-sm sm:text-base font-extrabold tracking-wide text-white">TUITION & STUDY</h2>
-                <p class="text-[11px] text-slate-300 font-medium">Track your batches, coaching sessions, and personal study focus</p>
+                <h2 class="text-xs sm:text-sm font-extrabold tracking-wide text-white">TUITION & STUDY</h2>
+                <p class="text-[10px] text-slate-300 font-medium">Track your batches, coaching sessions, and personal study focus</p>
               </div>
             </div>
-            <button onclick="addRow('tuition_study')" class="bg-accentYellow hover:bg-accentYellowHover text-slate-900 font-black text-xs px-3.5 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm transition active:scale-95 print-hide" aria-label="Add tuition or study task">
-              <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+            <button onclick="addRow('tuition_study')" class="bg-accentYellow hover:bg-accentYellowHover text-slate-900 font-black text-xs px-3 py-1 rounded-lg flex items-center gap-1 shadow-sm transition active:scale-95 print-hide" aria-label="Add tuition or study task">
+              <i data-lucide="plus" class="w-3 h-3"></i>
               Add Task
             </button>
           </header>
@@ -375,89 +406,77 @@ body { -webkit-tap-highlight-color: transparent; }
           <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse mobile-table">
               <thead>
-                <tr class="bg-slate-50 text-slate-500 text-[11px] font-black uppercase tracking-wider border-b border-slate-200 text-center">
-                  <th class="py-3 px-2 w-10"></th>
-                  <th class="py-3 px-2 w-52 text-center"><span class="flex items-center justify-center gap-1"><i data-lucide="clock" class="w-3.5 h-3.5 text-slate-400"></i> TIME</span></th>
-                  <th class="py-3 px-2 w-28 text-center"><span class="flex items-center justify-center gap-1"><i data-lucide="hourglass" class="w-3.5 h-3.5 text-slate-400"></i> <span class="hidden sm:inline">HOURS</span><span class="sm:hidden">HRS</span></span></th>
-                  <th class="py-3 px-2 w-32 text-center"><span class="flex items-center justify-center gap-1"><i data-lucide="tag" class="w-3.5 h-3.5 text-slate-400"></i> CATEGORY</span></th>
-                  <th class="py-3 px-4 text-left"><span class="flex items-center gap-1"><i data-lucide="file-text" class="w-3.5 h-3.5 text-slate-400"></i> TASK / SUBJECT</span></th>
-                  <th class="py-3 px-2 w-12 text-center col-del"></th>
+                <tr class="bg-slate-50 text-slate-500 text-[10.5px] font-black uppercase tracking-wider border-b border-slate-200 text-center">
+                  <th class="py-2 px-2 w-9"></th>
+                  <th class="py-2 px-2 w-48 text-center"><span class="flex items-center justify-center gap-1"><i data-lucide="clock" class="w-3 h-3 text-slate-400"></i> TIME</span></th>
+                  <th class="py-2 px-2 w-24 text-center"><span class="flex items-center justify-center gap-1"><i data-lucide="hourglass" class="w-3 h-3 text-slate-400"></i> <span class="hidden sm:inline">HOURS</span><span class="sm:hidden">HRS</span></span></th>
+                  <th class="py-2 px-2 w-28 text-center"><span class="flex items-center justify-center gap-1"><i data-lucide="tag" class="w-3 h-3 text-slate-400"></i> CATEGORY</span></th>
+                  <th class="py-2 px-3 text-left"><span class="flex items-center gap-1"><i data-lucide="file-text" class="w-3 h-3 text-slate-400"></i> TASK / SUBJECT</span></th>
                 </tr>
               </thead>
-              <tbody id="tuitionStudyBody" class="divide-y divide-slate-100 text-sm"></tbody>
+              <tbody id="tuitionStudyBody" class="divide-y divide-slate-100 text-xs"></tbody>
             </table>
-          </div>
-
-          <!-- Dynamic Momentum & Motivation Banner -->
-          <div id="motivationBanner" class="m-3 sm:m-4 p-3.5 bg-amber-50 border border-amber-200 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-2.5 transition-all print-hide">
-            <div class="flex items-center gap-2.5 text-xs sm:text-sm font-bold text-amber-900">
-              <span id="motivationEmoji" class="text-lg">🌅</span>
-              <span id="motivationText">A fresh day of learning ahead. Tackle your first task!</span>
-            </div>
-            <div id="motivationSubtext" class="text-xs sm:text-sm font-extrabold text-amber-800 sm:border-l sm:border-amber-300 sm:pl-3 whitespace-nowrap">
-              Let's Begin! 🚀
-            </div>
           </div>
         </section>
 
       </div>
 
       <!-- ================= TAB: TIMETABLES ================= -->
-      <div id="timetables" class="tab-content space-y-4" role="tabpanel">
-        <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 flex items-start gap-3 text-blue-900">
-          <i data-lucide="info" class="w-5 h-5 text-blue-600 shrink-0 mt-0.5"></i>
+      <div id="timetables" class="tab-content space-y-3" role="tabpanel">
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 flex items-start gap-2.5 text-blue-900">
+          <i data-lucide="info" class="w-4 h-4 text-blue-600 shrink-0 mt-0.5"></i>
           <div>
-            <h3 class="text-sm font-black">Weekly Schedule Templates</h3>
-            <p class="text-xs text-blue-700 mt-0.5">Set your recurring weekly schedule here — it automatically populates each corresponding day in your live Planner.</p>
+            <h3 class="text-xs font-black">Weekly Schedule Templates</h3>
+            <p class="text-[11px] text-blue-700 mt-0.5">Set your recurring weekly schedule here — it automatically populates each corresponding day in your live Planner.</p>
           </div>
         </div>
 
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-4">
           <div>
-            <div class="flex items-center gap-2 mb-3">
-              <i data-lucide="school" class="w-5 h-5 text-blue-600"></i>
-              <h2 class="text-sm font-black uppercase tracking-wider text-slate-800">School Timetable</h2>
+            <div class="flex items-center gap-2 mb-2">
+              <i data-lucide="school" class="w-4 h-4 text-blue-600"></i>
+              <h2 class="text-xs font-black uppercase tracking-wider text-slate-800">School Timetable</h2>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3" id="schoolTimetable"></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5" id="schoolTimetable"></div>
           </div>
 
-          <div class="border-t border-slate-100 pt-5">
-            <div class="flex items-center gap-2 mb-3">
-              <i data-lucide="users" class="w-5 h-5 text-orange-500"></i>
-              <h2 class="text-sm font-black uppercase tracking-wider text-slate-800">Tuition Schedule</h2>
+          <div class="border-t border-slate-100 pt-3">
+            <div class="flex items-center gap-2 mb-2">
+              <i data-lucide="users" class="w-4 h-4 text-orange-500"></i>
+              <h2 class="text-xs font-black uppercase tracking-wider text-slate-800">Tuition Schedule</h2>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3" id="tuitionTimetable"></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5" id="tuitionTimetable"></div>
           </div>
 
-          <div class="border-t border-slate-100 pt-5">
-            <div class="flex items-center gap-2 mb-3">
-              <i data-lucide="book-open" class="w-5 h-5 text-purple-600"></i>
-              <h2 class="text-sm font-black uppercase tracking-wider text-slate-800">Daily Study Plan</h2>
+          <div class="border-t border-slate-100 pt-3">
+            <div class="flex items-center gap-2 mb-2">
+              <i data-lucide="book-open" class="w-4 h-4 text-purple-600"></i>
+              <h2 class="text-xs font-black uppercase tracking-wider text-slate-800">Daily Study Plan</h2>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3" id="studyTimetable"></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5" id="studyTimetable"></div>
           </div>
         </div>
       </div>
 
       <!-- ================= TAB: ANALYTICS ================= -->
-      <div id="analytics" class="tab-content space-y-4" role="tabpanel">
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="statsGrid"></div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
-            <h3 class="text-xs font-black uppercase text-slate-400 tracking-wider text-center mb-3">Weekly Breakdown (Hours)</h3>
-            <div class="relative h-56 w-full"><canvas id="categoryChart"></canvas></div>
+      <div id="analytics" class="tab-content space-y-3" role="tabpanel">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5" id="statsGrid"></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm">
+            <h3 class="text-[11px] font-black uppercase text-slate-400 tracking-wider text-center mb-2">Weekly Breakdown (Hours)</h3>
+            <div class="relative h-48 w-full"><canvas id="categoryChart"></canvas></div>
           </div>
-          <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
-            <h3 class="text-xs font-black uppercase text-slate-400 tracking-wider text-center mb-3">Category Completion Rate (%)</h3>
-            <div class="relative h-56 w-full"><canvas id="completionChart"></canvas></div>
+          <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm">
+            <h3 class="text-[11px] font-black uppercase text-slate-400 tracking-wider text-center mb-2">Category Completion Rate (%)</h3>
+            <div class="relative h-48 w-full"><canvas id="completionChart"></canvas></div>
           </div>
-          <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
-            <h3 class="text-xs font-black uppercase text-slate-400 tracking-wider text-center mb-3">Daily Hours Trend</h3>
-            <div class="relative h-56 w-full"><canvas id="trendChart"></canvas></div>
+          <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm">
+            <h3 class="text-[11px] font-black uppercase text-slate-400 tracking-wider text-center mb-2">Daily Hours Trend</h3>
+            <div class="relative h-48 w-full"><canvas id="trendChart"></canvas></div>
           </div>
-          <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
-            <h3 class="text-xs font-black uppercase text-slate-400 tracking-wider text-center mb-3">Daily Completion Trend (%)</h3>
-            <div class="relative h-56 w-full"><canvas id="completionTrendChart"></canvas></div>
+          <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm">
+            <h3 class="text-[11px] font-black uppercase text-slate-400 tracking-wider text-center mb-2">Daily Completion Trend (%)</h3>
+            <div class="relative h-48 w-full"><canvas id="completionTrendChart"></canvas></div>
           </div>
         </div>
       </div>
@@ -466,9 +485,8 @@ body { -webkit-tap-highlight-color: transparent; }
   </div>
 
   <!-- ================= BOTTOM FOOTER BAR ================= -->
-  <!-- Styled to match Image 12 without the right links -->
-  <footer class="w-full bg-brandNavy text-slate-300 rounded-2xl px-5 py-4 flex items-center justify-between shadow-xl border border-slate-800/80 print-hide mt-2">
-    <div class="flex items-center gap-2 text-xs sm:text-sm font-medium">
+  <footer class="w-full bg-brandNavy text-slate-300 rounded-xl px-4 py-2.5 flex items-center justify-between shadow-lg border border-slate-800/80 print-hide mt-1">
+    <div class="flex items-center gap-2 text-xs font-medium">
       <span>&copy; 2026 SinghClasses.in</span>
       <span class="text-slate-600 font-light">|</span>
       <span>Designed with <span class="text-rose-500">💖</span> by <strong class="font-bold text-white">Rohit Singh</strong></span>
@@ -479,7 +497,7 @@ body { -webkit-tap-highlight-color: transparent; }
 
 <script>
 const DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-const STORE_KEY='singhPlanner_v13';
+const STORE_KEY='singhPlanner_v16';
 
 let state={
   activeDateStr:getTodayISO(),
@@ -590,7 +608,7 @@ function showToast(message, type='info'){
   const container = document.getElementById('toastContainer');
   const toast = document.createElement('div');
   const bg = type==='error' ? 'bg-rose-600' : type==='success' ? 'bg-emerald-600' : 'bg-slate-900';
-  toast.className = `${bg} text-white font-semibold text-xs px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 pointer-events-auto transform transition-all duration-200 translate-y-2 opacity-0`;
+  toast.className = `${bg} text-white font-semibold text-xs px-3.5 py-2 rounded-xl shadow-lg flex items-center gap-2 pointer-events-auto transform transition-all duration-200 translate-y-2 opacity-0`;
   toast.innerHTML = `<span>${escapeHtml(message)}</span>`;
   container.appendChild(toast);
   requestAnimationFrame(()=>{
@@ -609,7 +627,7 @@ function openModal({title, message, confirmText='Confirm', confirmClass='bg-rose
   document.getElementById('modalMessage').textContent = message;
   const btn = document.getElementById('modalConfirmBtn');
   btn.textContent = confirmText;
-  btn.className = `px-4 py-2 text-white font-bold text-xs rounded-xl transition shadow-sm ${confirmClass}`;
+  btn.className = `px-3 py-1.5 text-white font-bold text-xs rounded-lg transition shadow-sm ${confirmClass}`;
   
   const inputContainer = document.getElementById('modalInputContainer');
   const inputField = document.getElementById('modalInputField');
@@ -649,7 +667,7 @@ function loadState(){
     }
   } else {
     initState();
-    const prev = localStorage.getItem('singhPlanner_v12') || localStorage.getItem('singhPlanner_v11');
+    const prev = localStorage.getItem('singhPlanner_v15') || localStorage.getItem('singhPlanner_v14') || localStorage.getItem('singhPlanner_v13');
     if(prev){
       try{
         const p = JSON.parse(prev);
@@ -736,6 +754,16 @@ function updatePrintDate(){
   if(target)target.textContent=formatted;
 }
 
+const dayThemes = [
+  { name: 'Mon', iconBg: 'bg-blue-50', iconColor: 'text-blue-500' },
+  { name: 'Tue', iconBg: 'bg-sky-50', iconColor: 'text-sky-500' },
+  { name: 'Wed', iconBg: 'bg-emerald-50', iconColor: 'text-emerald-500' },
+  { name: 'Thu', iconBg: 'bg-orange-50', iconColor: 'text-orange-500' },
+  { name: 'Fri', iconBg: 'bg-purple-50', iconColor: 'text-purple-500' },
+  { name: 'Sat', iconBg: 'bg-rose-50', iconColor: 'text-rose-500' },
+  { name: 'Sun', iconBg: 'bg-amber-50', iconColor: 'text-amber-500' }
+];
+
 function renderSidebarDaySelector(){
   const today=getTodayISO();
   const container=document.getElementById('sidebarDayGrid');
@@ -746,22 +774,58 @@ function renderSidebarDaySelector(){
     const dNum=dIso.split('-')[2];
     const isActive=dIso===state.activeDateStr;
     const isToday=dIso===today;
+    const isSun = dName === 'Sun';
+    const theme = dayThemes[i];
 
-    let borderClasses = 'border-slate-200';
-    let bgClasses = 'bg-slate-50 hover:bg-slate-100 text-slate-700';
+    const spanClass = isSun ? 'col-span-2' : 'col-span-1';
+
+    let cardClasses = 'bg-slate-50/70 hover:bg-slate-100 border border-slate-200/80 text-slate-700';
+    let iconWrapperClass = `${theme.iconBg} ${theme.iconColor}`;
+    let dayNameColor = 'text-slate-500';
+    let dayNumColor = 'text-slate-800';
+    let activeSpark = '';
+    let sunDots = '';
 
     if (isActive) {
-      bgClasses = 'bg-blue-600 text-white shadow-md shadow-blue-500/30';
-      borderClasses = 'border-2 border-accentYellow';
+      cardClasses = 'bg-blue-600 text-white border-2 border-amber-300 shadow-sm shadow-blue-500/25';
+      iconWrapperClass = 'bg-white/20 text-white';
+      dayNameColor = 'text-blue-100';
+      dayNumColor = 'text-white';
+      activeSpark = `
+        <div class="absolute top-1 right-1.5 text-amber-300">
+          <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+            <line x1="12" y1="2" x2="12" y2="7"></line>
+            <line x1="4.93" y1="4.93" x2="8.46" y2="8.46"></line>
+            <line x1="19.07" y1="4.93" x2="15.54" y2="8.46"></line>
+          </svg>
+        </div>`;
+    } else if (isSun) {
+      cardClasses = 'bg-amber-50/40 hover:bg-amber-50/80 border-2 border-amber-300 text-slate-800';
+      iconWrapperClass = 'bg-amber-100/80 text-amber-600';
+      dayNameColor = 'text-slate-600';
+      sunDots = `
+        <div class="absolute bottom-1 right-2 text-amber-400/80 pointer-events-none">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="4" cy="4" r="1.8"/><circle cx="12" cy="4" r="1.8"/><circle cx="20" cy="4" r="1.8"/>
+            <circle cx="4" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="20" cy="12" r="1.8"/>
+            <circle cx="4" cy="20" r="1.8"/><circle cx="12" cy="20" r="1.8"/><circle cx="20" cy="20" r="1.8"/>
+          </svg>
+        </div>`;
     } else if (isToday) {
-      borderClasses = 'border-2 border-accentYellow';
-      bgClasses = 'bg-amber-50/50 text-slate-800 hover:bg-amber-100/50';
+      cardClasses = 'bg-amber-50/40 border-2 border-amber-300 text-slate-800';
     }
 
     return `
-      <button onclick="selectDate('${dIso}')" class="h-12 rounded-xl border flex flex-col items-center justify-center transition ${borderClasses} ${bgClasses}" aria-label="${dName} ${dIso}">
-        <span class="text-[9.5px] font-bold ${isActive?'text-blue-100':'text-slate-400'}">${dName}</span>
-        <span class="text-xs font-black">${dNum}</span>
+      <button onclick="selectDate('${dIso}')" class="${spanClass} h-10 rounded-xl p-1.5 flex items-center gap-1.5 relative overflow-hidden transition ${cardClasses}" aria-label="${dName} ${dIso}">
+        ${activeSpark}
+        <div class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition ${iconWrapperClass}">
+          <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+        </div>
+        <div class="flex flex-col text-left leading-tight">
+          <span class="text-[9.5px] font-extrabold uppercase ${dayNameColor}">${dName}</span>
+          <span class="text-xs font-black ${dayNumColor}">${dNum}</span>
+        </div>
+        ${sunDots}
       </button>`;
   }).join('');
 
@@ -772,6 +836,8 @@ function renderSidebarDaySelector(){
   
   const lbl=document.getElementById('sidebarWeekLabel');
   if(lbl) lbl.textContent=labelText;
+
+  if(window.lucide)lucide.createIcons();
 }
 
 function selectDate(isoStr){
@@ -804,7 +870,7 @@ function renderTables(){
     tbody.innerHTML='';
     const items=dayData[sec]||[];
     if(!items.length){
-      tbody.innerHTML=`<tr class="empty-row"><td colspan="6" class="p-6 text-center text-slate-400 font-medium italic text-xs">No classes scheduled for ${getDayName(state.activeDateStr)}</td></tr>`;
+      tbody.innerHTML=`<tr class="empty-row"><td colspan="5" class="p-4 text-center text-slate-400 font-medium italic text-xs">No classes scheduled for ${getDayName(state.activeDateStr)}</td></tr>`;
       return;
     }
     items.forEach((item)=>{
@@ -812,34 +878,29 @@ function renderTables(){
       const row=document.createElement('tr');
       row.className=`transition hover:bg-slate-50/80 ${item.completed?'bg-slate-50/70 opacity-75':''} ${isLive?'bg-blue-50/80 border-y-2 border-blue-500':''}`;
       row.innerHTML=`
-        <td class="py-2.5 px-2 text-center col-cb">
+        <td class="py-1 px-2 text-center col-cb">
           <label class="flex items-center justify-center cursor-pointer">
-            <input type="checkbox" ${item.completed?'checked':''} onchange="updateCheckbox('${item.id}','${sec}')" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer" aria-label="Task completion status">
+            <input type="checkbox" ${item.completed?'checked':''} onchange="updateCheckbox('${item.id}','${sec}')" class="w-3.5 h-3.5 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer" aria-label="Task completion status">
           </label>
         </td>
-        <td class="py-2 px-2 text-center col-tm">
+        <td class="py-1 px-2 text-center col-tm">
           <div class="flex items-center justify-center gap-1.5">
-            ${isLive?'<span class="inline-flex items-center gap-1 bg-blue-100 text-blue-700 text-[10px] font-black px-1.5 py-0.5 rounded shadow-sm"><span class="w-1.5 h-1.5 rounded-full bg-blue-600 live-pulse"></span>LIVE</span>':''}
-            <input value="${escapeHtml(item.time)}" placeholder="08:00 AM - 09:00 AM" onchange="updateTask('${item.id}','time',this.value,'${sec}')" class="w-full max-w-[155px] font-semibold text-xs text-slate-800 text-center bg-transparent border border-transparent focus:border-blue-400 focus:bg-white rounded px-1.5 py-1 outline-none transition" aria-label="Class time">
+            ${isLive?'<span class="inline-flex items-center gap-1 bg-blue-100 text-blue-700 text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm"><span class="w-1.5 h-1.5 rounded-full bg-blue-600 live-pulse"></span>LIVE</span>':''}
+            <input value="${escapeHtml(item.time)}" placeholder="08:00 AM - 09:00 AM" onchange="updateTask('${item.id}','time',this.value,'${sec}')" class="w-full max-w-[155px] font-semibold text-xs text-slate-800 text-center bg-transparent border border-transparent focus:border-blue-400 focus:bg-white rounded px-1.5 py-0.5 outline-none transition" aria-label="Class time">
           </div>
         </td>
-        <td class="py-2 px-2 text-center col-hr">
-          <input type="number" step="0.01" value="${Number(item.hrs).toFixed(2)}" onchange="updateTask('${item.id}','hrs',this.value,'${sec}')" class="w-16 sm:w-20 font-black text-xs text-blue-600 text-center bg-transparent border border-transparent focus:border-blue-400 focus:bg-white rounded px-1.5 py-1 outline-none transition" aria-label="Duration in hours">
+        <td class="py-1 px-2 text-center col-hr">
+          <input type="number" step="0.01" value="${Number(item.hrs).toFixed(2)}" onchange="updateTask('${item.id}','hrs',this.value,'${sec}')" class="w-14 sm:w-16 font-black text-xs text-blue-600 text-center bg-transparent border border-transparent focus:border-blue-400 focus:bg-white rounded px-1 py-0.5 outline-none transition" aria-label="Duration in hours">
         </td>
-        <td class="py-2 px-2 text-center col-cat">
-          <select onchange="updateTask('${item.id}','cat',this.value,'${sec}')" class="cat-pill ${escapeHtml(item.cat)} text-[11px] font-extrabold px-3 py-1 rounded-md cursor-pointer outline-none shadow-sm text-center" aria-label="Category">
+        <td class="py-1 px-2 text-center col-cat">
+          <select onchange="updateTask('${item.id}','cat',this.value,'${sec}')" class="cat-pill ${escapeHtml(item.cat)} text-[10.5px] font-extrabold px-2.5 py-0.5 rounded-md cursor-pointer outline-none shadow-sm text-center" aria-label="Category">
             <option value="School" ${item.cat==='School'?'selected':''}>School</option>
             <option value="Tuition" ${item.cat==='Tuition'?'selected':''}>Tuition</option>
             <option value="Study" ${item.cat==='Study'?'selected':''}>Study</option>
           </select>
         </td>
-        <td class="py-2 px-3 text-left col-tk">
-          <input id="task_inp_${item.id}" value="${escapeHtml(item.task)}" placeholder="Enter subject or task..." onchange="updateTask('${item.id}','task',this.value,'${sec}')" class="w-full font-semibold text-xs sm:text-sm text-slate-800 bg-slate-100/90 hover:bg-slate-200/60 focus:bg-white border border-slate-200/90 rounded-xl px-3.5 py-1.5 outline-none transition shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 ${item.completed?'line-through text-slate-400':''}" aria-label="Subject or task description">
-        </td>
-        <td class="py-2 px-2 text-center col-del">
-          <button onclick="confirmDeleteRow('${sec}','${item.id}')" class="p-1 text-slate-300 hover:text-rose-600 hover:bg-rose-50 rounded-md transition" title="Delete task" aria-label="Delete">
-            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-          </button>
+        <td class="py-1 px-3 text-left col-tk">
+          <input id="task_inp_${item.id}" value="${escapeHtml(item.task)}" placeholder="Enter subject or task..." onchange="updateTask('${item.id}','task',this.value,'${sec}')" class="w-full font-semibold text-xs sm:text-[13px] text-slate-800 bg-slate-100/90 hover:bg-slate-200/60 focus:bg-white border border-slate-200/90 rounded-xl px-3 py-1 outline-none transition shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 ${item.completed?'line-through text-slate-400':''}" aria-label="Subject or task description">
         </td>`;
       tbody.appendChild(row);
     });
@@ -863,27 +924,6 @@ function addRow(sec){
   renderTables();
   calculateWeeklyStats();
   updateProgress();
-}
-
-function confirmDeleteRow(sec,taskId){
-  openModal({
-    title:'Delete Task',
-    message:'Are you sure you want to remove this item from your schedule?',
-    confirmText:'Delete',
-    confirmClass:'bg-rose-600 hover:bg-rose-700',
-    onConfirm:()=>{
-      const list=state.days[state.activeDateStr][sec];
-      const idx=list.findIndex(t=>t.id===taskId);
-      if(idx!==-1){
-        list.splice(idx,1);
-        saveState();
-        renderTables();
-        calculateWeeklyStats();
-        updateProgress();
-        showToast('Task removed', 'info');
-      }
-    }
-  });
 }
 
 function updateTask(taskId,field,val,sec){
@@ -955,40 +995,14 @@ function updateProgress(){
   const text = document.getElementById('sidebarCompletedText');
 
   if(tot > 0 && comp === tot){
-    icon.className = 'w-7 h-7 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mb-1 transition';
-    text.className = 'text-sm font-black text-emerald-600 mt-0.5 transition';
+    icon.className = 'w-5 h-5 text-emerald-600 flex items-center justify-center mb-0.5 transition';
+    text.className = 'text-xs sm:text-sm font-black text-emerald-600 mt-0.5 leading-none transition';
   } else if(comp > 0){
-    icon.className = 'w-7 h-7 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mb-1 transition';
-    text.className = 'text-sm font-black text-amber-600 mt-0.5 transition';
+    icon.className = 'w-5 h-5 text-amber-500 flex items-center justify-center mb-0.5 transition';
+    text.className = 'text-xs sm:text-sm font-black text-amber-600 mt-0.5 leading-none transition';
   } else {
-    icon.className = 'w-7 h-7 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mb-1 transition';
-    text.className = 'text-sm font-black text-slate-700 mt-0.5 transition';
-  }
-
-  updateMotivationBanner(comp, tot);
-}
-
-function updateMotivationBanner(comp, tot){
-  const emoji = document.getElementById('motivationEmoji');
-  const text = document.getElementById('motivationText');
-  const sub = document.getElementById('motivationSubtext');
-
-  if(tot === 0){
-    emoji.textContent = '🎯';
-    text.textContent = 'Set your goals and add your classes for the day!';
-    sub.textContent = 'Ready When You Are';
-  } else if(comp === 0){
-    emoji.textContent = '🌅';
-    text.textContent = 'A fresh day of learning ahead. Tackle your first task!';
-    sub.textContent = 'Let\'s Begin! 🚀';
-  } else if(comp === tot){
-    emoji.textContent = '🏆';
-    text.textContent = `All ${tot} classes and tasks completed! Outstanding work today.`;
-    sub.textContent = 'Day Complete! 🎉';
-  } else {
-    emoji.textContent = '⚡';
-    text.textContent = `Great momentum! You've finished ${comp} of ${tot} tasks today.`;
-    sub.textContent = `${Math.round((comp/tot)*100)}% Finished 🔥`;
+    icon.className = 'w-5 h-5 text-emerald-500 flex items-center justify-center mb-0.5 transition';
+    text.className = 'text-xs sm:text-sm font-black text-slate-800 mt-0.5 leading-none transition';
   }
 }
 
@@ -996,30 +1010,30 @@ function updateMotivationBanner(comp, tot){
 function renderTimetables(){
   const renderGrid=(type,obj)=>DAYS.map(d=>`
     <div class="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm ${d===getDayName(state.activeDateStr)?'ring-2 ring-blue-500':''}">
-      <div class="px-3 py-2 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+      <div class="px-3 py-1.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
         <span class="font-black text-xs text-slate-700">${d}</span>
-        <button onclick="toggleEditMode('${type}')" class="text-[11px] font-bold text-blue-600 hover:text-blue-700">${editMode[type]?'💾 Save':'✏️ Edit'}</button>
+        <button onclick="toggleEditMode('${type}')" class="text-[10px] font-bold text-blue-600 hover:text-blue-700">${editMode[type]?'💾 Save':'✏️ Edit'}</button>
       </div>
-      <div class="p-2 space-y-1.5">
+      <div class="p-2 space-y-1">
         ${(obj[d]||[]).map((it,i)=>editMode[type]?`
-          <div class="bg-slate-50 p-2 rounded-lg border border-slate-200 space-y-1">
+          <div class="bg-slate-50 p-1.5 rounded-lg border border-slate-200 space-y-1">
             <div class="flex items-center gap-1">
-              <input type="text" class="w-full text-xs font-semibold p-1 border border-slate-300 rounded bg-white tt-time-${type}-${d}" data-idx="${i}" value="${escapeHtml(it.time)}" placeholder="Time (e.g. 08:40 AM - 09:15 AM)">
-              <button onclick="deleteTemplateSlot('${type}','${d}',${i})" class="text-rose-500 hover:text-rose-700 p-1" title="Delete slot"><i data-lucide="trash" class="w-3.5 h-3.5"></i></button>
+              <input type="text" class="w-full text-[11px] font-semibold p-1 border border-slate-300 rounded bg-white tt-time-${type}-${d}" data-idx="${i}" value="${escapeHtml(it.time)}" placeholder="Time (e.g. 08:40 AM - 09:15 AM)">
+              <button onclick="deleteTemplateSlot('${type}','${d}',${i})" class="text-rose-500 hover:text-rose-700 p-1" title="Delete slot"><i data-lucide="trash" class="w-3 h-3"></i></button>
             </div>
-            <input type="text" class="w-full text-xs p-1 border border-slate-300 rounded bg-white tt-task-${type}-${d}" data-idx="${i}" value="${escapeHtml(it.task)}" placeholder="Subject / Batch">
+            <input type="text" class="w-full text-[11px] p-1 border border-slate-300 rounded bg-white tt-task-${type}-${d}" data-idx="${i}" value="${escapeHtml(it.task)}" placeholder="Subject / Batch">
           </div>
         `:`
-          <div class="p-1.5 border-b border-slate-50 text-slate-700 last:border-none flex items-center justify-between text-xs">
+          <div class="p-1 border-b border-slate-50 text-slate-700 last:border-none flex items-center justify-between text-[11px]">
             <div>
-              <div class="font-bold text-slate-900">${escapeHtml(it.task)}</div>
-              <div class="text-[11px] text-slate-500">${escapeHtml(it.time)}</div>
+              <div class="font-bold text-slate-900 leading-tight">${escapeHtml(it.task)}</div>
+              <div class="text-[10px] text-slate-500">${escapeHtml(it.time)}</div>
             </div>
-            <span class="text-[10px] font-extrabold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">${Number(it.hrs).toFixed(2)}h</span>
+            <span class="text-[9px] font-extrabold text-blue-600 bg-blue-50 px-1 py-0.5 rounded">${Number(it.hrs).toFixed(2)}h</span>
           </div>
         `).join('')}
-        ${editMode[type]?`<button onclick="addNewTemplateSlot('${type}','${d}')" class="w-full py-1 text-xs font-bold text-emerald-600 hover:bg-emerald-50 rounded-lg border border-dashed border-emerald-300 mt-1">+ Add Slot</button>`:''}
-        ${(!editMode[type] && (!obj[d] || obj[d].length===0)) ? '<div class="text-xs p-1.5 text-slate-300 italic">No classes scheduled</div>' : ''}
+        ${editMode[type]?`<button onclick="addNewTemplateSlot('${type}','${d}')" class="w-full py-1 text-[11px] font-bold text-emerald-600 hover:bg-emerald-50 rounded-lg border border-dashed border-emerald-300 mt-1">+ Add Slot</button>`:''}
+        ${(!editMode[type] && (!obj[d] || obj[d].length===0)) ? '<div class="text-[11px] p-1 text-slate-300 italic">No classes scheduled</div>' : ''}
       </div>
     </div>`).join('');
 
@@ -1093,15 +1107,15 @@ function updateAnalytics(){
   }
   const rate=weekTot>0?((weekComp/weekTot)*100).toFixed(1):0;
   document.getElementById('statsGrid').innerHTML=`
-    <div class="bg-white p-4 rounded-2xl border border-slate-200 text-center shadow-sm"><span class="text-[10px] font-bold uppercase text-slate-400">Weekly Total</span><div class="text-2xl font-black text-slate-800 mt-1">${weekHours.toFixed(1)} H</div></div>
-    <div class="bg-white p-4 rounded-2xl border border-slate-200 text-center shadow-sm"><span class="text-[10px] font-bold uppercase text-slate-400">Tasks Completed</span><div class="text-2xl font-black text-blue-600 mt-1">${weekComp} / ${weekTot}</div></div>
-    <div class="bg-white p-4 rounded-2xl border border-slate-200 text-center shadow-sm"><span class="text-[10px] font-bold uppercase text-slate-400">Completion Rate</span><div class="text-2xl font-black text-emerald-600 mt-1">${rate}%</div></div>`;
+    <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-xs"><span class="text-[9.5px] font-bold uppercase text-slate-400">Weekly Total</span><div class="text-xl font-black text-slate-800 mt-0.5">${weekHours.toFixed(1)} H</div></div>
+    <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-xs"><span class="text-[9.5px] font-bold uppercase text-slate-400">Tasks Completed</span><div class="text-xl font-black text-blue-600 mt-0.5">${weekComp} / ${weekTot}</div></div>
+    <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-xs"><span class="text-[9.5px] font-bold uppercase text-slate-400">Completion Rate</span><div class="text-xl font-black text-emerald-600 mt-0.5">${rate}%</div></div>`;
 
-  Chart.defaults.color='#64748b';Chart.defaults.font.size=11;
+  Chart.defaults.color='#64748b';Chart.defaults.font.size=10;
   if(charts.cat)charts.cat.destroy();
   charts.cat=new Chart(document.getElementById('categoryChart'),{type:'doughnut',data:{labels:['School','Tuition','Study'],datasets:[{data:[cH.School,cH.Tuition,cH.Study],backgroundColor:['#2563eb','#f97316','#8b5cf6'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}});
   if(charts.comp)charts.comp.destroy();
-  charts.comp=new Chart(document.getElementById('completionChart'),{type:'bar',data:{labels:['School','Tuition','Study'],datasets:[{data:[cT.School?Math.round((cC.School/cT.School)*100):0,cT.Tuition?Math.round((cC.Tuition/cT.Tuition)*100):0,cT.Study?Math.round((cC.Study/cT.Study)*100):0],backgroundColor:['#2563eb','#f97316','#8b5cf6'],borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:100}}}});
+  charts.comp=new Chart(document.getElementById('completionChart'),{type:'bar',data:{labels:['School','Tuition','Study'],datasets:[{data:[cT.School?Math.round((cC.School/cT.School)*100):0,cT.Tuition?Math.round((cC.Tuition/cT.Tuition)*100):0,cT.Study?Math.round((cC.Study/cT.Study)*100):0],backgroundColor:['#2563eb','#f97316','#8b5cf6'],borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:100}}}});
   if(charts.trend)charts.trend.destroy();
   charts.trend=new Chart(document.getElementById('trendChart'),{type:'line',data:{labels,datasets:[{label:'Hours',data:dH,borderColor:'#2563eb',tension:0.35,fill:true,backgroundColor:'rgba(37,99,235,0.06)'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
   if(charts.compTrend)charts.compTrend.destroy();
@@ -1145,10 +1159,10 @@ function updateCurrentDate(){
   const display = document.getElementById('currentDateDisplay');
   if(display){
     display.innerHTML=`
-      <i data-lucide="calendar" class="w-4 h-4 text-amber-300"></i>
+      <i data-lucide="calendar" class="w-3.5 h-3.5 text-amber-300"></i>
       <span>${datePart}</span>
       <span class="text-slate-500 font-light">|</span>
-      <i data-lucide="clock" class="w-4 h-4 text-slate-400"></i>
+      <i data-lucide="clock" class="w-3.5 h-3.5 text-slate-400"></i>
       <span>${timePart}</span>`;
   }
 
