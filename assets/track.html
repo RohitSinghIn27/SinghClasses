@@ -60,7 +60,7 @@ body { -webkit-tap-highlight-color: transparent; }
 }
 .live-pulse { animation: liveDot 1.4s infinite ease-in-out; }
 
-/* Sidebar Nav Active State - Light Yellow Theme */
+/* Sidebar Nav Active State */
 .nav-btn {
   transition: all 0.15s ease-in-out;
   border-left: 3px solid transparent;
@@ -76,7 +76,7 @@ body { -webkit-tap-highlight-color: transparent; }
   color: #facc15 !important;
 }
 
-/* Custom Scrollbar for Main Workspace */
+/* Custom Scrollbar */
 #mainWorkspace {
   scrollbar-width: thin;
   scrollbar-color: #cbd5e1 transparent;
@@ -235,9 +235,9 @@ body { -webkit-tap-highlight-color: transparent; }
   <div class="flex flex-col lg:flex-row items-start gap-3 flex-1">
 
     <!-- LEFT SIDEBAR -->
-    <aside id="plannerSidebar" class="w-full lg:w-48 xl:w-52 bg-sidebarNavy text-white rounded-2xl p-2.5 flex flex-col gap-2.5 shrink-0 shadow-lg print-hide">
+    <aside id="plannerSidebar" class="w-full lg:w-56 xl:w-60 bg-sidebarNavy text-white rounded-2xl p-2.5 flex flex-col gap-2 shrink-0 shadow-lg print-hide">
       
-      <!-- Navigation Menu (Light Yellow active indicator) -->
+      <!-- Navigation Menu -->
       <nav class="flex flex-col gap-1" role="tablist" id="sidebarNav">
         <button onclick="handleNavClick('schoolClassesSec', this)" class="nav-btn active w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[11px] font-bold text-slate-300 hover:text-white hover:bg-white/5 transition text-left">
           <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>
@@ -257,80 +257,77 @@ body { -webkit-tap-highlight-color: transparent; }
         </button>
       </nav>
 
-      <!-- ================= DATE & WEEK WIDGET ================= -->
-      <div class="bg-white text-slate-800 rounded-xl p-2.5 shadow-sm space-y-2 border border-slate-100">
+      <!-- ================= COMPACT DATE & WEEK WIDGET ================= -->
+      <div class="bg-white text-slate-800 rounded-2xl p-2.5 shadow-sm border border-slate-100">
         
-        <div class="flex items-center justify-between gap-1 text-xs">
-          <button onclick="shiftWeek(-1)" class="w-6 h-6 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition active:scale-95" aria-label="Previous week">
-            <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
+        <!-- Top Nav: Prev, Today, Next -->
+        <div class="flex items-center justify-between gap-1 mb-2">
+          <button onclick="shiftWeek(-1)" class="w-7 h-7 rounded-xl bg-[#f1f5f9] hover:bg-slate-200 text-slate-800 flex items-center justify-center transition active:scale-95" aria-label="Previous week">
+            <i data-lucide="chevron-left" class="w-3.5 h-3.5 stroke-[2.5]"></i>
           </button>
-          <button onclick="jumpToday()" class="px-3 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 font-extrabold text-[10px] rounded-md transition active:scale-95">
-            Today
+          <button onclick="jumpToday()" class="flex-1 h-7 rounded-xl bg-[#eef5ff] hover:bg-blue-100 text-blue-600 font-extrabold text-[11px] flex items-center justify-center gap-1 transition active:scale-95">
+            <i data-lucide="calendar" class="w-3 h-3 stroke-[2.5]"></i>
+            <span>Today</span>
           </button>
-          <button onclick="shiftWeek(1)" class="w-6 h-6 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition active:scale-95" aria-label="Next week">
-            <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+          <button onclick="shiftWeek(1)" class="w-7 h-7 rounded-xl bg-[#f1f5f9] hover:bg-slate-200 text-slate-800 flex items-center justify-center transition active:scale-95" aria-label="Next week">
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 stroke-[2.5]"></i>
           </button>
         </div>
 
-        <div class="text-center font-black text-xs text-slate-900 tracking-tight" id="sidebarWeekLabel">14 Sep - 20 Sep</div>
+        <!-- Week Title & Subtitle -->
+        <div class="text-center mb-2">
+          <h2 class="text-xs font-black text-slate-900 tracking-tight leading-tight" id="sidebarWeekLabel">21 Sep - 27 Sep 2026</h2>
+          <p class="text-[9.5px] font-semibold text-slate-400 leading-tight">Select a day to view or plan</p>
+        </div>
         
-        <!-- Days Grid (Sunday centered in middle row) -->
+        <!-- Days Grid (Mon to Sat) -->
         <div class="grid grid-cols-2 gap-1.5" id="sidebarDayGrid"></div>
 
-        <!-- Check All & Uncheck All Action Buttons -->
-        <div class="grid grid-cols-2 gap-1.5 pt-0.5">
-          <button onclick="checkAllToday()" class="w-full py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200/80 font-bold text-[10.5px] rounded-lg flex items-center justify-center gap-1 transition active:scale-95" title="Check all tasks for selected day">
-            <i data-lucide="check-check" class="w-3.5 h-3.5 text-emerald-600"></i>
-            <span>Check All</span>
-          </button>
-          <button onclick="clearTodayChecks()" class="w-full py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-800 border border-slate-200 font-bold text-[10.5px] rounded-lg flex items-center justify-center gap-1 transition active:scale-95" title="Uncheck all tasks for selected day">
-            <i data-lucide="square" class="w-3.5 h-3.5 text-slate-400"></i>
-            <span>Uncheck All</span>
-          </button>
-        </div>
+        <!-- Sunday Row & Action Buttons -->
+        <div id="sidebarSundayRow"></div>
       </div>
 
       <!-- ================= STUDY SUMMARY WIDGET ================= -->
-      <div class="bg-white text-slate-800 rounded-xl p-2.5 shadow-sm space-y-2 border border-slate-100">
+      <div class="bg-white text-slate-800 rounded-2xl p-2 shadow-sm space-y-1.5 border border-slate-100">
         <div class="text-center">
-          <h3 class="text-[11px] font-black text-slate-900 tracking-wider uppercase">WEEKLY SUMMARY</h3>
-          <p class="text-[9.5px] font-semibold text-slate-500 leading-tight mt-0.5">Your progress this week</p>
+          <h3 class="text-[10px] font-black text-slate-900 tracking-wider uppercase">WEEKLY SUMMARY</h3>
+          <p class="text-[9px] font-semibold text-slate-500 leading-tight">Your progress this week</p>
         </div>
 
-        <div class="grid grid-cols-2 gap-1.5 pt-0.5">
-          <div class="bg-slate-50/90 border border-slate-100/80 rounded-lg p-1.5 flex flex-col items-center justify-center text-center">
-            <div class="w-4 h-4 text-blue-600 flex items-center justify-center mb-0.5">
-              <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>
+        <div class="grid grid-cols-2 gap-1 pt-0.5">
+          <div class="bg-slate-50/90 border border-slate-100/80 rounded-lg p-1 flex flex-col items-center justify-center text-center">
+            <div class="w-3.5 h-3.5 text-blue-600 flex items-center justify-center mb-0.5">
+              <i data-lucide="graduation-cap" class="w-3 h-3"></i>
             </div>
-            <div class="text-[8.5px] font-extrabold text-slate-500 uppercase tracking-wide">SCHOOL</div>
-            <div class="text-xs font-black text-blue-600 mt-0.5 leading-none"><span id="totalSchool">0.0</span>H</div>
+            <div class="text-[8px] font-extrabold text-slate-500 uppercase tracking-wide">SCHOOL</div>
+            <div class="text-[11px] font-black text-blue-600 mt-0.5 leading-none"><span id="totalSchool">0.0</span>H</div>
           </div>
 
-          <div class="bg-slate-50/90 border border-slate-100/80 rounded-lg p-1.5 flex flex-col items-center justify-center text-center">
-            <div class="w-4 h-4 text-orange-500 flex items-center justify-center mb-0.5">
-              <i data-lucide="users" class="w-3.5 h-3.5"></i>
+          <div class="bg-slate-50/90 border border-slate-100/80 rounded-lg p-1 flex flex-col items-center justify-center text-center">
+            <div class="w-3.5 h-3.5 text-orange-500 flex items-center justify-center mb-0.5">
+              <i data-lucide="users" class="w-3 h-3"></i>
             </div>
-            <div class="text-[8.5px] font-extrabold text-slate-500 uppercase tracking-wide">TUITION</div>
-            <div class="text-xs font-black text-orange-500 mt-0.5 leading-none"><span id="totalTuition">0.0</span>H</div>
+            <div class="text-[8px] font-extrabold text-slate-500 uppercase tracking-wide">TUITION</div>
+            <div class="text-[11px] font-black text-orange-500 mt-0.5 leading-none"><span id="totalTuition">0.0</span>H</div>
           </div>
 
-          <div class="bg-slate-50/90 border border-slate-100/80 rounded-lg p-1.5 flex flex-col items-center justify-center text-center">
-            <div class="w-4 h-4 text-purple-600 flex items-center justify-center mb-0.5">
-              <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+          <div class="bg-slate-50/90 border border-slate-100/80 rounded-lg p-1 flex flex-col items-center justify-center text-center">
+            <div class="w-3.5 h-3.5 text-purple-600 flex items-center justify-center mb-0.5">
+              <i data-lucide="book-open" class="w-3 h-3"></i>
             </div>
-            <div class="text-[8.5px] font-extrabold text-slate-500 uppercase tracking-wide">STUDY</div>
-            <div class="text-xs font-black text-purple-600 mt-0.5 leading-none"><span id="totalStudy">0.0</span>H</div>
+            <div class="text-[8px] font-extrabold text-slate-500 uppercase tracking-wide">STUDY</div>
+            <div class="text-[11px] font-black text-purple-600 mt-0.5 leading-none"><span id="totalStudy">0.0</span>H</div>
           </div>
 
-          <div id="sidebarCompletedCard" class="bg-slate-50/90 border border-slate-100/80 rounded-lg p-1.5 flex flex-col items-center justify-center text-center">
-            <div class="relative w-8 h-8 flex items-center justify-center my-0.5">
-              <svg class="w-8 h-8 -rotate-90" viewBox="0 0 36 36">
+          <div id="sidebarCompletedCard" class="bg-slate-50/90 border border-slate-100/80 rounded-lg p-1 flex flex-col items-center justify-center text-center">
+            <div class="relative w-7 h-7 flex items-center justify-center my-0.5">
+              <svg class="w-7 h-7 -rotate-90" viewBox="0 0 36 36">
                 <path class="text-slate-200" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
                 <path id="progressRing" class="text-emerald-500 transition-all duration-300" stroke-dasharray="0, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
               </svg>
-              <span id="progressPercent" class="absolute text-[8.5px] font-black text-slate-800">0%</span>
+              <span id="progressPercent" class="absolute text-[8px] font-black text-slate-800">0%</span>
             </div>
-            <div class="text-[8px] font-bold text-slate-500 mt-0.5 leading-none">
+            <div class="text-[7.5px] font-bold text-slate-500 mt-0.5 leading-none">
               <span id="completedCount" class="font-extrabold text-emerald-600">0</span>/<span id="totalCount">0</span> done
             </div>
           </div>
@@ -571,7 +568,7 @@ const defaultTimetables = {
   }
 };
 
-/* ================= UTILITIES & BENCHMARK SCROLL ================= */
+/* ================= UTILITIES ================= */
 function escapeHtml(str){
   if(str==null)return'';
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
@@ -605,7 +602,8 @@ function formatShortDate(isoStr){
 
 function formatWeekRange(mondayIso){
   const sundayIso=addDays(mondayIso,6);
-  return `${formatShortDate(mondayIso)} - ${formatShortDate(sundayIso)}`;
+  const [y]=sundayIso.split('-');
+  return `${formatShortDate(mondayIso)} - ${formatShortDate(sundayIso)} ${y}`;
 }
 
 function parseMinutes(t,fallbackMod){
@@ -651,7 +649,6 @@ function sortTasksByTime(taskList){
   });
 }
 
-/* Sync workspace height to sidebar benchmark */
 function syncWorkspaceHeight() {
   const sidebar = document.getElementById('plannerSidebar');
   const workspace = document.getElementById('mainWorkspace');
@@ -718,40 +715,8 @@ function showToast(message, type='info'){
   }, 3500);
 }
 
-let modalCallback = null;
-function openModal({title, message, confirmText='Confirm', confirmClass='bg-rose-600 hover:bg-rose-700', requireMatch=null, onConfirm}){
-  const modal = document.getElementById('customModal');
-  document.getElementById('modalTitle').textContent = title;
-  document.getElementById('modalMessage').textContent = message;
-  const btn = document.getElementById('modalConfirmBtn');
-  btn.textContent = confirmText;
-  btn.className = `px-3 py-1.5 text-white font-bold text-xs rounded-lg transition shadow-sm ${confirmClass}`;
-  
-  const inputContainer = document.getElementById('modalInputContainer');
-  const inputField = document.getElementById('modalInputField');
-  if(requireMatch){
-    inputContainer.classList.remove('hidden');
-    inputField.value = '';
-    document.getElementById('modalInputLabel').textContent = `Type "${requireMatch}" to proceed:`;
-  } else {
-    inputContainer.classList.add('hidden');
-  }
-
-  modalCallback = () => {
-    if(requireMatch && inputField.value.trim().toUpperCase() !== requireMatch.toUpperCase()){
-      inputField.classList.add('ring-2', 'ring-rose-500');
-      showToast(`Please type ${requireMatch} exactly.`, 'error');
-      return;
-    }
-    closeModal();
-    if(onConfirm) onConfirm();
-  };
-  btn.onclick = modalCallback;
-  modal.classList.remove('hidden');
-}
 function closeModal(){
   document.getElementById('customModal').classList.add('hidden');
-  modalCallback = null;
 }
 
 /* ================= STATE MANAGEMENT ================= */
@@ -864,91 +829,111 @@ function updatePrintDate(){
 }
 
 const dayThemes = [
-  { name: 'Mon', iconBg: 'bg-blue-50', iconColor: 'text-blue-500' },
+  { name: 'Mon', iconBg: 'bg-blue-50', iconColor: 'text-blue-600' },
   { name: 'Tue', iconBg: 'bg-sky-50', iconColor: 'text-sky-500' },
   { name: 'Wed', iconBg: 'bg-emerald-50', iconColor: 'text-emerald-500' },
   { name: 'Thu', iconBg: 'bg-orange-50', iconColor: 'text-orange-500' },
   { name: 'Fri', iconBg: 'bg-purple-50', iconColor: 'text-purple-500' },
   { name: 'Sat', iconBg: 'bg-rose-50', iconColor: 'text-rose-500' },
-  { name: 'Sun', iconBg: 'bg-amber-100/70', iconColor: 'text-amber-600' }
+  { name: 'Sun', iconBg: 'bg-amber-100', iconColor: 'text-amber-600' }
 ];
 
+/* Render the Sleek & Compact Date Selector */
 function renderSidebarDaySelector(){
-  const today=getTodayISO();
-  const container=document.getElementById('sidebarDayGrid');
+  const today = getTodayISO();
+  const container = document.getElementById('sidebarDayGrid');
+  const sunRowContainer = document.getElementById('sidebarSundayRow');
   if(!container) return;
 
-  container.innerHTML=DAYS.map((dName,i)=>{
-    const dIso=addDays(state.viewMondayStr,i);
-    const dNum=dIso.split('-')[2];
-    const isActive=dIso===state.activeDateStr;
-    const isToday=dIso===today;
-    const isSun = dName === 'Sun';
+  // Render Mon - Sat
+  container.innerHTML = DAYS.slice(0, 6).map((dName, i) => {
+    const dIso = addDays(state.viewMondayStr, i);
+    const dNum = dIso.split('-')[2];
+    const isActive = dIso === state.activeDateStr;
+    const isToday = dIso === today;
     const theme = dayThemes[i];
 
-    let cardClasses = 'bg-slate-50/70 hover:bg-slate-100/90 border border-slate-200/80 text-slate-700';
+    let cardClasses = 'bg-white hover:bg-slate-50 border border-slate-200/80 text-slate-800 shadow-[0_1px_2px_rgba(0,0,0,0.02)]';
     let iconWrapperClass = `${theme.iconBg} ${theme.iconColor}`;
     let dayNameColor = 'text-slate-500';
-    let dayNumColor = 'text-slate-800';
-    let todayDot = '';
+    let dayNumColor = 'text-slate-900';
+    let todayIndicator = isToday ? '<span class="w-1.5 h-1.5 rounded-full bg-blue-500 absolute top-1 right-1" title="Today"></span>' : '';
 
     if (isActive) {
-      cardClasses = isSun
-        ? 'bg-amber-500 text-white border-2 border-amber-300 shadow-sm shadow-amber-500/30'
-        : 'bg-blue-600 text-white border-2 border-blue-400 shadow-sm shadow-blue-500/25';
+      cardClasses = 'bg-blue-600 text-white border border-blue-400 shadow-sm shadow-blue-500/20';
       iconWrapperClass = 'bg-white/20 text-white';
-      dayNameColor = isSun ? 'text-amber-100' : 'text-blue-100';
+      dayNameColor = 'text-white/80';
       dayNumColor = 'text-white';
+      todayIndicator = isToday ? '<span class="w-1.5 h-1.5 rounded-full bg-white absolute top-1 right-1" title="Today"></span>' : '';
     } else if (isToday) {
-      cardClasses = isSun
-        ? 'bg-amber-100/90 border border-amber-400 text-amber-950 font-bold'
-        : 'bg-blue-50/60 border border-blue-300 text-slate-800 font-bold';
-      iconWrapperClass = isSun ? 'bg-amber-200 text-amber-700' : 'bg-blue-100 text-blue-600';
-      dayNameColor = isSun ? 'text-amber-700' : 'text-slate-500';
-      dayNumColor = isSun ? 'text-amber-950' : 'text-slate-800';
-      todayDot = `<span class="w-1.5 h-1.5 rounded-full ${isSun ? 'bg-amber-500' : 'bg-blue-500'} absolute top-1.5 right-1.5" title="Today"></span>`;
-    } else if (isSun) {
-      /* Distinct warm amber / holiday styling for Sunday */
-      cardClasses = 'bg-amber-50/90 hover:bg-amber-100/90 border border-amber-200/90 text-amber-950 font-medium';
-      iconWrapperClass = 'bg-amber-100/80 text-amber-600';
-      dayNameColor = 'text-amber-700 font-extrabold';
-      dayNumColor = 'text-amber-950 font-black';
-    }
-
-    /* Sunday centered in the middle between column 1 & 2 */
-    if (isSun) {
-      return `
-        <div class="col-span-2 flex justify-center">
-          <button onclick="selectDate('${dIso}')" class="w-1/2 min-w-[96px] h-9 rounded-xl p-1 flex items-center justify-center gap-1.5 relative overflow-hidden transition active:scale-95 ${cardClasses}" aria-label="${dName} ${dIso}">
-            ${todayDot}
-            <div class="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 transition ${iconWrapperClass}">
-              <i data-lucide="calendar" class="w-3 h-3"></i>
-            </div>
-            <div class="flex flex-col text-left leading-tight">
-              <span class="text-[9px] font-extrabold uppercase ${dayNameColor}">${dName}</span>
-              <span class="text-[11px] font-black ${dayNumColor}">${dNum}</span>
-            </div>
-          </button>
-        </div>`;
+      cardClasses = 'bg-blue-50/40 border border-blue-300/80 text-slate-900 font-bold';
     }
 
     return `
-      <button onclick="selectDate('${dIso}')" class="col-span-1 h-9 rounded-xl p-1 flex items-center gap-1.5 relative overflow-hidden transition active:scale-95 ${cardClasses}" aria-label="${dName} ${dIso}">
-        ${todayDot}
+      <button onclick="selectDate('${dIso}')" class="h-10 rounded-xl px-2 py-1 flex items-center gap-1.5 relative overflow-hidden transition active:scale-95 text-left ${cardClasses}" aria-label="${dName} ${dIso}">
+        ${todayIndicator}
         <div class="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 transition ${iconWrapperClass}">
-          <i data-lucide="calendar" class="w-3 h-3"></i>
+          <i data-lucide="calendar" class="w-3.5 h-3.5 stroke-[2]"></i>
         </div>
-        <div class="flex flex-col text-left leading-tight">
-          <span class="text-[9px] font-extrabold uppercase ${dayNameColor}">${dName}</span>
-          <span class="text-[11px] font-black ${dayNumColor}">${dNum}</span>
+        <div class="flex flex-col leading-none min-w-0">
+          <span class="text-[9px] font-black uppercase tracking-wider ${dayNameColor}">${dName}</span>
+          <span class="text-xs font-black mt-0.5 ${dayNumColor}">${dNum}</span>
         </div>
       </button>`;
   }).join('');
 
-  const lbl=document.getElementById('sidebarWeekLabel');
-  if(lbl) lbl.textContent=formatWeekRange(state.viewMondayStr);
+  // Render Compact Sunday + Check All/Uncheck All
+  if(sunRowContainer){
+    const sunIso = addDays(state.viewMondayStr, 6);
+    const sunNum = sunIso.split('-')[2];
+    const isSunActive = sunIso === state.activeDateStr;
+    const isSunToday = sunIso === today;
+    
+    let sunCardClasses = 'bg-amber-50/70 hover:bg-amber-100/60 border border-amber-200/90 text-amber-950 transition active:scale-95';
+    let sunIconClass = 'bg-amber-100 text-amber-600';
+    let sunNameColor = 'text-amber-700 font-extrabold';
+    let sunNumColor = 'text-amber-950 font-black';
 
-  if(window.lucide)lucide.createIcons();
+    if(isSunActive){
+      sunCardClasses = 'bg-blue-600 text-white border border-blue-400 shadow-sm shadow-blue-500/20';
+      sunIconClass = 'bg-white/20 text-white';
+      sunNameColor = 'text-white/80';
+      sunNumColor = 'text-white';
+    }
+
+    sunRowContainer.innerHTML = `
+      <div class="grid grid-cols-2 gap-1.5 mt-1.5 items-center">
+        <!-- Sunday Selector -->
+        <button onclick="selectDate('${sunIso}')" class="h-9 rounded-xl px-2 py-1 flex items-center gap-1.5 relative overflow-hidden text-left ${sunCardClasses}" aria-label="Sun ${sunIso}">
+          ${isSunToday ? '<span class="w-1.5 h-1.5 rounded-full bg-amber-500 absolute top-1 right-1" title="Today"></span>' : ''}
+          <div class="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 transition ${sunIconClass}">
+            <i data-lucide="calendar" class="w-3.5 h-3.5 stroke-[2]"></i>
+          </div>
+          <div class="flex flex-col leading-none">
+            <span class="text-[9px] font-black uppercase tracking-wider ${sunNameColor}">SUN</span>
+            <span class="text-xs font-black mt-0.5 ${sunNumColor}">${sunNum}</span>
+          </div>
+        </button>
+
+        <!-- Compact Actions -->
+        <div class="grid grid-cols-2 gap-1 h-9 items-center">
+          <button onclick="checkAllToday()" class="h-full bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 font-extrabold text-[10px] rounded-xl flex items-center justify-center gap-0.5 transition active:scale-95 shadow-xs" title="Check all tasks for selected day">
+            <i data-lucide="check" class="w-3 h-3 text-emerald-600 stroke-[3]"></i>
+            <span>All</span>
+          </button>
+          <button onclick="clearTodayChecks()" class="h-full bg-white hover:bg-slate-100 text-slate-600 hover:text-slate-800 border border-slate-200 font-extrabold text-[10px] rounded-xl flex items-center justify-center gap-0.5 transition active:scale-95 shadow-xs" title="Uncheck all tasks for selected day">
+            <i data-lucide="square" class="w-3 h-3 text-slate-400 stroke-[2.2]"></i>
+            <span>All</span>
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  const lbl = document.getElementById('sidebarWeekLabel');
+  if(lbl) lbl.textContent = formatWeekRange(state.viewMondayStr);
+
+  if(window.lucide) lucide.createIcons();
 }
 
 function selectDate(isoStr){
@@ -1104,7 +1089,6 @@ function updateCheckbox(taskId,sec){
   renderTables();
 }
 
-/* Check All Tasks for selected day */
 function checkAllToday(){
   const d=state.days[state.activeDateStr];
   if(!d)return;
@@ -1116,7 +1100,6 @@ function checkAllToday(){
   showToast('All tasks checked for selected day', 'success');
 }
 
-/* Uncheck All Tasks for selected day */
 function clearTodayChecks(){
   const d=state.days[state.activeDateStr];
   if(!d)return;
