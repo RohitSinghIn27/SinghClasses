@@ -60,17 +60,20 @@ body { -webkit-tap-highlight-color: transparent; }
 }
 .live-pulse { animation: liveDot 1.4s infinite ease-in-out; }
 
-/* Sidebar Nav Active State */
+/* Sidebar Nav Active State - Light Yellow Theme */
 .nav-btn {
   transition: all 0.15s ease-in-out;
   border-left: 3px solid transparent;
 }
 .nav-btn.active {
-  background-color: rgba(255, 255, 255, 0.12) !important;
-  color: #ffffff !important;
-  font-weight: 700 !important;
-  border-left-color: #38bdf8 !important;
+  background-color: rgba(254, 240, 138, 0.16) !important;
+  color: #fef08a !important;
+  font-weight: 800 !important;
+  border-left-color: #facc15 !important;
   padding-left: 10px !important;
+}
+.nav-btn.active i, .nav-btn.active svg {
+  color: #facc15 !important;
 }
 
 /* Custom Scrollbar for Main Workspace */
@@ -231,10 +234,10 @@ body { -webkit-tap-highlight-color: transparent; }
   <!-- ================= MAIN BODY ================= -->
   <div class="flex flex-col lg:flex-row items-start gap-3 flex-1">
 
-    <!-- LEFT SIDEBAR (BENCHMARK ELEMENT) -->
+    <!-- LEFT SIDEBAR -->
     <aside id="plannerSidebar" class="w-full lg:w-48 xl:w-52 bg-sidebarNavy text-white rounded-2xl p-2.5 flex flex-col gap-2.5 shrink-0 shadow-lg print-hide">
       
-      <!-- Navigation Menu -->
+      <!-- Navigation Menu (Light Yellow active indicator) -->
       <nav class="flex flex-col gap-1" role="tablist" id="sidebarNav">
         <button onclick="handleNavClick('schoolClassesSec', this)" class="nav-btn active w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[11px] font-bold text-slate-300 hover:text-white hover:bg-white/5 transition text-left">
           <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>
@@ -270,12 +273,21 @@ body { -webkit-tap-highlight-color: transparent; }
         </div>
 
         <div class="text-center font-black text-xs text-slate-900 tracking-tight" id="sidebarWeekLabel">14 Sep - 20 Sep</div>
+        
+        <!-- Days Grid (Sunday centered in middle row) -->
         <div class="grid grid-cols-2 gap-1.5" id="sidebarDayGrid"></div>
 
-        <button onclick="clearTodayChecks()" class="w-full py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-800 border border-slate-200 font-bold text-[10.5px] rounded-lg flex items-center justify-center gap-1.5 transition active:scale-95">
-          <i data-lucide="check-square" class="w-3 h-3 text-slate-400"></i>
-          <span>Uncheck All</span>
-        </button>
+        <!-- Check All & Uncheck All Action Buttons -->
+        <div class="grid grid-cols-2 gap-1.5 pt-0.5">
+          <button onclick="checkAllToday()" class="w-full py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200/80 font-bold text-[10.5px] rounded-lg flex items-center justify-center gap-1 transition active:scale-95" title="Check all tasks for selected day">
+            <i data-lucide="check-check" class="w-3.5 h-3.5 text-emerald-600"></i>
+            <span>Check All</span>
+          </button>
+          <button onclick="clearTodayChecks()" class="w-full py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-800 border border-slate-200 font-bold text-[10.5px] rounded-lg flex items-center justify-center gap-1 transition active:scale-95" title="Uncheck all tasks for selected day">
+            <i data-lucide="square" class="w-3.5 h-3.5 text-slate-400"></i>
+            <span>Uncheck All</span>
+          </button>
+        </div>
       </div>
 
       <!-- ================= STUDY SUMMARY WIDGET ================= -->
@@ -327,7 +339,7 @@ body { -webkit-tap-highlight-color: transparent; }
 
     </aside>
 
-    <!-- RIGHT MAIN WORKSPACE (SCROLLS IF EXCEEDING BENCHMARK) -->
+    <!-- RIGHT MAIN WORKSPACE -->
     <main id="mainWorkspace" class="flex-1 w-full space-y-3 lg:pr-1.5 transition-all">
 
       <!-- Print Only Header -->
@@ -858,7 +870,7 @@ const dayThemes = [
   { name: 'Thu', iconBg: 'bg-orange-50', iconColor: 'text-orange-500' },
   { name: 'Fri', iconBg: 'bg-purple-50', iconColor: 'text-purple-500' },
   { name: 'Sat', iconBg: 'bg-rose-50', iconColor: 'text-rose-500' },
-  { name: 'Sun', iconBg: 'bg-amber-50', iconColor: 'text-amber-500' }
+  { name: 'Sun', iconBg: 'bg-amber-100/70', iconColor: 'text-amber-600' }
 ];
 
 function renderSidebarDaySelector(){
@@ -874,8 +886,6 @@ function renderSidebarDaySelector(){
     const isSun = dName === 'Sun';
     const theme = dayThemes[i];
 
-    const spanClass = isSun ? 'col-span-2' : 'col-span-1';
-
     let cardClasses = 'bg-slate-50/70 hover:bg-slate-100/90 border border-slate-200/80 text-slate-700';
     let iconWrapperClass = `${theme.iconBg} ${theme.iconColor}`;
     let dayNameColor = 'text-slate-500';
@@ -883,17 +893,47 @@ function renderSidebarDaySelector(){
     let todayDot = '';
 
     if (isActive) {
-      cardClasses = 'bg-blue-600 text-white border-2 border-blue-400 shadow-sm shadow-blue-500/25';
+      cardClasses = isSun
+        ? 'bg-amber-500 text-white border-2 border-amber-300 shadow-sm shadow-amber-500/30'
+        : 'bg-blue-600 text-white border-2 border-blue-400 shadow-sm shadow-blue-500/25';
       iconWrapperClass = 'bg-white/20 text-white';
-      dayNameColor = 'text-blue-100';
+      dayNameColor = isSun ? 'text-amber-100' : 'text-blue-100';
       dayNumColor = 'text-white';
     } else if (isToday) {
-      cardClasses = 'bg-blue-50/60 border border-blue-300 text-slate-800 font-bold';
-      todayDot = '<span class="w-1.5 h-1.5 rounded-full bg-blue-500 absolute top-1.5 right-1.5" title="Today"></span>';
+      cardClasses = isSun
+        ? 'bg-amber-100/90 border border-amber-400 text-amber-950 font-bold'
+        : 'bg-blue-50/60 border border-blue-300 text-slate-800 font-bold';
+      iconWrapperClass = isSun ? 'bg-amber-200 text-amber-700' : 'bg-blue-100 text-blue-600';
+      dayNameColor = isSun ? 'text-amber-700' : 'text-slate-500';
+      dayNumColor = isSun ? 'text-amber-950' : 'text-slate-800';
+      todayDot = `<span class="w-1.5 h-1.5 rounded-full ${isSun ? 'bg-amber-500' : 'bg-blue-500'} absolute top-1.5 right-1.5" title="Today"></span>`;
+    } else if (isSun) {
+      /* Distinct warm amber / holiday styling for Sunday */
+      cardClasses = 'bg-amber-50/90 hover:bg-amber-100/90 border border-amber-200/90 text-amber-950 font-medium';
+      iconWrapperClass = 'bg-amber-100/80 text-amber-600';
+      dayNameColor = 'text-amber-700 font-extrabold';
+      dayNumColor = 'text-amber-950 font-black';
+    }
+
+    /* Sunday centered in the middle between column 1 & 2 */
+    if (isSun) {
+      return `
+        <div class="col-span-2 flex justify-center">
+          <button onclick="selectDate('${dIso}')" class="w-1/2 min-w-[96px] h-9 rounded-xl p-1 flex items-center justify-center gap-1.5 relative overflow-hidden transition active:scale-95 ${cardClasses}" aria-label="${dName} ${dIso}">
+            ${todayDot}
+            <div class="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 transition ${iconWrapperClass}">
+              <i data-lucide="calendar" class="w-3 h-3"></i>
+            </div>
+            <div class="flex flex-col text-left leading-tight">
+              <span class="text-[9px] font-extrabold uppercase ${dayNameColor}">${dName}</span>
+              <span class="text-[11px] font-black ${dayNumColor}">${dNum}</span>
+            </div>
+          </button>
+        </div>`;
     }
 
     return `
-      <button onclick="selectDate('${dIso}')" class="${spanClass} h-9 rounded-xl p-1 flex items-center gap-1.5 relative overflow-hidden transition active:scale-95 ${cardClasses}" aria-label="${dName} ${dIso}">
+      <button onclick="selectDate('${dIso}')" class="col-span-1 h-9 rounded-xl p-1 flex items-center gap-1.5 relative overflow-hidden transition active:scale-95 ${cardClasses}" aria-label="${dName} ${dIso}">
         ${todayDot}
         <div class="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 transition ${iconWrapperClass}">
           <i data-lucide="calendar" class="w-3 h-3"></i>
@@ -1064,6 +1104,19 @@ function updateCheckbox(taskId,sec){
   renderTables();
 }
 
+/* Check All Tasks for selected day */
+function checkAllToday(){
+  const d=state.days[state.activeDateStr];
+  if(!d)return;
+  ['school','tuition_study'].forEach(s=>(d[s]||[]).forEach(t=>t.completed=true));
+  saveState();
+  renderTables();
+  updateProgress();
+  calculateWeeklyStats();
+  showToast('All tasks checked for selected day', 'success');
+}
+
+/* Uncheck All Tasks for selected day */
 function clearTodayChecks(){
   const d=state.days[state.activeDateStr];
   if(!d)return;
@@ -1072,7 +1125,7 @@ function clearTodayChecks(){
   renderTables();
   updateProgress();
   calculateWeeklyStats();
-  showToast('All tasks unchecked for today', 'info');
+  showToast('All tasks unchecked for selected day', 'info');
 }
 
 function calculateWeeklyStats(){
@@ -1328,7 +1381,6 @@ window.addEventListener('load',()=>{
   updateCurrentDate();
   setInterval(updateCurrentDate,60000);
   
-  // Benchmark observer
   const sidebar = document.getElementById('plannerSidebar');
   if (sidebar && window.ResizeObserver) {
     new ResizeObserver(() => syncWorkspaceHeight()).observe(sidebar);
