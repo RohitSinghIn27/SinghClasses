@@ -73,6 +73,25 @@ body { -webkit-tap-highlight-color: transparent; }
   padding-left: 10px !important;
 }
 
+/* Custom Scrollbar for Main Workspace */
+#mainWorkspace {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+#mainWorkspace::-webkit-scrollbar {
+  width: 6px;
+}
+#mainWorkspace::-webkit-scrollbar-track {
+  background: transparent;
+}
+#mainWorkspace::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 8px;
+}
+#mainWorkspace::-webkit-scrollbar-thumb:hover {
+  background-color: #94a3b8;
+}
+
 /* Mobile Table Stacked Card View (< 640px) */
 @media screen and (max-width: 640px) {
   .mobile-table thead { display: none !important; }
@@ -132,6 +151,11 @@ body { -webkit-tap-highlight-color: transparent; }
   .mobile-table input { border: none !important; background: transparent !important; padding: 0 !important; font-size: 9px !important; text-align: center !important; }
   .col-tk input { text-align: left !important; }
   .cat-pill { -webkit-appearance: none !important; appearance: none !important; border-radius: 4px !important; font-size: 7.5px !important; padding: 1px 3px !important; }
+  
+  #mainWorkspace {
+    max-height: none !important;
+    overflow: visible !important;
+  }
 }
 </style>
 </head>
@@ -207,8 +231,8 @@ body { -webkit-tap-highlight-color: transparent; }
   <!-- ================= MAIN BODY ================= -->
   <div class="flex flex-col lg:flex-row items-start gap-3 flex-1">
 
-    <!-- LEFT SIDEBAR -->
-    <aside class="w-full lg:w-48 xl:w-52 bg-sidebarNavy text-white rounded-2xl p-2.5 flex flex-col gap-2.5 shrink-0 shadow-lg print-hide">
+    <!-- LEFT SIDEBAR (BENCHMARK ELEMENT) -->
+    <aside id="plannerSidebar" class="w-full lg:w-48 xl:w-52 bg-sidebarNavy text-white rounded-2xl p-2.5 flex flex-col gap-2.5 shrink-0 shadow-lg print-hide">
       
       <!-- Navigation Menu -->
       <nav class="flex flex-col gap-1" role="tablist" id="sidebarNav">
@@ -303,8 +327,8 @@ body { -webkit-tap-highlight-color: transparent; }
 
     </aside>
 
-    <!-- RIGHT MAIN WORKSPACE -->
-    <main class="flex-1 w-full space-y-3">
+    <!-- RIGHT MAIN WORKSPACE (SCROLLS IF EXCEEDING BENCHMARK) -->
+    <main id="mainWorkspace" class="flex-1 w-full space-y-3 lg:pr-1.5 transition-all">
 
       <!-- Print Only Header -->
       <div class="hidden print-only-header">
@@ -535,7 +559,7 @@ const defaultTimetables = {
   }
 };
 
-/* ================= UTILITIES & TIME SORTING ================= */
+/* ================= UTILITIES & BENCHMARK SCROLL ================= */
 function escapeHtml(str){
   if(str==null)return'';
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
@@ -582,7 +606,6 @@ function parseMinutes(t,fallbackMod){
   return h*60+min;
 }
 
-/* Parses start time minutes for sorting */
 function getTaskStartMinutes(timeStr){
   if(!timeStr || typeof timeStr !== 'string') return 99999;
   const m = timeStr.match(/(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)\s*-\s*(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)/i);
@@ -606,7 +629,6 @@ function getTaskStartMinutes(timeStr){
   return 99999;
 }
 
-/* In-place ascending sort by start time */
 function sortTasksByTime(taskList){
   if(!Array.isArray(taskList)) return taskList;
   return taskList.sort((a, b) => {
@@ -615,6 +637,24 @@ function sortTasksByTime(taskList){
     if(minA !== minB) return minA - minB;
     return (a.task || '').localeCompare(b.task || '');
   });
+}
+
+/* Sync workspace height to sidebar benchmark */
+function syncWorkspaceHeight() {
+  const sidebar = document.getElementById('plannerSidebar');
+  const workspace = document.getElementById('mainWorkspace');
+  if (!sidebar || !workspace) return;
+
+  if (window.innerWidth >= 1024) {
+    const benchmarkH = sidebar.offsetHeight;
+    if (benchmarkH > 0) {
+      workspace.style.maxHeight = `${benchmarkH}px`;
+      workspace.style.overflowY = 'auto';
+    }
+  } else {
+    workspace.style.maxHeight = 'none';
+    workspace.style.overflowY = 'visible';
+  }
 }
 
 function extractTimeAndCalculateHrs(text){
@@ -722,7 +762,6 @@ function loadState(){
     }
   }
 
-  /* Sort all existing loaded days */
   if(state.days){
     Object.values(state.days).forEach(day => {
       if(day.school) sortTasksByTime(day.school);
@@ -786,7 +825,6 @@ function ensureDayPopulated(dateStr){
     });
   });
 
-  /* Auto-sort when generating a day */
   sortTasksByTime(sTasks);
   sortTasksByTime(tsTasks);
 
@@ -801,6 +839,7 @@ function renderAll(){
   updateProgress();
   renderTimetables();
   updatePrintDate();
+  syncWorkspaceHeight();
   if(window.lucide)lucide.createIcons();
 }
 
@@ -881,10 +920,12 @@ function selectDate(isoStr){
   updateProgress();
   renderSidebarDaySelector();
   updatePrintDate();
+  syncWorkspaceHeight();
 }
 function shiftWeek(dir){
   state.viewMondayStr=addDays(state.viewMondayStr,dir*7);
   renderSidebarDaySelector();
+  syncWorkspaceHeight();
 }
 function jumpToday(){
   const t=getTodayISO();
@@ -899,7 +940,6 @@ function renderTables(){
   const dayData=state.days[state.activeDateStr]||{school:[],tuition_study:[]};
   
   ['school','tuition_study'].forEach(sec=>{
-    /* Keep arrays sorted on every table render */
     if(dayData[sec]) sortTasksByTime(dayData[sec]);
     const tbody=document.getElementById(sec==='school'?'schoolBody':'tuitionStudyBody');
     tbody.innerHTML='';
@@ -984,12 +1024,12 @@ function addRow(sec){
   if(!state.days[state.activeDateStr])state.days[state.activeDateStr]={school:[],tuition_study:[]};
   state.days[state.activeDateStr][sec].push(newTask);
   
-  /* Auto-sort after adding */
   sortTasksByTime(state.days[state.activeDateStr][sec]);
   saveState();
   renderTables();
   calculateWeeklyStats();
   updateProgress();
+  syncWorkspaceHeight();
 }
 
 function updateTask(taskId,field,val,sec){
@@ -1001,7 +1041,6 @@ function updateTask(taskId,field,val,sec){
     item.time=val;
     const p=extractTimeAndCalculateHrs(val);
     if(p){item.hrs=p.hrs;}
-    /* Auto-sort and re-render when timing changes */
     sortTasksByTime(state.days[state.activeDateStr][sec]);
     renderTables();
   }else if(field==='cat'){
@@ -1012,6 +1051,7 @@ function updateTask(taskId,field,val,sec){
   }
   saveState();
   calculateWeeklyStats();
+  syncWorkspaceHeight();
 }
 
 function updateCheckbox(taskId,sec){
@@ -1140,6 +1180,7 @@ function toggleEditMode(t){
     showToast('Schedule template saved & sorted!', 'success');
   }
   renderTimetables();
+  syncWorkspaceHeight();
 }
 
 function addNewTemplateSlot(t,d){
@@ -1147,11 +1188,13 @@ function addNewTemplateSlot(t,d){
   state.timetables[t][d].push({ time:'08:00 AM - 09:00 AM', task:'New Class', hrs:1.00 });
   sortTasksByTime(state.timetables[t][d]);
   renderTimetables();
+  syncWorkspaceHeight();
 }
 
 function deleteTemplateSlot(t,d,i){
   state.timetables[t][d].splice(i,1);
   renderTimetables();
+  syncWorkspaceHeight();
 }
 
 /* ================= ANALYTICS ================= */
@@ -1192,6 +1235,8 @@ function updateAnalytics(){
   charts.trend=new Chart(document.getElementById('trendChart'),{type:'line',data:{labels,datasets:[{label:'Hours',data:dH,borderColor:'#2563eb',tension:0.35,fill:true,backgroundColor:'rgba(37,99,235,0.06)'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
   if(charts.compTrend)charts.compTrend.destroy();
   charts.compTrend=new Chart(document.getElementById('completionTrendChart'),{type:'line',data:{labels,datasets:[{label:'%',data:dC,borderColor:'#10b981',tension:0.35,fill:true,backgroundColor:'rgba(16,185,129,0.06)'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:100}}}});
+  
+  syncWorkspaceHeight();
 }
 
 /* ================= TABS & NAVIGATION ================= */
@@ -1209,6 +1254,8 @@ function switchTab(tabId, btn){
   if(tabId==='analytics') setTimeout(updateAnalytics,80);
   if(tabId==='timetables') renderTimetables();
   if(window.lucide) lucide.createIcons();
+
+  syncWorkspaceHeight();
 }
 
 function handleNavClick(secId, btn){
@@ -1235,6 +1282,7 @@ function updateCurrentDate(){
   renderTables();
   renderSidebarDaySelector();
   updatePrintDate();
+  syncWorkspaceHeight();
 }
 
 function triggerPrint(){
@@ -1279,6 +1327,13 @@ window.addEventListener('load',()=>{
   loadState();
   updateCurrentDate();
   setInterval(updateCurrentDate,60000);
+  
+  // Benchmark observer
+  const sidebar = document.getElementById('plannerSidebar');
+  if (sidebar && window.ResizeObserver) {
+    new ResizeObserver(() => syncWorkspaceHeight()).observe(sidebar);
+  }
+  window.addEventListener('resize', syncWorkspaceHeight);
 });
 </script>
 </body>
