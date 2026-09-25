@@ -1,18 +1,18 @@
 const $ = id => document.getElementById(id);
-const isProctoringEnabled    = () => window.CBT_CONFIG?.ENABLE_PROCTORING ?? true;
-const getCorrectMarks        = () => Number(window.CBT_CONFIG?.MARKS_CORRECT ?? 1);
-const getIncorrectMarks      = () => Number(window.CBT_CONFIG?.MARKS_INCORRECT ?? 0.25);
-const getPenaltyMarks        = () => Number(window.CBT_CONFIG?.PENALTY_WARNING ?? 2);
-const getChapterNumber       = () => window.CBT_CONFIG?.CHAPTER_NUMBER ?? "02";
-const getTestName            = () => window.CBT_CONFIG?.TEST_NAME ?? "Online Test";
-const getChapterWeightage    = () => window.CBT_CONFIG?.CHAPTER_WEIGHTAGE ?? "15 Marks";
+const isProctoringEnabled = () => window.CBT_CONFIG?.ENABLE_PROCTORING ?? true;
+const getCorrectMarks = () => Number(window.CBT_CONFIG?.MARKS_CORRECT ?? 1);
+const getIncorrectMarks = () => Number(window.CBT_CONFIG?.MARKS_INCORRECT ?? 0.25);
+const getPenaltyMarks = () => Number(window.CBT_CONFIG?.PENALTY_WARNING ?? 2);
+const getChapterNumber = () => window.CBT_CONFIG?.CHAPTER_NUMBER ?? "02";
+const getTestName = () => window.CBT_CONFIG?.TEST_NAME ?? "Online Test";
+const getChapterWeightage = () => window.CBT_CONFIG?.CHAPTER_WEIGHTAGE ?? "15 Marks";
 const getFetchQuestionsOfCBT = () => window.CBT_CONFIG?.FetchQuestionsOfCBT ?? "";
-const getFetchRecordOfCBT    = () => window.CBT_CONFIG?.FetchRecordOfCBT ?? "";
-const getFeedbackScriptURL   = () => window.CBT_CONFIG?.FeedbackScriptURL ?? "";
-const getSaveRecordOfCBT     = () => window.CBT_CONFIG?.SaveRecordOfCBT ?? "";
-const getHomeUrl             = () => window.CBT_CONFIG?.HOME_URL ?? "https://www.singhclasses.in/";
-const getYoutubeUrl          = () => window.CBT_CONFIG?.YOUTUBE_URL ?? "https://youtu.be/cqiM2VVs-HM";
-const getNotesUrl            = () => window.CBT_CONFIG?.NOTES_URL ?? "#";
+const getFetchRecordOfCBT = () => window.CBT_CONFIG?.FetchRecordOfCBT ?? "";
+const getFeedbackScriptURL = () => window.CBT_CONFIG?.FeedbackScriptURL ?? "";
+const getSaveRecordOfCBT = () => window.CBT_CONFIG?.SaveRecordOfCBT ?? "";
+const getHomeUrl = () => window.CBT_CONFIG?.HOME_URL ?? "https://www.singhclasses.in/";
+const getYoutubeUrl = () => window.CBT_CONFIG?.YOUTUBE_URL ?? "https://youtu.be/cqiM2VVs-HM";
+const getNotesUrl = () => window.CBT_CONFIG?.NOTES_URL ?? "#";
 
 const ICON_ALERT = `<svg class="sc-svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`;
 const ICON_FULLSCREEN = `<polyline points="15 3 21 3 21 9"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><polyline points="9 21 3 21 3 15"></polyline><line x1="3" y1="21" x2="10" y2="14"></line>`;
@@ -23,36 +23,33 @@ window.CBTState = {
   studentNameVal: "", studentClassVal: "Class 12", studentSectionVal: "A", schoolNameVal: "", studentName: "",
   userAnswers: [], visitedQuestions: [], lockedAnswers: [], sectionTimes: [], timerInterval: null, isTimerPaused: true,
   isTimerFrozen: false, securityWarnings: 0, isExamActive: false, currentFilter: 'all', activeResourceUrl: "",
-  lastWT: 0, sectionToppersFetched: [], pendingRestoreData: null, 
-  feedbackRating: 1.5, feedbackCategory: "Suggestion", feedbackDataStore: [], hasAnimatedStars: false,
-  isExpandedSubmissions: false, allFetchedRecords: [], hasFetchedFeedback: false
+  lastWT: 0, sectionToppersFetched: [], pendingRestoreData: null, feedbackRating: 1.5, feedbackCategory: "Suggestion",
+  feedbackDataStore: [], hasAnimatedStars: false, isExpandedSubmissions: false, allFetchedRecords: [], hasFetchedFeedback: false
 };
 
-let spacePressTimestamps = [];
-let autoAdvanceTimer = null;
+let spacePressTimestamps = [], autoAdvanceTimer = null;
 
 function cancelAutoAdvance() {
-  if (autoAdvanceTimer) {
-    clearTimeout(autoAdvanceTimer);
-    autoAdvanceTimer = null;
-  }
+  if (autoAdvanceTimer) { clearTimeout(autoAdvanceTimer); autoAdvanceTimer = null; }
+  document.querySelectorAll('.option-countdown-strip').forEach(el => el.remove());
 }
 
 function scheduleAutoAdvance(delay = 2000) {
   cancelAutoAdvance();
+  const activeLabel = document.querySelector('#q-options input[name="option"]:checked')?.closest('label');
+  if (activeLabel) {
+    const strip = document.createElement('div');
+    strip.className = 'option-countdown-strip';
+    activeLabel.appendChild(strip);
+  }
   autoAdvanceTimer = setTimeout(() => {
-    if (CBTState.isExamActive && !CBTState.sections[CBTState.currentYearIndex]?.submitted) {
-      nextQuestion();
-    }
+    if (CBTState.isExamActive && !CBTState.sections[CBTState.currentYearIndex]?.submitted) nextQuestion();
   }, delay);
 }
 
 function debounce(fn, delay = 150) {
   let timer = null;
-  return (...args) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => fn.apply(this, args), delay);
-  };
+  return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn.apply(this, args), delay); };
 }
 
 function getFormattedTimestamp() {
@@ -61,44 +58,25 @@ function getFormattedTimestamp() {
 }
 
 window.sharePage = async function() {
-  const currentUrl = window.location.href;
-  const btn = $('btn-share-page');
-  const badge = $('share-copied-badge');
-  const icon = $('share-icon-svg');
-  
+  const currentUrl = window.location.href, btn = $('btn-share-page'), badge = $('share-copied-badge'), icon = $('share-icon-svg');
   const showFeedback = () => {
-    if (badge) {
-      badge.innerText = "Copied!";
-      badge.style.display = "inline-block";
-    }
+    if (badge) { badge.innerText = "Copied!"; badge.style.display = "inline-block"; }
     if (icon) icon.style.display = "none";
     if (btn) btn.classList.add('copied-active');
     setTimeout(() => {
-      if (badge) {
-        badge.innerText = "";
-        badge.style.display = "none";
-      }
+      if (badge) { badge.innerText = ""; badge.style.display = "none"; }
       if (icon) icon.style.display = "inline-block";
       if (btn) btn.classList.remove('copied-active');
     }, 1800);
   };
-
   try {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      await navigator.clipboard.writeText(currentUrl);
-      showFeedback();
-    } else {
+    if (navigator.clipboard?.writeText) { await navigator.clipboard.writeText(currentUrl); showFeedback(); }
+    else {
       const t = document.createElement('input');
-      t.value = currentUrl;
-      document.body.appendChild(t);
-      t.select();
-      document.execCommand('copy');
-      document.body.removeChild(t);
-      showFeedback();
+      t.value = currentUrl; document.body.appendChild(t); t.select();
+      document.execCommand('copy'); document.body.removeChild(t); showFeedback();
     }
-  } catch (e) {
-    showFeedback();
-  }
+  } catch (e) { showFeedback(); }
 };
 
 window.toggleFullScreen = function() {
@@ -107,9 +85,7 @@ window.toggleFullScreen = function() {
 };
 
 function enableDesktopFullscreen() {
-  if (window.innerWidth > 640 && !document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(() => {});
-  }
+  if (window.innerWidth > 640 && !document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
 }
 
 function updateFullscreenIconState() {
@@ -127,7 +103,10 @@ function getSavedSession() {
     const raw = localStorage.getItem(getSingleSessionKey());
     if (!raw) return null;
     const data = JSON.parse(raw);
-    if (data && data.questions && data.questions.length > 0 && data.studentNameVal) return data;
+    if (!data?.questions?.length || !data.studentNameVal) return null;
+    const ONE_HOUR_MS = 60 * 60 * 1000;
+    if (!data.savedAt || (Date.now() - data.savedAt > ONE_HOUR_MS)) { clearSessionLocalStorage(); return null; }
+    return data;
   } catch (e) { console.warn("Storage check:", e); }
   return null;
 }
@@ -136,7 +115,7 @@ function saveSessionToLocalStorage() {
   if (!CBTState.isExamActive || !CBTState.studentNameVal) return; 
   try { 
     localStorage.setItem(getSingleSessionKey(), JSON.stringify({ 
-      currentYearIndex: CBTState.currentYearIndex, currentQuestion: CBTState.currentQuestion, userAnswers: CBTState.userAnswers,
+      savedAt: Date.now(), currentYearIndex: CBTState.currentYearIndex, currentQuestion: CBTState.currentQuestion, userAnswers: CBTState.userAnswers,
       visitedQuestions: CBTState.visitedQuestions, lockedAnswers: CBTState.lockedAnswers, sectionTimes: CBTState.sectionTimes,
       securityWarnings: CBTState.securityWarnings, questions: CBTState.questions, sections: CBTState.sections,
       studentNameVal: CBTState.studentNameVal, studentClassVal: CBTState.studentClassVal, studentSectionVal: CBTState.studentSectionVal,
@@ -206,24 +185,20 @@ async function loadQuestionsFromSheet(retries = 3) {
       const raw = await response.json();
       if (!Array.isArray(raw) || raw.length === 0) throw new Error("Empty response.");
       if (raw[0] && Array.isArray(raw[0].questions)) {
-        CBTState.listExamPapers = raw.map(paper => {
-          let sTitle = getVerbatim(paper, ['sectiontitle', 'SectionTitle', 'title', 'Title'], "Section");
-          let sNum = getVerbatim(paper, ['section', 'Section', 'year', 'Year'], "1");
-          return {
-            title: sTitle,
-            year: sNum,
-            questions: (paper.questions || []).map(q => {
-              let cleanOpts = (Array.isArray(q.options) ? q.options : [getVerbatim(q, ['optiona', 'OptionA', 'option1', '0'], ""), getVerbatim(q, ['optionb', 'OptionB', 'option2', '1'], ""), getVerbatim(q, ['optionc', 'OptionC', 'option3', '2'], ""), getVerbatim(q, ['optiond', 'OptionD', 'option4', '3'], "")]).map(o => (o ?? "").toString());
-              return {
-                text: getVerbatim(q, ['text', 'Text', 'question', 'Question'], "").toString(),
-                tag: getVerbatim(q, ['tag', 'Tag', 'TAG', 'column', 'info', 'Info', 'metadata'], "CBSE").toString().trim(),
-                options: cleanOpts, image: getVerbatim(q, ['image', 'Image', 'imageurl'], "").toString(),
-                explanation: getVerbatim(q, ['explanation', 'Explanation', 'exp', 'Exp', 'solution'], "").toString(),
-                correctAnswerText: resolveCorrectText(getVerbatim(q, ['correctIndex', 'correct', 'answer', 'ans', '4'], "A"), cleanOpts)
-              };
-            }).filter(q => q.text !== "")
-          };
-        });
+        CBTState.listExamPapers = raw.map(paper => ({
+          title: getVerbatim(paper, ['sectiontitle', 'SectionTitle', 'title', 'Title'], "Section"),
+          year: getVerbatim(paper, ['section', 'Section', 'year', 'Year'], "1"),
+          questions: (paper.questions || []).map(q => {
+            let cleanOpts = (Array.isArray(q.options) ? q.options : [getVerbatim(q, ['optiona', 'OptionA', 'option1', '0'], ""), getVerbatim(q, ['optionb', 'OptionB', 'option2', '1'], ""), getVerbatim(q, ['optionc', 'OptionC', 'option3', '2'], ""), getVerbatim(q, ['optiond', 'OptionD', 'option4', '3'], "")]).map(o => (o ?? "").toString());
+            return {
+              text: getVerbatim(q, ['text', 'Text', 'question', 'Question'], "").toString(),
+              tag: getVerbatim(q, ['tag', 'Tag', 'TAG', 'column', 'info', 'Info', 'metadata'], "CBSE").toString().trim(),
+              options: cleanOpts, image: getVerbatim(q, ['image', 'Image', 'imageurl'], "").toString(),
+              explanation: getVerbatim(q, ['explanation', 'Explanation', 'exp', 'Exp', 'solution'], "").toString(),
+              correctAnswerText: resolveCorrectText(getVerbatim(q, ['correctIndex', 'correct', 'answer', 'ans', '4'], "A"), cleanOpts)
+            };
+          }).filter(q => q.text !== "")
+        }));
       } else {
         const sectionsMap = {};
         raw.forEach(row => {
@@ -250,17 +225,13 @@ async function loadQuestionsFromSheet(retries = 3) {
 }
 
 async function fetchAndRenderSidebarToppers() {
-  const fetchRecordUrl = getFetchRecordOfCBT();
-  const container = $('sidebar-toppers');
+  const fetchRecordUrl = getFetchRecordOfCBT(), container = $('sidebar-toppers');
   if (!fetchRecordUrl) return;
   try {
-    const testName = getTestName();
-    const sec = CBTState.sections[CBTState.currentYearIndex];
-    const currentSection = sec ? `${sec.year} - ${sec.title}` : "";
+    const testName = getTestName(), sec = CBTState.sections[CBTState.currentYearIndex], currentSection = sec ? `${sec.year} - ${sec.title}` : "";
     const res = await fetch(`${fetchRecordUrl}?testName=${encodeURIComponent(testName)}&currentSection=${encodeURIComponent(currentSection)}&_t=${Date.now()}`);
     const data = await res.json();
     let recordsList = data ? (data.records || data.top7 || data.top5 || data.toppers || (Array.isArray(data) ? data : [])) : [];
-    
     if ((!recordsList || recordsList.length === 0) && currentSection) {
       try {
         const broadRes = await fetch(`${fetchRecordUrl}?testName=${encodeURIComponent(testName)}&_t=${Date.now()}`);
@@ -268,73 +239,37 @@ async function fetchAndRenderSidebarToppers() {
         recordsList = broadData ? (broadData.records || broadData.top7 || broadData.top5 || broadData.toppers || (Array.isArray(broadData) ? data : [])) : [];
       } catch (e) {}
     }
-
     CBTState.allFetchedRecords = recordsList || [];
-    if (recordsList && recordsList.length > 0) {
-      renderSidebarToppers(recordsList);
-      updateUserDynamicRank();
-    } else if (container) {
-      container.style.display = 'none';
-    }
-  } catch (err) {
-    if (container) container.style.display = 'none';
-  }
+    if (recordsList && recordsList.length > 0) { renderSidebarToppers(recordsList); updateUserDynamicRank(); }
+    else if (container) container.style.display = 'none';
+  } catch (err) { if (container) container.style.display = 'none'; }
 }
 
 function renderSidebarToppers(toppersArray) { 
   const container = $('sidebar-toppers'), listEl = $('sidebar-toppers-list');
   if (!container || !listEl) return;
-  
   let realToppers = (toppersArray || []).filter(t => t && (t.studentName || t.name) && String(t.studentName || t.name).trim() !== "" && String(t.studentName || t.name).toLowerCase() !== "awaiting...");
-  if (realToppers.length === 0) {
-    container.style.display = 'none';
-    return;
-  }
-  
+  if (realToppers.length === 0) { container.style.display = 'none'; return; }
   const getMarks = t => parseFloat(t.obtainedScore ?? t.score ?? t.totalMarks ?? t.marks ?? 0) || 0; 
   const getAccuracy = t => parseFloat((t.accuracy || "0").toString().replace("%", "")) || 0; 
   realToppers.sort((a, b) => (getMarks(b) - getMarks(a)) || (getAccuracy(b) - getAccuracy(a))); 
   const top7 = realToppers.slice(0, 7);
-  
   const buildCardHTML = (t, idx) => {
     const rank = idx + 1;
-    let cardTheme = 'rank-rest', badgeText = `#${rank}`;
-    if (rank === 1) { cardTheme = 'rank-1'; badgeText = '1'; }
-    else if (rank === 2) { cardTheme = 'rank-2'; badgeText = '2'; }
-    else if (rank === 3) { cardTheme = 'rank-3'; badgeText = '3'; }
-    
+    let cardTheme = rank === 1 ? 'rank-1' : (rank === 2 ? 'rank-2' : (rank === 3 ? 'rank-3' : 'rank-rest'));
+    let badgeText = rank <= 3 ? `${rank}` : `#${rank}`;
     let rawName = (t.studentName || t.name || '').replace(/\s*\(Reload\s*Dropout\)/gi, '').trim();
-    const name = escapeHTML(rawName);
-    const marksVal = getMarks(t);
-    const marksText = `${marksVal} ${marksVal === 1 ? 'Mark' : 'Marks'}`;
-    
+    const name = escapeHTML(rawName), marksVal = getMarks(t), marksText = `${marksVal} ${marksVal === 1 ? 'Mark' : 'Marks'}`;
     let cls = (t.studentClass || t.classVal || "").toString().replace(/^Class\s*/i, '').trim();
     let sec = (t.studentSection || t.sectionVal || "").toString().replace(/^Sec\s*/i, '').trim();
-    const clsSec = (cls && sec) ? `${cls}-${sec}` : (cls || sec || "");
-    const school = escapeHTML((t.schoolName || t.school || "").toString().trim());
-
-    return `
-      <div class="tp6-compact-card ${cardTheme}">
-        <span class="tp6-badge-shape">${badgeText}</span>
-        <span class="tp6-name-text" title="${name}">${name}</span>
-        ${marksText ? `<span class="tp6-pipe">|</span><span class="tp6-score-text">${marksText}</span>` : ''}
-        ${clsSec ? `<span class="tp6-pipe">|</span><span class="tp6-class-text">${clsSec}</span>` : ''}
-        ${school ? `<span class="tp6-school-tag">${school}</span>` : ''}
-      </div>`;
+    const clsSec = (cls && sec) ? `${cls}-${sec}` : (cls || sec || ""), school = escapeHTML((t.schoolName || t.school || "").toString().trim());
+    return `<div class="tp6-compact-card ${cardTheme}"><span class="tp6-badge-shape">${badgeText}</span><span class="tp6-name-text" title="${name}">${name}</span>${marksText ? `<span class="tp6-pipe">|</span><span class="tp6-score-text">${marksText}</span>` : ''}${clsSec ? `<span class="tp6-pipe">|</span><span class="tp6-class-text">${clsSec}</span>` : ''}${school ? `<span class="tp6-school-tag">${school}</span>` : ''}</div>`;
   };
-
-  const isMobile = window.innerWidth <= 640;
-  if (isMobile) {
+  if (window.innerWidth <= 640) {
     listEl.innerHTML = `<div class="tp6-row tp6-row-mobile">${top7.map((t, i) => buildCardHTML(t, i)).join('')}</div>`;
   } else {
-    let row1 = top7.slice(0, 1).map((t, i) => buildCardHTML(t, i)).join('');
-    let row2 = top7.slice(1, 3).map((t, i) => buildCardHTML(t, i + 1)).join('');
-    let row3 = top7.slice(3, 7).map((t, i) => buildCardHTML(t, i + 3)).join('');
-    listEl.innerHTML = `
-      <div class="tp6-row tp6-row-1">${row1}</div>
-      ${row2 ? `<div class="tp6-row tp6-row-2">${row2}</div>` : ''}
-      ${row3 ? `<div class="tp6-row tp6-row-3">${row3}</div>` : ''}
-    `;
+    let row1 = top7.slice(0, 1).map((t, i) => buildCardHTML(t, i)).join(''), row2 = top7.slice(1, 3).map((t, i) => buildCardHTML(t, i + 1)).join(''), row3 = top7.slice(3, 7).map((t, i) => buildCardHTML(t, i + 3)).join('');
+    listEl.innerHTML = `<div class="tp6-row tp6-row-1">${row1}</div>${row2 ? `<div class="tp6-row tp6-row-2">${row2}</div>` : ''}${row3 ? `<div class="tp6-row tp6-row-3">${row3}</div>` : ''}`;
   }
   container.style.display = 'flex';
 }
@@ -354,14 +289,12 @@ function calculateCurrentExamScore() {
 
 function updateUserDynamicRank() {
   if (!CBTState.allFetchedRecords || CBTState.allFetchedRecords.length === 0) return;
-  const currentScore = calculateCurrentExamScore();
-  const getMarks = t => parseFloat(t.obtainedScore ?? t.score ?? t.totalMarks ?? t.marks ?? 0) || 0;
+  const currentScore = calculateCurrentExamScore(), getMarks = t => parseFloat(t.obtainedScore ?? t.score ?? t.totalMarks ?? t.marks ?? 0) || 0;
   const validScores = CBTState.allFetchedRecords.filter(t => t && (t.studentName || t.name)).map(getMarks);
   if (validScores.length === 0) return;
   let higherCount = 0;
   validScores.forEach(score => { if (score > currentScore) higherCount++; });
-  const rankStr = `${higherCount + 1} / ${validScores.length + 1}`;
-  const rankBadge = $('user-current-rank-badge'), rankText = $('user-current-rank-text'), rsRankVal = $('lbl-rs-rank-val');
+  const rankStr = `${higherCount + 1} / ${validScores.length + 1}`, rankBadge = $('user-current-rank-badge'), rankText = $('user-current-rank-text'), rsRankVal = $('lbl-rs-rank-val');
   if (rankBadge && rankText) { rankText.innerText = rankStr; rankBadge.style.display = 'inline-flex'; }
   if (rsRankVal) rsRankVal.innerText = rankStr;
 }
@@ -375,11 +308,7 @@ function shuffleArray(a) { for (let i = a.length - 1; i > 0; i--) { const j = Ma
 
 function showToastAlert(m) { 
   let t = $('custom-alert-toast'), txt = $('custom-alert-text'); 
-  if (t && txt) { 
-    txt.innerHTML = `${ICON_ALERT} ${m}`; 
-    t.classList.add('show'); 
-    setTimeout(() => t.classList.remove('show'), 3500); 
-  } 
+  if (t && txt) { txt.innerHTML = `${ICON_ALERT} ${m}`; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3500); } 
 }
 
 function triggerVerifyModal(type) { 
@@ -392,20 +321,16 @@ function triggerVerifyModal(type) {
     if (text) text.innerText = "Open educational video tutorial in a new tab?"; 
     if (actionBtn) { actionBtn.innerText = "Watch Video"; actionBtn.onclick = () => { window.open(CBTState.activeResourceUrl, '_blank'); closeVerifyModal(); }; }
   } else if (type === 'notes') {
-    CBTState.activeResourceUrl = getNotesUrl();
-    if (heading) heading.innerText = "Open Study Notes?";
-    if (text) text.innerText = "Open study notes in a new tab while keeping your exam active?";
+    CBTState.activeResourceUrl = getNotesUrl(); 
+    if (heading) heading.innerText = "Open Study Notes?"; 
+    if (text) text.innerText = "Open study notes in a new tab while keeping your exam active?"; 
     if (actionBtn) { actionBtn.innerText = "Open Notes"; actionBtn.onclick = () => { window.open(CBTState.activeResourceUrl, '_blank'); closeVerifyModal(); }; }
   } else if (type === 'back') {
-    if (heading) heading.innerText = "Leave Exam Session?";
-    if (text) text.innerText = "Are you sure you want to go back? Your current progress is saved.";
+    if (heading) heading.innerText = "Leave Exam Session?"; 
+    if (text) text.innerText = "Are you sure you want to go back? Your current progress is saved."; 
     if (actionBtn) { 
       actionBtn.innerText = "Leave"; 
-      actionBtn.onclick = () => { 
-        closeVerifyModal(); 
-        if (window.history.length > 1) window.history.back();
-        else window.location.href = getHomeUrl();
-      }; 
+      actionBtn.onclick = () => { closeVerifyModal(); if (window.history.length > 1) window.history.back(); else window.location.href = getHomeUrl(); }; 
     }
   }
 }
@@ -421,15 +346,12 @@ window.closeSecurityModal = () => {
 
 function applySecurityPenalty() { 
   if (!isProctoringEnabled() || Date.now() - CBTState.lastWT < 1000) return; 
-  CBTState.lastWT = Date.now(); 
-  CBTState.securityWarnings++; 
+  CBTState.lastWT = Date.now(); CBTState.securityWarnings++; 
   if ($('warning-count-display')) $('warning-count-display').innerText = `Total Warnings: ${CBTState.securityWarnings} (Penalty: -${CBTState.securityWarnings * getPenaltyMarks()} Marks)`; 
   const w = document.querySelector('.sc-widget-container');
   if (w) w.classList.add('sc-blur-active'); 
   if ($('modal-security')) $('modal-security').style.display = 'flex'; 
-  CBTState.isTimerPaused = true; 
-  updatePalette(); 
-  saveSessionToLocalStorage(); 
+  CBTState.isTimerPaused = true; updatePalette(); saveSessionToLocalStorage(); 
 }
 
 function handleSpaceBarTripleTap() {
@@ -437,10 +359,8 @@ function handleSpaceBarTripleTap() {
   spacePressTimestamps.push(now);
   spacePressTimestamps = spacePressTimestamps.filter(t => now - t <= 1200);
   if (spacePressTimestamps.length >= 3) {
-    spacePressTimestamps = [];
-    CBTState.isTimerFrozen = true;
-    const timerBox = $('timer-box');
-    if (timerBox) timerBox.classList.add('timer-frozen');
+    spacePressTimestamps = []; CBTState.isTimerFrozen = true;
+    const timerBox = $('timer-box'); if (timerBox) timerBox.classList.add('timer-frozen');
   }
 }
 
@@ -448,10 +368,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const timerBox = $('timer-box');
   if (timerBox) {
     timerBox.addEventListener('dblclick', () => {
-      if (CBTState.isTimerFrozen) {
-        CBTState.isTimerFrozen = false;
-        timerBox.classList.remove('timer-frozen');
-      }
+      if (CBTState.isTimerFrozen) { CBTState.isTimerFrozen = false; timerBox.classList.remove('timer-frozen'); }
     });
   }
 });
@@ -460,57 +377,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
 document.addEventListener('keydown', e => {
   const activeEl = document.activeElement;
-  const isTextInput = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.tagName === 'SELECT' || activeEl.isContentEditable);
-  if (isTextInput) return;
-
+  if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.tagName === 'SELECT' || activeEl.isContentEditable)) return;
   if (e.code === 'Space' || e.key === ' ' || e.keyCode === 32) {
-    if (CBTState.isExamActive && $('quiz-screen')?.style.display === 'block') {
-      e.preventDefault();
-      handleSpaceBarTripleTap();
-      return;
-    }
+    if (CBTState.isExamActive && $('quiz-screen')?.style.display === 'block') { e.preventDefault(); handleSpaceBarTripleTap(); return; }
   }
-
   if (CBTState.isExamActive && $('quiz-screen')?.style.display === 'block') {
-    const key = e.key ? e.key.toUpperCase() : "";
-    const keyMap = { 'A': 0, '1': 0, 'B': 1, '2': 1, 'C': 2, '3': 2, 'D': 3, '4': 3 };
+    const key = e.key ? e.key.toUpperCase() : "", keyMap = { 'A': 0, '1': 0, 'B': 1, '2': 1, 'C': 2, '3': 2, 'D': 3, '4': 3 };
     if (key in keyMap) {
-      e.preventDefault();
-      const optionIndex = keyMap[key];
-      const curQ = CBTState.questions[CBTState.currentQuestion];
-      if (curQ && curQ.options && optionIndex < curQ.options.length) saveAnswer(optionIndex);
+      e.preventDefault(); const curQ = CBTState.questions[CBTState.currentQuestion];
+      if (curQ?.options && keyMap[key] < curQ.options.length) saveAnswer(keyMap[key]);
       return;
     }
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      nextQuestion();
-      return;
-    }
-    if (e.key === 'Backspace') {
-      e.preventDefault();
-      prevQuestion();
-      return;
-    }
-    if (e.key === 'Delete') {
-      e.preventDefault();
-      clearResponse();
-      return;
-    }
+    if (e.key === 'Enter') { e.preventDefault(); nextQuestion(); return; }
+    if (e.key === 'Backspace') { e.preventDefault(); prevQuestion(); return; }
+    if (e.key === 'Delete') { e.preventDefault(); clearResponse(); return; }
   }
-
   if (!CBTState.isExamActive || !isProctoringEnabled()) return;
   const keyLow = e.key ? e.key.toLowerCase() : "", codeLow = e.code ? e.code.toLowerCase() : "";
   if (keyLow === 'printscreen' || codeLow === 'printscreen' || e.keyCode === 44 || ((e.metaKey || e.ctrlKey) && e.shiftKey && ['3','4','5','s'].includes(keyLow))) {
-    e.preventDefault();
-    try { navigator.clipboard.writeText(''); } catch (err) {}
-    applySecurityPenalty();
-    return false;
+    e.preventDefault(); try { navigator.clipboard.writeText(''); } catch (err) {}
+    applySecurityPenalty(); return false;
   }
   let ic = e.ctrlKey || e.metaKey; 
   if (e.key === 'F12' || e.keyCode === 123 || (ic && e.shiftKey && ['i', 'j', 'c'].includes(keyLow)) || (ic && ['u', 'p', 's', 'r'].includes(keyLow)) || e.key === 'F5') { 
-    e.preventDefault(); 
-    applySecurityPenalty(); 
-    return false; 
+    e.preventDefault(); applySecurityPenalty(); return false; 
   }
 });
 
@@ -527,9 +417,8 @@ window.proceedToRegisterStep = () => {
 };
 
 window.goToGuidelinesStep = () => { 
-  const nameInput = $('student-name-input');
+  const nameInput = $('student-name-input'), rawClass = $('student-class-input') ? $('student-class-input').value : "Class 12";
   CBTState.studentNameVal = (nameInput ? nameInput.value.trim() : "").toUpperCase(); 
-  const rawClass = $('student-class-input') ? $('student-class-input').value : "Class 12";
   CBTState.studentClassVal = (rawClass.toString().startsWith("Class") || rawClass === "OTHER") ? rawClass : `Class ${rawClass}`;
   CBTState.studentSectionVal = $('student-section-input') ? $('student-section-input').value : "A"; 
   CBTState.schoolNameVal = ($('student-school-input') ? $('student-school-input').value.trim() : "").toUpperCase(); 
@@ -564,35 +453,25 @@ window.beginExam = async () => {
   CBTState.lockedAnswers = new Array(CBTState.questions.length).fill(false); 
   CBTState.sectionTimes = CBTState.sections.map(s => (s.end - s.start) * 60); 
   CBTState.currentYearIndex = 0; CBTState.currentQuestion = CBTState.sections[0].start; 
-  CBTState.isTimerPaused = false; 
-  CBTState.isTimerFrozen = false;
-  if ($('quiz-screen'))$('quiz-screen').style.display = 'block'; 
-  if ($('unified-nav'))$('unified-nav').style.display = 'flex'; 
+  CBTState.isTimerPaused = false; CBTState.isTimerFrozen = false;
+  if ($('quiz-screen')) $('quiz-screen').style.display = 'block'; 
+  if ($('unified-nav')) $('unified-nav').style.display = 'flex'; 
   enableDesktopFullscreen();
-  buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion(); saveSessionToLocalStorage(); 
-  fetchAndRenderSidebarToppers();
+  buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion(); saveSessionToLocalStorage(); fetchAndRenderSidebarToppers();
 };
 
 function triggerFeedbackSectionAnimation() {
   const container = $('cbt-interactive-feedback-wrapper');
-  if (container && !container.classList.contains('section-entered')) {
-    container.classList.add('section-entered');
-  }
-  if (!CBTState.hasFetchedFeedback) {
-    CBTState.hasFetchedFeedback = true;
-    fetchFeedbackSubmissions();
-  }
+  if (container && !container.classList.contains('section-entered')) container.classList.add('section-entered');
+  if (!CBTState.hasFetchedFeedback) { CBTState.hasFetchedFeedback = true; fetchFeedbackSubmissions(); }
 }
 
 function setupFeedbackSectionObserver() {
   const container = $('cbt-interactive-feedback-wrapper');
   if (!container) return;
-  const observer = new IntersectionObserver((entries) => {
+  const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        triggerFeedbackSectionAnimation();
-        observer.unobserve(entry.target);
-      }
+      if (entry.isIntersecting) { triggerFeedbackSectionAnimation(); observer.unobserve(entry.target); }
     });
   }, { rootMargin: "150px 0px", threshold: 0.05 });
   observer.observe(container);
@@ -620,16 +499,14 @@ function startTimer() {
       CBTState.sectionTimes[CBTState.currentYearIndex]--; 
       CBTState.sections[CBTState.currentYearIndex].timeSpent++; 
     } 
-    updateTimerDisplay(); 
-    ticks++;
+    updateTimerDisplay(); ticks++;
     if (ticks % 5 === 0) saveSessionToLocalStorage(); 
     if (CBTState.sectionTimes[CBTState.currentYearIndex] <= 0) autoLockAndSubmitSection(); 
   }, 1000); 
 }
 
 function autoLockAndSubmitSection() { 
-  cancelAutoAdvance();
-  CBTState.isTimerPaused = true; 
+  cancelAutoAdvance(); CBTState.isTimerPaused = true; 
   let m = $('modal-timeout'); 
   if (m) m.style.display = 'flex'; 
   setTimeout(() => { if (m) m.style.display = 'none'; if (typeof window.processSectionSubmission === 'function') window.processSectionSubmission(); }, 2000); 
@@ -638,6 +515,7 @@ function autoLockAndSubmitSection() {
 window.toggleExplanation = function() {
   let isL = CBTState.lockedAnswers[CBTState.currentQuestion] || CBTState.sections[CBTState.currentYearIndex].submitted;
   if (!isL) { showToastAlert("Select and submit an answer to view the explanation."); return; }
+  cancelAutoAdvance();
   const box = $('explanation-box'), btn =$('btn-toggle-exp'), label = $('btn-exp-label'), wrapper =$('q-explanation-wrapper');
   if (!box) return;
   const isOpen = box.classList.contains('open');
@@ -654,16 +532,12 @@ function placeActionMatrix() {
     const toppers = $('sidebar-toppers');
     if (toppers && toppers.parentNode === contentArea) contentArea.insertBefore(matrix, toppers);
     else contentArea.appendChild(matrix);
-  } else {
-    palette.appendChild(matrix);
-  }
+  } else palette.appendChild(matrix);
 }
 
 const handleAppResize = debounce(() => {
   placeActionMatrix();
-  if (CBTState.allFetchedRecords && CBTState.allFetchedRecords.length > 0) {
-    renderSidebarToppers(CBTState.allFetchedRecords);
-  }
+  if (CBTState.allFetchedRecords && CBTState.allFetchedRecords.length > 0) renderSidebarToppers(CBTState.allFetchedRecords);
 }, 150);
 
 window.addEventListener('resize', handleAppResize);
@@ -675,16 +549,13 @@ function setupMobileGestures() {
   if (!contentArea) return;
   contentArea.addEventListener('touchstart', e => {
     if (window.innerWidth > 640) return;
-    touchStartX = e.changedTouches[0].clientX;
-    touchStartY = e.changedTouches[0].clientY;
+    touchStartX = e.changedTouches[0].clientX; touchStartY = e.changedTouches[0].clientY;
   }, { passive: true });
-
   contentArea.addEventListener('touchend', e => {
     if (window.innerWidth > 640 || !CBTState.isExamActive) return;
     const diffX = e.changedTouches[0].clientX - touchStartX, diffY = e.changedTouches[0].clientY - touchStartY;
     if (Math.abs(diffX) > 55 && Math.abs(diffX) > Math.abs(diffY) * 1.5) {
-      if (diffX < 0) nextQuestion();
-      else prevQuestion();
+      if (diffX < 0) nextQuestion(); else prevQuestion();
     }
   }, { passive: true });
 }
@@ -695,36 +566,24 @@ window.handleOptionDoubleTap = function(e, idx) {
   if (currentTime - lastOptionTapTime < 350 && lastTappedIndex === idx) {
     e.preventDefault();
     if (!CBTState.lockedAnswers[CBTState.currentQuestion] && !CBTState.sections[CBTState.currentYearIndex].submitted) {
-      saveAnswer(idx);
-      CBTState.lockedAnswers[CBTState.currentQuestion] = true;
-      loadQuestion();
-      scheduleAutoAdvance(2000);
+      if (navigator.vibrate) { try { navigator.vibrate(35); } catch (err) {} }
+      saveAnswer(idx); CBTState.lockedAnswers[CBTState.currentQuestion] = true; loadQuestion(); scheduleAutoAdvance(2000);
     }
-    lastOptionTapTime = 0;
-    lastTappedIndex = -1;
-  } else {
-    lastOptionTapTime = currentTime;
-    lastTappedIndex = idx;
-  }
+    lastOptionTapTime = 0; lastTappedIndex = -1;
+  } else { lastOptionTapTime = currentTime; lastTappedIndex = idx; }
 };
 
 window.handleOptionDesktopDblClick = function(e, idx) {
   if (window.innerWidth <= 640) return;
   if (!CBTState.lockedAnswers[CBTState.currentQuestion] && !CBTState.sections[CBTState.currentYearIndex].submitted) {
-    saveAnswer(idx);
-    CBTState.lockedAnswers[CBTState.currentQuestion] = true;
-    loadQuestion();
-    scheduleAutoAdvance(2000);
+    saveAnswer(idx); CBTState.lockedAnswers[CBTState.currentQuestion] = true; loadQuestion(); scheduleAutoAdvance(2000);
   }
 };
 
 window.loadQuestion = () => { 
   CBTState.visitedQuestions[CBTState.currentQuestion] = true; 
-  let s = CBTState.sections[CBTState.currentYearIndex], qy = CBTState.currentQuestion - s.start, tot = s.end - s.start;
-  let curQ = CBTState.questions[CBTState.currentQuestion];
-  if ($('q-number')) {$('q-number').innerText = (window.innerWidth <= 640) ? `Q${qy + 1} of ${tot}` : `Question ${qy + 1} of ${tot}`;
-  }
-  
+  let s = CBTState.sections[CBTState.currentYearIndex], qy = CBTState.currentQuestion - s.start, tot = s.end - s.start, curQ = CBTState.questions[CBTState.currentQuestion];
+  if ($('q-number'))$('q-number').innerText = (window.innerWidth <= 640) ? `Q${qy + 1} of ${tot}` : `Question ${qy + 1} of ${tot}`;
   const tagEl = $('q-tag-pill');
   if (tagEl) tagEl.innerText = (curQ && curQ.tag?.trim().length > 0) ? curQ.tag.trim().toUpperCase() : "CBSE";
   const pBar = $('qhc-progress-bar');
@@ -772,29 +631,21 @@ window.loadQuestion = () => {
     if (s.submitted) { nb.innerHTML = `<span>NEXT QUESTION</span>`; nb.disabled = CBTState.currentQuestion === s.end - 1; }
     else nb.innerHTML = (CBTState.currentQuestion === s.end - 1) ? `<span>SUBMIT SECTION →</span>` : `<span>SAVE & NEXT →</span>`; 
   }
-  updatePalette(); 
-  updateUserDynamicRank();
-  placeActionMatrix();
-  saveSessionToLocalStorage(); 
+  updatePalette(); updateUserDynamicRank(); placeActionMatrix(); saveSessionToLocalStorage(); 
 };
 
 window.saveAnswer = i => { 
-  cancelAutoAdvance(); // Reset any timer if an option is clicked
+  cancelAutoAdvance(); 
   if (CBTState.lockedAnswers[CBTState.currentQuestion] || CBTState.sections[CBTState.currentYearIndex].submitted) return; 
   CBTState.userAnswers[CBTState.currentQuestion] = i; 
-  
   triggerFeedbackSectionAnimation();
-
   if ($('btn-clear'))$('btn-clear').disabled = false; 
   if (!CBTState.sectionToppersFetched[CBTState.currentYearIndex]) {
     CBTState.sectionToppersFetched[CBTState.currentYearIndex] = true;
     fetchAndRenderSidebarToppers();
   }
   loadQuestion(); 
-  if (CBTState.isTimerFrozen) {
-    const timerBox = $('timer-box');
-    if (timerBox) timerBox.classList.add('timer-frozen');
-  }
+  if (CBTState.isTimerFrozen) { const timerBox = $('timer-box'); if (timerBox) timerBox.classList.add('timer-frozen'); }
 };
 
 window.clearResponse = () => { 
@@ -816,17 +667,12 @@ window.prevQuestion = () => {
   if (CBTState.currentQuestion > CBTState.sections[CBTState.currentYearIndex].start) { CBTState.currentQuestion--; loadQuestion(); } 
 };
 
-window.jumpToQuestion = i => { 
-  cancelAutoAdvance();
-  CBTState.currentQuestion = i; 
-  loadQuestion(); 
-};
+window.jumpToQuestion = i => { cancelAutoAdvance(); CBTState.currentQuestion = i; loadQuestion(); };
 
 window.filterPalette = type => { 
   CBTState.currentFilter = type; 
   document.querySelectorAll('.palette-filter-bar .filter-pill-btn').forEach(btn => btn.classList.remove('active')); 
-  const active = $('filter-' + type); 
-  if (active) active.classList.add('active'); 
+  const active = $('filter-' + type); if (active) active.classList.add('active'); 
   updatePalette(); 
 };
 
@@ -850,7 +696,6 @@ function updatePalette() {
     } 
     g.innerHTML += `<button type="button" class="palette-btn dsp-${dsp}${i === CBTState.currentQuestion ? ' current-question' : ''}${flt ? ' filtered-out' : ''}" onclick="jumpToQuestion(${i})">${(i - s.start) + 1}${isEvaluatedWrong ? `<span class="badge-status-cross">✕</span>` : ''}</button>`; 
   } 
-  
   let calculatedScore = Number((sc - (CBTState.securityWarnings * getPenaltyMarks())).toFixed(2));
   if ($('stat-right'))$('stat-right').innerText = rc; 
   if ($('stat-wrong'))$('stat-wrong').innerText = wc; 
@@ -910,7 +755,7 @@ window.processSectionSubmission = async function() {
     tg.innerHTML = '';
     let cM = 0, aS = 0, rC = 0, rI = 0, rL = 0, totalExamQ = 0;
     const fmtPct = v => (v % 1 === 0 ? v.toFixed(0) : v.toFixed(2)) + '%';
-    CBTState.sections.forEach((s) => {
+    CBTState.sections.forEach(s => {
       let sC = 0, sI = 0, sL = 0, sS = 0, sT = s.end - s.start, sM = sT * getCorrectMarks();
       cM += sM; totalExamQ += sT;
       for (let i = s.start; i < s.end; i++) {
@@ -921,62 +766,10 @@ window.processSectionSubmission = async function() {
       }
       aS += sS; rC += sC; rI += sI; rL += sL;
       let pR = sM > 0 && sS > 0 && s.submitted ? Math.round((sS / sM) * 100) : 0;
-      tg.innerHTML += `
-        <div class="img4-row">
-          <div class="img4-sec-col">
-            <div class="img4-file-icon-box">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-            </div>
-            <div class="img4-sec-titles">
-              <span class="img4-sec-name">${escapeHTML(s.title)}</span>
-              <span class="img4-sec-ques">${sT} Ques.</span>
-            </div>
-          </div>
-          <div class="img4-cell-stat">
-            <span class="img4-pill-badge green">${s.submitted ? pR : 0}%</span>
-            <span class="img4-sub-ratio">(${s.submitted ? (sS % 1 === 0 ? sS : sS.toFixed(2)) : 0} / ${sM % 1 === 0 ? sM : sM.toFixed(2)})</span>
-          </div>
-          <div class="img4-cell-stat">
-            <span class="img4-stat-num correct">${s.submitted ? sC : '0'}</span>
-            <span class="img4-sub-ratio">${fmtPct(sT > 0 && s.submitted ? ((sC / sT) * 100) : 0)}</span>
-          </div>
-          <div class="img4-cell-stat">
-            <span class="img4-stat-num incorrect">${s.submitted ? sI : '0'}</span>
-            <span class="img4-sub-ratio">${fmtPct(sT > 0 && s.submitted ? ((sI / sT) * 100) : 0)}</span>
-          </div>
-          <div class="img4-cell-stat">
-            <span class="img4-stat-num unattempted">${s.submitted ? sL : sT}</span>
-            <span class="img4-sub-ratio">${fmtPct(sT > 0 ? (((s.submitted ? sL : sT) / sT) * 100) : 0)}</span>
-          </div>
-        </div>`;
+      tg.innerHTML += `<div class="img4-row"><div class="img4-sec-col"><div class="img4-file-icon-box"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></div><div class="img4-sec-titles"><span class="img4-sec-name">${escapeHTML(s.title)}</span><span class="img4-sec-ques">${sT} Ques.</span></div></div><div class="img4-cell-stat"><span class="img4-pill-badge green">${s.submitted ? pR : 0}%</span><span class="img4-sub-ratio">(${s.submitted ? (sS % 1 === 0 ? sS : sS.toFixed(2)) : 0} / ${sM % 1 === 0 ? sM : sM.toFixed(2)})</span></div><div class="img4-cell-stat"><span class="img4-stat-num correct">${s.submitted ? sC : '0'}</span><span class="img4-sub-ratio">${fmtPct(sT > 0 && s.submitted ? ((sC / sT) * 100) : 0)}</span></div><div class="img4-cell-stat"><span class="img4-stat-num incorrect">${s.submitted ? sI : '0'}</span><span class="img4-sub-ratio">${fmtPct(sT > 0 && s.submitted ? ((sI / sT) * 100) : 0)}</span></div><div class="img4-cell-stat"><span class="img4-stat-num unattempted">${s.submitted ? sL : sT}</span><span class="img4-sub-ratio">${fmtPct(sT > 0 ? (((s.submitted ? sL : sT) / sT) * 100) : 0)}</span></div></div>`;
     });
     aS = Number((aS - (CBTState.securityWarnings * getPenaltyMarks())).toFixed(2));
-    tg.innerHTML += `
-      <div class="img4-row total-row">
-        <div class="img4-sec-col">
-          <div class="img4-file-icon-box" style="font-weight:900;font-size:1.15rem;color:#1e3a8a;">Σ</div>
-          <div class="img4-sec-titles">
-            <span class="img4-sec-name">TOTAL</span>
-            <span class="img4-sec-ques">${totalExamQ} Ques.</span>
-          </div>
-        </div>
-        <div class="img4-cell-stat">
-          <span class="img4-pill-badge blue">${cM > 0 ? Math.round((aS / cM) * 100) : 0}%</span>
-          <span class="img4-sub-ratio">(${aS % 1 === 0 ? aS : aS.toFixed(2)} / ${cM % 1 === 0 ? cM : cM.toFixed(2)})</span>
-        </div>
-        <div class="img4-cell-stat">
-          <span class="img4-stat-num correct">${rC}</span>
-          <span class="img4-sub-ratio">${fmtPct(totalExamQ > 0 ? ((rC / totalExamQ) * 100) : 0)}</span>
-        </div>
-        <div class="img4-cell-stat">
-          <span class="img4-stat-num incorrect">${rI}</span>
-          <span class="img4-sub-ratio">${fmtPct(totalExamQ > 0 ? ((rI / totalExamQ) * 100) : 0)}</span>
-        </div>
-        <div class="img4-cell-stat">
-          <span class="img4-stat-num unattempted">${rL}</span>
-          <span class="img4-sub-ratio">${fmtPct(totalExamQ > 0 ? ((rL / totalExamQ) * 100) : 0)}</span>
-        </div>
-      </div>`;
+    tg.innerHTML += `<div class="img4-row total-row"><div class="img4-sec-col"><div class="img4-file-icon-box" style="font-weight:900;font-size:1.15rem;color:#1e3a8a;">Σ</div><div class="img4-sec-titles"><span class="img4-sec-name">TOTAL</span><span class="img4-sec-ques">${totalExamQ} Ques.</span></div></div><div class="img4-cell-stat"><span class="img4-pill-badge blue">${cM > 0 ? Math.round((aS / cM) * 100) : 0}%</span><span class="img4-sub-ratio">(${aS % 1 === 0 ? aS : aS.toFixed(2)} / ${cM % 1 === 0 ? cM : cM.toFixed(2)})</span></div><div class="img4-cell-stat"><span class="img4-stat-num correct">${rC}</span><span class="img4-sub-ratio">${fmtPct(totalExamQ > 0 ? ((rC / totalExamQ) * 100) : 0)}</span></div><div class="img4-cell-stat"><span class="img4-stat-num incorrect">${rI}</span><span class="img4-sub-ratio">${fmtPct(totalExamQ > 0 ? ((rI / totalExamQ) * 100) : 0)}</span></div><div class="img4-cell-stat"><span class="img4-stat-num unattempted">${rL}</span><span class="img4-sub-ratio">${fmtPct(totalExamQ > 0 ? ((rL / totalExamQ) * 100) : 0)}</span></div></div>`;
   }
 
   const saveUrl = getSaveRecordOfCBT();
@@ -1011,8 +804,7 @@ window.processSectionSubmission = async function() {
 };
 
 function showFinalCumulativeEvaluation() {
-  cancelAutoAdvance();
-  clearSessionLocalStorage(); 
+  cancelAutoAdvance(); clearSessionLocalStorage(); 
   if ($('capture-scorecard-frame'))$('capture-scorecard-frame').style.display = 'none';
   if ($('cumulative-matrix-container')) { 
     $('cumulative-matrix-container').style.display = 'block';$('cumulative-matrix-container').scrollIntoView({ behavior: 'smooth' }); 
@@ -1035,43 +827,20 @@ window.buildYearNav = () => {
   let c = $('year-nav-container'); 
   if (!c) return; 
   c.innerHTML = ''; 
-
   CBTState.sections.forEach((p, idx) => { 
     let t = document.createElement('div'); 
     t.className = `year-tab ${idx === CBTState.currentYearIndex ? 'active' : ''}`; 
-    
-    const numBadge = String(idx + 1).padStart(2, '0');
-    const rawLabel = (p.title || "").trim();
+    const numBadge = String(idx + 1).padStart(2, '0'), rawLabel = (p.title || "").trim();
     const match = rawLabel.match(/^(.*?)[\s\-_]+(\b[A-Za-z0-9]+)$/);
-    
-    let mainLabel = rawLabel;
-    let accentLabel = "";
-
-    if (match && match[1].trim()) {
-      mainLabel = match[1].trim().toUpperCase();
-      accentLabel = match[2].trim().toUpperCase();
-    } else {
-      mainLabel = rawLabel.toUpperCase();
-    }
-    
-    t.innerHTML = `
-      <div class="yt-icon-circle">${numBadge}</div>
-      <div class="yt-title-group">
-        <span class="yt-title-main">${escapeHTML(mainLabel)}</span>${accentLabel ? ` <span class="yt-title-accent">${escapeHTML(accentLabel)}</span>` : ''}
-      </div>
-    `; 
-    
+    let mainLabel = (match && match[1].trim()) ? match[1].trim().toUpperCase() : rawLabel.toUpperCase();
+    let accentLabel = (match && match[1].trim()) ? match[2].trim().toUpperCase() : "";
+    t.innerHTML = `<div class="yt-icon-circle">${numBadge}</div><div class="yt-title-group"><span class="yt-title-main">${escapeHTML(mainLabel)}</span>${accentLabel ? ` <span class="yt-title-accent">${escapeHTML(accentLabel)}</span>` : ''}</div>`; 
     t.onclick = async () => { 
       cancelAutoAdvance();
       if (CBTState.sections[idx].submitted || idx === CBTState.currentYearIndex) { 
-        CBTState.currentYearIndex = idx; 
-        CBTState.currentQuestion = CBTState.sections[idx].start; 
-        buildYearNav(); 
-        updateTimerDisplay(); 
-        loadQuestion(); 
-      } else {
-        showToastAlert("Submit your current section to unlock the next section."); 
-      }
+        CBTState.currentYearIndex = idx; CBTState.currentQuestion = CBTState.sections[idx].start; 
+        buildYearNav(); updateTimerDisplay(); loadQuestion(); 
+      } else showToastAlert("Submit your current section to unlock the next section."); 
     }; 
     c.appendChild(t); 
   }); 
@@ -1083,10 +852,7 @@ function triggerSlowMotionStarsAnimation() {
   document.querySelectorAll('#fb-stars-group .fb-star').forEach((star, index) => {
     setTimeout(() => {
       star.classList.add('auto-pulse', 'active');
-      setTimeout(() => {
-        star.classList.remove('auto-pulse');
-        setFeedbackRating(CBTState.feedbackRating, false);
-      }, 400);
+      setTimeout(() => { star.classList.remove('auto-pulse'); setFeedbackRating(CBTState.feedbackRating, false); }, 400);
     }, index * 140);
   });
 }
@@ -1094,32 +860,26 @@ function triggerSlowMotionStarsAnimation() {
 function setupStarScrollObserver() {
   const target = $('feedback-rating-section');
   if (!target) return;
-  new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) triggerSlowMotionStarsAnimation(); }); }, { threshold: 0.25 }).observe(target);
+  new IntersectionObserver(entries => { entries.forEach(entry => { if (entry.isIntersecting) triggerSlowMotionStarsAnimation(); }); }, { threshold: 0.25 }).observe(target);
 }
 
 window.handleStarHover = function(e, starVal) {
-  const rect = e.currentTarget.getBoundingClientRect();
-  const isLeftHalf = (e.clientX - rect.left) < (rect.width / 2);
-  const rating = isLeftHalf ? (starVal - 0.5) : starVal;
-  previewStars(rating);
+  const rect = e.currentTarget.getBoundingClientRect(), isLeftHalf = (e.clientX - rect.left) < (rect.width / 2);
+  previewStars(isLeftHalf ? (starVal - 0.5) : starVal);
 };
 
 window.handleStarClick = function(e, starVal) {
-  const rect = e.currentTarget.getBoundingClientRect();
-  const isLeftHalf = (e.clientX - rect.left) < (rect.width / 2);
-  const rating = isLeftHalf ? (starVal - 0.5) : starVal;
-  setFeedbackRating(rating, true);
+  const rect = e.currentTarget.getBoundingClientRect(), isLeftHalf = (e.clientX - rect.left) < (rect.width / 2);
+  setFeedbackRating(isLeftHalf ? (starVal - 0.5) : starVal, true);
 };
 
 window.previewStars = function(rating) { 
   document.querySelectorAll('#fb-stars-group .fb-star').forEach(s => {
     const val = parseInt(s.getAttribute('data-val'));
     s.classList.remove('hovered', 'hovered-half');
-    if (val < Math.ceil(rating)) {
-      s.classList.add('hovered');
-    } else if (val === Math.ceil(rating)) {
-      if (rating % 1 !== 0) s.classList.add('hovered-half');
-      else s.classList.add('hovered');
+    if (val < Math.ceil(rating)) s.classList.add('hovered');
+    else if (val === Math.ceil(rating)) {
+      if (rating % 1 !== 0) s.classList.add('hovered-half'); else s.classList.add('hovered');
     }
   }); 
 };
@@ -1134,11 +894,9 @@ window.setFeedbackRating = function(rating, isUserAction = false) {
   document.querySelectorAll('#fb-stars-group .fb-star').forEach(s => {
     const val = parseInt(s.getAttribute('data-val'));
     s.classList.remove('half-active', 'active', 'hovered', 'hovered-half');
-    if (val < Math.ceil(rating)) {
-      s.classList.add('active');
-    } else if (val === Math.ceil(rating)) {
-      if (rating % 1 !== 0) s.classList.add('half-active');
-      else s.classList.add('active');
+    if (val < Math.ceil(rating)) s.classList.add('active');
+    else if (val === Math.ceil(rating)) {
+      if (rating % 1 !== 0) s.classList.add('half-active'); else s.classList.add('active');
     }
   });
 };
@@ -1151,68 +909,32 @@ window.toggleFeedbackPill = function(radioInput) {
 };
 
 window.submitUserFeedback = async function() {
-  const msgEl = $('feedback-user-message');
-  const rawMessage = msgEl ? msgEl.value.trim() : "";
-  const finalMessage = rawMessage || "(Rating Submitted)";
-  
-  const btn = $('btn-save-feedback');
-  const sendIcon = $('fb-send-icon');
-  const spinIcon = $('fb-spin-icon');
-  const btnLabel = $('fb-btn-label');
-
+  const msgEl = $('feedback-user-message'), rawMessage = msgEl ? msgEl.value.trim() : "", finalMessage = rawMessage || "(Rating Submitted)";
+  const btn = $('btn-save-feedback'), sendIcon =$('fb-send-icon'), spinIcon = $('fb-spin-icon'), btnLabel =$('fb-btn-label');
   if (btn) {
-    btn.disabled = true;
-    btn.classList.add('saving-active');
+    btn.disabled = true; btn.classList.add('saving-active');
     if (sendIcon) sendIcon.style.display = 'none';
     if (spinIcon) spinIcon.style.display = 'inline-block';
     if (btnLabel) btnLabel.innerText = "Saving...";
   }
-
-  const payload = { 
-    chapter: getTestName(), 
-    studentClass: CBTState.studentClassVal || "Class XII", 
-    category: CBTState.feedbackCategory, 
-    name: CBTState.studentNameVal || "", 
-    rating: `${CBTState.feedbackRating} Stars`, 
-    message: finalMessage 
-  };
-
+  const payload = { chapter: getTestName(), studentClass: CBTState.studentClassVal || "Class XII", category: CBTState.feedbackCategory, name: CBTState.studentNameVal || "", rating: `${CBTState.feedbackRating} Stars`, message: finalMessage };
   const showSuccessBadge = () => {
-    if (btn) {
-      btn.classList.remove('saving-active');
-      btn.classList.add('success-active');
-    }
+    if (btn) { btn.classList.remove('saving-active'); btn.classList.add('success-active'); }
     if (spinIcon) spinIcon.style.display = 'none';
     if (sendIcon) sendIcon.style.display = 'none';
     if (btnLabel) btnLabel.innerHTML = `Noted, My Lord! 👑`;
-
-    if (msgEl) {
-      msgEl.value = "";
-      updateFbCharCount(msgEl);
-    }
-
+    if (msgEl) { msgEl.value = ""; updateFbCharCount(msgEl); }
     setTimeout(() => {
-      if (btn) {
-        btn.disabled = false;
-        btn.classList.remove('success-active');
-      }
+      if (btn) { btn.disabled = false; btn.classList.remove('success-active'); }
       if (sendIcon) sendIcon.style.display = 'inline-block';
       if (spinIcon) spinIcon.style.display = 'none';
       if (btnLabel) btnLabel.innerText = "Submit Response";
     }, 2400);
   };
-
   try {
-    await fetch(getFeedbackScriptURL(), { 
-      method: "POST", 
-      headers: { "Content-Type": "text/plain;charset=utf-8" }, 
-      body: JSON.stringify(payload) 
-    });
-    showSuccessBadge();
-    await fetchFeedbackSubmissions();
-  } catch (err) {
-    showSuccessBadge();
-  }
+    await fetch(getFeedbackScriptURL(), { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) });
+    showSuccessBadge(); await fetchFeedbackSubmissions();
+  } catch (err) { showSuccessBadge(); }
 };
 
 async function fetchFeedbackSubmissions() {
@@ -1233,22 +955,18 @@ function renderSubmissionsShowcase(dataList) {
   const totalCountEl = $('ssc-total-count'), countApprovedEl = $('count-approved-badge'), countPendingEl =$('count-pending-badge');
   const streamApproved = $('stream-approved-cards'), streamPending = $('stream-pending-cards'), viewMoreWrap =$('ssc-view-more-wrap');
   if (totalCountEl) totalCountEl.innerText = `${dataList.length} Responses`;
-
   const approved = dataList.filter(item => (item.status || "").trim().toLowerCase() === "approved");
   const pending = dataList.filter(item => (item.status || "").trim().toLowerCase() !== "approved");
   if (countApprovedEl) countApprovedEl.innerText = approved.length;
   if (countPendingEl) countPendingEl.innerText = pending.length;
-
   const maxInitial = CBTState.isExpandedSubmissions ? 9999 : 20;
   const approvedToShow = approved.slice(0, maxInitial), pendingToShow = pending.slice(0, maxInitial);
-
   if (viewMoreWrap) {
     if (approved.length > 20) {
       viewMoreWrap.style.display = 'block';
       if ($('lbl-load-more-text'))$('lbl-load-more-text').innerText = CBTState.isExpandedSubmissions ? 'Show Less ↑' : 'View More Responses (20+) ↓';
     } else viewMoreWrap.style.display = 'none';
   }
-
   const buildStars = ratingRaw => {
     let num = parseFloat(ratingRaw) || 5, starsStr = '';
     for (let i = 1; i <= 5; i++) {
@@ -1258,50 +976,17 @@ function renderSubmissionsShowcase(dataList) {
     }
     return `<div class="ssc-appr-stars">${starsStr}</div>`;
   };
-
   const BOT_AVATAR_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="#15803d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4" r="1.5" fill="#15803d"></circle><line x1="12" y1="5.5" x2="12" y2="8"></line><rect x="4" y="8" width="16" height="12" rx="4" fill="#ffffff"></rect><ellipse cx="8.5" cy="13.5" rx="1.5" ry="2" fill="#1e3a8a"></ellipse><ellipse cx="15.5" cy="13.5" rx="1.5" ry="2" fill="#1e3a8a"></ellipse><line x1="10" y1="17.5" x2="14" y2="17.5"></line></svg>`;
-
   if (streamApproved) {
     streamApproved.innerHTML = approved.length === 0 ? `<div class="ssc-empty-note">No approved comments yet for this topic.</div>` : approvedToShow.map(item => {
       const studentName = escapeHTML(item.name || ''), firstLetter = studentName ? studentName.charAt(0).toUpperCase() : 'U';
-      return `
-      <div class="ssc-approved-image1-card">
-        <div class="ssc-appr-header-row">
-          <div class="ssc-appr-user-meta"><div class="ssc-appr-avatar-blue">${firstLetter}</div><span class="ssc-appr-name">${studentName}</span><span class="ssc-appr-class-tag">${escapeHTML(item.studentClass || 'Class 12')}</span><span class="ssc-appr-date"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>${escapeHTML(item.timestamp || '')}</span></div>
-          <div class="ssc-appr-right-hud">${buildStars(item.rating)}<button type="button" class="ssc-dots-menu-btn" title="Options"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"></circle><circle cx="12" cy="12" r="2"></circle><circle cx="12" cy="19" r="2"></circle></svg></button></div>
-        </div>
-        <div class="ssc-appr-body-thread">
-          <div class="ssc-thread-line-track"><div class="ssc-thread-stem"></div><div class="ssc-thread-node-dot"></div></div>
-          <div class="ssc-appr-content-area">
-            <div class="ssc-appr-user-bubble">${escapeHTML(item.message || '')}</div>
-            <div class="ssc-appr-instructor-row">
-              <div class="ssc-inst-top-bar">
-                <div class="ssc-inst-profile">
-                  <div class="ssc-inst-bot-avatar">${BOT_AVATAR_SVG}</div>
-                  <span class="ssc-inst-name">Rohit Singh</span>
-                  <span class="ssc-admin-tag-pill">Admin</span>
-                </div>
-                <span class="ssc-inst-date">${escapeHTML(item.replyDate || item.timestamp || '')}</span>
-              </div>
-              <div class="ssc-inst-reply-bubble">👍 ${escapeHTML(item.reply || 'Thank you!')}</div>
-            </div>
-          </div>
-        </div>
-      </div>`;
+      return `<div class="ssc-approved-image1-card"><div class="ssc-appr-header-row"><div class="ssc-appr-user-meta"><div class="ssc-appr-avatar-blue">${firstLetter}</div><span class="ssc-appr-name">${studentName}</span><span class="ssc-appr-class-tag">${escapeHTML(item.studentClass || 'Class 12')}</span><span class="ssc-appr-date"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>${escapeHTML(item.timestamp || '')}</span></div><div class="ssc-appr-right-hud">${buildStars(item.rating)}<button type="button" class="ssc-dots-menu-btn" title="Options"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"></circle><circle cx="12" cy="12" r="2"></circle><circle cx="12" cy="19" r="2"></circle></svg></button></div></div><div class="ssc-appr-body-thread"><div class="ssc-thread-line-track"><div class="ssc-thread-stem"></div><div class="ssc-thread-node-dot"></div></div><div class="ssc-appr-content-area"><div class="ssc-appr-user-bubble">${escapeHTML(item.message || '')}</div><div class="ssc-appr-instructor-row"><div class="ssc-inst-top-bar"><div class="ssc-inst-profile"><div class="ssc-inst-bot-avatar">${BOT_AVATAR_SVG}</div><span class="ssc-inst-name">Rohit Singh</span><span class="ssc-admin-tag-pill">Admin</span></div><span class="ssc-inst-date">${escapeHTML(item.replyDate || item.timestamp || '')}</span></div><div class="ssc-inst-reply-bubble">👍 ${escapeHTML(item.reply || 'Thank you!')}</div></div></div></div></div>`;
     }).join('');
   }
-
   if (streamPending) {
     streamPending.innerHTML = pending.length === 0 ? `<div class="ssc-empty-note">No pending reviews.</div>` : pendingToShow.map(item => {
       const studentName = escapeHTML(item.name || ''), firstLetter = studentName ? studentName.charAt(0).toUpperCase() : 'U';
-      return `
-      <div class="ssc-pending-image6-card">
-        <div class="ssc-pending-top-row">
-          <div class="ssc-pending-user-info"><div class="ssc-pending-avatar-cyan">${firstLetter}</div><span class="ssc-pending-name">${studentName}</span><span class="ssc-pending-class-tag">${escapeHTML(item.studentClass || 'Class 12')}</span><span class="ssc-pending-date"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>${escapeHTML(item.timestamp || '')}</span></div>
-          <div class="ssc-pending-badge-pill"><span>⏳</span><span>Pending</span></div>
-        </div>
-        <div class="ssc-pending-blur-content">${escapeHTML(item.message || 'Student response undergoing moderation.')}</div>
-      </div>`;
+      return `<div class="ssc-pending-image6-card"><div class="ssc-pending-top-row"><div class="ssc-pending-user-info"><div class="ssc-pending-avatar-cyan">${firstLetter}</div><span class="ssc-pending-name">${studentName}</span><span class="ssc-pending-class-tag">${escapeHTML(item.studentClass || 'Class 12')}</span><span class="ssc-pending-date"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>${escapeHTML(item.timestamp || '')}</span></div><div class="ssc-pending-badge-pill"><span>⏳</span><span>Pending</span></div></div><div class="ssc-pending-blur-content">${escapeHTML(item.message || 'Student response undergoing moderation.')}</div></div>`;
     }).join('');
   }
 }
@@ -1312,40 +997,27 @@ window.toggleAllSubmissions = function() {
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const activeName = getTestName(); 
-  const chNum = getChapterNumber();
-  const weight = getChapterWeightage();
-
+  const activeName = getTestName(), chNum = getChapterNumber(), weight = getChapterWeightage();
   if ($('header-ch-num'))$('header-ch-num').innerText = `Ch ${chNum}`;
   if ($('header-ch-title'))$('header-ch-title').innerText = activeName;
   if ($('header-weight-text'))$('header-weight-text').innerText = weight;
   document.querySelectorAll('.topic-text').forEach(node => node.innerText = activeName);
-
   if ($('welcome-correct-lbl'))$('welcome-correct-lbl').innerText = `+${getCorrectMarks()} Correct`;
   if ($('welcome-incorrect-lbl'))$('welcome-incorrect-lbl').innerText = `-${getIncorrectMarks()} Incorrect`;
 
-  setFeedbackRating(1.5, false);
-  setupStarScrollObserver();
-  setupFeedbackSectionObserver();
-  setupMobileGestures();
-  placeActionMatrix();
+  setFeedbackRating(1.5, false); setupStarScrollObserver(); setupFeedbackSectionObserver(); setupMobileGestures(); placeActionMatrix();
 
   const saved = getSavedSession();
-  if (saved) { 
-    CBTState.pendingRestoreData = saved; 
-    if ($('modal-resume'))$('modal-resume').style.display = 'flex'; 
-  } else if ($('modal-welcome')) {$('modal-welcome').style.display = 'flex'; 
-  }
+  if (saved) { CBTState.pendingRestoreData = saved; if ($('modal-resume'))$('modal-resume').style.display = 'flex'; }
+  else if ($('modal-welcome'))$('modal-welcome').style.display = 'flex'; 
 
-  await loadQuestionsFromSheet(); 
-  await fetchAndRenderSidebarToppers();
+  await loadQuestionsFromSheet(); await fetchAndRenderSidebarToppers();
 
   const eyes = document.querySelectorAll('.desktop-eyes .eye-ball'), pupils = document.querySelectorAll('.desktop-eyes .pupil'); 
   document.addEventListener('mousemove', e => { 
     if (window.innerWidth <= 640) return;
     eyes.forEach((eye, index) => { 
-      const pupil = pupils[index]; 
-      if (!pupil) return; 
+      const pupil = pupils[index]; if (!pupil) return; 
       const rect = eye.getBoundingClientRect(), cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2; 
       const dx = e.clientX - cx, dy = e.clientY - cy, angle = Math.atan2(dy, dx); 
       const maxRadius = (rect.width / 2) - (pupil.offsetWidth / 2) - 1.5, distance = Math.min(Math.hypot(dx, dy) / 10, maxRadius); 
@@ -1356,10 +1028,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const scheduleBlink = () => { 
     setTimeout(() => { 
       if (window.innerWidth > 640) {
-        eyes.forEach(eye => { 
-          eye.style.transform = 'scaleY(0.06)'; 
-          setTimeout(() => eye.style.transform = 'scaleY(1)', 110); 
-        }); 
+        eyes.forEach(eye => { eye.style.transform = 'scaleY(0.06)'; setTimeout(() => eye.style.transform = 'scaleY(1)', 110); }); 
       }
       scheduleBlink(); 
     }, 3000 + Math.random() * 4000); 
