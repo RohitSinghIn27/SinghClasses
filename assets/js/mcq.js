@@ -29,6 +29,23 @@ window.CBTState = {
 };
 
 let spacePressTimestamps = [];
+let autoAdvanceTimer = null;
+
+function cancelAutoAdvance() {
+  if (autoAdvanceTimer) {
+    clearTimeout(autoAdvanceTimer);
+    autoAdvanceTimer = null;
+  }
+}
+
+function scheduleAutoAdvance(delay = 2000) {
+  cancelAutoAdvance();
+  autoAdvanceTimer = setTimeout(() => {
+    if (CBTState.isExamActive && !CBTState.sections[CBTState.currentYearIndex]?.submitted) {
+      nextQuestion();
+    }
+  }, delay);
+}
 
 function debounce(fn, delay = 150) {
   let timer = null;
@@ -549,8 +566,8 @@ window.beginExam = async () => {
   CBTState.currentYearIndex = 0; CBTState.currentQuestion = CBTState.sections[0].start; 
   CBTState.isTimerPaused = false; 
   CBTState.isTimerFrozen = false;
-  if ($('quiz-screen')) $('quiz-screen').style.display = 'block'; 
-  if ($('unified-nav')) $('unified-nav').style.display = 'flex'; 
+  if ($('quiz-screen'))$('quiz-screen').style.display = 'block'; 
+  if ($('unified-nav'))$('unified-nav').style.display = 'flex'; 
   enableDesktopFullscreen();
   buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion(); saveSessionToLocalStorage(); 
   fetchAndRenderSidebarToppers();
@@ -591,7 +608,7 @@ function getCorrectIndex(qIdx) { return textToIndex(CBTState.questions[qIdx].cor
 
 function updateTimerDisplay() { 
   let t = CBTState.sectionTimes[CBTState.currentYearIndex] || 0, m = Math.floor(t / 60), s = t % 60, timeStr = `${m}:${s < 10 ? '0' : ''}${s}`; 
-  if ($('time-left')) $('time-left').innerText = timeStr; 
+  if ($('time-left'))$('time-left').innerText = timeStr; 
 }
 
 function startTimer() { 
@@ -611,6 +628,7 @@ function startTimer() {
 }
 
 function autoLockAndSubmitSection() { 
+  cancelAutoAdvance();
   CBTState.isTimerPaused = true; 
   let m = $('modal-timeout'); 
   if (m) m.style.display = 'flex'; 
@@ -620,7 +638,7 @@ function autoLockAndSubmitSection() {
 window.toggleExplanation = function() {
   let isL = CBTState.lockedAnswers[CBTState.currentQuestion] || CBTState.sections[CBTState.currentYearIndex].submitted;
   if (!isL) { showToastAlert("Select and submit an answer to view the explanation."); return; }
-  const box = $('explanation-box'), btn = $('btn-toggle-exp'), label = $('btn-exp-label'), wrapper = $('q-explanation-wrapper');
+  const box = $('explanation-box'), btn =$('btn-toggle-exp'), label = $('btn-exp-label'), wrapper =$('q-explanation-wrapper');
   if (!box) return;
   const isOpen = box.classList.contains('open');
   box.classList.toggle('open', !isOpen);
@@ -630,7 +648,7 @@ window.toggleExplanation = function() {
 };
 
 function placeActionMatrix() {
-  const matrix = $('action-matrix-slot'), contentArea = $('question-content'), palette = $('palette-column-container');
+  const matrix = $('action-matrix-slot'), contentArea = $('question-content'), palette =$('palette-column-container');
   if (!matrix || !contentArea || !palette) return;
   if (window.innerWidth <= 640) {
     const toppers = $('sidebar-toppers');
@@ -680,6 +698,7 @@ window.handleOptionDoubleTap = function(e, idx) {
       saveAnswer(idx);
       CBTState.lockedAnswers[CBTState.currentQuestion] = true;
       loadQuestion();
+      scheduleAutoAdvance(2000);
     }
     lastOptionTapTime = 0;
     lastTappedIndex = -1;
@@ -695,6 +714,7 @@ window.handleOptionDesktopDblClick = function(e, idx) {
     saveAnswer(idx);
     CBTState.lockedAnswers[CBTState.currentQuestion] = true;
     loadQuestion();
+    scheduleAutoAdvance(2000);
   }
 };
 
@@ -702,8 +722,7 @@ window.loadQuestion = () => {
   CBTState.visitedQuestions[CBTState.currentQuestion] = true; 
   let s = CBTState.sections[CBTState.currentYearIndex], qy = CBTState.currentQuestion - s.start, tot = s.end - s.start;
   let curQ = CBTState.questions[CBTState.currentQuestion];
-  if ($('q-number')) {
-    $('q-number').innerText = (window.innerWidth <= 640) ? `Q${qy + 1} of ${tot}` : `Question ${qy + 1} of ${tot}`;
+  if ($('q-number')) {$('q-number').innerText = (window.innerWidth <= 640) ? `Q${qy + 1} of ${tot}` : `Question ${qy + 1} of ${tot}`;
   }
   
   const tagEl = $('q-tag-pill');
@@ -713,7 +732,7 @@ window.loadQuestion = () => {
   
   let baseText = `<span style="font-weight:800;color:var(--q-num-color);margin-right:6px;">Q${qy + 1}.</span>` + escapeHTML(curQ.question); 
   if (curQ.image) baseText += `<div class="question-image-wrap" style="margin:0 0 12px 0;text-align:left;max-width:100%;"><img src="${curQ.image}" alt="Question Image" style="max-width:100%;max-height:220px;border-radius:8px;border:1px solid var(--border-color);object-fit:contain;display:block;"></div>`; 
-  if ($('q-text')) $('q-text').innerHTML = baseText; 
+  if ($('q-text'))$('q-text').innerHTML = baseText; 
 
   let ol = $('q-options'), isL = CBTState.lockedAnswers[CBTState.currentQuestion] || s.submitted;
   let userChoice = CBTState.userAnswers[CBTState.currentQuestion], ci = getCorrectIndex(CBTState.currentQuestion), lt = ['A', 'B', 'C', 'D', 'E'];
@@ -732,8 +751,8 @@ window.loadQuestion = () => {
     }); 
   }
 
-  const btnExp = $('btn-toggle-exp'), boxExp = $('explanation-box'), contentExp = $('explanation-text-content');
-  const expChar = $('exp-correct-char'), expVerdict = $('exp-verdict-text'), btnExpLabel = $('btn-exp-label'), wrapper = $('q-explanation-wrapper');
+  const btnExp = $('btn-toggle-exp'), boxExp = $('explanation-box'), contentExp =$('explanation-text-content');
+  const expChar = $('exp-correct-char'), expVerdict =$('exp-verdict-text'), btnExpLabel = $('btn-exp-label'), wrapper =$('q-explanation-wrapper');
   if (btnExp && boxExp && contentExp) {
     boxExp.classList.remove('open'); btnExp.classList.remove('open');
     if (wrapper) wrapper.classList.remove('has-open-content');
@@ -746,8 +765,8 @@ window.loadQuestion = () => {
     } else btnExp.classList.add('disabled');
   }
 
-  if ($('btn-prev')) $('btn-prev').disabled = CBTState.currentQuestion === s.start; 
-  if ($('btn-clear')) $('btn-clear').disabled = userChoice === null || isL; 
+  if ($('btn-prev'))$('btn-prev').disabled = CBTState.currentQuestion === s.start; 
+  if ($('btn-clear'))$('btn-clear').disabled = userChoice === null || isL; 
   let nb = $('btn-next'); 
   if (nb) {
     if (s.submitted) { nb.innerHTML = `<span>NEXT QUESTION</span>`; nb.disabled = CBTState.currentQuestion === s.end - 1; }
@@ -760,12 +779,13 @@ window.loadQuestion = () => {
 };
 
 window.saveAnswer = i => { 
+  cancelAutoAdvance(); // Reset any timer if an option is clicked
   if (CBTState.lockedAnswers[CBTState.currentQuestion] || CBTState.sections[CBTState.currentYearIndex].submitted) return; 
   CBTState.userAnswers[CBTState.currentQuestion] = i; 
   
   triggerFeedbackSectionAnimation();
 
-  if ($('btn-clear')) $('btn-clear').disabled = false; 
+  if ($('btn-clear'))$('btn-clear').disabled = false; 
   if (!CBTState.sectionToppersFetched[CBTState.currentYearIndex]) {
     CBTState.sectionToppersFetched[CBTState.currentYearIndex] = true;
     fetchAndRenderSidebarToppers();
@@ -778,22 +798,26 @@ window.saveAnswer = i => {
 };
 
 window.clearResponse = () => { 
+  cancelAutoAdvance();
   if (CBTState.lockedAnswers[CBTState.currentQuestion] || CBTState.sections[CBTState.currentYearIndex].submitted) return; 
   CBTState.userAnswers[CBTState.currentQuestion] = null; 
   loadQuestion(); 
 };
 
 window.nextQuestion = () => { 
+  cancelAutoAdvance();
   if (CBTState.userAnswers[CBTState.currentQuestion] !== null && !CBTState.sections[CBTState.currentYearIndex].submitted) CBTState.lockedAnswers[CBTState.currentQuestion] = true; 
   if (CBTState.currentQuestion < CBTState.sections[CBTState.currentYearIndex].end - 1) { CBTState.currentQuestion++; loadQuestion(); } 
   else if (!CBTState.sections[CBTState.currentYearIndex].submitted) showSubmitModal(); 
 };
 
 window.prevQuestion = () => { 
+  cancelAutoAdvance();
   if (CBTState.currentQuestion > CBTState.sections[CBTState.currentYearIndex].start) { CBTState.currentQuestion--; loadQuestion(); } 
 };
 
 window.jumpToQuestion = i => { 
+  cancelAutoAdvance();
   CBTState.currentQuestion = i; 
   loadQuestion(); 
 };
@@ -828,36 +852,38 @@ function updatePalette() {
   } 
   
   let calculatedScore = Number((sc - (CBTState.securityWarnings * getPenaltyMarks())).toFixed(2));
-  if ($('stat-right')) $('stat-right').innerText = rc; 
-  if ($('stat-wrong')) $('stat-wrong').innerText = wc; 
-  if ($('stat-score')) $('stat-score').innerText = calculatedScore; 
+  if ($('stat-right'))$('stat-right').innerText = rc; 
+  if ($('stat-wrong'))$('stat-wrong').innerText = wc; 
+  if ($('stat-score'))$('stat-score').innerText = calculatedScore; 
 }
 
 window.showSubmitModal = () => { 
+  cancelAutoAdvance();
   if (CBTState.userAnswers[CBTState.currentQuestion] !== null && !CBTState.sections[CBTState.currentYearIndex].submitted) CBTState.lockedAnswers[CBTState.currentQuestion] = true; 
-  if ($('submit-modal-text')) $('submit-modal-text').innerText = `Submit responses for ${CBTState.sections[CBTState.currentYearIndex].year}?`; 
+  if ($('submit-modal-text'))$('submit-modal-text').innerText = `Submit responses for ${CBTState.sections[CBTState.currentYearIndex].year}?`; 
   CBTState.isTimerPaused = true; 
-  if ($('modal-submit')) $('modal-submit').style.display = 'flex'; 
+  if ($('modal-submit'))$('modal-submit').style.display = 'flex'; 
 };
-window.closeSubmitModal = () => { if ($('modal-submit')) $('modal-submit').style.display = 'none'; CBTState.isTimerPaused = false; };
-window.confirmSubmitExam = () => { if ($('modal-submit')) $('modal-submit').style.display = 'none'; CBTState.isTimerPaused = false; window.processSectionSubmission(); };
+window.closeSubmitModal = () => { if ($('modal-submit'))$('modal-submit').style.display = 'none'; CBTState.isTimerPaused = false; };
+window.confirmSubmitExam = () => { if ($('modal-submit'))$('modal-submit').style.display = 'none'; CBTState.isTimerPaused = false; window.processSectionSubmission(); };
 
 window.processSectionSubmission = async function() { 
+  cancelAutoAdvance();
   let sec = CBTState.sections[CBTState.currentYearIndex]; 
   sec.submitted = true; 
   for (let i = sec.start; i < sec.end; i++) CBTState.lockedAnswers[i] = true; 
   document.body.classList.remove('exam-in-progress'); 
-  if ($('quiz-screen')) $('quiz-screen').style.display = 'none'; 
-  if ($('unified-nav')) $('unified-nav').style.display = 'none'; 
+  if ($('quiz-screen'))$('quiz-screen').style.display = 'none'; 
+  if ($('unified-nav'))$('unified-nav').style.display = 'none'; 
   
-  const resScreen = $('result-screen'), loaderBox = $('processing-loader-box'), scFrame = $('capture-scorecard-frame'), sumCard = $('cumulative-matrix-container');
+  const resScreen = $('result-screen'), loaderBox =$('processing-loader-box'), scFrame = $('capture-scorecard-frame'), sumCard =$('cumulative-matrix-container');
   if (resScreen) resScreen.style.display = 'block'; 
   if (loaderBox) loaderBox.style.display = 'flex'; 
   if (scFrame) scFrame.style.display = 'none'; 
   if (sumCard) sumCard.style.display = 'none'; 
 
-  if ($('lbl-user-greeting')) $('lbl-user-greeting').innerText = CBTState.studentNameVal || "";
-  if ($('lbl-section-title')) $('lbl-section-title').innerText = `${sec.title} Completed,`;
+  if ($('lbl-user-greeting'))$('lbl-user-greeting').innerText = CBTState.studentNameVal || "";
+  if ($('lbl-section-title'))$('lbl-section-title').innerText = `${sec.title} Completed,`;
 
   let secCorrect = 0, secIncorrect = 0, secUnattempted = 0, secMarks = 0;
   let totalQuestions = sec.end - sec.start, totalSectionMarks = totalQuestions * getCorrectMarks();
@@ -870,12 +896,12 @@ window.processSectionSubmission = async function() {
 
   secMarks = Number(secMarks.toFixed(2));
   let formattedTime = `${Math.floor(sec.timeSpent / 60).toString().padStart(2, '0')}:${(sec.timeSpent % 60).toString().padStart(2, '0')}`;
-  if ($('lbl-score-obtained')) $('lbl-score-obtained').innerText = (secMarks % 1 === 0) ? secMarks : secMarks.toFixed(2); 
-  if ($('lbl-score-total')) $('lbl-score-total').innerText = (totalSectionMarks % 1 === 0) ? totalSectionMarks : totalSectionMarks.toFixed(2); 
-  if ($('lbl-stat-correct-val')) $('lbl-stat-correct-val').innerText = secCorrect; 
-  if ($('lbl-stat-incorrect-val')) $('lbl-stat-incorrect-val').innerText = secIncorrect; 
-  if ($('lbl-stat-unattempted-val')) $('lbl-stat-unattempted-val').innerText = secUnattempted; 
-  if ($('lbl-stat-time-val')) $('lbl-stat-time-val').innerText = formattedTime;
+  if ($('lbl-score-obtained'))$('lbl-score-obtained').innerText = (secMarks % 1 === 0) ? secMarks : secMarks.toFixed(2); 
+  if ($('lbl-score-total'))$('lbl-score-total').innerText = (totalSectionMarks % 1 === 0) ? totalSectionMarks : totalSectionMarks.toFixed(2); 
+  if ($('lbl-stat-correct-val'))$('lbl-stat-correct-val').innerText = secCorrect; 
+  if ($('lbl-stat-incorrect-val'))$('lbl-stat-incorrect-val').innerText = secIncorrect; 
+  if ($('lbl-stat-unattempted-val'))$('lbl-stat-unattempted-val').innerText = secUnattempted; 
+  if ($('lbl-stat-time-val'))$('lbl-stat-time-val').innerText = formattedTime;
 
   updateUserDynamicRank();
 
@@ -985,21 +1011,22 @@ window.processSectionSubmission = async function() {
 };
 
 function showFinalCumulativeEvaluation() {
+  cancelAutoAdvance();
   clearSessionLocalStorage(); 
-  if ($('capture-scorecard-frame')) $('capture-scorecard-frame').style.display = 'none';
+  if ($('capture-scorecard-frame'))$('capture-scorecard-frame').style.display = 'none';
   if ($('cumulative-matrix-container')) { 
-    $('cumulative-matrix-container').style.display = 'block'; 
-    $('cumulative-matrix-container').scrollIntoView({ behavior: 'smooth' }); 
+    $('cumulative-matrix-container').style.display = 'block';$('cumulative-matrix-container').scrollIntoView({ behavior: 'smooth' }); 
   }
 }
 
 function executeProgressionAdvance() { 
+  cancelAutoAdvance();
   if (CBTState.currentYearIndex + 1 < CBTState.sections.length) { 
     CBTState.currentYearIndex++; 
     CBTState.currentQuestion = CBTState.sections[CBTState.currentYearIndex].start; 
-    if ($('result-screen')) $('result-screen').style.display = 'none'; 
-    if ($('quiz-screen')) $('quiz-screen').style.display = 'block'; 
-    if ($('unified-nav')) $('unified-nav').style.display = 'flex'; 
+    if ($('result-screen'))$('result-screen').style.display = 'none'; 
+    if ($('quiz-screen'))$('quiz-screen').style.display = 'block'; 
+    if ($('unified-nav'))$('unified-nav').style.display = 'flex'; 
     buildYearNav(); updateTimerDisplay(); loadQuestion(); 
   } else showFinalCumulativeEvaluation(); 
 }
@@ -1035,6 +1062,7 @@ window.buildYearNav = () => {
     `; 
     
     t.onclick = async () => { 
+      cancelAutoAdvance();
       if (CBTState.sections[idx].submitted || idx === CBTState.currentYearIndex) { 
         CBTState.currentYearIndex = idx; 
         CBTState.currentQuestion = CBTState.sections[idx].start; 
@@ -1115,7 +1143,7 @@ window.setFeedbackRating = function(rating, isUserAction = false) {
   });
 };
 
-window.updateFbCharCount = function(textarea) { if ($('fb-char-counter')) $('fb-char-counter').innerText = `${textarea.value.length}/500`; };
+window.updateFbCharCount = function(textarea) { if ($('fb-char-counter'))$('fb-char-counter').innerText = `${textarea.value.length}/500`; };
 window.toggleFeedbackPill = function(radioInput) {
   CBTState.feedbackCategory = radioInput.value;
   document.querySelectorAll('.fb-radio-pill-exact').forEach(pill => pill.classList.remove('active'));
@@ -1202,8 +1230,8 @@ async function fetchFeedbackSubmissions() {
 }
 
 function renderSubmissionsShowcase(dataList) {
-  const totalCountEl = $('ssc-total-count'), countApprovedEl = $('count-approved-badge'), countPendingEl = $('count-pending-badge');
-  const streamApproved = $('stream-approved-cards'), streamPending = $('stream-pending-cards'), viewMoreWrap = $('ssc-view-more-wrap');
+  const totalCountEl = $('ssc-total-count'), countApprovedEl = $('count-approved-badge'), countPendingEl =$('count-pending-badge');
+  const streamApproved = $('stream-approved-cards'), streamPending = $('stream-pending-cards'), viewMoreWrap =$('ssc-view-more-wrap');
   if (totalCountEl) totalCountEl.innerText = `${dataList.length} Responses`;
 
   const approved = dataList.filter(item => (item.status || "").trim().toLowerCase() === "approved");
@@ -1217,7 +1245,7 @@ function renderSubmissionsShowcase(dataList) {
   if (viewMoreWrap) {
     if (approved.length > 20) {
       viewMoreWrap.style.display = 'block';
-      if ($('lbl-load-more-text')) $('lbl-load-more-text').innerText = CBTState.isExpandedSubmissions ? 'Show Less ↑' : 'View More Responses (20+) ↓';
+      if ($('lbl-load-more-text'))$('lbl-load-more-text').innerText = CBTState.isExpandedSubmissions ? 'Show Less ↑' : 'View More Responses (20+) ↓';
     } else viewMoreWrap.style.display = 'none';
   }
 
@@ -1288,13 +1316,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   const chNum = getChapterNumber();
   const weight = getChapterWeightage();
 
-  if ($('header-ch-num')) $('header-ch-num').innerText = `Ch ${chNum}`;
-  if ($('header-ch-title')) $('header-ch-title').innerText = activeName;
-  if ($('header-weight-text')) $('header-weight-text').innerText = weight;
+  if ($('header-ch-num'))$('header-ch-num').innerText = `Ch ${chNum}`;
+  if ($('header-ch-title'))$('header-ch-title').innerText = activeName;
+  if ($('header-weight-text'))$('header-weight-text').innerText = weight;
   document.querySelectorAll('.topic-text').forEach(node => node.innerText = activeName);
 
-  if ($('welcome-correct-lbl')) $('welcome-correct-lbl').innerText = `+${getCorrectMarks()} Correct`;
-  if ($('welcome-incorrect-lbl')) $('welcome-incorrect-lbl').innerText = `-${getIncorrectMarks()} Incorrect`;
+  if ($('welcome-correct-lbl'))$('welcome-correct-lbl').innerText = `+${getCorrectMarks()} Correct`;
+  if ($('welcome-incorrect-lbl'))$('welcome-incorrect-lbl').innerText = `-${getIncorrectMarks()} Incorrect`;
 
   setFeedbackRating(1.5, false);
   setupStarScrollObserver();
@@ -1305,9 +1333,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const saved = getSavedSession();
   if (saved) { 
     CBTState.pendingRestoreData = saved; 
-    if ($('modal-resume')) $('modal-resume').style.display = 'flex'; 
-  } else if ($('modal-welcome')) {
-    $('modal-welcome').style.display = 'flex'; 
+    if ($('modal-resume'))$('modal-resume').style.display = 'flex'; 
+  } else if ($('modal-welcome')) {$('modal-welcome').style.display = 'flex'; 
   }
 
   await loadQuestionsFromSheet(); 
