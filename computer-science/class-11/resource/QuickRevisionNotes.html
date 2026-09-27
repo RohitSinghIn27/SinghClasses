@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Class XI Computer Science Sample Paper | SinghClasses</title>
+  <meta name="description" content="Access Class 11 Computer Science Sample Papers and practice materials with interactive PDF reader by Rohit Singh at SinghClasses.in.">
+  <link rel="icon" href="assets/images/favicon/favicon.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../../assets/css/notes.css">
+</head>
+<body>
+  <canvas id="ambient-canvas" aria-hidden="true"></canvas>
+
+  <header class="unified-workspace-header" role="banner">
+    <div class="header-left-group">
+      <button class="back-btn" onclick="handleBackNavigation(event)" aria-label="Go Back" title="Go Back">
+        <svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24" width="18">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+
+      <h1
+        class="chapter-capsule"
+        id="current-chapter"
+        data-drive-id="1Y4Q08KW6r7K6orKeLihS05yakk0PG6Pr"
+        data-yt-link="https://www.youtube.com/playlist?list=PL_xrPHUh3EKrCyBavxEiWyX4NusGAkaHc">
+        Class XI CS QRN
+      </h1>    
+    </div>
+
+    <div class="header-right-group">
+      <button class="app-btn app-btn-outline" onclick="downloadPDF()" aria-label="Download PDF" title="Download PDF">
+        <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" x2="12" y1="15" y2="3"></line>
+        </svg>
+      </button>
+
+      <button class="app-btn app-btn-yt" id="yt-trigger-btn" onclick="handleYTClick()" aria-label="Watch One Shot Video" title="Watch One Shot">
+        <svg fill="currentColor" height="16" viewBox="0 0 24 24" width="16">
+          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.377.55a3.016 3.016 0 0 0-2.122 2.136C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.55 9.376.55 9.376.55s7.505 0 9.377-.55a3.016 3.016 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+        </svg>
+      </button>
+
+      <button class="app-btn app-btn-icon" id="fullscreen-btn" onclick="toggleFullScreen()" title="Enter Fullscreen" aria-label="Toggle Fullscreen">
+        <svg id="fs-expand-icon" fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24" width="17">
+          <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+        </svg>
+        <svg id="fs-compress-icon" class="hidden" fill="none" height="17" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24" width="17">
+          <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path>
+        </svg>
+      </button>
+
+      <div class="timer-display mobile-timer">00:00:00</div>
+      <div class="tracking-eyes-container mobile-eyes" aria-hidden="true">
+        <div class="eye-ball"><div class="pupil"></div></div>
+        <div class="eye-ball"><div class="pupil"></div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="pdf-viewer-container" id="viewer-container">
+      <div class="pdf-loading-overlay" id="loading-overlay">
+        <div class="loading-spinner-ring"></div>
+        <div class="loading-text">Loading Document...</div>
+      </div>
+      <iframe id="pdf-frame" src="" onload="hideLoader()" allowfullscreen="true" title="PDF Document Viewer"></iframe>
+    </div>
+  </main>
+
+  <footer class="unified-workspace-footer">
+    <div>© 2026 SinghClasses.in</div>
+    <div class="footer-tools">
+      <span id="motivation-text" class="motivation-text">Best of luck!</span>
+      <div class="timer-display" id="study-timer">00:00:00</div>
+      <div class="tracking-eyes-container desktop-eyes" aria-hidden="true">
+        <div class="eye-ball"><div class="pupil"></div></div>
+        <div class="eye-ball"><div class="pupil"></div></div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- YouTube Modal -->
+  <div id="yt-modal" class="yt-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="yt-modal-heading">
+    <div class="yt-modal-card">
+      <div class="modal-icon-wrapper">
+        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </div>
+      <h2 id="yt-modal-heading">Want to watch this video?</h2>
+      <p>Proceed to YouTube to watch the curated one-shot lecture for this chapter.</p>
+      <div class="modal-actions">
+        <button class="m-btn m-btn-outline" onclick="closeYTModal()">Stay</button>
+        <button class="m-btn m-btn-solid" onclick="proceedToYT()">Watch</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="status-toast" class="status-toast" role="status" aria-live="polite">🚧 We are currently preparing this material. Coming soon!</div>
+
+  <script src="../../../assets/js/notes.js"></script>
+</body>
+</html>
