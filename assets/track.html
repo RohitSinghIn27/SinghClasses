@@ -554,50 +554,139 @@ body { -webkit-tap-highlight-color: transparent; }
 </div>
 
 <script>
+/* ==========================================================================
+   GLOBAL MASTER TIMETABLE CONFIGURATION
+   Edit your recurring periods, tuition batches, and study sessions here.
+   Changes made here will automatically take effect in the app upon refresh!
+   ========================================================================== */
+window.MASTER_TIMETABLES = {
+  school: {
+    'Mon': [
+      { time: '08:40 AM - 09:15 AM', task: 'XI C', hrs: 0.58 },
+      { time: '09:25 AM - 10:00 AM', task: 'XI C', hrs: 0.58 },
+      { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
+      { time: '10:35 AM - 11:10 AM', task: 'XIII C', hrs: 0.58 },
+      { time: '11:40 AM - 12:20 PM', task: 'XII C', hrs: 0.67 },
+      { time: '12:20 PM - 12:55 PM', task: 'XI D', hrs: 0.58 },
+      { time: '12:55 PM - 01:30 PM', task: 'XIII D', hrs: 0.58 },
+      { time: '01:30 PM - 02:00 PM', task: 'XIII D', hrs: 0.50 }
+    ],
+    'Tue': [
+      { time: '08:40 AM - 09:15 AM', task: 'XI C', hrs: 0.58 },
+      { time: '09:25 AM - 10:00 AM', task: 'XI C', hrs: 0.58 },
+      { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
+      { time: '10:35 AM - 11:10 AM', task: 'XII C', hrs: 0.58 },
+      { time: '11:40 AM - 12:20 PM', task: 'XII C', hrs: 0.67 },
+      { time: '12:20 PM - 12:55 PM', task: 'XI D', hrs: 0.58 },
+      { time: '12:55 PM - 01:30 PM', task: 'XIII D', hrs: 0.58 },
+      { time: '01:30 PM - 02:00 PM', task: 'XIII D', hrs: 0.50 }
+    ],
+    'Wed': [
+      { time: '08:40 AM - 09:15 AM', task: 'XI C', hrs: 0.58 },
+      { time: '09:25 AM - 10:00 AM', task: 'X C', hrs: 0.58 },
+      { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
+      { time: '10:35 AM - 11:10 AM', task: 'XII C', hrs: 0.58 },
+      { time: '11:40 AM - 12:20 PM', task: 'XI D', hrs: 0.67 },
+      { time: '12:20 PM - 12:55 PM', task: 'XI D', hrs: 0.58 },
+      { time: '12:55 PM - 01:30 PM', task: 'XIII D', hrs: 0.58 },
+      { time: '01:30 PM - 02:00 PM', task: 'IX C', hrs: 0.50 }
+    ],
+    'Thu': [
+      { time: '08:40 AM - 09:15 AM', task: 'XI C', hrs: 0.58 },
+      { time: '09:25 AM - 10:00 AM', task: 'X C', hrs: 0.58 },
+      { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
+      { time: '10:35 AM - 11:10 AM', task: 'XII C', hrs: 0.58 },
+      { time: '11:40 AM - 12:20 PM', task: 'XI D', hrs: 0.67 },
+      { time: '12:55 PM - 01:30 PM', task: 'XIII D', hrs: 0.58 },
+      { time: '01:30 PM - 02:00 PM', task: 'X B', hrs: 0.50 }
+    ],
+    'Fri': [
+      { time: '08:40 AM - 09:15 AM', task: 'XI C', hrs: 0.58 },
+      { time: '09:25 AM - 10:00 AM', task: 'X B', hrs: 0.58 },
+      { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
+      { time: '10:35 AM - 11:10 AM', task: 'XII C', hrs: 0.58 },
+      { time: '11:40 AM - 12:20 PM', task: 'XI D', hrs: 0.67 },
+      { time: '12:20 PM - 12:55 PM', task: 'X C', hrs: 0.58 },
+      { time: '12:55 PM - 01:30 PM', task: 'XIII D', hrs: 0.58 },
+      { time: '01:30 PM - 02:00 PM', task: 'IX C', hrs: 0.50 }
+    ],
+    'Sat': [
+      { time: '08:40 AM - 09:15 AM', task: 'XI C', hrs: 0.58 },
+      { time: '09:25 AM - 10:00 AM', task: 'X B', hrs: 0.58 },
+      { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
+      { time: '10:35 AM - 11:10 AM', task: 'XII C', hrs: 0.58 },
+      { time: '11:40 AM - 12:20 PM', task: 'XI D', hrs: 0.67 },
+      { time: '12:20 PM - 12:55 PM', task: 'XI D', hrs: 0.58 },
+      { time: '12:55 PM - 01:30 PM', task: 'XIII D', hrs: 0.58 },
+      { time: '01:30 PM - 02:00 PM', task: 'IX C', hrs: 0.50 }
+    ],
+    'Sun': []
+  },
+  tuition: {
+    'Mon': [
+      { time: '03:50 PM - 05:00 PM', task: 'XII IP Sant Nagar', hrs: 1.17 },
+      { time: '05:10 PM - 06:00 PM', task: 'XII IP SICS', hrs: 0.83 },
+      { time: '07:00 PM - 08:00 PM', task: 'XII CS Sant Nagar', hrs: 1.00 },
+      { time: '08:15 PM - 09:15 PM', task: 'Home Tuition', hrs: 1.00 }
+    ],
+    'Tue': [
+      { time: '04:00 PM - 05:30 PM', task: 'XI IP/CS Sant Nagar', hrs: 1.50 },
+      { time: '05:30 PM - 06:20 PM', task: 'XI AI SICS', hrs: 0.83 },
+      { time: '06:20 PM - 07:30 PM', task: 'XI IP/CS SICS', hrs: 1.17 },
+      { time: '08:00 PM - 09:00 PM', task: 'SkillYards', hrs: 1.00 }
+    ],
+    'Wed': [
+      { time: '04:00 PM - 05:10 PM', task: 'XII IP Sant Nagar', hrs: 1.17 },
+      { time: '05:10 PM - 06:20 PM', task: 'XII IP SICS', hrs: 1.17 },
+      { time: '07:15 PM - 08:30 PM', task: 'XII CS Sant Nagar', hrs: 1.25 },
+      { time: '08:10 PM - 09:15 PM', task: 'Vidya Home Tuition', hrs: 1.08 }
+    ],
+    'Thu': [
+      { time: '04:00 PM - 05:30 PM', task: 'XI IP/CS Sant Nagar', hrs: 1.50 },
+      { time: '05:30 PM - 06:20 PM', task: 'XI AI SICS', hrs: 0.83 },
+      { time: '06:20 PM - 07:30 PM', task: 'XI IP/CS SICS', hrs: 1.17 },
+      { time: '08:00 PM - 09:00 PM', task: 'SkillYards', hrs: 1.00 }
+    ],
+    'Fri': [
+      { time: '04:00 PM - 05:10 PM', task: 'XII IP Sant Nagar', hrs: 1.17 },
+      { time: '05:10 PM - 06:20 PM', task: 'XII IP SICS', hrs: 1.17 },
+      { time: '07:15 PM - 08:30 PM', task: 'XII CS Sant Nagar', hrs: 1.25 },
+      { time: '08:00 PM - 09:00 PM', task: 'kriti Class', hrs: 1.00 }
+    ],
+    'Sat': [
+      { time: '04:00 PM - 05:30 PM', task: 'XI IP/CS Sant Nagar', hrs: 1.50 },
+      { time: '05:30 PM - 06:20 PM', task: 'XI AI SICS', hrs: 0.83 },
+      { time: '06:20 PM - 07:30 PM', task: 'XI IP/CS SICS', hrs: 1.17 },
+      { time: '08:00 PM - 09:00 PM', task: 'SkillYards', hrs: 1.00 }
+    ],
+    'Sun': []
+  },
+  study: {
+    'Mon': [{ time: '10:00 PM - 11:30 PM', task: 'Mathematics', hrs: 1.50 }],
+    'Tue': [{ time: '10:00 PM - 11:30 PM', task: 'English', hrs: 1.50 }],
+    'Wed': [{ time: '10:00 PM - 11:30 PM', task: 'Reasoning', hrs: 1.50 }],
+    'Thu': [{ time: '10:00 PM - 11:30 PM', task: 'Hindi', hrs: 1.50 }],
+    'Fri': [{ time: '10:00 PM - 11:30 PM', task: 'Computer Science', hrs: 1.50 }],
+    'Sat': [{ time: '10:00 PM - 11:30 PM', task: 'Computer Science', hrs: 1.50 }],
+    'Sun': [{ time: '10:00 PM - 11:30 PM', task: 'CS + Teaching Aptitude', hrs: 1.50 }]
+  }
+};
+
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-const STORE_KEY = 'singhPlanner_v20';
+const STORE_KEY = 'singhPlanner_v21';
 
 let state = {
   activeDateStr: getTodayISO(),
   viewMondayStr: getMondayISO(new Date()),
   days: {},
   timetables: { school: {}, tuition: {}, study: {} },
-  lastBackup: null
+  lastBackup: null,
+  lastCodeTemplate: ''
 };
 
 let charts = {};
 let editMode = { school: false, tuition: false, study: false };
 let lastCheckedDate = getTodayISO();
-
-const defaultTimetables = {
-  school: {
-    'Mon':[{time:'08:40 AM - 09:15 AM',task:'XI C',hrs:0.58},{time:'09:25 AM - 10:00 AM',task:'XI C',hrs:0.58},{time:'10:00 AM - 10:35 AM',task:'FREE',hrs:0.58},{time:'10:35 AM - 11:10 AM',task:'XIII C',hrs:0.58},{time:'11:40 AM - 12:20 PM',task:'XII C',hrs:0.67},{time:'12:20 PM - 12:55 PM',task:'XI D',hrs:0.58},{time:'12:55 PM - 01:30 PM',task:'XIII D',hrs:0.58},{time:'01:30 PM - 02:00 PM',task:'XIII D',hrs:0.50}],
-    'Tue':[{time:'08:40 AM - 09:15 AM',task:'XI C',hrs:0.58},{time:'09:25 AM - 10:00 AM',task:'XI C',hrs:0.58},{time:'10:00 AM - 10:35 AM',task:'FREE',hrs:0.58},{time:'10:35 AM - 11:10 AM',task:'XII C',hrs:0.58},{time:'11:40 AM - 12:20 PM',task:'XII C',hrs:0.67},{time:'12:20 PM - 12:55 PM',task:'XI D',hrs:0.58},{time:'12:55 PM - 01:30 PM',task:'XIII D',hrs:0.58},{time:'01:30 PM - 02:00 PM',task:'XIII D',hrs:0.50}],
-    'Wed':[{time:'08:40 AM - 09:15 AM',task:'XI C',hrs:0.58},{time:'09:25 AM - 10:00 AM',task:'X C',hrs:0.58},{time:'10:00 AM - 10:35 AM',task:'FREE',hrs:0.58},{time:'10:35 AM - 11:10 AM',task:'XII C',hrs:0.58},{time:'11:40 AM - 12:20 PM',task:'XI D',hrs:0.67},{time:'12:20 PM - 12:55 PM',task:'XI D',hrs:0.58},{time:'12:55 PM - 01:30 PM',task:'XIII D',hrs:0.58},{time:'01:30 PM - 02:00 PM',task:'IX C',hrs:0.50}],
-    'Thu':[{time:'08:40 AM - 09:15 AM',task:'XI C',hrs:0.58},{time:'09:25 AM - 10:00 AM',task:'X C',hrs:0.58},{time:'10:00 AM - 10:35 AM',task:'FREE',hrs:0.58},{time:'10:35 AM - 11:10 AM',task:'XII C',hrs:0.58},{time:'11:40 AM - 12:20 PM',task:'XI D',hrs:0.67},{time:'12:55 PM - 01:30 PM',task:'XIII D',hrs:0.58},{time:'01:30 PM - 02:00 PM',task:'X B',hrs:0.50}],
-    'Fri':[{time:'08:40 AM - 09:15 AM',task:'XI C',hrs:0.58},{time:'09:25 AM - 10:00 AM',task:'X B',hrs:0.58},{time:'10:00 AM - 10:35 AM',task:'FREE',hrs:0.58},{time:'10:35 AM - 11:10 AM',task:'XII C',hrs:0.58},{time:'11:40 AM - 12:20 PM',task:'XI D',hrs:0.67},{time:'12:20 PM - 12:55 PM',task:'X C',hrs:0.58},{time:'12:55 PM - 01:30 PM',task:'XIII D',hrs:0.58},{time:'01:30 PM - 02:00 PM',task:'IX C',hrs:0.50}],
-    'Sat':[{time:'08:40 AM - 09:15 AM',task:'XI C',hrs:0.58},{time:'09:25 AM - 10:00 AM',task:'X B',hrs:0.58},{time:'10:00 AM - 10:35 AM',task:'FREE',hrs:0.58},{time:'10:35 AM - 11:10 AM',task:'XII C',hrs:0.58},{time:'11:40 AM - 12:20 PM',task:'XI D',hrs:0.67},{time:'12:20 PM - 12:55 PM',task:'XI D',hrs:0.58},{time:'12:55 PM - 01:30 PM',task:'XIII D',hrs:0.58},{time:'01:30 PM - 02:00 PM',task:'IX C',hrs:0.50}],
-    'Sun':[]
-  },
-  tuition: {
-    'Mon':[{time:'03:50 PM - 05:00 PM',task:'XII IP Sant Nagar',hrs:1.17},{time:'05:10 PM - 06:00 PM',task:'XII IP SICS',hrs:0.83},{time:'07:00 PM - 08:00 PM',task:'XII CS Sant Nagar',hrs:1.00},{time:'08:15 PM - 09:15 PM',task:'Home Tuition',hrs:1.00}],
-    'Tue':[{time:'04:00 PM - 05:30 PM',task:'XI IP/CS Sant Nagar',hrs:1.50},{time:'05:30 PM - 06:20 PM',task:'XI AI SICS',hrs:0.83},{time:'06:20 PM - 07:30 PM',task:'XI IP/CS SICS',hrs:1.17}],
-    'Wed':[{time:'04:00 PM - 05:10 PM',task:'XII IP Sant Nagar',hrs:1.17},{time:'05:10 PM - 06:20 PM',task:'XII IP SICS',hrs:1.17},{time:'07:15 PM - 08:30 PM',task:'XII CS Sant Nagar',hrs:1.25},{time:'08:10 PM - 09:15 PM',task:'Vidya Home Tuition',hrs:1.08}],
-    'Thu':[{time:'04:00 PM - 05:30 PM',task:'XI IP/CS Sant Nagar',hrs:1.50},{time:'05:30 PM - 06:20 PM',task:'XI AI SICS',hrs:0.83},{time:'06:20 PM - 07:30 PM',task:'XI IP/CS SICS',hrs:1.17}],
-    'Fri':[{time:'04:00 PM - 05:10 PM',task:'XII IP Sant Nagar',hrs:1.17},{time:'05:10 PM - 06:20 PM',task:'XII IP SICS',hrs:1.17},{time:'07:15 PM - 08:30 PM',task:'XII CS Sant Nagar',hrs:1.25},{time:'08:00 PM - 09:00 PM',task:'kriti Class',hrs:1.00}],
-    'Sat':[{time:'04:00 PM - 05:30 PM',task:'XI IP/CS Sant Nagar',hrs:1.50},{time:'05:30 PM - 06:20 PM',task:'XI AI SICS',hrs:0.83},{time:'06:20 PM - 07:30 PM',task:'XI IP/CS SICS',hrs:1.17}],
-    'Sun':[]
-  },
-  study: {
-    'Mon':[{time:'10:00 PM - 11:30 PM',task:'Mathematics',hrs:1.50}],
-    'Tue':[{time:'10:00 PM - 11:30 PM',task:'English',hrs:1.50}],
-    'Wed':[{time:'10:00 PM - 11:30 PM',task:'Reasoning',hrs:1.50}],
-    'Thu':[{time:'10:00 PM - 11:30 PM',task:'Hindi',hrs:1.50}],
-    'Fri':[{time:'10:00 PM - 11:30 PM',task:'Computer Science',hrs:1.50}],
-    'Sat':[{time:'10:00 PM - 11:30 PM',task:'Computer Science',hrs:1.50}],
-    'Sun':[{time:'10:00 PM - 11:30 PM',task:'CS + Teaching Aptitude',hrs:1.50}]
-  }
-};
 
 /* ================= UTILITIES ================= */
 function escapeHtml(str){
@@ -817,13 +906,20 @@ function loadState(){
     }
   } else {
     initState();
-    const prev = localStorage.getItem('singhPlanner_v19') || localStorage.getItem('singhPlanner_v18') || localStorage.getItem('singhPlanner_v17');
+    const prev = localStorage.getItem('singhPlanner_v20') || localStorage.getItem('singhPlanner_v19');
     if(prev){
       try {
         const p = JSON.parse(prev);
         if(p.days) state.days = p.days;
       } catch(e){}
     }
+  }
+
+  // Detect if window.MASTER_TIMETABLES changed in code
+  const currentCodeTemplate = JSON.stringify(window.MASTER_TIMETABLES);
+  if(!state.lastCodeTemplate || state.lastCodeTemplate !== currentCodeTemplate || !state.timetables){
+    state.timetables = JSON.parse(currentCodeTemplate);
+    state.lastCodeTemplate = currentCodeTemplate;
   }
 
   // Always force the active view to current date & week
@@ -848,8 +944,9 @@ function initState(){
     activeDateStr: getTodayISO(),
     viewMondayStr: getMondayISO(new Date()),
     days: {},
-    timetables: JSON.parse(JSON.stringify(defaultTimetables)),
-    lastBackup: null
+    timetables: JSON.parse(JSON.stringify(window.MASTER_TIMETABLES)),
+    lastBackup: null,
+    lastCodeTemplate: JSON.stringify(window.MASTER_TIMETABLES)
   };
 }
 
