@@ -58,6 +58,7 @@ body { -webkit-tap-highlight-color: transparent; }
   text-transform: uppercase;
   letter-spacing: 0.04em;
   font-size: 9.5px;
+  white-space: nowrap;
 }
 .cat-pill.School { background-color: #2563eb; color: #ffffff; }
 .cat-pill.Tuition { background-color: #f97316; color: #ffffff; }
@@ -133,7 +134,7 @@ body { -webkit-tap-highlight-color: transparent; }
   .mobile-table tr.empty-row { display: block !important; padding: 12px !important; text-align: center !important; }
   .mobile-table td { display: flex !important; align-items: center !important; border: none !important; padding: 0 !important; }
   .col-cb { grid-area: cb !important; }
-  .col-tm { grid-area: tm !important; width: 100% !important; justify-content: flex-start !important; font-size: 11px !important; }
+  .col-tm { grid-area: tm !important; width: 100% !important; justify-content: flex-start !important; font-size: 11px !important; white-space: nowrap !important; }
   .col-tk { grid-area: tk !important; width: 100% !important; font-size: 13.5px !important; }
   .col-cat { grid-area: cat !important; justify-content: flex-end !important; }
   .col-hr { grid-area: hr !important; justify-content: flex-end !important; }
@@ -369,12 +370,10 @@ body { -webkit-tap-highlight-color: transparent; }
               </div>
             </div>
             <div class="flex items-center gap-1.5">
-              <!-- Secondary Action: Ghost Sync -->
               <button onclick="reloadDayFromTimetable(state.activeDateStr)" class="bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 text-xs font-semibold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition active:scale-95 print-hide" title="Reload periods from weekly timetable template">
                 <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-slate-400"></i>
                 <span>Sync</span>
               </button>
-              <!-- Primary Action: Warm Accent Button -->
               <button onclick="switchTab('timetables', document.getElementById('tabBtnTimetables'))" class="bg-amber-400/15 hover:bg-amber-400/25 text-amber-300 border border-amber-400/35 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm transition active:scale-95 print-hide" title="Modify periods in Timetable templates">
                 <i data-lucide="pencil" class="w-3.5 h-3.5 text-amber-400"></i>
                 <span>Edit Timetable</span>
@@ -385,10 +384,9 @@ body { -webkit-tap-highlight-color: transparent; }
           <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse mobile-table">
               <thead>
-                <!-- Clean Micro-Typography without noisy icons -->
                 <tr class="bg-slate-50 text-slate-400 text-[10.5px] font-bold uppercase tracking-wider border-b border-slate-200">
                   <th class="py-2.5 px-3 w-12 text-center">DONE</th>
-                  <th class="py-2.5 px-3 w-48 text-left">TIME</th>
+                  <th class="py-2.5 px-3 w-48 text-left whitespace-nowrap">TIME</th>
                   <th class="py-2.5 px-3 text-left">TASK / SUBJECT</th>
                   <th class="py-2.5 px-3 w-24 text-right">HOURS</th>
                 </tr>
@@ -398,7 +396,7 @@ body { -webkit-tap-highlight-color: transparent; }
               <tfoot class="bg-slate-50/90 border-t border-slate-200 text-slate-600 text-xs font-semibold">
                 <tr>
                   <td class="py-2.5 px-3 text-center"></td>
-                  <td class="py-2.5 px-3 text-left text-slate-400 font-bold uppercase tracking-wider text-[10.5px]">
+                  <td class="py-2.5 px-3 text-left text-slate-400 font-bold uppercase tracking-wider text-[10.5px] whitespace-nowrap">
                     Section Total
                   </td>
                   <td class="py-2.5 px-3 text-left text-slate-500 font-medium text-[11px]" id="schoolSecMeta">0 of 0 completed</td>
@@ -424,12 +422,10 @@ body { -webkit-tap-highlight-color: transparent; }
               </div>
             </div>
             <div class="flex items-center gap-1.5">
-              <!-- Secondary Action: Ghost Sync -->
               <button onclick="reloadDayFromTimetable(state.activeDateStr)" class="bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 text-xs font-semibold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition active:scale-95 print-hide" title="Reload sessions from weekly timetable template">
                 <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-slate-400"></i>
                 <span>Sync</span>
               </button>
-              <!-- Primary Action: Warm Accent Button -->
               <button onclick="switchTab('timetables', document.getElementById('tabBtnTimetables'))" class="bg-amber-400/15 hover:bg-amber-400/25 text-amber-300 border border-amber-400/35 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm transition active:scale-95 print-hide" title="Modify sessions in Timetable templates">
                 <i data-lucide="pencil" class="w-3.5 h-3.5 text-amber-400"></i>
                 <span>Edit Timetable</span>
@@ -440,10 +436,9 @@ body { -webkit-tap-highlight-color: transparent; }
           <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse mobile-table">
               <thead>
-                <!-- Clean Micro-Typography without noisy icons -->
                 <tr class="bg-slate-50 text-slate-400 text-[10.5px] font-bold uppercase tracking-wider border-b border-slate-200">
                   <th class="py-2.5 px-3 w-12 text-center">DONE</th>
-                  <th class="py-2.5 px-3 w-48 text-left">TIME</th>
+                  <th class="py-2.5 px-3 w-48 text-left whitespace-nowrap">TIME</th>
                   <th class="py-2.5 px-3 text-left">TASK / SUBJECT</th>
                   <th class="py-2.5 px-3 w-28 text-center">CATEGORY</th>
                   <th class="py-2.5 px-3 w-24 text-right">HOURS</th>
@@ -454,7 +449,7 @@ body { -webkit-tap-highlight-color: transparent; }
               <tfoot class="bg-slate-50/90 border-t border-slate-200 text-slate-600 text-xs font-semibold">
                 <tr>
                   <td class="py-2.5 px-3 text-center"></td>
-                  <td class="py-2.5 px-3 text-left text-slate-400 font-bold uppercase tracking-wider text-[10.5px]">
+                  <td class="py-2.5 px-3 text-left text-slate-400 font-bold uppercase tracking-wider text-[10.5px] whitespace-nowrap">
                     Section Total
                   </td>
                   <td class="py-2.5 px-3 text-left text-slate-500 font-medium text-[11px]" id="tuitionSecMeta">0 of 0 completed</td>
@@ -560,7 +555,7 @@ body { -webkit-tap-highlight-color: transparent; }
 
 <script>
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-const STORE_KEY = 'singhPlanner_v19';
+const STORE_KEY = 'singhPlanner_v20';
 
 let state = {
   activeDateStr: getTodayISO(),
@@ -572,24 +567,25 @@ let state = {
 
 let charts = {};
 let editMode = { school: false, tuition: false, study: false };
+let lastCheckedDate = getTodayISO();
 
 const defaultTimetables = {
   school: {
-    'Mon':[{time:'08:40 AM - 09:15 AM',task:'XI C',hrs:0.58},{time:'09:25 AM - 10:00 AM',task:'XI C',hrs:0.58},{time:'10:35 AM - 11:10 AM',task:'XIII C',hrs:0.58},{time:'11:40 AM - 12:20 PM',task:'XII C',hrs:0.67},{time:'12:20 PM - 12:55 PM',task:'XI D',hrs:0.58},{time:'12:55 PM - 01:30 PM',task:'XIII D',hrs:0.58},{time:'01:30 PM - 02:00 PM',task:'XIII D',hrs:0.50}],
-    'Tue':[{time:'08:40 AM - 09:15 AM',task:'XI C',hrs:0.58},{time:'09:25 AM - 10:00 AM',task:'XI C',hrs:0.58},{time:'10:35 AM - 11:10 AM',task:'XII C',hrs:0.58},{time:'11:40 AM - 12:20 PM',task:'XII C',hrs:0.67},{time:'12:20 PM - 12:55 PM',task:'XI D',hrs:0.58},{time:'12:55 PM - 01:30 PM',task:'XIII D',hrs:0.58},{time:'01:30 PM - 02:00 PM',task:'XIII D',hrs:0.50}],
-    'Wed':[{time:'08:40 AM - 09:15 AM',task:'XI C',hrs:0.58},{time:'09:25 AM - 10:00 AM',task:'X C',hrs:0.58},{time:'10:35 AM - 11:10 AM',task:'XII C',hrs:0.58},{time:'11:40 AM - 12:20 PM',task:'XI D',hrs:0.67},{time:'12:20 PM - 12:55 PM',task:'XI D',hrs:0.58},{time:'12:55 PM - 01:30 PM',task:'XIII D',hrs:0.58},{time:'01:30 PM - 02:00 PM',task:'IX C',hrs:0.50}],
-    'Thu':[{time:'08:40 AM - 09:15 AM',task:'XI C',hrs:0.58},{time:'09:25 AM - 10:00 AM',task:'X C',hrs:0.58},{time:'10:35 AM - 11:10 AM',task:'XII C',hrs:0.58},{time:'11:40 AM - 12:20 PM',task:'XI D',hrs:0.67},{time:'12:55 PM - 01:30 PM',task:'XIII D',hrs:0.58},{time:'01:30 PM - 02:00 PM',task:'X B',hrs:0.50}],
-    'Fri':[{time:'08:40 AM - 09:15 AM',task:'XI C',hrs:0.58},{time:'09:25 AM - 10:00 AM',task:'X B',hrs:0.58},{time:'10:35 AM - 11:10 AM',task:'XII C',hrs:0.58},{time:'11:40 AM - 12:20 PM',task:'XI D',hrs:0.67},{time:'12:20 PM - 12:55 PM',task:'X C',hrs:0.58},{time:'12:55 PM - 01:30 PM',task:'XIII D',hrs:0.58},{time:'01:30 PM - 02:00 PM',task:'IX C',hrs:0.50}],
-    'Sat':[{time:'08:40 AM - 09:15 AM',task:'XI C',hrs:0.58},{time:'09:25 AM - 10:00 AM',task:'X B',hrs:0.58},{time:'10:35 AM - 11:10 AM',task:'XII C',hrs:0.58},{time:'11:40 AM - 12:20 PM',task:'XI D',hrs:0.67},{time:'12:20 PM - 12:55 PM',task:'XI D',hrs:0.58},{time:'12:55 PM - 01:30 PM',task:'XIII D',hrs:0.58},{time:'01:30 PM - 02:00 PM',task:'IX C',hrs:0.50}],
+    'Mon':[{time:'08:40 AM - 09:15 AM',task:'XI C',hrs:0.58},{time:'09:25 AM - 10:00 AM',task:'XI C',hrs:0.58},{time:'10:00 AM - 10:35 AM',task:'FREE',hrs:0.58},{time:'10:35 AM - 11:10 AM',task:'XIII C',hrs:0.58},{time:'11:40 AM - 12:20 PM',task:'XII C',hrs:0.67},{time:'12:20 PM - 12:55 PM',task:'XI D',hrs:0.58},{time:'12:55 PM - 01:30 PM',task:'XIII D',hrs:0.58},{time:'01:30 PM - 02:00 PM',task:'XIII D',hrs:0.50}],
+    'Tue':[{time:'08:40 AM - 09:15 AM',task:'XI C',hrs:0.58},{time:'09:25 AM - 10:00 AM',task:'XI C',hrs:0.58},{time:'10:00 AM - 10:35 AM',task:'FREE',hrs:0.58},{time:'10:35 AM - 11:10 AM',task:'XII C',hrs:0.58},{time:'11:40 AM - 12:20 PM',task:'XII C',hrs:0.67},{time:'12:20 PM - 12:55 PM',task:'XI D',hrs:0.58},{time:'12:55 PM - 01:30 PM',task:'XIII D',hrs:0.58},{time:'01:30 PM - 02:00 PM',task:'XIII D',hrs:0.50}],
+    'Wed':[{time:'08:40 AM - 09:15 AM',task:'XI C',hrs:0.58},{time:'09:25 AM - 10:00 AM',task:'X C',hrs:0.58},{time:'10:00 AM - 10:35 AM',task:'FREE',hrs:0.58},{time:'10:35 AM - 11:10 AM',task:'XII C',hrs:0.58},{time:'11:40 AM - 12:20 PM',task:'XI D',hrs:0.67},{time:'12:20 PM - 12:55 PM',task:'XI D',hrs:0.58},{time:'12:55 PM - 01:30 PM',task:'XIII D',hrs:0.58},{time:'01:30 PM - 02:00 PM',task:'IX C',hrs:0.50}],
+    'Thu':[{time:'08:40 AM - 09:15 AM',task:'XI C',hrs:0.58},{time:'09:25 AM - 10:00 AM',task:'X C',hrs:0.58},{time:'10:00 AM - 10:35 AM',task:'FREE',hrs:0.58},{time:'10:35 AM - 11:10 AM',task:'XII C',hrs:0.58},{time:'11:40 AM - 12:20 PM',task:'XI D',hrs:0.67},{time:'12:55 PM - 01:30 PM',task:'XIII D',hrs:0.58},{time:'01:30 PM - 02:00 PM',task:'X B',hrs:0.50}],
+    'Fri':[{time:'08:40 AM - 09:15 AM',task:'XI C',hrs:0.58},{time:'09:25 AM - 10:00 AM',task:'X B',hrs:0.58},{time:'10:00 AM - 10:35 AM',task:'FREE',hrs:0.58},{time:'10:35 AM - 11:10 AM',task:'XII C',hrs:0.58},{time:'11:40 AM - 12:20 PM',task:'XI D',hrs:0.67},{time:'12:20 PM - 12:55 PM',task:'X C',hrs:0.58},{time:'12:55 PM - 01:30 PM',task:'XIII D',hrs:0.58},{time:'01:30 PM - 02:00 PM',task:'IX C',hrs:0.50}],
+    'Sat':[{time:'08:40 AM - 09:15 AM',task:'XI C',hrs:0.58},{time:'09:25 AM - 10:00 AM',task:'X B',hrs:0.58},{time:'10:00 AM - 10:35 AM',task:'FREE',hrs:0.58},{time:'10:35 AM - 11:10 AM',task:'XII C',hrs:0.58},{time:'11:40 AM - 12:20 PM',task:'XI D',hrs:0.67},{time:'12:20 PM - 12:55 PM',task:'XI D',hrs:0.58},{time:'12:55 PM - 01:30 PM',task:'XIII D',hrs:0.58},{time:'01:30 PM - 02:00 PM',task:'IX C',hrs:0.50}],
     'Sun':[]
   },
   tuition: {
-    'Mon':[{time:'04:00 PM - 05:10 PM',task:'XII IP Sant Ngr',hrs:1.17},{time:'05:10 PM - 06:20 PM',task:'XII IP SICS',hrs:1.17},{time:'07:15 PM - 08:30 PM',task:'XII CS Sant Ngr',hrs:1.25}],
-    'Tue':[{time:'04:00 PM - 05:30 PM',task:'XI IP/CS Sant Ngr',hrs:1.50},{time:'05:30 PM - 06:20 PM',task:'XI AI SICS',hrs:0.83},{time:'06:20 PM - 07:30 PM',task:'XI IP/CS SICS',hrs:1.17}],
-    'Wed':[{time:'04:00 PM - 05:10 PM',task:'XII IP Sant Ngr',hrs:1.17},{time:'05:10 PM - 06:20 PM',task:'XII IP SICS',hrs:1.17},{time:'07:15 PM - 08:30 PM',task:'XII CS Sant Ngr',hrs:1.25}],
-    'Thu':[{time:'04:00 PM - 05:30 PM',task:'XI IP/CS Sant Ngr',hrs:1.50},{time:'05:30 PM - 06:20 PM',task:'XI AI SICS',hrs:0.83},{time:'06:20 PM - 07:30 PM',task:'XI IP/CS SICS',hrs:1.17}],
-    'Fri':[{time:'04:00 PM - 05:10 PM',task:'XII IP Sant Ngr',hrs:1.17},{time:'05:10 PM - 06:20 PM',task:'XII IP SICS',hrs:1.17},{time:'07:15 PM - 08:30 PM',task:'XII CS Sant Ngr',hrs:1.25}],
-    'Sat':[{time:'04:00 PM - 05:30 PM',task:'XI IP/CS Sant Ngr',hrs:1.50},{time:'05:30 PM - 06:20 PM',task:'XI AI SICS',hrs:0.83},{time:'06:20 PM - 07:30 PM',task:'XI IP/CS SICS',hrs:1.17}],
+    'Mon':[{time:'03:50 PM - 05:00 PM',task:'XII IP Sant Nagar',hrs:1.17},{time:'05:10 PM - 06:00 PM',task:'XII IP SICS',hrs:0.83},{time:'07:00 PM - 08:00 PM',task:'XII CS Sant Nagar',hrs:1.00},{time:'08:15 PM - 09:15 PM',task:'Home Tuition',hrs:1.00}],
+    'Tue':[{time:'04:00 PM - 05:30 PM',task:'XI IP/CS Sant Nagar',hrs:1.50},{time:'05:30 PM - 06:20 PM',task:'XI AI SICS',hrs:0.83},{time:'06:20 PM - 07:30 PM',task:'XI IP/CS SICS',hrs:1.17}],
+    'Wed':[{time:'04:00 PM - 05:10 PM',task:'XII IP Sant Nagar',hrs:1.17},{time:'05:10 PM - 06:20 PM',task:'XII IP SICS',hrs:1.17},{time:'07:15 PM - 08:30 PM',task:'XII CS Sant Nagar',hrs:1.25},{time:'08:10 PM - 09:15 PM',task:'Vidya Home Tuition',hrs:1.08}],
+    'Thu':[{time:'04:00 PM - 05:30 PM',task:'XI IP/CS Sant Nagar',hrs:1.50},{time:'05:30 PM - 06:20 PM',task:'XI AI SICS',hrs:0.83},{time:'06:20 PM - 07:30 PM',task:'XI IP/CS SICS',hrs:1.17}],
+    'Fri':[{time:'04:00 PM - 05:10 PM',task:'XII IP Sant Nagar',hrs:1.17},{time:'05:10 PM - 06:20 PM',task:'XII IP SICS',hrs:1.17},{time:'07:15 PM - 08:30 PM',task:'XII CS Sant Nagar',hrs:1.25},{time:'08:00 PM - 09:00 PM',task:'kriti Class',hrs:1.00}],
+    'Sat':[{time:'04:00 PM - 05:30 PM',task:'XI IP/CS Sant Nagar',hrs:1.50},{time:'05:30 PM - 06:20 PM',task:'XI AI SICS',hrs:0.83},{time:'06:20 PM - 07:30 PM',task:'XI IP/CS SICS',hrs:1.17}],
     'Sun':[]
   },
   study: {
@@ -757,7 +753,60 @@ window.addEventListener('keydown', (e) => {
   if(e.key === 'Escape') closeModal();
 });
 
-/* ================= STATE & STORAGE ================= */
+/* ================= AUTO-SYNC & STATE ================= */
+function syncDayFromTimetable(dateStr){
+  const dName = getDayName(dateStr);
+  const existing = state.days[dateStr] || { school: [], tuition_study: [] };
+  
+  // Index previous completion checks to keep progress intact
+  const compSchool = new Set();
+  (existing.school || []).forEach(t => {
+    if(t.completed) compSchool.add(`${t.time}_${t.task}`);
+  });
+
+  const compTuition = new Set();
+  (existing.tuition_study || []).forEach(t => {
+    if(t.completed) compTuition.add(`${t.time}_${t.task}`);
+  });
+
+  const sTasks = (state.timetables.school[dName] || []).map(item => ({
+    id: uid(),
+    time: item.time,
+    hrs: parseFloat(item.hrs) || 0.58,
+    cat: 'School',
+    task: item.task,
+    completed: compSchool.has(`${item.time}_${item.task}`)
+  }));
+
+  const tsTasks = [];
+  (state.timetables.tuition[dName] || []).forEach(item => {
+    tsTasks.push({
+      id: uid(),
+      time: item.time,
+      hrs: parseFloat(item.hrs) || 1.17,
+      cat: 'Tuition',
+      task: item.task,
+      completed: compTuition.has(`${item.time}_${item.task}`)
+    });
+  });
+
+  (state.timetables.study[dName] || []).forEach(item => {
+    tsTasks.push({
+      id: uid(),
+      time: item.time,
+      hrs: parseFloat(item.hrs) || 1.50,
+      cat: 'Study',
+      task: item.task,
+      completed: compTuition.has(`${item.time}_${item.task}`)
+    });
+  });
+
+  sortTasksByTime(sTasks);
+  sortTasksByTime(tsTasks);
+
+  state.days[dateStr] = { school: sTasks, tuition_study: tsTasks };
+}
+
 function loadState(){
   const raw = localStorage.getItem(STORE_KEY);
   if(raw){
@@ -768,7 +817,7 @@ function loadState(){
     }
   } else {
     initState();
-    const prev = localStorage.getItem('singhPlanner_v18') || localStorage.getItem('singhPlanner_v17');
+    const prev = localStorage.getItem('singhPlanner_v19') || localStorage.getItem('singhPlanner_v18') || localStorage.getItem('singhPlanner_v17');
     if(prev){
       try {
         const p = JSON.parse(prev);
@@ -777,6 +826,10 @@ function loadState(){
     }
   }
 
+  // Always force the active view to current date & week
+  state.activeDateStr = getTodayISO();
+  state.viewMondayStr = getMondayISO(new Date());
+
   if(state.days){
     Object.values(state.days).forEach(day => {
       if(day.school) sortTasksByTime(day.school);
@@ -784,7 +837,8 @@ function loadState(){
     });
   }
 
-  ensureDayPopulated(state.activeDateStr);
+  // Auto-sync current day schedule from master timetable before rendering
+  syncDayFromTimetable(state.activeDateStr);
   saveState();
   renderAll();
 }
@@ -808,51 +862,12 @@ function saveState(){
 }
 
 function ensureDayPopulated(dateStr){
-  if(state.days[dateStr]) return;
-  reloadDayFromTimetable(dateStr, false);
+  syncDayFromTimetable(dateStr);
 }
 
 function reloadDayFromTimetable(dateStr, showToastMsg=true){
   const dName = getDayName(dateStr);
-  const sTasks = [], tsTasks = [];
-  
-  (state.timetables.school[dName] || []).forEach((item) => {
-    sTasks.push({
-      id: uid(),
-      time: item.time,
-      hrs: parseFloat(item.hrs) || 0.58,
-      cat: 'School',
-      task: item.task,
-      completed: false
-    });
-  });
-
-  (state.timetables.tuition[dName] || []).forEach((item) => {
-    tsTasks.push({
-      id: uid(),
-      time: item.time,
-      hrs: parseFloat(item.hrs) || 1.17,
-      cat: 'Tuition',
-      task: item.task,
-      completed: false
-    });
-  });
-
-  (state.timetables.study[dName] || []).forEach((item) => {
-    tsTasks.push({
-      id: uid(),
-      time: item.time,
-      hrs: parseFloat(item.hrs) || 1.50,
-      cat: 'Study',
-      task: item.task,
-      completed: false
-    });
-  });
-
-  sortTasksByTime(sTasks);
-  sortTasksByTime(tsTasks);
-
-  state.days[dateStr] = { school: sTasks, tuition_study: tsTasks };
+  syncDayFromTimetable(dateStr);
   saveState();
   renderAll();
   if(showToastMsg){
@@ -896,7 +911,6 @@ function renderSidebarDaySelector(){
   const sunRowContainer = document.getElementById('sidebarSundayRow');
   if(!container) return;
 
-  // Render Mon - Sat
   container.innerHTML = DAYS.slice(0, 6).map((dName, i) => {
     const dIso = addDays(state.viewMondayStr, i);
     const dNum = dIso.split('-')[2];
@@ -933,7 +947,6 @@ function renderSidebarDaySelector(){
       </button>`;
   }).join('');
 
-  // Render Sunday + Dedicated Micro-Toolbar for All Actions
   if(sunRowContainer){
     const sunIso = addDays(state.viewMondayStr, 6);
     const sunNum = sunIso.split('-')[2];
@@ -954,7 +967,6 @@ function renderSidebarDaySelector(){
 
     sunRowContainer.innerHTML = `
       <div class="mt-1.5">
-        <!-- Sunday Selector -->
         <button onclick="selectDate('${sunIso}')" class="w-full h-9 rounded-xl px-2.5 py-1 flex items-center gap-2 relative overflow-hidden text-left ${sunCardClasses}" aria-label="Sun ${sunIso}">
           ${isSunToday ? '<span class="w-1.5 h-1.5 rounded-full bg-amber-500 absolute top-1 right-2" title="Today"></span>' : ''}
           <div class="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 transition ${sunIconClass}">
@@ -966,7 +978,6 @@ function renderSidebarDaySelector(){
           </div>
         </button>
 
-        <!-- Dedicated All Actions Toolbar -->
         <div class="mt-2 pt-2 border-t border-slate-200/70 grid grid-cols-2 gap-1.5">
           <button onclick="checkAllToday()" class="py-1.5 bg-white hover:bg-emerald-50 text-emerald-700 hover:text-emerald-800 border border-slate-200 hover:border-emerald-200 font-extrabold text-[10.5px] rounded-xl flex items-center justify-center gap-1 transition active:scale-95 shadow-xs" title="Check all tasks for selected day">
             <i data-lucide="check-check" class="w-3.5 h-3.5 text-emerald-600 stroke-[2.5]"></i>
@@ -1008,7 +1019,7 @@ function jumpToday(){
   const t = getTodayISO();
   state.activeDateStr = t;
   state.viewMondayStr = getMondayISO(new Date());
-  ensureDayPopulated(t);
+  syncDayFromTimetable(t);
   saveState();
   renderAll();
 }
@@ -1064,10 +1075,10 @@ function renderTables(){
               <input type="checkbox" ${item.completed ? 'checked' : ''} onchange="updateCheckbox('${item.id}','${sec}')" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer" aria-label="Mark completed">
             </label>
           </td>
-          <td class="py-2.5 px-3 text-left col-tm">
-            <div class="flex items-center gap-1.5">
+          <td class="py-2.5 px-3 text-left col-tm whitespace-nowrap">
+            <div class="flex items-center gap-1.5 whitespace-nowrap">
               ${isLive ? '<span class="inline-flex items-center gap-1 bg-blue-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-xs animate-pulse"><span class="w-1.5 h-1.5 rounded-full bg-white live-pulse"></span>LIVE</span>' : ''}
-              <span class="font-semibold text-xs tracking-tight tabular-nums ${item.completed ? 'text-slate-400' : 'text-slate-600'}">${escapeHtml(item.time)}</span>
+              <span class="font-semibold text-xs tracking-tight tabular-nums whitespace-nowrap ${item.completed ? 'text-slate-400' : 'text-slate-600'}">${escapeHtml(item.time)}</span>
             </div>
           </td>
           <td class="py-2.5 px-3 text-left col-tk">
@@ -1076,7 +1087,7 @@ function renderTables(){
               ${item.completed ? '<span class="inline-flex items-center gap-0.5 text-[9.5px] font-extrabold text-emerald-700 bg-emerald-100/90 px-1.5 py-0.2 rounded border border-emerald-300 shrink-0"><i data-lucide="check" class="w-2.5 h-2.5 stroke-[3]"></i> Done</span>' : ''}
             </div>
           </td>
-          <td class="py-2.5 px-3 text-right col-hr">
+          <td class="py-2.5 px-3 text-right col-hr whitespace-nowrap">
             <span class="inline-block font-semibold text-xs text-slate-600 bg-slate-100/80 px-2 py-0.5 rounded border border-slate-200/60 tabular-nums">${Number(item.hrs).toFixed(2)} hrs</span>
           </td>`;
         tbody.appendChild(row);
@@ -1131,10 +1142,10 @@ function renderTables(){
               <input type="checkbox" ${item.completed ? 'checked' : ''} onchange="updateCheckbox('${item.id}','${sec}')" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer" aria-label="Mark completed">
             </label>
           </td>
-          <td class="py-2.5 px-3 text-left col-tm">
-            <div class="flex items-center gap-1.5">
+          <td class="py-2.5 px-3 text-left col-tm whitespace-nowrap">
+            <div class="flex items-center gap-1.5 whitespace-nowrap">
               ${isLive ? '<span class="inline-flex items-center gap-1 bg-blue-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-xs animate-pulse"><span class="w-1.5 h-1.5 rounded-full bg-white live-pulse"></span>LIVE</span>' : ''}
-              <span class="font-semibold text-xs tracking-tight tabular-nums ${item.completed ? 'text-slate-400' : 'text-slate-600'}">${escapeHtml(item.time)}</span>
+              <span class="font-semibold text-xs tracking-tight tabular-nums whitespace-nowrap ${item.completed ? 'text-slate-400' : 'text-slate-600'}">${escapeHtml(item.time)}</span>
             </div>
           </td>
           <td class="py-2.5 px-3 text-left col-tk">
@@ -1143,10 +1154,10 @@ function renderTables(){
               ${item.completed ? '<span class="inline-flex items-center gap-0.5 text-[9.5px] font-extrabold text-emerald-700 bg-emerald-100/90 px-1.5 py-0.2 rounded border border-emerald-300 shrink-0"><i data-lucide="check" class="w-2.5 h-2.5 stroke-[3]"></i> Done</span>' : ''}
             </div>
           </td>
-          <td class="py-2.5 px-3 text-center col-cat">
+          <td class="py-2.5 px-3 text-center col-cat whitespace-nowrap">
             <span class="cat-pill ${escapeHtml(item.cat)}">${escapeHtml(item.cat)}</span>
           </td>
-          <td class="py-2.5 px-3 text-right col-hr">
+          <td class="py-2.5 px-3 text-right col-hr whitespace-nowrap">
             <span class="inline-block font-semibold text-xs text-slate-600 bg-slate-100/80 px-2 py-0.5 rounded border border-slate-200/60 tabular-nums">${Number(item.hrs).toFixed(2)} hrs</span>
           </td>`;
         tbody.appendChild(row);
@@ -1332,14 +1343,11 @@ function toggleEditMode(t){
     editMode[t] = false;
     saveState();
 
-    const activeDay = state.days[state.activeDateStr];
-    const hasCompletions = activeDay && (
-      (activeDay.school || []).some(item => item.completed) ||
-      (activeDay.tuition_study || []).some(item => item.completed)
-    );
-    if(!hasCompletions){
-      reloadDayFromTimetable(state.activeDateStr, false);
-    }
+    // Auto-sync active date with updated templates
+    syncDayFromTimetable(state.activeDateStr);
+    renderTables();
+    calculateWeeklyStats();
+    updateProgress();
     showToast(`${t.charAt(0).toUpperCase() + t.slice(1)} schedule saved`, 'success');
   } else {
     editMode[t] = true;
@@ -1446,6 +1454,17 @@ function handleNavClick(secId, btn){
 
 function updateCurrentDate(){
   const n = new Date();
+  const currentTodayISO = getTodayISO();
+
+  // If date rolled over midnight, auto-advance planner to today's schedule
+  if(currentTodayISO !== lastCheckedDate){
+    lastCheckedDate = currentTodayISO;
+    state.activeDateStr = currentTodayISO;
+    state.viewMondayStr = getMondayISO(n);
+    syncDayFromTimetable(currentTodayISO);
+    saveState();
+  }
+
   const day = n.getDate();
   const month = n.toLocaleDateString('en-US', {month:'short'});
   const weekday = n.toLocaleDateString('en-US', {weekday:'short'});
@@ -1488,6 +1507,10 @@ function importBackup(e){
       const d = JSON.parse(evt.target.result);
       if(d.timetables && d.days){
         state = d;
+        // Always focus on today's date after importing a backup
+        state.activeDateStr = getTodayISO();
+        state.viewMondayStr = getMondayISO(new Date());
+        syncDayFromTimetable(state.activeDateStr);
         saveState();
         loadState();
         showToast('Backup restored successfully!', 'success');
