@@ -357,7 +357,7 @@ body { -webkit-tap-highlight-color: transparent; }
       <!-- ================= TAB: PLANNER ================= -->
       <div id="planner" class="tab-content active space-y-3" role="tabpanel" aria-labelledby="tabBtnSchool">
 
-        <!-- 1. SCHOOL CLASSES -->
+        <!-- 1. SCHOOL CLASSES (No WhatsApp button) -->
         <section id="schoolClassesSec" class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden schedule-container-card">
           <header class="bg-cardNavy text-white px-3.5 sm:px-4 py-2 flex items-center justify-between">
             <div class="flex items-center gap-2.5">
@@ -409,7 +409,7 @@ body { -webkit-tap-highlight-color: transparent; }
           </div>
         </section>
 
-        <!-- 2. TUITION & STUDY -->
+        <!-- 2. TUITION & STUDY (WhatsApp button exclusive here) -->
         <section id="tuitionStudySec" class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden schedule-container-card">
           <header class="bg-cardNavy text-white px-3.5 sm:px-4 py-2 flex items-center justify-between">
             <div class="flex items-center gap-2.5">
@@ -465,7 +465,7 @@ body { -webkit-tap-highlight-color: transparent; }
 
       </div>
 
-      <!-- ================= TAB: TIMETABLES (THE MASTER SCHEDULE EDITOR) ================= -->
+      <!-- ================= TAB: TIMETABLES ================= -->
       <div id="timetables" class="tab-content space-y-3" role="tabpanel" aria-labelledby="tabBtnTimetables">
         <div class="bg-blue-50 border border-blue-200 rounded-xl p-3.5 flex items-start gap-3 text-blue-900 shadow-sm">
           <i data-lucide="info" class="w-5 h-5 text-blue-600 shrink-0 mt-0.5"></i>
@@ -556,8 +556,6 @@ body { -webkit-tap-highlight-color: transparent; }
 <script>
 /* ==========================================================================
    GLOBAL MASTER TIMETABLE CONFIGURATION
-   Edit your recurring periods, tuition batches, and study sessions here.
-   Changes made here will automatically take effect in the app upon refresh!
    ========================================================================== */
 window.MASTER_TIMETABLES = {
   school: {
@@ -620,10 +618,7 @@ window.MASTER_TIMETABLES = {
       { time: '12:55 PM - 01:30 PM', task: 'XIII D', hrs: 0.58 },
       { time: '01:30 PM - 02:00 PM', task: 'IX C', hrs: 0.50 }
     ],
-    'Sun': [
-      { time: '02:00 PM - 03:00 PM', task: 'Kirti Class', hrs: 1.00 },
-          { time: '12:30 PM - 01:30 PM', task: 'Vidya Class', hrs: 1.00 }
-    ]
+    'Sun': []
   },
   tuition: {
     'Mon': [
@@ -662,7 +657,10 @@ window.MASTER_TIMETABLES = {
       { time: '06:20 PM - 07:30 PM', task: 'XI IP/CS SICS', hrs: 1.17 },
       { time: '08:00 PM - 09:00 PM', task: 'SkillYards', hrs: 1.00 }
     ],
-    'Sun': []
+    'Sun': [
+      { time: '12:30 PM - 01:30 PM', task: 'Vidya Class', hrs: 1.00 },
+      { time: '02:00 PM - 03:00 PM', task: 'Kirti Class', hrs: 1.00 }
+    ]
   },
   study: {
     'Mon': [{ time: '10:00 PM - 11:30 PM', task: 'Mathematics', hrs: 1.50 }],
@@ -845,12 +843,32 @@ window.addEventListener('keydown', (e) => {
   if(e.key === 'Escape') closeModal();
 });
 
+/* ================= WHATSAPP REMINDER DISPATCHER ================= */
+function sendTaskWhatsApp(taskId, sec, e){
+  if(e) e.stopPropagation();
+  const dayData = state.days[state.activeDateStr];
+  if(!dayData || !dayData[sec]) return;
+  const item = dayData[sec].find(t => t.id === taskId);
+  if(!item) return;
+
+  const rawSubject = (item.task || 'Class').trim();
+  const cleanSubject = rawSubject.replace(/\s+class$/i, '');
+  const time = item.time || '';
+  
+  const clockEmoji = '\u23F0';
+  const globeEmoji = '\uD83C\uDF10';
+  const message = `${clockEmoji} *Reminder:* Today’s ${cleanSubject} class is at ${time}.\n${globeEmoji} www.SinghClasses.in`;
+  
+  // Triggers the "Open WhatsApp App" prompt on desktop and launches the app on mobile
+  const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+  window.open(url, '_blank');
+}
+
 /* ================= AUTO-SYNC & STATE ================= */
 function syncDayFromTimetable(dateStr){
   const dName = getDayName(dateStr);
   const existing = state.days[dateStr] || { school: [], tuition_study: [] };
   
-  // Index previous completion checks to keep progress intact
   const compSchool = new Set();
   (existing.school || []).forEach(t => {
     if(t.completed) compSchool.add(`${t.time}_${t.task}`);
@@ -918,14 +936,12 @@ function loadState(){
     }
   }
 
-  // Detect if window.MASTER_TIMETABLES changed in code
   const currentCodeTemplate = JSON.stringify(window.MASTER_TIMETABLES);
   if(!state.lastCodeTemplate || state.lastCodeTemplate !== currentCodeTemplate || !state.timetables){
     state.timetables = JSON.parse(currentCodeTemplate);
     state.lastCodeTemplate = currentCodeTemplate;
   }
 
-  // Always force the active view to current date & week
   state.activeDateStr = getTodayISO();
   state.viewMondayStr = getMondayISO(new Date());
 
@@ -936,7 +952,6 @@ function loadState(){
     });
   }
 
-  // Auto-sync current day schedule from master timetable before rendering
   syncDayFromTimetable(state.activeDateStr);
   saveState();
   renderAll();
@@ -1128,7 +1143,7 @@ function jumpToday(){
 function renderTables(){
   const dayData = state.days[state.activeDateStr] || { school: [], tuition_study: [] };
   
-  // 1. Render School Classes
+  // 1. Render School Classes (No WhatsApp button)
   {
     const sec = 'school';
     if(dayData[sec]) sortTasksByTime(dayData[sec]);
@@ -1195,7 +1210,7 @@ function renderTables(){
     }
   }
 
-  // 2. Render Tuition & Study
+  // 2. Render Tuition & Study (WhatsApp button exclusive to Tuition items)
   {
     const sec = 'tuition_study';
     if(dayData[sec]) sortTasksByTime(dayData[sec]);
@@ -1221,6 +1236,7 @@ function renderTables(){
       items.forEach((item) => {
         const status = getTimeStatus(item.time, state.activeDateStr);
         const isLive = status === 'active';
+        const isTuition = item.cat === 'Tuition';
         
         const row = document.createElement('tr');
         let rowClasses = 'transition duration-150 border-b border-slate-100 cursor-pointer select-none ';
@@ -1249,9 +1265,19 @@ function renderTables(){
             </div>
           </td>
           <td class="py-2.5 px-3 text-left col-tk">
-            <div class="flex items-center gap-2">
-              <span class="text-xs sm:text-[13px] font-bold ${item.completed ? 'line-through text-slate-500' : 'text-slate-900'}">${escapeHtml(item.task || 'Untitled Session')}</span>
-              ${item.completed ? '<span class="inline-flex items-center gap-0.5 text-[9.5px] font-extrabold text-emerald-700 bg-emerald-100/90 px-1.5 py-0.2 rounded border border-emerald-300 shrink-0"><i data-lucide="check" class="w-2.5 h-2.5 stroke-[3]"></i> Done</span>' : ''}
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2 flex-wrap min-w-0">
+                <span class="text-xs sm:text-[13px] font-bold ${item.completed ? 'line-through text-slate-500' : 'text-slate-900'}">${escapeHtml(item.task || 'Untitled Session')}</span>
+                ${item.completed ? '<span class="inline-flex items-center gap-0.5 text-[9.5px] font-extrabold text-emerald-700 bg-emerald-100/90 px-1.5 py-0.2 rounded border border-emerald-300 shrink-0"><i data-lucide="check" class="w-2.5 h-2.5 stroke-[3]"></i> Done</span>' : ''}
+              </div>
+              ${isTuition ? `
+                <button type="button" onclick="sendTaskWhatsApp('${item.id}', '${sec}', event)" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10.5px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 hover:border-emerald-300 transition active:scale-95 shrink-0 print-hide" title="Send reminder to WhatsApp" aria-label="Send reminder on WhatsApp">
+                  <svg class="w-3.5 h-3.5 fill-[#25D366] shrink-0" viewBox="0 0 24 24">
+                    <path d="M17.472 14.382c-.301-.15-1.781-.879-2.056-.98-.277-.101-.479-.15-.68.15-.202.301-.782.98-.959 1.182-.176.201-.353.226-.653.076-.301-.15-1.27-.468-2.42-1.493-.894-.798-1.498-1.784-1.674-2.086-.176-.301-.019-.464.131-.614.136-.134.301-.351.451-.527.15-.176.201-.301.301-.502.101-.201.05-.376-.025-.526-.075-.15-.68-1.637-.93-2.24-.244-.588-.492-.508-.68-.518l-.58-.01c-.201 0-.528.075-.804.376-.276.301-1.055 1.03-1.055 2.511 0 1.481 1.08 2.91 1.23 3.111.151.201 2.125 3.245 5.148 4.551.719.311 1.28.497 1.718.636.722.23 1.378.197 1.898.12.578-.087 1.781-.728 2.032-1.431.251-.703.251-1.306.176-1.431-.076-.125-.276-.201-.577-.351zm-5.466 7.426h-.008c-1.802 0-3.57-.485-5.115-1.402l-.367-.218-3.805.998 1.016-3.708-.239-.381c-1.01-1.607-1.543-3.473-1.542-5.388.004-5.577 4.542-10.115 10.122-10.115 2.701 0 5.241 1.053 7.151 2.964 1.911 1.912 2.963 4.453 2.961 7.156-.005 5.579-4.543 10.116-10.124 10.116zm8.566-18.681c-2.288-2.29-5.33-3.553-8.568-3.555-6.673 0-12.099 5.424-12.102 12.099-.001 2.133.557 4.215 1.617 6.052l-1.717 6.273 6.42-1.684c1.764.962 3.748 1.469 5.774 1.47h.005c6.671 0 12.099-5.425 12.102-12.1 0-3.234-1.258-6.276-3.531-8.555z"/>
+                  </svg>
+                  <span>WhatsApp</span>
+                </button>
+              ` : ''}
             </div>
           </td>
           <td class="py-2.5 px-3 text-center col-cat whitespace-nowrap">
@@ -1282,7 +1308,7 @@ function renderTables(){
 }
 
 function handleRowClick(e, taskId, sec){
-  if(e.target.tagName === 'INPUT' || e.target.closest('label')) return;
+  if(e.target.tagName === 'INPUT' || e.target.closest('label') || e.target.closest('button')) return;
   updateCheckbox(taskId, sec);
 }
 
@@ -1443,7 +1469,6 @@ function toggleEditMode(t){
     editMode[t] = false;
     saveState();
 
-    // Auto-sync active date with updated templates
     syncDayFromTimetable(state.activeDateStr);
     renderTables();
     calculateWeeklyStats();
@@ -1556,7 +1581,6 @@ function updateCurrentDate(){
   const n = new Date();
   const currentTodayISO = getTodayISO();
 
-  // If date rolled over midnight, auto-advance planner to today's schedule
   if(currentTodayISO !== lastCheckedDate){
     lastCheckedDate = currentTodayISO;
     state.activeDateStr = currentTodayISO;
@@ -1607,7 +1631,6 @@ function importBackup(e){
       const d = JSON.parse(evt.target.result);
       if(d.timetables && d.days){
         state = d;
-        // Always focus on today's date after importing a backup
         state.activeDateStr = getTodayISO();
         state.viewMondayStr = getMondayISO(new Date());
         syncDayFromTimetable(state.activeDateStr);
