@@ -240,15 +240,9 @@ async function fetchAndRenderSidebarToppers() {
       } catch (e) {}
     }
     CBTState.allFetchedRecords = recordsList || [];
-    if (recordsList && recordsList.length > 0) { 
-      renderSidebarToppers(recordsList); 
-      updateUserDynamicRank(); 
-    } else if (container) {
-      container.style.display = 'none';
-    }
-  } catch (err) { 
-    if (container) container.style.display = 'none'; 
-  }
+    if (recordsList && recordsList.length > 0) { renderSidebarToppers(recordsList); updateUserDynamicRank(); }
+    else if (container) container.style.display = 'none';
+  } catch (err) { if (container) container.style.display = 'none'; }
 }
 
 function getSectionRankedCandidates() {
@@ -270,7 +264,47 @@ function getSectionRankedCandidates() {
   return list;
 }
 
-window.openLeaderboardModal = async function() {
+function ensureLeaderboardStyles() {
+  if ($('cbt-leaderboard-injected-styles')) return;
+  const style = document.createElement('style');
+  style.id = 'cbt-leaderboard-injected-styles';
+  style.textContent = `
+    .tp6-leaderboard-btn { background: #eff6ff !important; border: 1.2px solid #93c5fd !important; cursor: pointer; color: #1d4ed8 !important; font-weight: 700; transition: all 0.15s ease; }
+    .tp6-leaderboard-btn:hover { background: #dbeafe !important; border-color: #3b82f6 !important; transform: translateY(-1px); }
+    .tp6-leaderboard-badge { background: #2563eb !important; color: #ffffff !important; border-radius: 6px; box-shadow: 0 1px 3px rgba(37,99,235,0.3); }
+    .tp6-leaderboard-text { color: #1d4ed8 !important; font-weight: 800; }
+    .leaderboard-modal-box { max-width: 620px; width: 95%; max-height: 85vh; display: flex; flex-direction: column; padding: 22px; text-align: left; }
+    .lb-modal-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
+    .lb-modal-title-group { display: flex; flex-direction: column; gap: 2px; }
+    .lb-modal-title { font-size: 1.15rem; font-weight: 800; color: #0f172a; margin: 0; display: flex; align-items: center; gap: 8px; }
+    .lb-modal-subtitle { font-size: 0.78rem; color: #64748b; font-weight: 600; }
+    .lb-close-btn { background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: #475569; cursor: pointer; transition: all 0.15s ease; }
+    .lb-close-btn:hover { background: #e2e8f0; color: #0f172a; }
+    .lb-candidate-list { overflow-y: auto; max-height: calc(85vh - 150px); margin: 12px 0; display: flex; flex-direction: column; gap: 7px; padding-right: 4px; }
+    .lb-candidate-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-color); background: #ffffff; transition: background 0.12s ease; }
+    .lb-candidate-row:hover { background: #f8fafc; }
+    .lb-candidate-row.rank-1 { background: #fffdf5; border-color: #fde68a; }
+    .lb-candidate-row.rank-2 { background: #f8fafc; border-color: #e2e8f0; }
+    .lb-candidate-row.rank-3 { background: #fffaf5; border-color: #fed7aa; }
+    .lb-candidate-row.lb-current-user { border: 1.5px solid #3b82f6; background: #eff6ff !important; }
+    .lb-left { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; }
+    .lb-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .lb-name-line { display: flex; align-items: center; gap: 6px; }
+    .lb-candidate-name { font-size: 0.88rem; font-weight: 800; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .lb-you-tag { background: #2563eb; color: #ffffff; font-size: 0.65rem; font-weight: 700; padding: 1px 6px; border-radius: 999px; }
+    .lb-meta-line { display: flex; align-items: center; gap: 6px; font-size: 0.74rem; color: #64748b; }
+    .lb-meta-chip { background: #f1f5f9; padding: 1px 5px; border-radius: 4px; font-weight: 600; }
+    .lb-meta-school { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; }
+    .lb-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0; }
+    .lb-score-badge { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; font-size: 0.82rem; font-weight: 800; padding: 2px 8px; border-radius: 6px; }
+    .lb-acc-text { font-size: 0.68rem; color: #64748b; font-weight: 600; }
+    .lb-empty-state { text-align: center; padding: 28px 16px; color: #64748b; font-size: 0.9rem; font-weight: 500; }
+  `;
+  document.head.appendChild(style);
+}
+
+window.openLeaderboardModal = function() {
+  ensureLeaderboardStyles();
   let modal = $('modal-leaderboard');
   if (!modal) {
     modal = document.createElement('div');
@@ -282,71 +316,64 @@ window.openLeaderboardModal = async function() {
 
   const sec = CBTState.sections[CBTState.currentYearIndex];
   const curSecTitle = sec ? `${sec.year} - ${sec.title}` : (sec ? sec.title : "Current Section");
+  const candidates = getSectionRankedCandidates();
+  const getMarks = t => parseFloat(t.obtainedScore ?? t.score ?? t.totalMarks ?? t.marks ?? 0) || 0;
 
-  const buildModalContent = (isLoading = false) => {
-    const candidates = getSectionRankedCandidates();
-    const getMarks = t => parseFloat(t.obtainedScore ?? t.score ?? t.totalMarks ?? t.marks ?? 0) || 0;
+  const rowsHTML = candidates.length === 0 
+    ? `<div class="lb-empty-state">No candidate scores recorded for this section yet.</div>`
+    : candidates.map((t, idx) => {
+        const rank = idx + 1;
+        const badgeClass = rank === 1 ? 'rank-1' : (rank === 2 ? 'rank-2' : (rank === 3 ? 'rank-3' : 'rank-rest'));
+        const badgeText = rank <= 3 ? `${rank}` : `#${rank}`;
+        const rawName = (t.studentName || t.name || '').replace(/\s*\(Reload\s*Dropout\)/gi, '').trim();
+        const name = escapeHTML(rawName);
+        const marksVal = getMarks(t);
+        const marksText = `${marksVal} ${marksVal === 1 ? 'Mark' : 'Marks'}`;
+        let cls = (t.studentClass || t.classVal || "").toString().replace(/^Class\s*/i, '').trim();
+        let sSec = (t.studentSection || t.sectionVal || "").toString().replace(/^Sec\s*/i, '').trim();
+        const clsSec = (cls && sSec) ? `${cls}-${sSec}` : (cls || sSec || "");
+        const school = escapeHTML((t.schoolName || t.school || "").toString().trim());
+        const acc = (t.accuracy || "").toString().trim();
+        const isUser = CBTState.studentNameVal && rawName.toLowerCase() === CBTState.studentNameVal.trim().toLowerCase();
 
-    const rowsHTML = candidates.length === 0 
-      ? `<div class="lb-empty-state">${isLoading ? 'Syncing latest records...' : 'No candidate scores recorded for this section yet.'}</div>`
-      : candidates.map((t, idx) => {
-          const rank = idx + 1;
-          const badgeClass = rank === 1 ? 'rank-1' : (rank === 2 ? 'rank-2' : (rank === 3 ? 'rank-3' : 'rank-rest'));
-          const badgeText = rank <= 3 ? `${rank}` : `#${rank}`;
-          const rawName = (t.studentName || t.name || '').replace(/\s*\(Reload\s*Dropout\)/gi, '').trim();
-          const name = escapeHTML(rawName);
-          const marksVal = getMarks(t);
-          const marksText = `${marksVal % 1 === 0 ? marksVal : marksVal.toFixed(2)}`;
-          let cls = (t.studentClass || t.classVal || "").toString().replace(/^Class\s*/i, '').trim();
-          let sSec = (t.studentSection || t.sectionVal || "").toString().replace(/^Sec\s*/i, '').trim();
-          const clsSec = (cls && sSec) ? `${cls}-${sSec}` : (cls || sSec || "-");
-          const rawSchool = (t.schoolName || t.school || "").toString().trim();
-          const school = escapeHTML(rawSchool && rawSchool.toUpperCase() !== "N/A" ? rawSchool : "-");
-          const isUser = CBTState.studentNameVal && rawName.toLowerCase() === CBTState.studentNameVal.trim().toLowerCase();
-
-          return `<div class="lb-table-row ${badgeClass} ${isUser ? 'lb-current-user' : ''}">
-            <div class="lb-col-rank"><span class="tp6-badge-shape">${badgeText}</span></div>
-            <div class="lb-col-name" title="${name}">
-              <span class="lb-name-text">${name}</span>
-              ${isUser ? `<span class="lb-you-tag">You</span>` : ''}
+        return `<div class="lb-candidate-row ${badgeClass} ${isUser ? 'lb-current-user' : ''}">
+          <div class="lb-left">
+            <span class="tp6-badge-shape">${badgeText}</span>
+            <div class="lb-info">
+              <div class="lb-name-line">
+                <span class="lb-candidate-name">${name}</span>
+                ${isUser ? `<span class="lb-you-tag">You</span>` : ''}
+              </div>
+              <div class="lb-meta-line">
+                ${clsSec ? `<span class="lb-meta-chip">${clsSec}</span>` : ''}
+                ${school ? `<span class="lb-meta-school" title="${school}">${school}</span>` : ''}
+              </div>
             </div>
-            <div class="lb-col-school" title="${school !== '-' ? school : ''}">${school}</div>
-            <div class="lb-col-class"><span class="lb-class-pill">${escapeHTML(clsSec)}</span></div>
-            <div class="lb-col-marks"><span class="lb-marks-badge ${marksVal < 0 ? 'negative' : ''}">${marksText}</span></div>
-          </div>`;
-        }).join('');
+          </div>
+          <div class="lb-right">
+            <span class="lb-score-badge">${marksText}</span>
+            ${acc ? `<span class="lb-acc-text">Acc: ${escapeHTML(acc)}</span>` : ''}
+          </div>
+        </div>`;
+      }).join('');
 
-    modal.innerHTML = `
-      <div class="custom-modal-box leaderboard-modal-box">
-        <div class="lb-modal-header">
-          <div class="lb-modal-title-group">
-            <h3 class="lb-modal-title">🏆 Section Leaderboard ${isLoading ? '<span style="font-size:0.78rem;color:#2563eb;font-weight:600;margin-left:4px;">(Refreshing...)</span>' : ''}</h3>
-            <span class="lb-modal-subtitle">${escapeHTML(curSecTitle)} · ${candidates.length} Candidate${candidates.length === 1 ? '' : 's'}</span>
-          </div>
-          <button type="button" class="lb-close-btn" onclick="closeLeaderboardModal()" title="Close">✕</button>
+  modal.innerHTML = `
+    <div class="custom-modal-box leaderboard-modal-box">
+      <div class="lb-modal-header">
+        <div class="lb-modal-title-group">
+          <h3 class="lb-modal-title">🏆 Section Leaderboard</h3>
+          <span class="lb-modal-subtitle">${escapeHTML(curSecTitle)} · ${candidates.length} Candidate${candidates.length === 1 ? '' : 's'}</span>
         </div>
-        <div class="lb-table-wrap">
-          <div class="lb-table-header">
-            <div class="lb-col-rank">Rank</div>
-            <div class="lb-col-name">Name</div>
-            <div class="lb-col-school">School Name</div>
-            <div class="lb-col-class">Class&amp;Sec</div>
-            <div class="lb-col-marks">Marks</div>
-          </div>
-          <div class="lb-candidate-list">${rowsHTML}</div>
-        </div>
-        <div class="modal-btn-row" style="margin-top:12px;">
-          <button type="button" class="modal-btn-confirm-cancel" onclick="closeLeaderboardModal()" style="width:100%;height:42px;border-radius:10px;font-weight:700;">Close Leaderboard</button>
-        </div>
+        <button type="button" class="lb-close-btn" onclick="closeLeaderboardModal()" title="Close">✕</button>
       </div>
-    `;
-  };
+      <div class="lb-candidate-list">${rowsHTML}</div>
+      <div class="modal-btn-row" style="margin-top:8px;">
+        <button type="button" class="modal-btn-confirm-cancel" onclick="closeLeaderboardModal()" style="width:100%;height:40px;border-radius:10px;">Close Leaderboard</button>
+      </div>
+    </div>
+  `;
 
-  buildModalContent(true);
   modal.style.display = 'flex';
-
-  await fetchAndRenderSidebarToppers();
-  buildModalContent(false);
 };
 
 window.closeLeaderboardModal = function() {
@@ -374,7 +401,8 @@ function renderSidebarToppers(toppersArray) {
     const clsSec = (cls && sec) ? `${cls}-${sec}` : (cls || sec || ""), school = escapeHTML((t.schoolName || t.school || "").toString().trim());
     return `<div class="tp6-compact-card ${cardTheme}"><span class="tp6-badge-shape">${badgeText}</span><span class="tp6-name-text" title="${name}">${name}</span>${marksText ? `<span class="tp6-pipe">|</span><span class="tp6-score-text">${marksText}</span>` : ''}${clsSec ? `<span class="tp6-pipe">|</span><span class="tp6-class-text">${clsSec}</span>` : ''}${school ? `<span class="tp6-school-tag">${school}</span>` : ''}</div>`;
   };
-  listEl.innerHTML = `<div class="tp6-row">${top7.map((t, i) => buildCardHTML(t, i)).join('')}</div>`;
+  const leaderboardBtnHTML = `<button type="button" class="tp6-compact-card tp6-leaderboard-btn" onclick="openLeaderboardModal()" title="View Section Leaderboard"><span class="tp6-badge-shape tp6-leaderboard-badge">🏆</span><span class="tp6-name-text tp6-leaderboard-text">Leaderboard</span></button>`;
+  listEl.innerHTML = `<div class="tp6-row">${top7.map((t, i) => buildCardHTML(t, i)).join('')}${leaderboardBtnHTML}</div>`;
   container.style.display = 'flex';
 }
 
