@@ -358,10 +358,11 @@ function renderSidebarToppers(toppersArray) {
   const container = $('sidebar-toppers'), listEl = $('sidebar-toppers-list');
   if (!container || !listEl) return;
   let realToppers = (toppersArray || []).filter(t => t && (t.studentName || t.name) && String(t.studentName || t.name).trim() !== "" && String(t.studentName || t.name).toLowerCase() !== "awaiting...");
-  if (realToppers.length === 0) { container.style.display = 'none'; return; }
+  
   const getMarks = t => parseFloat(t.obtainedScore ?? t.score ?? t.totalMarks ?? t.marks ?? 0) || 0; 
   const getAccuracy = t => parseFloat((t.accuracy || "0").toString().replace("%", "")) || 0; 
   realToppers.sort((a, b) => (getMarks(b) - getMarks(a)) || (getAccuracy(b) - getAccuracy(a))); 
+  
   const top7 = realToppers.slice(0, 7);
   const buildCardHTML = (t, idx) => {
     const rank = idx + 1;
@@ -374,7 +375,13 @@ function renderSidebarToppers(toppersArray) {
     const clsSec = (cls && sec) ? `${cls}-${sec}` : (cls || sec || ""), school = escapeHTML((t.schoolName || t.school || "").toString().trim());
     return `<div class="tp6-compact-card ${cardTheme}"><span class="tp6-badge-shape">${badgeText}</span><span class="tp6-name-text" title="${name}">${name}</span>${marksText ? `<span class="tp6-pipe">|</span><span class="tp6-score-text">${marksText}</span>` : ''}${clsSec ? `<span class="tp6-pipe">|</span><span class="tp6-class-text">${clsSec}</span>` : ''}${school ? `<span class="tp6-school-tag">${school}</span>` : ''}</div>`;
   };
-  listEl.innerHTML = `<div class="tp6-row">${top7.map((t, i) => buildCardHTML(t, i)).join('')}</div>`;
+
+  let cardsHTML = top7.map((t, i) => buildCardHTML(t, i)).join('');
+  if (top7.length < 7) {
+    cardsHTML += `<div class="tp6-compact-card tp6-next-card"><span class="tp6-next-trophy">🏆</span><span class="tp6-next-text">You Could Be Next!</span></div>`;
+  }
+
+  listEl.innerHTML = `<div class="tp6-row">${cardsHTML}</div>`;
   container.style.display = 'flex';
 }
 
@@ -1002,7 +1009,7 @@ window.setFeedbackRating = function(rating, isUserAction = false) {
     else if (val === Math.ceil(rating)) {
       if (rating % 1 !== 0) s.classList.add('half-active'); else s.classList.add('active');
     }
-  });
+  }); 
 };
 
 window.updateFbCharCount = function(textarea) { if ($('fb-char-counter'))$('fb-char-counter').innerText = `${textarea.value.length}/500`; };
