@@ -893,7 +893,7 @@ function sendTaskWhatsApp(taskId, sec, e){
   const topicText = topicPart || 'Functions in Python';
 
   // Build the message exactly as formatted
-  const message = `⏰ Reminder:\nToday’s ${cleanSubject} class is scheduled from ${timeFormatted}.\n📚 Topic: ${topicText}\n🌐VisitNow:  www.SinghClasses.in`;
+  const message = `⏰ Gentle Reminder:\nToday’s ${cleanSubject} class is scheduled from ${timeFormatted}.\n📚 Topic: ${topicText}\n🌐VisitNow:  www.SinghClasses.in`;
 
   // Triggers the "Open WhatsApp App" prompt on desktop and launches the app on mobile
   const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
