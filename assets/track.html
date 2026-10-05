@@ -409,7 +409,7 @@ body { -webkit-tap-highlight-color: transparent; }
           </div>
         </section>
 
-        <!-- 2. TUITION & STUDY (Cleaned Batch Title, Dedicated Topic Badge & WhatsApp Integration) -->
+        <!-- 2. TUITION & STUDY (Clean 2-line layout: Batch Name on Line 1, Topic on Line 2) -->
         <section id="tuitionStudySec" class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden schedule-container-card">
           <header class="bg-cardNavy text-white px-3.5 sm:px-4 py-2 flex items-center justify-between">
             <div class="flex items-center gap-2.5">
@@ -555,7 +555,7 @@ body { -webkit-tap-highlight-color: transparent; }
 
 <script>
 /* ==========================================================================
-   GLOBAL MASTER TIMETABLE CONFIGURATION (Cleaned from raw strings)
+   GLOBAL MASTER TIMETABLE CONFIGURATION
    ========================================================================== */
 window.MASTER_TIMETABLES = {
   school: {
@@ -674,7 +674,7 @@ window.MASTER_TIMETABLES = {
 };
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-const STORE_KEY = 'singhPlanner_v23';
+const STORE_KEY = 'singhPlanner_v25';
 
 let state = {
   activeDateStr: getTodayISO(),
@@ -820,7 +820,7 @@ function getTimeStatus(timeStr, dateStr){
   return 'upcoming';
 }
 
-/* ================= TASK & TOPIC SANITIZER ================= */
+/* ================= PARSER & STATE SANITIZER ================= */
 function parseTaskAndTopic(rawText, existingTopic){
   if(existingTopic && typeof existingTopic === 'string' && existingTopic.trim() !== ''){
     const cleanTitle = (rawText || '').replace(/\s*\|\s*Topic:.*$/i, '').trim();
@@ -844,26 +844,20 @@ function parseTaskAndTopic(rawText, existingTopic){
 
 function sanitizePlannerState(dataObj){
   if(!dataObj) return;
-  // Clean Master Timetables
+  const cleanItem = (item) => {
+    if(!item || !item.task) return;
+    const p = parseTaskAndTopic(item.task, item.topic);
+    item.task = p.title;
+    item.topic = p.topic;
+  };
   if(dataObj.timetables && dataObj.timetables.tuition){
     Object.keys(dataObj.timetables.tuition).forEach(d => {
-      (dataObj.timetables.tuition[d] || []).forEach(slot => {
-        const p = parseTaskAndTopic(slot.task, slot.topic);
-        slot.task = p.title;
-        slot.topic = p.topic;
-      });
+      (dataObj.timetables.tuition[d] || []).forEach(cleanItem);
     });
   }
-  // Clean Daily Tasks
   if(dataObj.days){
     Object.values(dataObj.days).forEach(day => {
-      if(day.tuition_study){
-        day.tuition_study.forEach(item => {
-          const p = parseTaskAndTopic(item.task, item.topic);
-          item.task = p.title;
-          item.topic = p.topic;
-        });
-      }
+      if(day.tuition_study) day.tuition_study.forEach(cleanItem);
     });
   }
 }
@@ -891,7 +885,7 @@ window.addEventListener('keydown', (e) => {
   if(e.key === 'Escape') closeModal();
 });
 
-/* ================= TOPIC EDITOR ================= */
+/* ================= TOPIC EDITING ================= */
 function editItemTopic(taskId, sec, e){
   if(e) e.stopPropagation();
   const dayData = state.days[state.activeDateStr];
@@ -955,7 +949,6 @@ function sendTaskWhatsApp(taskId, sec, e){
   // Build the message exactly matching the requested format
   const message = `⏰ Reminder:\nToday’s ${cleanSubject} class is scheduled from ${timeFormatted}.\n📚 Topic: ${topicDisplay}\n🌐VisitNow:  www.SinghClasses.in`;
 
-  // Triggers the "Open WhatsApp App" prompt on desktop and launches the app on mobile
   const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
   window.open(url, '_blank');
 }
@@ -1026,7 +1019,7 @@ function loadState(){
     }
   } else {
     initState();
-    const prev = localStorage.getItem('singhPlanner_v22') || localStorage.getItem('singhPlanner_v21') || localStorage.getItem('singhPlanner_v20');
+    const prev = localStorage.getItem('singhPlanner_v23') || localStorage.getItem('singhPlanner_v22') || localStorage.getItem('singhPlanner_v21');
     if(prev){
       try {
         const p = JSON.parse(prev);
@@ -1035,7 +1028,6 @@ function loadState(){
     }
   }
 
-  // Sanitize stored data so old '| Topic:' doesn't contaminate UI
   sanitizePlannerState(state);
 
   const currentCodeTemplate = JSON.stringify(window.MASTER_TIMETABLES);
@@ -1312,7 +1304,7 @@ function renderTables(){
     }
   }
 
-  // 2. Render Tuition & Study (Cleaned Task Name & Dedicated Topic Badge)
+  // 2. Render Tuition & Study (Clean Two-Line Stack: Line 1 = Batch Title, Line 2 = Topic)
   {
     const sec = 'tuition_study';
     if(dayData[sec]) sortTasksByTime(dayData[sec]);
@@ -1339,6 +1331,11 @@ function renderTables(){
         const status = getTimeStatus(item.time, state.activeDateStr);
         const isLive = status === 'active';
         const isTuition = item.cat === 'Tuition';
+        
+        // Ensure parsing splits title and topic cleanly
+        const parsed = parseTaskAndTopic(item.task, item.topic);
+        const cleanTitle = parsed.title;
+        const currentTopic = parsed.topic;
         
         const row = document.createElement('tr');
         let rowClasses = 'transition duration-150 border-b border-slate-100 cursor-pointer select-none ';
@@ -1369,23 +1366,26 @@ function renderTables(){
           <td class="py-2.5 px-3 text-left col-tk">
             <div class="flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
               <div class="flex flex-col min-w-0 pr-1">
+                <!-- LINE 1: BATCH / SUBJECT NAME -->
                 <div class="flex items-center gap-2 flex-wrap min-w-0">
-                  <span class="text-xs sm:text-[13px] font-bold ${item.completed ? 'line-through text-slate-500' : 'text-slate-900'}">${escapeHtml(item.task || 'Untitled Session')}</span>
+                  <span class="text-xs sm:text-[13px] font-bold ${item.completed ? 'line-through text-slate-500' : 'text-slate-900'}">${escapeHtml(cleanTitle)}</span>
                   ${item.completed ? '<span class="inline-flex items-center gap-0.5 text-[9.5px] font-extrabold text-emerald-700 bg-emerald-100/90 px-1.5 py-0.2 rounded border border-emerald-300 shrink-0"><i data-lucide="check" class="w-2.5 h-2.5 stroke-[3]"></i> Done</span>' : ''}
                 </div>
+                <!-- LINE 2: DEDICATED TOPIC SUB-LINE -->
                 ${isTuition ? `
-                  <div class="flex items-center gap-1.5 mt-0.5 text-[11px] text-slate-500">
-                    ${item.topic ? `
-                      <span class="inline-flex items-center gap-1 text-[10.5px] font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
-                        📚 Topic: ${escapeHtml(item.topic)}
+                  <div class="flex items-center gap-1.5 mt-1 text-[11px]">
+                    ${currentTopic ? `
+                      <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100/80 px-2 py-0.5 rounded border border-blue-200/90 cursor-pointer transition active:scale-95" onclick="editItemTopic('${item.id}', '${sec}', event)" title="Click to edit topic">
+                        <span>📚 Topic:</span>
+                        <strong class="font-bold underline decoration-blue-300 underline-offset-2">${escapeHtml(currentTopic)}</strong>
                       </span>
                       <button type="button" onclick="editItemTopic('${item.id}', '${sec}', event)" class="text-slate-400 hover:text-blue-600 p-0.5 rounded transition print-hide" title="Edit Topic">
                         <i data-lucide="pencil" class="w-3 h-3"></i>
                       </button>
                     ` : `
-                      <button type="button" onclick="editItemTopic('${item.id}', '${sec}', event)" class="inline-flex items-center gap-1 text-[10.5px] font-semibold text-slate-400 hover:text-blue-600 transition print-hide">
-                        <i data-lucide="plus-circle" class="w-3 h-3"></i>
-                        <span>Add topic</span>
+                      <button type="button" onclick="editItemTopic('${item.id}', '${sec}', event)" class="inline-flex items-center gap-1 text-[11px] font-medium text-slate-400 hover:text-blue-600 transition print-hide">
+                        <span>📚 Topic:</span>
+                        <span class="italic text-slate-400 hover:underline">+ Add topic</span>
                       </button>
                     `}
                   </div>
