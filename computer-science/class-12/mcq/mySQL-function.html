@@ -21,7 +21,7 @@
   
 <script>
 window.CBT_CONFIG = {
-  ENABLE_PROCTORING: true,
+  ENABLE_PROCTORING: false,
   MARKS_CORRECT: 1,
   MARKS_INCORRECT: 0.25,
   PENALTY_WARNING: 2,
@@ -286,11 +286,19 @@ window.CBT_CONFIG = {
       <div class="toppers-hero-header">
         <div class="toppers-title-group">
           <span class="toppers-vertical-accent"></span>
+          <span class="toppers-crown-icon" aria-hidden="true">👑</span>
           <h3 class="shortcut-label">Top Performers</h3>
         </div>
-        <span id="user-current-rank-badge" class="topper-user-rank-pill" style="display:none;">
-          Your current rank: <strong id="user-current-rank-text">-</strong>
-        </span>
+        <div class="toppers-header-actions">
+          <span id="user-current-rank-badge" class="topper-user-rank-pill" style="display:none;">
+            Your current rank: <strong id="user-current-rank-text">-</strong>
+          </span>
+          <button type="button" class="btn-toppers-leaderboard" onclick="openLeaderboardModal()" aria-label="View Leaderboard">
+            <span class="toppers-lb-trophy">🏆</span>
+            <span>Leaderboard</span>
+            <svg class="toppers-lb-arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
       </div>
       <div id="sidebar-toppers-list" class="sidebar-toppers-grid-img6"></div>
     </div>
