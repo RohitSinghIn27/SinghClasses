@@ -138,7 +138,7 @@ body { -webkit-tap-highlight-color: transparent; }
   .col-tk { grid-area: tk !important; width: 100% !important; font-size: 13.5px !important; }
   .col-cat { grid-area: cat !important; justify-content: flex-end !important; }
   .col-hr { grid-area: hr !important; justify-content: flex-end !important; }
-
+  
   .mobile-table tfoot { display: block !important; width: 100% !important; border-top: 1px solid #e2e8f0 !important; }
   .mobile-table tfoot tr { display: flex !important; justify-content: space-between !important; align-items: center !important; padding: 8px 10px !important; background: #f8fafc !important; border-radius: 8px !important; }
   .mobile-table tfoot td { display: inline-block !important; padding: 0 !important; border: none !important; }
@@ -160,7 +160,7 @@ body { -webkit-tap-highlight-color: transparent; }
   .mobile-table th { display: table-cell !important; padding: 3px 2px !important; font-size: 8.5px !important; background: #f8fafc !important; border: 1px solid #cbd5e1 !important; }
   .mobile-table td { display: table-cell !important; padding: 3px 2px !important; font-size: 9px !important; border: 1px solid #cbd5e1 !important; text-align: center !important; }
   .cat-pill { border-radius: 4px !important; font-size: 7.5px !important; padding: 1px 3px !important; }
-
+  
   #mainWorkspace {
     max-height: none !important;
     overflow: visible !important;
@@ -409,7 +409,7 @@ body { -webkit-tap-highlight-color: transparent; }
           </div>
         </section>
 
-        <!-- 2. TUITION & STUDY (WhatsApp button exclusive here) -->
+        <!-- 2. TUITION & STUDY (Cleaned Batch Title, Dedicated Topic Badge & WhatsApp Integration) -->
         <section id="tuitionStudySec" class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden schedule-container-card">
           <header class="bg-cardNavy text-white px-3.5 sm:px-4 py-2 flex items-center justify-between">
             <div class="flex items-center gap-2.5">
@@ -555,7 +555,7 @@ body { -webkit-tap-highlight-color: transparent; }
 
 <script>
 /* ==========================================================================
-   GLOBAL MASTER TIMETABLE CONFIGURATION
+   GLOBAL MASTER TIMETABLE CONFIGURATION (Cleaned from raw strings)
    ========================================================================== */
 window.MASTER_TIMETABLES = {
   school: {
@@ -622,44 +622,44 @@ window.MASTER_TIMETABLES = {
   },
   tuition: {
     'Mon': [
-      { time: '04:00 PM - 04:50 PM', task: 'Class XII IP – Sant Nagar | Topic: ', hrs: 0.50 },
-      { time: '05:10 PM - 06:00 PM', task: 'Class XII IP – SICS | Topic: ', hrs: 0.50 },
-      { time: '07:00 PM - 07:50 PM', task: 'Class XII CS – Sant Nagar | Topic: Functions in Python', hrs: 0.50 },
-      { time: '08:00 PM - 09:00 PM', task: 'Home Tuition | Topic: ', hrs: 1.00 }
+      { time: '04:00 PM - 04:50 PM', task: 'Class XII IP – Sant Nagar', topic: '', hrs: 0.50 },
+      { time: '05:10 PM - 06:00 PM', task: 'Class XII IP – SICS', topic: '', hrs: 0.50 },
+      { time: '07:00 PM - 07:50 PM', task: 'Class XII CS – Sant Nagar', topic: 'Functions in Python', hrs: 0.50 },
+      { time: '08:00 PM - 09:00 PM', task: 'Home Tuition', topic: '', hrs: 1.00 }
     ],
     'Tue': [
-      { time: '04:00 PM - 05:30 PM', task: 'Class XI IP/CS – Sant Nagar | Topic: ', hrs: 1.50 },
-      { time: '05:30 PM - 06:20 PM', task: 'Class XI AI – SICS | Topic: ', hrs: 0.83 },
-      { time: '06:20 PM - 07:30 PM', task: 'Class XI IP/CS – SICS | Topic: ', hrs: 1.17 },
-      { time: '08:00 PM - 09:00 PM', task: 'SkillYards | Topic: ', hrs: 1.00 }
+      { time: '04:00 PM - 05:30 PM', task: 'Class XI IP/CS – Sant Nagar', topic: '', hrs: 1.50 },
+      { time: '05:30 PM - 06:20 PM', task: 'Class XI AI – SICS', topic: '', hrs: 0.83 },
+      { time: '06:20 PM - 07:30 PM', task: 'Class XI IP/CS – SICS', topic: '', hrs: 1.17 },
+      { time: '08:00 PM - 09:00 PM', task: 'SkillYards', topic: '', hrs: 1.00 }
     ],
     'Wed': [
-      { time: '04:00 PM - 05:10 PM', task: 'Class XII IP – Sant Nagar | Topic: ', hrs: 1.17 },
-      { time: '05:10 PM - 06:20 PM', task: 'Class XII IP – SICS | Topic: ', hrs: 1.17 },
-      { time: '07:15 PM - 08:30 PM', task: 'Class XII CS – Sant Nagar | Topic: ', hrs: 1.25 },
-      { time: '08:10 PM - 09:15 PM', task: 'Vidya Home Tuition | Topic: ', hrs: 1.08 }
+      { time: '04:00 PM - 05:10 PM', task: 'Class XII IP – Sant Nagar', topic: '', hrs: 1.17 },
+      { time: '05:10 PM - 06:20 PM', task: 'Class XII IP – SICS', topic: '', hrs: 1.17 },
+      { time: '07:15 PM - 08:30 PM', task: 'Class XII CS – Sant Nagar', topic: '', hrs: 1.25 },
+      { time: '08:10 PM - 09:15 PM', task: 'Vidya Home Tuition', topic: '', hrs: 1.08 }
     ],
     'Thu': [
-      { time: '04:00 PM - 05:30 PM', task: 'Class XI IP/CS – Sant Nagar | Topic: ', hrs: 1.50 },
-      { time: '05:30 PM - 06:20 PM', task: 'Class XI AI – SICS | Topic: ', hrs: 0.83 },
-      { time: '06:20 PM - 07:30 PM', task: 'Class XI IP/CS – SICS | Topic: ', hrs: 1.17 },
-      { time: '08:00 PM - 09:00 PM', task: 'SkillYards | Topic: ', hrs: 1.00 }
+      { time: '04:00 PM - 05:30 PM', task: 'Class XI IP/CS – Sant Nagar', topic: '', hrs: 1.50 },
+      { time: '05:30 PM - 06:20 PM', task: 'Class XI AI – SICS', topic: '', hrs: 0.83 },
+      { time: '06:20 PM - 07:30 PM', task: 'Class XI IP/CS – SICS', topic: '', hrs: 1.17 },
+      { time: '08:00 PM - 09:00 PM', task: 'SkillYards', topic: '', hrs: 1.00 }
     ],
     'Fri': [
-      { time: '04:00 PM - 05:10 PM', task: 'Class XII IP – Sant Nagar | Topic: ', hrs: 1.17 },
-      { time: '05:10 PM - 06:20 PM', task: 'Class XII IP – SICS | Topic: ', hrs: 1.17 },
-      { time: '07:15 PM - 08:30 PM', task: 'Class XII CS – Sant Nagar | Topic: ', hrs: 1.25 },
-      { time: '08:00 PM - 09:00 PM', task: 'Kriti Class | Topic: ', hrs: 1.00 }
+      { time: '04:00 PM - 05:10 PM', task: 'Class XII IP – Sant Nagar', topic: '', hrs: 1.17 },
+      { time: '05:10 PM - 06:20 PM', task: 'Class XII IP – SICS', topic: '', hrs: 1.17 },
+      { time: '07:15 PM - 08:30 PM', task: 'Class XII CS – Sant Nagar', topic: '', hrs: 1.25 },
+      { time: '08:00 PM - 09:00 PM', task: 'Kriti Class', topic: '', hrs: 1.00 }
     ],
     'Sat': [
-      { time: '04:00 PM - 05:30 PM', task: 'Class XI IP/CS – Sant Nagar | Topic: ', hrs: 1.50 },
-      { time: '05:30 PM - 06:20 PM', task: 'Class XI AI – SICS | Topic: ', hrs: 0.83 },
-      { time: '06:20 PM - 07:30 PM', task: 'Class XI IP/CS – SICS | Topic: ', hrs: 1.17 },
-      { time: '08:00 PM - 09:00 PM', task: 'SkillYards | Topic: ', hrs: 1.00 }
+      { time: '04:00 PM - 05:30 PM', task: 'Class XI IP/CS – Sant Nagar', topic: '', hrs: 1.50 },
+      { time: '05:30 PM - 06:20 PM', task: 'Class XI AI – SICS', topic: '', hrs: 0.83 },
+      { time: '06:20 PM - 07:30 PM', task: 'Class XI IP/CS – SICS', topic: '', hrs: 1.17 },
+      { time: '08:00 PM - 09:00 PM', task: 'SkillYards', topic: '', hrs: 1.00 }
     ],
     'Sun': [
-      { time: '12:30 PM - 01:30 PM', task: 'Vidya Class | Topic: ', hrs: 1.00 },
-      { time: '02:00 PM - 03:00 PM', task: 'Kirti Class | Topic: ', hrs: 1.00 }
+      { time: '12:30 PM - 01:30 PM', task: 'Vidya Class', topic: '', hrs: 1.00 },
+      { time: '02:00 PM - 03:00 PM', task: 'Kirti Class', topic: '', hrs: 1.00 }
     ]
   },
   study: {
@@ -674,7 +674,7 @@ window.MASTER_TIMETABLES = {
 };
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-const STORE_KEY = 'singhPlanner_v22';
+const STORE_KEY = 'singhPlanner_v23';
 
 let state = {
   activeDateStr: getTodayISO(),
@@ -820,6 +820,54 @@ function getTimeStatus(timeStr, dateStr){
   return 'upcoming';
 }
 
+/* ================= TASK & TOPIC SANITIZER ================= */
+function parseTaskAndTopic(rawText, existingTopic){
+  if(existingTopic && typeof existingTopic === 'string' && existingTopic.trim() !== ''){
+    const cleanTitle = (rawText || '').replace(/\s*\|\s*Topic:.*$/i, '').trim();
+    return { title: cleanTitle, topic: existingTopic.trim() };
+  }
+  if(!rawText) return { title: 'Untitled Session', topic: '' };
+  
+  if(rawText.includes('|')){
+    const parts = rawText.split('|');
+    const title = parts[0].trim();
+    const topic = parts.slice(1).join('|').replace(/^\s*topic\s*:\s*/i, '').trim();
+    return { title, topic };
+  }
+
+  const m = rawText.match(/^(.*?)\s*topic\s*:\s*(.*)$/i);
+  if(m){
+    return { title: m[1].trim(), topic: m[2].trim() };
+  }
+  return { title: rawText.trim(), topic: '' };
+}
+
+function sanitizePlannerState(dataObj){
+  if(!dataObj) return;
+  // Clean Master Timetables
+  if(dataObj.timetables && dataObj.timetables.tuition){
+    Object.keys(dataObj.timetables.tuition).forEach(d => {
+      (dataObj.timetables.tuition[d] || []).forEach(slot => {
+        const p = parseTaskAndTopic(slot.task, slot.topic);
+        slot.task = p.title;
+        slot.topic = p.topic;
+      });
+    });
+  }
+  // Clean Daily Tasks
+  if(dataObj.days){
+    Object.values(dataObj.days).forEach(day => {
+      if(day.tuition_study){
+        day.tuition_study.forEach(item => {
+          const p = parseTaskAndTopic(item.task, item.topic);
+          item.task = p.title;
+          item.topic = p.topic;
+        });
+      }
+    });
+  }
+}
+
 /* ================= TOASTS & MODALS ================= */
 function showToast(message, type='info'){
   const container = document.getElementById('toastContainer');
@@ -843,6 +891,24 @@ window.addEventListener('keydown', (e) => {
   if(e.key === 'Escape') closeModal();
 });
 
+/* ================= TOPIC EDITOR ================= */
+function editItemTopic(taskId, sec, e){
+  if(e) e.stopPropagation();
+  const dayData = state.days[state.activeDateStr];
+  if(!dayData || !dayData[sec]) return;
+  const item = dayData[sec].find(t => t.id === taskId);
+  if(!item) return;
+
+  const currentTopic = item.topic || '';
+  const newTopic = prompt(`Enter topic for "${item.task}":`, currentTopic);
+  if(newTopic !== null){
+    item.topic = newTopic.trim();
+    saveState();
+    renderTables();
+    showToast(newTopic.trim() ? 'Topic saved!' : 'Topic cleared', 'success');
+  }
+}
+
 /* ================= WHATSAPP REMINDER DISPATCHER ================= */
 function sendTaskWhatsApp(taskId, sec, e){
   if(e) e.stopPropagation();
@@ -851,25 +917,9 @@ function sendTaskWhatsApp(taskId, sec, e){
   const item = dayData[sec].find(t => t.id === taskId);
   if(!item) return;
 
-  const rawTask = (item.task || 'Class').trim();
-  let subjectPart = rawTask;
-  let topicPart = '';
+  let cleanSubject = (item.task || 'Class').trim();
 
-  // Extract task/batch title and topic from separator patterns
-  if(rawTask.includes('|')){
-    const parts = rawTask.split('|');
-    subjectPart = parts[0].trim();
-    topicPart = parts.slice(1).join('|').trim().replace(/^topic\s*:\s*/i, '').trim();
-  } else if(/topic\s*:\s*/i.test(rawTask)){
-    const m = rawTask.match(/^(.*?)\s*topic\s*:\s*(.*)$/i);
-    if(m){
-      subjectPart = m[1].trim();
-      topicPart = m[2].trim();
-    }
-  }
-
-  // Format batch/subject: e.g. "XII CS SantNagar" -> "Class XII CS – Sant Nagar"
-  let cleanSubject = subjectPart.replace(/\s+class$/i, '').trim();
+  // Normalize batch title
   if(/^(IX|X|XI|XII)\b/i.test(cleanSubject) && !/^Class\b/i.test(cleanSubject)){
     cleanSubject = 'Class ' + cleanSubject;
   }
@@ -889,11 +939,21 @@ function sendTaskWhatsApp(taskId, sec, e){
     ? rawTime.replace(/\s*[-–]\s*/, ' to ')
     : rawTime;
 
-  // Final topic fallback
-  const topicText = topicPart || 'Functions in Python';
+  let topicText = (item.topic || '').trim();
+  if(!topicText){
+    const promptAns = prompt(`Enter topic for today's ${cleanSubject} class:`, '');
+    if(promptAns !== null && promptAns.trim()){
+      item.topic = promptAns.trim();
+      topicText = item.topic;
+      saveState();
+      renderTables();
+    }
+  }
 
-  // Build the message exactly as formatted
-  const message = `⏰ Gentle Reminder:\nToday’s ${cleanSubject} class is scheduled from ${timeFormatted}.\n📚 Topic: ${topicText}\n🌐VisitNow:  www.SinghClasses.in`;
+  const topicDisplay = topicText || 'Functions in Python';
+
+  // Build the message exactly matching the requested format
+  const message = `⏰ Reminder:\nToday’s ${cleanSubject} class is scheduled from ${timeFormatted}.\n📚 Topic: ${topicDisplay}\n🌐VisitNow:  www.SinghClasses.in`;
 
   // Triggers the "Open WhatsApp App" prompt on desktop and launches the app on mobile
   const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
@@ -926,13 +986,15 @@ function syncDayFromTimetable(dateStr){
 
   const tsTasks = [];
   (state.timetables.tuition[dName] || []).forEach(item => {
+    const p = parseTaskAndTopic(item.task, item.topic);
     tsTasks.push({
       id: uid(),
       time: item.time,
       hrs: parseFloat(item.hrs) || 1.17,
       cat: 'Tuition',
-      task: item.task,
-      completed: compTuition.has(`${item.time}_${item.task}`)
+      task: p.title,
+      topic: p.topic || '',
+      completed: compTuition.has(`${item.time}_${item.task}`) || compTuition.has(`${item.time}_${p.title}`)
     });
   });
 
@@ -943,6 +1005,7 @@ function syncDayFromTimetable(dateStr){
       hrs: parseFloat(item.hrs) || 1.50,
       cat: 'Study',
       task: item.task,
+      topic: '',
       completed: compTuition.has(`${item.time}_${item.task}`)
     });
   });
@@ -963,7 +1026,7 @@ function loadState(){
     }
   } else {
     initState();
-    const prev = localStorage.getItem('singhPlanner_v21') || localStorage.getItem('singhPlanner_v20');
+    const prev = localStorage.getItem('singhPlanner_v22') || localStorage.getItem('singhPlanner_v21') || localStorage.getItem('singhPlanner_v20');
     if(prev){
       try {
         const p = JSON.parse(prev);
@@ -971,6 +1034,9 @@ function loadState(){
       } catch(e){}
     }
   }
+
+  // Sanitize stored data so old '| Topic:' doesn't contaminate UI
+  sanitizePlannerState(state);
 
   const currentCodeTemplate = JSON.stringify(window.MASTER_TIMETABLES);
   if(!state.lastCodeTemplate || state.lastCodeTemplate !== currentCodeTemplate || !state.timetables){
@@ -1246,7 +1312,7 @@ function renderTables(){
     }
   }
 
-  // 2. Render Tuition & Study (WhatsApp button exclusive to Tuition items)
+  // 2. Render Tuition & Study (Cleaned Task Name & Dedicated Topic Badge)
   {
     const sec = 'tuition_study';
     if(dayData[sec]) sortTasksByTime(dayData[sec]);
@@ -1301,13 +1367,32 @@ function renderTables(){
             </div>
           </td>
           <td class="py-2.5 px-3 text-left col-tk">
-            <div class="flex items-center justify-between gap-2">
-              <div class="flex items-center gap-2 flex-wrap min-w-0">
-                <span class="text-xs sm:text-[13px] font-bold ${item.completed ? 'line-through text-slate-500' : 'text-slate-900'}">${escapeHtml(item.task || 'Untitled Session')}</span>
-                ${item.completed ? '<span class="inline-flex items-center gap-0.5 text-[9.5px] font-extrabold text-emerald-700 bg-emerald-100/90 px-1.5 py-0.2 rounded border border-emerald-300 shrink-0"><i data-lucide="check" class="w-2.5 h-2.5 stroke-[3]"></i> Done</span>' : ''}
+            <div class="flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
+              <div class="flex flex-col min-w-0 pr-1">
+                <div class="flex items-center gap-2 flex-wrap min-w-0">
+                  <span class="text-xs sm:text-[13px] font-bold ${item.completed ? 'line-through text-slate-500' : 'text-slate-900'}">${escapeHtml(item.task || 'Untitled Session')}</span>
+                  ${item.completed ? '<span class="inline-flex items-center gap-0.5 text-[9.5px] font-extrabold text-emerald-700 bg-emerald-100/90 px-1.5 py-0.2 rounded border border-emerald-300 shrink-0"><i data-lucide="check" class="w-2.5 h-2.5 stroke-[3]"></i> Done</span>' : ''}
+                </div>
+                ${isTuition ? `
+                  <div class="flex items-center gap-1.5 mt-0.5 text-[11px] text-slate-500">
+                    ${item.topic ? `
+                      <span class="inline-flex items-center gap-1 text-[10.5px] font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                        📚 Topic: ${escapeHtml(item.topic)}
+                      </span>
+                      <button type="button" onclick="editItemTopic('${item.id}', '${sec}', event)" class="text-slate-400 hover:text-blue-600 p-0.5 rounded transition print-hide" title="Edit Topic">
+                        <i data-lucide="pencil" class="w-3 h-3"></i>
+                      </button>
+                    ` : `
+                      <button type="button" onclick="editItemTopic('${item.id}', '${sec}', event)" class="inline-flex items-center gap-1 text-[10.5px] font-semibold text-slate-400 hover:text-blue-600 transition print-hide">
+                        <i data-lucide="plus-circle" class="w-3 h-3"></i>
+                        <span>Add topic</span>
+                      </button>
+                    `}
+                  </div>
+                ` : ''}
               </div>
               ${isTuition ? `
-                <button type="button" onclick="sendTaskWhatsApp('${item.id}', '${sec}', event)" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10.5px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 hover:border-emerald-300 transition active:scale-95 shrink-0 print-hide" title="Send reminder to WhatsApp" aria-label="Send reminder on WhatsApp">
+                <button type="button" onclick="sendTaskWhatsApp('${item.id}', '${sec}', event)" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10.5px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 hover:border-emerald-300 transition active:scale-95 shrink-0 print-hide" title="Send reminder to WhatsApp" aria-label="Send reminder on WhatsApp">
                   <svg class="w-3.5 h-3.5 fill-[#25D366] shrink-0" viewBox="0 0 24 24">
                     <path d="M17.472 14.382c-.301-.15-1.781-.879-2.056-.98-.277-.101-.479-.15-.68.15-.202.301-.782.98-.959 1.182-.176.201-.353.226-.653.076-.301-.15-1.27-.468-2.42-1.493-.894-.798-1.498-1.784-1.674-2.086-.176-.301-.019-.464.131-.614.136-.134.301-.351.451-.527.15-.176.201-.301.301-.502.101-.201.05-.376-.025-.526-.075-.15-.68-1.637-.93-2.24-.244-.588-.492-.508-.68-.518l-.58-.01c-.201 0-.528.075-.804.376-.276.301-1.055 1.03-1.055 2.511 0 1.481 1.08 2.91 1.23 3.111.151.201 2.125 3.245 5.148 4.551.719.311 1.28.497 1.718.636.722.23 1.378.197 1.898.12.578-.087 1.781-.728 2.032-1.431.251-.703.251-1.306.176-1.431-.076-.125-.276-.201-.577-.351zm-5.466 7.426h-.008c-1.802 0-3.57-.485-5.115-1.402l-.367-.218-3.805.998 1.016-3.708-.239-.381c-1.01-1.607-1.543-3.473-1.542-5.388.004-5.577 4.542-10.115 10.122-10.115 2.701 0 5.241 1.053 7.151 2.964 1.911 1.912 2.963 4.453 2.961 7.156-.005 5.579-4.543 10.116-10.124 10.116zm8.566-18.681c-2.288-2.29-5.33-3.553-8.568-3.555-6.673 0-12.099 5.424-12.102 12.099-.001 2.133.557 4.215 1.617 6.052l-1.717 6.273 6.42-1.684c1.764.962 3.748 1.469 5.774 1.47h.005c6.671 0 12.099-5.425 12.102-12.1 0-3.234-1.258-6.276-3.531-8.555z"/>
                   </svg>
@@ -1441,7 +1526,7 @@ function renderTimetables(){
           ` : `
             <div class="p-1 border-b border-slate-50 text-slate-700 last:border-none flex items-center justify-between text-[11px]">
               <div>
-                <div class="font-bold text-slate-900 leading-tight">${escapeHtml(it.task)}</div>
+                <div class="font-bold text-slate-900 leading-tight">${escapeHtml(it.task)}</div>${it.topic ? `<div class="text-[9.5px] text-blue-600 font-semibold">Topic: ${escapeHtml(it.topic)}</div>` : ''}
                 <div class="text-[10px] text-slate-500">${escapeHtml(it.time)}</div>
               </div>
               <span class="text-[9px] font-extrabold text-blue-600 bg-blue-50 px-1 py-0.5 rounded">${Number(it.hrs).toFixed(2)}h</span>
@@ -1485,9 +1570,11 @@ function syncCurrentTimetableInputs(t){
       const taskVal = tasks[idx] ? tasks[idx].value.trim() : '';
       if(tVal || taskVal){
         const p = extractTimeAndCalculateHrs(tVal);
+        const parsedTask = parseTaskAndTopic(taskVal || (p ? p.cleanTask : 'Class'));
         newSlots.push({
           time: p ? p.timeStr : tVal,
-          task: taskVal || (p ? p.cleanTask : 'Class'),
+          task: parsedTask.title,
+          topic: parsedTask.topic,
           hrs: p ? p.hrs : (t === 'school' ? 0.58 : t === 'tuition' ? 1.17 : 1.50)
         });
       }
@@ -1523,6 +1610,7 @@ function addNewTemplateSlot(t, d){
   state.timetables[t][d].push({
     time: t === 'school' ? '08:40 AM - 09:15 AM' : t === 'tuition' ? '04:00 PM - 05:10 PM' : '10:00 PM - 11:30 PM',
     task: 'New Session',
+    topic: '',
     hrs: t === 'school' ? 0.58 : t === 'tuition' ? 1.17 : 1.50
   });
   sortTasksByTime(state.timetables[t][d]);
@@ -1667,6 +1755,7 @@ function importBackup(e){
       const d = JSON.parse(evt.target.result);
       if(d.timetables && d.days){
         state = d;
+        sanitizePlannerState(state);
         state.activeDateStr = getTodayISO();
         state.viewMondayStr = getMondayISO(new Date());
         syncDayFromTimetable(state.activeDateStr);
