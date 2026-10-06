@@ -947,7 +947,7 @@ function sendTaskWhatsApp(taskId, sec, e){
   const topicDisplay = topicText || 'Functions in Python';
 
   // Build the message exactly matching the requested format
-  const message = `⏰ Reminder:\nToday’s ${cleanSubject} class is scheduled from ${timeFormatted}.\n📚 Topic: ${topicDisplay}\n🌐VisitNow:  www.SinghClasses.in`;
+  const message = `⏰ Gental Reminder:\n\nToday’s ${cleanSubject} class is scheduled from ${timeFormatted}.\n📚 Topic: ${topicDisplay}\n🌐 Visit:  www.SinghClasses.in`;
 
   const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
   window.open(url, '_blank');
