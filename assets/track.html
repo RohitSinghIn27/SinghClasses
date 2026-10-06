@@ -1,953 +1,867 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Planner & Analytics</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Planner & Analytics</title>
 
-<!-- Google Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-<!-- Tailwind CSS -->
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        fontFamily: {
-          sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-        },
-        colors: {
-          brandNavy: '#07152b',
-          cardNavy: '#092244',
-          sidebarNavy: '#07152b',
-          accentYellow: '#facc15',
-          accentYellowHover: '#eab308',
-          cSchool: '#2563eb',
-          cTuition: '#f97316',
-          cStudy: '#8b5cf6',
-          cSuccess: '#10b981',
-          cDanger: '#ef4444',
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+          },
+          colors: {
+            brandNavy: '#07152b',
+            cardNavy: '#092244',
+            sidebarNavy: '#07152b',
+            accentYellow: '#facc15',
+            accentYellowHover: '#eab308',
+            cSchool: '#2563eb',
+            cTuition: '#f97316',
+            cStudy: '#8b5cf6',
+            cSuccess: '#10b981',
+            cDanger: '#ef4444',
+          }
         }
       }
+    };
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+
+  <style>
+    /* Global & Tab Styles */
+    body { -webkit-tap-highlight-color: transparent; }
+    .tab-content { display: none; opacity: 0; transition: opacity .2s ease-in-out; }
+    .tab-content.active { display: block; opacity: 1; }
+
+    /* Category Pills */
+    .cat-pill { display: inline-flex; align-items: center; justify-content: center; font-weight: 800; border-radius: 6px; padding: 2px 7px; text-transform: uppercase; letter-spacing: 0.04em; font-size: 9.5px; white-space: nowrap; }
+    .cat-pill.School { background-color: #2563eb; color: #ffffff; }
+    .cat-pill.Tuition { background-color: #f97316; color: #ffffff; }
+    .cat-pill.Study { background-color: #8b5cf6; color: #ffffff; }
+
+    /* Live Status Pulse */
+    @keyframes liveDot {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(1.25); }
+      100% { opacity: 1; transform: scale(1); }
     }
-  }
-</script>
+    .live-pulse { animation: liveDot 1.4s infinite ease-in-out; }
 
-<!-- Lucide Icons -->
-<script src="https://unpkg.com/lucide@latest"></script>
+    /* Sidebar Navigation */
+    .nav-btn { transition: all 0.15s ease-in-out; border-left: 3px solid transparent; }
+    .nav-btn.active { background-color: rgba(254, 240, 138, 0.16) !important; color: #fef08a !important; font-weight: 800 !important; border-left-color: #facc15 !important; padding-left: 10px !important; }
+    .nav-btn.active i, .nav-btn.active svg { color: #facc15 !important; }
 
-<!-- Chart.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    /* Custom Scrollbar */
+    #mainWorkspace { scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent; }
+    #mainWorkspace::-webkit-scrollbar { width: 6px; }
+    #mainWorkspace::-webkit-scrollbar-track { background: transparent; }
+    #mainWorkspace::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 8px; }
+    #mainWorkspace::-webkit-scrollbar-thumb:hover { background-color: #94a3b8; }
 
-<style>
-body { -webkit-tap-highlight-color: transparent; }
-.tab-content { display: none; opacity: 0; transition: opacity .2s ease-in-out; }
-.tab-content.active { display: block; opacity: 1; }
+    /* Mobile Table Stacked Card View (< 640px) */
+    @media screen and (max-width: 640px) {
+      .mobile-table thead { display: none !important; }
+      .mobile-table, .mobile-table tbody { display: flex !important; flex-direction: column !important; width: 100% !important; gap: 8px !important; padding: 2px !important; }
+      .mobile-table tr {
+        display: grid !important;
+        grid-template-columns: 32px 1fr auto !important;
+        grid-template-areas: "cb tk hr" "cb tm cat" !important;
+        gap: 4px 8px !important;
+        align-items: center !important;
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 12px !important;
+        padding: 10px !important;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02) !important;
+      }
+      .mobile-table tr.empty-row { display: block !important; padding: 12px !important; text-align: center !important; }
+      .mobile-table td { display: flex !important; align-items: center !important; border: none !important; padding: 0 !important; }
+      .col-cb { grid-area: cb !important; }
+      .col-tm { grid-area: tm !important; width: 100% !important; justify-content: flex-start !important; font-size: 11px !important; white-space: nowrap !important; }
+      .col-tk { grid-area: tk !important; width: 100% !important; font-size: 13.5px !important; }
+      .col-cat { grid-area: cat !important; justify-content: flex-end !important; }
+      .col-hr { grid-area: hr !important; justify-content: flex-end !important; }
+      .mobile-table tfoot { display: block !important; width: 100% !important; border-top: 1px solid #e2e8f0 !important; }
+      .mobile-table tfoot tr { display: flex !important; justify-content: space-between !important; align-items: center !important; padding: 8px 10px !important; background: #f8fafc !important; border-radius: 8px !important; }
+      .mobile-table tfoot td { display: inline-block !important; padding: 0 !important; border: none !important; }
+    }
 
-/* Category Pills */
-.cat-pill {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 800;
-  border-radius: 6px;
-  padding: 2px 7px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  font-size: 9.5px;
-  white-space: nowrap;
-}
-.cat-pill.School { background-color: #2563eb; color: #ffffff; }
-.cat-pill.Tuition { background-color: #f97316; color: #ffffff; }
-.cat-pill.Study { background-color: #8b5cf6; color: #ffffff; }
-
-/* Pulse animation for live ongoing class */
-@keyframes liveDot {
-  0% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.3; transform: scale(1.25); }
-  100% { opacity: 1; transform: scale(1); }
-}
-.live-pulse { animation: liveDot 1.4s infinite ease-in-out; }
-
-/* Sidebar Nav Active State */
-.nav-btn {
-  transition: all 0.15s ease-in-out;
-  border-left: 3px solid transparent;
-}
-.nav-btn.active {
-  background-color: rgba(254, 240, 138, 0.16) !important;
-  color: #fef08a !important;
-  font-weight: 800 !important;
-  border-left-color: #facc15 !important;
-  padding-left: 10px !important;
-}
-.nav-btn.active i, .nav-btn.active svg {
-  color: #facc15 !important;
-}
-
-/* Custom Scrollbar */
-#mainWorkspace {
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 transparent;
-}
-#mainWorkspace::-webkit-scrollbar {
-  width: 6px;
-}
-#mainWorkspace::-webkit-scrollbar-track {
-  background: transparent;
-}
-#mainWorkspace::-webkit-scrollbar-thumb {
-  background-color: #cbd5e1;
-  border-radius: 8px;
-}
-#mainWorkspace::-webkit-scrollbar-thumb:hover {
-  background-color: #94a3b8;
-}
-
-/* Mobile Table Stacked Card View (< 640px) */
-@media screen and (max-width: 640px) {
-  .mobile-table thead { display: none !important; }
-  .mobile-table, .mobile-table tbody {
-    display: flex !important;
-    flex-direction: column !important;
-    width: 100% !important;
-    gap: 8px !important;
-    padding: 2px !important;
-  }
-  .mobile-table tr {
-    display: grid !important;
-    grid-template-columns: 32px 1fr auto !important;
-    grid-template-areas:
-      "cb tk hr"
-      "cb tm cat" !important;
-    gap: 4px 8px !important;
-    align-items: center !important;
-    background: #ffffff !important;
-    border: 1px solid #e2e8f0 !important;
-    border-radius: 12px !important;
-    padding: 10px !important;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.02) !important;
-  }
-  .mobile-table tr.empty-row { display: block !important; padding: 12px !important; text-align: center !important; }
-  .mobile-table td { display: flex !important; align-items: center !important; border: none !important; padding: 0 !important; }
-  .col-cb { grid-area: cb !important; }
-  .col-tm { grid-area: tm !important; width: 100% !important; justify-content: flex-start !important; font-size: 11px !important; white-space: nowrap !important; }
-  .col-tk { grid-area: tk !important; width: 100% !important; font-size: 13.5px !important; }
-  .col-cat { grid-area: cat !important; justify-content: flex-end !important; }
-  .col-hr { grid-area: hr !important; justify-content: flex-end !important; }
-  
-  .mobile-table tfoot { display: block !important; width: 100% !important; border-top: 1px solid #e2e8f0 !important; }
-  .mobile-table tfoot tr { display: flex !important; justify-content: space-between !important; align-items: center !important; padding: 8px 10px !important; background: #f8fafc !important; border-radius: 8px !important; }
-  .mobile-table tfoot td { display: inline-block !important; padding: 0 !important; border: none !important; }
-}
-
-/* Print Stylesheet */
-@media print {
-  @page { size: A4 portrait; margin: 6mm; }
-  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  body { background: #ffffff !important; padding: 0 !important; font-size: 10px !important; color: #000000 !important; }
-  .print-hide { display: none !important; }
-  .print-only-header { display: flex !important; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #0f172a; padding-bottom: 4px; margin-bottom: 6px; }
-  .schedule-container-card { break-inside: avoid; page-break-inside: avoid; border: 1px solid #94a3b8 !important; border-radius: 6px !important; margin-bottom: 8px !important; }
-  .schedule-container-card header { background: #0f172a !important; padding: 5px 8px !important; }
-  .mobile-table { width: 100% !important; display: table !important; border-collapse: collapse !important; }
-  .mobile-table thead { display: table-header-group !important; }
-  .mobile-table tbody { display: table-row-group !important; }
-  .mobile-table tr { display: table-row !important; border-bottom: 1px solid #cbd5e1 !important; }
-  .mobile-table th { display: table-cell !important; padding: 3px 2px !important; font-size: 8.5px !important; background: #f8fafc !important; border: 1px solid #cbd5e1 !important; }
-  .mobile-table td { display: table-cell !important; padding: 3px 2px !important; font-size: 9px !important; border: 1px solid #cbd5e1 !important; text-align: center !important; }
-  .cat-pill { border-radius: 4px !important; font-size: 7.5px !important; padding: 1px 3px !important; }
-  
-  #mainWorkspace {
-    max-height: none !important;
-    overflow: visible !important;
-  }
-}
-</style>
+    /* Print Stylesheet */
+    @media print {
+      @page { size: A4 portrait; margin: 6mm; }
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      body { background: #ffffff !important; padding: 0 !important; font-size: 10px !important; color: #000000 !important; }
+      .print-hide { display: none !important; }
+      .print-only-header { display: flex !important; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #0f172a; padding-bottom: 4px; margin-bottom: 6px; }
+      .schedule-container-card { break-inside: avoid; page-break-inside: avoid; border: 1px solid #94a3b8 !important; border-radius: 6px !important; margin-bottom: 8px !important; }
+      .schedule-container-card header { background: #0f172a !important; padding: 5px 8px !important; }
+      .mobile-table { width: 100% !important; display: table !important; border-collapse: collapse !important; }
+      .mobile-table thead { display: table-header-group !important; }
+      .mobile-table tbody { display: table-row-group !important; }
+      .mobile-table tr { display: table-row !important; border-bottom: 1px solid #cbd5e1 !important; }
+      .mobile-table th { display: table-cell !important; padding: 3px 2px !important; font-size: 8.5px !important; background: #f8fafc !important; border: 1px solid #cbd5e1 !important; }
+      .mobile-table td { display: table-cell !important; padding: 3px 2px !important; font-size: 9px !important; border: 1px solid #cbd5e1 !important; text-align: center !important; }
+      .cat-pill { border-radius: 4px !important; font-size: 7.5px !important; padding: 1px 3px !important; }
+      #mainWorkspace { max-height: none !important; overflow: visible !important; }
+    }
+  </style>
 </head>
 <body class="bg-[#f0f4f9] text-slate-800 p-2 sm:p-3 min-h-screen">
 
-<!-- Global Toast Container -->
-<div id="toastContainer" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+  <!-- Global Toast Container -->
+  <div id="toastContainer" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-<!-- Confirmation Modal -->
-<div id="customModal" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-3 hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-  <div class="bg-white w-full max-w-sm rounded-xl shadow-2xl border border-slate-200 overflow-hidden transform transition-all">
-    <div class="p-4 border-b border-slate-100 flex items-center justify-between">
-      <h3 id="modalTitle" class="text-sm font-black text-slate-900">Confirm Action</h3>
-      <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg" aria-label="Close dialog">
-        <i data-lucide="x" class="w-4 h-4"></i>
-      </button>
-    </div>
-    <div class="p-4 space-y-2.5">
-      <p id="modalMessage" class="text-xs text-slate-600 leading-relaxed"></p>
-      <div id="modalInputContainer" class="hidden">
-        <label class="block text-[11px] font-bold text-slate-700 mb-1" id="modalInputLabel">Type confirmation:</label>
-        <input type="text" id="modalInputField" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs font-semibold text-slate-800 uppercase focus:outline-none focus:ring-2 focus:ring-rose-500">
+  <!-- Confirmation Modal -->
+  <div id="customModal" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-3 hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="bg-white w-full max-w-sm rounded-xl shadow-2xl border border-slate-200 overflow-hidden transform transition-all">
+      <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+        <h3 id="modalTitle" class="text-sm font-black text-slate-900">Confirm Action</h3>
+        <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg" aria-label="Close dialog">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
       </div>
-    </div>
-    <div class="p-3 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-2">
-      <button onclick="closeModal()" class="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-bold text-xs rounded-lg transition">Cancel</button>
-      <button id="modalConfirmBtn" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-lg transition shadow-sm">Confirm</button>
+      <div class="p-4 space-y-2.5">
+        <p id="modalMessage" class="text-xs text-slate-600 leading-relaxed"></p>
+        <div id="modalInputContainer" class="hidden">
+          <label class="block text-[11px] font-bold text-slate-700 mb-1" id="modalInputLabel">Type confirmation:</label>
+          <input type="text" id="modalInputField" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs font-semibold text-slate-800 uppercase focus:outline-none focus:ring-2 focus:ring-rose-500">
+        </div>
+      </div>
+      <div class="p-3 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-2">
+        <button onclick="closeModal()" class="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-bold text-xs rounded-lg transition">Cancel</button>
+        <button id="modalConfirmBtn" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-lg transition shadow-sm">Confirm</button>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="max-w-[1600px] mx-auto flex flex-col gap-2.5 min-h-screen">
+  <div class="max-w-[1600px] mx-auto flex flex-col gap-2.5 min-h-screen">
 
-  <!-- ================= TOP HEADER BAR ================= -->
-  <header class="bg-brandNavy text-white rounded-xl px-3.5 py-2.5 sm:px-4 flex flex-wrap items-center justify-between gap-3 shadow-md border border-slate-800/80 print-hide">
-    <div class="flex items-center gap-2.5">
-      <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white shadow-sm shadow-blue-500/30 shrink-0">
-        <i data-lucide="layout-grid" class="w-4 h-4"></i>
-      </div>
-      <div>
-        <h1 class="text-sm font-black tracking-wider leading-none text-white">PLANNER</h1>
-        <p class="text-[10px] font-medium text-slate-400 mt-0.5 leading-tight">Plan Today &bull; Achieve Tomorrow</p>
-      </div>
-    </div>
-
-    <!-- Center: Date & Time Pill -->
-    <div class="bg-white/[0.06] border border-white/10 px-3.5 py-1.5 rounded-lg text-[11px] font-semibold text-slate-200 flex items-center gap-2.5 shadow-inner" id="currentDateDisplay" aria-live="polite">
-      <i data-lucide="calendar" class="w-3.5 h-3.5 text-blue-400"></i>
-      <span id="headerDateStr">Loading date...</span>
-      <span class="text-slate-600 font-light">|</span>
-      <i data-lucide="clock" class="w-3.5 h-3.5 text-slate-400"></i>
-      <span id="headerTimeStr">Loading time...</span>
-    </div>
-
-    <!-- Right: Action Buttons -->
-    <div class="flex items-center gap-1.5">
-      <button onclick="exportBackup()" id="exportBtn" class="bg-white/[0.08] hover:bg-white/[0.14] text-slate-200 border border-white/10 font-bold text-xs px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm transition active:scale-95" aria-label="Export backup">
-        <i data-lucide="download" class="w-3.5 h-3.5 text-blue-400"></i>
-        <span>Export</span>
-      </button>
-      <button onclick="document.getElementById('importFile').click()" class="bg-white/[0.08] hover:bg-white/[0.14] text-slate-200 border border-white/10 font-bold text-xs px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm transition active:scale-95" aria-label="Import backup">
-        <i data-lucide="upload" class="w-3.5 h-3.5 text-slate-300"></i>
-        <span>Import</span>
-      </button>
-      <button onclick="triggerPrint()" class="bg-white/[0.08] hover:bg-white/[0.14] text-slate-200 border border-white/10 font-bold text-xs px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm transition active:scale-95" aria-label="Print schedule">
-        <i data-lucide="printer" class="w-3.5 h-3.5 text-purple-400"></i>
-        <span>Print</span>
-      </button>
-      <input type="file" id="importFile" class="hidden" accept=".json" onchange="importBackup(event)">
-    </div>
-  </header>
-
-  <!-- ================= MAIN BODY ================= -->
-  <div class="flex flex-col lg:flex-row items-start gap-3 flex-1">
-
-    <!-- LEFT SIDEBAR -->
-    <aside id="plannerSidebar" class="w-full lg:w-56 xl:w-60 bg-sidebarNavy text-white rounded-2xl p-2.5 flex flex-col gap-2.5 shrink-0 shadow-lg print-hide">
-      
-      <!-- Navigation Menu -->
-      <nav class="flex flex-col gap-1" role="tablist" id="sidebarNav" aria-label="Planner Views">
-        <button id="tabBtnSchool" role="tab" aria-selected="true" aria-controls="planner" onclick="handleNavClick('schoolClassesSec', this)" class="nav-btn active w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-[11px] font-bold text-slate-300 hover:text-white hover:bg-white/5 transition text-left">
-          <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>
-          <span>School Classes</span>
-        </button>
-        <button id="tabBtnTuition" role="tab" aria-selected="false" aria-controls="planner" onclick="handleNavClick('tuitionStudySec', this)" class="nav-btn w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-[11px] font-bold text-slate-300 hover:text-white hover:bg-white/5 transition text-left">
-          <i data-lucide="book-marked" class="w-3.5 h-3.5"></i>
-          <span>Tuition & Study</span>
-        </button>
-        <button id="tabBtnTimetables" role="tab" aria-selected="false" aria-controls="timetables" onclick="switchTab('timetables', this)" class="nav-btn w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-[11px] font-bold text-slate-300 hover:text-white hover:bg-white/5 transition text-left">
-          <i data-lucide="clock" class="w-3.5 h-3.5"></i>
-          <span>Timetables</span>
-        </button>
-        <button id="tabBtnAnalytics" role="tab" aria-selected="false" aria-controls="analytics" onclick="switchTab('analytics', this)" class="nav-btn w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-[11px] font-bold text-slate-300 hover:text-white hover:bg-white/5 transition text-left">
-          <i data-lucide="bar-chart-2" class="w-3.5 h-3.5"></i>
-          <span>Analytics</span>
-        </button>
-      </nav>
-
-      <!-- ================= COMPACT DATE & WEEK WIDGET ================= -->
-      <div class="bg-[#f8fafc] text-slate-800 rounded-2xl p-2.5 shadow-sm border border-slate-200/80">
-        
-        <!-- Top Nav: Previous, Today, Next -->
-        <div class="flex items-center justify-between gap-1.5 mb-2">
-          <button onclick="shiftWeek(-1)" class="w-9 h-8 rounded-xl bg-white hover:bg-slate-200/70 border border-slate-200 text-slate-700 flex items-center justify-center transition active:scale-95" aria-label="Previous week">
-            <i data-lucide="chevron-left" class="w-4 h-4 stroke-[2.5]"></i>
-          </button>
-          <button onclick="jumpToday()" class="flex-1 h-8 rounded-xl bg-blue-50/80 hover:bg-blue-100 border border-blue-200/60 text-blue-700 font-extrabold text-[11px] flex items-center justify-center gap-1 transition active:scale-95">
-            <i data-lucide="calendar" class="w-3.5 h-3.5 stroke-[2.5]"></i>
-            <span>Today</span>
-          </button>
-          <button onclick="shiftWeek(1)" class="w-9 h-8 rounded-xl bg-white hover:bg-slate-200/70 border border-slate-200 text-slate-700 flex items-center justify-center transition active:scale-95" aria-label="Next week">
-            <i data-lucide="chevron-right" class="w-4 h-4 stroke-[2.5]"></i>
-          </button>
+    <!-- ================= TOP HEADER BAR ================= -->
+    <header class="bg-brandNavy text-white rounded-xl px-3.5 py-2.5 sm:px-4 flex flex-wrap items-center justify-between gap-3 shadow-md border border-slate-800/80 print-hide">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white shadow-sm shadow-blue-500/30 shrink-0">
+          <i data-lucide="layout-grid" class="w-4 h-4"></i>
         </div>
-
-        <!-- Week Title & Subtitle -->
-        <div class="text-center mb-2">
-          <h2 class="text-xs font-black text-slate-900 tracking-tight leading-tight" id="sidebarWeekLabel">Loading...</h2>
-          <p class="text-[9.5px] font-semibold text-slate-400 leading-tight">Select a day to track or complete</p>
-        </div>
-        
-        <!-- Days Grid (Mon to Sat) -->
-        <div class="grid grid-cols-2 gap-1.5" id="sidebarDayGrid"></div>
-
-        <!-- Sunday Row & Dedicated All Actions Toolbar -->
-        <div id="sidebarSundayRow"></div>
-      </div>
-
-      <!-- ================= STUDY SUMMARY WIDGET ================= -->
-      <div class="bg-[#f8fafc] text-slate-800 rounded-2xl p-2.5 shadow-sm space-y-1.5 border border-slate-200/80">
-        <div class="text-center">
-          <h3 class="text-[10px] font-black text-slate-900 tracking-wider uppercase">WEEKLY SUMMARY</h3>
-          <p class="text-[9px] font-semibold text-slate-500 leading-tight">Your progress this week</p>
-        </div>
-
-        <div class="grid grid-cols-2 gap-1.5 pt-0.5">
-          <div class="bg-white border border-slate-200/70 rounded-xl p-1.5 flex flex-col items-center justify-center text-center shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
-            <div class="w-3.5 h-3.5 text-blue-600 flex items-center justify-center mb-0.5">
-              <i data-lucide="graduation-cap" class="w-3 h-3"></i>
-            </div>
-            <div class="text-[8px] font-extrabold text-slate-400 uppercase tracking-wide">SCHOOL</div>
-            <div class="text-[11px] font-black text-blue-600 mt-0.5 leading-none"><span id="totalSchool">0.0</span>H</div>
-          </div>
-
-          <div class="bg-white border border-slate-200/70 rounded-xl p-1.5 flex flex-col items-center justify-center text-center shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
-            <div class="w-3.5 h-3.5 text-orange-500 flex items-center justify-center mb-0.5">
-              <i data-lucide="users" class="w-3 h-3"></i>
-            </div>
-            <div class="text-[8px] font-extrabold text-slate-400 uppercase tracking-wide">TUITION</div>
-            <div class="text-[11px] font-black text-orange-500 mt-0.5 leading-none"><span id="totalTuition">0.0</span>H</div>
-          </div>
-
-          <div class="bg-white border border-slate-200/70 rounded-xl p-1.5 flex flex-col items-center justify-center text-center shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
-            <div class="w-3.5 h-3.5 text-purple-600 flex items-center justify-center mb-0.5">
-              <i data-lucide="book-open" class="w-3 h-3"></i>
-            </div>
-            <div class="text-[8px] font-extrabold text-slate-400 uppercase tracking-wide">STUDY</div>
-            <div class="text-[11px] font-black text-purple-600 mt-0.5 leading-none"><span id="totalStudy">0.0</span>H</div>
-          </div>
-
-          <div id="sidebarCompletedCard" class="bg-white border border-slate-200/70 rounded-xl p-1.5 flex flex-col items-center justify-center text-center shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
-            <div class="relative w-7 h-7 flex items-center justify-center my-0.5">
-              <svg class="w-7 h-7 -rotate-90" viewBox="0 0 36 36">
-                <path class="text-slate-200" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
-                <path id="progressRing" class="text-emerald-500 transition-all duration-300" stroke-dasharray="0, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
-              </svg>
-              <span id="progressPercent" class="absolute text-[8px] font-black text-slate-800">0%</span>
-            </div>
-            <div class="text-[7.5px] font-bold text-slate-500 mt-0.5 leading-none">
-              <span id="completedCount" class="font-extrabold text-emerald-600">0</span>/<span id="totalCount">0</span> done
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </aside>
-
-    <!-- RIGHT MAIN WORKSPACE -->
-    <main id="mainWorkspace" class="flex-1 w-full space-y-3 lg:pr-1.5 transition-all">
-
-      <!-- Print Only Header -->
-      <div class="hidden print-only-header">
         <div>
-          <div class="text-lg font-black text-slate-900 tracking-wide">PLANNER & SCHEDULE</div>
-          <div class="text-[11px] text-slate-500 font-semibold">Daily Academic & Class Tracker</div>
+          <h1 class="text-sm font-black tracking-wider leading-none text-white">PLANNER</h1>
+          <p class="text-[10px] font-medium text-slate-400 mt-0.5 leading-tight">Plan Today &bull; Achieve Tomorrow</p>
         </div>
-        <div class="text-[11px] font-bold text-slate-600 text-right" id="printDateMeta"></div>
       </div>
 
-      <!-- ================= TAB: PLANNER ================= -->
-      <div id="planner" class="tab-content active space-y-3" role="tabpanel" aria-labelledby="tabBtnSchool">
-
-        <!-- 1. SCHOOL CLASSES (No WhatsApp button) -->
-        <section id="schoolClassesSec" class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden schedule-container-card">
-          <header class="bg-cardNavy text-white px-3.5 sm:px-4 py-2 flex items-center justify-between">
-            <div class="flex items-center gap-2.5">
-              <div class="w-7 h-7 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center">
-                <i data-lucide="school" class="w-4 h-4"></i>
-              </div>
-              <div>
-                <h2 class="text-xs sm:text-sm font-extrabold tracking-wide text-white">SCHOOL CLASSES</h2>
-                <p class="text-[10px] text-slate-300 font-medium">Daily school periods & attendance checklist</p>
-              </div>
-            </div>
-            <div class="flex items-center gap-1.5">
-              <button onclick="reloadDayFromTimetable(state.activeDateStr)" class="bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 text-xs font-semibold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition active:scale-95 print-hide" title="Reload periods from weekly timetable template">
-                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-slate-400"></i>
-                <span>Sync</span>
-              </button>
-              <button onclick="switchTab('timetables', document.getElementById('tabBtnTimetables'))" class="bg-amber-400/15 hover:bg-amber-400/25 text-amber-300 border border-amber-400/35 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm transition active:scale-95 print-hide" title="Modify periods in Timetable templates">
-                <i data-lucide="pencil" class="w-3.5 h-3.5 text-amber-400"></i>
-                <span>Edit Timetable</span>
-              </button>
-            </div>
-          </header>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse mobile-table">
-              <thead>
-                <tr class="bg-slate-50 text-slate-400 text-[10.5px] font-bold uppercase tracking-wider border-b border-slate-200">
-                  <th class="py-2.5 px-3 w-12 text-center">DONE</th>
-                  <th class="py-2.5 px-3 w-48 text-left whitespace-nowrap">TIME</th>
-                  <th class="py-2.5 px-3 text-left">TASK / SUBJECT</th>
-                  <th class="py-2.5 px-3 w-24 text-right">HOURS</th>
-                </tr>
-              </thead>
-              <tbody id="schoolBody" class="divide-y divide-slate-100 text-xs"></tbody>
-              
-              <tfoot class="bg-slate-50/90 border-t border-slate-200 text-slate-600 text-xs font-semibold">
-                <tr>
-                  <td class="py-2.5 px-3 text-center"></td>
-                  <td class="py-2.5 px-3 text-left text-slate-400 font-bold uppercase tracking-wider text-[10.5px] whitespace-nowrap">
-                    Section Total
-                  </td>
-                  <td class="py-2.5 px-3 text-left text-slate-500 font-medium text-[11px]" id="schoolSecMeta">0 of 0 completed</td>
-                  <td class="py-2.5 px-3 text-right whitespace-nowrap">
-                    <span class="inline-block bg-slate-100 text-slate-700 font-black text-xs px-2.5 py-0.5 rounded-md border border-slate-200" id="schoolSecTotal">0.00 hrs</span>
-                  </td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-        </section>
-
-        <!-- 2. TUITION & STUDY (Clean 2-line layout: Batch Name on Line 1, Topic on Line 2) -->
-        <section id="tuitionStudySec" class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden schedule-container-card">
-          <header class="bg-cardNavy text-white px-3.5 sm:px-4 py-2 flex items-center justify-between">
-            <div class="flex items-center gap-2.5">
-              <div class="w-7 h-7 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center">
-                <i data-lucide="book-marked" class="w-4 h-4"></i>
-              </div>
-              <div>
-                <h2 class="text-xs sm:text-sm font-extrabold tracking-wide text-white">TUITION & STUDY</h2>
-                <p class="text-[10px] text-slate-300 font-medium">Batches, coaching sessions, and personal study checklist</p>
-              </div>
-            </div>
-            <div class="flex items-center gap-1.5">
-              <button onclick="reloadDayFromTimetable(state.activeDateStr)" class="bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 text-xs font-semibold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition active:scale-95 print-hide" title="Reload sessions from weekly timetable template">
-                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-slate-400"></i>
-                <span>Sync</span>
-              </button>
-              <button onclick="switchTab('timetables', document.getElementById('tabBtnTimetables'))" class="bg-amber-400/15 hover:bg-amber-400/25 text-amber-300 border border-amber-400/35 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm transition active:scale-95 print-hide" title="Modify sessions in Timetable templates">
-                <i data-lucide="pencil" class="w-3.5 h-3.5 text-amber-400"></i>
-                <span>Edit Timetable</span>
-              </button>
-            </div>
-          </header>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse mobile-table">
-              <thead>
-                <tr class="bg-slate-50 text-slate-400 text-[10.5px] font-bold uppercase tracking-wider border-b border-slate-200">
-                  <th class="py-2.5 px-3 w-12 text-center">DONE</th>
-                  <th class="py-2.5 px-3 w-48 text-left whitespace-nowrap">TIME</th>
-                  <th class="py-2.5 px-3 text-left">TASK / SUBJECT</th>
-                  <th class="py-2.5 px-3 w-28 text-center">CATEGORY</th>
-                  <th class="py-2.5 px-3 w-24 text-right">HOURS</th>
-                </tr>
-              </thead>
-              <tbody id="tuitionStudyBody" class="divide-y divide-slate-100 text-xs"></tbody>
-              
-              <tfoot class="bg-slate-50/90 border-t border-slate-200 text-slate-600 text-xs font-semibold">
-                <tr>
-                  <td class="py-2.5 px-3 text-center"></td>
-                  <td class="py-2.5 px-3 text-left text-slate-400 font-bold uppercase tracking-wider text-[10.5px] whitespace-nowrap">
-                    Section Total
-                  </td>
-                  <td class="py-2.5 px-3 text-left text-slate-500 font-medium text-[11px]" id="tuitionSecMeta">0 of 0 completed</td>
-                  <td class="py-2.5 px-3 text-center"></td>
-                  <td class="py-2.5 px-3 text-right whitespace-nowrap">
-                    <span class="inline-block bg-slate-100 text-slate-700 font-black text-xs px-2.5 py-0.5 rounded-md border border-slate-200" id="tuitionSecTotal">0.00 hrs</span>
-                  </td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-        </section>
-
+      <!-- Center: Date & Time Pill -->
+      <div class="bg-white/[0.06] border border-white/10 px-3.5 py-1.5 rounded-lg text-[11px] font-semibold text-slate-200 flex items-center gap-2.5 shadow-inner" id="currentDateDisplay" aria-live="polite">
+        <i data-lucide="calendar" class="w-3.5 h-3.5 text-blue-400"></i>
+        <span id="headerDateStr">Loading date...</span>
+        <span class="text-slate-600 font-light">|</span>
+        <i data-lucide="clock" class="w-3.5 h-3.5 text-slate-400"></i>
+        <span id="headerTimeStr">Loading time...</span>
       </div>
 
-      <!-- ================= TAB: TIMETABLES ================= -->
-      <div id="timetables" class="tab-content space-y-3" role="tabpanel" aria-labelledby="tabBtnTimetables">
-        <div class="bg-blue-50 border border-blue-200 rounded-xl p-3.5 flex items-start gap-3 text-blue-900 shadow-sm">
-          <i data-lucide="info" class="w-5 h-5 text-blue-600 shrink-0 mt-0.5"></i>
+      <!-- Right: Action Buttons -->
+      <div class="flex items-center gap-1.5">
+        <button onclick="exportBackup()" id="exportBtn" class="bg-white/[0.08] hover:bg-white/[0.14] text-slate-200 border border-white/10 font-bold text-xs px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm transition active:scale-95" aria-label="Export backup">
+          <i data-lucide="download" class="w-3.5 h-3.5 text-blue-400"></i>
+          <span>Export</span>
+        </button>
+        <button onclick="document.getElementById('importFile').click()" class="bg-white/[0.08] hover:bg-white/[0.14] text-slate-200 border border-white/10 font-bold text-xs px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm transition active:scale-95" aria-label="Import backup">
+          <i data-lucide="upload" class="w-3.5 h-3.5 text-slate-300"></i>
+          <span>Import</span>
+        </button>
+        <button onclick="triggerPrint()" class="bg-white/[0.08] hover:bg-white/[0.14] text-slate-200 border border-white/10 font-bold text-xs px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm transition active:scale-95" aria-label="Print schedule">
+          <i data-lucide="printer" class="w-3.5 h-3.5 text-purple-400"></i>
+          <span>Print</span>
+        </button>
+        <input type="file" id="importFile" class="hidden" accept=".json" onchange="importBackup(event)">
+      </div>
+    </header>
+
+    <!-- ================= MAIN BODY ================= -->
+    <div class="flex flex-col lg:flex-row items-start gap-3 flex-1">
+
+      <!-- LEFT SIDEBAR -->
+      <aside id="plannerSidebar" class="w-full lg:w-56 xl:w-60 bg-sidebarNavy text-white rounded-2xl p-2.5 flex flex-col gap-2.5 shrink-0 shadow-lg print-hide">
+
+        <!-- Navigation Menu -->
+        <nav class="flex flex-col gap-1" role="tablist" id="sidebarNav" aria-label="Planner Views">
+          <button id="tabBtnSchool" role="tab" aria-selected="true" aria-controls="planner" onclick="handleNavClick('schoolClassesSec', this)" class="nav-btn active w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-[11px] font-bold text-slate-300 hover:text-white hover:bg-white/5 transition text-left">
+            <i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>
+            <span>School Classes</span>
+          </button>
+          <button id="tabBtnTuition" role="tab" aria-selected="false" aria-controls="planner" onclick="handleNavClick('tuitionStudySec', this)" class="nav-btn w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-[11px] font-bold text-slate-300 hover:text-white hover:bg-white/5 transition text-left">
+            <i data-lucide="book-marked" class="w-3.5 h-3.5"></i>
+            <span>Tuition & Study</span>
+          </button>
+          <button id="tabBtnTimetables" role="tab" aria-selected="false" aria-controls="timetables" onclick="switchTab('timetables', this)" class="nav-btn w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-[11px] font-bold text-slate-300 hover:text-white hover:bg-white/5 transition text-left">
+            <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+            <span>Timetables</span>
+          </button>
+          <button id="tabBtnAnalytics" role="tab" aria-selected="false" aria-controls="analytics" onclick="switchTab('analytics', this)" class="nav-btn w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-[11px] font-bold text-slate-300 hover:text-white hover:bg-white/5 transition text-left">
+            <i data-lucide="bar-chart-2" class="w-3.5 h-3.5"></i>
+            <span>Analytics</span>
+          </button>
+        </nav>
+
+        <!-- Compact Date & Week Widget -->
+        <div class="bg-[#f8fafc] text-slate-800 rounded-2xl p-2.5 shadow-sm border border-slate-200/80">
+          <div class="flex items-center justify-between gap-1.5 mb-2">
+            <button onclick="shiftWeek(-1)" class="w-9 h-8 rounded-xl bg-white hover:bg-slate-200/70 border border-slate-200 text-slate-700 flex items-center justify-center transition active:scale-95" aria-label="Previous week">
+              <i data-lucide="chevron-left" class="w-4 h-4 stroke-[2.5]"></i>
+            </button>
+            <button onclick="jumpToday()" class="flex-1 h-8 rounded-xl bg-blue-50/80 hover:bg-blue-100 border border-blue-200/60 text-blue-700 font-extrabold text-[11px] flex items-center justify-center gap-1 transition active:scale-95">
+              <i data-lucide="calendar" class="w-3.5 h-3.5 stroke-[2.5]"></i>
+              <span>Today</span>
+            </button>
+            <button onclick="shiftWeek(1)" class="w-9 h-8 rounded-xl bg-white hover:bg-slate-200/70 border border-slate-200 text-slate-700 flex items-center justify-center transition active:scale-95" aria-label="Next week">
+              <i data-lucide="chevron-right" class="w-4 h-4 stroke-[2.5]"></i>
+            </button>
+          </div>
+
+          <div class="text-center mb-2">
+            <h2 class="text-xs font-black text-slate-900 tracking-tight leading-tight" id="sidebarWeekLabel">Loading...</h2>
+            <p class="text-[9.5px] font-semibold text-slate-400 leading-tight">Select a day to track or complete</p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-1.5" id="sidebarDayGrid"></div>
+          <div id="sidebarSundayRow"></div>
+        </div>
+
+        <!-- Weekly Summary Widget -->
+        <div class="bg-[#f8fafc] text-slate-800 rounded-2xl p-2.5 shadow-sm space-y-1.5 border border-slate-200/80">
+          <div class="text-center">
+            <h3 class="text-[10px] font-black text-slate-900 tracking-wider uppercase">WEEKLY SUMMARY</h3>
+            <p class="text-[9px] font-semibold text-slate-500 leading-tight">Your progress this week</p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-1.5 pt-0.5">
+            <div class="bg-white border border-slate-200/70 rounded-xl p-1.5 flex flex-col items-center justify-center text-center shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+              <div class="w-3.5 h-3.5 text-blue-600 flex items-center justify-center mb-0.5">
+                <i data-lucide="graduation-cap" class="w-3 h-3"></i>
+              </div>
+              <div class="text-[8px] font-extrabold text-slate-400 uppercase tracking-wide">SCHOOL</div>
+              <div class="text-[11px] font-black text-blue-600 mt-0.5 leading-none"><span id="totalSchool">0.0</span>H</div>
+            </div>
+
+            <div class="bg-white border border-slate-200/70 rounded-xl p-1.5 flex flex-col items-center justify-center text-center shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+              <div class="w-3.5 h-3.5 text-orange-500 flex items-center justify-center mb-0.5">
+                <i data-lucide="users" class="w-3 h-3"></i>
+              </div>
+              <div class="text-[8px] font-extrabold text-slate-400 uppercase tracking-wide">TUITION</div>
+              <div class="text-[11px] font-black text-orange-500 mt-0.5 leading-none"><span id="totalTuition">0.0</span>H</div>
+            </div>
+
+            <div class="bg-white border border-slate-200/70 rounded-xl p-1.5 flex flex-col items-center justify-center text-center shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+              <div class="w-3.5 h-3.5 text-purple-600 flex items-center justify-center mb-0.5">
+                <i data-lucide="book-open" class="w-3 h-3"></i>
+              </div>
+              <div class="text-[8px] font-extrabold text-slate-400 uppercase tracking-wide">STUDY</div>
+              <div class="text-[11px] font-black text-purple-600 mt-0.5 leading-none"><span id="totalStudy">0.0</span>H</div>
+            </div>
+
+            <div id="sidebarCompletedCard" class="bg-white border border-slate-200/70 rounded-xl p-1.5 flex flex-col items-center justify-center text-center shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+              <div class="relative w-7 h-7 flex items-center justify-center my-0.5">
+                <svg class="w-7 h-7 -rotate-90" viewBox="0 0 36 36">
+                  <path class="text-slate-200" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                  <path id="progressRing" class="text-emerald-500 transition-all duration-300" stroke-dasharray="0, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                </svg>
+                <span id="progressPercent" class="absolute text-[8px] font-black text-slate-800">0%</span>
+              </div>
+              <div class="text-[7.5px] font-bold text-slate-500 mt-0.5 leading-none">
+                <span id="completedCount" class="font-extrabold text-emerald-600">0</span>/<span id="totalCount">0</span> done
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </aside>
+
+      <!-- RIGHT MAIN WORKSPACE -->
+      <main id="mainWorkspace" class="flex-1 w-full space-y-3 lg:pr-1.5 transition-all">
+
+        <!-- Print Only Header -->
+        <div class="hidden print-only-header">
           <div>
-            <h3 class="text-xs font-black uppercase tracking-wide">Master Weekly Schedule Templates</h3>
-            <p class="text-[11px] text-blue-800 mt-0.5 leading-relaxed">
-              <strong>All recurring schedule editing is managed here.</strong> Click <strong>"Edit"</strong> on any section to adjust timings, subjects, or add periods. Saving updates your daily planner checklist automatically.
-            </p>
+            <div class="text-lg font-black text-slate-900 tracking-wide">PLANNER & SCHEDULE</div>
+            <div class="text-[11px] text-slate-500 font-semibold">Daily Academic & Class Tracker</div>
+          </div>
+          <div class="text-[11px] font-bold text-slate-600 text-right" id="printDateMeta"></div>
+        </div>
+
+        <!-- ================= TAB: PLANNER ================= -->
+        <div id="planner" class="tab-content active space-y-3" role="tabpanel" aria-labelledby="tabBtnSchool">
+
+          <!-- 1. School Classes Section -->
+          <section id="schoolClassesSec" class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden schedule-container-card">
+            <header class="bg-cardNavy text-white px-3.5 sm:px-4 py-2 flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <div class="w-7 h-7 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center">
+                  <i data-lucide="school" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <h2 class="text-xs sm:text-sm font-extrabold tracking-wide text-white">SCHOOL CLASSES</h2>
+                  <p class="text-[10px] text-slate-300 font-medium">Daily school periods & attendance checklist</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <button onclick="reloadDayFromTimetable(state.activeDateStr)" class="bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 text-xs font-semibold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition active:scale-95 print-hide" title="Reload periods from weekly timetable template">
+                  <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-slate-400"></i>
+                  <span>Sync</span>
+                </button>
+                <button onclick="switchTab('timetables', document.getElementById('tabBtnTimetables'))" class="bg-amber-400/15 hover:bg-amber-400/25 text-amber-300 border border-amber-400/35 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm transition active:scale-95 print-hide" title="Modify periods in Timetable templates">
+                  <i data-lucide="pencil" class="w-3.5 h-3.5 text-amber-400"></i>
+                  <span>Edit Timetable</span>
+                </button>
+              </div>
+            </header>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse mobile-table">
+                <thead>
+                  <tr class="bg-slate-50 text-slate-400 text-[10.5px] font-bold uppercase tracking-wider border-b border-slate-200">
+                    <th class="py-2.5 px-3 w-12 text-center">DONE</th>
+                    <th class="py-2.5 px-3 w-48 text-left whitespace-nowrap">TIME</th>
+                    <th class="py-2.5 px-3 text-left">TASK / SUBJECT</th>
+                    <th class="py-2.5 px-3 w-24 text-right">HOURS</th>
+                  </tr>
+                </thead>
+                <tbody id="schoolBody" class="divide-y divide-slate-100 text-xs"></tbody>
+                <tfoot class="bg-slate-50/90 border-t border-slate-200 text-slate-600 text-xs font-semibold">
+                  <tr>
+                    <td class="py-2.5 px-3 text-center"></td>
+                    <td class="py-2.5 px-3 text-left text-slate-400 font-bold uppercase tracking-wider text-[10.5px] whitespace-nowrap">Section Total</td>
+                    <td class="py-2.5 px-3 text-left text-slate-500 font-medium text-[11px]" id="schoolSecMeta">0 of 0 completed</td>
+                    <td class="py-2.5 px-3 text-right whitespace-nowrap">
+                      <span class="inline-block bg-slate-100 text-slate-700 font-black text-xs px-2.5 py-0.5 rounded-md border border-slate-200" id="schoolSecTotal">0.00 hrs</span>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </section>
+
+          <!-- 2. Tuition & Study Section -->
+          <section id="tuitionStudySec" class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden schedule-container-card">
+            <header class="bg-cardNavy text-white px-3.5 sm:px-4 py-2 flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <div class="w-7 h-7 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center">
+                  <i data-lucide="book-marked" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <h2 class="text-xs sm:text-sm font-extrabold tracking-wide text-white">TUITION & STUDY</h2>
+                  <p class="text-[10px] text-slate-300 font-medium">Batches, coaching sessions, and personal study checklist</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <button onclick="reloadDayFromTimetable(state.activeDateStr)" class="bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 text-xs font-semibold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition active:scale-95 print-hide" title="Reload sessions from weekly timetable template">
+                  <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-slate-400"></i>
+                  <span>Sync</span>
+                </button>
+                <button onclick="switchTab('timetables', document.getElementById('tabBtnTimetables'))" class="bg-amber-400/15 hover:bg-amber-400/25 text-amber-300 border border-amber-400/35 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm transition active:scale-95 print-hide" title="Modify sessions in Timetable templates">
+                  <i data-lucide="pencil" class="w-3.5 h-3.5 text-amber-400"></i>
+                  <span>Edit Timetable</span>
+                </button>
+              </div>
+            </header>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse mobile-table">
+                <thead>
+                  <tr class="bg-slate-50 text-slate-400 text-[10.5px] font-bold uppercase tracking-wider border-b border-slate-200">
+                    <th class="py-2.5 px-3 w-12 text-center">DONE</th>
+                    <th class="py-2.5 px-3 w-48 text-left whitespace-nowrap">TIME</th>
+                    <th class="py-2.5 px-3 text-left">TASK / SUBJECT</th>
+                    <th class="py-2.5 px-3 w-28 text-center">CATEGORY</th>
+                    <th class="py-2.5 px-3 w-24 text-right">HOURS</th>
+                  </tr>
+                </thead>
+                <tbody id="tuitionStudyBody" class="divide-y divide-slate-100 text-xs"></tbody>
+                <tfoot class="bg-slate-50/90 border-t border-slate-200 text-slate-600 text-xs font-semibold">
+                  <tr>
+                    <td class="py-2.5 px-3 text-center"></td>
+                    <td class="py-2.5 px-3 text-left text-slate-400 font-bold uppercase tracking-wider text-[10.5px] whitespace-nowrap">Section Total</td>
+                    <td class="py-2.5 px-3 text-left text-slate-500 font-medium text-[11px]" id="tuitionSecMeta">0 of 0 completed</td>
+                    <td class="py-2.5 px-3 text-center"></td>
+                    <td class="py-2.5 px-3 text-right whitespace-nowrap">
+                      <span class="inline-block bg-slate-100 text-slate-700 font-black text-xs px-2.5 py-0.5 rounded-md border border-slate-200" id="tuitionSecTotal">0.00 hrs</span>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- ================= TAB: TIMETABLES ================= -->
+        <div id="timetables" class="tab-content space-y-3" role="tabpanel" aria-labelledby="tabBtnTimetables">
+          <div class="bg-blue-50 border border-blue-200 rounded-xl p-3.5 flex items-start gap-3 text-blue-900 shadow-sm">
+            <i data-lucide="info" class="w-5 h-5 text-blue-600 shrink-0 mt-0.5"></i>
+            <div>
+              <h3 class="text-xs font-black uppercase tracking-wide">Master Weekly Schedule Templates</h3>
+              <p class="text-[11px] text-blue-800 mt-0.5 leading-relaxed">
+                <strong>All recurring schedule editing is managed here.</strong> Click <strong>"Edit"</strong> on any section to adjust timings, subjects, or add periods. Saving updates your daily planner checklist automatically.
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-5">
+            <!-- School Timetable -->
+            <div>
+              <div class="flex items-center justify-between mb-2.5">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="school" class="w-4 h-4 text-blue-600"></i>
+                  <h2 class="text-xs font-black uppercase tracking-wider text-slate-800">School Timetable Template</h2>
+                </div>
+                <button onclick="toggleEditMode('school')" class="text-xs font-bold px-3 py-1 rounded-lg border transition shadow-xs" id="btnEditSchool">Edit School</button>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5" id="schoolTimetable"></div>
+            </div>
+
+            <!-- Tuition Schedule -->
+            <div class="border-t border-slate-100 pt-4">
+              <div class="flex items-center justify-between mb-2.5">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="users" class="w-4 h-4 text-orange-500"></i>
+                  <h2 class="text-xs font-black uppercase tracking-wider text-slate-800">Tuition Batches Template</h2>
+                </div>
+                <button onclick="toggleEditMode('tuition')" class="text-xs font-bold px-3 py-1 rounded-lg border transition shadow-xs" id="btnEditTuition">Edit Tuition</button>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5" id="tuitionTimetable"></div>
+            </div>
+
+            <!-- Study Plan -->
+            <div class="border-t border-slate-100 pt-4">
+              <div class="flex items-center justify-between mb-2.5">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="book-open" class="w-4 h-4 text-purple-600"></i>
+                  <h2 class="text-xs font-black uppercase tracking-wider text-slate-800">Self Study Plan Template</h2>
+                </div>
+                <button onclick="toggleEditMode('study')" class="text-xs font-bold px-3 py-1 rounded-lg border transition shadow-xs" id="btnEditStudy">Edit Study</button>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5" id="studyTimetable"></div>
+            </div>
           </div>
         </div>
 
-        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-5">
-          <!-- School Timetable -->
-          <div>
-            <div class="flex items-center justify-between mb-2.5">
-              <div class="flex items-center gap-2">
-                <i data-lucide="school" class="w-4 h-4 text-blue-600"></i>
-                <h2 class="text-xs font-black uppercase tracking-wider text-slate-800">School Timetable Template</h2>
-              </div>
-              <button onclick="toggleEditMode('school')" class="text-xs font-bold px-3 py-1 rounded-lg border transition shadow-xs" id="btnEditSchool">Edit School</button>
+        <!-- ================= TAB: ANALYTICS ================= -->
+        <div id="analytics" class="tab-content space-y-3" role="tabpanel" aria-labelledby="tabBtnAnalytics">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5" id="statsGrid"></div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm">
+              <h3 class="text-[11px] font-black uppercase text-slate-400 tracking-wider text-center mb-2">Weekly Breakdown (Hours)</h3>
+              <div class="relative h-48 w-full"><canvas id="categoryChart"></canvas></div>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5" id="schoolTimetable"></div>
-          </div>
-
-          <!-- Tuition Schedule -->
-          <div class="border-t border-slate-100 pt-4">
-            <div class="flex items-center justify-between mb-2.5">
-              <div class="flex items-center gap-2">
-                <i data-lucide="users" class="w-4 h-4 text-orange-500"></i>
-                <h2 class="text-xs font-black uppercase tracking-wider text-slate-800">Tuition Batches Template</h2>
-              </div>
-              <button onclick="toggleEditMode('tuition')" class="text-xs font-bold px-3 py-1 rounded-lg border transition shadow-xs" id="btnEditTuition">Edit Tuition</button>
+            <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm">
+              <h3 class="text-[11px] font-black uppercase text-slate-400 tracking-wider text-center mb-2">Category Completion Rate (%)</h3>
+              <div class="relative h-48 w-full"><canvas id="completionChart"></canvas></div>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5" id="tuitionTimetable"></div>
-          </div>
-
-          <!-- Study Plan -->
-          <div class="border-t border-slate-100 pt-4">
-            <div class="flex items-center justify-between mb-2.5">
-              <div class="flex items-center gap-2">
-                <i data-lucide="book-open" class="w-4 h-4 text-purple-600"></i>
-                <h2 class="text-xs font-black uppercase tracking-wider text-slate-800">Self Study Plan Template</h2>
-              </div>
-              <button onclick="toggleEditMode('study')" class="text-xs font-bold px-3 py-1 rounded-lg border transition shadow-xs" id="btnEditStudy">Edit Study</button>
+            <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm">
+              <h3 class="text-[11px] font-black uppercase text-slate-400 tracking-wider text-center mb-2">Daily Hours Trend</h3>
+              <div class="relative h-48 w-full"><canvas id="trendChart"></canvas></div>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5" id="studyTimetable"></div>
+            <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm">
+              <h3 class="text-[11px] font-black uppercase text-slate-400 tracking-wider text-center mb-2">Daily Completion Trend (%)</h3>
+              <div class="relative h-48 w-full"><canvas id="completionTrendChart"></canvas></div>
+            </div>
           </div>
         </div>
+
+      </main>
+    </div>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="w-full bg-brandNavy text-slate-300 rounded-xl px-4 py-2.5 flex items-center justify-between shadow-md border border-slate-800/80 print-hide mt-1">
+      <div class="flex items-center gap-2 text-xs font-medium">
+        <span>&copy; 2026 SinghClasses.in</span>
+        <span class="text-slate-600 font-light">|</span>
+        <span>Designed with <span class="text-rose-500">💖</span> by <strong class="font-bold text-white">Rohit Singh</strong></span>
       </div>
+    </footer>
 
-      <!-- ================= TAB: ANALYTICS ================= -->
-      <div id="analytics" class="tab-content space-y-3" role="tabpanel" aria-labelledby="tabBtnAnalytics">
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5" id="statsGrid"></div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm">
-            <h3 class="text-[11px] font-black uppercase text-slate-400 tracking-wider text-center mb-2">Weekly Breakdown (Hours)</h3>
-            <div class="relative h-48 w-full"><canvas id="categoryChart"></canvas></div>
-          </div>
-          <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm">
-            <h3 class="text-[11px] font-black uppercase text-slate-400 tracking-wider text-center mb-2">Category Completion Rate (%)</h3>
-            <div class="relative h-48 w-full"><canvas id="completionChart"></canvas></div>
-          </div>
-          <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm">
-            <h3 class="text-[11px] font-black uppercase text-slate-400 tracking-wider text-center mb-2">Daily Hours Trend</h3>
-            <div class="relative h-48 w-full"><canvas id="trendChart"></canvas></div>
-          </div>
-          <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm">
-            <h3 class="text-[11px] font-black uppercase text-slate-400 tracking-wider text-center mb-2">Daily Completion Trend (%)</h3>
-            <div class="relative h-48 w-full"><canvas id="completionTrendChart"></canvas></div>
-          </div>
-        </div>
-      </div>
-
-    </main>
   </div>
 
-  <!-- ================= FOOTER ================= -->
-  <footer class="w-full bg-brandNavy text-slate-300 rounded-xl px-4 py-2.5 flex items-center justify-between shadow-md border border-slate-800/80 print-hide mt-1">
-    <div class="flex items-center gap-2 text-xs font-medium">
-      <span>&copy; 2026 SinghClasses.in</span>
-      <span class="text-slate-600 font-light">|</span>
-      <span>Designed with <span class="text-rose-500">💖</span> by <strong class="font-bold text-white">Rohit Singh</strong></span>
-    </div>
-  </footer>
-
-</div>
-
-<script>
-/* ==========================================================================
-   GLOBAL MASTER TIMETABLE CONFIGURATION
-   ========================================================================== */
-window.MASTER_TIMETABLES = {
-  school: {
-    'Mon': [
-      { time: '08:40 AM - 09:15 AM', task: 'XI C', hrs: 0.58 },
-      { time: '09:25 AM - 10:00 AM', task: 'XI C', hrs: 0.58 },
-      { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
-      { time: '10:35 AM - 11:10 AM', task: 'XIII C', hrs: 0.58 },
-      { time: '11:40 AM - 12:20 PM', task: 'XII C', hrs: 0.67 },
-      { time: '12:20 PM - 12:55 PM', task: 'XI D', hrs: 0.58 },
-      { time: '12:55 PM - 01:30 PM', task: 'XIII D', hrs: 0.58 },
-      { time: '01:30 PM - 02:00 PM', task: 'XIII D', hrs: 0.50 }
-    ],
-    'Tue': [
-      { time: '08:40 AM - 09:15 AM', task: 'XI C', hrs: 0.58 },
-      { time: '09:25 AM - 10:00 AM', task: 'XI C', hrs: 0.58 },
-      { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
-      { time: '10:35 AM - 11:10 AM', task: 'XII C', hrs: 0.58 },
-      { time: '11:40 AM - 12:20 PM', task: 'XII C', hrs: 0.67 },
-      { time: '12:20 PM - 12:55 PM', task: 'XI D', hrs: 0.58 },
-      { time: '12:55 PM - 01:30 PM', task: 'XIII D', hrs: 0.58 },
-      { time: '01:30 PM - 02:00 PM', task: 'XIII D', hrs: 0.50 }
-    ],
-    'Wed': [
-      { time: '08:40 AM - 09:15 AM', task: 'XI C', hrs: 0.58 },
-      { time: '09:25 AM - 10:00 AM', task: 'X C', hrs: 0.58 },
-      { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
-      { time: '10:35 AM - 11:10 AM', task: 'XII C', hrs: 0.58 },
-      { time: '11:40 AM - 12:20 PM', task: 'XI D', hrs: 0.67 },
-      { time: '12:20 PM - 12:55 PM', task: 'XI D', hrs: 0.58 },
-      { time: '12:55 PM - 01:30 PM', task: 'XIII D', hrs: 0.58 },
-      { time: '01:30 PM - 02:00 PM', task: 'IX C', hrs: 0.50 }
-    ],
-    'Thu': [
-      { time: '08:40 AM - 09:15 AM', task: 'XI C', hrs: 0.58 },
-      { time: '09:25 AM - 10:00 AM', task: 'X C', hrs: 0.58 },
-      { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
-      { time: '10:35 AM - 11:10 AM', task: 'XII C', hrs: 0.58 },
-      { time: '11:40 AM - 12:20 PM', task: 'XI D', hrs: 0.67 },
-      { time: '12:55 PM - 01:30 PM', task: 'XIII D', hrs: 0.58 },
-      { time: '01:30 PM - 02:00 PM', task: 'X B', hrs: 0.50 }
-    ],
-    'Fri': [
-      { time: '08:40 AM - 09:15 AM', task: 'XI C', hrs: 0.58 },
-      { time: '09:25 AM - 10:00 AM', task: 'X B', hrs: 0.58 },
-      { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
-      { time: '10:35 AM - 11:10 AM', task: 'XII C', hrs: 0.58 },
-      { time: '11:40 AM - 12:20 PM', task: 'XI D', hrs: 0.67 },
-      { time: '12:20 PM - 12:55 PM', task: 'X C', hrs: 0.58 },
-      { time: '12:55 PM - 01:30 PM', task: 'XIII D', hrs: 0.58 },
-      { time: '01:30 PM - 02:00 PM', task: 'IX C', hrs: 0.50 }
-    ],
-    'Sat': [
-      { time: '08:40 AM - 09:15 AM', task: 'XI C', hrs: 0.58 },
-      { time: '09:25 AM - 10:00 AM', task: 'X B', hrs: 0.58 },
-      { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
-      { time: '10:35 AM - 11:10 AM', task: 'XII C', hrs: 0.58 },
-      { time: '11:40 AM - 12:20 PM', task: 'XI D', hrs: 0.67 },
-      { time: '12:20 PM - 12:55 PM', task: 'XI D', hrs: 0.58 },
-      { time: '12:55 PM - 01:30 PM', task: 'XIII D', hrs: 0.58 },
-      { time: '01:30 PM - 02:00 PM', task: 'IX C', hrs: 0.50 }
-    ],
-    'Sun': []
-  },
-  tuition: {
-    'Mon': [
-      { time: '04:00 PM - 04:50 PM', task: 'Class XII IP – Sant Nagar', topic: 'Series in Python', hrs: 0.50 },
-      { time: '05:10 PM - 06:00 PM', task: 'Class XII IP – SICS', topic: 'Series in Python', hrs: 0.50 },
-      { time: '07:10 PM - 08:00 PM', task: 'Class XII CS – Sant Nagar', topic: 'Functions in Python', hrs: 0.50 },
-      { time: '08:00 PM - 09:00 PM', task: 'Home Tuition', topic: 'Series in Python', hrs: 1.00 }
-    ],
-    'Tue': [
-      { time: '04:10 PM - 05:00 PM', task: 'Class XI IP/CS – Sant Nagar', topic: 'Dictionary in Python', hrs: .50 },
-      { time: '06:00 PM - 07:00 PM', task: 'Class XI AI – SICS', topic: 'Capstone Project', hrs: 0.50 },
-      { time: '06:30 PM - 07:30 PM', task: 'Class XI IP/CS – SICS', topic: 'Dictionary in Python', hrs: 0.50 },
-      { time: '08:00 PM - 09:00 PM', task: 'SkillYards', topic: 'Function in Python', hrs: 1.00 }
-    ],
-    'Wed': [
-      { time: '04:00 PM - 05:10 PM', task: 'Class XII IP – Sant Nagar', topic: 'Series in Python', hrs: 1.17 },
-      { time: '05:10 PM - 06:20 PM', task: 'Class XII IP – SICS', topic: 'Series in Python', hrs: 1.17 },
-      { time: '07:15 PM - 08:30 PM', task: 'Class XII CS – Sant Nagar', topic: 'Series in Python', hrs: 1.25 },
-      { time: '08:10 PM - 09:15 PM', task: 'Vidya Home Tuition', topic: 'Series in Python', hrs: 1.08 }
-    ],
-    'Thu': [
-      { time: '04:00 PM - 05:30 PM', task: 'Class XI IP/CS – Sant Nagar', topic: 'Series in Python', hrs: 1.50 },
-      { time: '05:30 PM - 06:20 PM', task: 'Class XI AI – SICS', topic: 'Series in Python', hrs: 0.83 },
-      { time: '06:20 PM - 07:30 PM', task: 'Class XI IP/CS – SICS', topic: 'Series in Python', hrs: 1.17 },
-      { time: '08:00 PM - 09:00 PM', task: 'SkillYards', topic: 'Series in Python', hrs: 1.00 }
-    ],
-    'Fri': [
-      { time: '04:00 PM - 05:10 PM', task: 'Class XII IP – Sant Nagar', topic: 'Series in Python', hrs: 1.17 },
-      { time: '05:10 PM - 06:20 PM', task: 'Class XII IP – SICS', topic: 'Series in Python', hrs: 1.17 },
-      { time: '07:15 PM - 08:30 PM', task: 'Class XII CS – Sant Nagar', topic: 'Series in Python', hrs: 1.25 },
-      { time: '08:00 PM - 09:00 PM', task: 'Kriti Class', topic: 'Series in Python', hrs: 1.00 }
-    ],
-    'Sat': [
-      { time: '04:00 PM - 05:30 PM', task: 'Class XI IP/CS – Sant Nagar', topic: 'Series in Python', hrs: 1.50 },
-      { time: '05:30 PM - 06:20 PM', task: 'Class XI AI – SICS', topic: 'Series in Python', hrs: 0.83 },
-      { time: '06:20 PM - 07:30 PM', task: 'Class XI IP/CS – SICS', topic: 'Series in Python', hrs: 1.17 },
-      { time: '08:00 PM - 09:00 PM', task: 'SkillYards', topic: 'Series in Python', hrs: 1.00 }
-    ],
-    'Sun': [
-      { time: '12:30 PM - 01:30 PM', task: 'Vidya Class', topic: 'Series in Python', hrs: 1.00 },
-      { time: '02:00 PM - 03:00 PM', task: 'Kirti Class', topic: 'Series in Python', hrs: 1.00 }
-    ]
-  },
-  study: {
-    'Mon': [{ time: '10:00 PM - 11:30 PM', task: 'Mathematics', hrs: 1.50 }],
-    'Tue': [{ time: '10:00 PM - 11:30 PM', task: 'English', hrs: 1.50 }],
-    'Wed': [{ time: '10:00 PM - 11:30 PM', task: 'Reasoning', hrs: 1.50 }],
-    'Thu': [{ time: '10:00 PM - 11:30 PM', task: 'Hindi', hrs: 1.50 }],
-    'Fri': [{ time: '10:00 PM - 11:30 PM', task: 'Computer Science', hrs: 1.50 }],
-    'Sat': [{ time: '10:00 PM - 11:30 PM', task: 'Computer Science', hrs: 1.50 }],
-    'Sun': [{ time: '10:00 PM - 11:30 PM', task: 'CS + Teaching Aptitude', hrs: 1.50 }]
-  }
-};
-
-const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-const STORE_KEY = 'singhPlanner_v25';
-
-let state = {
-  activeDateStr: getTodayISO(),
-  viewMondayStr: getMondayISO(new Date()),
-  days: {},
-  timetables: { school: {}, tuition: {}, study: {} },
-  lastBackup: null,
-  lastCodeTemplate: ''
-};
-
-let charts = {};
-let editMode = { school: false, tuition: false, study: false };
-let lastCheckedDate = getTodayISO();
-
-/* ================= UTILITIES ================= */
-function escapeHtml(str){
-  if(str == null) return '';
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-}
-function uid(){ return 't_' + Math.random().toString(36).slice(2,8) + Date.now().toString(36); }
-function getTodayISO(){ const n = new Date(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')}`; }
-function getMondayISO(refDate){
-  const d = new Date(refDate);
-  const day = d.getDay(), diff = d.getDate() - day + (day === 0 ? -6 : 1);
-  d.setDate(diff);
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-}
-function addDays(isoStr, num){
-  const [y,m,d] = isoStr.split('-').map(Number);
-  const dt = new Date(y, m-1, d+num);
-  return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;
-}
-function getDayName(isoStr){
-  const [y,m,d] = isoStr.split('-').map(Number);
-  const idx = new Date(y, m-1, d).getDay();
-  return DAYS[idx === 0 ? 6 : idx-1];
-}
-
-function formatShortDate(isoStr){
-  const [y,m,d] = isoStr.split('-').map(Number);
-  const dt = new Date(y, m-1, d);
-  const day = dt.getDate();
-  const month = dt.toLocaleDateString('en-US', {month:'short'});
-  return `${day} ${month}`;
-}
-
-function formatWeekRange(mondayIso){
-  const sundayIso = addDays(mondayIso, 6);
-  const [y] = sundayIso.split('-');
-  return `${formatShortDate(mondayIso)} - ${formatShortDate(sundayIso)} ${y}`;
-}
-
-function parseMinutes(t, fallbackMod){
-  let c = t.toUpperCase().replace(/\s+/g,'');
-  let mod = c.includes('PM') ? 'PM' : (c.includes('AM') ? 'AM' : fallbackMod);
-  let p = c.replace('AM','').replace('PM','');
-  let [h,min] = p.split(':').map(Number);
-  if(isNaN(h)) return 0; if(isNaN(min)) min = 0;
-  if(mod === 'PM' && h !== 12) h += 12;
-  if(mod === 'AM' && h === 12) h = 0;
-  return h * 60 + min;
-}
-
-function getTaskStartMinutes(timeStr){
-  if(!timeStr || typeof timeStr !== 'string') return 99999;
-  const m = timeStr.match(/(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)\s*-\s*(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)/i);
-  if(m){
-    let s = m[1].trim(), e = m[2].trim();
-    let emod = e.toUpperCase().includes('PM') ? 'PM' : (e.toUpperCase().includes('AM') ? 'AM' : 'PM');
-    let smod = s.toUpperCase().includes('AM') ? 'AM' : (s.toUpperCase().includes('PM') ? 'PM' : emod);
-    let sm = parseMinutes(s, smod);
-    let em = parseMinutes(e, emod);
-    if(!s.toUpperCase().includes('AM') && !s.toUpperCase().includes('PM') && sm > em && em <= 780){
-      sm = parseMinutes(s, 'AM');
-    }
-    return sm;
-  }
-  const single = timeStr.match(/(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)/i);
-  if(single){
-    let s = single[1].trim();
-    let mod = s.toUpperCase().includes('PM') ? 'PM' : 'AM';
-    return parseMinutes(s, mod);
-  }
-  return 99999;
-}
-
-function sortTasksByTime(taskList){
-  if(!Array.isArray(taskList)) return taskList;
-  return taskList.sort((a, b) => {
-    const minA = getTaskStartMinutes(a.time);
-    const minB = getTaskStartMinutes(b.time);
-    if(minA !== minB) return minA - minB;
-    return (a.task || '').localeCompare(b.task || '');
-  });
-}
-
-function syncWorkspaceHeight(){
-  const sidebar = document.getElementById('plannerSidebar');
-  const workspace = document.getElementById('mainWorkspace');
-  if(!sidebar || !workspace) return;
-
-  if(window.innerWidth >= 1024){
-    const benchmarkH = sidebar.offsetHeight;
-    if(benchmarkH > 0){
-      workspace.style.maxHeight = `${benchmarkH}px`;
-      workspace.style.overflowY = 'auto';
-    }
-  } else {
-    workspace.style.maxHeight = 'none';
-    workspace.style.overflowY = 'visible';
-  }
-}
-
-function extractTimeAndCalculateHrs(text){
-  const m = text.match(/(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)\s*-\s*(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)/i);
-  if(m){
-    let s = m[1].trim(), e = m[2].trim();
-    let emod = e.toUpperCase().includes('PM') ? 'PM' : (e.toUpperCase().includes('AM') ? 'AM' : 'PM');
-    let smod = s.toUpperCase().includes('AM') ? 'AM' : (s.toUpperCase().includes('PM') ? 'PM' : emod);
-    let sm = parseMinutes(s, smod), em = parseMinutes(e, emod);
-    if(em < sm) em += 1440;
-    return {
-      timeStr: `${s} - ${e}`,
-      hrs: parseFloat(((em - sm) / 60).toFixed(2)),
-      cleanTask: text.replace(m[0], '').replace(/[()]/g, '').trim()
+  <script>
+    /* ==========================================================================
+       GLOBAL MASTER TIMETABLE CONFIGURATION
+       ========================================================================== */
+    window.MASTER_TIMETABLES = {
+      school: {
+        'Mon': [
+          { time: '08:40 AM - 09:15 AM', task: 'XI C', hrs: 0.58 },
+          { time: '09:25 AM - 10:00 AM', task: 'XI C', hrs: 0.58 },
+          { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
+          { time: '10:35 AM - 11:10 AM', task: 'XIII C', hrs: 0.58 },
+          { time: '11:40 AM - 12:20 PM', task: 'XII C', hrs: 0.67 },
+          { time: '12:20 PM - 12:55 PM', task: 'XI D', hrs: 0.58 },
+          { time: '12:55 PM - 01:30 PM', task: 'XIII D', hrs: 0.58 },
+          { time: '01:30 PM - 02:00 PM', task: 'XIII D', hrs: 0.50 }
+        ],
+        'Tue': [
+          { time: '08:40 AM - 09:15 AM', task: 'XI C', hrs: 0.58 },
+          { time: '09:25 AM - 10:00 AM', task: 'XI C', hrs: 0.58 },
+          { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
+          { time: '10:35 AM - 11:10 AM', task: 'XII C', hrs: 0.58 },
+          { time: '11:40 AM - 12:20 PM', task: 'XII C', hrs: 0.67 },
+          { time: '12:20 PM - 12:55 PM', task: 'XI D', hrs: 0.58 },
+          { time: '12:55 PM - 01:30 PM', task: 'XIII D', hrs: 0.58 },
+          { time: '01:30 PM - 02:00 PM', task: 'XIII D', hrs: 0.50 }
+        ],
+        'Wed': [
+          { time: '08:40 AM - 09:15 AM', task: 'XI C', hrs: 0.58 },
+          { time: '09:25 AM - 10:00 AM', task: 'X C', hrs: 0.58 },
+          { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
+          { time: '10:35 AM - 11:10 AM', task: 'XII C', hrs: 0.58 },
+          { time: '11:40 AM - 12:20 PM', task: 'XI D', hrs: 0.67 },
+          { time: '12:20 PM - 12:55 PM', task: 'XI D', hrs: 0.58 },
+          { time: '12:55 PM - 01:30 PM', task: 'XIII D', hrs: 0.58 },
+          { time: '01:30 PM - 02:00 PM', task: 'IX C', hrs: 0.50 }
+        ],
+        'Thu': [
+          { time: '08:40 AM - 09:15 AM', task: 'XI C', hrs: 0.58 },
+          { time: '09:25 AM - 10:00 AM', task: 'X C', hrs: 0.58 },
+          { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
+          { time: '10:35 AM - 11:10 AM', task: 'XII C', hrs: 0.58 },
+          { time: '11:40 AM - 12:20 PM', task: 'XI D', hrs: 0.67 },
+          { time: '12:55 PM - 01:30 PM', task: 'XIII D', hrs: 0.58 },
+          { time: '01:30 PM - 02:00 PM', task: 'X B', hrs: 0.50 }
+        ],
+        'Fri': [
+          { time: '08:40 AM - 09:15 AM', task: 'XI C', hrs: 0.58 },
+          { time: '09:25 AM - 10:00 AM', task: 'X B', hrs: 0.58 },
+          { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
+          { time: '10:35 AM - 11:10 AM', task: 'XII C', hrs: 0.58 },
+          { time: '11:40 AM - 12:20 PM', task: 'XI D', hrs: 0.67 },
+          { time: '12:20 PM - 12:55 PM', task: 'X C', hrs: 0.58 },
+          { time: '12:55 PM - 01:30 PM', task: 'XIII D', hrs: 0.58 },
+          { time: '01:30 PM - 02:00 PM', task: 'IX C', hrs: 0.50 }
+        ],
+        'Sat': [
+          { time: '08:40 AM - 09:15 AM', task: 'XI C', hrs: 0.58 },
+          { time: '09:25 AM - 10:00 AM', task: 'X B', hrs: 0.58 },
+          { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
+          { time: '10:35 AM - 11:10 AM', task: 'XII C', hrs: 0.58 },
+          { time: '11:40 AM - 12:20 PM', task: 'XI D', hrs: 0.67 },
+          { time: '12:20 PM - 12:55 PM', task: 'XI D', hrs: 0.58 },
+          { time: '12:55 PM - 01:30 PM', task: 'XIII D', hrs: 0.58 },
+          { time: '01:30 PM - 02:00 PM', task: 'IX C', hrs: 0.50 }
+        ],
+        'Sun': []
+      },
+      tuition: {
+        'Mon': [
+          { time: '04:00 PM - 04:50 PM', task: 'Class XII IP – Sant Nagar', topic: 'Series in Python', hrs: 0.50 },
+          { time: '05:10 PM - 06:00 PM', task: 'Class XII IP – SICS', topic: 'Series in Python', hrs: 0.50 },
+          { time: '07:10 PM - 08:00 PM', task: 'Class XII CS – Sant Nagar', topic: 'Functions in Python', hrs: 0.50 },
+          { time: '08:00 PM - 09:00 PM', task: 'Home Tuition', topic: 'Series in Python', hrs: 1.00 }
+        ],
+        'Tue': [
+          { time: '04:10 PM - 05:00 PM', task: 'Class XI IP/CS – Sant Nagar', topic: 'Dictionary in Python', hrs: 0.50 },
+          { time: '06:00 PM - 07:00 PM', task: 'Class XI AI – SICS', topic: 'Capstone Project', hrs: 0.50 },
+          { time: '06:30 PM - 07:30 PM', task: 'Class XI IP/CS – SICS', topic: 'Dictionary in Python', hrs: 0.50 },
+          { time: '08:00 PM - 09:00 PM', task: 'SkillYards', topic: 'Function in Python', hrs: 1.00 }
+        ],
+        'Wed': [
+          { time: '04:00 PM - 05:10 PM', task: 'Class XII IP – Sant Nagar', topic: 'Series in Python', hrs: 1.17 },
+          { time: '05:10 PM - 06:20 PM', task: 'Class XII IP – SICS', topic: 'Series in Python', hrs: 1.17 },
+          { time: '07:15 PM - 08:30 PM', task: 'Class XII CS – Sant Nagar', topic: 'Series in Python', hrs: 1.25 },
+          { time: '08:10 PM - 09:15 PM', task: 'Vidya Home Tuition', topic: 'Series in Python', hrs: 1.08 }
+        ],
+        'Thu': [
+          { time: '04:00 PM - 05:30 PM', task: 'Class XI IP/CS – Sant Nagar', topic: 'Series in Python', hrs: 1.50 },
+          { time: '05:30 PM - 06:20 PM', task: 'Class XI AI – SICS', topic: 'Series in Python', hrs: 0.83 },
+          { time: '06:20 PM - 07:30 PM', task: 'Class XI IP/CS – SICS', topic: 'Series in Python', hrs: 1.17 },
+          { time: '08:00 PM - 09:00 PM', task: 'SkillYards', topic: 'Series in Python', hrs: 1.00 }
+        ],
+        'Fri': [
+          { time: '04:00 PM - 05:10 PM', task: 'Class XII IP – Sant Nagar', topic: 'Series in Python', hrs: 1.17 },
+          { time: '05:10 PM - 06:20 PM', task: 'Class XII IP – SICS', topic: 'Series in Python', hrs: 1.17 },
+          { time: '07:15 PM - 08:30 PM', task: 'Class XII CS – Sant Nagar', topic: 'Series in Python', hrs: 1.25 },
+          { time: '08:00 PM - 09:00 PM', task: 'Kriti Class', topic: 'Series in Python', hrs: 1.00 }
+        ],
+        'Sat': [
+          { time: '04:00 PM - 05:30 PM', task: 'Class XI IP/CS – Sant Nagar', topic: 'Series in Python', hrs: 1.50 },
+          { time: '05:30 PM - 06:20 PM', task: 'Class XI AI – SICS', topic: 'Series in Python', hrs: 0.83 },
+          { time: '06:20 PM - 07:30 PM', task: 'Class XI IP/CS – SICS', topic: 'Series in Python', hrs: 1.17 },
+          { time: '08:00 PM - 09:00 PM', task: 'SkillYards', topic: 'Series in Python', hrs: 1.00 }
+        ],
+        'Sun': [
+          { time: '12:30 PM - 01:30 PM', task: 'Vidya Class', topic: 'Series in Python', hrs: 1.00 },
+          { time: '02:00 PM - 03:00 PM', task: 'Kirti Class', topic: 'Series in Python', hrs: 1.00 }
+        ]
+      },
+      study: {
+        'Mon': [{ time: '10:00 PM - 11:30 PM', task: 'Mathematics', hrs: 1.50 }],
+        'Tue': [{ time: '10:00 PM - 11:30 PM', task: 'English', hrs: 1.50 }],
+        'Wed': [{ time: '10:00 PM - 11:30 PM', task: 'Reasoning', hrs: 1.50 }],
+        'Thu': [{ time: '10:00 PM - 11:30 PM', task: 'Hindi', hrs: 1.50 }],
+        'Fri': [{ time: '10:00 PM - 11:30 PM', task: 'Computer Science', hrs: 1.50 }],
+        'Sat': [{ time: '10:00 PM - 11:30 PM', task: 'Computer Science', hrs: 1.50 }],
+        'Sun': [{ time: '10:00 PM - 11:30 PM', task: 'CS + Teaching Aptitude', hrs: 1.50 }]
+      }
     };
-  }
-  return null;
-}
 
-function getTimeStatus(timeStr, dateStr){
-  if(dateStr !== getTodayISO()) return 'normal';
-  const m = timeStr.match(/(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)\s*-\s*(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)/i);
-  if(!m) return 'normal';
-  let s = m[1].trim(), e = m[2].trim();
-  let emod = e.toUpperCase().includes('PM') ? 'PM' : (e.toUpperCase().includes('AM') ? 'AM' : 'PM');
-  let smod = s.toUpperCase().includes('AM') ? 'AM' : (s.toUpperCase().includes('PM') ? 'PM' : emod);
-  let now = new Date(), curM = now.getHours() * 60 + now.getMinutes();
-  let sm = parseMinutes(s, smod), em = parseMinutes(e, emod);
-  if(em < sm) em += 1440;
-  if(curM >= sm && curM <= em) return 'active';
-  if(curM > em) return 'past';
-  return 'upcoming';
-}
+    const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const STORE_KEY = 'singhPlanner_v25';
 
-/* ================= PARSER & STATE SANITIZER ================= */
-function parseTaskAndTopic(rawText, existingTopic){
-  if(existingTopic && typeof existingTopic === 'string' && existingTopic.trim() !== ''){
-    const cleanTitle = (rawText || '').replace(/\s*\|\s*Topic:.*$/i, '').trim();
-    return { title: cleanTitle, topic: existingTopic.trim() };
-  }
-  if(!rawText) return { title: 'Untitled Session', topic: '' };
-  
-  if(rawText.includes('|')){
-    const parts = rawText.split('|');
-    const title = parts[0].trim();
-    const topic = parts.slice(1).join('|').replace(/^\s*topic\s*:\s*/i, '').trim();
-    return { title, topic };
-  }
+    let state = {
+      activeDateStr: getTodayISO(),
+      viewMondayStr: getMondayISO(new Date()),
+      days: {},
+      timetables: { school: {}, tuition: {}, study: {} },
+      lastBackup: null,
+      lastCodeTemplate: ''
+    };
 
-  const m = rawText.match(/^(.*?)\s*topic\s*:\s*(.*)$/i);
-  if(m){
-    return { title: m[1].trim(), topic: m[2].trim() };
-  }
-  return { title: rawText.trim(), topic: '' };
-}
+    let charts = {};
+    let editMode = { school: false, tuition: false, study: false };
+    let lastCheckedDate = getTodayISO();
 
-function sanitizePlannerState(dataObj){
-  if(!dataObj) return;
-  const cleanItem = (item) => {
-    if(!item || !item.task) return;
-    const p = parseTaskAndTopic(item.task, item.topic);
-    item.task = p.title;
-    item.topic = p.topic;
-  };
-  if(dataObj.timetables && dataObj.timetables.tuition){
-    Object.keys(dataObj.timetables.tuition).forEach(d => {
-      (dataObj.timetables.tuition[d] || []).forEach(cleanItem);
-    });
-  }
-  if(dataObj.days){
-    Object.values(dataObj.days).forEach(day => {
-      if(day.tuition_study) day.tuition_study.forEach(cleanItem);
-    });
-  }
-}
+    /* ================= UTILITIES ================= */
+    function escapeHtml(str) { return str == null ? '' : String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+    function uid() { return 't_' + Math.random().toString(36).slice(2, 8) + Date.now().toString(36); }
+    function getTodayISO() { const n = new Date(); return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, '0')}-${String(n.getDate()).padStart(2, '0')}`; }
+    function addDays(isoStr, num) { const [y, m, d] = isoStr.split('-').map(Number); const dt = new Date(y, m - 1, d + num); return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`; }
+    function getDayName(isoStr) { const [y, m, d] = isoStr.split('-').map(Number); const idx = new Date(y, m - 1, d).getDay(); return DAYS[idx === 0 ? 6 : idx - 1]; }
+    function formatShortDate(isoStr) { const [y, m, d] = isoStr.split('-').map(Number); const dt = new Date(y, m - 1, d); return `${dt.getDate()} ${dt.toLocaleDateString('en-US', { month: 'short' })}`; }
+    function formatWeekRange(mondayIso) { const sundayIso = addDays(mondayIso, 6); return `${formatShortDate(mondayIso)} - ${formatShortDate(sundayIso)} ${sundayIso.split('-')[0]}`; }
+    function closeModal() { document.getElementById('customModal').classList.add('hidden'); }
+    function ensureDayPopulated(dateStr) { syncDayFromTimetable(dateStr); }
+    function triggerPrint() { updatePrintDate(); window.print(); }
+    function shiftWeek(dir) { state.viewMondayStr = addDays(state.viewMondayStr, dir * 7); renderSidebarDaySelector(); syncWorkspaceHeight(); }
+    function handleRowClick(e, taskId, sec) { if (e.target.tagName === 'INPUT' || e.target.closest('label') || e.target.closest('button')) return; updateCheckbox(taskId, sec); }
 
-/* ================= TOASTS & MODALS ================= */
-function showToast(message, type='info'){
-  const container = document.getElementById('toastContainer');
-  const toast = document.createElement('div');
-  const bg = type === 'error' ? 'bg-rose-600' : type === 'success' ? 'bg-emerald-600' : 'bg-slate-900';
-  toast.className = `${bg} text-white font-semibold text-xs px-3.5 py-2 rounded-xl shadow-lg flex items-center gap-2 pointer-events-auto transform transition-all duration-200 translate-y-2 opacity-0`;
-  toast.innerHTML = `<span>${escapeHtml(message)}</span>`;
-  container.appendChild(toast);
-  requestAnimationFrame(() => toast.classList.remove('translate-y-2', 'opacity-0'));
-  setTimeout(() => {
-    toast.classList.add('opacity-0', 'translate-y-2');
-    setTimeout(() => toast.remove(), 200);
-  }, 3500);
-}
-
-function closeModal(){
-  document.getElementById('customModal').classList.add('hidden');
-}
-
-window.addEventListener('keydown', (e) => {
-  if(e.key === 'Escape') closeModal();
-});
-
-/* ================= TOPIC EDITING ================= */
-function editItemTopic(taskId, sec, e){
-  if(e) e.stopPropagation();
-  const dayData = state.days[state.activeDateStr];
-  if(!dayData || !dayData[sec]) return;
-  const item = dayData[sec].find(t => t.id === taskId);
-  if(!item) return;
-
-  const currentTopic = item.topic || '';
-  const newTopic = prompt(`Enter topic for "${item.task}":`, currentTopic);
-  if(newTopic !== null){
-    item.topic = newTopic.trim();
-    saveState();
-    renderTables();
-    showToast(newTopic.trim() ? 'Topic saved!' : 'Topic cleared', 'success');
-  }
-}
-
-/* ================= WHATSAPP REMINDER DISPATCHER ================= */
-function sendTaskWhatsApp(taskId, sec, e){
-  if(e) e.stopPropagation();
-  const dayData = state.days[state.activeDateStr];
-  if(!dayData || !dayData[sec]) return;
-  const item = dayData[sec].find(t => t.id === taskId);
-  if(!item) return;
-
-  let cleanSubject = (item.task || 'Class').trim();
-
-  // Normalize batch title
-  if(/^(IX|X|XI|XII)\b/i.test(cleanSubject) && !/^Class\b/i.test(cleanSubject)){
-    cleanSubject = 'Class ' + cleanSubject;
-  }
-  cleanSubject = cleanSubject.replace(/SantNagar/gi, 'Sant Nagar');
-
-  if(cleanSubject.includes('–')){
-    cleanSubject = cleanSubject.replace(/\s*–\s*/g, ' – ');
-  } else if(cleanSubject.includes('-')){
-    cleanSubject = cleanSubject.replace(/\s*-\s*/g, ' – ');
-  } else {
-    cleanSubject = cleanSubject.replace(/\s+(Sant Nagar|SICS)\b/i, ' – $1');
-  }
-
-  // Format time range: "07:00 PM - 07:50 PM" -> "07:00 PM to 07:50 PM"
-  const rawTime = (item.time || '').trim();
-  const timeFormatted = (rawTime.includes('-') || rawTime.includes('–'))
-    ? rawTime.replace(/\s*[-–]\s*/, ' to ')
-    : rawTime;
-
-  let topicText = (item.topic || '').trim();
-  if(!topicText){
-    const promptAns = prompt(`Enter topic for today's ${cleanSubject} class:`, '');
-    if(promptAns !== null && promptAns.trim()){
-      item.topic = promptAns.trim();
-      topicText = item.topic;
-      saveState();
-      renderTables();
+    function getMondayISO(refDate) {
+      const d = new Date(refDate);
+      const day = d.getDay(), diff = d.getDate() - day + (day === 0 ? -6 : 1);
+      d.setDate(diff);
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     }
-  }
 
-  const topicDisplay = topicText || 'Functions in Python';
+    function parseMinutes(t, fallbackMod) {
+      let c = t.toUpperCase().replace(/\s+/g, '');
+      let mod = c.includes('PM') ? 'PM' : (c.includes('AM') ? 'AM' : fallbackMod);
+      let p = c.replace('AM', '').replace('PM', '');
+      let [h, min] = p.split(':').map(Number);
+      if (isNaN(h)) return 0;
+      if (isNaN(min)) min = 0;
+      if (mod === 'PM' && h !== 12) h += 12;
+      if (mod === 'AM' && h === 12) h = 0;
+      return h * 60 + min;
+    }
 
-  // Build the message exactly matching the requested format
- const message = `⏰ *Gentle Reminder*
+    function getTaskStartMinutes(timeStr) {
+      if (!timeStr || typeof timeStr !== 'string') return 99999;
+      const m = timeStr.match(/(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)\s*-\s*(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)/i);
+      if (m) {
+        let s = m[1].trim(), e = m[2].trim();
+        let emod = e.toUpperCase().includes('PM') ? 'PM' : (e.toUpperCase().includes('AM') ? 'AM' : 'PM');
+        let smod = s.toUpperCase().includes('AM') ? 'AM' : (s.toUpperCase().includes('PM') ? 'PM' : emod);
+        let sm = parseMinutes(s, smod);
+        let em = parseMinutes(e, emod);
+        if (!s.toUpperCase().includes('AM') && !s.toUpperCase().includes('PM') && sm > em && em <= 780) {
+          sm = parseMinutes(s, 'AM');
+        }
+        return sm;
+      }
+      const single = timeStr.match(/(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)/i);
+      if (single) {
+        let s = single[1].trim();
+        let mod = s.toUpperCase().includes('PM') ? 'PM' : 'AM';
+        return parseMinutes(s, mod);
+      }
+      return 99999;
+    }
+
+    function sortTasksByTime(taskList) {
+      if (!Array.isArray(taskList)) return taskList;
+      return taskList.sort((a, b) => {
+        const minA = getTaskStartMinutes(a.time);
+        const minB = getTaskStartMinutes(b.time);
+        if (minA !== minB) return minA - minB;
+        return (a.task || '').localeCompare(b.task || '');
+      });
+    }
+
+    function syncWorkspaceHeight() {
+      const sidebar = document.getElementById('plannerSidebar');
+      const workspace = document.getElementById('mainWorkspace');
+      if (!sidebar || !workspace) return;
+      if (window.innerWidth >= 1024) {
+        const benchmarkH = sidebar.offsetHeight;
+        if (benchmarkH > 0) {
+          workspace.style.maxHeight = `${benchmarkH}px`;
+          workspace.style.overflowY = 'auto';
+        }
+      } else {
+        workspace.style.maxHeight = 'none';
+        workspace.style.overflowY = 'visible';
+      }
+    }
+
+    function extractTimeAndCalculateHrs(text) {
+      const m = text.match(/(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)\s*-\s*(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)/i);
+      if (m) {
+        let s = m[1].trim(), e = m[2].trim();
+        let emod = e.toUpperCase().includes('PM') ? 'PM' : (e.toUpperCase().includes('AM') ? 'AM' : 'PM');
+        let smod = s.toUpperCase().includes('AM') ? 'AM' : (s.toUpperCase().includes('PM') ? 'PM' : emod);
+        let sm = parseMinutes(s, smod), em = parseMinutes(e, emod);
+        if (em < sm) em += 1440;
+        return {
+          timeStr: `${s} - ${e}`,
+          hrs: parseFloat(((em - sm) / 60).toFixed(2)),
+          cleanTask: text.replace(m[0], '').replace(/[()]/g, '').trim()
+        };
+      }
+      return null;
+    }
+
+    function getTimeStatus(timeStr, dateStr) {
+      if (dateStr !== getTodayISO()) return 'normal';
+      const m = timeStr.match(/(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)\s*-\s*(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)/i);
+      if (!m) return 'normal';
+      let s = m[1].trim(), e = m[2].trim();
+      let emod = e.toUpperCase().includes('PM') ? 'PM' : (e.toUpperCase().includes('AM') ? 'AM' : 'PM');
+      let smod = s.toUpperCase().includes('AM') ? 'AM' : (s.toUpperCase().includes('PM') ? 'PM' : emod);
+      let now = new Date(), curM = now.getHours() * 60 + now.getMinutes();
+      let sm = parseMinutes(s, smod), em = parseMinutes(e, emod);
+      if (em < sm) em += 1440;
+      if (curM >= sm && curM <= em) return 'active';
+      if (curM > em) return 'past';
+      return 'upcoming';
+    }
+
+    /* ================= PARSER & STATE SANITIZER ================= */
+    function parseTaskAndTopic(rawText, existingTopic) {
+      if (existingTopic && typeof existingTopic === 'string' && existingTopic.trim() !== '') {
+        const cleanTitle = (rawText || '').replace(/\s*\|\s*Topic:.*$/i, '').trim();
+        return { title: cleanTitle, topic: existingTopic.trim() };
+      }
+      if (!rawText) return { title: 'Untitled Session', topic: '' };
+      if (rawText.includes('|')) {
+        const parts = rawText.split('|');
+        const title = parts[0].trim();
+        const topic = parts.slice(1).join('|').replace(/^\s*topic\s*:\s*/i, '').trim();
+        return { title, topic };
+      }
+      const m = rawText.match(/^(.*?)\s*topic\s*:\s*(.*)$/i);
+      if (m) {
+        return { title: m[1].trim(), topic: m[2].trim() };
+      }
+      return { title: rawText.trim(), topic: '' };
+    }
+
+    function sanitizePlannerState(dataObj) {
+      if (!dataObj) return;
+      const cleanItem = (item) => {
+        if (!item || !item.task) return;
+        const p = parseTaskAndTopic(item.task, item.topic);
+        item.task = p.title;
+        item.topic = p.topic;
+      };
+      if (dataObj.timetables && dataObj.timetables.tuition) {
+        Object.keys(dataObj.timetables.tuition).forEach(d => {
+          (dataObj.timetables.tuition[d] || []).forEach(cleanItem);
+        });
+      }
+      if (dataObj.days) {
+        Object.values(dataObj.days).forEach(day => {
+          if (day.tuition_study) day.tuition_study.forEach(cleanItem);
+        });
+      }
+    }
+
+    /* ================= TOASTS & MODALS ================= */
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      const bg = type === 'error' ? 'bg-rose-600' : type === 'success' ? 'bg-emerald-600' : 'bg-slate-900';
+      toast.className = `${bg} text-white font-semibold text-xs px-3.5 py-2 rounded-xl shadow-lg flex items-center gap-2 pointer-events-auto transform transition-all duration-200 translate-y-2 opacity-0`;
+      toast.innerHTML = `<span>${escapeHtml(message)}</span>`;
+      container.appendChild(toast);
+      requestAnimationFrame(() => toast.classList.remove('translate-y-2', 'opacity-0'));
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 200);
+      }, 3500);
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    /* ================= TOPIC EDITING ================= */
+    function editItemTopic(taskId, sec, e) {
+      if (e) e.stopPropagation();
+      const dayData = state.days[state.activeDateStr];
+      if (!dayData || !dayData[sec]) return;
+      const item = dayData[sec].find(t => t.id === taskId);
+      if (!item) return;
+
+      const currentTopic = item.topic || '';
+      const newTopic = prompt(`Enter topic for "${item.task}":`, currentTopic);
+      if (newTopic !== null) {
+        item.topic = newTopic.trim();
+        saveState();
+        renderTables();
+        showToast(newTopic.trim() ? 'Topic saved!' : 'Topic cleared', 'success');
+      }
+    }
+
+    /* ================= WHATSAPP REMINDER DISPATCHER ================= */
+    function sendTaskWhatsApp(taskId, sec, e) {
+      if (e) e.stopPropagation();
+      const dayData = state.days[state.activeDateStr];
+      if (!dayData || !dayData[sec]) return;
+      const item = dayData[sec].find(t => t.id === taskId);
+      if (!item) return;
+
+      let cleanSubject = (item.task || 'Class').trim();
+      if (/^(IX|X|XI|XII)\b/i.test(cleanSubject) && !/^Class\b/i.test(cleanSubject)) {
+        cleanSubject = 'Class ' + cleanSubject;
+      }
+      cleanSubject = cleanSubject.replace(/SantNagar/gi, 'Sant Nagar');
+
+      if (cleanSubject.includes('–')) {
+        cleanSubject = cleanSubject.replace(/\s*–\s*/g, ' – ');
+      } else if (cleanSubject.includes('-')) {
+        cleanSubject = cleanSubject.replace(/\s*-\s*/g, ' – ');
+      } else {
+        cleanSubject = cleanSubject.replace(/\s+(Sant Nagar|SICS)\b/i, ' – $1');
+      }
+
+      const rawTime = (item.time || '').trim();
+      const timeParts = rawTime.split(/\s*[-–]\s*/);
+      const startTimeFormatted = timeParts[0] ? timeParts[0].trim() : '';
+      const endTimeFormatted = timeParts[1] ? timeParts[1].trim() : '';
+
+      let topicText = (item.topic || '').trim();
+      if (!topicText) {
+        const promptAns = prompt(`Enter topic for today's ${cleanSubject} class:`, '');
+        if (promptAns !== null && promptAns.trim()) {
+          item.topic = promptAns.trim();
+          topicText = item.topic;
+          saveState();
+          renderTables();
+        }
+      }
+      const topicDisplay = topicText || 'Functions in Python';
+
+      const message = `⏰ *Gentle Reminder*
 =-=-=-=-=-=-=-=-=-=-=
 🏛️ *Today’s ${cleanSubject}*
 📍 *Venue:* Sant Nagar
@@ -956,840 +870,835 @@ function sendTaskWhatsApp(taskId, sec, e){
 =-=-=-=-=-=-=-=-=-=-=
 🌐 *Visit:* www.SinghClasses.in
 =-=-=-=-=-=-=-=-=-=-=`;
-  const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
-  window.open(url, '_blank');
-}
-
-/* ================= AUTO-SYNC & STATE ================= */
-function syncDayFromTimetable(dateStr){
-  const dName = getDayName(dateStr);
-  const existing = state.days[dateStr] || { school: [], tuition_study: [] };
-  
-  const compSchool = new Set();
-  (existing.school || []).forEach(t => {
-    if(t.completed) compSchool.add(`${t.time}_${t.task}`);
-  });
-
-  const compTuition = new Set();
-  (existing.tuition_study || []).forEach(t => {
-    if(t.completed) compTuition.add(`${t.time}_${t.task}`);
-  });
-
-  const sTasks = (state.timetables.school[dName] || []).map(item => ({
-    id: uid(),
-    time: item.time,
-    hrs: parseFloat(item.hrs) || 0.58,
-    cat: 'School',
-    task: item.task,
-    completed: compSchool.has(`${item.time}_${item.task}`)
-  }));
-
-  const tsTasks = [];
-  (state.timetables.tuition[dName] || []).forEach(item => {
-    const p = parseTaskAndTopic(item.task, item.topic);
-    tsTasks.push({
-      id: uid(),
-      time: item.time,
-      hrs: parseFloat(item.hrs) || 1.17,
-      cat: 'Tuition',
-      task: p.title,
-      topic: p.topic || '',
-      completed: compTuition.has(`${item.time}_${item.task}`) || compTuition.has(`${item.time}_${p.title}`)
-    });
-  });
-
-  (state.timetables.study[dName] || []).forEach(item => {
-    tsTasks.push({
-      id: uid(),
-      time: item.time,
-      hrs: parseFloat(item.hrs) || 1.50,
-      cat: 'Study',
-      task: item.task,
-      topic: '',
-      completed: compTuition.has(`${item.time}_${item.task}`)
-    });
-  });
-
-  sortTasksByTime(sTasks);
-  sortTasksByTime(tsTasks);
-
-  state.days[dateStr] = { school: sTasks, tuition_study: tsTasks };
-}
-
-function loadState(){
-  const raw = localStorage.getItem(STORE_KEY);
-  if(raw){
-    try {
-      state = JSON.parse(raw);
-    } catch(e){
-      initState();
-    }
-  } else {
-    initState();
-    const prev = localStorage.getItem('singhPlanner_v23') || localStorage.getItem('singhPlanner_v22') || localStorage.getItem('singhPlanner_v21');
-    if(prev){
-      try {
-        const p = JSON.parse(prev);
-        if(p.days) state.days = p.days;
-      } catch(e){}
-    }
-  }
-
-  sanitizePlannerState(state);
-
-  const currentCodeTemplate = JSON.stringify(window.MASTER_TIMETABLES);
-  if(!state.lastCodeTemplate || state.lastCodeTemplate !== currentCodeTemplate || !state.timetables){
-    state.timetables = JSON.parse(currentCodeTemplate);
-    state.lastCodeTemplate = currentCodeTemplate;
-  }
-
-  state.activeDateStr = getTodayISO();
-  state.viewMondayStr = getMondayISO(new Date());
-
-  if(state.days){
-    Object.values(state.days).forEach(day => {
-      if(day.school) sortTasksByTime(day.school);
-      if(day.tuition_study) sortTasksByTime(day.tuition_study);
-    });
-  }
-
-  syncDayFromTimetable(state.activeDateStr);
-  saveState();
-  renderAll();
-}
-
-function initState(){
-  state = {
-    activeDateStr: getTodayISO(),
-    viewMondayStr: getMondayISO(new Date()),
-    days: {},
-    timetables: JSON.parse(JSON.stringify(window.MASTER_TIMETABLES)),
-    lastBackup: null,
-    lastCodeTemplate: JSON.stringify(window.MASTER_TIMETABLES)
-  };
-}
-
-function saveState(){
-  try {
-    localStorage.setItem(STORE_KEY, JSON.stringify(state));
-  } catch(e) {
-    showToast('Storage quota exceeded! Export a backup file now.', 'error');
-  }
-}
-
-function ensureDayPopulated(dateStr){
-  syncDayFromTimetable(dateStr);
-}
-
-function reloadDayFromTimetable(dateStr, showToastMsg=true){
-  const dName = getDayName(dateStr);
-  syncDayFromTimetable(dateStr);
-  saveState();
-  renderAll();
-  if(showToastMsg){
-    showToast(`Loaded ${dName} schedule from timetable templates`, 'success');
-  }
-}
-
-/* ================= RENDERING ================= */
-function renderAll(){
-  renderSidebarDaySelector();
-  renderTables();
-  calculateWeeklyStats();
-  updateProgress();
-  renderTimetables();
-  updatePrintDate();
-  syncWorkspaceHeight();
-  if(window.lucide) lucide.createIcons();
-}
-
-function updatePrintDate(){
-  const [y,m,d] = state.activeDateStr.split('-');
-  const dt = new Date(y, m-1, d);
-  const formatted = dt.toLocaleDateString('en-US', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
-  const target = document.getElementById('printDateMeta');
-  if(target) target.textContent = formatted;
-}
-
-const dayThemes = [
-  { name: 'Mon', iconBg: 'bg-blue-50', iconColor: 'text-blue-600' },
-  { name: 'Tue', iconBg: 'bg-sky-50', iconColor: 'text-sky-500' },
-  { name: 'Wed', iconBg: 'bg-emerald-50', iconColor: 'text-emerald-500' },
-  { name: 'Thu', iconBg: 'bg-orange-50', iconColor: 'text-orange-500' },
-  { name: 'Fri', iconBg: 'bg-purple-50', iconColor: 'text-purple-500' },
-  { name: 'Sat', iconBg: 'bg-rose-50', iconColor: 'text-rose-500' },
-  { name: 'Sun', iconBg: 'bg-amber-100', iconColor: 'text-amber-600' }
-];
-
-function renderSidebarDaySelector(){
-  const today = getTodayISO();
-  const container = document.getElementById('sidebarDayGrid');
-  const sunRowContainer = document.getElementById('sidebarSundayRow');
-  if(!container) return;
-
-  container.innerHTML = DAYS.slice(0, 6).map((dName, i) => {
-    const dIso = addDays(state.viewMondayStr, i);
-    const dNum = dIso.split('-')[2];
-    const isActive = dIso === state.activeDateStr;
-    const isToday = dIso === today;
-    const theme = dayThemes[i];
-
-    let cardClasses = 'bg-white hover:bg-slate-100/70 border border-slate-200/80 text-slate-800 shadow-[0_1px_2px_rgba(0,0,0,0.02)]';
-    let iconWrapperClass = `${theme.iconBg} ${theme.iconColor}`;
-    let dayNameColor = 'text-slate-500';
-    let dayNumColor = 'text-slate-900';
-    let todayIndicator = isToday ? '<span class="w-1.5 h-1.5 rounded-full bg-blue-500 absolute top-1 right-1" title="Today"></span>' : '';
-
-    if(isActive){
-      cardClasses = 'bg-blue-600 text-white border border-blue-400 shadow-sm shadow-blue-500/20';
-      iconWrapperClass = 'bg-white/20 text-white';
-      dayNameColor = 'text-white/80';
-      dayNumColor = 'text-white';
-      todayIndicator = isToday ? '<span class="w-1.5 h-1.5 rounded-full bg-white absolute top-1 right-1" title="Today"></span>' : '';
-    } else if(isToday){
-      cardClasses = 'bg-blue-50/70 border border-blue-300 text-slate-900 font-bold';
+      const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
     }
 
-    return `
-      <button onclick="selectDate('${dIso}')" class="h-10 rounded-xl px-2 py-1 flex items-center gap-1.5 relative overflow-hidden transition active:scale-95 text-left ${cardClasses}" aria-label="${dName} ${dIso}">
-        ${todayIndicator}
-        <div class="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 transition ${iconWrapperClass}">
-          <i data-lucide="calendar" class="w-3.5 h-3.5 stroke-[2]"></i>
-        </div>
-        <div class="flex flex-col leading-none min-w-0">
-          <span class="text-[9px] font-black uppercase tracking-wider ${dayNameColor}">${dName}</span>
-          <span class="text-xs font-black mt-0.5 ${dayNumColor}">${dNum}</span>
-        </div>
-      </button>`;
-  }).join('');
+    /* ================= AUTO-SYNC & STATE ================= */
+    function syncDayFromTimetable(dateStr) {
+      const dName = getDayName(dateStr);
+      const existing = state.days[dateStr] || { school: [], tuition_study: [] };
 
-  if(sunRowContainer){
-    const sunIso = addDays(state.viewMondayStr, 6);
-    const sunNum = sunIso.split('-')[2];
-    const isSunActive = sunIso === state.activeDateStr;
-    const isSunToday = sunIso === today;
-    
-    let sunCardClasses = 'bg-amber-50/80 hover:bg-amber-100/70 border border-amber-200/90 text-amber-950 transition active:scale-95';
-    let sunIconClass = 'bg-amber-100 text-amber-600';
-    let sunNameColor = 'text-amber-700 font-extrabold';
-    let sunNumColor = 'text-amber-950 font-black';
-
-    if(isSunActive){
-      sunCardClasses = 'bg-blue-600 text-white border border-blue-400 shadow-sm shadow-blue-500/20';
-      sunIconClass = 'bg-white/20 text-white';
-      sunNameColor = 'text-white/80';
-      sunNumColor = 'text-white';
-    }
-
-    sunRowContainer.innerHTML = `
-      <div class="mt-1.5">
-        <button onclick="selectDate('${sunIso}')" class="w-full h-9 rounded-xl px-2.5 py-1 flex items-center gap-2 relative overflow-hidden text-left ${sunCardClasses}" aria-label="Sun ${sunIso}">
-          ${isSunToday ? '<span class="w-1.5 h-1.5 rounded-full bg-amber-500 absolute top-1 right-2" title="Today"></span>' : ''}
-          <div class="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 transition ${sunIconClass}">
-            <i data-lucide="calendar" class="w-3.5 h-3.5 stroke-[2]"></i>
-          </div>
-          <div class="flex items-center justify-between flex-1 pr-1">
-            <span class="text-[9.5px] font-black uppercase tracking-wider ${sunNameColor}">SUNDAY</span>
-            <span class="text-xs font-black ${sunNumColor}">${sunNum}</span>
-          </div>
-        </button>
-
-        <div class="mt-2 pt-2 border-t border-slate-200/70 grid grid-cols-2 gap-1.5">
-          <button onclick="checkAllToday()" class="py-1.5 bg-white hover:bg-emerald-50 text-emerald-700 hover:text-emerald-800 border border-slate-200 hover:border-emerald-200 font-extrabold text-[10.5px] rounded-xl flex items-center justify-center gap-1 transition active:scale-95 shadow-xs" title="Check all tasks for selected day">
-            <i data-lucide="check-check" class="w-3.5 h-3.5 text-emerald-600 stroke-[2.5]"></i>
-            <span>Check All</span>
-          </button>
-          <button onclick="clearTodayChecks()" class="py-1.5 bg-white hover:bg-slate-100 text-slate-600 hover:text-slate-800 border border-slate-200 font-extrabold text-[10.5px] rounded-xl flex items-center justify-center gap-1 transition active:scale-95 shadow-xs" title="Uncheck all tasks for selected day">
-            <i data-lucide="square" class="w-3 h-3 text-slate-400 stroke-[2.2]"></i>
-            <span>Clear All</span>
-          </button>
-        </div>
-      </div>
-    `;
-  }
-
-  const lbl = document.getElementById('sidebarWeekLabel');
-  if(lbl) lbl.textContent = formatWeekRange(state.viewMondayStr);
-  if(window.lucide) lucide.createIcons();
-}
-
-function selectDate(isoStr){
-  state.activeDateStr = isoStr;
-  ensureDayPopulated(isoStr);
-  saveState();
-  renderTables();
-  calculateWeeklyStats();
-  updateProgress();
-  renderSidebarDaySelector();
-  updatePrintDate();
-  syncWorkspaceHeight();
-}
-
-function shiftWeek(dir){
-  state.viewMondayStr = addDays(state.viewMondayStr, dir * 7);
-  renderSidebarDaySelector();
-  syncWorkspaceHeight();
-}
-
-function jumpToday(){
-  const t = getTodayISO();
-  state.activeDateStr = t;
-  state.viewMondayStr = getMondayISO(new Date());
-  syncDayFromTimetable(t);
-  saveState();
-  renderAll();
-}
-
-/* ================= PLANNER TABLES ================= */
-function renderTables(){
-  const dayData = state.days[state.activeDateStr] || { school: [], tuition_study: [] };
-  
-  // 1. Render School Classes (No WhatsApp button)
-  {
-    const sec = 'school';
-    if(dayData[sec]) sortTasksByTime(dayData[sec]);
-    const tbody = document.getElementById('schoolBody');
-    tbody.innerHTML = '';
-    const items = dayData[sec] || [];
-    
-    if(!items.length){
-      tbody.innerHTML = `
-        <tr class="empty-row">
-          <td colspan="4" class="py-8 px-4 text-center">
-            <div class="flex flex-col items-center justify-center gap-2 text-slate-400">
-              <i data-lucide="calendar-x" class="w-7 h-7 text-slate-300"></i>
-              <span class="text-xs font-semibold">No classes scheduled for ${getDayName(state.activeDateStr)}</span>
-              <button onclick="switchTab('timetables', document.getElementById('tabBtnTimetables'))" class="mt-1 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition active:scale-95">
-                <span>Configure in Timetables</span>
-                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-              </button>
-            </div>
-          </td>
-        </tr>`;
-    } else {
-      items.forEach((item) => {
-        const status = getTimeStatus(item.time, state.activeDateStr);
-        const isLive = status === 'active';
-        
-        const row = document.createElement('tr');
-        let rowClasses = 'transition duration-150 border-b border-slate-100 cursor-pointer select-none ';
-        
-        if(item.completed){
-          rowClasses += 'bg-emerald-50/20 text-slate-700 hover:bg-emerald-50/30 ';
-        } else if(isLive){
-          rowClasses += 'bg-blue-50/90 border-l-4 border-blue-600 font-semibold shadow-xs ';
-        } else {
-          rowClasses += 'hover:bg-slate-50/90 text-slate-800 ';
-        }
-        
-        row.className = rowClasses;
-        row.onclick = (e) => handleRowClick(e, item.id, sec);
-        
-        row.innerHTML = `
-          <td class="py-2.5 px-3 text-center col-cb">
-            <label class="flex items-center justify-center cursor-pointer p-0.5" onclick="event.stopPropagation()">
-              <input type="checkbox" ${item.completed ? 'checked' : ''} onchange="updateCheckbox('${item.id}','${sec}')" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer" aria-label="Mark completed">
-            </label>
-          </td>
-          <td class="py-2.5 px-3 text-left col-tm whitespace-nowrap">
-            <div class="flex items-center gap-1.5 whitespace-nowrap">
-              ${isLive ? '<span class="inline-flex items-center gap-1 bg-blue-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-xs animate-pulse"><span class="w-1.5 h-1.5 rounded-full bg-white live-pulse"></span>LIVE</span>' : ''}
-              <span class="font-semibold text-xs tracking-tight tabular-nums whitespace-nowrap ${item.completed ? 'text-slate-400' : 'text-slate-600'}">${escapeHtml(item.time)}</span>
-            </div>
-          </td>
-          <td class="py-2.5 px-3 text-left col-tk">
-            <div class="flex items-center gap-2">
-              <span class="text-xs sm:text-[13px] font-bold ${item.completed ? 'line-through text-slate-500' : 'text-slate-900'}">${escapeHtml(item.task || 'Untitled Period')}</span>
-              ${item.completed ? '<span class="inline-flex items-center gap-0.5 text-[9.5px] font-extrabold text-emerald-700 bg-emerald-100/90 px-1.5 py-0.2 rounded border border-emerald-300 shrink-0"><i data-lucide="check" class="w-2.5 h-2.5 stroke-[3]"></i> Done</span>' : ''}
-            </div>
-          </td>
-          <td class="py-2.5 px-3 text-right col-hr whitespace-nowrap">
-            <span class="inline-block font-semibold text-xs text-slate-600 bg-slate-100/80 px-2 py-0.5 rounded border border-slate-200/60 tabular-nums">${Number(item.hrs).toFixed(2)} hrs</span>
-          </td>`;
-        tbody.appendChild(row);
+      const compSchool = new Set();
+      (existing.school || []).forEach(t => {
+        if (t.completed) compSchool.add(`${t.time}_${t.task}`);
       });
-    }
-  }
 
-  // 2. Render Tuition & Study (Clean Two-Line Stack: Line 1 = Batch Title, Line 2 = Topic)
-  {
-    const sec = 'tuition_study';
-    if(dayData[sec]) sortTasksByTime(dayData[sec]);
-    const tbody = document.getElementById('tuitionStudyBody');
-    tbody.innerHTML = '';
-    const items = dayData[sec] || [];
-    
-    if(!items.length){
-      tbody.innerHTML = `
-        <tr class="empty-row">
-          <td colspan="5" class="py-8 px-4 text-center">
-            <div class="flex flex-col items-center justify-center gap-2 text-slate-400">
-              <i data-lucide="calendar-x" class="w-7 h-7 text-slate-300"></i>
-              <span class="text-xs font-semibold">No tuition or study tasks scheduled for ${getDayName(state.activeDateStr)}</span>
-              <button onclick="switchTab('timetables', document.getElementById('tabBtnTimetables'))" class="mt-1 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition active:scale-95">
-                <span>Configure in Timetables</span>
-                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-              </button>
-            </div>
-          </td>
-        </tr>`;
-    } else {
-      items.forEach((item) => {
-        const status = getTimeStatus(item.time, state.activeDateStr);
-        const isLive = status === 'active';
-        const isTuition = item.cat === 'Tuition';
-        
-        // Ensure parsing splits title and topic cleanly
-        const parsed = parseTaskAndTopic(item.task, item.topic);
-        const cleanTitle = parsed.title;
-        const currentTopic = parsed.topic;
-        
-        const row = document.createElement('tr');
-        let rowClasses = 'transition duration-150 border-b border-slate-100 cursor-pointer select-none ';
-        
-        if(item.completed){
-          rowClasses += 'bg-emerald-50/20 text-slate-700 hover:bg-emerald-50/30 ';
-        } else if(isLive){
-          rowClasses += 'bg-blue-50/90 border-l-4 border-blue-600 font-semibold shadow-xs ';
-        } else {
-          rowClasses += 'hover:bg-slate-50/90 text-slate-800 ';
-        }
-        
-        row.className = rowClasses;
-        row.onclick = (e) => handleRowClick(e, item.id, sec);
-        
-        row.innerHTML = `
-          <td class="py-2.5 px-3 text-center col-cb">
-            <label class="flex items-center justify-center cursor-pointer p-0.5" onclick="event.stopPropagation()">
-              <input type="checkbox" ${item.completed ? 'checked' : ''} onchange="updateCheckbox('${item.id}','${sec}')" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer" aria-label="Mark completed">
-            </label>
-          </td>
-          <td class="py-2.5 px-3 text-left col-tm whitespace-nowrap">
-            <div class="flex items-center gap-1.5 whitespace-nowrap">
-              ${isLive ? '<span class="inline-flex items-center gap-1 bg-blue-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-xs animate-pulse"><span class="w-1.5 h-1.5 rounded-full bg-white live-pulse"></span>LIVE</span>' : ''}
-              <span class="font-semibold text-xs tracking-tight tabular-nums whitespace-nowrap ${item.completed ? 'text-slate-400' : 'text-slate-600'}">${escapeHtml(item.time)}</span>
-            </div>
-          </td>
-          <td class="py-2.5 px-3 text-left col-tk">
-            <div class="flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
-              <div class="flex flex-col min-w-0 pr-1">
-                <!-- LINE 1: BATCH / SUBJECT NAME -->
-                <div class="flex items-center gap-2 flex-wrap min-w-0">
-                  <span class="text-xs sm:text-[13px] font-bold ${item.completed ? 'line-through text-slate-500' : 'text-slate-900'}">${escapeHtml(cleanTitle)}</span>
-                  ${item.completed ? '<span class="inline-flex items-center gap-0.5 text-[9.5px] font-extrabold text-emerald-700 bg-emerald-100/90 px-1.5 py-0.2 rounded border border-emerald-300 shrink-0"><i data-lucide="check" class="w-2.5 h-2.5 stroke-[3]"></i> Done</span>' : ''}
-                </div>
-                <!-- LINE 2: DEDICATED TOPIC SUB-LINE -->
-                ${isTuition ? `
-                  <div class="flex items-center gap-1.5 mt-1 text-[11px]">
-                    ${currentTopic ? `
-                      <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100/80 px-2 py-0.5 rounded border border-blue-200/90 cursor-pointer transition active:scale-95" onclick="editItemTopic('${item.id}', '${sec}', event)" title="Click to edit topic">
-                        <span>📚 Topic:</span>
-                        <strong class="font-bold underline decoration-blue-300 underline-offset-2">${escapeHtml(currentTopic)}</strong>
-                      </span>
-                      <button type="button" onclick="editItemTopic('${item.id}', '${sec}', event)" class="text-slate-400 hover:text-blue-600 p-0.5 rounded transition print-hide" title="Edit Topic">
-                        <i data-lucide="pencil" class="w-3 h-3"></i>
-                      </button>
-                    ` : `
-                      <button type="button" onclick="editItemTopic('${item.id}', '${sec}', event)" class="inline-flex items-center gap-1 text-[11px] font-medium text-slate-400 hover:text-blue-600 transition print-hide">
-                        <span>📚 Topic:</span>
-                        <span class="italic text-slate-400 hover:underline">+ Add topic</span>
-                      </button>
-                    `}
-                  </div>
-                ` : ''}
-              </div>
-              ${isTuition ? `
-                <button type="button" onclick="sendTaskWhatsApp('${item.id}', '${sec}', event)" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10.5px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 hover:border-emerald-300 transition active:scale-95 shrink-0 print-hide" title="Send reminder to WhatsApp" aria-label="Send reminder on WhatsApp">
-                  <svg class="w-3.5 h-3.5 fill-[#25D366] shrink-0" viewBox="0 0 24 24">
-                    <path d="M17.472 14.382c-.301-.15-1.781-.879-2.056-.98-.277-.101-.479-.15-.68.15-.202.301-.782.98-.959 1.182-.176.201-.353.226-.653.076-.301-.15-1.27-.468-2.42-1.493-.894-.798-1.498-1.784-1.674-2.086-.176-.301-.019-.464.131-.614.136-.134.301-.351.451-.527.15-.176.201-.301.301-.502.101-.201.05-.376-.025-.526-.075-.15-.68-1.637-.93-2.24-.244-.588-.492-.508-.68-.518l-.58-.01c-.201 0-.528.075-.804.376-.276.301-1.055 1.03-1.055 2.511 0 1.481 1.08 2.91 1.23 3.111.151.201 2.125 3.245 5.148 4.551.719.311 1.28.497 1.718.636.722.23 1.378.197 1.898.12.578-.087 1.781-.728 2.032-1.431.251-.703.251-1.306.176-1.431-.076-.125-.276-.201-.577-.351zm-5.466 7.426h-.008c-1.802 0-3.57-.485-5.115-1.402l-.367-.218-3.805.998 1.016-3.708-.239-.381c-1.01-1.607-1.543-3.473-1.542-5.388.004-5.577 4.542-10.115 10.122-10.115 2.701 0 5.241 1.053 7.151 2.964 1.911 1.912 2.963 4.453 2.961 7.156-.005 5.579-4.543 10.116-10.124 10.116zm8.566-18.681c-2.288-2.29-5.33-3.553-8.568-3.555-6.673 0-12.099 5.424-12.102 12.099-.001 2.133.557 4.215 1.617 6.052l-1.717 6.273 6.42-1.684c1.764.962 3.748 1.469 5.774 1.47h.005c6.671 0 12.099-5.425 12.102-12.1 0-3.234-1.258-6.276-3.531-8.555z"/>
-                  </svg>
-                  <span>WhatsApp</span>
-                </button>
-              ` : ''}
-            </div>
-          </td>
-          <td class="py-2.5 px-3 text-center col-cat whitespace-nowrap">
-            <span class="cat-pill ${escapeHtml(item.cat)}">${escapeHtml(item.cat)}</span>
-          </td>
-          <td class="py-2.5 px-3 text-right col-hr whitespace-nowrap">
-            <span class="inline-block font-semibold text-xs text-slate-600 bg-slate-100/80 px-2 py-0.5 rounded border border-slate-200/60 tabular-nums">${Number(item.hrs).toFixed(2)} hrs</span>
-          </td>`;
-        tbody.appendChild(row);
+      const compTuition = new Set();
+      (existing.tuition_study || []).forEach(t => {
+        if (t.completed) compTuition.add(`${t.time}_${t.task}`);
       });
+
+      const sTasks = (state.timetables.school[dName] || []).map(item => ({
+        id: uid(),
+        time: item.time,
+        hrs: parseFloat(item.hrs) || 0.58,
+        cat: 'School',
+        task: item.task,
+        completed: compSchool.has(`${item.time}_${item.task}`)
+      }));
+
+      const tsTasks = [];
+      (state.timetables.tuition[dName] || []).forEach(item => {
+        const p = parseTaskAndTopic(item.task, item.topic);
+        tsTasks.push({
+          id: uid(),
+          time: item.time,
+          hrs: parseFloat(item.hrs) || 1.17,
+          cat: 'Tuition',
+          task: p.title,
+          topic: p.topic || '',
+          completed: compTuition.has(`${item.time}_${item.task}`) || compTuition.has(`${item.time}_${p.title}`)
+        });
+      });
+
+      (state.timetables.study[dName] || []).forEach(item => {
+        tsTasks.push({
+          id: uid(),
+          time: item.time,
+          hrs: parseFloat(item.hrs) || 1.50,
+          cat: 'Study',
+          task: item.task,
+          topic: '',
+          completed: compTuition.has(`${item.time}_${item.task}`)
+        });
+      });
+
+      sortTasksByTime(sTasks);
+      sortTasksByTime(tsTasks);
+
+      state.days[dateStr] = { school: sTasks, tuition_study: tsTasks };
     }
-  }
 
-  // Totals & Meta
-  const schoolHrs = (dayData.school || []).reduce((sum, t) => sum + (parseFloat(t.hrs) || 0), 0);
-  const schoolComp = (dayData.school || []).filter(t => t.completed).length;
-  const schoolTot = (dayData.school || []).length;
-  document.getElementById('schoolSecTotal').textContent = `${schoolHrs.toFixed(2)} hrs`;
-  document.getElementById('schoolSecMeta').textContent = `${schoolComp} of ${schoolTot} completed`;
-
-  const tsHrs = (dayData.tuition_study || []).reduce((sum, t) => sum + (parseFloat(t.hrs) || 0), 0);
-  const tsComp = (dayData.tuition_study || []).filter(t => t.completed).length;
-  const tsTot = (dayData.tuition_study || []).length;
-  document.getElementById('tuitionSecTotal').textContent = `${tsHrs.toFixed(2)} hrs`;
-  document.getElementById('tuitionSecMeta').textContent = `${tsComp} of ${tsTot} completed`;
-
-  if(window.lucide) lucide.createIcons();
-}
-
-function handleRowClick(e, taskId, sec){
-  if(e.target.tagName === 'INPUT' || e.target.closest('label') || e.target.closest('button')) return;
-  updateCheckbox(taskId, sec);
-}
-
-function updateCheckbox(taskId, sec){
-  const item = state.days[state.activeDateStr][sec].find(t => t.id === taskId);
-  if(!item) return;
-  item.completed = !item.completed;
-  saveState();
-  updateProgress();
-  calculateWeeklyStats();
-  renderTables();
-}
-
-function checkAllToday(){
-  const d = state.days[state.activeDateStr];
-  if(!d) return;
-  ['school', 'tuition_study'].forEach(s => (d[s] || []).forEach(t => t.completed = true));
-  saveState();
-  renderTables();
-  updateProgress();
-  calculateWeeklyStats();
-  showToast('All tasks checked for selected day', 'success');
-}
-
-function clearTodayChecks(){
-  const d = state.days[state.activeDateStr];
-  if(!d) return;
-  ['school', 'tuition_study'].forEach(s => (d[s] || []).forEach(t => t.completed = false));
-  saveState();
-  renderTables();
-  updateProgress();
-  calculateWeeklyStats();
-  showToast('All tasks unchecked for selected day', 'info');
-}
-
-function calculateWeeklyStats(){
-  const totals = { school: 0, tuition: 0, study: 0 };
-  const d = state.days[state.activeDateStr] || { school: [], tuition_study: [] };
-  [...(d.school || []), ...(d.tuition_study || [])].forEach(i => {
-    const h = parseFloat(i.hrs) || 0;
-    if(i.cat === 'School') totals.school += h;
-    if(i.cat === 'Tuition') totals.tuition += h;
-    if(i.cat === 'Study') totals.study += h;
-  });
-  document.getElementById('totalSchool').textContent = totals.school.toFixed(1);
-  document.getElementById('totalTuition').textContent = totals.tuition.toFixed(1);
-  document.getElementById('totalStudy').textContent = totals.study.toFixed(1);
-}
-
-function updateProgress(){
-  const d = state.days[state.activeDateStr] || { school: [], tuition_study: [] };
-  const all = [...(d.school || []), ...(d.tuition_study || [])];
-  const comp = all.filter(t => t.completed).length;
-  const tot = all.length;
-  const percent = tot > 0 ? Math.round((comp / tot) * 100) : 0;
-  
-  document.getElementById('completedCount').textContent = comp;
-  document.getElementById('totalCount').textContent = tot;
-  document.getElementById('progressPercent').textContent = `${percent}%`;
-
-  const ring = document.getElementById('progressRing');
-  if(ring){
-    ring.setAttribute('stroke-dasharray', `${percent}, 100`);
-    if(percent === 100 && tot > 0){
-      ring.setAttribute('class', 'text-emerald-500 transition-all duration-300');
-    } else if(percent > 0){
-      ring.setAttribute('class', 'text-blue-500 transition-all duration-300');
-    } else {
-      ring.setAttribute('class', 'text-slate-300 transition-all duration-300');
-    }
-  }
-}
-
-/* ================= MASTER TIMETABLES EDITOR ================= */
-function renderTimetables(){
-  const renderGrid = (type, obj) => DAYS.map(d => {
-    if(obj[d]) sortTasksByTime(obj[d]);
-    return `
-      <div class="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-xs ${d === getDayName(state.activeDateStr) ? 'ring-2 ring-blue-500' : ''}">
-        <div class="px-3 py-1.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
-          <span class="font-black text-xs text-slate-700">${d}</span>
-        </div>
-        <div class="p-2 space-y-1">
-          ${(obj[d] || []).map((it, i) => editMode[type] ? `
-            <div class="bg-slate-50 p-1.5 rounded-lg border border-slate-200 space-y-1">
-              <div class="flex items-center gap-1">
-                <input type="text" class="w-full text-[11px] font-semibold p-1 border border-slate-300 rounded bg-white tt-time-${type}-${d}" data-idx="${i}" value="${escapeHtml(it.time)}" placeholder="Time (e.g. 08:40 AM - 09:15 AM)">
-                <button onclick="deleteTemplateSlot('${type}','${d}',${i})" class="text-rose-500 hover:text-rose-700 p-1 rounded" title="Delete slot">
-                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                </button>
-              </div>
-              <input type="text" class="w-full text-[11px] font-bold p-1 border border-slate-300 rounded bg-white tt-task-${type}-${d}" data-idx="${i}" value="${escapeHtml(it.task)}" placeholder="Subject / Batch">
-            </div>
-          ` : `
-            <div class="p-1 border-b border-slate-50 text-slate-700 last:border-none flex items-center justify-between text-[11px]">
-              <div>
-                <div class="font-bold text-slate-900 leading-tight">${escapeHtml(it.task)}</div>${it.topic ? `<div class="text-[9.5px] text-blue-600 font-semibold">Topic: ${escapeHtml(it.topic)}</div>` : ''}
-                <div class="text-[10px] text-slate-500">${escapeHtml(it.time)}</div>
-              </div>
-              <span class="text-[9px] font-extrabold text-blue-600 bg-blue-50 px-1 py-0.5 rounded">${Number(it.hrs).toFixed(2)}h</span>
-            </div>
-          `).join('')}
-          ${editMode[type] ? `<button onclick="addNewTemplateSlot('${type}','${d}')" class="w-full py-1 text-[11px] font-bold text-emerald-600 hover:bg-emerald-50 rounded-lg border border-dashed border-emerald-300 mt-1">+ Add Period</button>` : ''}
-          ${(!editMode[type] && (!obj[d] || obj[d].length === 0)) ? '<div class="text-[11px] p-1 text-slate-400 italic">No classes scheduled</div>' : ''}
-        </div>
-      </div>`;
-  }).join('');
-
-  document.getElementById('schoolTimetable').innerHTML = renderGrid('school', state.timetables.school);
-  document.getElementById('tuitionTimetable').innerHTML = renderGrid('tuition', state.timetables.tuition);
-  document.getElementById('studyTimetable').innerHTML = renderGrid('study', state.timetables.study);
-
-  ['school', 'tuition', 'study'].forEach(t => {
-    const btn = document.getElementById(`btnEdit${t.charAt(0).toUpperCase() + t.slice(1)}`);
-    if(btn){
-      if(editMode[t]){
-        btn.textContent = 'Save Changes';
-        btn.className = 'text-xs font-bold px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition';
+    function loadState() {
+      const raw = localStorage.getItem(STORE_KEY);
+      if (raw) {
+        try {
+          state = JSON.parse(raw);
+        } catch (e) {
+          initState();
+        }
       } else {
-        btn.textContent = `Edit ${t.charAt(0).toUpperCase() + t.slice(1)}`;
-        btn.className = 'text-xs font-bold px-3 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 shadow-xs transition';
+        initState();
+        const prev = localStorage.getItem('singhPlanner_v23') || localStorage.getItem('singhPlanner_v22') || localStorage.getItem('singhPlanner_v21');
+        if (prev) {
+          try {
+            const p = JSON.parse(prev);
+            if (p.days) state.days = p.days;
+          } catch (e) {}
+        }
       }
-    }
-  });
 
-  if(window.lucide) lucide.createIcons();
-}
+      sanitizePlannerState(state);
 
-function syncCurrentTimetableInputs(t){
-  if(!editMode[t]) return;
-  const obj = state.timetables[t];
-  DAYS.forEach(d => {
-    const times = document.querySelectorAll(`.tt-time-${t}-${d}`);
-    const tasks = document.querySelectorAll(`.tt-task-${t}-${d}`);
-    const newSlots = [];
-    times.forEach((el, idx) => {
-      const tVal = el.value.trim();
-      const taskVal = tasks[idx] ? tasks[idx].value.trim() : '';
-      if(tVal || taskVal){
-        const p = extractTimeAndCalculateHrs(tVal);
-        const parsedTask = parseTaskAndTopic(taskVal || (p ? p.cleanTask : 'Class'));
-        newSlots.push({
-          time: p ? p.timeStr : tVal,
-          task: parsedTask.title,
-          topic: parsedTask.topic,
-          hrs: p ? p.hrs : (t === 'school' ? 0.58 : t === 'tuition' ? 1.17 : 1.50)
+      const currentCodeTemplate = JSON.stringify(window.MASTER_TIMETABLES);
+      if (!state.lastCodeTemplate || state.lastCodeTemplate !== currentCodeTemplate || !state.timetables) {
+        state.timetables = JSON.parse(currentCodeTemplate);
+        state.lastCodeTemplate = currentCodeTemplate;
+      }
+
+      state.activeDateStr = getTodayISO();
+      state.viewMondayStr = getMondayISO(new Date());
+
+      if (state.days) {
+        Object.values(state.days).forEach(day => {
+          if (day.school) sortTasksByTime(day.school);
+          if (day.tuition_study) sortTasksByTime(day.tuition_study);
         });
       }
-    });
-    obj[d] = newSlots;
-  });
-}
 
-function toggleEditMode(t){
-  if(editMode[t]){
-    syncCurrentTimetableInputs(t);
-    DAYS.forEach(d => {
-      if(state.timetables[t][d]) sortTasksByTime(state.timetables[t][d]);
-    });
-    editMode[t] = false;
-    saveState();
+      syncDayFromTimetable(state.activeDateStr);
+      saveState();
+      renderAll();
+    }
 
-    syncDayFromTimetable(state.activeDateStr);
-    renderTables();
-    calculateWeeklyStats();
-    updateProgress();
-    showToast(`${t.charAt(0).toUpperCase() + t.slice(1)} schedule saved`, 'success');
-  } else {
-    editMode[t] = true;
-  }
-  renderTimetables();
-  syncWorkspaceHeight();
-}
+    function initState() {
+      state = {
+        activeDateStr: getTodayISO(),
+        viewMondayStr: getMondayISO(new Date()),
+        days: {},
+        timetables: JSON.parse(JSON.stringify(window.MASTER_TIMETABLES)),
+        lastBackup: null,
+        lastCodeTemplate: JSON.stringify(window.MASTER_TIMETABLES)
+      };
+    }
 
-function addNewTemplateSlot(t, d){
-  syncCurrentTimetableInputs(t);
-  if(!state.timetables[t][d]) state.timetables[t][d] = [];
-  state.timetables[t][d].push({
-    time: t === 'school' ? '08:40 AM - 09:15 AM' : t === 'tuition' ? '04:00 PM - 05:10 PM' : '10:00 PM - 11:30 PM',
-    task: 'New Session',
-    topic: '',
-    hrs: t === 'school' ? 0.58 : t === 'tuition' ? 1.17 : 1.50
-  });
-  sortTasksByTime(state.timetables[t][d]);
-  renderTimetables();
-  syncWorkspaceHeight();
-}
+    function saveState() {
+      try {
+        localStorage.setItem(STORE_KEY, JSON.stringify(state));
+      } catch (e) {
+        showToast('Storage quota exceeded! Export a backup file now.', 'error');
+      }
+    }
 
-function deleteTemplateSlot(t, d, i){
-  syncCurrentTimetableInputs(t);
-  state.timetables[t][d].splice(i, 1);
-  renderTimetables();
-  syncWorkspaceHeight();
-}
+    function reloadDayFromTimetable(dateStr, showToastMsg = true) {
+      const dName = getDayName(dateStr);
+      syncDayFromTimetable(dateStr);
+      saveState();
+      renderAll();
+      if (showToastMsg) {
+        showToast(`Loaded ${dName} schedule from timetable templates`, 'success');
+      }
+    }
 
-/* ================= ANALYTICS ================= */
-function updateAnalytics(){
-  let weekHours = 0, weekComp = 0, weekTot = 0;
-  let cH = { School:0, Tuition:0, Study:0 }, cT = { School:0, Tuition:0, Study:0 }, cC = { School:0, Tuition:0, Study:0 };
-  let dH = [], dC = [], labels = [];
+    /* ================= RENDERING ================= */
+    function renderAll() {
+      renderSidebarDaySelector();
+      renderTables();
+      calculateWeeklyStats();
+      updateProgress();
+      renderTimetables();
+      updatePrintDate();
+      syncWorkspaceHeight();
+      if (window.lucide) lucide.createIcons();
+    }
 
-  for(let i=0; i<7; i++){
-    const dIso = addDays(state.viewMondayStr, i);
-    labels.push(`${DAYS[i]} ${dIso.slice(8)}`);
-    let dayH = 0, dayComp = 0, dayTot = 0;
-    const d = state.days[dIso];
-    if(d){
-      [...(d.school || []), ...(d.tuition_study || [])].forEach(t => {
-        const h = parseFloat(t.hrs) || 0;
-        dayH += h; dayTot++; weekTot++; weekHours += h;
-        if(cH[t.cat] !== undefined) cH[t.cat] += h;
-        if(cT[t.cat] !== undefined) cT[t.cat]++;
-        if(t.completed){ dayComp++; weekComp++; if(cC[t.cat] !== undefined) cC[t.cat]++; }
+    function updatePrintDate() {
+      const [y, m, d] = state.activeDateStr.split('-');
+      const dt = new Date(y, m - 1, d);
+      const formatted = dt.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      const target = document.getElementById('printDateMeta');
+      if (target) target.textContent = formatted;
+    }
+
+    const dayThemes = [
+      { name: 'Mon', iconBg: 'bg-blue-50', iconColor: 'text-blue-600' },
+      { name: 'Tue', iconBg: 'bg-sky-50', iconColor: 'text-sky-500' },
+      { name: 'Wed', iconBg: 'bg-emerald-50', iconColor: 'text-emerald-500' },
+      { name: 'Thu', iconBg: 'bg-orange-50', iconColor: 'text-orange-500' },
+      { name: 'Fri', iconBg: 'bg-purple-50', iconColor: 'text-purple-500' },
+      { name: 'Sat', iconBg: 'bg-rose-50', iconColor: 'text-rose-500' },
+      { name: 'Sun', iconBg: 'bg-amber-100', iconColor: 'text-amber-600' }
+    ];
+
+    function renderSidebarDaySelector() {
+      const today = getTodayISO();
+      const container = document.getElementById('sidebarDayGrid');
+      const sunRowContainer = document.getElementById('sidebarSundayRow');
+      if (!container) return;
+
+      container.innerHTML = DAYS.slice(0, 6).map((dName, i) => {
+        const dIso = addDays(state.viewMondayStr, i);
+        const dNum = dIso.split('-')[2];
+        const isActive = dIso === state.activeDateStr;
+        const isToday = dIso === today;
+        const theme = dayThemes[i];
+
+        let cardClasses = 'bg-white hover:bg-slate-100/70 border border-slate-200/80 text-slate-800 shadow-[0_1px_2px_rgba(0,0,0,0.02)]';
+        let iconWrapperClass = `${theme.iconBg} ${theme.iconColor}`;
+        let dayNameColor = 'text-slate-500';
+        let dayNumColor = 'text-slate-900';
+        let todayIndicator = isToday ? '<span class="w-1.5 h-1.5 rounded-full bg-blue-500 absolute top-1 right-1" title="Today"></span>' : '';
+
+        if (isActive) {
+          cardClasses = 'bg-blue-600 text-white border border-blue-400 shadow-sm shadow-blue-500/20';
+          iconWrapperClass = 'bg-white/20 text-white';
+          dayNameColor = 'text-white/80';
+          dayNumColor = 'text-white';
+          todayIndicator = isToday ? '<span class="w-1.5 h-1.5 rounded-full bg-white absolute top-1 right-1" title="Today"></span>' : '';
+        } else if (isToday) {
+          cardClasses = 'bg-blue-50/70 border border-blue-300 text-slate-900 font-bold';
+        }
+
+        return `
+          <button onclick="selectDate('${dIso}')" class="h-10 rounded-xl px-2 py-1 flex items-center gap-1.5 relative overflow-hidden transition active:scale-95 text-left ${cardClasses}" aria-label="${dName} ${dIso}">
+            ${todayIndicator}
+            <div class="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 transition ${iconWrapperClass}">
+              <i data-lucide="calendar" class="w-3.5 h-3.5 stroke-[2]"></i>
+            </div>
+            <div class="flex flex-col leading-none min-w-0">
+              <span class="text-[9px] font-black uppercase tracking-wider ${dayNameColor}">${dName}</span>
+              <span class="text-xs font-black mt-0.5 ${dayNumColor}">${dNum}</span>
+            </div>
+          </button>`;
+      }).join('');
+
+      if (sunRowContainer) {
+        const sunIso = addDays(state.viewMondayStr, 6);
+        const sunNum = sunIso.split('-')[2];
+        const isSunActive = sunIso === state.activeDateStr;
+        const isSunToday = sunIso === today;
+
+        let sunCardClasses = 'bg-amber-50/80 hover:bg-amber-100/70 border border-amber-200/90 text-amber-950 transition active:scale-95';
+        let sunIconClass = 'bg-amber-100 text-amber-600';
+        let sunNameColor = 'text-amber-700 font-extrabold';
+        let sunNumColor = 'text-amber-950 font-black';
+
+        if (isSunActive) {
+          sunCardClasses = 'bg-blue-600 text-white border border-blue-400 shadow-sm shadow-blue-500/20';
+          sunIconClass = 'bg-white/20 text-white';
+          sunNameColor = 'text-white/80';
+          sunNumColor = 'text-white';
+        }
+
+        sunRowContainer.innerHTML = `
+          <div class="mt-1.5">
+            <button onclick="selectDate('${sunIso}')" class="w-full h-9 rounded-xl px-2.5 py-1 flex items-center gap-2 relative overflow-hidden text-left ${sunCardClasses}" aria-label="Sun ${sunIso}">
+              ${isSunToday ? '<span class="w-1.5 h-1.5 rounded-full bg-amber-500 absolute top-1 right-2" title="Today"></span>' : ''}
+              <div class="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 transition ${sunIconClass}">
+                <i data-lucide="calendar" class="w-3.5 h-3.5 stroke-[2]"></i>
+              </div>
+              <div class="flex items-center justify-between flex-1 pr-1">
+                <span class="text-[9.5px] font-black uppercase tracking-wider ${sunNameColor}">SUNDAY</span>
+                <span class="text-xs font-black ${sunNumColor}">${sunNum}</span>
+              </div>
+            </button>
+
+            <div class="mt-2 pt-2 border-t border-slate-200/70 grid grid-cols-2 gap-1.5">
+              <button onclick="checkAllToday()" class="py-1.5 bg-white hover:bg-emerald-50 text-emerald-700 hover:text-emerald-800 border border-slate-200 hover:border-emerald-200 font-extrabold text-[10.5px] rounded-xl flex items-center justify-center gap-1 transition active:scale-95 shadow-xs" title="Check all tasks for selected day">
+                <i data-lucide="check-check" class="w-3.5 h-3.5 text-emerald-600 stroke-[2.5]"></i>
+                <span>Check All</span>
+              </button>
+              <button onclick="clearTodayChecks()" class="py-1.5 bg-white hover:bg-slate-100 text-slate-600 hover:text-slate-800 border border-slate-200 font-extrabold text-[10.5px] rounded-xl flex items-center justify-center gap-1 transition active:scale-95 shadow-xs" title="Uncheck all tasks for selected day">
+                <i data-lucide="square" class="w-3 h-3 text-slate-400 stroke-[2.2]"></i>
+                <span>Clear All</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      const lbl = document.getElementById('sidebarWeekLabel');
+      if (lbl) lbl.textContent = formatWeekRange(state.viewMondayStr);
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function selectDate(isoStr) {
+      state.activeDateStr = isoStr;
+      ensureDayPopulated(isoStr);
+      saveState();
+      renderTables();
+      calculateWeeklyStats();
+      updateProgress();
+      renderSidebarDaySelector();
+      updatePrintDate();
+      syncWorkspaceHeight();
+    }
+
+    function jumpToday() {
+      const t = getTodayISO();
+      state.activeDateStr = t;
+      state.viewMondayStr = getMondayISO(new Date());
+      syncDayFromTimetable(t);
+      saveState();
+      renderAll();
+    }
+
+    /* ================= PLANNER TABLES ================= */
+    function renderTables() {
+      const dayData = state.days[state.activeDateStr] || { school: [], tuition_study: [] };
+
+      // 1. Render School Classes
+      {
+        const sec = 'school';
+        if (dayData[sec]) sortTasksByTime(dayData[sec]);
+        const tbody = document.getElementById('schoolBody');
+        tbody.innerHTML = '';
+        const items = dayData[sec] || [];
+
+        if (!items.length) {
+          tbody.innerHTML = `
+            <tr class="empty-row">
+              <td colspan="4" class="py-8 px-4 text-center">
+                <div class="flex flex-col items-center justify-center gap-2 text-slate-400">
+                  <i data-lucide="calendar-x" class="w-7 h-7 text-slate-300"></i>
+                  <span class="text-xs font-semibold">No classes scheduled for ${getDayName(state.activeDateStr)}</span>
+                  <button onclick="switchTab('timetables', document.getElementById('tabBtnTimetables'))" class="mt-1 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition active:scale-95">
+                    <span>Configure in Timetables</span>
+                    <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>`;
+        } else {
+          items.forEach((item) => {
+            const status = getTimeStatus(item.time, state.activeDateStr);
+            const isLive = status === 'active';
+
+            const row = document.createElement('tr');
+            let rowClasses = 'transition duration-150 border-b border-slate-100 cursor-pointer select-none ';
+
+            if (item.completed) {
+              rowClasses += 'bg-emerald-50/20 text-slate-700 hover:bg-emerald-50/30 ';
+            } else if (isLive) {
+              rowClasses += 'bg-blue-50/90 border-l-4 border-blue-600 font-semibold shadow-xs ';
+            } else {
+              rowClasses += 'hover:bg-slate-50/90 text-slate-800 ';
+            }
+
+            row.className = rowClasses;
+            row.onclick = (e) => handleRowClick(e, item.id, sec);
+
+            row.innerHTML = `
+              <td class="py-2.5 px-3 text-center col-cb">
+                <label class="flex items-center justify-center cursor-pointer p-0.5" onclick="event.stopPropagation()">
+                  <input type="checkbox" ${item.completed ? 'checked' : ''} onchange="updateCheckbox('${item.id}','${sec}')" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer" aria-label="Mark completed">
+                </label>
+              </td>
+              <td class="py-2.5 px-3 text-left col-tm whitespace-nowrap">
+                <div class="flex items-center gap-1.5 whitespace-nowrap">
+                  ${isLive ? '<span class="inline-flex items-center gap-1 bg-blue-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-xs animate-pulse"><span class="w-1.5 h-1.5 rounded-full bg-white live-pulse"></span>LIVE</span>' : ''}
+                  <span class="font-semibold text-xs tracking-tight tabular-nums whitespace-nowrap ${item.completed ? 'text-slate-400' : 'text-slate-600'}">${escapeHtml(item.time)}</span>
+                </div>
+              </td>
+              <td class="py-2.5 px-3 text-left col-tk">
+                <div class="flex items-center gap-2">
+                  <span class="text-xs sm:text-[13px] font-bold ${item.completed ? 'line-through text-slate-500' : 'text-slate-900'}">${escapeHtml(item.task || 'Untitled Period')}</span>
+                  ${item.completed ? '<span class="inline-flex items-center gap-0.5 text-[9.5px] font-extrabold text-emerald-700 bg-emerald-100/90 px-1.5 py-0.5 rounded border border-emerald-300 shrink-0"><i data-lucide="check" class="w-2.5 h-2.5 stroke-[3]"></i> Done</span>' : ''}
+                </div>
+              </td>
+              <td class="py-2.5 px-3 text-right col-hr whitespace-nowrap">
+                <span class="inline-block font-semibold text-xs text-slate-600 bg-slate-100/80 px-2 py-0.5 rounded border border-slate-200/60 tabular-nums">${Number(item.hrs).toFixed(2)} hrs</span>
+              </td>`;
+            tbody.appendChild(row);
+          });
+        }
+      }
+
+      // 2. Render Tuition & Study
+      {
+        const sec = 'tuition_study';
+        if (dayData[sec]) sortTasksByTime(dayData[sec]);
+        const tbody = document.getElementById('tuitionStudyBody');
+        tbody.innerHTML = '';
+        const items = dayData[sec] || [];
+
+        if (!items.length) {
+          tbody.innerHTML = `
+            <tr class="empty-row">
+              <td colspan="5" class="py-8 px-4 text-center">
+                <div class="flex flex-col items-center justify-center gap-2 text-slate-400">
+                  <i data-lucide="calendar-x" class="w-7 h-7 text-slate-300"></i>
+                  <span class="text-xs font-semibold">No tuition or study tasks scheduled for ${getDayName(state.activeDateStr)}</span>
+                  <button onclick="switchTab('timetables', document.getElementById('tabBtnTimetables'))" class="mt-1 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition active:scale-95">
+                    <span>Configure in Timetables</span>
+                    <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>`;
+        } else {
+          items.forEach((item) => {
+            const status = getTimeStatus(item.time, state.activeDateStr);
+            const isLive = status === 'active';
+            const isTuition = item.cat === 'Tuition';
+
+            const parsed = parseTaskAndTopic(item.task, item.topic);
+            const cleanTitle = parsed.title;
+            const currentTopic = parsed.topic;
+
+            const row = document.createElement('tr');
+            let rowClasses = 'transition duration-150 border-b border-slate-100 cursor-pointer select-none ';
+
+            if (item.completed) {
+              rowClasses += 'bg-emerald-50/20 text-slate-700 hover:bg-emerald-50/30 ';
+            } else if (isLive) {
+              rowClasses += 'bg-blue-50/90 border-l-4 border-blue-600 font-semibold shadow-xs ';
+            } else {
+              rowClasses += 'hover:bg-slate-50/90 text-slate-800 ';
+            }
+
+            row.className = rowClasses;
+            row.onclick = (e) => handleRowClick(e, item.id, sec);
+
+            row.innerHTML = `
+              <td class="py-2.5 px-3 text-center col-cb">
+                <label class="flex items-center justify-center cursor-pointer p-0.5" onclick="event.stopPropagation()">
+                  <input type="checkbox" ${item.completed ? 'checked' : ''} onchange="updateCheckbox('${item.id}','${sec}')" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer" aria-label="Mark completed">
+                </label>
+              </td>
+              <td class="py-2.5 px-3 text-left col-tm whitespace-nowrap">
+                <div class="flex items-center gap-1.5 whitespace-nowrap">
+                  ${isLive ? '<span class="inline-flex items-center gap-1 bg-blue-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-xs animate-pulse"><span class="w-1.5 h-1.5 rounded-full bg-white live-pulse"></span>LIVE</span>' : ''}
+                  <span class="font-semibold text-xs tracking-tight tabular-nums whitespace-nowrap ${item.completed ? 'text-slate-400' : 'text-slate-600'}">${escapeHtml(item.time)}</span>
+                </div>
+              </td>
+              <td class="py-2.5 px-3 text-left col-tk">
+                <div class="flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
+                  <div class="flex flex-col min-w-0 pr-1">
+                    <div class="flex items-center gap-2 flex-wrap min-w-0">
+                      <span class="text-xs sm:text-[13px] font-bold ${item.completed ? 'line-through text-slate-500' : 'text-slate-900'}">${escapeHtml(cleanTitle)}</span>
+                      ${item.completed ? '<span class="inline-flex items-center gap-0.5 text-[9.5px] font-extrabold text-emerald-700 bg-emerald-100/90 px-1.5 py-0.5 rounded border border-emerald-300 shrink-0"><i data-lucide="check" class="w-2.5 h-2.5 stroke-[3]"></i> Done</span>' : ''}
+                    </div>
+                    ${isTuition ? `
+                      <div class="flex items-center gap-1.5 mt-1 text-[11px]">
+                        ${currentTopic ? `
+                          <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100/80 px-2 py-0.5 rounded border border-blue-200/90 cursor-pointer transition active:scale-95" onclick="editItemTopic('${item.id}', '${sec}', event)" title="Click to edit topic">
+                            <span>📚 Topic:</span>
+                            <strong class="font-bold underline decoration-blue-300 underline-offset-2">${escapeHtml(currentTopic)}</strong>
+                          </span>
+                          <button type="button" onclick="editItemTopic('${item.id}', '${sec}', event)" class="text-slate-400 hover:text-blue-600 p-0.5 rounded transition print-hide" title="Edit Topic">
+                            <i data-lucide="pencil" class="w-3 h-3"></i>
+                          </button>
+                        ` : `
+                          <button type="button" onclick="editItemTopic('${item.id}', '${sec}', event)" class="inline-flex items-center gap-1 text-[11px] font-medium text-slate-400 hover:text-blue-600 transition print-hide">
+                            <span>📚 Topic:</span>
+                            <span class="italic text-slate-400 hover:underline">+ Add topic</span>
+                          </button>
+                        `}
+                      </div>
+                    ` : ''}
+                  </div>
+                  ${isTuition ? `
+                    <button type="button" onclick="sendTaskWhatsApp('${item.id}', '${sec}', event)" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10.5px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 hover:border-emerald-300 transition active:scale-95 shrink-0 print-hide" title="Send reminder to WhatsApp" aria-label="Send reminder on WhatsApp">
+                      <svg class="w-3.5 h-3.5 fill-[#25D366] shrink-0" viewBox="0 0 24 24">
+                        <path d="M17.472 14.382c-.301-.15-1.781-.879-2.056-.98-.277-.101-.479-.15-.68.15-.202.301-.782.98-.959 1.182-.176.201-.353.226-.653.076-.301-.15-1.27-.468-2.42-1.493-.894-.798-1.498-1.784-1.674-2.086-.176-.301-.019-.464.131-.614.136-.134.301-.351.451-.527.15-.176.201-.301.301-.502.101-.201.05-.376-.025-.526-.075-.15-.68-1.637-.93-2.24-.244-.588-.492-.508-.68-.518l-.58-.01c-.201 0-.528.075-.804.376-.276.301-1.055 1.03-1.055 2.511 0 1.481 1.08 2.91 1.23 3.111.151.201 2.125 3.245 5.148 4.551.719.311 1.28.497 1.718.636.722.23 1.378.197 1.898.12.578-.087 1.781-.728 2.032-1.431.251-.703.251-1.306.176-1.431-.076-.125-.276-.201-.577-.351zm-5.466 7.426h-.008c-1.802 0-3.57-.485-5.115-1.402l-.367-.218-3.805.998 1.016-3.708-.239-.381c-1.01-1.607-1.543-3.473-1.542-5.388.004-5.577 4.542-10.115 10.122-10.115 2.701 0 5.241 1.053 7.151 2.964 1.911 1.912 2.963 4.453 2.961 7.156-.005 5.579-4.543 10.116-10.124 10.116zm8.566-18.681c-2.288-2.29-5.33-3.553-8.568-3.555-6.673 0-12.099 5.424-12.102 12.099-.001 2.133.557 4.215 1.617 6.052l-1.717 6.273 6.42-1.684c1.764.962 3.748 1.469 5.774 1.47h.005c6.671 0 12.099-5.425 12.102-12.1 0-3.234-1.258-6.276-3.531-8.555z"/>
+                      </svg>
+                      <span>WhatsApp</span>
+                    </button>
+                  ` : ''}
+                </div>
+              </td>
+              <td class="py-2.5 px-3 text-center col-cat whitespace-nowrap">
+                <span class="cat-pill ${escapeHtml(item.cat)}">${escapeHtml(item.cat)}</span>
+              </td>
+              <td class="py-2.5 px-3 text-right col-hr whitespace-nowrap">
+                <span class="inline-block font-semibold text-xs text-slate-600 bg-slate-100/80 px-2 py-0.5 rounded border border-slate-200/60 tabular-nums">${Number(item.hrs).toFixed(2)} hrs</span>
+              </td>`;
+            tbody.appendChild(row);
+          });
+        }
+      }
+
+      // Totals & Metadata
+      const schoolHrs = (dayData.school || []).reduce((sum, t) => sum + (parseFloat(t.hrs) || 0), 0);
+      const schoolComp = (dayData.school || []).filter(t => t.completed).length;
+      const schoolTot = (dayData.school || []).length;
+      document.getElementById('schoolSecTotal').textContent = `${schoolHrs.toFixed(2)} hrs`;
+      document.getElementById('schoolSecMeta').textContent = `${schoolComp} of ${schoolTot} completed`;
+
+      const tsHrs = (dayData.tuition_study || []).reduce((sum, t) => sum + (parseFloat(t.hrs) || 0), 0);
+      const tsComp = (dayData.tuition_study || []).filter(t => t.completed).length;
+      const tsTot = (dayData.tuition_study || []).length;
+      document.getElementById('tuitionSecTotal').textContent = `${tsHrs.toFixed(2)} hrs`;
+      document.getElementById('tuitionSecMeta').textContent = `${tsComp} of ${tsTot} completed`;
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function updateCheckbox(taskId, sec) {
+      const item = state.days[state.activeDateStr][sec].find(t => t.id === taskId);
+      if (!item) return;
+      item.completed = !item.completed;
+      saveState();
+      updateProgress();
+      calculateWeeklyStats();
+      renderTables();
+    }
+
+    function checkAllToday() {
+      const d = state.days[state.activeDateStr];
+      if (!d) return;
+      ['school', 'tuition_study'].forEach(s => (d[s] || []).forEach(t => t.completed = true));
+      saveState();
+      renderTables();
+      updateProgress();
+      calculateWeeklyStats();
+      showToast('All tasks checked for selected day', 'success');
+    }
+
+    function clearTodayChecks() {
+      const d = state.days[state.activeDateStr];
+      if (!d) return;
+      ['school', 'tuition_study'].forEach(s => (d[s] || []).forEach(t => t.completed = false));
+      saveState();
+      renderTables();
+      updateProgress();
+      calculateWeeklyStats();
+      showToast('All tasks unchecked for selected day', 'info');
+    }
+
+    function calculateWeeklyStats() {
+      const totals = { school: 0, tuition: 0, study: 0 };
+      const d = state.days[state.activeDateStr] || { school: [], tuition_study: [] };
+      [...(d.school || []), ...(d.tuition_study || [])].forEach(i => {
+        const h = parseFloat(i.hrs) || 0;
+        if (i.cat === 'School') totals.school += h;
+        if (i.cat === 'Tuition') totals.tuition += h;
+        if (i.cat === 'Study') totals.study += h;
+      });
+      document.getElementById('totalSchool').textContent = totals.school.toFixed(1);
+      document.getElementById('totalTuition').textContent = totals.tuition.toFixed(1);
+      document.getElementById('totalStudy').textContent = totals.study.toFixed(1);
+    }
+
+    function updateProgress() {
+      const d = state.days[state.activeDateStr] || { school: [], tuition_study: [] };
+      const all = [...(d.school || []), ...(d.tuition_study || [])];
+      const comp = all.filter(t => t.completed).length;
+      const tot = all.length;
+      const percent = tot > 0 ? Math.round((comp / tot) * 100) : 0;
+
+      document.getElementById('completedCount').textContent = comp;
+      document.getElementById('totalCount').textContent = tot;
+      document.getElementById('progressPercent').textContent = `${percent}%`;
+
+      const ring = document.getElementById('progressRing');
+      if (ring) {
+        ring.setAttribute('stroke-dasharray', `${percent}, 100`);
+        if (percent === 100 && tot > 0) {
+          ring.setAttribute('class', 'text-emerald-500 transition-all duration-300');
+        } else if (percent > 0) {
+          ring.setAttribute('class', 'text-blue-500 transition-all duration-300');
+        } else {
+          ring.setAttribute('class', 'text-slate-300 transition-all duration-300');
+        }
+      }
+    }
+
+    /* ================= MASTER TIMETABLES EDITOR ================= */
+    function renderTimetables() {
+      const renderGrid = (type, obj) => DAYS.map(d => {
+        if (obj[d]) sortTasksByTime(obj[d]);
+        return `
+          <div class="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-xs ${d === getDayName(state.activeDateStr) ? 'ring-2 ring-blue-500' : ''}">
+            <div class="px-3 py-1.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+              <span class="font-black text-xs text-slate-700">${d}</span>
+            </div>
+            <div class="p-2 space-y-1">
+              ${(obj[d] || []).map((it, i) => editMode[type] ? `
+                <div class="bg-slate-50 p-1.5 rounded-lg border border-slate-200 space-y-1">
+                  <div class="flex items-center gap-1">
+                    <input type="text" class="w-full text-[11px] font-semibold p-1 border border-slate-300 rounded bg-white tt-time-${type}-${d}" data-idx="${i}" value="${escapeHtml(it.time)}" placeholder="Time (e.g. 08:40 AM - 09:15 AM)">
+                    <button onclick="deleteTemplateSlot('${type}','${d}',${i})" class="text-rose-500 hover:text-rose-700 p-1 rounded" title="Delete slot">
+                      <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                    </button>
+                  </div>
+                  <input type="text" class="w-full text-[11px] font-bold p-1 border border-slate-300 rounded bg-white tt-task-${type}-${d}" data-idx="${i}" value="${escapeHtml(it.task)}" placeholder="Subject / Batch">
+                </div>
+              ` : `
+                <div class="p-1 border-b border-slate-50 text-slate-700 last:border-none flex items-center justify-between text-[11px]">
+                  <div>
+                    <div class="font-bold text-slate-900 leading-tight">${escapeHtml(it.task)}</div>${it.topic ? `<div class="text-[9.5px] text-blue-600 font-semibold">Topic: ${escapeHtml(it.topic)}</div>` : ''}
+                    <div class="text-[10px] text-slate-500">${escapeHtml(it.time)}</div>
+                  </div>
+                  <span class="text-[9px] font-extrabold text-blue-600 bg-blue-50 px-1 py-0.5 rounded">${Number(it.hrs).toFixed(2)}h</span>
+                </div>
+              `).join('')}
+              ${editMode[type] ? `<button onclick="addNewTemplateSlot('${type}','${d}')" class="w-full py-1 text-[11px] font-bold text-emerald-600 hover:bg-emerald-50 rounded-lg border border-dashed border-emerald-300 mt-1">+ Add Period</button>` : ''}
+              ${(!editMode[type] && (!obj[d] || obj[d].length === 0)) ? '<div class="text-[11px] p-1 text-slate-400 italic">No classes scheduled</div>' : ''}
+            </div>
+          </div>`;
+      }).join('');
+
+      document.getElementById('schoolTimetable').innerHTML = renderGrid('school', state.timetables.school);
+      document.getElementById('tuitionTimetable').innerHTML = renderGrid('tuition', state.timetables.tuition);
+      document.getElementById('studyTimetable').innerHTML = renderGrid('study', state.timetables.study);
+
+      ['school', 'tuition', 'study'].forEach(t => {
+        const btn = document.getElementById(`btnEdit${t.charAt(0).toUpperCase() + t.slice(1)}`);
+        if (btn) {
+          if (editMode[t]) {
+            btn.textContent = 'Save Changes';
+            btn.className = 'text-xs font-bold px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition';
+          } else {
+            btn.textContent = `Edit ${t.charAt(0).toUpperCase() + t.slice(1)}`;
+            btn.className = 'text-xs font-bold px-3 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 shadow-xs transition';
+          }
+        }
+      });
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function syncCurrentTimetableInputs(t) {
+      if (!editMode[t]) return;
+      const obj = state.timetables[t];
+      DAYS.forEach(d => {
+        const times = document.querySelectorAll(`.tt-time-${t}-${d}`);
+        const tasks = document.querySelectorAll(`.tt-task-${t}-${d}`);
+        const newSlots = [];
+        times.forEach((el, idx) => {
+          const tVal = el.value.trim();
+          const taskVal = tasks[idx] ? tasks[idx].value.trim() : '';
+          if (tVal || taskVal) {
+            const p = extractTimeAndCalculateHrs(tVal);
+            const parsedTask = parseTaskAndTopic(taskVal || (p ? p.cleanTask : 'Class'));
+            newSlots.push({
+              time: p ? p.timeStr : tVal,
+              task: parsedTask.title,
+              topic: parsedTask.topic,
+              hrs: p ? p.hrs : (t === 'school' ? 0.58 : t === 'tuition' ? 1.17 : 1.50)
+            });
+          }
+        });
+        obj[d] = newSlots;
       });
     }
-    dH.push(dayH);
-    dC.push(dayTot > 0 ? parseFloat(((dayComp / dayTot) * 100).toFixed(1)) : 0);
-  }
-  const rate = weekTot > 0 ? ((weekComp / weekTot) * 100).toFixed(1) : 0;
-  document.getElementById('statsGrid').innerHTML = `
-    <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-xs"><span class="text-[9.5px] font-bold uppercase text-slate-400">Weekly Total</span><div class="text-xl font-black text-slate-800 mt-0.5">${weekHours.toFixed(1)} H</div></div>
-    <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-xs"><span class="text-[9.5px] font-bold uppercase text-slate-400">Tasks Completed</span><div class="text-xl font-black text-blue-600 mt-0.5">${weekComp} / ${weekTot}</div></div>
-    <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-xs"><span class="text-[9.5px] font-bold uppercase text-slate-400">Completion Rate</span><div class="text-xl font-black text-emerald-600 mt-0.5">${rate}%</div></div>`;
 
-  Chart.defaults.color = '#64748b'; Chart.defaults.font.size = 10;
-  if(charts.cat) charts.cat.destroy();
-  charts.cat = new Chart(document.getElementById('categoryChart'), { type:'doughnut', data:{ labels:['School','Tuition','Study'], datasets:[{ data:[cH.School,cH.Tuition,cH.Study], backgroundColor:['#2563eb','#f97316','#8b5cf6'], borderWidth:0 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom' } } } });
-  
-  if(charts.comp) charts.comp.destroy();
-  charts.comp = new Chart(document.getElementById('completionChart'), { type:'bar', data:{ labels:['School','Tuition','Study'], datasets:[{ data:[cT.School?Math.round((cC.School/cT.School)*100):0, cT.Tuition?Math.round((cC.Tuition/cT.Tuition)*100):0, cT.Study?Math.round((cC.Study/cT.Study)*100):0], backgroundColor:['#2563eb','#f97316','#8b5cf6'], borderRadius:4 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true, max:100 } } } });
-  
-  if(charts.trend) charts.trend.destroy();
-  charts.trend = new Chart(document.getElementById('trendChart'), { type:'line', data:{ labels, datasets:[{ label:'Hours', data:dH, borderColor:'#2563eb', tension:0.35, fill:true, backgroundColor:'rgba(37,99,235,0.06)' }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true } } } });
-  
-  if(charts.compTrend) charts.compTrend.destroy();
-  charts.compTrend = new Chart(document.getElementById('completionTrendChart'), { type:'line', data:{ labels, datasets:[{ label:'%', data:dC, borderColor:'#10b981', tension:0.35, fill:true, backgroundColor:'rgba(16,185,129,0.06)' }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true, max:100 } } } });
-  
-  syncWorkspaceHeight();
-}
-
-/* ================= TABS & NAVIGATION ================= */
-function switchTab(tabId, btn){
-  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => {
-    b.classList.remove('active');
-    b.setAttribute('aria-selected', 'false');
-  });
-  
-  const target = document.getElementById(tabId);
-  if(target) target.classList.add('active');
-
-  if(btn && btn.classList.contains('nav-btn')){
-    btn.classList.add('active');
-    btn.setAttribute('aria-selected', 'true');
-  }
-
-  if(tabId === 'analytics') setTimeout(updateAnalytics, 80);
-  if(tabId === 'timetables') renderTimetables();
-  if(window.lucide) lucide.createIcons();
-
-  syncWorkspaceHeight();
-}
-
-function handleNavClick(secId, btn){
-  switchTab('planner', btn);
-  const el = document.getElementById(secId);
-  if(el){
-    el.scrollIntoView({ behavior:'smooth', block:'start' });
-  }
-}
-
-function updateCurrentDate(){
-  const n = new Date();
-  const currentTodayISO = getTodayISO();
-
-  if(currentTodayISO !== lastCheckedDate){
-    lastCheckedDate = currentTodayISO;
-    state.activeDateStr = currentTodayISO;
-    state.viewMondayStr = getMondayISO(n);
-    syncDayFromTimetable(currentTodayISO);
-    saveState();
-  }
-
-  const day = n.getDate();
-  const month = n.toLocaleDateString('en-US', {month:'short'});
-  const weekday = n.toLocaleDateString('en-US', {weekday:'short'});
-  const year = n.getFullYear();
-  const timePart = n.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-  
-  const dateSpan = document.getElementById('headerDateStr');
-  const timeSpan = document.getElementById('headerTimeStr');
-  if(dateSpan) dateSpan.textContent = `${weekday}, ${day} ${month} ${year}`;
-  if(timeSpan) timeSpan.textContent = timePart;
-
-  renderTables();
-  renderSidebarDaySelector();
-  updatePrintDate();
-  syncWorkspaceHeight();
-}
-
-function triggerPrint(){
-  updatePrintDate();
-  window.print();
-}
-
-function exportBackup(){
-  state.lastBackup = Date.now();
-  saveState();
-  const blob = new Blob([JSON.stringify(state, null, 2)], { type:'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `planner_backup_${getTodayISO()}.json`;
-  a.click();
-  showToast('Planner backup downloaded', 'success');
-}
-
-function importBackup(e){
-  const f = e.target.files[0];
-  if(!f) return;
-  const r = new FileReader();
-  r.onload = (evt) => {
-    try {
-      const d = JSON.parse(evt.target.result);
-      if(d.timetables && d.days){
-        state = d;
-        sanitizePlannerState(state);
-        state.activeDateStr = getTodayISO();
-        state.viewMondayStr = getMondayISO(new Date());
-        syncDayFromTimetable(state.activeDateStr);
+    function toggleEditMode(t) {
+      if (editMode[t]) {
+        syncCurrentTimetableInputs(t);
+        DAYS.forEach(d => {
+          if (state.timetables[t][d]) sortTasksByTime(state.timetables[t][d]);
+        });
+        editMode[t] = false;
         saveState();
-        loadState();
-        showToast('Backup restored successfully!', 'success');
-      } else {
-        throw new Error();
-      }
-    } catch(err){
-      showToast("This file doesn't look like a valid planner backup.", 'error');
-    }
-  };
-  r.readAsText(f);
-}
 
-window.addEventListener('load', () => {
-  loadState();
-  updateCurrentDate();
-  setInterval(updateCurrentDate, 60000);
-  
-  const sidebar = document.getElementById('plannerSidebar');
-  if(sidebar && window.ResizeObserver){
-    new ResizeObserver(() => syncWorkspaceHeight()).observe(sidebar);
-  }
-  window.addEventListener('resize', syncWorkspaceHeight);
-});
-</script>
+        syncDayFromTimetable(state.activeDateStr);
+        renderTables();
+        calculateWeeklyStats();
+        updateProgress();
+        showToast(`${t.charAt(0).toUpperCase() + t.slice(1)} schedule saved`, 'success');
+      } else {
+        editMode[t] = true;
+      }
+      renderTimetables();
+      syncWorkspaceHeight();
+    }
+
+    function addNewTemplateSlot(t, d) {
+      syncCurrentTimetableInputs(t);
+      if (!state.timetables[t][d]) state.timetables[t][d] = [];
+      state.timetables[t][d].push({
+        time: t === 'school' ? '08:40 AM - 09:15 AM' : t === 'tuition' ? '04:00 PM - 05:10 PM' : '10:00 PM - 11:30 PM',
+        task: 'New Session',
+        topic: '',
+        hrs: t === 'school' ? 0.58 : t === 'tuition' ? 1.17 : 1.50
+      });
+      sortTasksByTime(state.timetables[t][d]);
+      renderTimetables();
+      syncWorkspaceHeight();
+    }
+
+    function deleteTemplateSlot(t, d, i) {
+      syncCurrentTimetableInputs(t);
+      state.timetables[t][d].splice(i, 1);
+      renderTimetables();
+      syncWorkspaceHeight();
+    }
+
+    /* ================= ANALYTICS ================= */
+    function updateAnalytics() {
+      let weekHours = 0, weekComp = 0, weekTot = 0;
+      let cH = { School: 0, Tuition: 0, Study: 0 }, cT = { School: 0, Tuition: 0, Study: 0 }, cC = { School: 0, Tuition: 0, Study: 0 };
+      let dH = [], dC = [], labels = [];
+
+      for (let i = 0; i < 7; i++) {
+        const dIso = addDays(state.viewMondayStr, i);
+        labels.push(`${DAYS[i]} ${dIso.slice(8)}`);
+        let dayH = 0, dayComp = 0, dayTot = 0;
+        const d = state.days[dIso];
+        if (d) {
+          [...(d.school || []), ...(d.tuition_study || [])].forEach(t => {
+            const h = parseFloat(t.hrs) || 0;
+            dayH += h; dayTot++; weekTot++; weekHours += h;
+            if (cH[t.cat] !== undefined) cH[t.cat] += h;
+            if (cT[t.cat] !== undefined) cT[t.cat]++;
+            if (t.completed) { dayComp++; weekComp++; if (cC[t.cat] !== undefined) cC[t.cat]++; }
+          });
+        }
+        dH.push(dayH);
+        dC.push(dayTot > 0 ? parseFloat(((dayComp / dayTot) * 100).toFixed(1)) : 0);
+      }
+      const rate = weekTot > 0 ? ((weekComp / weekTot) * 100).toFixed(1) : 0;
+      document.getElementById('statsGrid').innerHTML = `
+        <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-xs"><span class="text-[9.5px] font-bold uppercase text-slate-400">Weekly Total</span><div class="text-xl font-black text-slate-800 mt-0.5">${weekHours.toFixed(1)} H</div></div>
+        <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-xs"><span class="text-[9.5px] font-bold uppercase text-slate-400">Tasks Completed</span><div class="text-xl font-black text-blue-600 mt-0.5">${weekComp} / ${weekTot}</div></div>
+        <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-xs"><span class="text-[9.5px] font-bold uppercase text-slate-400">Completion Rate</span><div class="text-xl font-black text-emerald-600 mt-0.5">${rate}%</div></div>`;
+
+      Chart.defaults.color = '#64748b';
+      Chart.defaults.font.size = 10;
+
+      if (charts.cat) charts.cat.destroy();
+      charts.cat = new Chart(document.getElementById('categoryChart'), {
+        type: 'doughnut',
+        data: { labels: ['School', 'Tuition', 'Study'], datasets: [{ data: [cH.School, cH.Tuition, cH.Study], backgroundColor: ['#2563eb', '#f97316', '#8b5cf6'], borderWidth: 0 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+      });
+
+      if (charts.comp) charts.comp.destroy();
+      charts.comp = new Chart(document.getElementById('completionChart'), {
+        type: 'bar',
+        data: { labels: ['School', 'Tuition', 'Study'], datasets: [{ data: [cT.School ? Math.round((cC.School / cT.School) * 100) : 0, cT.Tuition ? Math.round((cC.Tuition / cT.Tuition) * 100) : 0, cT.Study ? Math.round((cC.Study / cT.Study) * 100) : 0], backgroundColor: ['#2563eb', '#f97316', '#8b5cf6'], borderRadius: 4 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 100 } } }
+      });
+
+      if (charts.trend) charts.trend.destroy();
+      charts.trend = new Chart(document.getElementById('trendChart'), {
+        type: 'line',
+        data: { labels, datasets: [{ label: 'Hours', data: dH, borderColor: '#2563eb', tension: 0.35, fill: true, backgroundColor: 'rgba(37,99,235,0.06)' }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+      });
+
+      if (charts.compTrend) charts.compTrend.destroy();
+      charts.compTrend = new Chart(document.getElementById('completionTrendChart'), {
+        type: 'line',
+        data: { labels, datasets: [{ label: '%', data: dC, borderColor: '#10b981', tension: 0.35, fill: true, backgroundColor: 'rgba(16,185,129,0.06)' }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 100 } } }
+      });
+
+      syncWorkspaceHeight();
+    }
+
+    /* ================= TABS & NAVIGATION ================= */
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
+
+      const target = document.getElementById(tabId);
+      if (target) target.classList.add('active');
+
+      if (btn && btn.classList.contains('nav-btn')) {
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected', 'true');
+      }
+
+      if (tabId === 'analytics') setTimeout(updateAnalytics, 80);
+      if (tabId === 'timetables') renderTimetables();
+      if (window.lucide) lucide.createIcons();
+
+      syncWorkspaceHeight();
+    }
+
+    function handleNavClick(secId, btn) {
+      switchTab('planner', btn);
+      const el = document.getElementById(secId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function updateCurrentDate() {
+      const n = new Date();
+      const currentTodayISO = getTodayISO();
+
+      if (currentTodayISO !== lastCheckedDate) {
+        lastCheckedDate = currentTodayISO;
+        state.activeDateStr = currentTodayISO;
+        state.viewMondayStr = getMondayISO(n);
+        syncDayFromTimetable(currentTodayISO);
+        saveState();
+      }
+
+      const day = n.getDate();
+      const month = n.toLocaleDateString('en-US', { month: 'short' });
+      const weekday = n.toLocaleDateString('en-US', { weekday: 'short' });
+      const year = n.getFullYear();
+      const timePart = n.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      const dateSpan = document.getElementById('headerDateStr');
+      const timeSpan = document.getElementById('headerTimeStr');
+      if (dateSpan) dateSpan.textContent = `${weekday}, ${day} ${month} ${year}`;
+      if (timeSpan) timeSpan.textContent = timePart;
+
+      renderTables();
+      renderSidebarDaySelector();
+      updatePrintDate();
+      syncWorkspaceHeight();
+    }
+
+    function exportBackup() {
+      state.lastBackup = Date.now();
+      saveState();
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `planner_backup_${getTodayISO()}.json`;
+      a.click();
+      showToast('Planner backup downloaded', 'success');
+    }
+
+    function importBackup(e) {
+      const f = e.target.files[0];
+      if (!f) return;
+      const r = new FileReader();
+      r.onload = (evt) => {
+        try {
+          const d = JSON.parse(evt.target.result);
+          if (d.timetables && d.days) {
+            state = d;
+            sanitizePlannerState(state);
+            state.activeDateStr = getTodayISO();
+            state.viewMondayStr = getMondayISO(new Date());
+            syncDayFromTimetable(state.activeDateStr);
+            saveState();
+            loadState();
+            showToast('Backup restored successfully!', 'success');
+          } else {
+            throw new Error();
+          }
+        } catch (err) {
+          showToast("This file doesn't look like a valid planner backup.", 'error');
+        }
+      };
+      r.readAsText(f);
+    }
+
+    window.addEventListener('load', () => {
+      loadState();
+      updateCurrentDate();
+      setInterval(updateCurrentDate, 60000);
+
+      const sidebar = document.getElementById('plannerSidebar');
+      if (sidebar && window.ResizeObserver) {
+        new ResizeObserver(() => syncWorkspaceHeight()).observe(sidebar);
+      }
+      window.addEventListener('resize', syncWorkspaceHeight);
+    });
+  </script>
 </body>
 </html>
