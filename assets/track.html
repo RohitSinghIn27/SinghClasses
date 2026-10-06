@@ -49,7 +49,18 @@
     .tab-content.active { display: block; opacity: 1; }
 
     /* Category Pills */
-    .cat-pill { display: inline-flex; align-items: center; justify-content: center; font-weight: 800; border-radius: 6px; padding: 2px 7px; text-transform: uppercase; letter-spacing: 0.04em; font-size: 9.5px; white-space: nowrap; }
+    .cat-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      border-radius: 6px;
+      padding: 2px 7px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-size: 9.5px;
+      white-space: nowrap;
+    }
     .cat-pill.School { background-color: #2563eb; color: #ffffff; }
     .cat-pill.Tuition { background-color: #f97316; color: #ffffff; }
     .cat-pill.Study { background-color: #8b5cf6; color: #ffffff; }
@@ -64,7 +75,13 @@
 
     /* Sidebar Navigation */
     .nav-btn { transition: all 0.15s ease-in-out; border-left: 3px solid transparent; }
-    .nav-btn.active { background-color: rgba(254, 240, 138, 0.16) !important; color: #fef08a !important; font-weight: 800 !important; border-left-color: #facc15 !important; padding-left: 10px !important; }
+    .nav-btn.active {
+      background-color: rgba(254, 240, 138, 0.16) !important;
+      color: #fef08a !important;
+      font-weight: 800 !important;
+      border-left-color: #facc15 !important;
+      padding-left: 10px !important;
+    }
     .nav-btn.active i, .nav-btn.active svg { color: #facc15 !important; }
 
     /* Custom Scrollbar */
@@ -238,7 +255,7 @@
           </div>
 
           <div class="grid grid-cols-2 gap-1.5" id="sidebarDayGrid"></div>
-          <div id="sidebarSundayRow"></div>
+          <div id="sidebarSundayRow" class="mt-1.5"></div>
         </div>
 
         <!-- Weekly Summary Widget -->
@@ -427,7 +444,7 @@
                   <i data-lucide="school" class="w-4 h-4 text-blue-600"></i>
                   <h2 class="text-xs font-black uppercase tracking-wider text-slate-800">School Timetable Template</h2>
                 </div>
-                <button onclick="toggleEditMode('school')" class="text-xs font-bold px-3 py-1 rounded-lg border transition shadow-xs" id="btnEditSchool">Edit School</button>
+                <button onclick="toggleEditMode('school')" class="text-xs font-bold px-3 py-1 rounded-lg border border-slate-300 hover:bg-slate-50 transition shadow-xs" id="btnEditSchool">Edit School</button>
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5" id="schoolTimetable"></div>
             </div>
@@ -439,7 +456,7 @@
                   <i data-lucide="users" class="w-4 h-4 text-orange-500"></i>
                   <h2 class="text-xs font-black uppercase tracking-wider text-slate-800">Tuition Batches Template</h2>
                 </div>
-                <button onclick="toggleEditMode('tuition')" class="text-xs font-bold px-3 py-1 rounded-lg border transition shadow-xs" id="btnEditTuition">Edit Tuition</button>
+                <button onclick="toggleEditMode('tuition')" class="text-xs font-bold px-3 py-1 rounded-lg border border-slate-300 hover:bg-slate-50 transition shadow-xs" id="btnEditTuition">Edit Tuition</button>
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5" id="tuitionTimetable"></div>
             </div>
@@ -451,7 +468,7 @@
                   <i data-lucide="book-open" class="w-4 h-4 text-purple-600"></i>
                   <h2 class="text-xs font-black uppercase tracking-wider text-slate-800">Self Study Plan Template</h2>
                 </div>
-                <button onclick="toggleEditMode('study')" class="text-xs font-bold px-3 py-1 rounded-lg border transition shadow-xs" id="btnEditStudy">Edit Study</button>
+                <button onclick="toggleEditMode('study')" class="text-xs font-bold px-3 py-1 rounded-lg border border-slate-300 hover:bg-slate-50 transition shadow-xs" id="btnEditStudy">Edit Study</button>
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5" id="studyTimetable"></div>
             </div>
@@ -464,1244 +481,954 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm">
               <h3 class="text-[11px] font-black uppercase text-slate-400 tracking-wider text-center mb-2">Weekly Breakdown (Hours)</h3>
-              <div class="relative h-48 w-full"><canvas id="categoryChart"></canvas></div>
+              <div class="relative h-52 w-full"><canvas id="categoryChart"></canvas></div>
             </div>
             <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm">
               <h3 class="text-[11px] font-black uppercase text-slate-400 tracking-wider text-center mb-2">Category Completion Rate (%)</h3>
-              <div class="relative h-48 w-full"><canvas id="completionChart"></canvas></div>
+              <div class="relative h-52 w-full"><canvas id="completionChart"></canvas></div>
             </div>
             <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm">
               <h3 class="text-[11px] font-black uppercase text-slate-400 tracking-wider text-center mb-2">Daily Hours Trend</h3>
-              <div class="relative h-48 w-full"><canvas id="trendChart"></canvas></div>
+              <div class="relative h-52 w-full"><canvas id="trendChart"></canvas></div>
             </div>
             <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm">
               <h3 class="text-[11px] font-black uppercase text-slate-400 tracking-wider text-center mb-2">Daily Completion Trend (%)</h3>
-              <div class="relative h-48 w-full"><canvas id="completionTrendChart"></canvas></div>
+              <div class="relative h-52 w-full"><canvas id="completionTrendChart"></canvas></div>
             </div>
           </div>
         </div>
 
       </main>
     </div>
-
-    <!-- ================= FOOTER ================= -->
-    <footer class="w-full bg-brandNavy text-slate-300 rounded-xl px-4 py-2.5 flex items-center justify-between shadow-md border border-slate-800/80 print-hide mt-1">
-      <div class="flex items-center gap-2 text-xs font-medium">
-        <span>&copy; 2026 SinghClasses.in</span>
-        <span class="text-slate-600 font-light">|</span>
-        <span>Designed with <span class="text-rose-500">💖</span> by <strong class="font-bold text-white">Rohit Singh</strong></span>
-      </div>
-    </footer>
-
   </div>
 
+  <!-- ================= JAVASCRIPT APPLICATION CORE ================= -->
   <script>
-    /* ==========================================================================
-       GLOBAL MASTER TIMETABLE CONFIGURATION
-       ========================================================================== */
-    window.MASTER_TIMETABLES = {
+    const STORAGE_KEY_TIMETABLES = 'planner_master_timetables_v2';
+    const STORAGE_KEY_TASKS = 'planner_daily_tasks_v2';
+    const DAYS_ORDER = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+    const DEFAULT_TIMETABLES = {
       school: {
-        'Mon': [
-          { time: '08:40 AM - 09:15 AM', task: 'XI C', hrs: 0.58 },
-          { time: '09:25 AM - 10:00 AM', task: 'XI C', hrs: 0.58 },
-          { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
-          { time: '10:35 AM - 11:10 AM', task: 'XIII C', hrs: 0.58 },
-          { time: '11:40 AM - 12:20 PM', task: 'XII C', hrs: 0.67 },
-          { time: '12:20 PM - 12:55 PM', task: 'XI D', hrs: 0.58 },
-          { time: '12:55 PM - 01:30 PM', task: 'XIII D', hrs: 0.58 },
-          { time: '01:30 PM - 02:00 PM', task: 'XIII D', hrs: 0.50 }
+        Mon: [
+          { id: 'sc_m1', time: '08:00 - 08:45', title: 'Assembly & Homeroom', hours: 0.75 },
+          { id: 'sc_m2', time: '08:45 - 09:30', title: 'Class 12 CS (Python & MySQL)', hours: 0.75 },
+          { id: 'sc_m3', time: '09:30 - 10:15', title: 'Class 11 IP (Python Basics)', hours: 0.75 },
+          { id: 'sc_m4', time: '10:35 - 11:15', title: 'Class 10 AI / Computer Apps', hours: 0.67 },
+          { id: 'sc_m5', time: '11:15 - 11:55', title: 'Class 12 CS Lab Practical', hours: 0.67 },
+          { id: 'sc_m6', time: '12:15 - 12:55', title: 'Class 9 AI / Cyber Safety', hours: 0.67 }
         ],
-        'Tue': [
-          { time: '08:40 AM - 09:15 AM', task: 'XI C', hrs: 0.58 },
-          { time: '09:25 AM - 10:00 AM', task: 'XI C', hrs: 0.58 },
-          { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
-          { time: '10:35 AM - 11:10 AM', task: 'XII C', hrs: 0.58 },
-          { time: '11:40 AM - 12:20 PM', task: 'XII C', hrs: 0.67 },
-          { time: '12:20 PM - 12:55 PM', task: 'XI D', hrs: 0.58 },
-          { time: '12:55 PM - 01:30 PM', task: 'XIII D', hrs: 0.58 },
-          { time: '01:30 PM - 02:00 PM', task: 'XIII D', hrs: 0.50 }
+        Tue: [
+          { id: 'sc_t1', time: '08:00 - 08:45', title: 'Class 11 CS (Flow of Control)', hours: 0.75 },
+          { id: 'sc_t2', time: '08:45 - 09:30', title: 'Class 12 CS (File Handling)', hours: 0.75 },
+          { id: 'sc_t3', time: '09:30 - 10:15', title: 'Class 10 AI Lab Session', hours: 0.75 },
+          { id: 'sc_t4', time: '10:35 - 11:15', title: 'Class 11 IP Lab Practical', hours: 0.67 },
+          { id: 'sc_t5', time: '11:15 - 11:55', title: 'Class 9 IT Practice', hours: 0.67 }
         ],
-        'Wed': [
-          { time: '08:40 AM - 09:15 AM', task: 'XI C', hrs: 0.58 },
-          { time: '09:25 AM - 10:00 AM', task: 'X C', hrs: 0.58 },
-          { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
-          { time: '10:35 AM - 11:10 AM', task: 'XII C', hrs: 0.58 },
-          { time: '11:40 AM - 12:20 PM', task: 'XI D', hrs: 0.67 },
-          { time: '12:20 PM - 12:55 PM', task: 'XI D', hrs: 0.58 },
-          { time: '12:55 PM - 01:30 PM', task: 'XIII D', hrs: 0.58 },
-          { time: '01:30 PM - 02:00 PM', task: 'IX C', hrs: 0.50 }
+        Wed: [
+          { id: 'sc_w1', time: '08:00 - 08:45', title: 'Class 12 CS (Data Structures Stack)', hours: 0.75 },
+          { id: 'sc_w2', time: '08:45 - 09:30', title: 'Class 11 IP (Pandas DataFrame)', hours: 0.75 },
+          { id: 'sc_w3', time: '09:30 - 10:15', title: 'Class 12 IP (Matplotlib)', hours: 0.75 },
+          { id: 'sc_w4', time: '10:35 - 11:15', title: 'Class 10 Coding Mentorship', hours: 0.67 },
+          { id: 'sc_w5', time: '11:15 - 11:55', title: 'IT Dept Planning & Evaluation', hours: 0.67 }
         ],
-        'Thu': [
-          { time: '08:40 AM - 09:15 AM', task: 'XI C', hrs: 0.58 },
-          { time: '09:25 AM - 10:00 AM', task: 'X C', hrs: 0.58 },
-          { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
-          { time: '10:35 AM - 11:10 AM', task: 'XII C', hrs: 0.58 },
-          { time: '11:40 AM - 12:20 PM', task: 'XI D', hrs: 0.67 },
-          { time: '12:55 PM - 01:30 PM', task: 'XIII D', hrs: 0.58 },
-          { time: '01:30 PM - 02:00 PM', task: 'X B', hrs: 0.50 }
+        Thu: [
+          { id: 'sc_th1', time: '08:00 - 08:45', title: 'Class 11 CS (Strings & Lists)', hours: 0.75 },
+          { id: 'sc_th2', time: '08:45 - 09:30', title: 'Class 12 CS (Computer Networks)', hours: 0.75 },
+          { id: 'sc_th3', time: '09:30 - 10:15', title: 'Class 11 IP (SQL Queries)', hours: 0.75 },
+          { id: 'sc_th4', time: '10:35 - 11:15', title: 'Class 9 AI (Ethics in AI)', hours: 0.67 }
         ],
-        'Fri': [
-          { time: '08:40 AM - 09:15 AM', task: 'XI C', hrs: 0.58 },
-          { time: '09:25 AM - 10:00 AM', task: 'X B', hrs: 0.58 },
-          { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
-          { time: '10:35 AM - 11:10 AM', task: 'XII C', hrs: 0.58 },
-          { time: '11:40 AM - 12:20 PM', task: 'XI D', hrs: 0.67 },
-          { time: '12:20 PM - 12:55 PM', task: 'X C', hrs: 0.58 },
-          { time: '12:55 PM - 01:30 PM', task: 'XIII D', hrs: 0.58 },
-          { time: '01:30 PM - 02:00 PM', task: 'IX C', hrs: 0.50 }
+        Fri: [
+          { id: 'sc_f1', time: '08:00 - 08:45', title: 'Class 12 CS (Pre-Board Revision)', hours: 0.75 },
+          { id: 'sc_f2', time: '08:45 - 09:30', title: 'Class 11 IP (Database Connectivity)', hours: 0.75 },
+          { id: 'sc_f3', time: '09:30 - 10:15', title: 'Class 10 AI Project Review', hours: 0.75 },
+          { id: 'sc_f4', time: '10:35 - 11:15', title: 'Class 12 CS Lab Evaluation', hours: 0.67 }
         ],
-        'Sat': [
-          { time: '08:40 AM - 09:15 AM', task: 'XI C', hrs: 0.58 },
-          { time: '09:25 AM - 10:00 AM', task: 'X B', hrs: 0.58 },
-          { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
-          { time: '10:35 AM - 11:10 AM', task: 'XII C', hrs: 0.58 },
-          { time: '11:40 AM - 12:20 PM', task: 'XI D', hrs: 0.67 },
-          { time: '12:20 PM - 12:55 PM', task: 'XI D', hrs: 0.58 },
-          { time: '12:55 PM - 01:30 PM', task: 'XIII D', hrs: 0.58 },
-          { time: '01:30 PM - 02:00 PM', task: 'IX C', hrs: 0.50 }
+        Sat: [
+          { id: 'sc_s1', time: '08:30 - 10:00', title: 'Remedial & Doubts Session', hours: 1.5 },
+          { id: 'sc_s2', time: '10:15 - 12:00', title: 'Faculty & Curriculum Sync', hours: 1.75 }
         ],
-        'Sun': []
+        Sun: []
       },
       tuition: {
-        'Mon': [
-          { time: '04:00 PM - 04:50 PM', task: 'Class XII IP – Sant Nagar', topic: 'Series in Python', hrs: 0.50 },
-          { time: '05:10 PM - 06:00 PM', task: 'Class XII IP – SICS', topic: 'Series in Python', hrs: 0.50 },
-          { time: '07:10 PM - 08:00 PM', task: 'Class XII CS – Sant Nagar', topic: 'Functions in Python', hrs: 0.50 },
-          { time: '08:00 PM - 09:00 PM', task: 'Home Tuition', topic: 'Series in Python', hrs: 1.00 }
+        Mon: [
+          { id: 'tu_m1', time: '04:00 PM - 05:30 PM', title: 'Class 12 CS Batch (Hudson Lane)', category: 'Tuition', hours: 1.5 },
+          { id: 'tu_m2', time: '06:00 PM - 07:30 PM', title: 'Class 11 IP Batch (Sant Nagar)', category: 'Tuition', hours: 1.5 }
         ],
-        'Tue': [
-          { time: '04:10 PM - 05:00 PM', task: 'Class XI IP/CS – Sant Nagar', topic: 'Dictionary in Python', hrs: 0.50 },
-          { time: '06:00 PM - 07:00 PM', task: 'Class XI AI – SICS', topic: 'Capstone Project', hrs: 0.50 },
-          { time: '06:30 PM - 07:30 PM', task: 'Class XI IP/CS – SICS', topic: 'Dictionary in Python', hrs: 0.50 },
-          { time: '08:00 PM - 09:00 PM', task: 'SkillYards', topic: 'Function in Python', hrs: 1.00 }
+        Tue: [
+          { id: 'tu_t1', time: '04:00 PM - 05:30 PM', title: 'Class 12 IP Batch', category: 'Tuition', hours: 1.5 },
+          { id: 'tu_t2', time: '06:00 PM - 07:30 PM', title: 'Class 10 Coding Bootcamp', category: 'Tuition', hours: 1.5 }
         ],
-        'Wed': [
-          { time: '04:00 PM - 05:10 PM', task: 'Class XII IP – Sant Nagar', topic: 'Series in Python', hrs: 1.17 },
-          { time: '05:10 PM - 06:20 PM', task: 'Class XII IP – SICS', topic: 'Series in Python', hrs: 1.17 },
-          { time: '07:15 PM - 08:30 PM', task: 'Class XII CS – Sant Nagar', topic: 'Series in Python', hrs: 1.25 },
-          { time: '08:10 PM - 09:15 PM', task: 'Vidya Home Tuition', topic: 'Series in Python', hrs: 1.08 }
+        Wed: [
+          { id: 'tu_w1', time: '04:00 PM - 05:30 PM', title: 'Class 12 CS Batch (Hudson Lane)', category: 'Tuition', hours: 1.5 },
+          { id: 'tu_w2', time: '06:00 PM - 07:30 PM', title: 'Class 11 IP Batch (Sant Nagar)', category: 'Tuition', hours: 1.5 }
         ],
-        'Thu': [
-          { time: '04:00 PM - 05:30 PM', task: 'Class XI IP/CS – Sant Nagar', topic: 'Series in Python', hrs: 1.50 },
-          { time: '05:30 PM - 06:20 PM', task: 'Class XI AI – SICS', topic: 'Series in Python', hrs: 0.83 },
-          { time: '06:20 PM - 07:30 PM', task: 'Class XI IP/CS – SICS', topic: 'Series in Python', hrs: 1.17 },
-          { time: '08:00 PM - 09:00 PM', task: 'SkillYards', topic: 'Series in Python', hrs: 1.00 }
+        Thu: [
+          { id: 'tu_th1', time: '04:00 PM - 05:30 PM', title: 'Class 12 IP Batch', category: 'Tuition', hours: 1.5 },
+          { id: 'tu_th2', time: '06:00 PM - 07:30 PM', title: 'Class 10 Coding Bootcamp', category: 'Tuition', hours: 1.5 }
         ],
-        'Fri': [
-          { time: '04:00 PM - 05:10 PM', task: 'Class XII IP – Sant Nagar', topic: 'Series in Python', hrs: 1.17 },
-          { time: '05:10 PM - 06:20 PM', task: 'Class XII IP – SICS', topic: 'Series in Python', hrs: 1.17 },
-          { time: '07:15 PM - 08:30 PM', task: 'Class XII CS – Sant Nagar', topic: 'Series in Python', hrs: 1.25 },
-          { time: '08:00 PM - 09:00 PM', task: 'Kriti Class', topic: 'Series in Python', hrs: 1.00 }
+        Fri: [
+          { id: 'tu_f1', time: '04:00 PM - 05:30 PM', title: 'Class 12 CS Project Lab', category: 'Tuition', hours: 1.5 },
+          { id: 'tu_f2', time: '06:00 PM - 07:30 PM', title: 'Class 11 IP Test Practice', category: 'Tuition', hours: 1.5 }
         ],
-        'Sat': [
-          { time: '04:00 PM - 05:30 PM', task: 'Class XI IP/CS – Sant Nagar', topic: 'Series in Python', hrs: 1.50 },
-          { time: '05:30 PM - 06:20 PM', task: 'Class XI AI – SICS', topic: 'Series in Python', hrs: 0.83 },
-          { time: '06:20 PM - 07:30 PM', task: 'Class XI IP/CS – SICS', topic: 'Series in Python', hrs: 1.17 },
-          { time: '08:00 PM - 09:00 PM', task: 'SkillYards', topic: 'Series in Python', hrs: 1.00 }
+        Sat: [
+          { id: 'tu_sa1', time: '03:00 PM - 05:00 PM', title: 'Weekend CS Advanced Batch', category: 'Tuition', hours: 2.0 },
+          { id: 'tu_sa2', time: '05:30 PM - 07:30 PM', title: 'Python & Data Analysis Special', category: 'Tuition', hours: 2.0 }
         ],
-        'Sun': [
-          { time: '12:30 PM - 01:30 PM', task: 'Vidya Class', topic: 'Series in Python', hrs: 1.00 },
-          { time: '02:00 PM - 03:00 PM', task: 'Kirti Class', topic: 'Series in Python', hrs: 1.00 }
+        Sun: [
+          { id: 'tu_su1', time: '10:00 AM - 12:00 PM', title: 'Mock Test Discussion & Mentorship', category: 'Tuition', hours: 2.0 }
         ]
       },
       study: {
-        'Mon': [{ time: '10:00 PM - 11:30 PM', task: 'Mathematics', hrs: 1.50 }],
-        'Tue': [{ time: '10:00 PM - 11:30 PM', task: 'English', hrs: 1.50 }],
-        'Wed': [{ time: '10:00 PM - 11:30 PM', task: 'Reasoning', hrs: 1.50 }],
-        'Thu': [{ time: '10:00 PM - 11:30 PM', task: 'Hindi', hrs: 1.50 }],
-        'Fri': [{ time: '10:00 PM - 11:30 PM', task: 'Computer Science', hrs: 1.50 }],
-        'Sat': [{ time: '10:00 PM - 11:30 PM', task: 'Computer Science', hrs: 1.50 }],
-        'Sun': [{ time: '10:00 PM - 11:30 PM', task: 'CS + Teaching Aptitude', hrs: 1.50 }]
+        Mon: [
+          { id: 'st_m1', time: '08:30 PM - 10:00 PM', title: 'Computer Networks & OSI Model Revision', category: 'Study', hours: 1.5 },
+          { id: 'st_m2', time: '10:15 PM - 11:30 PM', title: 'Pedagogy & Teaching Aptitude Notes', category: 'Study', hours: 1.25 }
+        ],
+        Tue: [
+          { id: 'st_t1', time: '08:30 PM - 10:00 PM', title: 'SQL Queries, Joins & Database Normalization', category: 'Study', hours: 1.5 },
+          { id: 'st_t2', time: '10:15 PM - 11:30 PM', title: 'Data Structures & Algorithms Practice', category: 'Study', hours: 1.25 }
+        ],
+        Wed: [
+          { id: 'st_w1', time: '08:30 PM - 10:00 PM', title: 'Operating Systems & Process Scheduling', category: 'Study', hours: 1.5 },
+          { id: 'st_w2', time: '10:15 PM - 11:30 PM', title: 'Educational Psychology & Child Development', category: 'Study', hours: 1.25 }
+        ],
+        Thu: [
+          { id: 'st_th1', time: '08:30 PM - 10:00 PM', title: 'Python Advanced OOP & File Handling', category: 'Study', hours: 1.5 },
+          { id: 'st_th2', time: '10:15 PM - 11:30 PM', title: 'DSSSB Previous Year Paper Practice', category: 'Study', hours: 1.25 }
+        ],
+        Fri: [
+          { id: 'st_f1', time: '08:30 PM - 10:00 PM', title: 'Web Tech (HTML/CSS/JS/DOM) Deep Dive', category: 'Study', hours: 1.5 },
+          { id: 'st_f2', time: '10:15 PM - 11:30 PM', title: 'General Awareness & Reasoning Test', category: 'Study', hours: 1.25 }
+        ],
+        Sat: [
+          { id: 'st_sa1', time: '08:30 PM - 11:00 PM', title: 'Full Length CBT Mock Exam & Analysis', category: 'Study', hours: 2.5 }
+        ],
+        Sun: [
+          { id: 'st_su1', time: '02:00 PM - 05:00 PM', title: 'Weekly Syllabus Review & Note Synthesis', category: 'Study', hours: 3.0 }
+        ]
       }
     };
 
-    const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    const STORE_KEY = 'singhPlanner_v25';
-
-    let state = {
-      activeDateStr: getTodayISO(),
-      viewMondayStr: getMondayISO(new Date()),
-      days: {},
-      timetables: { school: {}, tuition: {}, study: {} },
-      lastBackup: null,
-      lastCodeTemplate: ''
+    // Global Application State
+    const state = {
+      activeDateStr: '',
+      currentWeekMonday: null,
+      timetables: null,
+      dailyTasks: {},
+      editModes: {
+        school: false,
+        tuition: false,
+        study: false
+      },
+      charts: {}
     };
 
-    let charts = {};
-    let editMode = { school: false, tuition: false, study: false };
-    let lastCheckedDate = getTodayISO();
+    // Modal Callback Holder
+    let modalConfirmCallback = null;
 
-    /* ================= UTILITIES ================= */
-    function escapeHtml(str) { return str == null ? '' : String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
-    function uid() { return 't_' + Math.random().toString(36).slice(2, 8) + Date.now().toString(36); }
-    function getTodayISO() { const n = new Date(); return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, '0')}-${String(n.getDate()).padStart(2, '0')}`; }
-    function addDays(isoStr, num) { const [y, m, d] = isoStr.split('-').map(Number); const dt = new Date(y, m - 1, d + num); return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`; }
-    function getDayName(isoStr) { const [y, m, d] = isoStr.split('-').map(Number); const idx = new Date(y, m - 1, d).getDay(); return DAYS[idx === 0 ? 6 : idx - 1]; }
-    function formatShortDate(isoStr) { const [y, m, d] = isoStr.split('-').map(Number); const dt = new Date(y, m - 1, d); return `${dt.getDate()} ${dt.toLocaleDateString('en-US', { month: 'short' })}`; }
-    function formatWeekRange(mondayIso) { const sundayIso = addDays(mondayIso, 6); return `${formatShortDate(mondayIso)} - ${formatShortDate(sundayIso)} ${sundayIso.split('-')[0]}`; }
-    function closeModal() { document.getElementById('customModal').classList.add('hidden'); }
-    function ensureDayPopulated(dateStr) { syncDayFromTimetable(dateStr); }
-    function triggerPrint() { updatePrintDate(); window.print(); }
-    function shiftWeek(dir) { state.viewMondayStr = addDays(state.viewMondayStr, dir * 7); renderSidebarDaySelector(); syncWorkspaceHeight(); }
-    function handleRowClick(e, taskId, sec) { if (e.target.tagName === 'INPUT' || e.target.closest('label') || e.target.closest('button')) return; updateCheckbox(taskId, sec); }
+    // ================= INITIALIZATION =================
+    function initApp() {
+      loadStorageData();
 
-    function getMondayISO(refDate) {
-      const d = new Date(refDate);
-      const day = d.getDay(), diff = d.getDate() - day + (day === 0 ? -6 : 1);
-      d.setDate(diff);
-      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      const today = new Date();
+      state.activeDateStr = toDateISO(today);
+      state.currentWeekMonday = getMonday(today);
+
+      startClock();
+      renderSidebar();
+      renderCurrentDayTables();
+      renderAllTimetableTemplates();
+      lucide.createIcons();
     }
 
-    function parseMinutes(t, fallbackMod) {
-      let c = t.toUpperCase().replace(/\s+/g, '');
-      let mod = c.includes('PM') ? 'PM' : (c.includes('AM') ? 'AM' : fallbackMod);
-      let p = c.replace('AM', '').replace('PM', '');
-      let [h, min] = p.split(':').map(Number);
-      if (isNaN(h)) return 0;
-      if (isNaN(min)) min = 0;
-      if (mod === 'PM' && h !== 12) h += 12;
-      if (mod === 'AM' && h === 12) h = 0;
-      return h * 60 + min;
-    }
-
-    function getTaskStartMinutes(timeStr) {
-      if (!timeStr || typeof timeStr !== 'string') return 99999;
-      const m = timeStr.match(/(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)\s*-\s*(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)/i);
-      if (m) {
-        let s = m[1].trim(), e = m[2].trim();
-        let emod = e.toUpperCase().includes('PM') ? 'PM' : (e.toUpperCase().includes('AM') ? 'AM' : 'PM');
-        let smod = s.toUpperCase().includes('AM') ? 'AM' : (s.toUpperCase().includes('PM') ? 'PM' : emod);
-        let sm = parseMinutes(s, smod);
-        let em = parseMinutes(e, emod);
-        if (!s.toUpperCase().includes('AM') && !s.toUpperCase().includes('PM') && sm > em && em <= 780) {
-          sm = parseMinutes(s, 'AM');
-        }
-        return sm;
-      }
-      const single = timeStr.match(/(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)/i);
-      if (single) {
-        let s = single[1].trim();
-        let mod = s.toUpperCase().includes('PM') ? 'PM' : 'AM';
-        return parseMinutes(s, mod);
-      }
-      return 99999;
-    }
-
-    function sortTasksByTime(taskList) {
-      if (!Array.isArray(taskList)) return taskList;
-      return taskList.sort((a, b) => {
-        const minA = getTaskStartMinutes(a.time);
-        const minB = getTaskStartMinutes(b.time);
-        if (minA !== minB) return minA - minB;
-        return (a.task || '').localeCompare(b.task || '');
-      });
-    }
-
-    function syncWorkspaceHeight() {
-      const sidebar = document.getElementById('plannerSidebar');
-      const workspace = document.getElementById('mainWorkspace');
-      if (!sidebar || !workspace) return;
-      if (window.innerWidth >= 1024) {
-        const benchmarkH = sidebar.offsetHeight;
-        if (benchmarkH > 0) {
-          workspace.style.maxHeight = `${benchmarkH}px`;
-          workspace.style.overflowY = 'auto';
-        }
-      } else {
-        workspace.style.maxHeight = 'none';
-        workspace.style.overflowY = 'visible';
-      }
-    }
-
-    function extractTimeAndCalculateHrs(text) {
-      const m = text.match(/(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)\s*-\s*(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)/i);
-      if (m) {
-        let s = m[1].trim(), e = m[2].trim();
-        let emod = e.toUpperCase().includes('PM') ? 'PM' : (e.toUpperCase().includes('AM') ? 'AM' : 'PM');
-        let smod = s.toUpperCase().includes('AM') ? 'AM' : (s.toUpperCase().includes('PM') ? 'PM' : emod);
-        let sm = parseMinutes(s, smod), em = parseMinutes(e, emod);
-        if (em < sm) em += 1440;
-        return {
-          timeStr: `${s} - ${e}`,
-          hrs: parseFloat(((em - sm) / 60).toFixed(2)),
-          cleanTask: text.replace(m[0], '').replace(/[()]/g, '').trim()
-        };
-      }
-      return null;
-    }
-
-    function getTimeStatus(timeStr, dateStr) {
-      if (dateStr !== getTodayISO()) return 'normal';
-      const m = timeStr.match(/(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)\s*-\s*(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)/i);
-      if (!m) return 'normal';
-      let s = m[1].trim(), e = m[2].trim();
-      let emod = e.toUpperCase().includes('PM') ? 'PM' : (e.toUpperCase().includes('AM') ? 'AM' : 'PM');
-      let smod = s.toUpperCase().includes('AM') ? 'AM' : (s.toUpperCase().includes('PM') ? 'PM' : emod);
-      let now = new Date(), curM = now.getHours() * 60 + now.getMinutes();
-      let sm = parseMinutes(s, smod), em = parseMinutes(e, emod);
-      if (em < sm) em += 1440;
-      if (curM >= sm && curM <= em) return 'active';
-      if (curM > em) return 'past';
-      return 'upcoming';
-    }
-
-    /* ================= PARSER & STATE SANITIZER ================= */
-    function parseTaskAndTopic(rawText, existingTopic) {
-      if (existingTopic && typeof existingTopic === 'string' && existingTopic.trim() !== '') {
-        const cleanTitle = (rawText || '').replace(/\s*\|\s*Topic:.*$/i, '').trim();
-        return { title: cleanTitle, topic: existingTopic.trim() };
-      }
-      if (!rawText) return { title: 'Untitled Session', topic: '' };
-      if (rawText.includes('|')) {
-        const parts = rawText.split('|');
-        const title = parts[0].trim();
-        const topic = parts.slice(1).join('|').replace(/^\s*topic\s*:\s*/i, '').trim();
-        return { title, topic };
-      }
-      const m = rawText.match(/^(.*?)\s*topic\s*:\s*(.*)$/i);
-      if (m) {
-        return { title: m[1].trim(), topic: m[2].trim() };
-      }
-      return { title: rawText.trim(), topic: '' };
-    }
-
-    function sanitizePlannerState(dataObj) {
-      if (!dataObj) return;
-      const cleanItem = (item) => {
-        if (!item || !item.task) return;
-        const p = parseTaskAndTopic(item.task, item.topic);
-        item.task = p.title;
-        item.topic = p.topic;
-      };
-      if (dataObj.timetables && dataObj.timetables.tuition) {
-        Object.keys(dataObj.timetables.tuition).forEach(d => {
-          (dataObj.timetables.tuition[d] || []).forEach(cleanItem);
-        });
-      }
-      if (dataObj.days) {
-        Object.values(dataObj.days).forEach(day => {
-          if (day.tuition_study) day.tuition_study.forEach(cleanItem);
-        });
-      }
-    }
-
-    /* ================= TOASTS & MODALS ================= */
-    function showToast(message, type = 'info') {
-      const container = document.getElementById('toastContainer');
-      const toast = document.createElement('div');
-      const bg = type === 'error' ? 'bg-rose-600' : type === 'success' ? 'bg-emerald-600' : 'bg-slate-900';
-      toast.className = `${bg} text-white font-semibold text-xs px-3.5 py-2 rounded-xl shadow-lg flex items-center gap-2 pointer-events-auto transform transition-all duration-200 translate-y-2 opacity-0`;
-      toast.innerHTML = `<span>${escapeHtml(message)}</span>`;
-      container.appendChild(toast);
-      requestAnimationFrame(() => toast.classList.remove('translate-y-2', 'opacity-0'));
-      setTimeout(() => {
-        toast.classList.add('opacity-0', 'translate-y-2');
-        setTimeout(() => toast.remove(), 200);
-      }, 3500);
-    }
-
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeModal();
-    });
-
-    /* ================= TOPIC EDITING ================= */
-    function editItemTopic(taskId, sec, e) {
-      if (e) e.stopPropagation();
-      const dayData = state.days[state.activeDateStr];
-      if (!dayData || !dayData[sec]) return;
-      const item = dayData[sec].find(t => t.id === taskId);
-      if (!item) return;
-
-      const currentTopic = item.topic || '';
-      const newTopic = prompt(`Enter topic for "${item.task}":`, currentTopic);
-      if (newTopic !== null) {
-        item.topic = newTopic.trim();
-        saveState();
-        renderTables();
-        showToast(newTopic.trim() ? 'Topic saved!' : 'Topic cleared', 'success');
-      }
-    }
-
-    /* ================= WHATSAPP REMINDER DISPATCHER ================= */
-    function sendTaskWhatsApp(taskId, sec, e) {
-      if (e) e.stopPropagation();
-      const dayData = state.days[state.activeDateStr];
-      if (!dayData || !dayData[sec]) return;
-      const item = dayData[sec].find(t => t.id === taskId);
-      if (!item) return;
-
-      let cleanSubject = (item.task || 'Class').trim();
-      if (/^(IX|X|XI|XII)\b/i.test(cleanSubject) && !/^Class\b/i.test(cleanSubject)) {
-        cleanSubject = 'Class ' + cleanSubject;
-      }
-      cleanSubject = cleanSubject.replace(/SantNagar/gi, 'Sant Nagar');
-
-      if (cleanSubject.includes('–')) {
-        cleanSubject = cleanSubject.replace(/\s*–\s*/g, ' – ');
-      } else if (cleanSubject.includes('-')) {
-        cleanSubject = cleanSubject.replace(/\s*-\s*/g, ' – ');
-      } else {
-        cleanSubject = cleanSubject.replace(/\s+(Sant Nagar|SICS)\b/i, ' – $1');
-      }
-
-      const rawTime = (item.time || '').trim();
-      const timeParts = rawTime.split(/\s*[-–]\s*/);
-      const startTimeFormatted = timeParts[0] ? timeParts[0].trim() : '';
-      const endTimeFormatted = timeParts[1] ? timeParts[1].trim() : '';
-
-      let topicText = (item.topic || '').trim();
-      if (!topicText) {
-        const promptAns = prompt(`Enter topic for today's ${cleanSubject} class:`, '');
-        if (promptAns !== null && promptAns.trim()) {
-          item.topic = promptAns.trim();
-          topicText = item.topic;
-          saveState();
-          renderTables();
-        }
-      }
-      const topicDisplay = topicText || 'Functions in Python';
-
-const message = `
-*=•=•=•=•=•=•=•=•==•=•=•=•=•=•=•=•=*
-⏰*Gentle Reminder*
-*=•=•=•=•=•=•=•=•==•=•=•=•=•=•=•=•=*
-🏛️ *Today’s* ${cleanSubject}
-📍 *Venue:* Sant Nagar
-⏰ *Time:* *${startTimeFormatted}* to *${endTimeFormatted}*
-📚 *Topic:* ${topicDisplay}
-*=•=•=•=•=•=•=•=•==•=•=•=•=•=•=•=•=*
-🌐 *Visit:* www.SinghClasses.in
-*=✦=✦=✦=✦=✦=✦=✦==✦=✦=✦=✦=*
-`;
-
-const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
-window.open(url, '_blank');
-
-    /* ================= AUTO-SYNC & STATE ================= */
-    function syncDayFromTimetable(dateStr) {
-      const dName = getDayName(dateStr);
-      const existing = state.days[dateStr] || { school: [], tuition_study: [] };
-
-      const compSchool = new Set();
-      (existing.school || []).forEach(t => {
-        if (t.completed) compSchool.add(`${t.time}_${t.task}`);
-      });
-
-      const compTuition = new Set();
-      (existing.tuition_study || []).forEach(t => {
-        if (t.completed) compTuition.add(`${t.time}_${t.task}`);
-      });
-
-      const sTasks = (state.timetables.school[dName] || []).map(item => ({
-        id: uid(),
-        time: item.time,
-        hrs: parseFloat(item.hrs) || 0.58,
-        cat: 'School',
-        task: item.task,
-        completed: compSchool.has(`${item.time}_${item.task}`)
-      }));
-
-      const tsTasks = [];
-      (state.timetables.tuition[dName] || []).forEach(item => {
-        const p = parseTaskAndTopic(item.task, item.topic);
-        tsTasks.push({
-          id: uid(),
-          time: item.time,
-          hrs: parseFloat(item.hrs) || 1.17,
-          cat: 'Tuition',
-          task: p.title,
-          topic: p.topic || '',
-          completed: compTuition.has(`${item.time}_${item.task}`) || compTuition.has(`${item.time}_${p.title}`)
-        });
-      });
-
-      (state.timetables.study[dName] || []).forEach(item => {
-        tsTasks.push({
-          id: uid(),
-          time: item.time,
-          hrs: parseFloat(item.hrs) || 1.50,
-          cat: 'Study',
-          task: item.task,
-          topic: '',
-          completed: compTuition.has(`${item.time}_${item.task}`)
-        });
-      });
-
-      sortTasksByTime(sTasks);
-      sortTasksByTime(tsTasks);
-
-      state.days[dateStr] = { school: sTasks, tuition_study: tsTasks };
-    }
-
-    function loadState() {
-      const raw = localStorage.getItem(STORE_KEY);
-      if (raw) {
-        try {
-          state = JSON.parse(raw);
-        } catch (e) {
-          initState();
-        }
-      } else {
-        initState();
-        const prev = localStorage.getItem('singhPlanner_v23') || localStorage.getItem('singhPlanner_v22') || localStorage.getItem('singhPlanner_v21');
-        if (prev) {
-          try {
-            const p = JSON.parse(prev);
-            if (p.days) state.days = p.days;
-          } catch (e) {}
-        }
-      }
-
-      sanitizePlannerState(state);
-
-      const currentCodeTemplate = JSON.stringify(window.MASTER_TIMETABLES);
-      if (!state.lastCodeTemplate || state.lastCodeTemplate !== currentCodeTemplate || !state.timetables) {
-        state.timetables = JSON.parse(currentCodeTemplate);
-        state.lastCodeTemplate = currentCodeTemplate;
-      }
-
-      state.activeDateStr = getTodayISO();
-      state.viewMondayStr = getMondayISO(new Date());
-
-      if (state.days) {
-        Object.values(state.days).forEach(day => {
-          if (day.school) sortTasksByTime(day.school);
-          if (day.tuition_study) sortTasksByTime(day.tuition_study);
-        });
-      }
-
-      syncDayFromTimetable(state.activeDateStr);
-      saveState();
-      renderAll();
-    }
-
-    function initState() {
-      state = {
-        activeDateStr: getTodayISO(),
-        viewMondayStr: getMondayISO(new Date()),
-        days: {},
-        timetables: JSON.parse(JSON.stringify(window.MASTER_TIMETABLES)),
-        lastBackup: null,
-        lastCodeTemplate: JSON.stringify(window.MASTER_TIMETABLES)
-      };
-    }
-
-    function saveState() {
+    function loadStorageData() {
       try {
-        localStorage.setItem(STORE_KEY, JSON.stringify(state));
-      } catch (e) {
-        showToast('Storage quota exceeded! Export a backup file now.', 'error');
+        const storedTimetables = localStorage.getItem(STORAGE_KEY_TIMETABLES);
+        state.timetables = storedTimetables ? JSON.parse(storedTimetables) : JSON.parse(JSON.stringify(DEFAULT_TIMETABLES));
+
+        const storedTasks = localStorage.getItem(STORAGE_KEY_TASKS);
+        state.dailyTasks = storedTasks ? JSON.parse(storedTasks) : {};
+      } catch (err) {
+        console.error('Storage parse error, resetting defaults', err);
+        state.timetables = JSON.parse(JSON.stringify(DEFAULT_TIMETABLES));
+        state.dailyTasks = {};
       }
     }
 
-    function reloadDayFromTimetable(dateStr, showToastMsg = true) {
-      const dName = getDayName(dateStr);
-      syncDayFromTimetable(dateStr);
-      saveState();
-      renderAll();
-      if (showToastMsg) {
-        showToast(`Loaded ${dName} schedule from timetable templates`, 'success');
+    function saveStorageData() {
+      try {
+        localStorage.setItem(STORAGE_KEY_TIMETABLES, JSON.stringify(state.timetables));
+        localStorage.setItem(STORAGE_KEY_TASKS, JSON.stringify(state.dailyTasks));
+      } catch (err) {
+        showToast('Storage quota exceeded or storage unavailable', 'error');
       }
     }
 
-    /* ================= RENDERING ================= */
-    function renderAll() {
-      renderSidebarDaySelector();
-      renderTables();
-      calculateWeeklyStats();
-      updateProgress();
-      renderTimetables();
-      updatePrintDate();
-      syncWorkspaceHeight();
-      if (window.lucide) lucide.createIcons();
+    // ================= DATE HELPERS =================
+    function toDateISO(d) {
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
     }
 
-    function updatePrintDate() {
-      const [y, m, d] = state.activeDateStr.split('-');
-      const dt = new Date(y, m - 1, d);
-      const formatted = dt.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-      const target = document.getElementById('printDateMeta');
-      if (target) target.textContent = formatted;
+    function fromDateISO(str) {
+      const [y, m, d] = str.split('-').map(Number);
+      return new Date(y, m - 1, d);
     }
 
-    const dayThemes = [
-      { name: 'Mon', iconBg: 'bg-blue-50', iconColor: 'text-blue-600' },
-      { name: 'Tue', iconBg: 'bg-sky-50', iconColor: 'text-sky-500' },
-      { name: 'Wed', iconBg: 'bg-emerald-50', iconColor: 'text-emerald-500' },
-      { name: 'Thu', iconBg: 'bg-orange-50', iconColor: 'text-orange-500' },
-      { name: 'Fri', iconBg: 'bg-purple-50', iconColor: 'text-purple-500' },
-      { name: 'Sat', iconBg: 'bg-rose-50', iconColor: 'text-rose-500' },
-      { name: 'Sun', iconBg: 'bg-amber-100', iconColor: 'text-amber-600' }
-    ];
+    function getMonday(d) {
+      const date = new Date(d);
+      const day = date.getDay();
+      const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+      const mon = new Date(date.setDate(diff));
+      mon.setHours(0, 0, 0, 0);
+      return mon;
+    }
 
-    function renderSidebarDaySelector() {
-      const today = getTodayISO();
-      const container = document.getElementById('sidebarDayGrid');
-      const sunRowContainer = document.getElementById('sidebarSundayRow');
-      if (!container) return;
+    function getDayKey(dateObj) {
+      const map = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      return map[dateObj.getDay()];
+    }
 
-      container.innerHTML = DAYS.slice(0, 6).map((dName, i) => {
-        const dIso = addDays(state.viewMondayStr, i);
-        const dNum = dIso.split('-')[2];
-        const isActive = dIso === state.activeDateStr;
-        const isToday = dIso === today;
-        const theme = dayThemes[i];
+    function formatShortDate(d) {
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
 
-        let cardClasses = 'bg-white hover:bg-slate-100/70 border border-slate-200/80 text-slate-800 shadow-[0_1px_2px_rgba(0,0,0,0.02)]';
-        let iconWrapperClass = `${theme.iconBg} ${theme.iconColor}`;
-        let dayNameColor = 'text-slate-500';
-        let dayNumColor = 'text-slate-900';
-        let todayIndicator = isToday ? '<span class="w-1.5 h-1.5 rounded-full bg-blue-500 absolute top-1 right-1" title="Today"></span>' : '';
-
-        if (isActive) {
-          cardClasses = 'bg-blue-600 text-white border border-blue-400 shadow-sm shadow-blue-500/20';
-          iconWrapperClass = 'bg-white/20 text-white';
-          dayNameColor = 'text-white/80';
-          dayNumColor = 'text-white';
-          todayIndicator = isToday ? '<span class="w-1.5 h-1.5 rounded-full bg-white absolute top-1 right-1" title="Today"></span>' : '';
-        } else if (isToday) {
-          cardClasses = 'bg-blue-50/70 border border-blue-300 text-slate-900 font-bold';
-        }
-
-        return `
-          <button onclick="selectDate('${dIso}')" class="h-10 rounded-xl px-2 py-1 flex items-center gap-1.5 relative overflow-hidden transition active:scale-95 text-left ${cardClasses}" aria-label="${dName} ${dIso}">
-            ${todayIndicator}
-            <div class="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 transition ${iconWrapperClass}">
-              <i data-lucide="calendar" class="w-3.5 h-3.5 stroke-[2]"></i>
-            </div>
-            <div class="flex flex-col leading-none min-w-0">
-              <span class="text-[9px] font-black uppercase tracking-wider ${dayNameColor}">${dName}</span>
-              <span class="text-xs font-black mt-0.5 ${dayNumColor}">${dNum}</span>
-            </div>
-          </button>`;
-      }).join('');
-
-      if (sunRowContainer) {
-        const sunIso = addDays(state.viewMondayStr, 6);
-        const sunNum = sunIso.split('-')[2];
-        const isSunActive = sunIso === state.activeDateStr;
-        const isSunToday = sunIso === today;
-
-        let sunCardClasses = 'bg-amber-50/80 hover:bg-amber-100/70 border border-amber-200/90 text-amber-950 transition active:scale-95';
-        let sunIconClass = 'bg-amber-100 text-amber-600';
-        let sunNameColor = 'text-amber-700 font-extrabold';
-        let sunNumColor = 'text-amber-950 font-black';
-
-        if (isSunActive) {
-          sunCardClasses = 'bg-blue-600 text-white border border-blue-400 shadow-sm shadow-blue-500/20';
-          sunIconClass = 'bg-white/20 text-white';
-          sunNameColor = 'text-white/80';
-          sunNumColor = 'text-white';
-        }
-
-        sunRowContainer.innerHTML = `
-          <div class="mt-1.5">
-            <button onclick="selectDate('${sunIso}')" class="w-full h-9 rounded-xl px-2.5 py-1 flex items-center gap-2 relative overflow-hidden text-left ${sunCardClasses}" aria-label="Sun ${sunIso}">
-              ${isSunToday ? '<span class="w-1.5 h-1.5 rounded-full bg-amber-500 absolute top-1 right-2" title="Today"></span>' : ''}
-              <div class="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 transition ${sunIconClass}">
-                <i data-lucide="calendar" class="w-3.5 h-3.5 stroke-[2]"></i>
-              </div>
-              <div class="flex items-center justify-between flex-1 pr-1">
-                <span class="text-[9.5px] font-black uppercase tracking-wider ${sunNameColor}">SUNDAY</span>
-                <span class="text-xs font-black ${sunNumColor}">${sunNum}</span>
-              </div>
-            </button>
-
-            <div class="mt-2 pt-2 border-t border-slate-200/70 grid grid-cols-2 gap-1.5">
-              <button onclick="checkAllToday()" class="py-1.5 bg-white hover:bg-emerald-50 text-emerald-700 hover:text-emerald-800 border border-slate-200 hover:border-emerald-200 font-extrabold text-[10.5px] rounded-xl flex items-center justify-center gap-1 transition active:scale-95 shadow-xs" title="Check all tasks for selected day">
-                <i data-lucide="check-check" class="w-3.5 h-3.5 text-emerald-600 stroke-[2.5]"></i>
-                <span>Check All</span>
-              </button>
-              <button onclick="clearTodayChecks()" class="py-1.5 bg-white hover:bg-slate-100 text-slate-600 hover:text-slate-800 border border-slate-200 font-extrabold text-[10.5px] rounded-xl flex items-center justify-center gap-1 transition active:scale-95 shadow-xs" title="Uncheck all tasks for selected day">
-                <i data-lucide="square" class="w-3 h-3 text-slate-400 stroke-[2.2]"></i>
-                <span>Clear All</span>
-              </button>
-            </div>
-          </div>
-        `;
+    function startClock() {
+      function update() {
+        const now = new Date();
+        const dateOptions = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+        const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+        const dateEl = document.getElementById('headerDateStr');
+        const timeEl = document.getElementById('headerTimeStr');
+        if (dateEl) dateEl.textContent = now.toLocaleDateString('en-US', dateOptions);
+        if (timeEl) timeEl.textContent = now.toLocaleTimeString('en-US', timeOptions);
       }
-
-      const lbl = document.getElementById('sidebarWeekLabel');
-      if (lbl) lbl.textContent = formatWeekRange(state.viewMondayStr);
-      if (window.lucide) lucide.createIcons();
+      update();
+      setInterval(update, 1000);
     }
 
-    function selectDate(isoStr) {
-      state.activeDateStr = isoStr;
-      ensureDayPopulated(isoStr);
-      saveState();
-      renderTables();
-      calculateWeeklyStats();
-      updateProgress();
-      renderSidebarDaySelector();
-      updatePrintDate();
-      syncWorkspaceHeight();
-    }
-
-    function jumpToday() {
-      const t = getTodayISO();
-      state.activeDateStr = t;
-      state.viewMondayStr = getMondayISO(new Date());
-      syncDayFromTimetable(t);
-      saveState();
-      renderAll();
-    }
-
-    /* ================= PLANNER TABLES ================= */
-    function renderTables() {
-      const dayData = state.days[state.activeDateStr] || { school: [], tuition_study: [] };
-
-      // 1. Render School Classes
-      {
-        const sec = 'school';
-        if (dayData[sec]) sortTasksByTime(dayData[sec]);
-        const tbody = document.getElementById('schoolBody');
-        tbody.innerHTML = '';
-        const items = dayData[sec] || [];
-
-        if (!items.length) {
-          tbody.innerHTML = `
-            <tr class="empty-row">
-              <td colspan="4" class="py-8 px-4 text-center">
-                <div class="flex flex-col items-center justify-center gap-2 text-slate-400">
-                  <i data-lucide="calendar-x" class="w-7 h-7 text-slate-300"></i>
-                  <span class="text-xs font-semibold">No classes scheduled for ${getDayName(state.activeDateStr)}</span>
-                  <button onclick="switchTab('timetables', document.getElementById('tabBtnTimetables'))" class="mt-1 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition active:scale-95">
-                    <span>Configure in Timetables</span>
-                    <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>`;
-        } else {
-          items.forEach((item) => {
-            const status = getTimeStatus(item.time, state.activeDateStr);
-            const isLive = status === 'active';
-
-            const row = document.createElement('tr');
-            let rowClasses = 'transition duration-150 border-b border-slate-100 cursor-pointer select-none ';
-
-            if (item.completed) {
-              rowClasses += 'bg-emerald-50/20 text-slate-700 hover:bg-emerald-50/30 ';
-            } else if (isLive) {
-              rowClasses += 'bg-blue-50/90 border-l-4 border-blue-600 font-semibold shadow-xs ';
-            } else {
-              rowClasses += 'hover:bg-slate-50/90 text-slate-800 ';
-            }
-
-            row.className = rowClasses;
-            row.onclick = (e) => handleRowClick(e, item.id, sec);
-
-            row.innerHTML = `
-              <td class="py-2.5 px-3 text-center col-cb">
-                <label class="flex items-center justify-center cursor-pointer p-0.5" onclick="event.stopPropagation()">
-                  <input type="checkbox" ${item.completed ? 'checked' : ''} onchange="updateCheckbox('${item.id}','${sec}')" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer" aria-label="Mark completed">
-                </label>
-              </td>
-              <td class="py-2.5 px-3 text-left col-tm whitespace-nowrap">
-                <div class="flex items-center gap-1.5 whitespace-nowrap">
-                  ${isLive ? '<span class="inline-flex items-center gap-1 bg-blue-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-xs animate-pulse"><span class="w-1.5 h-1.5 rounded-full bg-white live-pulse"></span>LIVE</span>' : ''}
-                  <span class="font-semibold text-xs tracking-tight tabular-nums whitespace-nowrap ${item.completed ? 'text-slate-400' : 'text-slate-600'}">${escapeHtml(item.time)}</span>
-                </div>
-              </td>
-              <td class="py-2.5 px-3 text-left col-tk">
-                <div class="flex items-center gap-2">
-                  <span class="text-xs sm:text-[13px] font-bold ${item.completed ? 'line-through text-slate-500' : 'text-slate-900'}">${escapeHtml(item.task || 'Untitled Period')}</span>
-                  ${item.completed ? '<span class="inline-flex items-center gap-0.5 text-[9.5px] font-extrabold text-emerald-700 bg-emerald-100/90 px-1.5 py-0.5 rounded border border-emerald-300 shrink-0"><i data-lucide="check" class="w-2.5 h-2.5 stroke-[3]"></i> Done</span>' : ''}
-                </div>
-              </td>
-              <td class="py-2.5 px-3 text-right col-hr whitespace-nowrap">
-                <span class="inline-block font-semibold text-xs text-slate-600 bg-slate-100/80 px-2 py-0.5 rounded border border-slate-200/60 tabular-nums">${Number(item.hrs).toFixed(2)} hrs</span>
-              </td>`;
-            tbody.appendChild(row);
-          });
-        }
-      }
-
-      // 2. Render Tuition & Study
-      {
-        const sec = 'tuition_study';
-        if (dayData[sec]) sortTasksByTime(dayData[sec]);
-        const tbody = document.getElementById('tuitionStudyBody');
-        tbody.innerHTML = '';
-        const items = dayData[sec] || [];
-
-        if (!items.length) {
-          tbody.innerHTML = `
-            <tr class="empty-row">
-              <td colspan="5" class="py-8 px-4 text-center">
-                <div class="flex flex-col items-center justify-center gap-2 text-slate-400">
-                  <i data-lucide="calendar-x" class="w-7 h-7 text-slate-300"></i>
-                  <span class="text-xs font-semibold">No tuition or study tasks scheduled for ${getDayName(state.activeDateStr)}</span>
-                  <button onclick="switchTab('timetables', document.getElementById('tabBtnTimetables'))" class="mt-1 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition active:scale-95">
-                    <span>Configure in Timetables</span>
-                    <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>`;
-        } else {
-          items.forEach((item) => {
-            const status = getTimeStatus(item.time, state.activeDateStr);
-            const isLive = status === 'active';
-            const isTuition = item.cat === 'Tuition';
-
-            const parsed = parseTaskAndTopic(item.task, item.topic);
-            const cleanTitle = parsed.title;
-            const currentTopic = parsed.topic;
-
-            const row = document.createElement('tr');
-            let rowClasses = 'transition duration-150 border-b border-slate-100 cursor-pointer select-none ';
-
-            if (item.completed) {
-              rowClasses += 'bg-emerald-50/20 text-slate-700 hover:bg-emerald-50/30 ';
-            } else if (isLive) {
-              rowClasses += 'bg-blue-50/90 border-l-4 border-blue-600 font-semibold shadow-xs ';
-            } else {
-              rowClasses += 'hover:bg-slate-50/90 text-slate-800 ';
-            }
-
-            row.className = rowClasses;
-            row.onclick = (e) => handleRowClick(e, item.id, sec);
-
-            row.innerHTML = `
-              <td class="py-2.5 px-3 text-center col-cb">
-                <label class="flex items-center justify-center cursor-pointer p-0.5" onclick="event.stopPropagation()">
-                  <input type="checkbox" ${item.completed ? 'checked' : ''} onchange="updateCheckbox('${item.id}','${sec}')" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer" aria-label="Mark completed">
-                </label>
-              </td>
-              <td class="py-2.5 px-3 text-left col-tm whitespace-nowrap">
-                <div class="flex items-center gap-1.5 whitespace-nowrap">
-                  ${isLive ? '<span class="inline-flex items-center gap-1 bg-blue-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-xs animate-pulse"><span class="w-1.5 h-1.5 rounded-full bg-white live-pulse"></span>LIVE</span>' : ''}
-                  <span class="font-semibold text-xs tracking-tight tabular-nums whitespace-nowrap ${item.completed ? 'text-slate-400' : 'text-slate-600'}">${escapeHtml(item.time)}</span>
-                </div>
-              </td>
-              <td class="py-2.5 px-3 text-left col-tk">
-                <div class="flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
-                  <div class="flex flex-col min-w-0 pr-1">
-                    <div class="flex items-center gap-2 flex-wrap min-w-0">
-                      <span class="text-xs sm:text-[13px] font-bold ${item.completed ? 'line-through text-slate-500' : 'text-slate-900'}">${escapeHtml(cleanTitle)}</span>
-                      ${item.completed ? '<span class="inline-flex items-center gap-0.5 text-[9.5px] font-extrabold text-emerald-700 bg-emerald-100/90 px-1.5 py-0.5 rounded border border-emerald-300 shrink-0"><i data-lucide="check" class="w-2.5 h-2.5 stroke-[3]"></i> Done</span>' : ''}
-                    </div>
-                    ${isTuition ? `
-                      <div class="flex items-center gap-1.5 mt-1 text-[11px]">
-                        ${currentTopic ? `
-                          <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100/80 px-2 py-0.5 rounded border border-blue-200/90 cursor-pointer transition active:scale-95" onclick="editItemTopic('${item.id}', '${sec}', event)" title="Click to edit topic">
-                            <span>📚 Topic:</span>
-                            <strong class="font-bold underline decoration-blue-300 underline-offset-2">${escapeHtml(currentTopic)}</strong>
-                          </span>
-                          <button type="button" onclick="editItemTopic('${item.id}', '${sec}', event)" class="text-slate-400 hover:text-blue-600 p-0.5 rounded transition print-hide" title="Edit Topic">
-                            <i data-lucide="pencil" class="w-3 h-3"></i>
-                          </button>
-                        ` : `
-                          <button type="button" onclick="editItemTopic('${item.id}', '${sec}', event)" class="inline-flex items-center gap-1 text-[11px] font-medium text-slate-400 hover:text-blue-600 transition print-hide">
-                            <span>📚 Topic:</span>
-                            <span class="italic text-slate-400 hover:underline">+ Add topic</span>
-                          </button>
-                        `}
-                      </div>
-                    ` : ''}
-                  </div>
-                  ${isTuition ? `
-                    <button type="button" onclick="sendTaskWhatsApp('${item.id}', '${sec}', event)" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10.5px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 hover:border-emerald-300 transition active:scale-95 shrink-0 print-hide" title="Send reminder to WhatsApp" aria-label="Send reminder on WhatsApp">
-                      <svg class="w-3.5 h-3.5 fill-[#25D366] shrink-0" viewBox="0 0 24 24">
-                        <path d="M17.472 14.382c-.301-.15-1.781-.879-2.056-.98-.277-.101-.479-.15-.68.15-.202.301-.782.98-.959 1.182-.176.201-.353.226-.653.076-.301-.15-1.27-.468-2.42-1.493-.894-.798-1.498-1.784-1.674-2.086-.176-.301-.019-.464.131-.614.136-.134.301-.351.451-.527.15-.176.201-.301.301-.502.101-.201.05-.376-.025-.526-.075-.15-.68-1.637-.93-2.24-.244-.588-.492-.508-.68-.518l-.58-.01c-.201 0-.528.075-.804.376-.276.301-1.055 1.03-1.055 2.511 0 1.481 1.08 2.91 1.23 3.111.151.201 2.125 3.245 5.148 4.551.719.311 1.28.497 1.718.636.722.23 1.378.197 1.898.12.578-.087 1.781-.728 2.032-1.431.251-.703.251-1.306.176-1.431-.076-.125-.276-.201-.577-.351zm-5.466 7.426h-.008c-1.802 0-3.57-.485-5.115-1.402l-.367-.218-3.805.998 1.016-3.708-.239-.381c-1.01-1.607-1.543-3.473-1.542-5.388.004-5.577 4.542-10.115 10.122-10.115 2.701 0 5.241 1.053 7.151 2.964 1.911 1.912 2.963 4.453 2.961 7.156-.005 5.579-4.543 10.116-10.124 10.116zm8.566-18.681c-2.288-2.29-5.33-3.553-8.568-3.555-6.673 0-12.099 5.424-12.102 12.099-.001 2.133.557 4.215 1.617 6.052l-1.717 6.273 6.42-1.684c1.764.962 3.748 1.469 5.774 1.47h.005c6.671 0 12.099-5.425 12.102-12.1 0-3.234-1.258-6.276-3.531-8.555z"/>
-                      </svg>
-                      <span>WhatsApp</span>
-                    </button>
-                  ` : ''}
-                </div>
-              </td>
-              <td class="py-2.5 px-3 text-center col-cat whitespace-nowrap">
-                <span class="cat-pill ${escapeHtml(item.cat)}">${escapeHtml(item.cat)}</span>
-              </td>
-              <td class="py-2.5 px-3 text-right col-hr whitespace-nowrap">
-                <span class="inline-block font-semibold text-xs text-slate-600 bg-slate-100/80 px-2 py-0.5 rounded border border-slate-200/60 tabular-nums">${Number(item.hrs).toFixed(2)} hrs</span>
-              </td>`;
-            tbody.appendChild(row);
-          });
-        }
-      }
-
-      // Totals & Metadata
-      const schoolHrs = (dayData.school || []).reduce((sum, t) => sum + (parseFloat(t.hrs) || 0), 0);
-      const schoolComp = (dayData.school || []).filter(t => t.completed).length;
-      const schoolTot = (dayData.school || []).length;
-      document.getElementById('schoolSecTotal').textContent = `${schoolHrs.toFixed(2)} hrs`;
-      document.getElementById('schoolSecMeta').textContent = `${schoolComp} of ${schoolTot} completed`;
-
-      const tsHrs = (dayData.tuition_study || []).reduce((sum, t) => sum + (parseFloat(t.hrs) || 0), 0);
-      const tsComp = (dayData.tuition_study || []).filter(t => t.completed).length;
-      const tsTot = (dayData.tuition_study || []).length;
-      document.getElementById('tuitionSecTotal').textContent = `${tsHrs.toFixed(2)} hrs`;
-      document.getElementById('tuitionSecMeta').textContent = `${tsComp} of ${tsTot} completed`;
-
-      if (window.lucide) lucide.createIcons();
-    }
-
-    function updateCheckbox(taskId, sec) {
-      const item = state.days[state.activeDateStr][sec].find(t => t.id === taskId);
-      if (!item) return;
-      item.completed = !item.completed;
-      saveState();
-      updateProgress();
-      calculateWeeklyStats();
-      renderTables();
-    }
-
-    function checkAllToday() {
-      const d = state.days[state.activeDateStr];
-      if (!d) return;
-      ['school', 'tuition_study'].forEach(s => (d[s] || []).forEach(t => t.completed = true));
-      saveState();
-      renderTables();
-      updateProgress();
-      calculateWeeklyStats();
-      showToast('All tasks checked for selected day', 'success');
-    }
-
-    function clearTodayChecks() {
-      const d = state.days[state.activeDateStr];
-      if (!d) return;
-      ['school', 'tuition_study'].forEach(s => (d[s] || []).forEach(t => t.completed = false));
-      saveState();
-      renderTables();
-      updateProgress();
-      calculateWeeklyStats();
-      showToast('All tasks unchecked for selected day', 'info');
-    }
-
-    function calculateWeeklyStats() {
-      const totals = { school: 0, tuition: 0, study: 0 };
-      const d = state.days[state.activeDateStr] || { school: [], tuition_study: [] };
-      [...(d.school || []), ...(d.tuition_study || [])].forEach(i => {
-        const h = parseFloat(i.hrs) || 0;
-        if (i.cat === 'School') totals.school += h;
-        if (i.cat === 'Tuition') totals.tuition += h;
-        if (i.cat === 'Study') totals.study += h;
-      });
-      document.getElementById('totalSchool').textContent = totals.school.toFixed(1);
-      document.getElementById('totalTuition').textContent = totals.tuition.toFixed(1);
-      document.getElementById('totalStudy').textContent = totals.study.toFixed(1);
-    }
-
-    function updateProgress() {
-      const d = state.days[state.activeDateStr] || { school: [], tuition_study: [] };
-      const all = [...(d.school || []), ...(d.tuition_study || [])];
-      const comp = all.filter(t => t.completed).length;
-      const tot = all.length;
-      const percent = tot > 0 ? Math.round((comp / tot) * 100) : 0;
-
-      document.getElementById('completedCount').textContent = comp;
-      document.getElementById('totalCount').textContent = tot;
-      document.getElementById('progressPercent').textContent = `${percent}%`;
-
-      const ring = document.getElementById('progressRing');
-      if (ring) {
-        ring.setAttribute('stroke-dasharray', `${percent}, 100`);
-        if (percent === 100 && tot > 0) {
-          ring.setAttribute('class', 'text-emerald-500 transition-all duration-300');
-        } else if (percent > 0) {
-          ring.setAttribute('class', 'text-blue-500 transition-all duration-300');
-        } else {
-          ring.setAttribute('class', 'text-slate-300 transition-all duration-300');
-        }
-      }
-    }
-
-    /* ================= MASTER TIMETABLES EDITOR ================= */
-    function renderTimetables() {
-      const renderGrid = (type, obj) => DAYS.map(d => {
-        if (obj[d]) sortTasksByTime(obj[d]);
-        return `
-          <div class="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-xs ${d === getDayName(state.activeDateStr) ? 'ring-2 ring-blue-500' : ''}">
-            <div class="px-3 py-1.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
-              <span class="font-black text-xs text-slate-700">${d}</span>
-            </div>
-            <div class="p-2 space-y-1">
-              ${(obj[d] || []).map((it, i) => editMode[type] ? `
-                <div class="bg-slate-50 p-1.5 rounded-lg border border-slate-200 space-y-1">
-                  <div class="flex items-center gap-1">
-                    <input type="text" class="w-full text-[11px] font-semibold p-1 border border-slate-300 rounded bg-white tt-time-${type}-${d}" data-idx="${i}" value="${escapeHtml(it.time)}" placeholder="Time (e.g. 08:40 AM - 09:15 AM)">
-                    <button onclick="deleteTemplateSlot('${type}','${d}',${i})" class="text-rose-500 hover:text-rose-700 p-1 rounded" title="Delete slot">
-                      <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                    </button>
-                  </div>
-                  <input type="text" class="w-full text-[11px] font-bold p-1 border border-slate-300 rounded bg-white tt-task-${type}-${d}" data-idx="${i}" value="${escapeHtml(it.task)}" placeholder="Subject / Batch">
-                </div>
-              ` : `
-                <div class="p-1 border-b border-slate-50 text-slate-700 last:border-none flex items-center justify-between text-[11px]">
-                  <div>
-                    <div class="font-bold text-slate-900 leading-tight">${escapeHtml(it.task)}</div>${it.topic ? `<div class="text-[9.5px] text-blue-600 font-semibold">Topic: ${escapeHtml(it.topic)}</div>` : ''}
-                    <div class="text-[10px] text-slate-500">${escapeHtml(it.time)}</div>
-                  </div>
-                  <span class="text-[9px] font-extrabold text-blue-600 bg-blue-50 px-1 py-0.5 rounded">${Number(it.hrs).toFixed(2)}h</span>
-                </div>
-              `).join('')}
-              ${editMode[type] ? `<button onclick="addNewTemplateSlot('${type}','${d}')" class="w-full py-1 text-[11px] font-bold text-emerald-600 hover:bg-emerald-50 rounded-lg border border-dashed border-emerald-300 mt-1">+ Add Period</button>` : ''}
-              ${(!editMode[type] && (!obj[d] || obj[d].length === 0)) ? '<div class="text-[11px] p-1 text-slate-400 italic">No classes scheduled</div>' : ''}
-            </div>
-          </div>`;
-      }).join('');
-
-      document.getElementById('schoolTimetable').innerHTML = renderGrid('school', state.timetables.school);
-      document.getElementById('tuitionTimetable').innerHTML = renderGrid('tuition', state.timetables.tuition);
-      document.getElementById('studyTimetable').innerHTML = renderGrid('study', state.timetables.study);
-
-      ['school', 'tuition', 'study'].forEach(t => {
-        const btn = document.getElementById(`btnEdit${t.charAt(0).toUpperCase() + t.slice(1)}`);
-        if (btn) {
-          if (editMode[t]) {
-            btn.textContent = 'Save Changes';
-            btn.className = 'text-xs font-bold px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition';
-          } else {
-            btn.textContent = `Edit ${t.charAt(0).toUpperCase() + t.slice(1)}`;
-            btn.className = 'text-xs font-bold px-3 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 shadow-xs transition';
-          }
-        }
-      });
-
-      if (window.lucide) lucide.createIcons();
-    }
-
-    function syncCurrentTimetableInputs(t) {
-      if (!editMode[t]) return;
-      const obj = state.timetables[t];
-      DAYS.forEach(d => {
-        const times = document.querySelectorAll(`.tt-time-${t}-${d}`);
-        const tasks = document.querySelectorAll(`.tt-task-${t}-${d}`);
-        const newSlots = [];
-        times.forEach((el, idx) => {
-          const tVal = el.value.trim();
-          const taskVal = tasks[idx] ? tasks[idx].value.trim() : '';
-          if (tVal || taskVal) {
-            const p = extractTimeAndCalculateHrs(tVal);
-            const parsedTask = parseTaskAndTopic(taskVal || (p ? p.cleanTask : 'Class'));
-            newSlots.push({
-              time: p ? p.timeStr : tVal,
-              task: parsedTask.title,
-              topic: parsedTask.topic,
-              hrs: p ? p.hrs : (t === 'school' ? 0.58 : t === 'tuition' ? 1.17 : 1.50)
-            });
-          }
-        });
-        obj[d] = newSlots;
-      });
-    }
-
-    function toggleEditMode(t) {
-      if (editMode[t]) {
-        syncCurrentTimetableInputs(t);
-        DAYS.forEach(d => {
-          if (state.timetables[t][d]) sortTasksByTime(state.timetables[t][d]);
-        });
-        editMode[t] = false;
-        saveState();
-
-        syncDayFromTimetable(state.activeDateStr);
-        renderTables();
-        calculateWeeklyStats();
-        updateProgress();
-        showToast(`${t.charAt(0).toUpperCase() + t.slice(1)} schedule saved`, 'success');
-      } else {
-        editMode[t] = true;
-      }
-      renderTimetables();
-      syncWorkspaceHeight();
-    }
-
-    function addNewTemplateSlot(t, d) {
-      syncCurrentTimetableInputs(t);
-      if (!state.timetables[t][d]) state.timetables[t][d] = [];
-      state.timetables[t][d].push({
-        time: t === 'school' ? '08:40 AM - 09:15 AM' : t === 'tuition' ? '04:00 PM - 05:10 PM' : '10:00 PM - 11:30 PM',
-        task: 'New Session',
-        topic: '',
-        hrs: t === 'school' ? 0.58 : t === 'tuition' ? 1.17 : 1.50
-      });
-      sortTasksByTime(state.timetables[t][d]);
-      renderTimetables();
-      syncWorkspaceHeight();
-    }
-
-    function deleteTemplateSlot(t, d, i) {
-      syncCurrentTimetableInputs(t);
-      state.timetables[t][d].splice(i, 1);
-      renderTimetables();
-      syncWorkspaceHeight();
-    }
-
-    /* ================= ANALYTICS ================= */
-    function updateAnalytics() {
-      let weekHours = 0, weekComp = 0, weekTot = 0;
-      let cH = { School: 0, Tuition: 0, Study: 0 }, cT = { School: 0, Tuition: 0, Study: 0 }, cC = { School: 0, Tuition: 0, Study: 0 };
-      let dH = [], dC = [], labels = [];
-
-      for (let i = 0; i < 7; i++) {
-        const dIso = addDays(state.viewMondayStr, i);
-        labels.push(`${DAYS[i]} ${dIso.slice(8)}`);
-        let dayH = 0, dayComp = 0, dayTot = 0;
-        const d = state.days[dIso];
-        if (d) {
-          [...(d.school || []), ...(d.tuition_study || [])].forEach(t => {
-            const h = parseFloat(t.hrs) || 0;
-            dayH += h; dayTot++; weekTot++; weekHours += h;
-            if (cH[t.cat] !== undefined) cH[t.cat] += h;
-            if (cT[t.cat] !== undefined) cT[t.cat]++;
-            if (t.completed) { dayComp++; weekComp++; if (cC[t.cat] !== undefined) cC[t.cat]++; }
-          });
-        }
-        dH.push(dayH);
-        dC.push(dayTot > 0 ? parseFloat(((dayComp / dayTot) * 100).toFixed(1)) : 0);
-      }
-      const rate = weekTot > 0 ? ((weekComp / weekTot) * 100).toFixed(1) : 0;
-      document.getElementById('statsGrid').innerHTML = `
-        <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-xs"><span class="text-[9.5px] font-bold uppercase text-slate-400">Weekly Total</span><div class="text-xl font-black text-slate-800 mt-0.5">${weekHours.toFixed(1)} H</div></div>
-        <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-xs"><span class="text-[9.5px] font-bold uppercase text-slate-400">Tasks Completed</span><div class="text-xl font-black text-blue-600 mt-0.5">${weekComp} / ${weekTot}</div></div>
-        <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-xs"><span class="text-[9.5px] font-bold uppercase text-slate-400">Completion Rate</span><div class="text-xl font-black text-emerald-600 mt-0.5">${rate}%</div></div>`;
-
-      Chart.defaults.color = '#64748b';
-      Chart.defaults.font.size = 10;
-
-      if (charts.cat) charts.cat.destroy();
-      charts.cat = new Chart(document.getElementById('categoryChart'), {
-        type: 'doughnut',
-        data: { labels: ['School', 'Tuition', 'Study'], datasets: [{ data: [cH.School, cH.Tuition, cH.Study], backgroundColor: ['#2563eb', '#f97316', '#8b5cf6'], borderWidth: 0 }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
-      });
-
-      if (charts.comp) charts.comp.destroy();
-      charts.comp = new Chart(document.getElementById('completionChart'), {
-        type: 'bar',
-        data: { labels: ['School', 'Tuition', 'Study'], datasets: [{ data: [cT.School ? Math.round((cC.School / cT.School) * 100) : 0, cT.Tuition ? Math.round((cC.Tuition / cT.Tuition) * 100) : 0, cT.Study ? Math.round((cC.Study / cT.Study) * 100) : 0], backgroundColor: ['#2563eb', '#f97316', '#8b5cf6'], borderRadius: 4 }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 100 } } }
-      });
-
-      if (charts.trend) charts.trend.destroy();
-      charts.trend = new Chart(document.getElementById('trendChart'), {
-        type: 'line',
-        data: { labels, datasets: [{ label: 'Hours', data: dH, borderColor: '#2563eb', tension: 0.35, fill: true, backgroundColor: 'rgba(37,99,235,0.06)' }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
-      });
-
-      if (charts.compTrend) charts.compTrend.destroy();
-      charts.compTrend = new Chart(document.getElementById('completionTrendChart'), {
-        type: 'line',
-        data: { labels, datasets: [{ label: '%', data: dC, borderColor: '#10b981', tension: 0.35, fill: true, backgroundColor: 'rgba(16,185,129,0.06)' }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 100 } } }
-      });
-
-      syncWorkspaceHeight();
-    }
-
-    /* ================= TABS & NAVIGATION ================= */
-    function switchTab(tabId, btn) {
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      document.querySelectorAll('.nav-btn').forEach(b => {
-        b.classList.remove('active');
-        b.setAttribute('aria-selected', 'false');
-      });
-
+    // ================= NAVIGATION & TABS =================
+    function switchTab(tabId, btnEl) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       const target = document.getElementById(tabId);
       if (target) target.classList.add('active');
 
-      if (btn && btn.classList.contains('nav-btn')) {
-        btn.classList.add('active');
-        btn.setAttribute('aria-selected', 'true');
+      document.querySelectorAll('#sidebarNav .nav-btn').forEach(btn => btn.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+
+      if (tabId === 'analytics') {
+        renderAnalyticsTab();
       }
-
-      if (tabId === 'analytics') setTimeout(updateAnalytics, 80);
-      if (tabId === 'timetables') renderTimetables();
-      if (window.lucide) lucide.createIcons();
-
-      syncWorkspaceHeight();
+      lucide.createIcons();
     }
 
-    function handleNavClick(secId, btn) {
-      switchTab('planner', btn);
-      const el = document.getElementById(secId);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    function handleNavClick(sectionId, btnEl) {
+      switchTab('planner', btnEl);
+      const target = document.getElementById(sectionId);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }
 
-    function updateCurrentDate() {
-      const n = new Date();
-      const currentTodayISO = getTodayISO();
+    // ================= WEEK NAVIGATION & SIDEBAR =================
+    function shiftWeek(offset) {
+      const newMon = new Date(state.currentWeekMonday);
+      newMon.setDate(newMon.getDate() + (offset * 7));
+      state.currentWeekMonday = newMon;
 
-      if (currentTodayISO !== lastCheckedDate) {
-        lastCheckedDate = currentTodayISO;
-        state.activeDateStr = currentTodayISO;
-        state.viewMondayStr = getMondayISO(n);
-        syncDayFromTimetable(currentTodayISO);
-        saveState();
-      }
-
-      const day = n.getDate();
-      const month = n.toLocaleDateString('en-US', { month: 'short' });
-      const weekday = n.toLocaleDateString('en-US', { weekday: 'short' });
-      const year = n.getFullYear();
-      const timePart = n.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-      const dateSpan = document.getElementById('headerDateStr');
-      const timeSpan = document.getElementById('headerTimeStr');
-      if (dateSpan) dateSpan.textContent = `${weekday}, ${day} ${month} ${year}`;
-      if (timeSpan) timeSpan.textContent = timePart;
-
-      renderTables();
-      renderSidebarDaySelector();
-      updatePrintDate();
-      syncWorkspaceHeight();
+      // Select Monday of the target week
+      state.activeDateStr = toDateISO(newMon);
+      renderSidebar();
+      renderCurrentDayTables();
+      lucide.createIcons();
     }
 
+    function jumpToday() {
+      const today = new Date();
+      state.activeDateStr = toDateISO(today);
+      state.currentWeekMonday = getMonday(today);
+      renderSidebar();
+      renderCurrentDayTables();
+      lucide.createIcons();
+    }
+
+    function selectDate(dateStr) {
+      state.activeDateStr = dateStr;
+      renderSidebar();
+      renderCurrentDayTables();
+      lucide.createIcons();
+    }
+
+    function getWeekDaysList() {
+      const list = [];
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(state.currentWeekMonday);
+        d.setDate(d.getDate() + i);
+        list.push(d);
+      }
+      return list;
+    }
+
+    function ensureDayTasksInitialized(dateStr) {
+      if (!state.dailyTasks[dateStr]) {
+        const d = fromDateISO(dateStr);
+        const dayKey = getDayKey(d);
+
+        const schoolTemplate = state.timetables.school[dayKey] || [];
+        const tuitionTemplate = state.timetables.tuition[dayKey] || [];
+        const studyTemplate = state.timetables.study[dayKey] || [];
+
+        state.dailyTasks[dateStr] = {
+          school: schoolTemplate.map(item => ({ ...item, done: false, category: 'School' })),
+          tuitionStudy: [
+            ...tuitionTemplate.map(item => ({ ...item, done: false, category: 'Tuition' })),
+            ...studyTemplate.map(item => ({ ...item, done: false, category: 'Study' }))
+          ]
+        };
+        saveStorageData();
+      }
+      return state.dailyTasks[dateStr];
+    }
+
+    function reloadDayFromTimetable(dateStr) {
+      showModal({
+        title: 'Sync Day with Template',
+        message: `This will reset tasks for ${dateStr} back to the master weekly timetable template. Any checked completion status for this day will be reset. Proceed?`,
+        onConfirm: () => {
+          delete state.dailyTasks[dateStr];
+          ensureDayTasksInitialized(dateStr);
+          renderSidebar();
+          renderCurrentDayTables();
+          showToast(`Tasks synced for ${dateStr}`, 'success');
+        }
+      });
+    }
+
+    function renderSidebar() {
+      const weekDays = getWeekDaysList();
+      const startStr = formatShortDate(weekDays[0]);
+      const endStr = formatShortDate(weekDays[6]);
+      const yearStr = weekDays[0].getFullYear();
+      document.getElementById('sidebarWeekLabel').textContent = `${startStr} - ${endStr}, ${yearStr}`;
+
+      const gridEl = document.getElementById('sidebarDayGrid');
+      const sunEl = document.getElementById('sidebarSundayRow');
+      gridEl.innerHTML = '';
+      sunEl.innerHTML = '';
+
+      const todayStr = toDateISO(new Date());
+
+      // Track week totals
+      let totalSchoolHours = 0;
+      let totalTuitionHours = 0;
+      let totalStudyHours = 0;
+      let totalTasksWeek = 0;
+      let doneTasksWeek = 0;
+
+      weekDays.forEach((d, index) => {
+        const dStr = toDateISO(d);
+        const dayKey = getDayKey(d);
+        const dayData = ensureDayTasksInitialized(dStr);
+
+        const allTasks = [...(dayData.school || []), ...(dayData.tuitionStudy || [])];
+        const dayTotal = allTasks.length;
+        const dayDone = allTasks.filter(t => t.done).length;
+
+        allTasks.forEach(t => {
+          const h = Number(t.hours) || 0;
+          if (t.category === 'School') totalSchoolHours += h;
+          else if (t.category === 'Tuition') totalTuitionHours += h;
+          else if (t.category === 'Study') totalStudyHours += h;
+        });
+
+        totalTasksWeek += dayTotal;
+        doneTasksWeek += dayDone;
+
+        const isSelected = dStr === state.activeDateStr;
+        const isToday = dStr === todayStr;
+
+        const card = document.createElement('button');
+        card.className = `w-full text-left p-2 rounded-xl transition border flex flex-col justify-between ${
+          isSelected
+            ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
+            : isToday
+            ? 'bg-blue-50/70 border-blue-300 text-slate-800 hover:bg-blue-100/70'
+            : 'bg-white border-slate-200/90 text-slate-700 hover:bg-slate-100/70'
+        }`;
+        card.onclick = () => selectDate(dStr);
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between w-full">
+            <span class="text-[10px] font-extrabold uppercase ${isSelected ? 'text-blue-100' : 'text-slate-500'}">${dayKey}</span>
+            ${isToday ? `<span class="w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-amber-300' : 'bg-blue-600'} live-pulse"></span>` : ''}
+          </div>
+          <div class="flex items-baseline justify-between mt-1 w-full">
+            <span class="text-xs font-black ${isSelected ? 'text-white' : 'text-slate-900'}">${d.getDate()}</span>
+            <span class="text-[9px] font-bold ${isSelected ? 'text-blue-200' : 'text-slate-400'}">${dayDone}/${dayTotal}</span>
+          </div>
+        `;
+
+        if (index < 6) {
+          gridEl.appendChild(card);
+        } else {
+          sunEl.appendChild(card);
+        }
+      });
+
+      // Update Weekly Summary cards
+      document.getElementById('totalSchool').textContent = totalSchoolHours.toFixed(1);
+      document.getElementById('totalTuition').textContent = totalTuitionHours.toFixed(1);
+      document.getElementById('totalStudy').textContent = totalStudyHours.toFixed(1);
+
+      document.getElementById('completedCount').textContent = doneTasksWeek;
+      document.getElementById('totalCount').textContent = totalTasksWeek;
+
+      const pct = totalTasksWeek === 0 ? 0 : Math.round((doneTasksWeek / totalTasksWeek) * 100);
+      document.getElementById('progressPercent').textContent = `${pct}%`;
+      const ring = document.getElementById('progressRing');
+      if (ring) {
+        ring.setAttribute('stroke-dasharray', `${pct}, 100`);
+      }
+    }
+
+    // ================= DAILY CHECKLIST TABLES =================
+    function renderCurrentDayTables() {
+      const dayData = ensureDayTasksInitialized(state.activeDateStr);
+      const schoolTasks = dayData.school || [];
+      const tuitionTasks = dayData.tuitionStudy || [];
+
+      // 1. School Body
+      const schoolBody = document.getElementById('schoolBody');
+      schoolBody.innerHTML = '';
+
+      let schoolHrs = 0;
+      let schoolDone = 0;
+
+      if (schoolTasks.length === 0) {
+        schoolBody.innerHTML = `
+          <tr class="empty-row text-center text-slate-400">
+            <td colspan="4" class="py-6 text-center font-medium">No school periods scheduled for this date.</td>
+          </tr>
+        `;
+      } else {
+        schoolTasks.forEach(task => {
+          const h = Number(task.hours) || 0;
+          schoolHrs += h;
+          if (task.done) schoolDone++;
+
+          const tr = document.createElement('tr');
+          tr.className = `hover:bg-slate-50/80 transition-colors ${task.done ? 'bg-slate-50/40 text-slate-400' : 'text-slate-800'}`;
+          tr.innerHTML = `
+            <td class="col-cb py-2 px-3 text-center">
+              <input type="checkbox" ${task.done ? 'checked' : ''} onchange="toggleTaskDone('school', '${task.id}')"
+                class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer">
+            </td>
+            <td class="col-tm py-2 px-3 font-semibold text-slate-600 whitespace-nowrap">${task.time || '—'}</td>
+            <td class="col-tk py-2 px-3 font-bold ${task.done ? 'line-through text-slate-400' : 'text-slate-800'}">${task.title}</td>
+            <td class="col-hr py-2 px-3 text-right font-black text-slate-700 whitespace-nowrap">${h.toFixed(2)}h</td>
+          `;
+          schoolBody.appendChild(tr);
+        });
+      }
+
+      document.getElementById('schoolSecMeta').textContent = `${schoolDone} of ${schoolTasks.length} completed`;
+      document.getElementById('schoolSecTotal').textContent = `${schoolHrs.toFixed(2)} hrs`;
+
+      // 2. Tuition & Study Body
+      const tuitionBody = document.getElementById('tuitionStudyBody');
+      tuitionBody.innerHTML = '';
+
+      let tsHrs = 0;
+      let tsDone = 0;
+
+      if (tuitionTasks.length === 0) {
+        tuitionBody.innerHTML = `
+          <tr class="empty-row text-center text-slate-400">
+            <td colspan="5" class="py-6 text-center font-medium">No tuition or study sessions scheduled for this date.</td>
+          </tr>
+        `;
+      } else {
+        tuitionTasks.forEach(task => {
+          const h = Number(task.hours) || 0;
+          tsHrs += h;
+          if (task.done) tsDone++;
+
+          const catClass = task.category === 'Tuition' ? 'Tuition' : 'Study';
+
+          const tr = document.createElement('tr');
+          tr.className = `hover:bg-slate-50/80 transition-colors ${task.done ? 'bg-slate-50/40 text-slate-400' : 'text-slate-800'}`;
+          tr.innerHTML = `
+            <td class="col-cb py-2 px-3 text-center">
+              <input type="checkbox" ${task.done ? 'checked' : ''} onchange="toggleTaskDone('tuitionStudy', '${task.id}')"
+                class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer">
+            </td>
+            <td class="col-tm py-2 px-3 font-semibold text-slate-600 whitespace-nowrap">${task.time || '—'}</td>
+            <td class="col-tk py-2 px-3 font-bold ${task.done ? 'line-through text-slate-400' : 'text-slate-800'}">${task.title}</td>
+            <td class="col-cat py-2 px-3 text-center whitespace-nowrap">
+              <span class="cat-pill ${catClass}">${task.category}</span>
+            </td>
+            <td class="col-hr py-2 px-3 text-right font-black text-slate-700 whitespace-nowrap">${h.toFixed(2)}h</td>
+          `;
+          tuitionBody.appendChild(tr);
+        });
+      }
+
+      document.getElementById('tuitionSecMeta').textContent = `${tsDone} of ${tuitionTasks.length} completed`;
+      document.getElementById('tuitionSecTotal').textContent = `${tsHrs.toFixed(2)} hrs`;
+
+      // Update Print meta date
+      const activeObj = fromDateISO(state.activeDateStr);
+      const printDate = activeObj.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+      document.getElementById('printDateMeta').textContent = printDate;
+    }
+
+    function toggleTaskDone(sectionKey, taskId) {
+      const dayData = state.dailyTasks[state.activeDateStr];
+      if (!dayData || !dayData[sectionKey]) return;
+
+      const item = dayData[sectionKey].find(t => t.id === taskId);
+      if (item) {
+        item.done = !item.done;
+        saveStorageData();
+        renderSidebar();
+        renderCurrentDayTables();
+      }
+    }
+
+    // ================= TIMETABLE TEMPLATES EDITOR =================
+    function toggleEditMode(sectionKey) {
+      state.editModes[sectionKey] = !state.editModes[sectionKey];
+      const isEditing = state.editModes[sectionKey];
+      const btn = document.getElementById(`btnEdit${sectionKey.charAt(0).toUpperCase() + sectionKey.slice(1)}`);
+
+      if (btn) {
+        if (isEditing) {
+          btn.textContent = 'Save Changes';
+          btn.className = 'text-xs font-bold px-3 py-1 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition shadow-xs';
+        } else {
+          btn.textContent = `Edit ${sectionKey.charAt(0).toUpperCase() + sectionKey.slice(1)}`;
+          btn.className = 'text-xs font-bold px-3 py-1 rounded-lg border border-slate-300 hover:bg-slate-50 transition shadow-xs';
+          saveStorageData();
+          showToast(`Master ${sectionKey} timetable saved!`, 'success');
+          // Re-render current day table in case template affects active date
+          renderSidebar();
+          renderCurrentDayTables();
+        }
+      }
+      renderTimetableTemplateSection(sectionKey);
+      lucide.createIcons();
+    }
+
+    function renderAllTimetableTemplates() {
+      ['school', 'tuition', 'study'].forEach(sec => renderTimetableTemplateSection(sec));
+    }
+
+    function renderTimetableTemplateSection(sectionKey) {
+      const containerId = `${sectionKey}Timetable`;
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      container.innerHTML = '';
+      const isEditing = state.editModes[sectionKey];
+      const data = state.timetables[sectionKey] || {};
+
+      DAYS_ORDER.forEach(day => {
+        const slots = data[day] || [];
+        const card = document.createElement('div');
+        card.className = 'bg-slate-50 rounded-xl p-3 border border-slate-200 flex flex-col justify-between';
+
+        let innerHTML = `
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-black uppercase text-slate-700">${day}</span>
+            <span class="text-[10px] font-bold text-slate-400">${slots.length} item(s)</span>
+          </div>
+          <div class="space-y-1.5 flex-1" id="${sectionKey}_${day}_list">
+        `;
+
+        if (slots.length === 0) {
+          innerHTML += `<p class="text-[10px] text-slate-400 italic">No scheduled items</p>`;
+        } else {
+          slots.forEach((slot, idx) => {
+            if (isEditing) {
+              innerHTML += `
+                <div class="bg-white p-2 rounded-lg border border-slate-200 text-[10px] space-y-1 shadow-xs">
+                  <div class="flex items-center justify-between gap-1">
+                    <input type="text" value="${escapeHtml(slot.time)}" placeholder="Time (e.g. 08:00 - 08:45)"
+                      onchange="updateTemplateSlot('${sectionKey}', '${day}', ${idx}, 'time', this.value)"
+                      class="w-full px-1.5 py-0.5 border border-slate-200 rounded text-[10px] font-semibold text-slate-700">
+                    <button onclick="removeTemplateSlot('${sectionKey}', '${day}', ${idx})" class="text-rose-500 hover:text-rose-700 p-0.5" title="Delete">
+                      <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                    </button>
+                  </div>
+                  <input type="text" value="${escapeHtml(slot.title)}" placeholder="Subject / Title"
+                    onchange="updateTemplateSlot('${sectionKey}', '${day}', ${idx}, 'title', this.value)"
+                    class="w-full px-1.5 py-0.5 border border-slate-200 rounded text-[10px] font-bold text-slate-800">
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-[9px] text-slate-400">Hours:</span>
+                    <input type="number" step="0.25" min="0" value="${slot.hours}"
+                      onchange="updateTemplateSlot('${sectionKey}', '${day}', ${idx}, 'hours', parseFloat(this.value) || 0)"
+                      class="w-16 px-1.5 py-0.5 border border-slate-200 rounded text-[10px] font-bold text-slate-700">
+                  </div>
+                </div>
+              `;
+            } else {
+              innerHTML += `
+                <div class="bg-white p-2 rounded-lg border border-slate-200/90 text-xs shadow-2xs">
+                  <div class="text-[9px] font-semibold text-slate-400">${slot.time || '—'}</div>
+                  <div class="text-[11px] font-bold text-slate-800 mt-0.5 leading-tight">${slot.title}</div>
+                  <div class="text-[9px] font-extrabold text-blue-600 mt-0.5 text-right">${(Number(slot.hours) || 0).toFixed(2)}h</div>
+                </div>
+              `;
+            }
+          });
+        }
+
+        innerHTML += `</div>`;
+
+        if (isEditing) {
+          innerHTML += `
+            <button onclick="addTemplateSlot('${sectionKey}', '${day}')" class="mt-2.5 w-full py-1 border border-dashed border-slate-300 hover:border-blue-500 hover:bg-blue-50 text-blue-600 font-bold text-[10px] rounded-lg flex items-center justify-center gap-1 transition">
+              <i data-lucide="plus" class="w-3 h-3"></i>
+              <span>Add Period</span>
+            </button>
+          `;
+        }
+
+        card.innerHTML = innerHTML;
+        container.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    function updateTemplateSlot(sectionKey, day, idx, field, val) {
+      if (state.timetables[sectionKey] && state.timetables[sectionKey][day] && state.timetables[sectionKey][day][idx]) {
+        state.timetables[sectionKey][day][idx][field] = val;
+      }
+    }
+
+    function addTemplateSlot(sectionKey, day) {
+      if (!state.timetables[sectionKey][day]) {
+        state.timetables[sectionKey][day] = [];
+      }
+      const newId = `${sectionKey.slice(0, 2)}_${day.toLowerCase()}_${Date.now()}`;
+      const cat = sectionKey === 'school' ? 'School' : (sectionKey === 'tuition' ? 'Tuition' : 'Study');
+      state.timetables[sectionKey][day].push({
+        id: newId,
+        time: '09:00 - 10:00',
+        title: 'New Session',
+        category: cat,
+        hours: 1.0
+      });
+      renderTimetableTemplateSection(sectionKey);
+      lucide.createIcons();
+    }
+
+    function removeTemplateSlot(sectionKey, day, idx) {
+      if (state.timetables[sectionKey] && state.timetables[sectionKey][day]) {
+        state.timetables[sectionKey][day].splice(idx, 1);
+        renderTimetableTemplateSection(sectionKey);
+        lucide.createIcons();
+      }
+    }
+
+    // ================= ANALYTICS & CHARTS =================
+    function renderAnalyticsTab() {
+      const weekDays = getWeekDaysList();
+      const labels = weekDays.map(d => getDayKey(d));
+
+      let catHours = { School: 0, Tuition: 0, Study: 0 };
+      let catDoneHours = { School: 0, Tuition: 0, Study: 0 };
+      let dailyTotalHours = [0, 0, 0, 0, 0, 0, 0];
+      let dailyCompletionRates = [0, 0, 0, 0, 0, 0, 0];
+
+      let grandTotalHours = 0;
+      let grandTotalTasks = 0;
+      let grandCompletedTasks = 0;
+
+      weekDays.forEach((d, i) => {
+        const dStr = toDateISO(d);
+        const dayData = ensureDayTasksInitialized(dStr);
+        const allTasks = [...(dayData.school || []), ...(dayData.tuitionStudy || [])];
+
+        let dTotalH = 0;
+        let dDoneTasks = 0;
+
+        allTasks.forEach(t => {
+          const h = Number(t.hours) || 0;
+          dTotalH += h;
+          grandTotalHours += h;
+          grandTotalTasks++;
+
+          if (t.category in catHours) {
+            catHours[t.category] += h;
+          }
+
+          if (t.done) {
+            dDoneTasks++;
+            grandCompletedTasks++;
+            if (t.category in catDoneHours) {
+              catDoneHours[t.category] += h;
+            }
+          }
+        });
+
+        dailyTotalHours[i] = parseFloat(dTotalH.toFixed(2));
+        dailyCompletionRates[i] = allTasks.length > 0 ? Math.round((dDoneTasks / allTasks.length) * 100) : 0;
+      });
+
+      // Top Cards Metrics
+      const overallRate = grandTotalTasks > 0 ? Math.round((grandCompletedTasks / grandTotalTasks) * 100) : 0;
+      const statsGrid = document.getElementById('statsGrid');
+      statsGrid.innerHTML = `
+        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+            <i data-lucide="clock" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Total Planned Hours</div>
+            <div class="text-lg font-black text-slate-900">${grandTotalHours.toFixed(1)} hrs</div>
+          </div>
+        </div>
+
+        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+            <i data-lucide="check-circle" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Weekly Completion Rate</div>
+            <div class="text-lg font-black text-emerald-600">${overallRate}%</div>
+          </div>
+        </div>
+
+        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
+            <i data-lucide="award" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Tasks Completed</div>
+            <div class="text-lg font-black text-slate-900">${grandCompletedTasks} / ${grandTotalTasks}</div>
+          </div>
+        </div>
+      `;
+
+      // 1. Category Chart (Doughnut)
+      buildChart('categoryChart', {
+        type: 'doughnut',
+        data: {
+          labels: ['School', 'Tuition', 'Study'],
+          datasets: [{
+            data: [catHours.School, catHours.Tuition, catHours.Study],
+            backgroundColor: ['#2563eb', '#f97316', '#8b5cf6'],
+            borderWidth: 2,
+            borderColor: '#ffffff'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { boxWidth: 12, font: { family: 'Inter', size: 11, weight: '700' } } }
+          }
+        }
+      });
+
+      // 2. Completion Chart by Category (%)
+      const schoolCompPct = catHours.School > 0 ? Math.round((catDoneHours.School / catHours.School) * 100) : 0;
+      const tuitionCompPct = catHours.Tuition > 0 ? Math.round((catDoneHours.Tuition / catHours.Tuition) * 100) : 0;
+      const studyCompPct = catHours.Study > 0 ? Math.round((catDoneHours.Study / catHours.Study) * 100) : 0;
+
+      buildChart('completionChart', {
+        type: 'bar',
+        data: {
+          labels: ['School', 'Tuition', 'Study'],
+          datasets: [{
+            data: [schoolCompPct, tuitionCompPct, studyCompPct],
+            backgroundColor: ['#2563eb', '#f97316', '#8b5cf6'],
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { min: 0, max: 100, ticks: { callback: v => v + '%' } }
+          },
+          plugins: { legend: { display: false } }
+        }
+      });
+
+      // 3. Daily Hours Trend
+      buildChart('trendChart', {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Hours',
+            data: dailyTotalHours,
+            backgroundColor: '#092244',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { beginAtZero: true, ticks: { callback: v => v + 'h' } }
+          },
+          plugins: { legend: { display: false } }
+        }
+      });
+
+      // 4. Daily Completion Trend
+      buildChart('completionTrendChart', {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Completion %',
+            data: dailyCompletionRates,
+            borderColor: '#10b981',
+            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+            fill: true,
+            tension: 0.3,
+            pointBackgroundColor: '#10b981',
+            pointRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { min: 0, max: 100, ticks: { callback: v => v + '%' } }
+          },
+          plugins: { legend: { display: false } }
+        }
+      });
+    }
+
+    function buildChart(canvasId, config) {
+      if (state.charts[canvasId]) {
+        state.charts[canvasId].destroy();
+      }
+      const ctx = document.getElementById(canvasId);
+      if (ctx) {
+        state.charts[canvasId] = new Chart(ctx, config);
+      }
+    }
+
+    // ================= EXPORT & IMPORT =================
     function exportBackup() {
-      state.lastBackup = Date.now();
-      saveState();
-      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `planner_backup_${getTodayISO()}.json`;
-      a.click();
-      showToast('Planner backup downloaded', 'success');
+      const dataToExport = {
+        app: 'Planner & Analytics',
+        version: 2,
+        exportedAt: new Date().toISOString(),
+        timetables: state.timetables,
+        dailyTasks: state.dailyTasks
+      };
+
+      const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(dataToExport, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute('href', dataStr);
+      downloadAnchor.setAttribute('download', `planner-backup-${state.activeDateStr}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+
+      showToast('Backup exported successfully!', 'success');
     }
 
-    function importBackup(e) {
-      const f = e.target.files[0];
-      if (!f) return;
-      const r = new FileReader();
-      r.onload = (evt) => {
+    function importBackup(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
         try {
-          const d = JSON.parse(evt.target.result);
-          if (d.timetables && d.days) {
-            state = d;
-            sanitizePlannerState(state);
-            state.activeDateStr = getTodayISO();
-            state.viewMondayStr = getMondayISO(new Date());
-            syncDayFromTimetable(state.activeDateStr);
-            saveState();
-            loadState();
+          const parsed = JSON.parse(e.target.result);
+          if (parsed && parsed.timetables && parsed.dailyTasks) {
+            state.timetables = parsed.timetables;
+            state.dailyTasks = parsed.dailyTasks;
+            saveStorageData();
+
+            renderSidebar();
+            renderCurrentDayTables();
+            renderAllTimetableTemplates();
             showToast('Backup restored successfully!', 'success');
           } else {
-            throw new Error();
+            showToast('Invalid backup file structure.', 'error');
           }
         } catch (err) {
-          showToast("This file doesn't look like a valid planner backup.", 'error');
+          showToast('Failed to parse the backup JSON file.', 'error');
         }
+        event.target.value = '';
       };
-      r.readAsText(f);
+      reader.readAsText(file);
     }
 
-    window.addEventListener('load', () => {
-      loadState();
-      updateCurrentDate();
-      setInterval(updateCurrentDate, 60000);
+    function triggerPrint() {
+      switchTab('planner', document.getElementById('tabBtnSchool'));
+      setTimeout(() => {
+        window.print();
+      }, 200);
+    }
 
-      const sidebar = document.getElementById('plannerSidebar');
-      if (sidebar && window.ResizeObserver) {
-        new ResizeObserver(() => syncWorkspaceHeight()).observe(sidebar);
-      }
-      window.addEventListener('resize', syncWorkspaceHeight);
-    });
+    // ================= MODAL & TOAST UTILITIES =================
+    function showModal({ title, message, onConfirm }) {
+      document.getElementById('modalTitle').textContent = title || 'Confirm Action';
+      document.getElementById('modalMessage').textContent = message || 'Are you sure?';
+
+      modalConfirmCallback = onConfirm;
+      document.getElementById('customModal').classList.remove('hidden');
+
+      const confirmBtn = document.getElementById('modalConfirmBtn');
+      confirmBtn.onclick = () => {
+        if (modalConfirmCallback) modalConfirmCallback();
+        closeModal();
+      };
+    }
+
+    function closeModal() {
+      document.getElementById('customModal').classList.add('hidden');
+      modalConfirmCallback = null;
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+
+      const bg = type === 'error' ? 'bg-rose-600' : (type === 'success' ? 'bg-emerald-600' : 'bg-slate-900');
+      toast.className = `${bg} text-white text-xs font-bold px-3.5 py-2.5 rounded-xl shadow-lg flex items-center gap-2 pointer-events-auto transition-all transform duration-300 opacity-0 translate-y-2`;
+      toast.innerHTML = `
+        <i data-lucide="${type === 'error' ? 'alert-triangle' : (type === 'success' ? 'check' : 'info')}" class="w-4 h-4"></i>
+        <span>${message}</span>
+      `;
+      container.appendChild(toast);
+      lucide.createIcons();
+
+      requestAnimationFrame(() => {
+        toast.classList.remove('opacity-0', 'translate-y-2');
+      });
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3200);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // Run on DOM Ready
+    window.addEventListener('DOMContentLoaded', initApp);
   </script>
 </body>
 </html>
