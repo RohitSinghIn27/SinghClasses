@@ -861,20 +861,21 @@
       }
       const topicDisplay = topicText || 'Functions in Python';
 
-      const message = `
-      =•=•=•=•=•=•=•=•==•=•=•=•=•=•=•=•=
-      ⏰*Gentle Reminder*
-      =•=•=•=•=•=•=•=•==•=•=•=•=•=•=•=•=
-🏛️ *Today’s ${cleanSubject}*
+const message = `
+*=•=•=•=•=•=•=•=•==•=•=•=•=•=•=•=•=*
+⏰*Gentle Reminder*
+*=•=•=•=•=•=•=•=•==•=•=•=•=•=•=•=•=*
+🏛️ *Today’s* ${cleanSubject}
 📍 *Venue:* Sant Nagar
 ⏰ *Time:* *${startTimeFormatted}* to *${endTimeFormatted}*
 📚 *Topic:* ${topicDisplay}
-=•=•=•=•=•=•=•=•==•=•=•=•=•=•=•=•=
+*=•=•=•=•=•=•=•=•==•=•=•=•=•=•=•=•=*
 🌐 *Visit:* www.SinghClasses.in
-=✦=✦=✦=✦=✦=✦=✦==✦=✦=✦=✦=`;
-      const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
-      window.open(url, '_blank');
-    }
+*=✦=✦=✦=✦=✦=✦=✦==✦=✦=✦=✦=*
+`;
+
+const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+window.open(url, '_blank');
 
     /* ================= AUTO-SYNC & STATE ================= */
     function syncDayFromTimetable(dateStr) {
