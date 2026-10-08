@@ -123,7 +123,7 @@ body { -webkit-tap-highlight-color: transparent; }
     grid-template-areas:
       "cb tk hr"
       "cb tm cat" !important;
-    gap: 4px 8px !important;
+    gap: 6px 8px !important;
     align-items: center !important;
     background: #ffffff !important;
     border: 1px solid #e2e8f0 !important;
@@ -173,26 +173,65 @@ body { -webkit-tap-highlight-color: transparent; }
 <!-- Global Toast Container -->
 <div id="toastContainer" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-<!-- Confirmation Modal -->
-<div id="customModal" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-3 hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-  <div class="bg-white w-full max-w-sm rounded-xl shadow-2xl border border-slate-200 overflow-hidden transform transition-all">
-    <div class="p-4 border-b border-slate-100 flex items-center justify-between">
-      <h3 id="modalTitle" class="text-sm font-black text-slate-900">Confirm Action</h3>
-      <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg" aria-label="Close dialog">
+<!-- ================= TUITION ATTENDANCE MODAL ================= -->
+<div id="attendanceModal" class="fixed inset-0 z-50 bg-slate-950/65 backdrop-blur-sm flex items-center justify-center p-3 hidden" role="dialog" aria-modal="true" aria-labelledby="attBatchTitle">
+  <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-slate-200 overflow-hidden transform transition-all flex flex-col max-h-[90vh]">
+    
+    <!-- Modal Header -->
+    <div class="p-3.5 sm:p-4 bg-brandNavy text-white flex items-center justify-between border-b border-slate-800">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center shrink-0">
+          <i data-lucide="users" class="w-4 h-4"></i>
+        </div>
+        <div class="min-w-0">
+          <h3 id="attBatchTitle" class="text-sm font-extrabold text-white leading-tight truncate">Batch Attendance</h3>
+          <p id="attDateSubtitle" class="text-[10.5px] text-slate-300 font-medium">Recording attendance for Date</p>
+        </div>
+      </div>
+      <button onclick="closeAttendanceModal()" class="text-slate-400 hover:text-white p-1 rounded-lg transition" aria-label="Close dialog">
         <i data-lucide="x" class="w-4 h-4"></i>
       </button>
     </div>
-    <div class="p-4 space-y-2.5">
-      <p id="modalMessage" class="text-xs text-slate-600 leading-relaxed"></p>
-      <div id="modalInputContainer" class="hidden">
-        <label class="block text-[11px] font-bold text-slate-700 mb-1" id="modalInputLabel">Type confirmation:</label>
-        <input type="text" id="modalInputField" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs font-semibold text-slate-800 uppercase focus:outline-none focus:ring-2 focus:ring-rose-500">
+
+    <!-- Quick Actions & Stats Toolbar -->
+    <div class="px-4 py-2.5 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-1.5">
+        <button onclick="markAllAttendance('P')" class="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-300 font-bold rounded-lg text-[11px] flex items-center gap-1 transition active:scale-95 shadow-xs">
+          <i data-lucide="check-check" class="w-3.5 h-3.5"></i> All Present
+        </button>
+        <button onclick="markAllAttendance('A')" class="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300 font-bold rounded-lg text-[11px] flex items-center gap-1 transition active:scale-95 shadow-xs">
+          <i data-lucide="x" class="w-3.5 h-3.5"></i> All Absent
+        </button>
+      </div>
+      <div id="attStatsCounter" class="text-xs font-black text-slate-700 bg-white px-2.5 py-1 rounded-lg border border-slate-200 shadow-xs">
+        0 Present / 0 Total
       </div>
     </div>
-    <div class="p-3 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-2">
-      <button onclick="closeModal()" class="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-bold text-xs rounded-lg transition">Cancel</button>
-      <button id="modalConfirmBtn" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-lg transition shadow-sm">Confirm</button>
+
+    <!-- Student List Scroll Area -->
+    <div class="p-3 sm:p-4 overflow-y-auto space-y-2 flex-1" id="attStudentList">
+      <!-- Injected dynamically -->
     </div>
+
+    <!-- Add Student to Roster -->
+    <div class="p-3 bg-slate-50 border-t border-slate-200 flex items-center gap-2">
+      <div class="relative flex-1">
+        <i data-lucide="user-plus" class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+        <input type="text" id="newStudentInput" placeholder="Add new student name to batch roster..." class="w-full pl-9 pr-3 py-1.5 border border-slate-300 rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white" onkeydown="if(event.key==='Enter') addStudentToRoster()">
+      </div>
+      <button onclick="addStudentToRoster()" class="px-3.5 py-1.5 bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs rounded-lg transition active:scale-95 shrink-0 shadow-xs">
+        Add
+      </button>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="px-4 py-2.5 bg-white border-t border-slate-200 flex items-center justify-between">
+      <span class="text-[10px] text-slate-400 font-medium">Auto-saves to selected date (retroactive editing supported)</span>
+      <button onclick="closeAttendanceModal()" class="px-4 py-1.5 bg-brandNavy hover:bg-slate-800 text-white font-bold text-xs rounded-lg transition shadow-xs">
+        Done
+      </button>
+    </div>
+
   </div>
 </div>
 
@@ -283,7 +322,7 @@ body { -webkit-tap-highlight-color: transparent; }
         <!-- Week Title & Subtitle -->
         <div class="text-center mb-2">
           <h2 class="text-xs font-black text-slate-900 tracking-tight leading-tight" id="sidebarWeekLabel">Loading...</h2>
-          <p class="text-[9.5px] font-semibold text-slate-400 leading-tight">Select a day to track or complete</p>
+          <p class="text-[9.5px] font-semibold text-slate-400 leading-tight">Select day to track or edit retroactively</p>
         </div>
         
         <!-- Days Grid (Mon to Sat) -->
@@ -297,7 +336,7 @@ body { -webkit-tap-highlight-color: transparent; }
       <div class="bg-[#f8fafc] text-slate-800 rounded-2xl p-2.5 shadow-sm space-y-1.5 border border-slate-200/80">
         <div class="text-center">
           <h3 class="text-[10px] font-black text-slate-900 tracking-wider uppercase">WEEKLY SUMMARY</h3>
-          <p class="text-[9px] font-semibold text-slate-500 leading-tight">Your progress this week</p>
+          <p class="text-[9px] font-semibold text-slate-500 leading-tight">Rolling 15-day storage enabled</p>
         </div>
 
         <div class="grid grid-cols-2 gap-1.5 pt-0.5">
@@ -349,7 +388,7 @@ body { -webkit-tap-highlight-color: transparent; }
       <div class="hidden print-only-header">
         <div>
           <div class="text-lg font-black text-slate-900 tracking-wide">PLANNER & SCHEDULE</div>
-          <div class="text-[11px] text-slate-500 font-semibold">Daily Academic & Class Tracker</div>
+          <div class="text-[11px] text-slate-500 font-semibold">Daily Academic, Lab & Class Tracker</div>
         </div>
         <div class="text-[11px] font-bold text-slate-600 text-right" id="printDateMeta"></div>
       </div>
@@ -357,7 +396,7 @@ body { -webkit-tap-highlight-color: transparent; }
       <!-- ================= TAB: PLANNER ================= -->
       <div id="planner" class="tab-content active space-y-3" role="tabpanel" aria-labelledby="tabBtnSchool">
 
-        <!-- 1. SCHOOL CLASSES (No WhatsApp button) -->
+        <!-- 1. SCHOOL CLASSES (Distinct Lab badges + Topic Support) -->
         <section id="schoolClassesSec" class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden schedule-container-card">
           <header class="bg-cardNavy text-white px-3.5 sm:px-4 py-2 flex items-center justify-between">
             <div class="flex items-center gap-2.5">
@@ -366,7 +405,7 @@ body { -webkit-tap-highlight-color: transparent; }
               </div>
               <div>
                 <h2 class="text-xs sm:text-sm font-extrabold tracking-wide text-white">SCHOOL CLASSES</h2>
-                <p class="text-[10px] text-slate-300 font-medium">Daily school periods & attendance checklist</p>
+                <p class="text-[10px] text-slate-300 font-medium">Daily periods, practical computer labs & lesson topics</p>
               </div>
             </div>
             <div class="flex items-center gap-1.5">
@@ -387,7 +426,7 @@ body { -webkit-tap-highlight-color: transparent; }
                 <tr class="bg-slate-50 text-slate-400 text-[10.5px] font-bold uppercase tracking-wider border-b border-slate-200">
                   <th class="py-2.5 px-3 w-12 text-center">DONE</th>
                   <th class="py-2.5 px-3 w-48 text-left whitespace-nowrap">TIME</th>
-                  <th class="py-2.5 px-3 text-left">TASK / SUBJECT</th>
+                  <th class="py-2.5 px-3 text-left">PERIOD & TOPIC</th>
                   <th class="py-2.5 px-3 w-24 text-right">HOURS</th>
                 </tr>
               </thead>
@@ -409,7 +448,7 @@ body { -webkit-tap-highlight-color: transparent; }
           </div>
         </section>
 
-        <!-- 2. TUITION & STUDY (Clean 2-line layout: Batch Name on Line 1, Topic on Line 2) -->
+        <!-- 2. TUITION & STUDY (Attendance Section + WhatsApp + Topic) -->
         <section id="tuitionStudySec" class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden schedule-container-card">
           <header class="bg-cardNavy text-white px-3.5 sm:px-4 py-2 flex items-center justify-between">
             <div class="flex items-center gap-2.5">
@@ -418,7 +457,7 @@ body { -webkit-tap-highlight-color: transparent; }
               </div>
               <div>
                 <h2 class="text-xs sm:text-sm font-extrabold tracking-wide text-white">TUITION & STUDY</h2>
-                <p class="text-[10px] text-slate-300 font-medium">Batches, coaching sessions, and personal study checklist</p>
+                <p class="text-[10px] text-slate-300 font-medium">Batches, student attendance, reminders, and self study</p>
               </div>
             </div>
             <div class="flex items-center gap-1.5">
@@ -439,7 +478,7 @@ body { -webkit-tap-highlight-color: transparent; }
                 <tr class="bg-slate-50 text-slate-400 text-[10.5px] font-bold uppercase tracking-wider border-b border-slate-200">
                   <th class="py-2.5 px-3 w-12 text-center">DONE</th>
                   <th class="py-2.5 px-3 w-48 text-left whitespace-nowrap">TIME</th>
-                  <th class="py-2.5 px-3 text-left">TASK / SUBJECT</th>
+                  <th class="py-2.5 px-3 text-left">BATCH / SUBJECT & ACTIONS</th>
                   <th class="py-2.5 px-3 w-28 text-center">CATEGORY</th>
                   <th class="py-2.5 px-3 w-24 text-right">HOURS</th>
                 </tr>
@@ -549,6 +588,9 @@ body { -webkit-tap-highlight-color: transparent; }
       <span class="text-slate-600 font-light">|</span>
       <span>Designed with <span class="text-rose-500">💖</span> by <strong class="font-bold text-white">Rohit Singh</strong></span>
     </div>
+    <div class="text-[10px] text-slate-400 hidden sm:block">
+      Rolling 15-Day History Retention Active
+    </div>
   </footer>
 
 </div>
@@ -560,63 +602,63 @@ body { -webkit-tap-highlight-color: transparent; }
 window.MASTER_TIMETABLES = {
   school: {
     'Mon': [
-      { time: '08:40 AM - 09:15 AM', task: 'XI C lab', hrs: 0.58 },
-      { time: '09:25 AM - 10:00 AM', task: 'XI C lab', hrs: 0.58 },
-      { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
-      { time: '10:35 AM - 11:10 AM', task: 'XIII C lab', hrs: 0.58 },
-      { time: '11:40 AM - 12:20 PM', task: 'XII C lab', hrs: 0.67 },
-      { time: '12:20 PM - 12:55 PM', task: 'XI D', hrs: 0.58 },
-      { time: '12:55 PM - 01:30 PM', task: 'XIII D lab', hrs: 0.58 },
-      { time: '01:30 PM - 02:00 PM', task: 'XIII D lab', hrs: 0.50 }
+      { time: '08:40 AM - 09:15 AM', task: 'XI C lab', topic: 'Python Basics Lab', hrs: 0.58 },
+      { time: '09:25 AM - 10:00 AM', task: 'XI C lab', topic: 'List Comprehensions', hrs: 0.58 },
+      { time: '10:00 AM - 10:35 AM', task: 'FREE', topic: '', hrs: 0.58 },
+      { time: '10:35 AM - 11:10 AM', task: 'XII C lab', topic: 'MySQL Connectivity', hrs: 0.58 },
+      { time: '11:40 AM - 12:20 PM', task: 'XII C lab', topic: 'Pandas DataFrame Queries', hrs: 0.67 },
+      { time: '12:20 PM - 12:55 PM', task: 'XI D', topic: 'Computer Systems', hrs: 0.58 },
+      { time: '12:55 PM - 01:30 PM', task: 'XII D lab', topic: 'SQL Queries', hrs: 0.58 },
+      { time: '01:30 PM - 02:00 PM', task: 'XII D lab', topic: 'Data Visualization', hrs: 0.50 }
     ],
     'Tue': [
-      { time: '08:40 AM - 09:15 AM', task: 'XI C lab', hrs: 0.58 },
-      { time: '09:25 AM - 10:00 AM', task: 'XI C lab ', hrs: 0.58 },
-      { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
-      { time: '10:35 AM - 11:10 AM', task: 'XII C lab', hrs: 0.58 },
-      { time: '11:40 AM - 12:20 PM', task: 'XII C lab', hrs: 0.67 },
-      { time: '12:20 PM - 12:55 PM', task: 'XI D lab', hrs: 0.58 },
-      { time: '12:55 PM - 01:30 PM', task: 'XIII D', hrs: 0.58 },
-      { time: '01:30 PM - 02:00 PM', task: 'XIII D lab', hrs: 0.50 }
+      { time: '08:40 AM - 09:15 AM', task: 'XI C lab', topic: 'Strings & Tuples', hrs: 0.58 },
+      { time: '09:25 AM - 10:00 AM', task: 'XI C lab', topic: 'Dictionary Practice', hrs: 0.58 },
+      { time: '10:00 AM - 10:35 AM', task: 'FREE', topic: '', hrs: 0.58 },
+      { time: '10:35 AM - 11:10 AM', task: 'XII C lab', topic: 'Matplotlib Plots', hrs: 0.58 },
+      { time: '11:40 AM - 12:20 PM', task: 'XII C lab', topic: 'Bar & Line Charts', hrs: 0.67 },
+      { time: '12:20 PM - 12:55 PM', task: 'XI D lab', topic: 'Algorithms', hrs: 0.58 },
+      { time: '12:55 PM - 01:30 PM', task: 'XII D', topic: 'Cyber Safety & Ethics', hrs: 0.58 },
+      { time: '01:30 PM - 02:00 PM', task: 'XII D lab', topic: 'Networking Commands', hrs: 0.50 }
     ],
     'Wed': [
-      { time: '08:40 AM - 09:15 AM', task: 'XI C lab', hrs: 0.58 },
-      { time: '09:25 AM - 10:00 AM', task: 'X C lab', hrs: 0.58 },
-      { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
-      { time: '10:35 AM - 11:10 AM', task: 'XII C lab', hrs: 0.58 },
-      { time: '11:40 AM - 12:20 PM', task: 'XI D lab', hrs: 0.67 },
-      { time: '12:20 PM - 12:55 PM', task: 'XI D lab', hrs: 0.58 },
-      { time: '12:55 PM - 01:30 PM', task: 'XIII D lab', hrs: 0.58 },
-      { time: '01:30 PM - 02:00 PM', task: 'IX C lab', hrs: 0.50 }
+      { time: '08:40 AM - 09:15 AM', task: 'XI C lab', topic: 'Conditional Statements', hrs: 0.58 },
+      { time: '09:25 AM - 10:00 AM', task: 'X C lab', topic: 'HTML Forms & CSS', hrs: 0.58 },
+      { time: '10:00 AM - 10:35 AM', task: 'FREE', topic: '', hrs: 0.58 },
+      { time: '10:35 AM - 11:10 AM', task: 'XII C lab', topic: 'Aggregate Functions in SQL', hrs: 0.58 },
+      { time: '11:40 AM - 12:20 PM', task: 'XI D lab', topic: 'Nested Loops', hrs: 0.67 },
+      { time: '12:20 PM - 12:55 PM', task: 'XI D lab', topic: 'Functions & Scope', hrs: 0.58 },
+      { time: '12:55 PM - 01:30 PM', task: 'XII D lab', topic: 'SQL Joins', hrs: 0.58 },
+      { time: '01:30 PM - 02:00 PM', task: 'IX C lab', topic: 'Word Processing & Calc', hrs: 0.50 }
     ],
     'Thu': [
-      { time: '08:40 AM - 09:15 AM', task: 'XI C lab', hrs: 0.58 },
-      { time: '09:25 AM - 10:00 AM', task: 'X C lab', hrs: 0.58 },
-      { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
-      { time: '10:35 AM - 11:10 AM', task: 'XII C lab', hrs: 0.58 },
-      { time: '11:40 AM - 12:20 PM', task: 'XI D', hrs: 0.67 },
-      { time: '12:55 PM - 01:30 PM', task: 'XIII D lab', hrs: 0.58 },
-      { time: '01:30 PM - 02:00 PM', task: 'X B lab', hrs: 0.50 }
+      { time: '08:40 AM - 09:15 AM', task: 'XI C lab', topic: 'List Methods', hrs: 0.58 },
+      { time: '09:25 AM - 10:00 AM', task: 'X C lab', topic: 'Spreadsheet Formulas', hrs: 0.58 },
+      { time: '10:00 AM - 10:35 AM', task: 'FREE', topic: '', hrs: 0.58 },
+      { time: '10:35 AM - 11:10 AM', task: 'XII C lab', topic: 'Table Grouping (GROUP BY)', hrs: 0.58 },
+      { time: '11:40 AM - 12:20 PM', task: 'XI D', topic: 'Boolean Logic', hrs: 0.67 },
+      { time: '12:55 PM - 01:30 PM', task: 'XII D lab', topic: 'HAVING Clause', hrs: 0.58 },
+      { time: '01:30 PM - 02:00 PM', task: 'X B lab', topic: 'Digital Documentation', hrs: 0.50 }
     ],
     'Fri': [
-      { time: '08:40 AM - 09:15 AM', task: 'XI C lab', hrs: 0.58 },
-      { time: '09:25 AM - 10:00 AM', task: 'X B', hrs: 0.58 },
-      { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
-      { time: '10:35 AM - 11:10 AM', task: 'XII C lab', hrs: 0.58 },
-      { time: '11:40 AM - 12:20 PM', task: 'XI D lab', hrs: 0.67 },
-      { time: '12:20 PM - 12:55 PM', task: 'X C', hrs: 0.58 },
-      { time: '12:55 PM - 01:30 PM', task: 'XIII D lab', hrs: 0.58 },
-      { time: '01:30 PM - 02:00 PM', task: 'IX C lab', hrs: 0.50 }
+      { time: '08:40 AM - 09:15 AM', task: 'XI C lab', topic: 'Data Types & Casting', hrs: 0.58 },
+      { time: '09:25 AM - 10:00 AM', task: 'X B', topic: 'Cyber Security Concepts', hrs: 0.58 },
+      { time: '10:00 AM - 10:35 AM', task: 'FREE', topic: '', hrs: 0.58 },
+      { time: '10:35 AM - 11:10 AM', task: 'XII C lab', topic: 'Practical Lab File Review', hrs: 0.58 },
+      { time: '11:40 AM - 12:20 PM', task: 'XI D lab', topic: 'Python Math Module', hrs: 0.67 },
+      { time: '12:20 PM - 12:55 PM', task: 'X C', topic: 'Internet Protocols', hrs: 0.58 },
+      { time: '12:55 PM - 01:30 PM', task: 'XII D lab', topic: 'SQL Constraints', hrs: 0.58 },
+      { time: '01:30 PM - 02:00 PM', task: 'IX C lab', topic: 'Presentation Software', hrs: 0.50 }
     ],
     'Sat': [
-      { time: '08:40 AM - 09:15 AM', task: 'XI C lab', hrs: 0.58 },
-      { time: '09:25 AM - 10:00 AM', task: 'X B', hrs: 0.58 },
-      { time: '10:00 AM - 10:35 AM', task: 'FREE', hrs: 0.58 },
-      { time: '10:35 AM - 11:10 AM', task: 'XII C lab', hrs: 0.58 },
-      { time: '11:40 AM - 12:20 PM', task: 'XI D lab', hrs: 0.67 },
-      { time: '12:20 PM - 12:55 PM', task: 'XI D', hrs: 0.58 },
-      { time: '12:55 PM - 01:30 PM', task: 'XIII D lab', hrs: 0.58 },
-      { time: '01:30 PM - 02:00 PM', task: 'IX C lab', hrs: 0.50 }
+      { time: '08:40 AM - 09:15 AM', task: 'XI C lab', topic: 'Weekly Practical Test', hrs: 0.58 },
+      { time: '09:25 AM - 10:00 AM', task: 'X B', topic: 'Revision', hrs: 0.58 },
+      { time: '10:00 AM - 10:35 AM', task: 'FREE', topic: '', hrs: 0.58 },
+      { time: '10:35 AM - 11:10 AM', task: 'XII C lab', topic: 'Board Practical Prep', hrs: 0.58 },
+      { time: '11:40 AM - 12:20 PM', task: 'XI D lab', topic: 'Error Debugging', hrs: 0.67 },
+      { time: '12:20 PM - 12:55 PM', task: 'XI D', topic: 'Operating Systems', hrs: 0.58 },
+      { time: '12:55 PM - 01:30 PM', task: 'XII D lab', topic: 'Project Viva Prep', hrs: 0.58 },
+      { time: '01:30 PM - 02:00 PM', task: 'IX C lab', topic: 'Touch Typing & Lab Tasks', hrs: 0.50 }
     ],
     'Sun': []
   },
@@ -628,7 +670,7 @@ window.MASTER_TIMETABLES = {
       { time: '08:00 PM - 09:00 PM', task: 'Home Tuition', topic: 'Series in Python', hrs: 1.00 }
     ],
     'Tue': [
-      { time: '04:10 PM - 05:00 PM', task: 'Class XI IP/CS – Sant Nagar', topic: 'Dictionary in Python', hrs: .50 },
+      { time: '04:10 PM - 05:00 PM', task: 'Class XI IP/CS – Sant Nagar', topic: 'Dictionary in Python', hrs: 0.50 },
       { time: '06:00 PM - 07:00 PM', task: 'Class XI AI – SICS', topic: 'Capstone Project', hrs: 0.50 },
       { time: '06:30 PM - 07:30 PM', task: 'Class XI IP/CS – SICS', topic: 'Dictionary in Python', hrs: 0.50 },
       { time: '08:00 PM - 09:00 PM', task: 'SkillYards', topic: 'Function in Python', hrs: 1.00 }
@@ -674,13 +716,14 @@ window.MASTER_TIMETABLES = {
 };
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-const STORE_KEY = 'singhPlanner_v25';
+const STORE_KEY = 'singhPlanner_v26';
 
 let state = {
   activeDateStr: getTodayISO(),
   viewMondayStr: getMondayISO(new Date()),
   days: {},
   timetables: { school: {}, tuition: {}, study: {} },
+  rosters: {}, // batchTitle -> array of student names
   lastBackup: null,
   lastCodeTemplate: ''
 };
@@ -688,6 +731,10 @@ let state = {
 let charts = {};
 let editMode = { school: false, tuition: false, study: false };
 let lastCheckedDate = getTodayISO();
+
+// Active attendance session pointer
+let currentAttBatch = null;
+let currentAttTaskId = null;
 
 /* ================= UTILITIES ================= */
 function escapeHtml(str){
@@ -820,7 +867,40 @@ function getTimeStatus(timeStr, dateStr){
   return 'upcoming';
 }
 
-/* ================= PARSER & STATE SANITIZER ================= */
+/* ================= 15-DAY STORAGE AUTO-PRUNING ================= */
+function pruneOldDays(keepDays = 15){
+  if(!state.days) return;
+  const now = new Date();
+  // Cutoff is keepDays ago from midnight
+  const pastLimit = new Date(now.getFullYear(), now.getMonth(), now.getDate() - keepDays);
+  const limitISO = `${pastLimit.getFullYear()}-${String(pastLimit.getMonth()+1).padStart(2,'0')}-${String(pastLimit.getDate()).padStart(2,'0')}`;
+  
+  let deletedCount = 0;
+  Object.keys(state.days).forEach(dateStr => {
+    // Only prune dates strictly older than 15 days ago
+    if(dateStr < limitISO){
+      delete state.days[dateStr];
+      deletedCount++;
+    }
+  });
+  if(deletedCount > 0){
+    console.log(`Auto-cleaned ${deletedCount} records older than 15 days.`);
+  }
+}
+
+/* ================= SCHOOL LAB & TASK PARSER ================= */
+function parseSchoolTask(taskStr){
+  const raw = taskStr || '';
+  const isFree = /\bfree\b/i.test(raw);
+  const isLab = /\blab\b/i.test(raw);
+  let name = raw.replace(/\blab\b/gi, '').replace(/\bfree\b/gi, '').trim();
+  if(!name){
+    name = isFree ? 'Free Period' : 'School Class';
+  }
+  return { name, isLab, isFree };
+}
+
+/* ================= TUITION PARSER & SANITIZER ================= */
 function parseTaskAndTopic(rawText, existingTopic){
   if(existingTopic && typeof existingTopic === 'string' && existingTopic.trim() !== ''){
     const cleanTitle = (rawText || '').replace(/\s*\|\s*Topic:.*$/i, '').trim();
@@ -858,11 +938,16 @@ function sanitizePlannerState(dataObj){
   if(dataObj.days){
     Object.values(dataObj.days).forEach(day => {
       if(day.tuition_study) day.tuition_study.forEach(cleanItem);
+      if(day.school) {
+        day.school.forEach(it => {
+          if(!it.topic) it.topic = '';
+        });
+      }
     });
   }
 }
 
-/* ================= TOASTS & MODALS ================= */
+/* ================= TOASTS & FEEDBACK ================= */
 function showToast(message, type='info'){
   const container = document.getElementById('toastContainer');
   const toast = document.createElement('div');
@@ -877,15 +962,7 @@ function showToast(message, type='info'){
   }, 3500);
 }
 
-function closeModal(){
-  document.getElementById('customModal').classList.add('hidden');
-}
-
-window.addEventListener('keydown', (e) => {
-  if(e.key === 'Escape') closeModal();
-});
-
-/* ================= TOPIC EDITING ================= */
+/* ================= TOPIC EDITING (SCHOOL & TUITION) ================= */
 function editItemTopic(taskId, sec, e){
   if(e) e.stopPropagation();
   const dayData = state.days[state.activeDateStr];
@@ -894,12 +971,207 @@ function editItemTopic(taskId, sec, e){
   if(!item) return;
 
   const currentTopic = item.topic || '';
-  const newTopic = prompt(`Enter topic for "${item.task}":`, currentTopic);
+  const promptLabel = sec === 'school' ? `Enter lesson topic for School (${item.task}):` : `Enter topic for "${item.task}":`;
+  const newTopic = prompt(promptLabel, currentTopic);
   if(newTopic !== null){
     item.topic = newTopic.trim();
     saveState();
     renderTables();
-    showToast(newTopic.trim() ? 'Topic saved!' : 'Topic cleared', 'success');
+    showToast(newTopic.trim() ? 'Topic updated!' : 'Topic cleared', 'success');
+  }
+}
+
+/* ================= ATTENDANCE ENGINE (WORKS IN-REALTIME & A DAY LATE) ================= */
+function getRosterForBatch(batchTitle){
+  if(!state.rosters) state.rosters = {};
+  if(state.rosters[batchTitle] && Array.isArray(state.rosters[batchTitle]) && state.rosters[batchTitle].length > 0){
+    return state.rosters[batchTitle];
+  }
+  
+  // Sensible default student rosters for Rohit Sir's batches
+  const t = (batchTitle || '').toLowerCase();
+  let defaultList = [];
+  if(t.includes('xii ip')){
+    defaultList = ['Aarav Sharma', 'Diya Patel', 'Rohan Gupta', 'Sneha Verma', 'Tanya Mehra'];
+  } else if(t.includes('xii cs')){
+    defaultList = ['Aditya Kumar', 'Bhavya Joshi', 'Harsh Vardhan', 'Kavya Singh', 'Manish Rawat'];
+  } else if(t.includes('xi ip') || t.includes('xi cs')){
+    defaultList = ['Ananya Roy', 'Daksh Malhotra', 'Ishaan Chawla', 'Rhea Kapoor', 'Tushar Negi'];
+  } else if(t.includes('xi ai')){
+    defaultList = ['Devansh Nair', 'Kritika Sen', 'Samarjeet Singh', 'Zoya Khan'];
+  } else if(t.includes('skillyards')){
+    defaultList = ['Aman Verma', 'Pooja Sharma', 'Vikas Yadav'];
+  } else if(t.includes('vidya')){
+    defaultList = ['Vidya'];
+  } else if(t.includes('kriti') || t.includes('kirti')){
+    defaultList = ['Kriti'];
+  } else if(t.includes('home tuition')){
+    defaultList = ['Home Student'];
+  } else {
+    defaultList = ['Student 1', 'Student 2', 'Student 3', 'Student 4'];
+  }
+
+  state.rosters[batchTitle] = defaultList;
+  return defaultList;
+}
+
+function getAttendanceSummary(batchTitle, dateStr){
+  const dayData = state.days[dateStr];
+  const roster = getRosterForBatch(batchTitle);
+  const total = roster.length;
+  if(!dayData || !dayData.attendance || !dayData.attendance[batchTitle]){
+    return { taken: false, present: 0, total, absent: 0, late: 0 };
+  }
+  const att = dayData.attendance[batchTitle];
+  let present = 0, absent = 0, late = 0;
+  roster.forEach(st => {
+    const status = att[st];
+    if(status === 'P') present++;
+    else if(status === 'L') { present++; late++; }
+    else if(status === 'A') absent++;
+  });
+  const taken = Object.keys(att).length > 0;
+  return { taken, present, total, absent, late };
+}
+
+function openAttendanceModal(taskId, batchTitle, e){
+  if(e) e.stopPropagation();
+  currentAttTaskId = taskId;
+  currentAttBatch = batchTitle;
+
+  const dayData = state.days[state.activeDateStr];
+  if(!dayData.attendance) dayData.attendance = {};
+  if(!dayData.attendance[batchTitle]) dayData.attendance[batchTitle] = {};
+
+  const roster = getRosterForBatch(batchTitle);
+  // Default unrecorded students to 'P' (Present) so one tap confirms attendance
+  roster.forEach(st => {
+    if(!dayData.attendance[batchTitle][st]){
+      dayData.attendance[batchTitle][st] = 'P';
+    }
+  });
+
+  const [y,m,d] = state.activeDateStr.split('-');
+  const dt = new Date(y, m-1, d);
+  const isToday = state.activeDateStr === getTodayISO();
+  const yesterdayISO = addDays(getTodayISO(), -1);
+  const isYesterday = state.activeDateStr === yesterdayISO;
+  let dayTag = isToday ? ' (Today)' : (isYesterday ? ' (Yesterday - A Day Late)' : '');
+
+  document.getElementById('attBatchTitle').textContent = batchTitle;
+  document.getElementById('attDateSubtitle').textContent = `${dt.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric', year:'numeric'})}${dayTag}`;
+
+  renderAttendanceList();
+  document.getElementById('attendanceModal').classList.remove('hidden');
+  if(window.lucide) lucide.createIcons();
+}
+
+function closeAttendanceModal(){
+  document.getElementById('attendanceModal').classList.add('hidden');
+  currentAttTaskId = null;
+  currentAttBatch = null;
+  saveState();
+  renderTables();
+}
+
+function renderAttendanceList(){
+  if(!currentAttBatch) return;
+  const container = document.getElementById('attStudentList');
+  const roster = getRosterForBatch(currentAttBatch);
+  const dayAtt = (state.days[state.activeDateStr].attendance && state.days[state.activeDateStr].attendance[currentAttBatch]) || {};
+
+  let presentCount = 0;
+  container.innerHTML = roster.map(student => {
+    const status = dayAtt[student] || 'P';
+    if(status === 'P' || status === 'L') presentCount++;
+
+    return `
+      <div class="flex items-center justify-between p-2 bg-slate-50 hover:bg-slate-100/80 rounded-xl border border-slate-200/70 transition">
+        <div class="flex items-center gap-2.5 min-w-0 pr-2">
+          <div class="w-7 h-7 rounded-lg bg-orange-100 text-orange-700 flex items-center justify-center text-[11px] font-black shrink-0">
+            ${escapeHtml(student.charAt(0))}
+          </div>
+          <span class="text-xs font-bold text-slate-800 truncate">${escapeHtml(student)}</span>
+        </div>
+        
+        <div class="flex items-center gap-1.5 shrink-0">
+          <button onclick="setStudentStatus('${escapeHtml(student)}', 'P')" class="px-2.5 py-1 rounded-lg text-[10.5px] font-extrabold transition active:scale-95 ${status === 'P' ? 'bg-emerald-600 text-white shadow-xs' : 'bg-white hover:bg-emerald-50 text-slate-600 border border-slate-200'}">
+            P
+          </button>
+          <button onclick="setStudentStatus('${escapeHtml(student)}', 'A')" class="px-2.5 py-1 rounded-lg text-[10.5px] font-extrabold transition active:scale-95 ${status === 'A' ? 'bg-rose-600 text-white shadow-xs' : 'bg-white hover:bg-rose-50 text-slate-600 border border-slate-200'}">
+            A
+          </button>
+          <button onclick="setStudentStatus('${escapeHtml(student)}', 'L')" class="px-2.5 py-1 rounded-lg text-[10.5px] font-extrabold transition active:scale-95 ${status === 'L' ? 'bg-amber-500 text-white shadow-xs' : 'bg-white hover:bg-amber-50 text-slate-600 border border-slate-200'}">
+            Late
+          </button>
+          <button onclick="removeStudentFromRoster('${escapeHtml(student)}')" class="text-slate-300 hover:text-rose-500 p-1 rounded-md transition ml-1" title="Remove from batch">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('attStatsCounter').textContent = `${presentCount} Present / ${roster.length} Total`;
+  if(window.lucide) lucide.createIcons();
+}
+
+function setStudentStatus(student, status){
+  if(!currentAttBatch) return;
+  const dayAtt = state.days[state.activeDateStr].attendance;
+  if(!dayAtt[currentAttBatch]) dayAtt[currentAttBatch] = {};
+  dayAtt[currentAttBatch][student] = status;
+  saveState();
+  renderAttendanceList();
+  renderTables();
+}
+
+function markAllAttendance(status){
+  if(!currentAttBatch) return;
+  const roster = getRosterForBatch(currentAttBatch);
+  const dayAtt = state.days[state.activeDateStr].attendance;
+  if(!dayAtt[currentAttBatch]) dayAtt[currentAttBatch] = {};
+  roster.forEach(st => {
+    dayAtt[currentAttBatch][st] = status;
+  });
+  saveState();
+  renderAttendanceList();
+  renderTables();
+  showToast(`Marked all ${status === 'P' ? 'Present' : 'Absent'} for ${currentAttBatch}`, 'success');
+}
+
+function addStudentToRoster(){
+  if(!currentAttBatch) return;
+  const input = document.getElementById('newStudentInput');
+  const name = input.value.trim();
+  if(!name) return;
+  if(!state.rosters[currentAttBatch]) state.rosters[currentAttBatch] = [];
+  if(!state.rosters[currentAttBatch].includes(name)){
+    state.rosters[currentAttBatch].push(name);
+    const dayAtt = state.days[state.activeDateStr].attendance;
+    if(!dayAtt[currentAttBatch]) dayAtt[currentAttBatch] = {};
+    dayAtt[currentAttBatch][name] = 'P';
+    saveState();
+    input.value = '';
+    renderAttendanceList();
+    renderTables();
+    showToast(`Added ${name} to batch roster`, 'success');
+  } else {
+    showToast(`${name} is already in this roster`, 'info');
+  }
+}
+
+function removeStudentFromRoster(student){
+  if(!currentAttBatch) return;
+  if(confirm(`Remove ${student} from the permanent roster for ${currentAttBatch}?`)){
+    state.rosters[currentAttBatch] = (state.rosters[currentAttBatch] || []).filter(s => s !== student);
+    if(state.days[state.activeDateStr].attendance && state.days[state.activeDateStr].attendance[currentAttBatch]){
+      delete state.days[state.activeDateStr].attendance[currentAttBatch][student];
+    }
+    saveState();
+    renderAttendanceList();
+    renderTables();
+    showToast(`Removed ${student}`, 'info');
   }
 }
 
@@ -953,7 +1225,7 @@ function sendTaskWhatsApp(taskId, sec, e){
 
   const topicDisplay = topicText || 'Functions in Python';
 
-  // Build the message exactly matching the requested format
+  // Build the message exactly matching requested template
   const message = `
 *=•=•=•=•=•=•=•=•==•=•=•=•=•=•=•=•=*
 ⏰*Gentle Reminder*
@@ -974,38 +1246,48 @@ function sendTaskWhatsApp(taskId, sec, e){
 /* ================= AUTO-SYNC & STATE ================= */
 function syncDayFromTimetable(dateStr){
   const dName = getDayName(dateStr);
-  const existing = state.days[dateStr] || { school: [], tuition_study: [] };
+  const existing = state.days[dateStr] || { school: [], tuition_study: [], attendance: {} };
   
+  // Preserve completed states and custom daily topics
   const compSchool = new Set();
+  const schoolTopics = new Map();
   (existing.school || []).forEach(t => {
     if(t.completed) compSchool.add(`${t.time}_${t.task}`);
+    if(t.topic) schoolTopics.set(`${t.time}_${t.task}`, t.topic);
   });
 
   const compTuition = new Set();
+  const tuitionTopics = new Map();
   (existing.tuition_study || []).forEach(t => {
     if(t.completed) compTuition.add(`${t.time}_${t.task}`);
+    if(t.topic) tuitionTopics.set(`${t.time}_${t.task}`, t.topic);
   });
 
-  const sTasks = (state.timetables.school[dName] || []).map(item => ({
-    id: uid(),
-    time: item.time,
-    hrs: parseFloat(item.hrs) || 0.58,
-    cat: 'School',
-    task: item.task,
-    completed: compSchool.has(`${item.time}_${item.task}`)
-  }));
+  const sTasks = (state.timetables.school[dName] || []).map(item => {
+    const key = `${item.time}_${item.task}`;
+    return {
+      id: uid(),
+      time: item.time,
+      hrs: parseFloat(item.hrs) || 0.58,
+      cat: 'School',
+      task: item.task,
+      topic: schoolTopics.get(key) || item.topic || '',
+      completed: compSchool.has(key)
+    };
+  });
 
   const tsTasks = [];
   (state.timetables.tuition[dName] || []).forEach(item => {
     const p = parseTaskAndTopic(item.task, item.topic);
+    const key = `${item.time}_${item.task}`;
     tsTasks.push({
       id: uid(),
       time: item.time,
       hrs: parseFloat(item.hrs) || 1.17,
       cat: 'Tuition',
       task: p.title,
-      topic: p.topic || '',
-      completed: compTuition.has(`${item.time}_${item.task}`) || compTuition.has(`${item.time}_${p.title}`)
+      topic: tuitionTopics.get(key) || p.topic || '',
+      completed: compTuition.has(key) || compTuition.has(`${item.time}_${p.title}`)
     });
   });
 
@@ -1024,7 +1306,11 @@ function syncDayFromTimetable(dateStr){
   sortTasksByTime(sTasks);
   sortTasksByTime(tsTasks);
 
-  state.days[dateStr] = { school: sTasks, tuition_study: tsTasks };
+  state.days[dateStr] = {
+    school: sTasks,
+    tuition_study: tsTasks,
+    attendance: existing.attendance || {}
+  };
 }
 
 function loadState(){
@@ -1037,14 +1323,18 @@ function loadState(){
     }
   } else {
     initState();
-    const prev = localStorage.getItem('singhPlanner_v23') || localStorage.getItem('singhPlanner_v22') || localStorage.getItem('singhPlanner_v21');
+    const prev = localStorage.getItem('singhPlanner_v25') || localStorage.getItem('singhPlanner_v24');
     if(prev){
       try {
         const p = JSON.parse(prev);
         if(p.days) state.days = p.days;
+        if(p.rosters) state.rosters = p.rosters;
       } catch(e){}
     }
   }
+
+  // Ensure rosters object exists
+  if(!state.rosters) state.rosters = {};
 
   sanitizePlannerState(state);
 
@@ -1064,6 +1354,9 @@ function loadState(){
     });
   }
 
+  // Auto-prune data older than 15 days
+  pruneOldDays(15);
+
   syncDayFromTimetable(state.activeDateStr);
   saveState();
   renderAll();
@@ -1075,6 +1368,7 @@ function initState(){
     viewMondayStr: getMondayISO(new Date()),
     days: {},
     timetables: JSON.parse(JSON.stringify(window.MASTER_TIMETABLES)),
+    rosters: {},
     lastBackup: null,
     lastCodeTemplate: JSON.stringify(window.MASTER_TIMETABLES)
   };
@@ -1082,6 +1376,7 @@ function initState(){
 
 function saveState(){
   try {
+    pruneOldDays(15);
     localStorage.setItem(STORE_KEY, JSON.stringify(state));
   } catch(e) {
     showToast('Storage quota exceeded! Export a backup file now.', 'error');
@@ -1089,7 +1384,9 @@ function saveState(){
 }
 
 function ensureDayPopulated(dateStr){
-  syncDayFromTimetable(dateStr);
+  if(!state.days[dateStr]){
+    syncDayFromTimetable(dateStr);
+  }
 }
 
 function reloadDayFromTimetable(dateStr, showToastMsg=true){
@@ -1255,7 +1552,7 @@ function jumpToday(){
 function renderTables(){
   const dayData = state.days[state.activeDateStr] || { school: [], tuition_study: [] };
   
-  // 1. Render School Classes (No WhatsApp button)
+  // 1. Render School Classes (Enhanced Lab visual indicators + Topic Sub-line)
   {
     const sec = 'school';
     if(dayData[sec]) sortTasksByTime(dayData[sec]);
@@ -1281,6 +1578,7 @@ function renderTables(){
       items.forEach((item) => {
         const status = getTimeStatus(item.time, state.activeDateStr);
         const isLive = status === 'active';
+        const parsed = parseSchoolTask(item.task);
         
         const row = document.createElement('tr');
         let rowClasses = 'transition duration-150 border-b border-slate-100 cursor-pointer select-none ';
@@ -1296,6 +1594,16 @@ function renderTables(){
         row.className = rowClasses;
         row.onclick = (e) => handleRowClick(e, item.id, sec);
         
+        // Lab vs Free vs Theory Badging
+        let typeBadgeHtml = '';
+        if(parsed.isFree){
+          typeBadgeHtml = `<span class="inline-flex items-center gap-1 bg-amber-50 text-amber-700 border border-amber-200/80 text-[9.5px] font-black px-1.5 py-0.5 rounded shadow-xs"><i data-lucide="coffee" class="w-2.5 h-2.5"></i> FREE</span>`;
+        } else if(parsed.isLab){
+          typeBadgeHtml = `<span class="inline-flex items-center gap-1 bg-cyan-50 text-cyan-700 border border-cyan-200/90 text-[9.5px] font-black px-1.5 py-0.5 rounded shadow-xs"><i data-lucide="flask-conical" class="w-2.5 h-2.5 text-cyan-600 stroke-[2.5]"></i> LAB</span>`;
+        } else {
+          typeBadgeHtml = `<span class="inline-flex items-center gap-1 bg-slate-100 text-slate-600 border border-slate-200 text-[9.5px] font-black px-1.5 py-0.5 rounded"><i data-lucide="book-open" class="w-2.5 h-2.5"></i> THEORY</span>`;
+        }
+
         row.innerHTML = `
           <td class="py-2.5 px-3 text-center col-cb">
             <label class="flex items-center justify-center cursor-pointer p-0.5" onclick="event.stopPropagation()">
@@ -1309,9 +1617,32 @@ function renderTables(){
             </div>
           </td>
           <td class="py-2.5 px-3 text-left col-tk">
-            <div class="flex items-center gap-2">
-              <span class="text-xs sm:text-[13px] font-bold ${item.completed ? 'line-through text-slate-500' : 'text-slate-900'}">${escapeHtml(item.task || 'Untitled Period')}</span>
-              ${item.completed ? '<span class="inline-flex items-center gap-0.5 text-[9.5px] font-extrabold text-emerald-700 bg-emerald-100/90 px-1.5 py-0.2 rounded border border-emerald-300 shrink-0"><i data-lucide="check" class="w-2.5 h-2.5 stroke-[3]"></i> Done</span>' : ''}
+            <div class="flex flex-col min-w-0">
+              <!-- LINE 1: Class Name & Lab Badge -->
+              <div class="flex items-center gap-2 flex-wrap min-w-0">
+                <span class="text-xs sm:text-[13.5px] font-extrabold ${item.completed ? 'line-through text-slate-400' : 'text-slate-900'}">${escapeHtml(parsed.name)}</span>
+                ${typeBadgeHtml}
+                ${item.completed ? '<span class="inline-flex items-center gap-0.5 text-[9px] font-black text-emerald-700 bg-emerald-100 px-1.5 py-0.2 rounded border border-emerald-300 shrink-0"><i data-lucide="check" class="w-2.5 h-2.5 stroke-[3]"></i> Done</span>' : ''}
+              </div>
+              <!-- LINE 2: Dedicated Lesson Topic Sub-line -->
+              ${!parsed.isFree ? `
+                <div class="flex items-center gap-1.5 mt-1 text-[11px]">
+                  ${item.topic ? `
+                    <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 px-2 py-0.5 rounded border border-blue-200/90 cursor-pointer transition active:scale-95" onclick="editItemTopic('${item.id}', '${sec}', event)" title="Click to edit topic">
+                      <span>📚 Topic:</span>
+                      <strong class="font-bold underline decoration-blue-300 underline-offset-2">${escapeHtml(item.topic)}</strong>
+                    </span>
+                    <button type="button" onclick="editItemTopic('${item.id}', '${sec}', event)" class="text-slate-400 hover:text-blue-600 p-0.5 rounded transition print-hide" title="Edit Topic">
+                      <i data-lucide="pencil" class="w-3 h-3"></i>
+                    </button>
+                  ` : `
+                    <button type="button" onclick="editItemTopic('${item.id}', '${sec}', event)" class="inline-flex items-center gap-1 text-[11px] font-medium text-slate-400 hover:text-blue-600 transition print-hide">
+                      <span>📚 Topic:</span>
+                      <span class="italic text-slate-400 hover:underline">+ Add lesson plan</span>
+                    </button>
+                  `}
+                </div>
+              ` : ''}
             </div>
           </td>
           <td class="py-2.5 px-3 text-right col-hr whitespace-nowrap">
@@ -1322,7 +1653,7 @@ function renderTables(){
     }
   }
 
-  // 2. Render Tuition & Study (Clean Two-Line Stack: Line 1 = Batch Title, Line 2 = Topic)
+  // 2. Render Tuition & Study (With Live Attendance & WhatsApp Dispatcher)
   {
     const sec = 'tuition_study';
     if(dayData[sec]) sortTasksByTime(dayData[sec]);
@@ -1350,10 +1681,12 @@ function renderTables(){
         const isLive = status === 'active';
         const isTuition = item.cat === 'Tuition';
         
-        // Ensure parsing splits title and topic cleanly
         const parsed = parseTaskAndTopic(item.task, item.topic);
         const cleanTitle = parsed.title;
         const currentTopic = parsed.topic;
+
+        // Fetch attendance status for this batch on active date
+        const attSummary = isTuition ? getAttendanceSummary(cleanTitle, state.activeDateStr) : null;
         
         const row = document.createElement('tr');
         let rowClasses = 'transition duration-150 border-b border-slate-100 cursor-pointer select-none ';
@@ -1409,13 +1742,24 @@ function renderTables(){
                   </div>
                 ` : ''}
               </div>
+
+              <!-- ACTION TOOLBAR: ATTENDANCE & WHATSAPP (TUITION ONLY) -->
               ${isTuition ? `
-                <button type="button" onclick="sendTaskWhatsApp('${item.id}', '${sec}', event)" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10.5px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 hover:border-emerald-300 transition active:scale-95 shrink-0 print-hide" title="Send reminder to WhatsApp" aria-label="Send reminder on WhatsApp">
-                  <svg class="w-3.5 h-3.5 fill-[#25D366] shrink-0" viewBox="0 0 24 24">
-                    <path d="M17.472 14.382c-.301-.15-1.781-.879-2.056-.98-.277-.101-.479-.15-.68.15-.202.301-.782.98-.959 1.182-.176.201-.353.226-.653.076-.301-.15-1.27-.468-2.42-1.493-.894-.798-1.498-1.784-1.674-2.086-.176-.301-.019-.464.131-.614.136-.134.301-.351.451-.527.15-.176.201-.301.301-.502.101-.201.05-.376-.025-.526-.075-.15-.68-1.637-.93-2.24-.244-.588-.492-.508-.68-.518l-.58-.01c-.201 0-.528.075-.804.376-.276.301-1.055 1.03-1.055 2.511 0 1.481 1.08 2.91 1.23 3.111.151.201 2.125 3.245 5.148 4.551.719.311 1.28.497 1.718.636.722.23 1.378.197 1.898.12.578-.087 1.781-.728 2.032-1.431.251-.703.251-1.306.176-1.431-.076-.125-.276-.201-.577-.351zm-5.466 7.426h-.008c-1.802 0-3.57-.485-5.115-1.402l-.367-.218-3.805.998 1.016-3.708-.239-.381c-1.01-1.607-1.543-3.473-1.542-5.388.004-5.577 4.542-10.115 10.122-10.115 2.701 0 5.241 1.053 7.151 2.964 1.911 1.912 2.963 4.453 2.961 7.156-.005 5.579-4.543 10.116-10.124 10.116zm8.566-18.681c-2.288-2.29-5.33-3.553-8.568-3.555-6.673 0-12.099 5.424-12.102 12.099-.001 2.133.557 4.215 1.617 6.052l-1.717 6.273 6.42-1.684c1.764.962 3.748 1.469 5.774 1.47h.005c6.671 0 12.099-5.425 12.102-12.1 0-3.234-1.258-6.276-3.531-8.555z"/>
-                  </svg>
-                  <span>WhatsApp</span>
-                </button>
+                <div class="flex items-center gap-1.5 shrink-0 print-hide">
+                  <!-- Attendance Trigger Button -->
+                  <button type="button" onclick="openAttendanceModal('${item.id}', '${escapeHtml(cleanTitle)}', event)" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10.5px] font-extrabold transition active:scale-95 border ${attSummary.taken ? 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-slate-50 hover:bg-orange-50 text-slate-700 hover:text-orange-700 border-slate-200'}" title="Take or check attendance">
+                    <i data-lucide="users" class="w-3.5 h-3.5 ${attSummary.taken ? 'text-emerald-600' : 'text-slate-500'}"></i>
+                    <span>${attSummary.taken ? `Att: ${attSummary.present}/${attSummary.total}` : 'Attendance'}</span>
+                  </button>
+
+                  <!-- WhatsApp Trigger Button -->
+                  <button type="button" onclick="sendTaskWhatsApp('${item.id}', '${sec}', event)" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10.5px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 hover:border-emerald-300 transition active:scale-95" title="Send reminder to WhatsApp" aria-label="Send reminder on WhatsApp">
+                    <svg class="w-3.5 h-3.5 fill-[#25D366] shrink-0" viewBox="0 0 24 24">
+                      <path d="M17.472 14.382c-.301-.15-1.781-.879-2.056-.98-.277-.101-.479-.15-.68.15-.202.301-.782.98-.959 1.182-.176.201-.353.226-.653.076-.301-.15-1.27-.468-2.42-1.493-.894-.798-1.498-1.784-1.674-2.086-.176-.301-.019-.464.131-.614.136-.134.301-.351.451-.527.15-.176.201-.301.301-.502.101-.201.05-.376-.025-.526-.075-.15-.68-1.637-.93-2.24-.244-.588-.492-.508-.68-.518l-.58-.01c-.201 0-.528.075-.804.376-.276.301-1.055 1.03-1.055 2.511 0 1.481 1.08 2.91 1.23 3.111.151.201 2.125 3.245 5.148 4.551.719.311 1.28.497 1.718.636.722.23 1.378.197 1.898.12.578-.087 1.781-.728 2.032-1.431.251-.703.251-1.306.176-1.431-.076-.125-.276-.201-.577-.351zm-5.466 7.426h-.008c-1.802 0-3.57-.485-5.115-1.402l-.367-.218-3.805.998 1.016-3.708-.239-.381c-1.01-1.607-1.543-3.473-1.542-5.388.004-5.577 4.542-10.115 10.122-10.115 2.701 0 5.241 1.053 7.151 2.964 1.911 1.912 2.963 4.453 2.961 7.156-.005 5.579-4.543 10.116-10.124 10.116zm8.566-18.681c-2.288-2.29-5.33-3.553-8.568-3.555-6.673 0-12.099 5.424-12.102 12.099-.001 2.133.557 4.215 1.617 6.052l-1.717 6.273 6.42-1.684c1.764.962 3.748 1.469 5.774 1.47h.005c6.671 0 12.099-5.425 12.102-12.1 0-3.234-1.258-6.276-3.531-8.555z"/>
+                    </svg>
+                    <span>WhatsApp</span>
+                  </button>
+                </div>
               ` : ''}
             </div>
           </td>
@@ -1430,7 +1774,7 @@ function renderTables(){
     }
   }
 
-  // Totals & Meta
+  // Section Totals & Meta
   const schoolHrs = (dayData.school || []).reduce((sum, t) => sum + (parseFloat(t.hrs) || 0), 0);
   const schoolComp = (dayData.school || []).filter(t => t.completed).length;
   const schoolTot = (dayData.school || []).length;
@@ -1539,7 +1883,7 @@ function renderTimetables(){
                   <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                 </button>
               </div>
-              <input type="text" class="w-full text-[11px] font-bold p-1 border border-slate-300 rounded bg-white tt-task-${type}-${d}" data-idx="${i}" value="${escapeHtml(it.task)}" placeholder="Subject / Batch">
+              <input type="text" class="w-full text-[11px] font-bold p-1 border border-slate-300 rounded bg-white tt-task-${type}-${d}" data-idx="${i}" value="${escapeHtml(it.task)}" placeholder="Subject / Batch / Lab">
             </div>
           ` : `
             <div class="p-1 border-b border-slate-50 text-slate-700 last:border-none flex items-center justify-between text-[11px]">
@@ -1627,7 +1971,7 @@ function addNewTemplateSlot(t, d){
   if(!state.timetables[t][d]) state.timetables[t][d] = [];
   state.timetables[t][d].push({
     time: t === 'school' ? '08:40 AM - 09:15 AM' : t === 'tuition' ? '04:00 PM - 05:10 PM' : '10:00 PM - 11:30 PM',
-    task: 'New Session',
+    task: t === 'school' ? 'XI C lab' : 'New Session',
     topic: '',
     hrs: t === 'school' ? 0.58 : t === 'tuition' ? 1.17 : 1.50
   });
@@ -1773,6 +2117,7 @@ function importBackup(e){
       const d = JSON.parse(evt.target.result);
       if(d.timetables && d.days){
         state = d;
+        if(!state.rosters) state.rosters = {};
         sanitizePlannerState(state);
         state.activeDateStr = getTodayISO();
         state.viewMondayStr = getMondayISO(new Date());
