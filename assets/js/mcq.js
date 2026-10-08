@@ -21,6 +21,7 @@ const ICON_MINIMIZE = `<polyline points="4 14 10 14 10 20"></polyline><line x1="
 window.CBTState = {
   listExamPapers: [], isQuestionsLoading: false, questions: [], sections: [], currentYearIndex: 0, currentQuestion: 0,
   studentNameVal: "", studentClassVal: "Class 12", studentSectionVal: "A", schoolNameVal: "", studentName: "",
+  selectedSectionMode: "ALL",
   userAnswers: [], visitedQuestions: [], lockedAnswers: [], sectionTimes: [], timerInterval: null, isTimerPaused: true,
   isTimerFrozen: false, securityWarnings: 0, isExamActive: false, currentFilter: 'all', activeResourceUrl: "",
   lastWT: 0, sectionToppersFetched: [], pendingRestoreData: null, feedbackRating: 1.5, feedbackCategory: "Suggestion",
@@ -119,7 +120,8 @@ function saveSessionToLocalStorage() {
       visitedQuestions: CBTState.visitedQuestions, lockedAnswers: CBTState.lockedAnswers, sectionTimes: CBTState.sectionTimes,
       securityWarnings: CBTState.securityWarnings, questions: CBTState.questions, sections: CBTState.sections,
       studentNameVal: CBTState.studentNameVal, studentClassVal: CBTState.studentClassVal, studentSectionVal: CBTState.studentSectionVal,
-      schoolNameVal: CBTState.schoolNameVal, studentName: CBTState.studentName, sectionToppersFetched: CBTState.sectionToppersFetched 
+      schoolNameVal: CBTState.schoolNameVal, studentName: CBTState.studentName, selectedSectionMode: CBTState.selectedSectionMode,
+      sectionToppersFetched: CBTState.sectionToppersFetched 
     })); 
   } catch (e) { console.warn("Save session failed:", e); } 
 }
@@ -134,8 +136,8 @@ function restoreSession(data) {
     visitedQuestions: data.visitedQuestions || [], lockedAnswers: data.lockedAnswers || [], sectionTimes: data.sectionTimes || [],
     securityWarnings: data.securityWarnings || 0, questions: data.questions || [], sections: data.sections || [],
     studentNameVal: data.studentNameVal || "", studentClassVal: restoredClass, studentSectionVal: data.studentSectionVal || "A",
-    schoolNameVal: data.schoolNameVal || "", studentName: data.studentName || "", sectionToppersFetched: data.sectionToppersFetched || [],
-    isExamActive: true, isTimerPaused: false, isTimerFrozen: false
+    schoolNameVal: data.schoolNameVal || "", studentName: data.studentName || "", selectedSectionMode: data.selectedSectionMode || "ALL",
+    sectionToppersFetched: data.sectionToppersFetched || [], isExamActive: true, isTimerPaused: false, isTimerFrozen: false
   });
   if ($('student-name-input')) $('student-name-input').value = CBTState.studentNameVal;
   if ($('student-class-input')) $('student-class-input').value = CBTState.studentClassVal;
@@ -217,12 +219,319 @@ async function loadQuestionsFromSheet(retries = 3) {
       if (CBTState.listExamPapers.length > 0) {
         CBTState.listExamPapers.forEach(p => (p.questions || []).forEach(q => { if (q.image) { const i = new Image(); i.src = q.image; } }));
         CBTState.isQuestionsLoading = false;
+        renderDynamicSectionPickerCards();
         return;
       }
     } catch (err) { if (attempt < retries) await new Promise(res => setTimeout(res, 800)); } 
   }
   CBTState.isQuestionsLoading = false;
 }
+
+/* ==========================================================
+   SECTION SELECTION MODAL INJECTION & FLOW
+   ========================================================== */
+
+function ensureSectionSelectionModalExists() {
+  let modalSection = $('welcome-step-section');
+  if (!modalSection) {
+    const welcomeOverlay = $('modal-welcome');
+    const step1 = $('welcome-step-1');
+    if (!welcomeOverlay || !step1) return;
+
+    modalSection = document.createElement('div');
+    modalSection.id = 'welcome-step-section';
+    modalSection.className = 'custom-modal-box registration-card';
+    modalSection.style.display = 'none';
+    modalSection.innerHTML = `
+      <div class="topic-banner-wrapper">
+        <div class="banner-line"></div>
+        <div class="modal-topic-title"><svg class="topic-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#046a38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg><span class="topic-text">Select Test Mode</span></div>
+        <div class="banner-line"></div>
+      </div>
+      <div class="modal-stepper" style="margin-bottom:12px;">
+        <div class="step-item"><span class="step-badge">1</span><span class="step-text">Details</span></div><div class="step-divider"></div>
+        <div class="step-item active"><span class="step-badge">2</span><span class="step-text">Section</span></div><div class="step-divider"></div>
+        <div class="step-item"><span class="step-badge">3</span><span class="step-text">Instructions</span></div><div class="step-divider"></div>
+        <div class="step-item"><span class="step-badge">4</span><span class="step-text">Test</span></div>
+      </div>
+      <div class="section-picker-container" style="text-align:left;margin-bottom:12px;">
+        <p style="font-size:0.84rem;color:#475569;margin:0 0 10px 0;text-align:center;font-weight:600;">Choose a specific section or attempt the complete test:</p>
+        <div class="section-picker-grid" id="section-picker-options-grid">
+          <label class="section-opt-card active" id="opt-section-all" onclick="handleSectionOptChange('ALL')">
+            <input type="radio" name="cbt-section-select" value="ALL" checked />
+            <div class="sec-card-badge">ALL</div>
+            <div class="sec-card-info">
+              <span class="sec-card-title">Full Mock Test (All Sections)</span>
+              <span class="sec-card-sub" id="lbl-all-sec-sub">Attempt all sections sequentially</span>
+            </div>
+            <span class="sec-card-check">✓</span>
+          </label>
+          <div id="dynamic-sections-container"></div>
+        </div>
+      </div>
+      <div class="modal-btn-row" style="display:flex;gap:8px;">
+        <button type="button" class="btn-back-home" style="flex:1;height:42px;border-radius:9px;font-weight:700;" onclick="backToDetailsStep()">&larr; Back</button>
+        <button type="button" class="btn-green-submit" style="flex:2;" onclick="confirmSectionAndProceed()">Proceed to Instructions &rarr;</button>
+      </div>
+    `;
+
+    step1.parentNode.insertBefore(modalSection, step1.nextSibling);
+  }
+
+  upgradeSteppersToFourSteps();
+}
+
+function upgradeSteppersToFourSteps() {
+  const step1 = $('welcome-step-1');
+  if (step1) {
+    const stepper1 = step1.querySelector('.modal-stepper');
+    if (stepper1 && stepper1.querySelectorAll('.step-item').length === 3) {
+      stepper1.innerHTML = `
+        <div class="step-item active"><span class="step-badge">1</span><span class="step-text">Details</span></div><div class="step-divider"></div>
+        <div class="step-item"><span class="step-badge">2</span><span class="step-text">Section</span></div><div class="step-divider"></div>
+        <div class="step-item"><span class="step-badge">3</span><span class="step-text">Instructions</span></div><div class="step-divider"></div>
+        <div class="step-item"><span class="step-badge">4</span><span class="step-text">Test</span></div>
+      `;
+    }
+  }
+
+  const step2 = $('welcome-step-2');
+  if (step2) {
+    const stepper2 = step2.querySelector('.modal-stepper');
+    if (stepper2 && stepper2.querySelectorAll('.step-item').length === 3) {
+      stepper2.innerHTML = `
+        <div class="step-item"><span class="step-badge">1</span><span class="step-text">Details</span></div><div class="step-divider"></div>
+        <div class="step-item"><span class="step-badge">2</span><span class="step-text">Section</span></div><div class="step-divider"></div>
+        <div class="step-item active"><span class="step-badge">3</span><span class="step-text">Instructions</span></div><div class="step-divider"></div>
+        <div class="step-item"><span class="step-badge">4</span><span class="step-text">Test</span></div>
+      `;
+    }
+    const btnRow = step2.querySelector('.modal-start-btn-row');
+    if (btnRow && !btnRow.querySelector('.btn-back-home')) {
+      btnRow.style.display = 'flex';
+      btnRow.style.gap = '8px';
+      btnRow.innerHTML = `
+        <button type="button" class="btn-back-home" style="flex:1;height:42px;border-radius:9px;font-weight:700;" onclick="backToSectionStep()">&larr; Back</button>
+        <button type="button" class="btn-green-submit" style="flex:2;" onclick="beginExam()">Start Mock Test</button>
+      `;
+    }
+  }
+}
+
+function renderDynamicSectionPickerCards() {
+  const container = $('dynamic-sections-container');
+  if (!container) return;
+
+  if (CBTState.listExamPapers.length === 0) {
+    container.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align:center; padding:14px; color:#64748b; font-size:0.80rem; font-weight:600;">
+        <div class="fetch-spinner" style="margin:0 auto 8px auto; width:22px; height:22px;"></div>
+        Fetching sections from database...
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = '';
+  let totalQuestionsCount = 0;
+
+  CBTState.listExamPapers.forEach((paper, idx) => {
+    const qCount = (paper.questions || []).length;
+    totalQuestionsCount += qCount;
+    const badgeNum = String(idx + 1).padStart(2, '0');
+    const labelTitle = escapeHTML(paper.title || `Section ${badgeNum}`);
+    
+    const card = document.createElement('label');
+    card.className = `section-opt-card ${CBTState.selectedSectionMode === String(idx) ? 'active' : ''}`;
+    card.id = `opt-section-${idx}`;
+    card.onclick = () => handleSectionOptChange(String(idx));
+    card.innerHTML = `
+      <input type="radio" name="cbt-section-select" value="${idx}" ${CBTState.selectedSectionMode === String(idx) ? 'checked' : ''} />
+      <div class="sec-card-badge">${badgeNum}</div>
+      <div class="sec-card-info">
+        <span class="sec-card-title">${labelTitle}</span>
+        <span class="sec-card-sub">${qCount} Questions · ${qCount} Mins</span>
+      </div>
+      <span class="sec-card-check">✓</span>
+    `;
+    container.appendChild(card);
+  });
+
+  const allSub = $('lbl-all-sec-sub');
+  if (allSub && totalQuestionsCount > 0) {
+    allSub.innerText = `${CBTState.listExamPapers.length} Sections · ${totalQuestionsCount} Questions (${totalQuestionsCount} Mins)`;
+  }
+}
+
+window.proceedToRegisterStep = () => {
+  ensureSectionSelectionModalExists();
+  if ($('welcome-step-intro')) $('welcome-step-intro').style.display = 'none';
+  if ($('welcome-step-1')) $('welcome-step-1').style.display = 'block';
+};
+
+window.goToSectionSelectionStep = () => {
+  ensureSectionSelectionModalExists();
+  const nameInput = $('student-name-input'), rawClass = $('student-class-input') ? $('student-class-input').value : "Class 12";
+  CBTState.studentNameVal = (nameInput ? nameInput.value.trim() : "").toUpperCase();
+  CBTState.studentClassVal = (rawClass.toString().startsWith("Class") || rawClass === "OTHER") ? rawClass : `Class ${rawClass}`;
+  CBTState.studentSectionVal = $('student-section-input') ? $('student-section-input').value : "A";
+  CBTState.schoolNameVal = ($('student-school-input') ? $('student-school-input').value.trim() : "").toUpperCase();
+  CBTState.studentName = `${CBTState.studentNameVal} | ${CBTState.studentClassVal} | SEC: ${CBTState.studentSectionVal} | ${CBTState.schoolNameVal}`;
+
+  renderDynamicSectionPickerCards();
+  if ($('welcome-step-1')) $('welcome-step-1').style.display = 'none';
+  if ($('welcome-step-section')) $('welcome-step-section').style.display = 'block';
+};
+
+window.goToGuidelinesStep = () => {
+  const step1 = $('welcome-step-1');
+  if (step1 && step1.style.display !== 'none') {
+    goToSectionSelectionStep();
+    return;
+  }
+  confirmSectionAndProceed();
+};
+
+window.backToDetailsStep = () => {
+  if ($('welcome-step-section')) $('welcome-step-section').style.display = 'none';
+  if ($('welcome-step-1')) $('welcome-step-1').style.display = 'block';
+};
+
+window.handleSectionOptChange = function(val) {
+  CBTState.selectedSectionMode = String(val);
+  document.querySelectorAll('.section-opt-card').forEach(c => c.classList.remove('active'));
+  if (val === 'ALL') {
+    const card = $('opt-section-all');
+    if (card) { card.classList.add('active'); const r = card.querySelector('input'); if (r) r.checked = true; }
+  } else {
+    const card = $(`opt-section-${val}`);
+    if (card) { card.classList.add('active'); const r = card.querySelector('input'); if (r) r.checked = true; }
+  }
+};
+
+window.confirmSectionAndProceed = () => {
+  if ($('welcome-step-section')) $('welcome-step-section').style.display = 'none';
+  if ($('welcome-step-2')) $('welcome-step-2').style.display = 'block';
+
+  const modeLbl = $('lbl-instruct-chosen-mode');
+  const titleLbl = $('instructions-mode-title');
+  if (CBTState.selectedSectionMode === 'ALL') {
+    if (modeLbl) modeLbl.innerText = "Full Mock Test (All Sections Sequentially)";
+    if (titleLbl) titleLbl.innerText = "Full Mock Test Instructions";
+  } else {
+    const secIdx = parseInt(CBTState.selectedSectionMode);
+    const chosenPaper = CBTState.listExamPapers[secIdx];
+    const secTitle = chosenPaper ? chosenPaper.title : `Section ${secIdx + 1}`;
+    if (modeLbl) modeLbl.innerText = `Dedicated Test: ${secTitle} Only`;
+    if (titleLbl) titleLbl.innerText = `${secTitle} Instructions`;
+  }
+};
+
+window.backToSectionStep = () => {
+  if ($('welcome-step-2')) $('welcome-step-2').style.display = 'none';
+  if ($('welcome-step-section')) $('welcome-step-section').style.display = 'block';
+  renderDynamicSectionPickerCards();
+};
+
+/* ==========================================================
+   EXAM INITIALIZATION (SINGLE SECTION VS FULL MOCK)
+   ========================================================= */
+
+window.beginExam = async () => { 
+  if ($('modal-welcome')) $('modal-welcome').style.display = 'none'; 
+  const loading = $('quiz-loading-overlay'); 
+  if (loading) loading.style.display = 'flex'; 
+  document.body.classList.add('exam-in-progress'); 
+  CBTState.isExamActive = true; 
+  let checks = 0; 
+  while (CBTState.isQuestionsLoading && checks < 300) { await new Promise(r => setTimeout(r, 100)); checks++; } 
+  if (CBTState.listExamPapers.length === 0) await loadQuestionsFromSheet(3);
+  if (loading) loading.style.display = 'none'; 
+
+  let targetPapers = [];
+  if (CBTState.selectedSectionMode === 'ALL' || !CBTState.listExamPapers[parseInt(CBTState.selectedSectionMode)]) {
+    targetPapers = CBTState.listExamPapers;
+  } else {
+    targetPapers = [ CBTState.listExamPapers[parseInt(CBTState.selectedSectionMode)] ];
+  }
+
+  CBTState.questions = []; 
+  CBTState.sections = []; 
+  let qt = 0; 
+  targetPapers.forEach((p, idx) => { 
+    let st = qt, sq = p.questions.map(q => ({ question: q.text, tag: q.tag ?? "CBSE", options: [...q.options], image: q.image ?? "", correctAnswerText: q.correctAnswerText, explanation: q.explanation ?? "" })); 
+    shuffleArray(sq); 
+    sq.forEach(q => { CBTState.questions.push(q); qt++; }); 
+    CBTState.sections.push({ index: idx, title: p.title, year: p.year, start: st, end: qt, submitted: false, timeSpent: 0 }); 
+  }); 
+
+  clearSessionLocalStorage(); 
+  CBTState.userAnswers = new Array(CBTState.questions.length).fill(null); 
+  CBTState.visitedQuestions = new Array(CBTState.questions.length).fill(false); 
+  CBTState.lockedAnswers = new Array(CBTState.questions.length).fill(false); 
+  CBTState.sectionTimes = CBTState.sections.map(s => (s.end - s.start) * 60); 
+  CBTState.currentYearIndex = 0; 
+  CBTState.currentQuestion = CBTState.sections[0].start; 
+  CBTState.isTimerPaused = false; 
+  CBTState.isTimerFrozen = false;
+
+  if ($('quiz-screen')) $('quiz-screen').style.display = 'block'; 
+  if ($('unified-nav')) $('unified-nav').style.display = 'flex'; 
+  enableDesktopFullscreen();
+  buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion(); saveSessionToLocalStorage(); fetchAndRenderSidebarToppers();
+};
+
+/* ==========================================================
+   STRICT SECTION NAVIGATION BUILDER (NO RETURNING TO PAST)
+   ========================================================== */
+
+window.buildYearNav = () => { 
+  let c = $('year-nav-container'); 
+  if (!c) return; 
+  c.innerHTML = ''; 
+
+  CBTState.sections.forEach((p, idx) => { 
+    let t = document.createElement('div'); 
+    const isCurrent = (idx === CBTState.currentYearIndex);
+    const isPast = (idx < CBTState.currentYearIndex || p.submitted);
+    const isFuture = (idx > CBTState.currentYearIndex);
+
+    let stateClass = isCurrent ? 'active' : (isPast ? 'locked-past' : 'locked-future');
+    t.className = `year-tab ${stateClass}`; 
+    const numBadge = String(idx + 1).padStart(2, '0'), rawLabel = (p.title || "").trim();
+    const match = rawLabel.match(/^(.*?)[\s\-_]+(\b[A-Za-z0-9]+)$/);
+    let mainLabel = (match && match[1].trim()) ? match[1].trim().toUpperCase() : rawLabel.toUpperCase();
+    let accentLabel = (match && match[1].trim()) ? match[2].trim().toUpperCase() : "";
+
+    let lockBadge = isPast ? `<span class="yt-lock-badge" title="Submitted & Locked"></span>` : (isFuture ? `<span class="yt-lock-badge" title="Locked"></span>` : '');
+
+    t.innerHTML = `
+      <div class="yt-icon-circle">${isPast ? '✓' : numBadge}</div>
+      <div class="yt-title-group">
+        <span class="yt-title-main">${escapeHTML(mainLabel)}</span>
+        ${accentLabel ? `<span class="yt-title-accent">${escapeHTML(accentLabel)}</span>` : ''}
+        ${lockBadge}
+      </div>
+    `; 
+
+    t.onclick = () => { 
+      cancelAutoAdvance();
+      if (idx === CBTState.currentYearIndex) return;
+      if (isPast) { 
+        showToastAlert("Submitted sections are locked and cannot be revisited."); 
+        return;
+      }
+      if (isFuture) { 
+        showToastAlert("Submit your current section to unlock the next section."); 
+        return;
+      }
+    }; 
+    c.appendChild(t); 
+  }); 
+};
+
+/* ==========================================================
+   TOP PERFORMERS & LEADERBOARD
+   ========================================================== */
 
 async function fetchAndRenderSidebarToppers() {
   const fetchRecordUrl = getFetchRecordOfCBT(), container = $('sidebar-toppers');
@@ -411,8 +720,11 @@ function updateUserDynamicRank() {
 }
 
 window.handleSectionProgression = function() {
-  if (CBTState.currentYearIndex < CBTState.sections.length - 1) executeProgressionAdvance();
-  else showFinalCumulativeEvaluation();
+  if (CBTState.currentYearIndex < CBTState.sections.length - 1) {
+    executeProgressionAdvance();
+  } else {
+    showFinalCumulativeEvaluation();
+  }
 };
 
 function shuffleArray(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } }
@@ -521,55 +833,6 @@ function handleBlurOrHide() {
 }
 document.addEventListener("visibilitychange", () => { if (document.visibilityState === 'hidden') handleBlurOrHide(); });
 window.addEventListener("blur", handleBlurOrHide);
-
-window.proceedToRegisterStep = () => {
-  if ($('welcome-step-intro')) $('welcome-step-intro').style.display = 'none';
-  if ($('welcome-step-1')) $('welcome-step-1').style.display = 'block';
-};
-
-window.goToGuidelinesStep = () => { 
-  const nameInput = $('student-name-input'), rawClass = $('student-class-input') ? $('student-class-input').value : "Class 12";
-  CBTState.studentNameVal = (nameInput ? nameInput.value.trim() : "").toUpperCase(); 
-  CBTState.studentClassVal = (rawClass.toString().startsWith("Class") || rawClass === "OTHER") ? rawClass : `Class ${rawClass}`;
-  CBTState.studentSectionVal = $('student-section-input') ? $('student-section-input').value : "A"; 
-  CBTState.schoolNameVal = ($('student-school-input') ? $('student-school-input').value.trim() : "").toUpperCase(); 
-  CBTState.studentName = `${CBTState.studentNameVal} | ${CBTState.studentClassVal} | SEC: ${CBTState.studentSectionVal} | ${CBTState.schoolNameVal}`; 
-  if ($('welcome-step-1')) $('welcome-step-1').style.display = 'none'; 
-  if ($('welcome-step-2')) $('welcome-step-2').style.display = 'block'; 
-};
-
-window.beginExam = async () => { 
-  if ($('modal-welcome')) $('modal-welcome').style.display = 'none'; 
-  const loading = $('quiz-loading-overlay'); 
-  if (loading) loading.style.display = 'flex'; 
-  document.body.classList.add('exam-in-progress'); 
-  CBTState.isExamActive = true; 
-  let checks = 0; 
-  while (CBTState.isQuestionsLoading && checks < 300) { await new Promise(r => setTimeout(r, 100)); checks++; } 
-  if (CBTState.listExamPapers.length === 0) await loadQuestionsFromSheet(3);
-  if (loading) loading.style.display = 'none'; 
-
-  CBTState.questions = []; CBTState.sections = []; 
-  let qt = 0; 
-  CBTState.listExamPapers.forEach((p, idx) => { 
-    let st = qt, sq = p.questions.map(q => ({ question: q.text, tag: q.tag ?? "CBSE", options: [...q.options], image: q.image ?? "", correctAnswerText: q.correctAnswerText, explanation: q.explanation ?? "" })); 
-    shuffleArray(sq); 
-    sq.forEach(q => { CBTState.questions.push(q); qt++; }); 
-    CBTState.sections.push({ index: idx, title: p.title, year: p.year, start: st, end: qt, submitted: false, timeSpent: 0 }); 
-  }); 
-
-  clearSessionLocalStorage(); 
-  CBTState.userAnswers = new Array(CBTState.questions.length).fill(null); 
-  CBTState.visitedQuestions = new Array(CBTState.questions.length).fill(false); 
-  CBTState.lockedAnswers = new Array(CBTState.questions.length).fill(false); 
-  CBTState.sectionTimes = CBTState.sections.map(s => (s.end - s.start) * 60); 
-  CBTState.currentYearIndex = 0; CBTState.currentQuestion = CBTState.sections[0].start; 
-  CBTState.isTimerPaused = false; CBTState.isTimerFrozen = false;
-  if ($('quiz-screen')) $('quiz-screen').style.display = 'block'; 
-  if ($('unified-nav')) $('unified-nav').style.display = 'flex'; 
-  enableDesktopFullscreen();
-  buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion(); saveSessionToLocalStorage(); fetchAndRenderSidebarToppers();
-};
 
 function triggerFeedbackSectionAnimation() {
   const container = $('cbt-interactive-feedback-wrapper');
@@ -816,12 +1079,16 @@ function updatePalette() {
 window.showSubmitModal = () => { 
   cancelAutoAdvance();
   if (CBTState.userAnswers[CBTState.currentQuestion] !== null && !CBTState.sections[CBTState.currentYearIndex].submitted) CBTState.lockedAnswers[CBTState.currentQuestion] = true; 
-  if ($('submit-modal-text'))$('submit-modal-text').innerText = `Submit responses for ${CBTState.sections[CBTState.currentYearIndex].year}?`; 
+  if ($('submit-modal-text'))$('submit-modal-text').innerText = `Submit responses for ${CBTState.sections[CBTState.currentYearIndex].title}?`; 
   CBTState.isTimerPaused = true; 
   if ($('modal-submit'))$('modal-submit').style.display = 'flex'; 
 };
 window.closeSubmitModal = () => { if ($('modal-submit'))$('modal-submit').style.display = 'none'; CBTState.isTimerPaused = false; };
 window.confirmSubmitExam = () => { if ($('modal-submit'))$('modal-submit').style.display = 'none'; CBTState.isTimerPaused = false; window.processSectionSubmission(); };
+
+/* ==========================================================
+   SECTION SUBMISSION & SCORECARD EVALUATION
+   ========================================================== */
 
 window.processSectionSubmission = async function() { 
   cancelAutoAdvance();
@@ -904,13 +1171,18 @@ window.processSectionSubmission = async function() {
     try { await fetch(saveUrl, { method: "POST", body: params }); } catch (err) { console.warn("Save sync error:", err); }
   }
 
-  await new Response(res => setTimeout(res, 900));
+  await new Promise(res => setTimeout(res, 900));
   if (loaderBox) loaderBox.style.display = 'none';
   if (scFrame) scFrame.style.display = 'flex';
+  
   let b = $('btn-dashboard-main-trigger'); 
   if (b) { 
     b.disabled = false; b.style.opacity = '1'; 
-    b.innerHTML = (CBTState.currentYearIndex < CBTState.sections.length - 1) ? `CONTINUE TO NEXT SECTION →` : `COMPLETE EVALUATION`;
+    if (CBTState.currentYearIndex < CBTState.sections.length - 1) {
+      b.innerHTML = `CONTINUE TO NEXT SECTION →`;
+    } else {
+      b.innerHTML = `COMPLETE EVALUATION SUMMARY`;
+    }
   } 
 };
 
@@ -930,32 +1202,17 @@ function executeProgressionAdvance() {
     if ($('result-screen'))$('result-screen').style.display = 'none'; 
     if ($('quiz-screen'))$('quiz-screen').style.display = 'block'; 
     if ($('unified-nav'))$('unified-nav').style.display = 'flex'; 
-    buildYearNav(); updateTimerDisplay(); loadQuestion(); 
-  } else showFinalCumulativeEvaluation(); 
+    buildYearNav(); 
+    updateTimerDisplay(); 
+    loadQuestion(); 
+  } else {
+    showFinalCumulativeEvaluation();
+  }
 }
 
-window.buildYearNav = () => { 
-  let c = $('year-nav-container'); 
-  if (!c) return; 
-  c.innerHTML = ''; 
-  CBTState.sections.forEach((p, idx) => { 
-    let t = document.createElement('div'); 
-    t.className = `year-tab ${idx === CBTState.currentYearIndex ? 'active' : ''}`; 
-    const numBadge = String(idx + 1).padStart(2, '0'), rawLabel = (p.title || "").trim();
-    const match = rawLabel.match(/^(.*?)[\s\-_]+(\b[A-Za-z0-9]+)$/);
-    let mainLabel = (match && match[1].trim()) ? match[1].trim().toUpperCase() : rawLabel.toUpperCase();
-    let accentLabel = (match && match[1].trim()) ? match[2].trim().toUpperCase() : "";
-    t.innerHTML = `<div class="yt-icon-circle">${numBadge}</div><div class="yt-title-group"><span class="yt-title-main">${escapeHTML(mainLabel)}</span>${accentLabel ? ` <span class="yt-title-accent">${escapeHTML(accentLabel)}</span>` : ''}</div>`; 
-    t.onclick = async () => { 
-      cancelAutoAdvance();
-      if (CBTState.sections[idx].submitted || idx === CBTState.currentYearIndex) { 
-        CBTState.currentYearIndex = idx; CBTState.currentQuestion = CBTState.sections[idx].start; 
-        buildYearNav(); updateTimerDisplay(); loadQuestion(); 
-      } else showToastAlert("Submit your current section to unlock the next section."); 
-    }; 
-    c.appendChild(t); 
-  }); 
-};
+/* ==========================================================
+   FEEDBACK & REVIEW SYSTEM
+   ========================================================== */
 
 function triggerSlowMotionStarsAnimation() {
   if (CBTState.hasAnimatedStars) return;
@@ -1063,9 +1320,8 @@ async function fetchFeedbackSubmissions() {
 }
 
 function renderSubmissionsShowcase(dataList) {
-  const totalCountEl = $('ssc-total-count'), countApprovedEl = $('count-approved-badge'), countPendingEl =$('count-pending-badge');
+  const countApprovedEl = $('count-approved-badge'), countPendingEl =$('count-pending-badge');
   const streamApproved = $('stream-approved-cards'), streamPending = $('stream-pending-cards'), viewMoreWrap =$('ssc-view-more-wrap');
-  if (totalCountEl) totalCountEl.innerText = `${dataList.length} Responses`;
   const approved = dataList.filter(item => (item.status || "").trim().toLowerCase() === "approved");
   const pending = dataList.filter(item => (item.status || "").trim().toLowerCase() !== "approved");
   if (countApprovedEl) countApprovedEl.innerText = approved.length;
@@ -1107,6 +1363,10 @@ window.toggleAllSubmissions = function() {
   renderSubmissionsShowcase(CBTState.feedbackDataStore);
 };
 
+/* ==========================================================
+   APP BOOTSTRAPPER
+   ========================================================== */
+
 document.addEventListener('DOMContentLoaded', async () => {
   const activeName = getTestName(), chNum = getChapterNumber(), weight = getChapterWeightage();
   if ($('header-ch-num'))$('header-ch-num').innerText = `Ch ${chNum}`;
@@ -1122,7 +1382,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (saved) { CBTState.pendingRestoreData = saved; if ($('modal-resume'))$('modal-resume').style.display = 'flex'; }
   else if ($('modal-welcome'))$('modal-welcome').style.display = 'flex'; 
 
-  await loadQuestionsFromSheet(); await fetchAndRenderSidebarToppers();
+  ensureSectionSelectionModalExists();
+  await loadQuestionsFromSheet(); 
+  await fetchAndRenderSidebarToppers();
+
 
   const eyes = document.querySelectorAll('.desktop-eyes .eye-ball'), pupils = document.querySelectorAll('.desktop-eyes .pupil'); 
   document.addEventListener('mousemove', e => { 
