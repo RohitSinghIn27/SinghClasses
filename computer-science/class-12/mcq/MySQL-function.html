@@ -21,7 +21,7 @@
 
 <script>
 window.CBT_CONFIG = {
-  ENABLE_PROCTORING: true, MARKS_CORRECT: 1, MARKS_INCORRECT: 0.25, PENALTY_WARNING: 2,
+  ENABLE_PROCTORING: false, MARKS_CORRECT: 1, MARKS_INCORRECT: 0.25, PENALTY_WARNING: 2,
   CHAPTER_NUMBER: "7.2", TEST_NAME: "MySQL Functions", CHAPTER_WEIGHTAGE: "8 Marks",
   FetchQuestionsOfCBT: "https://script.google.com/macros/s/AKfycbzVTpL3Hsk9aA6ZvVyCaa7f0eJN8Rr3liVCoX3Tt-y4M397FInM_-Drspgl8v00i3ms/exec",
   FetchRecordOfCBT: "https://script.google.com/macros/s/AKfycbwpK6z8HC87ZKvQFnGX78Prnv4sVPxF7tAER1uZkRl-jeMxhaSOcSoIkdKJf4ak1VGwQw/exec",
@@ -55,8 +55,7 @@ window.CBT_CONFIG = {
     <div class="img5-chapter-capsule">
       <span class="img5-ch-num" id="header-ch-num">Ch 7.2 · Unit III</span>
       <div class="nav-hud-divider"></div>
-      <h1 class="img5-ch-title" id="header-ch-title" style="margin:0;padding:0;font-size:inherit;font-weight:inherit;line-height:inherit;display:inline;">MySQL Functions</h1>
-      <span class="img5-weight-pill" id="header-ch-weightage">
+<h1 class="img5-ch-title" id="header-ch-title" style="margin:0;padding:0;display:inline;">MySQL Functions</h1><span class="img5-weight-pill" id="header-ch-weightage">
         <span class="weight-pulse-dot" aria-hidden="true"></span>
         <span id="header-weight-text">3 Marks</span>
       </span>
@@ -115,6 +114,7 @@ window.CBT_CONFIG = {
 </div>
 
 <div id="modal-welcome" class="custom-modal-overlay">
+  <!-- Portal Introduction Card -->
   <div id="welcome-step-intro" class="custom-modal-box welcome-portal-card">
     <div class="wp-decor-dots wp-dots-top-left"></div><div class="wp-decor-dots wp-dots-bottom-right"></div>
     <div class="wp-decor-triangles-top-right"><span class="wp-chevron-dark"></span><span class="wp-chevron-light"></span></div>
@@ -136,6 +136,7 @@ window.CBT_CONFIG = {
     </div>
   </div>
 
+  <!-- Step 1: Student Details Form -->
   <div id="welcome-step-1" class="custom-modal-box registration-card" style="display:none;">
     <div class="topic-banner-wrapper">
       <div class="banner-line"></div>
@@ -143,9 +144,10 @@ window.CBT_CONFIG = {
       <div class="banner-line"></div>
     </div>
     <div class="modal-stepper">
-      <div class="step-item"><span class="step-badge">1</span><span class="step-text">Details</span></div><div class="step-divider"></div>
-      <div class="step-item"><span class="step-badge">2</span><span class="step-text">Instructions</span></div><div class="step-divider"></div>
-      <div class="step-item"><span class="step-badge">3</span><span class="step-text">Test</span></div>
+      <div class="step-item active"><span class="step-badge">1</span><span class="step-text">Details</span></div><div class="step-divider"></div>
+      <div class="step-item"><span class="step-badge">2</span><span class="step-text">Section</span></div><div class="step-divider"></div>
+      <div class="step-item"><span class="step-badge">3</span><span class="step-text">Instructions</span></div><div class="step-divider"></div>
+      <div class="step-item"><span class="step-badge">4</span><span class="step-text">Test</span></div>
     </div>
     <div class="registration-form-grid">
       <div class="field-box"><svg class="field-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#046a38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg><input type="text" id="student-name-input" class="field-control" placeholder="Student Name" autocomplete="off" /></div>
@@ -154,35 +156,67 @@ window.CBT_CONFIG = {
         <div class="field-box"><svg class="field-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#046a38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg><select id="student-section-input" class="field-control select-control"><option value="A" selected>Sec A</option><option value="B">Sec B</option><option value="C">Sec C</option><option value="D">Sec D</option><option value="E">Sec E</option><option value="F">Sec F</option><option value="OTHER">Other</option></select><svg class="chevron-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
       </div>
       <div class="field-box"><svg class="field-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#046a38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 22V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v18"></path><path d="M18 22V10a2 2 0 0 0-2-2h-2"></path><path d="M6 6h4"></path><path d="M6 10h4"></path><path d="M6 14h4"></path><path d="M6 18h4"></path></svg><input type="text" id="student-school-input" class="field-control" placeholder="School Name" autocomplete="off" /></div>
-      <div class="modal-btn-row"><button type="button" class="btn-green-submit" onclick="goToGuidelinesStep()">Proceed to Guidelines &rarr;</button></div>
+      <div class="modal-btn-row"><button type="button" class="btn-green-submit" onclick="goToSectionSelectionStep()">Proceed to Section Choice &rarr;</button></div>
     </div>
   </div>
 
+  <!-- Step 2: Section Choice (Opt Specific Section or Complete Test) -->
+  <div id="welcome-step-section" class="custom-modal-box registration-card" style="display:none;">
+    <div class="topic-banner-wrapper">
+      <div class="banner-line"></div>
+      <div class="modal-topic-title"><svg class="topic-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#046a38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg><span class="topic-text">Select Test Mode</span></div>
+      <div class="banner-line"></div>
+    </div>
+    <div class="modal-stepper" style="margin-bottom:12px;">
+      <div class="step-item"><span class="step-badge">1</span><span class="step-text">Details</span></div><div class="step-divider"></div>
+      <div class="step-item active"><span class="step-badge">2</span><span class="step-text">Section</span></div><div class="step-divider"></div>
+      <div class="step-item"><span class="step-badge">3</span><span class="step-text">Instructions</span></div><div class="step-divider"></div>
+      <div class="step-item"><span class="step-badge">4</span><span class="step-text">Test</span></div>
+    </div>
+    <div class="section-picker-container" style="text-align:left;margin-bottom:12px;">
+      <p style="font-size:0.84rem;color:#475569;margin:0 0 10px 0;text-align:center;font-weight:600;">Choose a specific section or attempt the complete test:</p>
+      <div class="section-picker-grid" id="section-picker-options-grid">
+        <label class="section-opt-card active" id="opt-section-all" onclick="handleSectionOptChange('ALL')">
+          <input type="radio" name="cbt-section-select" value="ALL" checked />
+          <div class="sec-card-badge">ALL</div>
+          <div class="sec-card-info">
+            <span class="sec-card-title">Full Mock Test (All Sections)</span>
+            <span class="sec-card-sub" id="lbl-all-sec-sub">Attempt all sections sequentially</span>
+          </div>
+          <span class="sec-card-check">✓</span>
+        </label>
+        <div id="dynamic-sections-container"></div>
+      </div>
+    </div>
+    <div class="modal-btn-row" style="display:flex;gap:8px;">
+      <button type="button" class="btn-back-home" style="flex:1;height:42px;border-radius:9px;font-weight:700;" onclick="backToDetailsStep()">&larr; Back</button>
+      <button type="button" class="btn-green-submit" style="flex:2;" onclick="confirmSectionAndProceed()">Proceed to Instructions &rarr;</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Exam Instructions & Guidelines -->
   <div id="welcome-step-2" class="custom-modal-box registration-card" style="display:none;">
     <div class="modal-stepper" style="margin-bottom:14px;">
       <div class="step-item"><span class="step-badge">1</span><span class="step-text">Details</span></div><div class="step-divider"></div>
-      <div class="step-item active"><span class="step-badge">2</span><span class="step-text">Instructions</span></div><div class="step-divider"></div>
-      <div class="step-item"><span class="step-badge">3</span><span class="step-text">Test</span></div>
+      <div class="step-item"><span class="step-badge">2</span><span class="step-text">Section</span></div><div class="step-divider"></div>
+      <div class="step-item active"><span class="step-badge">3</span><span class="step-text">Instructions</span></div><div class="step-divider"></div>
+      <div class="step-item"><span class="step-badge">4</span><span class="step-text">Test</span></div>
     </div>
     <div class="instructions-container center-aligned-guidelines">
       <div class="topic-banner-wrapper modal-guidelines-banner">
         <div class="banner-line"></div>
-        <div class="modal-topic-title"><svg class="topic-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#046a38" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg><span class="topic-text">Exam Instructions &amp; Guidelines</span></div>
+        <div class="modal-topic-title"><svg class="topic-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#046a38" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg><span class="topic-text" id="instructions-mode-title">Exam Instructions &amp; Guidelines</span></div>
         <div class="banner-line"></div>
       </div>
       <ul class="instructions-list">
         <li><strong>Time Limit:</strong> 1 minute per question</li>
-        <li><strong>Marking Scheme:</strong> <span id="welcome-correct-lbl" style="color:var(--color-correct);font-weight:700;">+1 Correct</span> | <span id="welcome-incorrect-lbl" style="color:var(--color-wrong);font-weight:700;">-0.25 Incorrect</span> | <span style="color:var(--stat-lbl-color);font-weight:700;">0 Unattempted</span></li>
-        <li><strong>Tab switching may incur a penalty.</strong></li>
-      </ul>
-      <div class="palette-legend centered-legend">
-        <div style="font-weight:bold;color:var(--q-num-color);font-size:0.82em;">Status:</div>
-        <div class="legend-item"><div class="legend-box unvisited"></div>Not Visited</div>
-        <div class="legend-item"><div class="legend-box not-answered"></div>Unattempted</div>
-        <div class="legend-item legend-item-answered"><div class="legend-box answered"></div>Answered</div>
-      </div>
+        <li><strong>Marking Scheme:</strong> <span id="welcome-correct-lbl" style="color:var(--color-correct);font-weight:700;">+1 Correct</span> | <span id="welcome-incorrect-lbl" style="color:var(--color-wrong);font-weight:700;">-0.25 Incorrect</span></li>
+      <li><strong>Tab switching penalty: <span style="color:var(--color-wrong);">-2 marks</span></strong></li>      </ul>
+       </div>
+    <div class="modal-start-btn-row" style="display:flex;gap:8px;">
+      <button type="button" class="btn-back-home" style="flex:1;height:42px;border-radius:9px;font-weight:700;" onclick="backToSectionStep()">&larr; Back</button>
+      <button type="button" class="btn-green-submit" style="flex:2;" onclick="beginExam()">Start Mock Test</button>
     </div>
-    <div class="modal-start-btn-row"><button type="button" class="btn-green-submit" onclick="beginExam()">Start Mock Test</button></div>
   </div>
 </div>
 
@@ -205,6 +239,7 @@ window.CBT_CONFIG = {
 <div id="modal-timeout" class="custom-modal-overlay"><div class="custom-modal-box" style="border:3px solid var(--color-danger);"><div class="modal-title" style="color:var(--color-danger);display:flex;align-items:center;justify-content:center;gap:8px;"><svg class="sc-svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 16 14"></polyline></svg>Time's Up!</div><div style="font-size:1.25em;font-weight:700;margin:20px 0;">Section timer expired! Saving responses safely...</div></div></div>
 <div id="quiz-loading-overlay" style="display:none;flex-direction:column;align-items:center;justify-content:center;padding:40px;text-align:center;min-height:350px;"><div class="fetch-spinner"></div><div style="margin-top:20px;font-size:var(--text-base);font-weight:700;color:var(--stat-lbl-color);">Loading questions, please wait...</div></div>
 
+<!-- Step 4: Live Exam Quiz Screen -->
 <div id="quiz-screen" style="display:none;">
 <div class="main-wrapper">
 <div class="cbt-container">
@@ -399,7 +434,7 @@ window.CBT_CONFIG = {
 <footer class="unfixed-site-footer">
   <div class="footer-gold-bar"></div>
   <div class="footer-content-inner">
-    <div class="footer-left-text">© 2026 SinghClasses.in | Designed with <span class="footer-heart">❤️</span> by Rohit Singh[cite: 1]</div>
+    <div class="footer-left-text">© 2026 SinghClasses.in | Designed with <span class="footer-heart">❤️</span> by Rohit Singh</div>
     <div class="footer-right-links"><a href="../../../legal/privacy-policy.html">Privacy Policy</a><span class="footer-pipe">|</span><a href="../../../legal/terms-of-service.html">Terms of Service</a><span class="footer-pipe">|</span><a href="../../../legal/disclaimer.html">Disclaimer</a></div>
   </div>
 </footer>
