@@ -1,6 +1,6 @@
 /* ==========================================================================
-   PLANNER & ANALYTICS — COMPACT MASTER STYLESHEET (plan.css)
-   Ultra-Compact Desktop Grid Architecture (Zero Horizontal Overflow)
+   PLANNER & ANALYTICS — MASTER STYLESHEET (plan.css)
+   Larger text + roomier spacing (desktop-first, zero horizontal overflow)
    ========================================================================== */
 
 /* Global Smoothing */
@@ -8,6 +8,7 @@ body {
   -webkit-tap-highlight-color: transparent;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 15px;
 }
 
 /* Tab Switching */
@@ -28,11 +29,11 @@ body {
   align-items: center;
   justify-content: center;
   font-weight: 800;
-  border-radius: 4px;
-  padding: 2px 8px !important;
+  border-radius: 5px;
+  padding: 3px 10px !important;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  font-size: 10px;
+  letter-spacing: 0.05em;
+  font-size: 11.5px;
   line-height: 1;
   white-space: nowrap !important;
 }
@@ -52,12 +53,82 @@ body {
   animation: livePulseGlow 1.6s infinite ease-in-out;
 }
 
-/* Top Horizontal Navigation Tabs */
+/* ==========================================================================
+   HEADER BAR (PLANNER / DATE PILL / ACTIONS)
+   ========================================================================== */
+
+header h1 {
+  font-size: 18px !important;
+  letter-spacing: 0.06em;
+}
+
+header p {
+  font-size: 13px !important;
+  margin-top: 3px !important;
+}
+
+header button {
+  font-size: 14px !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+  min-height: 38px !important;
+  gap: 8px !important;
+}
+
+#currentDateDisplay {
+  font-size: 15px !important;
+  gap: 12px !important;
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+  padding-left: 8px !important;
+  padding-right: 14px !important;
+}
+
+#currentDateDisplay button {
+  min-height: 32px !important;
+  height: 32px !important;
+  font-size: 13px !important;
+}
+
+#headerDateStr,
+#headerTimeStr {
+  font-size: 15px !important;
+}
+
+/* ==========================================================================
+   TOP NAVIGATION BAR (TABS + PROGRESS)
+   ========================================================================== */
+
+#topNav {
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+  gap: 12px !important;
+}
+
+#sidebarNav {
+  gap: 8px !important;
+}
+
 .nav-btn {
   transition: all 0.15s ease-in-out;
   border-bottom: 2.5px solid transparent;
   border-left: none !important;
-  font-size: 13.5px !important;
+  font-size: 15px !important;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+  gap: 9px !important;
+  min-height: 44px !important;
+}
+
+.nav-btn svg {
+  width: 17px !important;
+  height: 17px !important;
 }
 
 .nav-btn.active {
@@ -66,11 +137,124 @@ body {
   font-weight: 800 !important;
   border-bottom-color: #facc15 !important;
   border-left-color: transparent !important;
-  padding-bottom: 6px !important;
+  padding-bottom: 8px !important;
+}
+
+/* Daily progress panel in the nav */
+#dailySummary {
+  gap: 10px !important;
+}
+
+#dailySummary > div {
+  gap: 12px !important;
+  padding-left: 14px !important;
+  padding-right: 14px !important;
+  height: 44px !important;
+  border-radius: 12px !important;
+}
+
+#dailySummary .text-xs {
+  font-size: 15px !important;
+}
+
+#dailySummary .text-\[11px\] {
+  font-size: 14px !important;
+}
+
+#dailySummary .relative {
+  width: 28px !important;
+  height: 28px !important;
+}
+
+#dailySummary svg {
+  width: 28px !important;
+  height: 28px !important;
 }
 
 /* ==========================================================================
-   DESKTOP GRID TABLE ARCHITECTURE (COMPACT SIZING & ZERO HORIZONTAL SCROLL)
+   SECTION HEADERS (SCHOOL / TUITION & STUDY)
+   ========================================================================== */
+
+section > header {
+  padding-top: 14px !important;
+  padding-bottom: 14px !important;
+  padding-left: 18px !important;
+  padding-right: 18px !important;
+  gap: 14px !important;
+}
+
+section > header > div {
+  gap: 12px !important;
+}
+
+section > header h2 {
+  font-size: 18px !important;
+  letter-spacing: 0.04em !important;
+}
+
+section > header p {
+  font-size: 13.5px !important;
+  margin-top: 3px !important;
+}
+
+section > header > div:first-child > div:first-child {
+  width: 34px !important;
+  height: 34px !important;
+}
+
+section > header svg {
+  width: 17px !important;
+  height: 17px !important;
+}
+
+section > header button {
+  font-size: 14px !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  padding-left: 14px !important;
+  padding-right: 14px !important;
+  min-height: 40px !important;
+  gap: 8px !important;
+  border-radius: 10px !important;
+}
+
+/* Hour tiles inside the School section header */
+#schoolClassesSec header .text-\[10px\] {
+  font-size: 12px !important;
+  letter-spacing: 0.06em !important;
+}
+
+#schoolClassesSec header .text-sm {
+  font-size: 17px !important;
+}
+
+#schoolClassesSec header > div:nth-child(2) {
+  gap: 10px !important;
+}
+
+#schoolClassesSec header > div:nth-child(2) > div {
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+  min-width: 128px !important;
+  gap: 10px !important;
+  border-radius: 10px !important;
+}
+
+/* Section progress bar a little thicker */
+section > .h-1\.5 {
+  height: 6px !important;
+}
+
+/* Section status text */
+#schoolSecMeta,
+#tuitionSecMeta {
+  font-size: 14px !important;
+}
+
+/* ==========================================================================
+   DESKTOP GRID TABLE (ROOMIER, ZERO HORIZONTAL SCROLL)
    ========================================================================== */
 
 @media screen and (min-width: 641px) {
@@ -80,20 +264,20 @@ body {
     border-spacing: 0 !important;
     border: 1px solid #cbd5e1 !important;
     background-color: #ffffff;
-    font-size: 13px !important;
+    font-size: 15px !important;
   }
 
-  /* Compact Header Row */
+  /* Header row */
   table.mobile-table thead tr {
     background-color: #f1f5f9 !important;
     border-bottom: 1.5px solid #cbd5e1 !important;
   }
 
   table.mobile-table thead th {
-    padding: 8px 9px !important;
-    font-size: 11.5px !important;
+    padding: 12px 14px !important;
+    font-size: 13px !important;
     font-weight: 800 !important;
-    letter-spacing: 0.04em !important;
+    letter-spacing: 0.05em !important;
     color: #475569 !important;
     text-transform: uppercase !important;
     border-right: 1px solid #cbd5e1 !important;
@@ -105,7 +289,7 @@ body {
     border-right: none !important;
   }
 
-  /* Table Body Rows */
+  /* Body rows */
   table.mobile-table tbody tr {
     border-bottom: 1px solid #e2e8f0 !important;
     transition: background-color 0.15s ease;
@@ -119,50 +303,54 @@ body {
     background-color: #f1f5f9 !important;
   }
 
-  /* Compact Cell Padding */
+  /* Body cells: more padding + bigger text */
   table.mobile-table tbody td {
-    padding: 7px 9px !important;
+    padding: 12px 14px !important;
     border-right: 1px solid #e2e8f0 !important;
     vertical-align: middle !important;
-    line-height: 1.3 !important;
+    line-height: 1.35 !important;
     white-space: nowrap !important;
-    font-size: 13px !important;
+    font-size: 15px !important;
   }
 
   table.mobile-table tbody td:last-child {
     border-right: none !important;
   }
 
-  /* Column 1: PERIOD / SNO (Checkbox + Label) */
+  /* Column 1: PERIOD / SNO (checkbox + label) */
   table.mobile-table tbody td.col-cb {
-    width: 56px !important;
-    max-width: 60px !important;
+    width: 76px !important;
+    max-width: 84px !important;
     text-align: center !important;
-    padding: 5px 4px !important;
+    padding: 10px 6px !important;
     background-color: rgba(248, 250, 252, 0.4);
   }
 
+  table.mobile-table tbody td.col-cb .inline-flex {
+    gap: 8px !important;
+  }
+
   table.mobile-table tbody td.col-cb input[type="checkbox"] {
-    width: 15px !important;
-    height: 15px !important;
+    width: 18px !important;
+    height: 18px !important;
     cursor: pointer;
     border: 1px solid #94a3b8 !important;
-    border-radius: 3px;
+    border-radius: 4px;
     accent-color: #2563eb;
     vertical-align: middle;
   }
 
   table.mobile-table tbody td.col-cb span {
-    font-size: 13px !important;
+    font-size: 14.5px !important;
     display: inline-block !important;
     vertical-align: middle !important;
   }
 
   /* Column 2: TIME */
   table.mobile-table tbody td.col-tm {
-    width: 140px !important;
-    max-width: 150px !important;
-    font-size: 13px !important;
+    width: 200px !important;
+    max-width: 220px !important;
+    font-size: 15px !important;
     font-weight: 700 !important;
     color: #334155 !important;
     white-space: nowrap !important;
@@ -170,15 +358,15 @@ body {
 
   table.mobile-table tbody td.col-tm span.bg-blue-600,
   table.mobile-table tbody td.col-tm span.bg-amber-600 {
-    font-size: 10px !important;
-    padding: 1px 4px !important;
-    border-radius: 3px !important;
-    margin-right: 3px !important;
+    font-size: 11px !important;
+    padding: 2px 6px !important;
+    border-radius: 4px !important;
+    margin-right: 6px !important;
   }
 
   /* Column 3: CLASS (School) & BATCHNAME (Tuition) */
   table.mobile-table tbody td.col-cls {
-    font-size: 13.5px !important;
+    font-size: 16px !important;
     font-weight: 800 !important;
     color: #0f172a !important;
     white-space: nowrap !important;
@@ -186,32 +374,32 @@ body {
 
   #schoolClassesSec table.mobile-table thead th:nth-child(3),
   #schoolClassesSec table.mobile-table tbody td.col-cls {
-    width: 90px !important;
-    max-width: 100px !important;
+    width: 110px !important;
+    max-width: 130px !important;
   }
 
   #tuitionStudySec table.mobile-table thead th:nth-child(3),
   #tuitionStudySec table.mobile-table tbody td.col-cls {
-    width: 170px !important;
-    max-width: 190px !important;
+    width: 230px !important;
+    max-width: 260px !important;
   }
 
-  /* Column 4 (Tuition): VENUE */
+  /* Venue (Tuition) */
   table.mobile-table tbody td.col-ven {
-    width: 100px !important;
-    max-width: 110px !important;
+    width: 130px !important;
+    max-width: 140px !important;
     text-align: center !important;
     white-space: nowrap !important;
-    padding: 5px 4px !important;
+    padding: 10px 8px !important;
   }
 
   table.mobile-table tbody td.col-ven span {
-    font-size: 12px !important;
-    padding: 2px 7px !important;
-    border-radius: 4px !important;
+    font-size: 14px !important;
+    padding: 4px 10px !important;
+    border-radius: 6px !important;
   }
 
-  /* TOPICNAME / TOPIC Column */
+  /* TOPIC / TOPICNAME */
   table.mobile-table tbody td.col-tpc {
     white-space: nowrap !important;
   }
@@ -219,14 +407,14 @@ body {
   table.mobile-table tbody td.col-tpc span[onclick] {
     display: inline-flex !important;
     align-items: center !important;
-    gap: 4px !important;
+    gap: 6px !important;
     white-space: nowrap !important;
-    padding: 3px 8px !important;
-    font-size: 12.5px !important;
+    padding: 5px 12px !important;
+    font-size: 14.5px !important;
     font-weight: 600 !important;
     background-color: #eff6ff !important;
     border: 1px solid #bfdbfe !important;
-    border-radius: 4px !important;
+    border-radius: 6px !important;
     color: #1d4ed8 !important;
     cursor: pointer;
     line-height: 1.3 !important;
@@ -243,87 +431,87 @@ body {
     white-space: nowrap !important;
   }
 
-  /* Column: ACTION(MSG) Button */
+  /* ACTION (MSG) button */
   table.mobile-table tbody td.col-act {
-    width: 66px !important;
-    max-width: 72px !important;
+    width: 96px !important;
+    max-width: 104px !important;
     text-align: center !important;
-    padding: 4px !important;
+    padding: 8px !important;
   }
 
   table.mobile-table tbody td.col-act button {
-    height: 27px !important;
-    padding: 0 8px !important;
-    border-radius: 5px !important;
-    font-size: 12px !important;
+    height: 34px !important;
+    padding: 0 12px !important;
+    border-radius: 7px !important;
+    font-size: 14px !important;
     font-weight: 800 !important;
     letter-spacing: 0.01em !important;
     display: inline-flex !important;
     align-items: center !important;
-    gap: 3px !important;
+    gap: 6px !important;
     box-shadow: 0 1px 2px rgba(16, 185, 129, 0.12) !important;
     white-space: nowrap !important;
   }
 
   table.mobile-table tbody td.col-act button svg {
-    width: 12px !important;
-    height: 12px !important;
+    width: 14px !important;
+    height: 14px !important;
   }
 
-  /* Column: NOOFSTUDENTS (Tuition) */
+  /* NOOFSTUDENTS (Tuition) */
   table.mobile-table tbody td.col-nos {
-    width: 90px !important;
-    max-width: 96px !important;
+    width: 130px !important;
+    max-width: 140px !important;
     text-align: center !important;
-    padding: 4px !important;
+    padding: 8px !important;
   }
 
   table.mobile-table tbody td.col-nos span {
-    font-size: 12px !important;
-    padding: 2px 6px !important;
-    border-radius: 4px !important;
+    font-size: 14px !important;
+    padding: 4px 10px !important;
+    border-radius: 6px !important;
   }
 
-  /* Column: MODE (LAB/CLASS) (School) */
+  /* MODE (LAB / CLASS) (School) */
   table.mobile-table tbody td.col-mode {
-    width: 74px !important;
-    max-width: 80px !important;
+    width: 120px !important;
+    max-width: 130px !important;
     text-align: center !important;
-    padding: 4px !important;
+    padding: 8px !important;
   }
 
   table.mobile-table tbody td.col-mode span {
-    font-size: 11px !important;
+    font-size: 12.5px !important;
     font-weight: 800 !important;
-    padding: 2px 6px !important;
-    border-radius: 4px !important;
+    padding: 3px 10px !important;
+    border-radius: 6px !important;
   }
 
-  /* Column: DURATION */
+  /* DURATION */
   table.mobile-table tbody td.col-dur {
-    width: 80px !important;
-    max-width: 86px !important;
+    width: 130px !important;
+    max-width: 140px !important;
     text-align: right !important;
-    font-size: 13px !important;
+    font-size: 15px !important;
     font-weight: 800 !important;
     color: #475569 !important;
     white-space: nowrap !important;
-    padding-right: 10px !important;
+    padding-right: 16px !important;
   }
 
-  /* Table Footer (Totals Row) */
+  /* Footer / totals row */
   table.mobile-table tfoot tr {
     background-color: #f1f5f9 !important;
     border-top: 1.5px solid #cbd5e1 !important;
   }
 
   table.mobile-table tfoot td {
-    padding: 8px 9px !important;
+    padding: 13px 14px !important;
     border-right: 1px solid #cbd5e1 !important;
     vertical-align: middle !important;
     color: #334155 !important;
     white-space: nowrap !important;
-    font-size: 12.5px !important;
+    font-size: 14.5px !important;
   }
 
   table.mobile-table tfoot td:last-child {
@@ -331,15 +519,15 @@ body {
   }
 
   table.mobile-table tfoot td span {
-    font-size: 12.5px !important;
-    padding: 2px 7px !important;
+    font-size: 15px !important;
+    padding: 4px 12px !important;
   }
 }
 
-/* Active Highlighted Row */
+/* Active highlighted row */
 .active-period-row {
   background-color: #eff6ff !important;
-  box-shadow: inset 3px 0 0 #2563eb !important;
+  box-shadow: inset 4px 0 0 #2563eb !important;
 }
 
 .active-period-row td {
@@ -347,78 +535,33 @@ body {
 }
 
 /* ==========================================================================
-   UI TEXT SIZE ENHANCEMENT (HEADERS, NAV, DAILY SUMMARY, MODALS, FOOTER)
+   ANALYTICS, TIMETABLES, STUDENTS, MODALS, FOOTER
    ========================================================================== */
 
-/* Top header */
-header h1 {
+.tab-content h2 {
   font-size: 16px !important;
 }
 
-header p {
-  font-size: 12px !important;
+.tab-content h3 {
+  font-size: 14.5px !important;
 }
 
-header button {
-  font-size: 13px !important;
-}
-
-#currentDateDisplay {
+.tab-content p {
   font-size: 14px !important;
 }
 
-/* Section headers (School / Tuition) */
-section > header h2 {
-  font-size: 16px !important;
-}
-
-section > header p {
-  font-size: 12.5px !important;
-}
-
-section > header button {
-  font-size: 13px !important;
-}
-
-/* Section status text */
-#schoolSecMeta,
-#tuitionSecMeta {
-  font-size: 12.5px !important;
-}
-
-/* Daily summary (top nav, right side) */
-#dailySummary #dailyDateLabel {
+.tab-content button {
   font-size: 14px !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
 }
 
-#dailySummary button {
-  font-size: 13px !important;
+.tab-content > div {
+  gap: 12px;
 }
 
-#dailySummary .text-\[9px\] {
-  font-size: 11px !important;
-}
-
-#dailySummary .text-\[10px\] {
-  font-size: 12px !important;
-}
-
-#dailySummary .text-\[11px\] {
-  font-size: 13px !important;
-}
-
-#dailySummary .text-xs {
-  font-size: 14px !important;
-}
-
-#dailySummary p,
-#dailySummary h3 {
-  font-size: 12px !important;
-}
-
-/* Attendance & action modals */
 #attendanceModal h3 {
-  font-size: 15px !important;
+  font-size: 17px !important;
 }
 
 #attendanceModal p,
@@ -426,43 +569,51 @@ section > header button {
 #attendanceModal span,
 #attendanceModal button,
 #attendanceModal input {
-  font-size: 13px !important;
+  font-size: 14.5px !important;
+}
+
+#attendanceModal > div > div {
+  padding-top: 14px !important;
+  padding-bottom: 14px !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
 }
 
 #actionModal h3 {
-  font-size: 15px !important;
+  font-size: 17px !important;
 }
 
 #actionModal p,
 #actionModal button,
 #actionModal input {
-  font-size: 13px !important;
+  font-size: 14.5px !important;
 }
 
-/* Timetables & Students tabs */
-.tab-content h2 {
-  font-size: 14px !important;
-}
-
-.tab-content h3 {
-  font-size: 13px !important;
-}
-
-.tab-content p {
-  font-size: 13px !important;
-}
-
-.tab-content button {
-  font-size: 13px !important;
+#actionModal input {
+  padding-top: 9px !important;
+  padding-bottom: 9px !important;
 }
 
 /* Footer */
 footer {
-  font-size: 13px !important;
+  font-size: 15px !important;
+  padding-top: 14px !important;
+  padding-bottom: 14px !important;
+  padding-left: 18px !important;
+  padding-right: 18px !important;
+  gap: 12px !important;
 }
 
 footer .text-\[11px\] {
-  font-size: 12px !important;
+  font-size: 13.5px !important;
+}
+
+/* Backup banner */
+#backupNudgeBanner {
+  font-size: 14.5px !important;
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+  gap: 12px !important;
 }
 
 /* ==========================================================================
@@ -479,24 +630,24 @@ footer .text-\[11px\] {
     display: flex !important;
     flex-direction: column !important;
     width: 100% !important;
-    gap: 8px !important;
-    padding: 2px !important;
+    gap: 12px !important;
+    padding: 4px !important;
     border: none !important;
   }
 
   .mobile-table tr {
     display: flex !important;
     flex-direction: column !important;
-    gap: 6px !important;
+    gap: 9px !important;
     background: #ffffff !important;
     border: 1px solid #cbd5e1 !important;
-    border-radius: 10px !important;
-    padding: 10px 12px !important;
+    border-radius: 12px !important;
+    padding: 14px 16px !important;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
   }
 
   .mobile-table tr.empty-row {
-    padding: 16px !important;
+    padding: 20px !important;
     text-align: center !important;
   }
 
@@ -507,38 +658,304 @@ footer .text-\[11px\] {
     border: none !important;
     padding: 0 !important;
     width: 100% !important;
-    font-size: 13px !important;
+    font-size: 15px !important;
   }
 
   .col-cb {
     justify-content: flex-start !important;
-    gap: 6px !important;
+    gap: 10px !important;
   }
 
   .col-cb span {
-    font-size: 13px !important;
+    font-size: 15px !important;
   }
 
   .col-tm {
-    font-size: 12.5px !important;
+    font-size: 14px !important;
     color: #64748b !important;
   }
 
   .col-cls {
-    font-size: 14.5px !important;
+    font-size: 16.5px !important;
     font-weight: 800 !important;
   }
 
   .col-tpc {
     width: 100% !important;
-    margin: 2px 0 !important;
+    margin: 4px 0 !important;
   }
 
   .col-tpc span[onclick] {
     width: 100% !important;
     justify-content: center !important;
+    font-size: 14.5px !important;
+    padding: 7px 10px !important;
+  }
+
+  .col-ven span,
+  .col-nos span,
+  .col-mode span {
+    font-size: 13.5px !important;
+  }
+
+  .col-act button {
+    width: 100% !important;
+    justify-content: center !important;
+    height: 38px !important;
+    font-size: 15px !important;
+  }
+
+  .col-dur {
+    justify-content: flex-end !important;
+    font-weight: 800 !important;
+    font-size: 15.5px !important;
+  }
+}
+
+/* ==========================================================================
+   MOBILE LAYOUT FIX (max-width: 640px) — compact, stacked, no cramping
+   ========================================================================== */
+
+@media screen and (max-width: 640px) {
+  body {
+    padding: 8px !important;
+    font-size: 14px !important;
+  }
+
+  /* ---- Header ---- */
+  header {
+    padding: 10px 12px !important;
+    gap: 10px !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  header > div:first-child {
+    width: 100%;
+  }
+
+  header h1 {
+    font-size: 16px !important;
+  }
+
+  header p {
+    font-size: 11.5px !important;
+  }
+
+  /* Date + time pill: full width, wraps cleanly, no broken lines */
+  #currentDateDisplay {
+    width: 100% !important;
+    flex-wrap: wrap !important;
+    justify-content: space-between !important;
+    gap: 6px 8px !important;
+    padding: 6px 8px !important;
+    font-size: 12px !important;
+    white-space: nowrap;
+  }
+
+  #currentDateDisplay > span[aria-hidden="true"] {
+    display: none !important;
+  }
+
+  #headerDateStr,
+  #headerTimeStr {
+    font-size: 12px !important;
+    white-space: nowrap !important;
+  }
+
+  #currentDateDisplay button {
+    height: 30px !important;
+    min-height: 30px !important;
+    padding: 0 8px !important;
+  }
+
+  /* Pull + Print: side by side, equal width */
+  header > div:last-child {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+
+  header > div:last-child button {
+    width: 100% !important;
+    justify-content: center !important;
     font-size: 13px !important;
-    padding: 5px 8px !important;
+    min-height: 36px !important;
+    padding: 6px 8px !important;
+  }
+
+  /* ---- Backup reminder banner ---- */
+  #backupNudgeBanner {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    font-size: 12px !important;
+    padding: 10px 12px !important;
+    gap: 8px !important;
+  }
+
+  #backupNudgeBanner > button {
+    width: 100%;
+    font-size: 12px !important;
+  }
+
+  /* ---- Top navigation ---- */
+  #topNav {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    padding: 8px !important;
+    gap: 8px !important;
+  }
+
+  #sidebarNav {
+    width: 100% !important;
+    overflow-x: auto !important;
+    flex-wrap: nowrap !important;
+    padding-bottom: 2px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .nav-btn {
+    font-size: 13px !important;
+    padding: 8px 12px !important;
+    min-height: 38px !important;
+    gap: 6px !important;
+  }
+
+  .nav-btn svg {
+    width: 15px !important;
+    height: 15px !important;
+  }
+
+  /* Progress panel: full width, single line */
+  #dailySummary {
+    width: 100% !important;
+    min-width: 0 !important;
+    padding-left: 0 !important;
+    border-left: none !important;
+    justify-content: stretch !important;
+  }
+
+  #dailySummary > div {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 40px !important;
+    justify-content: space-between !important;
+    padding: 8px 12px !important;
+    gap: 8px !important;
+  }
+
+  #dailySummary .text-xs {
+    font-size: 13px !important;
+  }
+
+  #dailySummary .text-\[11px\] {
+    font-size: 12px !important;
+  }
+
+  /* ---- Section headers (School / Tuition & Study) ---- */
+  section > header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    padding: 12px !important;
+    gap: 10px !important;
+  }
+
+  section > header > div:first-child {
+    gap: 10px !important;
+  }
+
+  section > header h2 {
+    font-size: 15px !important;
+    letter-spacing: 0.03em !important;
+  }
+
+  section > header p {
+    font-size: 12px !important;
+    line-height: 1.35 !important;
+  }
+
+  /* Hour tiles: three equal columns */
+  #schoolClassesSec header > div:nth-child(2) {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+  }
+
+  #schoolClassesSec header > div:nth-child(2) > div {
+    min-width: 0 !important;
+    width: 100% !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    gap: 2px !important;
+    padding: 6px 8px !important;
+  }
+
+  #schoolClassesSec header .text-\[10px\] {
+    font-size: 10px !important;
+  }
+
+  #schoolClassesSec header .text-sm {
+    font-size: 14px !important;
+  }
+
+  /* Action buttons: two equal columns */
+  section > header > div:last-child {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+
+  section > header > div:last-child button {
+    width: 100% !important;
+    justify-content: center !important;
+    font-size: 13px !important;
+    padding: 8px 8px !important;
+    min-height: 38px !important;
+  }
+
+  /* ---- Table cards ---- */
+  .mobile-table,
+  .mobile-table tbody {
+    gap: 10px !important;
+    padding: 2px !important;
+  }
+
+  .mobile-table tr {
+    gap: 8px !important;
+    padding: 12px 12px !important;
+    border-radius: 10px !important;
+  }
+
+  .mobile-table td {
+    font-size: 14px !important;
+    gap: 8px !important;
+  }
+
+  .col-cb {
+    gap: 8px !important;
+  }
+
+  .col-cb span {
+    font-size: 14px !important;
+  }
+
+  .col-tm {
+    font-size: 13px !important;
+    flex-wrap: wrap !important;
+    gap: 4px !important;
+  }
+
+  .col-cls {
+    font-size: 15px !important;
+  }
+
+  .col-tpc span[onclick] {
+    font-size: 13px !important;
+    padding: 6px 10px !important;
   }
 
   .col-ven span,
@@ -547,17 +964,35 @@ footer .text-\[11px\] {
     font-size: 12px !important;
   }
 
+  /* Msg button: compact and centred, not a giant bar */
   .col-act button {
     width: 100% !important;
-    justify-content: center !important;
-    height: 32px !important;
+    max-width: 100% !important;
+    height: 34px !important;
     font-size: 13px !important;
+    border-radius: 8px !important;
+    justify-content: center !important;
   }
 
   .col-dur {
-    justify-content: flex-end !important;
-    font-weight: 800 !important;
-    font-size: 13.5px !important;
+    font-size: 14px !important;
+  }
+
+  /* ---- Footer ---- */
+  footer {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
+    padding: 12px !important;
+    font-size: 12.5px !important;
+  }
+
+  footer > div {
+    flex-wrap: wrap !important;
+  }
+
+  footer .text-\[11px\] {
+    font-size: 11.5px !important;
   }
 }
 
