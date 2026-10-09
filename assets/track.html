@@ -147,10 +147,9 @@ body { -webkit-tap-highlight-color: transparent; }
   </div>
 </div>
 
-<!-- ================= ATTENDANCE & WHATSAPP MODAL ================= -->
+<!-- Attendance & WhatsApp Modal -->
 <div id="attendanceModal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-3 hidden" role="dialog" aria-modal="true">
   <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[92vh]">
-    
     <div class="p-3.5 sm:p-4 bg-brandNavy text-white flex items-center justify-between border-b border-slate-800">
       <div class="flex items-center gap-2.5">
         <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
@@ -166,26 +165,19 @@ body { -webkit-tap-highlight-color: transparent; }
       </button>
     </div>
 
-    <!-- Attendance Date Selector Bar -->
     <div class="px-4 py-2 bg-slate-100 border-b border-slate-200 flex items-center justify-between gap-2">
       <span class="text-xs font-bold text-slate-700">Attendance For:</span>
       <div class="flex items-center gap-1.5" id="attDateButtonsGroup">
-        <button type="button" id="btnDatePrevious" onclick="switchAttDate('previous')" class="px-3 py-1.5 text-xs font-bold rounded-lg border transition min-h-[36px]">
-          Previous Class
-        </button>
-        <button type="button" id="btnDateToday" onclick="switchAttDate('today')" class="px-3 py-1.5 text-xs font-bold rounded-lg border transition min-h-[36px]">
-          Class Date
-        </button>
+        <button type="button" id="btnDatePrevious" onclick="switchAttDate('previous')" class="px-3 py-1.5 text-xs font-bold rounded-lg border transition min-h-[36px]">Previous Class</button>
+        <button type="button" id="btnDateToday" onclick="switchAttDate('today')" class="px-3 py-1.5 text-xs font-bold rounded-lg border transition min-h-[36px]">Class Date</button>
       </div>
     </div>
 
-    <!-- Previous class attendance warning notice -->
     <div id="attPrevWarningBanner" class="px-4 py-2 bg-amber-50 border-b border-amber-200 text-amber-800 text-xs font-semibold flex items-center gap-2 hidden">
       <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-600 shrink-0"></i>
       <span>Previous class attendance was never recorded. Mark it now or continue.</span>
     </div>
 
-    <!-- Quick Actions Toolbar -->
     <div class="px-4 py-2 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2">
       <div class="flex items-center gap-1.5">
         <button onclick="markAllAttendance('P')" class="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-300 font-bold rounded-lg text-xs flex items-center gap-1 transition active:scale-95 min-h-[36px]">
@@ -200,21 +192,16 @@ body { -webkit-tap-highlight-color: transparent; }
       </div>
     </div>
 
-    <!-- Student List Scroll Area -->
     <div class="p-3 sm:p-4 overflow-y-auto space-y-2 flex-1" id="attStudentList"></div>
 
-    <!-- Add Student to Roster -->
     <div class="p-2.5 bg-slate-50 border-t border-slate-200 flex items-center gap-2">
       <div class="relative flex-1">
         <i data-lucide="user-plus" class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
         <input type="text" id="newStudentInput" placeholder="Add student name to batch roster..." class="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white min-h-[38px]" onkeydown="if(event.key==='Enter') addStudentFromModal()">
       </div>
-      <button onclick="addStudentFromModal()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs rounded-lg transition active:scale-95 shrink-0 min-h-[38px]">
-        Add
-      </button>
+      <button onclick="addStudentFromModal()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs rounded-lg transition active:scale-95 shrink-0 min-h-[38px]">Add</button>
     </div>
 
-    <!-- Absentee message inclusion toggle -->
     <div class="px-4 py-2 bg-slate-100 border-t border-slate-200 flex items-center justify-between">
       <label class="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer select-none">
         <input type="checkbox" id="includeAbsenteeToggle" checked class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500">
@@ -222,11 +209,8 @@ body { -webkit-tap-highlight-color: transparent; }
       </label>
     </div>
 
-    <!-- Modal Footer with Primary WhatsApp Send Button -->
     <div class="p-3 bg-white border-t border-slate-200 flex items-center justify-between gap-2">
-      <button onclick="saveAttendanceOnly()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition min-h-[40px]">
-        Save Attendance Only
-      </button>
+      <button onclick="saveAttendanceOnly()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition min-h-[40px]">Save Attendance Only</button>
       <button onclick="confirmAttendanceAndLaunchWhatsApp()" class="flex-1 py-2 px-3 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl flex items-center justify-center gap-1.5 shadow-sm transition active:scale-95 min-h-[40px]">
         <svg class="w-4 h-4 fill-white shrink-0" viewBox="0 0 24 24">
           <path d="M17.472 14.382c-.301-.15-1.781-.879-2.056-.98-.277-.101-.479-.15-.68.15-.202.301-.782.98-.959 1.182-.176.201-.353.226-.653.076-.301-.15-1.27-.468-2.42-1.493-.894-.798-1.498-1.784-1.674-2.086-.176-.301-.019-.464.131-.614.136-.134.301-.351.451-.527.15-.176.201-.301.301-.502.101-.201.05-.376-.025-.526-.075-.15-.68-1.637-.93-2.24-.244-.588-.492-.508-.68-.518l-.58-.01c-.201 0-.528.075-.804.376-.276.301-1.055 1.03-1.055 2.511 0 1.481 1.08 2.91 1.23 3.111.151.201 2.125 3.245 5.148 4.551.719.311 1.28.497 1.718.636.722.23 1.378.197 1.898.12.578-.087 1.781-.728 2.032-1.431.251-.703.251-1.306.176-1.431-.076-.125-.276-.201-.577-.351zm-5.466 7.426h-.008c-1.802 0-3.57-.485-5.115-1.402l-.367-.218-3.805.998 1.016-3.708-.239-.381c-1.01-1.607-1.543-3.473-1.542-5.388.004-5.577 4.542-10.115 10.122-10.115 2.701 0 5.241 1.053 7.151 2.964 1.911 1.912 2.963 4.453 2.961 7.156-.005 5.579-4.543 10.116-10.124 10.116zm8.566-18.681c-2.288-2.29-5.33-3.553-8.568-3.555-6.673 0-12.099 5.424-12.102 12.099-.001 2.133.557 4.215 1.617 6.052l-1.717 6.273 6.42-1.684c1.764.962 3.748 1.469 5.774 1.47h.005c6.671 0 12.099-5.425 12.102-12.1 0-3.234-1.258-6.276-3.531-8.555z"/>
@@ -234,13 +218,12 @@ body { -webkit-tap-highlight-color: transparent; }
         <span>Send WhatsApp Reminder</span>
       </button>
     </div>
-
   </div>
 </div>
 
 <div class="max-w-[1600px] mx-auto flex flex-col gap-2.5 min-h-screen">
 
-  <!-- ================= TOP HEADER BAR ================= -->
+  <!-- TOP HEADER BAR -->
   <header class="bg-brandNavy text-white rounded-xl px-3.5 py-2.5 sm:px-4 flex flex-wrap items-center justify-between gap-3 shadow-md border border-slate-800/80 print-hide">
     <div class="flex items-center gap-2.5">
       <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white shadow-sm shrink-0">
@@ -261,8 +244,12 @@ body { -webkit-tap-highlight-color: transparent; }
       <span id="headerTimeStr">Loading time...</span>
     </div>
 
-    <!-- Right: Action Buttons -->
+    <!-- Right: Action Buttons with Cloud Sync -->
     <div class="flex items-center gap-1.5">
+      <button onclick="fetchFromAppsScript(true)" id="cloudSyncBtn" class="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition active:scale-95 shadow-sm min-h-[34px]">
+        <i data-lucide="cloud-download" class="w-3.5 h-3.5"></i>
+        <span>Cloud Sync</span>
+      </button>
       <button onclick="exportBackup()" id="exportBtn" class="bg-white/[0.08] hover:bg-white/[0.14] text-slate-200 border border-white/10 font-bold text-xs px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition active:scale-95 min-h-[34px]">
         <i data-lucide="download" class="w-3.5 h-3.5 text-blue-400"></i>
         <span>Export</span>
@@ -290,13 +277,11 @@ body { -webkit-tap-highlight-color: transparent; }
     </button>
   </div>
 
-  <!-- ================= MAIN BODY ================= -->
+  <!-- MAIN BODY -->
   <div class="flex flex-col lg:flex-row items-start gap-3 flex-1">
 
     <!-- LEFT SIDEBAR -->
     <aside id="plannerSidebar" class="w-full lg:w-56 xl:w-60 bg-sidebarNavy text-white rounded-2xl p-2.5 flex flex-col gap-2.5 shrink-0 shadow-lg print-hide lg:sticky lg:top-2.5 lg:self-start">
-      
-      <!-- Navigation Menu -->
       <nav class="flex flex-col gap-1" id="sidebarNav" aria-label="Planner Views">
         <button id="tabBtnSchool" onclick="handleNavClick('school', this)" class="nav-btn active w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs font-bold text-slate-300 hover:text-white hover:bg-white/5 transition text-left min-h-[38px]">
           <i data-lucide="graduation-cap" class="w-4 h-4"></i>
@@ -322,7 +307,6 @@ body { -webkit-tap-highlight-color: transparent; }
 
       <!-- Date & Week Selector Widget -->
       <div class="bg-[#f8fafc] text-slate-800 rounded-2xl p-2.5 shadow-sm border border-slate-200/80">
-        
         <div class="flex items-center justify-between gap-1.5 mb-2">
           <button onclick="shiftWeek(-1)" class="w-9 h-8 rounded-xl bg-white hover:bg-slate-200/70 border border-slate-200 text-slate-700 flex items-center justify-center transition active:scale-95" aria-label="Previous week">
             <i data-lucide="chevron-left" class="w-4 h-4 stroke-[2.5]"></i>
@@ -345,7 +329,7 @@ body { -webkit-tap-highlight-color: transparent; }
         <div id="sidebarSundayRow"></div>
       </div>
 
-      <!-- True 7-Day Weekly Summary Widget -->
+      <!-- Weekly Summary -->
       <div class="bg-[#f8fafc] text-slate-800 rounded-2xl p-2.5 shadow-sm space-y-1.5 border border-slate-200/80">
         <div class="text-center">
           <h3 class="text-[10px] font-black text-slate-900 tracking-wider uppercase">WEEKLY SUMMARY</h3>
@@ -391,16 +375,13 @@ body { -webkit-tap-highlight-color: transparent; }
           </div>
         </div>
       </div>
-
     </aside>
 
     <!-- RIGHT MAIN WORKSPACE -->
     <main id="mainWorkspace" class="flex-1 w-full space-y-3 transition-all">
 
-      <!-- ================= TAB 1: PLANNER ================= -->
+      <!-- TAB 1: PLANNER -->
       <div id="planner" class="tab-content active space-y-3" role="tabpanel">
-
-        <!-- PLANNER VIEW SELECTOR PILL -->
         <div class="bg-white p-1.5 rounded-xl border border-slate-200 flex items-center justify-between gap-2 print-hide">
           <div class="flex items-center gap-1">
             <button onclick="setPlannerView('school')" id="pillBtnSchool" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-blue-600 text-white min-h-[34px]">
@@ -421,7 +402,7 @@ body { -webkit-tap-highlight-color: transparent; }
           </div>
         </div>
 
-        <!-- 1. SCHOOL CLASSES SECTION -->
+        <!-- 1. School Section -->
         <section id="schoolClassesSec" class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
           <header class="bg-cardNavy text-white px-3.5 sm:px-4 py-2.5 flex items-center justify-between">
             <div class="flex items-center gap-2.5">
@@ -436,7 +417,7 @@ body { -webkit-tap-highlight-color: transparent; }
             <div class="flex items-center gap-1.5">
               <button onclick="reloadDayFromTimetable(state.activeDateStr)" class="bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 text-xs font-semibold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition active:scale-95 print-hide min-h-[34px]">
                 <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-slate-400"></i>
-                <span>Sync</span>
+                <span>Reset Day</span>
               </button>
               <button onclick="switchTab('timetables', document.getElementById('tabBtnTimetables'))" class="bg-amber-400/15 hover:bg-amber-400/25 text-amber-300 border border-amber-400/35 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm transition active:scale-95 print-hide min-h-[34px]">
                 <i data-lucide="pencil" class="w-3.5 h-3.5 text-amber-400"></i>
@@ -456,13 +437,10 @@ body { -webkit-tap-highlight-color: transparent; }
                 </tr>
               </thead>
               <tbody id="schoolBody" class="divide-y divide-slate-100 text-xs"></tbody>
-              
               <tfoot class="bg-slate-50/90 border-t border-slate-200 text-slate-600 text-xs font-semibold">
                 <tr>
                   <td class="py-2.5 px-3 text-center"></td>
-                  <td class="py-2.5 px-3 text-left text-slate-400 font-bold uppercase tracking-wider text-[11px] whitespace-nowrap">
-                    Section Total
-                  </td>
+                  <td class="py-2.5 px-3 text-left text-slate-400 font-bold uppercase tracking-wider text-[11px] whitespace-nowrap">Section Total</td>
                   <td class="py-2.5 px-3 text-left text-slate-500 font-medium text-xs" id="schoolSecMeta">0 of 0 completed</td>
                   <td class="py-2.5 px-3 text-right whitespace-nowrap">
                     <span class="inline-block bg-slate-100 text-slate-700 font-black text-xs px-2.5 py-0.5 rounded-md border border-slate-200" id="schoolSecTotal">0.00 hrs</span>
@@ -473,7 +451,7 @@ body { -webkit-tap-highlight-color: transparent; }
           </div>
         </section>
 
-        <!-- 2. TUITION & STUDY SECTION -->
+        <!-- 2. Tuition & Study Section -->
         <section id="tuitionStudySec" class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
           <header class="bg-cardNavy text-white px-3.5 sm:px-4 py-2.5 flex items-center justify-between">
             <div class="flex items-center gap-2.5">
@@ -488,7 +466,7 @@ body { -webkit-tap-highlight-color: transparent; }
             <div class="flex items-center gap-1.5">
               <button onclick="reloadDayFromTimetable(state.activeDateStr)" class="bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 text-xs font-semibold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition active:scale-95 print-hide min-h-[34px]">
                 <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-slate-400"></i>
-                <span>Sync</span>
+                <span>Reset Day</span>
               </button>
               <button onclick="switchTab('students', document.getElementById('tabBtnStudents'))" class="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm transition active:scale-95 print-hide min-h-[34px]">
                 <i data-lucide="users" class="w-3.5 h-3.5 text-emerald-400"></i>
@@ -509,13 +487,10 @@ body { -webkit-tap-highlight-color: transparent; }
                 </tr>
               </thead>
               <tbody id="tuitionStudyBody" class="divide-y divide-slate-100 text-xs"></tbody>
-              
               <tfoot class="bg-slate-50/90 border-t border-slate-200 text-slate-600 text-xs font-semibold">
                 <tr>
                   <td class="py-2.5 px-3 text-center"></td>
-                  <td class="py-2.5 px-3 text-left text-slate-400 font-bold uppercase tracking-wider text-[11px] whitespace-nowrap">
-                    Section Total
-                  </td>
+                  <td class="py-2.5 px-3 text-left text-slate-400 font-bold uppercase tracking-wider text-[11px] whitespace-nowrap">Section Total</td>
                   <td class="py-2.5 px-3 text-left text-slate-500 font-medium text-xs" id="tuitionSecMeta">0 of 0 completed</td>
                   <td class="py-2.5 px-3 text-center"></td>
                   <td class="py-2.5 px-3 text-right whitespace-nowrap">
@@ -526,10 +501,9 @@ body { -webkit-tap-highlight-color: transparent; }
             </table>
           </div>
         </section>
-
       </div>
 
-      <!-- ================= TAB 2: TIMETABLES ================= -->
+      <!-- TAB 2: TIMETABLES -->
       <div id="timetables" class="tab-content space-y-3" role="tabpanel">
         <div class="bg-blue-50 border border-blue-200 rounded-xl p-3.5 flex items-start justify-between gap-3 text-blue-900">
           <div class="flex items-start gap-3">
@@ -537,7 +511,7 @@ body { -webkit-tap-highlight-color: transparent; }
             <div>
               <h3 class="text-xs font-black uppercase tracking-wide">Master Weekly Schedule Templates</h3>
               <p class="text-xs text-blue-800 mt-0.5 leading-relaxed">
-                Add/edit periods, custom timings, and default lesson topics. Hours calculate automatically from time ranges, and changes synchronize across your planner days.
+                Add/edit periods, custom timings, and default lesson topics. Synchronizes with your Google Sheet 'Planner' tab during Cloud Sync.
               </p>
             </div>
           </div>
@@ -547,7 +521,6 @@ body { -webkit-tap-highlight-color: transparent; }
         </div>
 
         <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-5">
-          <!-- School Timetable -->
           <div>
             <div class="flex items-center justify-between mb-2.5">
               <div class="flex items-center gap-2">
@@ -559,7 +532,6 @@ body { -webkit-tap-highlight-color: transparent; }
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5" id="schoolTimetable"></div>
           </div>
 
-          <!-- Tuition Schedule -->
           <div class="border-t border-slate-100 pt-4">
             <div class="flex items-center justify-between mb-2.5">
               <div class="flex items-center gap-2">
@@ -571,7 +543,6 @@ body { -webkit-tap-highlight-color: transparent; }
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5" id="tuitionTimetable"></div>
           </div>
 
-          <!-- Study Plan -->
           <div class="border-t border-slate-100 pt-4">
             <div class="flex items-center justify-between mb-2.5">
               <div class="flex items-center gap-2">
@@ -585,10 +556,8 @@ body { -webkit-tap-highlight-color: transparent; }
         </div>
       </div>
 
-      <!-- ================= TAB 3: STUDENTS MASTER SHEET ================= -->
+      <!-- TAB 3: STUDENTS MASTER -->
       <div id="students" class="tab-content space-y-3" role="tabpanel">
-        
-        <!-- Header Banner & Action Bar -->
         <div class="bg-white rounded-xl border border-slate-200 p-3.5 sm:p-4 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div>
             <div class="flex items-center gap-2">
@@ -597,9 +566,7 @@ body { -webkit-tap-highlight-color: transparent; }
               </div>
               <h2 class="text-sm font-black text-slate-900 tracking-wide uppercase">Students & Batches Master Sheet</h2>
             </div>
-            <p class="text-xs text-slate-500 mt-0.5">
-              Central student directory. Changes here instantly reflect in attendance sheets, WhatsApp reminders, and timetables.
-            </p>
+            <p class="text-xs text-slate-500 mt-0.5">Central student directory. Changes reflect in attendance sheets and WhatsApp reminders.</p>
           </div>
 
           <div class="flex items-center gap-2 w-full sm:w-auto">
@@ -614,10 +581,8 @@ body { -webkit-tap-highlight-color: transparent; }
           </div>
         </div>
 
-        <!-- Master Statistics Row -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5" id="studentsMasterStats"></div>
 
-        <!-- View Mode Switcher -->
         <div class="flex items-center justify-between bg-white px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold">
           <div class="flex items-center gap-1">
             <button onclick="setStudentMasterView('cards')" id="btnViewCards" class="px-3 py-1.5 rounded-lg font-bold bg-emerald-600 text-white transition min-h-[32px]">Batch Cards</button>
@@ -626,10 +591,7 @@ body { -webkit-tap-highlight-color: transparent; }
           <span class="text-slate-400 text-[11px] hidden sm:inline">Click any student name to edit</span>
         </div>
 
-        <!-- Cards View -->
         <div id="studentBatchCardsContainer" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3"></div>
-
-        <!-- Directory Table View -->
         <div id="studentDirectoryContainer" class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden hidden">
           <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
@@ -647,10 +609,9 @@ body { -webkit-tap-highlight-color: transparent; }
             </table>
           </div>
         </div>
-
       </div>
 
-      <!-- ================= TAB 4: ANALYTICS ================= -->
+      <!-- TAB 4: ANALYTICS -->
       <div id="analytics" class="tab-content space-y-3" role="tabpanel">
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5" id="statsGrid"></div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -676,7 +637,6 @@ body { -webkit-tap-highlight-color: transparent; }
     </main>
   </div>
 
-  <!-- ================= FOOTER ================= -->
   <footer class="w-full bg-brandNavy text-slate-300 rounded-xl px-4 py-2.5 flex items-center justify-between shadow-md border border-slate-800/80 print-hide mt-1 text-xs">
     <div class="flex items-center gap-2 font-medium">
       <span>&copy; 2026 SinghClasses.in</span>
@@ -687,13 +647,15 @@ body { -webkit-tap-highlight-color: transparent; }
       Master Roster Engine & Live Sync Active
     </div>
   </footer>
-
 </div>
 
 <script>
 /* ==========================================================================
-   CONSTANTS & MASTER SCHEDULE DEFINITIONS
+   CONFIGURATION & STATE
    ========================================================================== */
+// 👉 Put your deployed Google Apps Script Web App URL below:
+const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+
 const TEMPLATE_VERSION = '2026.2';
 const STORAGE_KEY_PLANNER = 'singhPlanner_core_v1';
 const STORAGE_KEY_ATTENDANCE = 'singhPlanner_attendance_v1';
@@ -832,7 +794,6 @@ window.DEFAULT_ROSTERS = {
   'b_kirti_sun': ['Kirti']
 };
 
-/* ================= STATE HOLDER ================= */
 let state = {
   templateVersion: TEMPLATE_VERSION,
   activeDateStr: toISO(new Date()),
@@ -843,23 +804,78 @@ let state = {
   lastBackup: null
 };
 
-// Independent attendance ledger: dateStr -> { batchId -> { studentName: 'P'|'A'|'L' } }
 let attendanceStore = {};
-
 let currentPlannerView = 'school';
 let studentMasterView = 'cards';
 let charts = {};
 let editMode = { school: false, tuition: false, study: false };
 let lastCheckedDate = toISO(new Date());
 
-// Modal Active State
 let currentAttBatchId = null;
 let currentAttBatchTitle = '';
 let currentAttTaskId = null;
 let currentAttTargetDate = toISO(new Date());
 let lastDeletedStudent = null;
 
-/* ================= TIME & DATE UTILITIES ================= */
+/* ================= APPS SCRIPT CLOUD FETCH ENGINE ================= */
+async function fetchFromAppsScript(showFeedback = true) {
+  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE') {
+    if (showFeedback) showToast('Set APPS_SCRIPT_URL in your script before syncing', 'error');
+    return;
+  }
+
+  if (showFeedback) showToast('Syncing with Planner sheet...', 'info');
+
+  try {
+    const res = await fetch(`${APPS_SCRIPT_URL}?action=getAll`, {
+      method: 'GET',
+      redirect: 'follow'
+    });
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const data = await res.json();
+
+    if (data.status === 'success') {
+      let syncedItems = [];
+
+      // 1. Sync timetables from Planner sheet
+      if (data.timetables && typeof data.timetables === 'object') {
+        if (data.timetables.school && Object.keys(data.timetables.school).length) {
+          state.timetables.school = data.timetables.school;
+        }
+        if (data.timetables.tuition && Object.keys(data.timetables.tuition).length) {
+          state.timetables.tuition = data.timetables.tuition;
+        }
+        if (data.timetables.study && Object.keys(data.timetables.study).length) {
+          state.timetables.study = data.timetables.study;
+        }
+        syncedItems.push('Timetables');
+      }
+
+      // 2. Sync rosters if available
+      if (data.rosters && Object.keys(data.rosters).length > 0) {
+        state.rosters = Object.assign({}, state.rosters, data.rosters);
+        syncedItems.push('Rosters');
+      }
+
+      saveState();
+      ensureDayPopulated(state.activeDateStr);
+      renderAll();
+
+      if (showFeedback) {
+        showToast(`Synced ${syncedItems.join(' & ')} successfully!`, 'success');
+      }
+    } else {
+      throw new Error(data.message || 'Error from Apps Script');
+    }
+  } catch (err) {
+    console.error('Apps Script Sync Error:', err);
+    if (showFeedback) showToast(`Sync failed: ${err.message}`, 'error');
+  }
+}
+
+/* ================= DATE / TIME UTILITIES ================= */
 function toISO(dateObj) {
   const d = new Date(dateObj);
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -967,16 +983,10 @@ function normalizeBatchId(name) {
   return 'b_' + (name || '').toLowerCase().replace(/[^a-z0-9]/g, '_').replace(/_+/g, '_').slice(0, 30);
 }
 
-/* ==========================================================================
-   CENTRALIZED REACTIVE DATA LAYER (AppData)
-   Reused by Planner, Attendance, Master Timetables, and Master Rosters
-   ========================================================================== */
+/* ================= APPDATA INTERFACE ================= */
 const AppData = {
-  // Batch & Student Roster Operations
   getAllBatches() {
     const batchMap = new Map();
-
-    // 1. Scan from existing rosters
     Object.keys(state.rosters || {}).forEach(batchId => {
       batchMap.set(batchId, {
         batchId,
@@ -986,7 +996,6 @@ const AppData = {
       });
     });
 
-    // 2. Cross-reference scheduled days from master tuition timetable
     DAYS.forEach(day => {
       (state.timetables.tuition[day] || []).forEach(slot => {
         const bId = slot.batchId || normalizeBatchId(slot.task);
@@ -1021,9 +1030,7 @@ const AppData = {
   },
 
   getRoster(batchId) {
-    if (!state.rosters[batchId]) {
-      state.rosters[batchId] = [];
-    }
+    if (!state.rosters[batchId]) state.rosters[batchId] = [];
     return state.rosters[batchId];
   },
 
@@ -1031,11 +1038,9 @@ const AppData = {
     const clean = (studentName || '').trim();
     if (!clean) return { success: false, message: 'Name cannot be blank' };
     if (!state.rosters[batchId]) state.rosters[batchId] = [];
-
     if (state.rosters[batchId].includes(clean)) {
       return { success: false, message: 'Student already exists in this batch' };
     }
-
     state.rosters[batchId].push(clean);
     this.saveAndNotify(`Added "${clean}" to roster`);
     return { success: true };
@@ -1051,7 +1056,6 @@ const AppData = {
 
     state.rosters[batchId][idx] = cleanNew;
 
-    // Migrate attendance ledger safely
     Object.keys(attendanceStore).forEach(dateStr => {
       if (attendanceStore[dateStr] && attendanceStore[dateStr][batchId]) {
         if (attendanceStore[dateStr][batchId][oldName] !== undefined) {
@@ -1069,7 +1073,6 @@ const AppData = {
     if (!state.rosters[batchId]) return;
     lastDeletedStudent = { batchId, name: studentName };
     state.rosters[batchId] = state.rosters[batchId].filter(s => s !== studentName);
-
     this.saveAndNotify(`Removed "${studentName}"`);
     showToastWithUndo(`Removed ${studentName}`, () => {
       if (lastDeletedStudent) {
@@ -1079,32 +1082,18 @@ const AppData = {
     });
   },
 
-  createBatch(batchTitle, batchIdCustom) {
+  createBatch(batchTitle) {
     const title = (batchTitle || '').trim();
     if (!title) return { success: false, message: 'Batch title is required' };
-    const bId = batchIdCustom ? normalizeBatchId(batchIdCustom) : normalizeBatchId(title);
-
-    if (state.rosters[bId]) {
-      return { success: false, message: 'Batch ID already exists' };
-    }
-
+    const bId = normalizeBatchId(title);
+    if (state.rosters[bId]) return { success: false, message: 'Batch ID already exists' };
     state.rosters[bId] = [];
     this.saveAndNotify(`Batch "${title}" created`);
     return { success: true, batchId: bId };
   },
 
-  deleteBatch(batchId) {
-    if (state.rosters[batchId]) {
-      delete state.rosters[batchId];
-    }
-    this.saveAndNotify(`Batch deleted`);
-  },
-
   getStudentAttendanceStats(batchId, studentName) {
-    let totalPresent = 0;
-    let totalAbsent = 0;
-    let totalRecords = 0;
-
+    let totalPresent = 0, totalAbsent = 0, totalRecords = 0;
     Object.keys(attendanceStore).forEach(dateStr => {
       const dayBatch = attendanceStore[dateStr]?.[batchId];
       if (dayBatch && dayBatch[studentName]) {
@@ -1113,11 +1102,9 @@ const AppData = {
         if (dayBatch[studentName] === 'A') totalAbsent++;
       }
     });
-
     return { totalPresent, totalAbsent, totalRecords };
   },
 
-  // State Persistence & Global Synchronizer
   saveAndNotify(toastMsg = null) {
     saveState();
     renderAll();
@@ -1125,7 +1112,7 @@ const AppData = {
   }
 };
 
-/* ================= STORAGE & RECOVERY SAFEGUARDS ================= */
+/* ================= STORAGE MANAGEMENT ================= */
 function loadState() {
   const rawPlanner = localStorage.getItem(STORAGE_KEY_PLANNER);
   const rawAtt = localStorage.getItem(STORAGE_KEY_ATTENDANCE);
@@ -1137,37 +1124,20 @@ function loadState() {
         state = Object.assign(state, parsed);
       }
     } catch (err) {
-      console.error('Planner storage corrupted, backing up raw payload to rescue key');
       localStorage.setItem(STORAGE_KEY_RESCUE, rawPlanner);
-      showToast('Corrupted storage restored from defaults; rescue copy saved', 'error');
+      showToast('Restored default state after storage error', 'error');
     }
   }
 
   if (rawAtt) {
     try {
       const parsedAtt = JSON.parse(rawAtt);
-      if (parsedAtt && typeof parsedAtt === 'object') {
-        attendanceStore = parsedAtt;
-      }
-    } catch (err) {
-      console.error('Attendance storage read error');
-    }
+      if (parsedAtt && typeof parsedAtt === 'object') attendanceStore = parsedAtt;
+    } catch (err) {}
   }
 
-  // Request persistent storage
   if (navigator.storage && navigator.storage.persist) {
-    navigator.storage.persist().then(persistent => {
-      if (persistent) console.log('Storage persistence granted');
-    });
-  }
-
-  // Check backup reminder (warn if older than 7 days)
-  if (state.lastBackup) {
-    const daysSinceBackup = (Date.now() - state.lastBackup) / (1000 * 60 * 60 * 24);
-    if (daysSinceBackup > 7) {
-      const banner = document.getElementById('backupNudgeBanner');
-      if (banner) banner.classList.remove('hidden');
-    }
+    navigator.storage.persist();
   }
 
   pruneOldTasks(15);
@@ -1182,27 +1152,22 @@ function saveState() {
     localStorage.setItem(STORAGE_KEY_PLANNER, JSON.stringify(state));
     localStorage.setItem(STORAGE_KEY_ATTENDANCE, JSON.stringify(attendanceStore));
   } catch (err) {
-    showToast('Storage quota exceeded! Export your backup immediately.', 'error');
+    showToast('Storage quota exceeded! Export backup soon.', 'error');
   }
 }
 
 function pruneOldTasks(keepDays = 15) {
   if (!state.days) return;
   const now = new Date();
-  const pastLimit = new Date(now.getFullYear(), now.getMonth(), now.getDate() - keepDays);
-  const limitISO = toISO(pastLimit);
-
+  const limitISO = toISO(new Date(now.getFullYear(), now.getMonth(), now.getDate() - keepDays));
   Object.keys(state.days).forEach(dateStr => {
-    if (dateStr < limitISO) {
-      delete state.days[dateStr];
-    }
+    if (dateStr < limitISO) delete state.days[dateStr];
   });
 }
 
 function ensureDayPopulated(dateStr) {
   const dName = getDayName(dateStr);
-  const now = new Date();
-  const limitISO = toISO(new Date(now.getFullYear(), now.getMonth(), now.getDate() - 15));
+  const limitISO = toISO(new Date(Date.now() - 15 * 86400000));
   if (dateStr < limitISO) return;
 
   if (!state.days[dateStr]) {
@@ -1213,7 +1178,6 @@ function ensureDayPopulated(dateStr) {
   const daySchoolMap = new Map((existing.school || []).map(t => [t.slotId || t.task, t]));
   const dayTuitionMap = new Map((existing.tuition_study || []).map(t => [t.slotId || t.task, t]));
 
-  // Populate school
   const schSlots = state.timetables.school[dName] || [];
   const populatedSchool = schSlots.map(slot => {
     const ex = daySchoolMap.get(slot.id);
@@ -1233,7 +1197,6 @@ function ensureDayPopulated(dateStr) {
     };
   });
 
-  // Populate tuition & study
   const tuiSlots = state.timetables.tuition[dName] || [];
   const populatedTuition = tuiSlots.map(slot => {
     const ex = dayTuitionMap.get(slot.id);
@@ -1271,37 +1234,28 @@ function ensureDayPopulated(dateStr) {
 }
 
 function reloadDayFromTimetable(dateStr) {
-  if (state.days[dateStr]) {
-    delete state.days[dateStr];
-  }
+  if (state.days[dateStr]) delete state.days[dateStr];
   ensureDayPopulated(dateStr);
-  AppData.saveAndNotify(`Synced ${getDayName(dateStr)} from weekly templates`);
+  AppData.saveAndNotify(`Reset ${getDayName(dateStr)} from template`);
 }
 
-/* ================= PREVIOUS CLASS LOOKUP ================= */
 function getPreviousClassDate(batchId, refDateStr) {
   if (!batchId || !refDateStr) return addDays(refDateStr, -1);
-
   for (let i = 1; i <= 7; i++) {
     const candDate = addDays(refDateStr, -i);
     const dName = getDayName(candDate);
-
     const ttSlots = (state.timetables && state.timetables.tuition && state.timetables.tuition[dName]) || [];
     const inTimetable = ttSlots.some(s => (s.batchId || normalizeBatchId(s.task)) === batchId);
-    const hasAtt = attendanceStore[candDate] && attendanceStore[candDate][batchId] && Object.keys(attendanceStore[candDate][batchId]).length > 0;
-
-    if (inTimetable || hasAtt) {
-      return candDate;
-    }
+    const hasAtt = attendanceStore[candDate]?.[batchId] && Object.keys(attendanceStore[candDate][batchId]).length > 0;
+    if (inTimetable || hasAtt) return candDate;
   }
   return addDays(refDateStr, -1);
 }
 
-/* ================= STATS & ANALYTICS COMPUTATION ================= */
+/* ================= STATS & ANALYTICS ================= */
 function calculateWeeklyStats() {
   const totals = { school: 0, tuition: 0, study: 0 };
-  let completedCount = 0;
-  let totalCount = 0;
+  let completedCount = 0, totalCount = 0;
 
   for (let i = 0; i < 7; i++) {
     const curDate = addDays(state.viewMondayStr, i);
@@ -1325,13 +1279,11 @@ function calculateWeeklyStats() {
         if (!p.isFree) { totals.school += range.hrs; totalCount++; }
       });
       (state.timetables.tuition[dName] || []).forEach(s => {
-        const range = parseTimeRange(s.time);
-        totals.tuition += range.hrs;
+        totals.tuition += parseTimeRange(s.time).hrs;
         totalCount++;
       });
       (state.timetables.study[dName] || []).forEach(s => {
-        const range = parseTimeRange(s.time);
-        totals.study += range.hrs;
+        totals.study += parseTimeRange(s.time).hrs;
         totalCount++;
       });
     }
@@ -1357,7 +1309,6 @@ function updateAnalytics() {
   let plannedCat = { School: 0, Tuition: 0, Study: 0 };
   let doneCat = { School: 0, Tuition: 0, Study: 0 };
   let dailyPlanned = [], dailyDone = [], dailyPct = [], labels = [];
-
   let grandPlanned = 0, grandDone = 0;
 
   for (let i = 0; i < 7; i++) {
@@ -1401,7 +1352,6 @@ function updateAnalytics() {
     dailyPlanned.push(parseFloat(dayPlan.toFixed(2)));
     dailyDone.push(parseFloat(dayDone.toFixed(2)));
     dailyPct.push(dayPlan > 0 ? Math.round((dayDone / dayPlan) * 100) : 0);
-
     grandPlanned += dayPlan;
     grandDone += dayDone;
   }
@@ -1505,11 +1455,8 @@ function renderSidebarDaySelector() {
     const isToday = dIso === today;
 
     let cardClasses = 'bg-white hover:bg-slate-100 border border-slate-200 text-slate-800';
-    if (isActive) {
-      cardClasses = 'bg-blue-600 text-white border-blue-400 font-bold shadow-sm';
-    } else if (isToday) {
-      cardClasses = 'bg-blue-50/80 border-blue-300 text-blue-900 font-bold';
-    }
+    if (isActive) cardClasses = 'bg-blue-600 text-white border-blue-400 font-bold shadow-sm';
+    else if (isToday) cardClasses = 'bg-blue-50/80 border-blue-300 text-blue-900 font-bold';
 
     return `
       <button onclick="selectDate('${dIso}')" class="h-10 rounded-xl px-2 py-1 flex items-center gap-1.5 transition active:scale-95 text-left ${cardClasses} min-h-[40px]">
@@ -1535,12 +1482,8 @@ function renderSidebarDaySelector() {
           <span class="text-xs font-black">${sunNum}</span>
         </button>
         <div class="mt-2 pt-2 border-t border-slate-200 grid grid-cols-2 gap-1.5">
-          <button onclick="checkAllToday()" class="py-1.5 bg-white hover:bg-emerald-50 text-emerald-700 border border-slate-200 font-bold text-xs rounded-xl transition active:scale-95 min-h-[36px]">
-            Check All
-          </button>
-          <button onclick="clearTodayChecks()" class="py-1.5 bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 font-bold text-xs rounded-xl transition active:scale-95 min-h-[36px]">
-            Clear All
-          </button>
+          <button onclick="checkAllToday()" class="py-1.5 bg-white hover:bg-emerald-50 text-emerald-700 border border-slate-200 font-bold text-xs rounded-xl transition active:scale-95 min-h-[36px]">Check All</button>
+          <button onclick="clearTodayChecks()" class="py-1.5 bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 font-bold text-xs rounded-xl transition active:scale-95 min-h-[36px]">Clear All</button>
         </div>
       </div>`;
   }
@@ -1573,15 +1516,13 @@ function jumpToday() {
   renderAll();
 }
 
-/* ================= PLANNER TABLES RENDERING ================= */
+/* ================= TABLES ================= */
 function renderTables() {
-  const now = new Date();
-  const limitISO = toISO(new Date(now.getFullYear(), now.getMonth(), now.getDate() - 15));
+  const limitISO = toISO(new Date(Date.now() - 15 * 86400000));
   const isArchived = state.activeDateStr < limitISO;
-
   const dayData = state.days[state.activeDateStr] || { school: [], tuition_study: [] };
 
-  // 1. School Classes
+  // School
   const sTbody = document.getElementById('schoolBody');
   sTbody.innerHTML = '';
   if (isArchived) {
@@ -1622,14 +1563,13 @@ function renderTables() {
     });
   }
 
-  // School Section Totals
   const sTot = dayData.school.reduce((acc, i) => acc + (Number.isFinite(i.hrs) ? i.hrs : 0), 0);
   const sDone = dayData.school.filter(i => i.completed && !i.isFree).length;
   const sCount = dayData.school.filter(i => !i.isFree).length;
   document.getElementById('schoolSecTotal').textContent = `${sTot.toFixed(2)} hrs`;
   document.getElementById('schoolSecMeta').textContent = `${sDone} of ${sCount} completed`;
 
-  // 2. Tuition & Study
+  // Tuition & Study
   const tTbody = document.getElementById('tuitionStudyBody');
   tTbody.innerHTML = '';
   if (isArchived) {
@@ -1686,7 +1626,6 @@ function renderTables() {
     });
   }
 
-  // Tuition Section Totals
   const tTot = dayData.tuition_study.reduce((acc, i) => acc + (Number.isFinite(i.hrs) ? i.hrs : 0), 0);
   const tDone = dayData.tuition_study.filter(i => i.completed).length;
   const tCount = dayData.tuition_study.length;
@@ -1712,7 +1651,7 @@ function editTopicPrompt(slotId, sec) {
 
   showActionModal({
     title: 'Edit Topic',
-    msg: `Enter new topic for "${item.task}":`,
+    msg: `Enter topic for "${item.task}":`,
     hasInput: true,
     inputVal: item.topic || '',
     onConfirm: (val) => {
@@ -1749,9 +1688,7 @@ function clearTodayChecks() {
   });
 }
 
-/* ==========================================================================
-   STUDENTS MASTER SHEET RENDERER & DIRECTORY
-   ========================================================================== */
+/* ================= STUDENTS MASTER ================= */
 function setStudentMasterView(mode) {
   studentMasterView = mode;
   const cards = document.getElementById('studentBatchCardsContainer');
@@ -1778,7 +1715,6 @@ function renderStudentsMaster() {
   const searchInput = document.getElementById('studentMasterSearch');
   const query = (searchInput?.value || '').toLowerCase().trim();
 
-  // Aggregate stats
   let totalBatches = batches.length;
   let totalEnrollments = 0;
   let allStudentNamesSet = new Set();
@@ -1809,7 +1745,6 @@ function renderStudentsMaster() {
       </div>`;
   }
 
-  // Filter batches by query
   const filteredBatches = batches.filter(b => {
     if (!query) return true;
     if (b.title.toLowerCase().includes(query)) return true;
@@ -1817,7 +1752,6 @@ function renderStudentsMaster() {
     return b.students.some(s => s.toLowerCase().includes(query));
   });
 
-  // 1. Render Batch Cards View
   const cardsContainer = document.getElementById('studentBatchCardsContainer');
   if (cardsContainer) {
     cardsContainer.innerHTML = filteredBatches.map(b => {
@@ -1836,7 +1770,6 @@ function renderStudentsMaster() {
               </span>
             </div>
 
-            <!-- Student List -->
             <div class="p-3 space-y-1.5 max-h-56 overflow-y-auto">
               ${b.students.length === 0 ? '<div class="text-xs text-slate-400 italic py-2 text-center">No students enrolled yet</div>' : ''}
               ${b.students.map((student, idx) => {
@@ -1850,7 +1783,7 @@ function renderStudentsMaster() {
                       </span>
                     </div>
                     <div class="flex items-center gap-1 shrink-0">
-                      <span class="text-[10px] font-bold text-slate-500 bg-white px-1.5 py-0.5 rounded border border-slate-200" title="Present: ${stats.totalPresent}, Absent: ${stats.totalAbsent}">
+                      <span class="text-[10px] font-bold text-slate-500 bg-white px-1.5 py-0.5 rounded border border-slate-200">
                         ${stats.totalPresent}P / ${stats.totalRecords}
                       </span>
                       <button onclick="promptRenameStudent('${b.batchId}', '${escapeHtml(student)}')" class="p-1 text-slate-400 hover:text-blue-600" title="Edit name">
@@ -1865,18 +1798,14 @@ function renderStudentsMaster() {
             </div>
           </div>
 
-          <!-- Add student inline form -->
           <div class="p-2.5 bg-slate-50/80 border-t border-slate-200 flex items-center gap-1.5">
             <input type="text" id="addStInput_${b.batchId}" placeholder="Add student..." class="flex-1 px-2.5 py-1.5 text-xs font-semibold bg-white border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-emerald-500 min-h-[34px]" onkeydown="if(event.key==='Enter') addStudentFromCard('${b.batchId}')">
-            <button onclick="addStudentFromCard('${b.batchId}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg transition min-h-[34px]">
-              Add
-            </button>
+            <button onclick="addStudentFromCard('${b.batchId}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg transition min-h-[34px]">Add</button>
           </div>
         </div>`;
     }).join('');
   }
 
-  // 2. Render Directory Table View
   const dirBody = document.getElementById('studentDirectoryBody');
   if (dirBody) {
     let rowIdx = 1;
@@ -1901,22 +1830,14 @@ function renderStudentsMaster() {
               </span>
             </td>
             <td class="py-2.5 px-3 text-right">
-              <button onclick="promptRenameStudent('${b.batchId}', '${escapeHtml(student)}')" class="px-2 py-1 bg-slate-100 hover:bg-blue-50 text-blue-600 rounded text-xs font-bold mr-1">
-                Rename
-              </button>
-              <button onclick="AppData.removeStudent('${b.batchId}', '${escapeHtml(student)}')" class="px-2 py-1 bg-slate-100 hover:bg-rose-50 text-rose-600 rounded text-xs font-bold">
-                Remove
-              </button>
+              <button onclick="promptRenameStudent('${b.batchId}', '${escapeHtml(student)}')" class="px-2 py-1 bg-slate-100 hover:bg-blue-50 text-blue-600 rounded text-xs font-bold mr-1">Rename</button>
+              <button onclick="AppData.removeStudent('${b.batchId}', '${escapeHtml(student)}')" class="px-2 py-1 bg-slate-100 hover:bg-rose-50 text-rose-600 rounded text-xs font-bold">Remove</button>
             </td>
           </tr>`);
       });
     });
 
-    if (tableRows.length === 0) {
-      dirBody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-xs font-semibold text-slate-400">No student records match your query</td></tr>`;
-    } else {
-      dirBody.innerHTML = tableRows.join('');
-    }
+    dirBody.innerHTML = tableRows.length === 0 ? `<tr><td colspan="6" class="py-8 text-center text-xs font-semibold text-slate-400">No student records match your query</td></tr>` : tableRows.join('');
   }
 
   if (window.lucide && lucide.createIcons) lucide.createIcons();
@@ -1926,17 +1847,14 @@ function addStudentFromCard(batchId) {
   const input = document.getElementById(`addStInput_${batchId}`);
   if (!input) return;
   const res = AppData.addStudent(batchId, input.value);
-  if (res.success) {
-    input.value = '';
-  } else {
-    showToast(res.message, 'error');
-  }
+  if (res.success) input.value = '';
+  else showToast(res.message, 'error');
 }
 
 function promptRenameStudent(batchId, oldName) {
   showActionModal({
     title: 'Rename Student',
-    msg: `Change name for "${oldName}" in this batch. All attendance logs will migrate seamlessly:`,
+    msg: `Change name for "${oldName}". Attendance logs migrate automatically:`,
     hasInput: true,
     inputVal: oldName,
     onConfirm: (newName) => {
@@ -1949,7 +1867,7 @@ function promptRenameStudent(batchId, oldName) {
 function promptCreateNewBatch() {
   showActionModal({
     title: 'Create New Batch',
-    msg: 'Enter Title for the new batch (e.g. "Class XII CS – Special Batch"):',
+    msg: 'Enter Batch Title (e.g. "Class XII CS – Morning Batch"):',
     hasInput: true,
     inputVal: '',
     onConfirm: (title) => {
@@ -1959,7 +1877,7 @@ function promptCreateNewBatch() {
   });
 }
 
-/* ================= ATTENDANCE & WHATSAPP ENGINE ================= */
+/* ================= ATTENDANCE & WHATSAPP ================= */
 function openAttendanceModal(slotId) {
   const dayData = state.days[state.activeDateStr];
   if (!dayData) return;
@@ -1970,7 +1888,6 @@ function openAttendanceModal(slotId) {
   currentAttBatchId = item.batchId || normalizeBatchId(item.task);
   currentAttBatchTitle = item.task;
 
-  // Compute previous class date
   const prevDate = getPreviousClassDate(currentAttBatchId, state.activeDateStr);
   currentAttTargetDate = prevDate;
 
@@ -1986,11 +1903,9 @@ function closeAttendanceModal() {
 }
 
 function switchAttDate(mode) {
-  if (mode === 'previous') {
-    currentAttTargetDate = getPreviousClassDate(currentAttBatchId, state.activeDateStr);
-  } else {
-    currentAttTargetDate = state.activeDateStr;
-  }
+  currentAttTargetDate = (mode === 'previous')
+    ? getPreviousClassDate(currentAttBatchId, state.activeDateStr)
+    : state.activeDateStr;
   updateAttDateButtons();
   renderAttendanceList();
 }
@@ -2011,14 +1926,11 @@ function updateAttDateButtons() {
     btnP.className = 'px-3 py-1.5 text-xs font-bold rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 min-h-[36px]';
   }
 
-  const hasPrevAtt = attendanceStore[prevDate] && attendanceStore[prevDate][currentAttBatchId] && Object.keys(attendanceStore[prevDate][currentAttBatchId]).length > 0;
+  const hasPrevAtt = attendanceStore[prevDate]?.[currentAttBatchId] && Object.keys(attendanceStore[prevDate][currentAttBatchId]).length > 0;
   const banner = document.getElementById('attPrevWarningBanner');
   if (banner) {
-    if (!hasPrevAtt && currentAttTargetDate === prevDate) {
-      banner.classList.remove('hidden');
-    } else {
-      banner.classList.add('hidden');
-    }
+    if (!hasPrevAtt && currentAttTargetDate === prevDate) banner.classList.remove('hidden');
+    else banner.classList.add('hidden');
   }
 }
 
@@ -2039,7 +1951,7 @@ function renderAttendanceList() {
           <button data-action="status" data-val="P" class="px-2.5 py-1 text-xs font-black rounded-lg transition min-h-[34px] min-w-[34px] ${status === 'P' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-white border border-slate-200 text-slate-600'}">P</button>
           <button data-action="status" data-val="A" class="px-2.5 py-1 text-xs font-black rounded-lg transition min-h-[34px] min-w-[34px] ${status === 'A' ? 'bg-rose-600 text-white shadow-sm' : 'bg-white border border-slate-200 text-slate-600'}">A</button>
           <button data-action="status" data-val="L" class="px-2.5 py-1 text-xs font-black rounded-lg transition min-h-[34px] min-w-[34px] ${status === 'L' ? 'bg-amber-500 text-white shadow-sm' : 'bg-white border border-slate-200 text-slate-600'}">Late</button>
-          <button data-action="delete" class="text-slate-300 hover:text-rose-500 p-1 rounded min-h-[34px] min-w-[34px] flex items-center justify-center" title="Remove from batch">
+          <button data-action="delete" class="text-slate-300 hover:text-rose-500 p-1 rounded min-h-[34px] min-w-[34px] flex items-center justify-center" title="Remove student">
             <i data-lucide="trash-2" class="w-4 h-4"></i>
           </button>
         </div>
@@ -2101,10 +2013,9 @@ function addStudentFromModal() {
 function saveAttendanceOnly() {
   saveState();
   closeAttendanceModal();
-  showToast('Attendance recorded successfully', 'success');
+  showToast('Attendance recorded', 'success');
 }
 
-/* ================= PRECISE WHATSAPP DISPATCHER ================= */
 function confirmAttendanceAndLaunchWhatsApp() {
   saveState();
   const dayData = state.days[state.activeDateStr];
@@ -2159,7 +2070,7 @@ function dispatchWhatsAppMessage(item) {
   const includeAbsentees = document.getElementById('includeAbsenteeToggle')?.checked;
 
   let absentStudents = [];
-  if (includeAbsentees && attendanceStore[prevDate] && attendanceStore[prevDate][currentAttBatchId]) {
+  if (includeAbsentees && attendanceStore[prevDate]?.[currentAttBatchId]) {
     const attMap = attendanceStore[prevDate][currentAttBatchId];
     Object.keys(attMap).forEach(st => {
       if (attMap[st] === 'A') absentStudents.push(st);
@@ -2169,11 +2080,7 @@ function dispatchWhatsAppMessage(item) {
   let absentSectionText = '';
   if (absentStudents.length > 0) {
     const listText = absentStudents.map((st, i) => `- ${i + 1}. ${st}`).join('\n');
-    absentSectionText = `
-*=✦=✦=✦=✦=✦=✦=✦==✦=✦=✦=✦=*
-⚠️ _*Absent students on ${formattedBackDate}:*_
-${listText}
-*=✦=✦=✦=✦=✦=✦=✦==✦=✦=✦=✦=*`;
+    absentSectionText = `\n*=✦=✦=✦=✦=✦=✦=✦==✦=✦=✦=✦=*\n⚠️ _*Absent students on ${formattedBackDate}:*_\n${listText}\n*=✦=✦=✦=✦=✦=✦=✦==✦=✦=✦=✦=*`;
   }
 
   const message = `
@@ -2192,7 +2099,7 @@ ${listText}
   window.open(url, '_blank');
 
   closeAttendanceModal();
-  showToast('Attendance recorded & WhatsApp launched', 'success');
+  showToast('WhatsApp launched & attendance saved', 'success');
 }
 
 /* ================= TIMETABLE MASTER EDITOR ================= */
@@ -2262,7 +2169,6 @@ function syncCurrentTimetableInputs(t) {
         const oldId = oldSlots[idx]?.id;
         const assignedBatchId = t === 'tuition' ? (oldSlots[idx]?.batchId || normalizeBatchId(taskVal)) : undefined;
 
-        // Ensure roster key exists for tuition
         if (t === 'tuition' && assignedBatchId && !state.rosters[assignedBatchId]) {
           state.rosters[assignedBatchId] = [];
         }
@@ -2287,7 +2193,7 @@ function toggleEditMode(t) {
     saveState();
     ensureDayPopulated(state.activeDateStr);
     renderAll();
-    showToast(`${t.toUpperCase()} schedule saved`, 'success');
+    showToast(`${t.toUpperCase()} schedule saved locally`, 'success');
   } else {
     editMode[t] = true;
     renderTimetables();
@@ -2316,7 +2222,7 @@ function deleteTemplateSlot(t, d, i) {
 function promptResetTimetableDefaults() {
   showActionModal({
     title: 'Reset Timetables',
-    msg: 'Reset all weekly templates to factory defaults? Your custom changes will be overwritten.',
+    msg: 'Reset all weekly templates to defaults? Any unexported edits will be replaced.',
     onConfirm: () => {
       state.timetables = JSON.parse(JSON.stringify(window.DEFAULT_TIMETABLES));
       saveState();
@@ -2327,7 +2233,7 @@ function promptResetTimetableDefaults() {
   });
 }
 
-/* ================= SECTION FILTERS & TABS ================= */
+/* ================= SECTION FILTERS & MODALS ================= */
 function setPlannerView(view) {
   currentPlannerView = view;
   const sSec = document.getElementById('schoolClassesSec');
@@ -2372,7 +2278,6 @@ function handleNavClick(view, btn) {
   setPlannerView(view);
 }
 
-/* ================= MODAL & TOAST NOTIFICATION HELPERS ================= */
 function showToast(msg, type = 'info') {
   const container = document.getElementById('toastContainer');
   const toast = document.createElement('div');
@@ -2428,7 +2333,7 @@ function showActionModal({ title, msg, hasInput = false, inputVal = '', onConfir
   };
 }
 
-/* ================= IMPORT & EXPORT PIPELINE ================= */
+/* ================= IMPORT / EXPORT ================= */
 function exportBackup() {
   state.lastBackup = Date.now();
   saveState();
@@ -2443,7 +2348,7 @@ function exportBackup() {
   a.href = URL.createObjectURL(blob);
   a.download = `singhPlanner_backup_${toISO(new Date())}.json`;
   a.click();
-  showToast('Planner backup downloaded successfully', 'success');
+  showToast('Planner backup downloaded', 'success');
 }
 
 function importBackup(e) {
@@ -2458,7 +2363,7 @@ function importBackup(e) {
 
       showActionModal({
         title: 'Confirm Backup Import',
-        msg: 'Importing this backup will overwrite existing schedules and student rosters. Continue?',
+        msg: 'Importing will replace your current schedule and student rosters. Continue?',
         onConfirm: () => {
           if (data.planner) {
             state = Object.assign(state, data.planner);
@@ -2491,9 +2396,14 @@ function escapeHtml(str) {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
-/* ================= INITIALIZATION & LIFECYCLE ================= */
+/* ================= INITIALIZATION ================= */
 window.addEventListener('load', () => {
   loadState();
+
+  // Background fetch from Google Sheets if configured
+  if (APPS_SCRIPT_URL && APPS_SCRIPT_URL !== 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE') {
+    fetchFromAppsScript(false);
+  }
 
   const updateClock = () => {
     const now = new Date();
