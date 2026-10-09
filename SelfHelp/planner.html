@@ -157,13 +157,22 @@
         </div>
       </div>
 
-      <!-- Center: Date & Time Pill -->
-      <div class="bg-white/[0.06] border border-white/10 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-200 flex items-center gap-2.5 shadow-inner" id="currentDateDisplay">
+      <!-- Center: Date & Time Pill with day shifter -->
+      <div class="bg-white/[0.06] border border-white/10 pl-1.5 pr-3.5 py-1 rounded-lg text-xs font-semibold text-slate-200 flex items-center gap-2.5 shadow-inner" id="currentDateDisplay">
+        <div class="flex items-center gap-1">
+          <button onclick="shiftDay(-1)" type="button" aria-label="Previous day" class="w-7 h-7 rounded-md hover:bg-white/10 text-slate-200 flex items-center justify-center transition active:scale-95">
+            <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-[2.5]" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <button onclick="shiftDay(1)" type="button" aria-label="Next day" class="w-7 h-7 rounded-md hover:bg-white/10 text-slate-200 flex items-center justify-center transition active:scale-95">
+            <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-[2.5]" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
         <svg class="w-3.5 h-3.5 text-blue-400 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
         <span id="headerDateStr">Loading date...</span>
         <span class="text-slate-500 font-light" aria-hidden="true">|</span>
         <svg class="w-3.5 h-3.5 text-slate-300 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
         <span id="headerTimeStr">Loading time...</span>
+        <button onclick="jumpToday()" type="button" class="h-7 px-2.5 rounded-md bg-blue-500/15 hover:bg-blue-500/25 border border-blue-400/40 text-blue-200 text-[11px] font-bold transition active:scale-95 whitespace-nowrap">Today</button>
       </div>
 
       <!-- Right: Action Buttons -->
@@ -190,7 +199,7 @@
       </button>
     </div>
 
-    <!-- TOP NAVIGATION BAR + DAILY SUMMARY -->
+    <!-- TOP NAVIGATION BAR + PROGRESS -->
     <nav class="bg-brandNavy text-white rounded-xl px-2.5 py-1.5 flex flex-wrap items-center gap-2 shadow-md border border-slate-800/80 print-hide" id="topNav" role="tablist" aria-label="Planner Views">
       <div class="flex items-center gap-1.5 overflow-x-auto shrink-0 max-w-full" id="sidebarNav">
         <button id="tabBtnSchool" type="button" role="tab" aria-selected="true" aria-controls="planner" onclick="handleNavClick('school', this)" class="nav-btn active flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold text-slate-300 hover:text-white hover:bg-white/5 transition whitespace-nowrap min-h-[38px]">
@@ -215,54 +224,19 @@
         </button>
       </div>
 
-      <!-- Daily Summary (enhanced card) -->
-      <div id="dailySummary" class="flex-1 min-w-[360px] flex flex-col gap-2 lg:pl-3 lg:border-l lg:border-white/10">
-
-        <!-- Row 1: date controls + progress -->
-        <div class="flex flex-wrap items-center gap-2">
-          <div class="flex items-center gap-1 bg-white/[0.06] border border-white/10 rounded-xl p-1">
-            <button onclick="shiftDay(-1)" type="button" aria-label="Previous day" class="w-7 h-7 rounded-lg hover:bg-white/10 text-slate-200 flex items-center justify-center transition active:scale-95">
-              <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-[2.5]" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
-            </button>
-            <span id="dailyDateLabel" class="h-7 px-3 flex items-center justify-center min-w-[190px] rounded-lg bg-blue-600 text-white text-sm font-extrabold whitespace-nowrap shadow-sm">Loading...</span>
-            <button onclick="shiftDay(1)" type="button" aria-label="Next day" class="w-7 h-7 rounded-lg hover:bg-white/10 text-slate-200 flex items-center justify-center transition active:scale-95">
-              <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-[2.5]" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
-            </button>
+      <!-- Daily Progress -->
+      <div id="dailySummary" class="flex-1 min-w-[260px] flex items-center justify-end lg:pl-3 lg:border-l lg:border-white/10">
+        <div class="flex items-center gap-2.5 bg-white/[0.06] border border-white/10 rounded-xl px-2.5 h-9">
+          <div class="relative w-6 h-6 flex items-center justify-center shrink-0" aria-hidden="true">
+            <svg class="w-6 h-6 -rotate-90" viewBox="0 0 36 36">
+              <path class="text-white/15" stroke-width="4" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+              <path id="progressRing" class="text-emerald-400 transition-all duration-300" stroke-dasharray="0, 100" stroke-width="4" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+            </svg>
           </div>
-
-          <button onclick="jumpToday()" type="button" class="h-9 px-3 rounded-xl bg-blue-500/15 hover:bg-blue-500/25 border border-blue-400/40 text-blue-200 text-xs font-bold flex items-center gap-1.5 transition active:scale-95 whitespace-nowrap">
-            <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-            <span>Today</span>
-          </button>
-
-          <div class="ml-auto flex items-center gap-2.5 bg-white/[0.06] border border-white/10 rounded-xl px-2.5 h-9">
-            <div class="relative w-6 h-6 flex items-center justify-center shrink-0" aria-hidden="true">
-              <svg class="w-6 h-6 -rotate-90" viewBox="0 0 36 36">
-                <path class="text-white/15" stroke-width="4" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
-                <path id="progressRing" class="text-emerald-400 transition-all duration-300" stroke-dasharray="0, 100" stroke-width="4" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
-              </svg>
-            </div>
-            <div class="text-xs font-black text-white whitespace-nowrap">
-              <span id="completedCount" class="text-emerald-400">0</span> <span class="text-slate-400 font-semibold">of</span> <span id="totalCount">0</span> <span class="text-slate-400 font-semibold">done</span>
-            </div>
-            <span class="text-[11px] font-extrabold text-slate-300 whitespace-nowrap" id="progressPercent">0% complete</span>
+          <div class="text-xs font-black text-white whitespace-nowrap">
+            <span id="completedCount" class="text-emerald-400">0</span> <span class="text-slate-400 font-semibold">of</span> <span id="totalCount">0</span> <span class="text-slate-400 font-semibold">done</span>
           </div>
-        </div>
-
-        <!-- Row 2: category hour tiles -->
-        <div class="grid grid-cols-3 gap-2">
-          <div class="bg-blue-500/15 border border-blue-400/40 border-t-2 border-t-blue-400 rounded-xl px-3 py-1.5 flex items-center justify-between gap-2">
-            <span class="text-[10px] font-extrabold text-blue-300 uppercase tracking-wider">School</span>
-            <span class="text-sm font-black text-blue-100 whitespace-nowrap"><span id="totalSchool">0.0</span>H</span>
-          </div>
-          <div class="bg-orange-500/15 border border-orange-400/40 border-t-2 border-t-orange-400 rounded-xl px-3 py-1.5 flex items-center justify-between gap-2">
-            <span class="text-[10px] font-extrabold text-orange-300 uppercase tracking-wider">Tuition</span>
-            <span class="text-sm font-black text-orange-100 whitespace-nowrap"><span id="totalTuition">0.0</span>H</span>
-          </div>
-          <div class="bg-purple-500/15 border border-purple-400/40 border-t-2 border-t-purple-400 rounded-xl px-3 py-1.5 flex items-center justify-between gap-2">
-            <span class="text-[10px] font-extrabold text-purple-300 uppercase tracking-wider">Study</span>
-            <span class="text-sm font-black text-purple-100 whitespace-nowrap"><span id="totalStudy">0.0</span>H</span>
-          </div>
+          <span class="text-[11px] font-extrabold text-slate-300 whitespace-nowrap" id="progressPercent">0% complete</span>
         </div>
       </div>
     </nav>
@@ -275,7 +249,7 @@
 
         <!-- 1. School Section: 6 Columns -->
         <section id="schoolClassesSec" class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden" aria-labelledby="schoolSecTitle">
-          <header class="bg-cardNavy text-white px-3.5 sm:px-4 py-2.5 flex items-center justify-between">
+          <header class="bg-cardNavy text-white px-3.5 sm:px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
             <div class="flex items-center gap-2.5">
               <div class="w-7 h-7 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center" aria-hidden="true">
                 <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
@@ -285,6 +259,23 @@
                 <p class="text-[10px] text-slate-300 font-medium">Daily periods, practical computer labs & lesson topics</p>
               </div>
             </div>
+
+            <!-- Daily hour tiles (moved here from the top navigation) -->
+            <div class="flex items-center gap-1.5">
+              <div class="bg-blue-500/15 border border-blue-400/40 border-t-2 border-t-blue-400 rounded-lg px-2.5 py-1 flex items-center gap-2 min-w-[104px] justify-between">
+                <span class="text-[10px] font-extrabold text-blue-300 uppercase tracking-wider">School</span>
+                <span class="text-sm font-black text-blue-100 whitespace-nowrap"><span id="totalSchool">0.0</span>H</span>
+              </div>
+              <div class="bg-orange-500/15 border border-orange-400/40 border-t-2 border-t-orange-400 rounded-lg px-2.5 py-1 flex items-center gap-2 min-w-[104px] justify-between">
+                <span class="text-[10px] font-extrabold text-orange-300 uppercase tracking-wider">Tuition</span>
+                <span class="text-sm font-black text-orange-100 whitespace-nowrap"><span id="totalTuition">0.0</span>H</span>
+              </div>
+              <div class="bg-purple-500/15 border border-purple-400/40 border-t-2 border-t-purple-400 rounded-lg px-2.5 py-1 flex items-center gap-2 min-w-[104px] justify-between">
+                <span class="text-[10px] font-extrabold text-purple-300 uppercase tracking-wider">Study</span>
+                <span class="text-sm font-black text-purple-100 whitespace-nowrap"><span id="totalStudy">0.0</span>H</span>
+              </div>
+            </div>
+
             <div class="flex items-center gap-1.5">
               <button onclick="reloadDayFromTimetable(state.activeDateStr)" type="button" class="bg-white/10 hover:bg-white/20 text-slate-200 border border-white/10 text-xs font-semibold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition active:scale-95 print-hide min-h-[34px]">
                 <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
