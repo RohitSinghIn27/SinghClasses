@@ -161,16 +161,6 @@ header button {
   font-size: 14px !important;
 }
 
-#dailySummary .relative {
-  width: 28px !important;
-  height: 28px !important;
-}
-
-#dailySummary svg {
-  width: 28px !important;
-  height: 28px !important;
-}
-
 /* ==========================================================================
    SECTION HEADERS (SCHOOL / TUITION & STUDY)
    ========================================================================== */
@@ -1025,5 +1015,71 @@ footer .text-\[11px\] {
 
   .print-hide {
     display: none !important;
+  }
+}
+
+/* ==========================================================================
+   MOBILE FIXES (<= 640px) — date pill, tab grid, Msg buttons
+   ========================================================================== */
+@media screen and (max-width: 640px) {
+  /* Date pill: keep date, time and Today on one line */
+  #currentDateDisplay {
+    flex-wrap: nowrap !important;
+    gap: 6px !important;
+    padding-left: 4px !important;
+    padding-right: 6px !important;
+  }
+
+  #currentDateDisplay > svg {
+    display: none !important;
+  }
+
+  #headerDateStr,
+  #headerTimeStr {
+    white-space: nowrap !important;
+    flex-shrink: 0;
+  }
+
+  #currentDateDisplay > button {
+    padding: 0 6px !important;
+    flex-shrink: 0;
+  }
+
+  /* Tabs: 2-column grid so every tab is visible (no hidden overflow) */
+  #sidebarNav {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    overflow: visible !important;
+    gap: 6px !important;
+    width: 100% !important;
+  }
+
+  #sidebarNav > .nav-btn {
+    justify-content: center !important;
+    white-space: normal !important;
+    width: 100%;
+    font-size: 13px !important;
+  }
+
+  #sidebarNav > .nav-btn:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+
+  /* Msg buttons inside mobile cards: centred icon + label */
+  .col-act button {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    height: auto !important;
+    min-height: 36px !important;
+    padding: 6px 10px !important;
+    line-height: 1.2 !important;
+  }
+
+  .col-act button svg {
+    flex-shrink: 0;
+    width: 14px !important;
+    height: 14px !important;
   }
 }

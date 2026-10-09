@@ -30,9 +30,6 @@ let state = {
 
 let attendanceStore = {};
 let currentPlannerView = 'school';
-let studentMasterView = 'cards';
-let charts = {};
-let editMode = { school: false, tuition: false, study: false };
 let lastCheckedDate = toISO(new Date());
 
 let currentAttBatchId = null;
@@ -87,7 +84,6 @@ async function fetchFromAppsScript(showFeedback = true) {
 
       const syncTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       localStorage.setItem(STORAGE_KEY_LAST_SYNC, syncTime);
-      updateSyncStatusUI(`Synced at ${syncTime}`);
 
       saveState();
       ensureDayPopulated(state.activeDateStr);
@@ -102,7 +98,6 @@ async function fetchFromAppsScript(showFeedback = true) {
     }
   } catch (err) {
     console.error('Apps Script Fetch Error:', err);
-    updateSyncStatusUI('Sync Failed');
     if (showFeedback) showToast(`Pull failed: ${err.message}`, 'error');
   } finally {
     if (syncBtn) {
@@ -110,11 +105,6 @@ async function fetchFromAppsScript(showFeedback = true) {
       syncBtn.classList.remove('opacity-70', 'cursor-not-allowed');
     }
   }
-}
-
-function updateSyncStatusUI(statusText) {
-  const badge = document.getElementById('syncStatusBadge');
-  if (badge) badge.textContent = statusText;
 }
 
 /* ================= DATE / TIME UTILITIES ================= */
@@ -153,12 +143,6 @@ function formatFullDisplayDate(isoStr) {
   const [y, m, d] = isoStr.split('-').map(Number);
   const dt = new Date(y, m - 1, d);
   return `${String(dt.getDate()).padStart(2, '0')} ${dt.toLocaleDateString('en-US', { month: 'short' })} ${dt.getFullYear()}`;
-}
-
-function formatWeekRange(mondayIso) {
-  const sundayIso = addDays(mondayIso, 6);
-  const [y] = sundayIso.split('-');
-  return `${formatShortDate(mondayIso)} - ${formatShortDate(sundayIso)} ${y}`;
 }
 
 function parseMinutes(t, fallbackMod) {
@@ -254,41 +238,6 @@ function normalizeBatchId(name) {
 
 /* ================= APPDATA INTERFACE ================= */
 const AppData = {
-  getAllBatches() {
-    const batchMap = new Map();
-    Object.keys(state.rosters || {}).forEach(batchId => {
-      batchMap.set(batchId, {
-        batchId,
-        title: this.getBatchDisplayName(batchId),
-        students: [...(state.rosters[batchId] || [])],
-        scheduledDays: new Set()
-      });
-    });
-
-    DAYS.forEach(day => {
-      (state.timetables.tuition[day] || []).forEach(slot => {
-        const bId = slot.batchId || normalizeBatchId(slot.task);
-        if (!batchMap.has(bId)) {
-          batchMap.set(bId, {
-            batchId: bId,
-            title: slot.task || this.getBatchDisplayName(bId),
-            students: [...(state.rosters[bId] || [])],
-            scheduledDays: new Set()
-          });
-        }
-        const b = batchMap.get(bId);
-        b.scheduledDays.add(day);
-        if (slot.task && (!b.title || b.title === bId)) {
-          b.title = slot.task;
-        }
-      });
-    });
-
-    return Array.from(batchMap.values()).map(b => ({
-      ...b,
-      daysArray: Array.from(b.scheduledDays)
-    }));
-  },
 
   getBatchDisplayName(batchId) {
     for (const d of DAYS) {
@@ -315,28 +264,6 @@ const AppData = {
     return { success: true };
   },
 
-  renameStudent(batchId, oldName, newName) {
-    const cleanNew = (newName || '').trim();
-    if (!cleanNew) return { success: false, message: 'New name cannot be blank' };
-    if (!state.rosters[batchId]) return { success: false, message: 'Batch not found' };
-
-    const idx = state.rosters[batchId].indexOf(oldName);
-    if (idx === -1) return { success: false, message: 'Student not found in batch' };
-
-    state.rosters[batchId][idx] = cleanNew;
-
-    Object.keys(attendanceStore).forEach(dateStr => {
-      if (attendanceStore[dateStr] && attendanceStore[dateStr][batchId]) {
-        if (attendanceStore[dateStr][batchId][oldName] !== undefined) {
-          attendanceStore[dateStr][batchId][cleanNew] = attendanceStore[dateStr][batchId][oldName];
-          delete attendanceStore[dateStr][batchId][oldName];
-        }
-      }
-    });
-
-    this.saveAndNotify(`Renamed "${oldName}" to "${cleanNew}"`);
-    return { success: true };
-  },
 
   removeStudent(batchId, studentName) {
     if (!state.rosters[batchId]) return;
@@ -351,28 +278,7 @@ const AppData = {
     });
   },
 
-  createBatch(batchTitle) {
-    const title = (batchTitle || '').trim();
-    if (!title) return { success: false, message: 'Batch title is required' };
-    const bId = normalizeBatchId(title);
-    if (state.rosters[bId]) return { success: false, message: 'Batch ID already exists' };
-    state.rosters[bId] = [];
-    this.saveAndNotify(`Batch "${title}" created`);
-    return { success: true, batchId: bId };
-  },
 
-  getStudentAttendanceStats(batchId, studentName) {
-    let totalPresent = 0, totalAbsent = 0, totalRecords = 0;
-    Object.keys(attendanceStore).forEach(dateStr => {
-      const dayBatch = attendanceStore[dateStr]?.[batchId];
-      if (dayBatch && dayBatch[studentName]) {
-        totalRecords++;
-        if (dayBatch[studentName] === 'P') totalPresent++;
-        if (dayBatch[studentName] === 'A') totalAbsent++;
-      }
-    });
-    return { totalPresent, totalAbsent, totalRecords };
-  },
 
   saveAndNotify(toastMsg = null) {
     saveState();
@@ -385,9 +291,7 @@ const AppData = {
 function loadState() {
   const rawPlanner = localStorage.getItem(STORAGE_KEY_PLANNER);
   const rawAtt = localStorage.getItem(STORAGE_KEY_ATTENDANCE);
-  const lastSync = localStorage.getItem(STORAGE_KEY_LAST_SYNC);
 
-  if (lastSync) updateSyncStatusUI(`Synced at ${lastSync}`);
 
   if (rawPlanner) {
     try {
@@ -594,11 +498,6 @@ function calculateDailyStats() {
   document.getElementById('totalCount').textContent = totalCount;
   document.getElementById('progressPercent').textContent = `${pct}% complete`;
 
-  const ring = document.getElementById('progressRing');
-  if (ring) {
-    ring.setAttribute('stroke-dasharray', `${pct}, 100`);
-    ring.setAttribute('class', pct === 100 && totalCount > 0 ? 'text-emerald-400' : (pct > 0 ? 'text-blue-400' : 'text-white/15'));
-  }
 }
 
 // Kept so existing calls (renderAll, selectDate) still work
@@ -606,132 +505,11 @@ function calculateWeeklyStats() {
   calculateDailyStats();
 }
 
-function updateAnalytics() {
-  let plannedCat = { School: 0, Tuition: 0, Study: 0 };
-  let doneCat = { School: 0, Tuition: 0, Study: 0 };
-  let dailyPlanned = [], dailyDone = [], dailyPct = [], labels = [];
-  let grandPlanned = 0, grandDone = 0;
-
-  for (let i = 0; i < 7; i++) {
-    const curDate = addDays(state.viewMondayStr, i);
-    const dName = DAYS[i];
-    labels.push(`${dName} ${curDate.slice(8)}`);
-
-    let dayPlan = 0, dayDone = 0;
-    const dayData = state.days[curDate];
-
-    if (dayData) {
-      [...(dayData.school || []), ...(dayData.tuition_study || [])].forEach(t => {
-        const h = Number.isFinite(t.hrs) ? t.hrs : 0;
-        if (!t.isFree) {
-          dayPlan += h;
-          plannedCat[t.cat] = (plannedCat[t.cat] || 0) + h;
-          if (t.completed) {
-            dayDone += h;
-            doneCat[t.cat] = (doneCat[t.cat] || 0) + h;
-          }
-        }
-      });
-    } else {
-      ((state.timetables.school && state.timetables.school[dName]) || []).forEach(s => {
-        const p = parseSchoolTask(s.task, s.mode);
-        if (!p.isFree) {
-          const h = parseTimeRange(s.time).hrs;
-          dayPlan += h; plannedCat.School += h;
-        }
-      });
-      ((state.timetables.tuition && state.timetables.tuition[dName]) || []).forEach(s => {
-        const h = parseTimeRange(s.time).hrs;
-        dayPlan += h; plannedCat.Tuition += h;
-      });
-      ((state.timetables.study && state.timetables.study[dName]) || []).forEach(s => {
-        const h = parseTimeRange(s.time).hrs;
-        dayPlan += h; plannedCat.Study += h;
-      });
-    }
-
-    dailyPlanned.push(parseFloat(dayPlan.toFixed(2)));
-    dailyDone.push(parseFloat(dayDone.toFixed(2)));
-    dailyPct.push(dayPlan > 0 ? Math.round((dayDone / dayPlan) * 100) : 0);
-    grandPlanned += dayPlan;
-    grandDone += dayDone;
-  }
-
-  const overallRate = grandPlanned > 0 ? Math.round((grandDone / grandPlanned) * 100) : 0;
-
-  document.getElementById('statsGrid').innerHTML = `
-    <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-sm">
-      <span class="text-xs font-bold uppercase text-slate-500">Total Planned</span>
-      <div class="text-xl font-black text-slate-800 mt-0.5">${grandPlanned.toFixed(1)} hrs</div>
-    </div>
-    <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-sm">
-      <span class="text-xs font-bold uppercase text-slate-500">Total Done</span>
-      <div class="text-xl font-black text-blue-600 mt-0.5">${grandDone.toFixed(1)} hrs</div>
-    </div>
-    <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-sm">
-      <span class="text-xs font-bold uppercase text-slate-500">Completion Rate</span>
-      <div class="text-xl font-black text-emerald-600 mt-0.5">${overallRate}%</div>
-    </div>`;
-
-  if (typeof Chart === 'undefined') return;
-
-  Chart.defaults.color = '#64748b';
-  Chart.defaults.font.size = 11;
-
-  if (charts.cat) charts.cat.destroy();
-  charts.cat = new Chart(document.getElementById('categoryChart'), {
-    type: 'doughnut',
-    data: {
-      labels: ['School', 'Tuition', 'Study'],
-      datasets: [{ data: [plannedCat.School, plannedCat.Tuition, plannedCat.Study], backgroundColor: ['#2563eb', '#f97316', '#8b5cf6'], borderWidth: 0 }]
-    },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
-  });
-
-  if (charts.comp) charts.comp.destroy();
-  charts.comp = new Chart(document.getElementById('completionChart'), {
-    type: 'bar',
-    data: {
-      labels: ['School', 'Tuition', 'Study'],
-      datasets: [
-        { label: 'Planned (h)', data: [plannedCat.School, plannedCat.Tuition, plannedCat.Study], backgroundColor: '#cbd5e1', borderRadius: 4 },
-        { label: 'Done (h)', data: [doneCat.School, doneCat.Tuition, doneCat.Study], backgroundColor: ['#2563eb', '#f97316', '#8b5cf6'], borderRadius: 4 }
-      ]
-    },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
-  });
-
-  if (charts.trend) charts.trend.destroy();
-  charts.trend = new Chart(document.getElementById('trendChart'), {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [
-        { label: 'Planned (h)', data: dailyPlanned, borderColor: '#94a3b8', borderDash: [4, 4], tension: 0.3, fill: false },
-        { label: 'Done (h)', data: dailyDone, borderColor: '#2563eb', tension: 0.3, fill: true, backgroundColor: 'rgba(37,99,235,0.08)' }
-      ]
-    },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
-  });
-
-  if (charts.compTrend) charts.compTrend.destroy();
-  charts.compTrend = new Chart(document.getElementById('completionTrendChart'), {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [{ label: 'Completion %', data: dailyPct, borderColor: '#10b981', tension: 0.3, fill: true, backgroundColor: 'rgba(16,185,129,0.08)' }]
-    },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 100 } } }
-  });
-}
-
 /* ================= RENDERING ================= */
 function renderAll() {
   renderSidebarDaySelector();
   renderTables();
   calculateWeeklyStats();
-  renderTimetables();
-  renderStudentsMaster();
   updatePrintDate();
 }
 
@@ -758,11 +536,6 @@ function selectDate(isoStr) {
   calculateWeeklyStats();
   renderSidebarDaySelector();
   updatePrintDate();
-}
-
-function shiftWeek(dir) {
-  state.viewMondayStr = addDays(state.viewMondayStr, dir * 7);
-  renderSidebarDaySelector();
 }
 
 function jumpToday() {
@@ -825,7 +598,7 @@ function renderTables() {
               <input type="checkbox" ${item.completed ? 'checked' : ''} onchange="toggleTaskDone('${item.slotId}', 'school')" aria-label="Mark period done" class="cursor-pointer">
             `}
             <span class="text-[11px] font-bold text-slate-500">${idx + 1}</span>
-          </div>
+                      </div>
         </td>
         <td class="py-2.5 px-3 text-left col-tm">
           ${isLive ? '<span class="inline-flex items-center gap-1 bg-blue-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm mr-1"><span class="w-1.5 h-1.5 rounded-full bg-white live-pulse"></span>LIVE</span>' : ''}
@@ -962,223 +735,6 @@ function editTopicPrompt(slotId, sec) {
       item.topic = val.trim();
       item.topicEdited = true;
       AppData.saveAndNotify('Topic updated');
-    }
-  });
-}
-
-function checkAllToday() {
-  const dayData = state.days[state.activeDateStr];
-  if (!dayData) return;
-  const prevCompletedState = JSON.stringify(dayData);
-  [...(dayData.school || []), ...(dayData.tuition_study || [])].forEach(i => {
-    if (!i.isFree) i.completed = true;
-  });
-  saveState();
-  renderAll();
-  showToastWithUndo('All tasks checked', () => {
-    state.days[state.activeDateStr] = JSON.parse(prevCompletedState);
-    AppData.saveAndNotify('Checks reverted');
-  });
-}
-
-function clearTodayChecks() {
-  const dayData = state.days[state.activeDateStr];
-  if (!dayData) return;
-  const prevCompletedState = JSON.stringify(dayData);
-  [...(dayData.school || []), ...(dayData.tuition_study || [])].forEach(i => i.completed = false);
-  saveState();
-  renderAll();
-  showToastWithUndo('All tasks cleared', () => {
-    state.days[state.activeDateStr] = JSON.parse(prevCompletedState);
-    AppData.saveAndNotify('Checks reverted');
-  });
-}
-
-/* ================= STUDENTS MASTER ================= */
-function setStudentMasterView(mode) {
-  studentMasterView = mode;
-  const cards = document.getElementById('studentBatchCardsContainer');
-  const dir = document.getElementById('studentDirectoryContainer');
-  const btnC = document.getElementById('btnViewCards');
-  const btnD = document.getElementById('btnViewDirectory');
-
-  if (mode === 'cards') {
-    cards.classList.remove('hidden');
-    dir.classList.add('hidden');
-    btnC.className = 'px-3 py-1.5 rounded-lg font-bold bg-emerald-600 text-white transition min-h-[32px]';
-    btnD.className = 'px-3 py-1.5 rounded-lg font-bold text-slate-600 hover:bg-slate-100 transition min-h-[32px]';
-  } else {
-    cards.classList.add('hidden');
-    dir.classList.remove('hidden');
-    btnD.className = 'px-3 py-1.5 rounded-lg font-bold bg-emerald-600 text-white transition min-h-[32px]';
-    btnC.className = 'px-3 py-1.5 rounded-lg font-bold text-slate-600 hover:bg-slate-100 transition min-h-[32px]';
-  }
-  renderStudentsMaster();
-}
-
-function renderStudentsMaster() {
-  const batches = AppData.getAllBatches();
-  const searchInput = document.getElementById('studentMasterSearch');
-  const query = (searchInput?.value || '').toLowerCase().trim();
-
-  let totalBatches = batches.length;
-  let totalEnrollments = 0;
-  let allStudentNamesSet = new Set();
-
-  batches.forEach(b => {
-    totalEnrollments += b.students.length;
-    b.students.forEach(s => allStudentNamesSet.add(s.toLowerCase()));
-  });
-
-  const statsRow = document.getElementById('studentsMasterStats');
-  if (statsRow) {
-    statsRow.innerHTML = `
-      <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-sm">
-        <span class="text-[10px] font-bold uppercase text-slate-500">Total Batches</span>
-        <div class="text-xl font-black text-slate-800 mt-0.5">${totalBatches}</div>
-      </div>
-      <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-sm">
-        <span class="text-[10px] font-bold uppercase text-slate-500">Total Enrolled</span>
-        <div class="text-xl font-black text-emerald-600 mt-0.5">${totalEnrollments}</div>
-      </div>
-      <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-sm">
-        <span class="text-[10px] font-bold uppercase text-slate-500">Unique Students</span>
-        <div class="text-xl font-black text-blue-600 mt-0.5">${allStudentNamesSet.size}</div>
-      </div>
-      <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-sm">
-        <span class="text-[10px] font-bold uppercase text-slate-500">Avg Batch Size</span>
-        <div class="text-xl font-black text-orange-500 mt-0.5">${totalBatches > 0 ? (totalEnrollments / totalBatches).toFixed(1) : '0'}</div>
-      </div>`;
-  }
-
-  const filteredBatches = batches.filter(b => {
-    if (!query) return true;
-    if (b.title.toLowerCase().includes(query)) return true;
-    if (b.batchId.toLowerCase().includes(query)) return true;
-    return b.students.some(s => s.toLowerCase().includes(query));
-  });
-
-  const cardsContainer = document.getElementById('studentBatchCardsContainer');
-  if (cardsContainer) {
-    cardsContainer.innerHTML = filteredBatches.map(b => {
-      const daysBadges = b.daysArray.map(d => `<span class="bg-blue-50 text-blue-700 font-bold px-1.5 py-0.5 rounded text-[10px]">${d}</span>`).join(' ') || '<span class="text-slate-400 text-[10px] italic">Not scheduled</span>';
-
-      return `
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col justify-between">
-          <div>
-            <div class="p-3 bg-slate-50 border-b border-slate-200 flex items-start justify-between gap-2">
-              <div class="min-w-0">
-                <h3 class="text-xs font-black text-slate-900 truncate">${escapeHtml(b.title)}</h3>
-                <div class="flex items-center gap-1.5 mt-1 flex-wrap">${daysBadges}</div>
-              </div>
-              <span class="bg-emerald-100 text-emerald-800 text-xs font-black px-2 py-0.5 rounded-full shrink-0">
-                ${b.students.length} ${b.students.length === 1 ? 'student' : 'students'}
-              </span>
-            </div>
-
-            <div class="p-3 space-y-1.5 max-h-56 overflow-y-auto">
-              ${b.students.length === 0 ? '<div class="text-xs text-slate-400 italic py-2 text-center">No students enrolled yet</div>' : ''}
-              ${b.students.map((student, idx) => {
-                const stats = AppData.getStudentAttendanceStats(b.batchId, student);
-                const encStudent = encodeURIComponent(student);
-                return `
-                  <div class="flex items-center justify-between p-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 transition text-xs">
-                    <div class="flex items-center gap-1.5 min-w-0">
-                      <span class="text-slate-400 font-bold text-[10px] w-4 text-center">${idx + 1}</span>
-                      <span class="font-bold text-slate-800 truncate cursor-pointer hover:text-blue-600" onclick="promptRenameStudent('${b.batchId}', decodeURIComponent('${encStudent}'))">
-                        ${escapeHtml(student)}
-                      </span>
-                    </div>
-                    <div class="flex items-center gap-1 shrink-0">
-                      <span class="text-[10px] font-bold text-slate-500 bg-white px-1.5 py-0.5 rounded border border-slate-200">
-                        ${stats.totalPresent}P / ${stats.totalRecords}
-                      </span>
-                      <button onclick="promptRenameStudent('${b.batchId}', decodeURIComponent('${encStudent}'))" type="button" class="p-1 text-slate-400 hover:text-blue-600" title="Edit name" aria-label="Edit student name">
-                        <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                      </button>
-                      <button onclick="AppData.removeStudent('${b.batchId}', decodeURIComponent('${encStudent}'))" type="button" class="p-1 text-slate-400 hover:text-rose-600" title="Remove student" aria-label="Remove student">
-                        <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                      </button>
-                    </div>
-                  </div>`;
-              }).join('')}
-            </div>
-          </div>
-
-          <div class="p-2.5 bg-slate-50/80 border-t border-slate-200 flex items-center gap-1.5">
-            <input type="text" id="addStInput_${b.batchId}" placeholder="Add student..." class="flex-1 px-2.5 py-1.5 text-xs font-semibold bg-white border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-emerald-500 min-h-[34px]" onkeydown="if(event.key==='Enter') addStudentFromCard('${b.batchId}')">
-            <button onclick="addStudentFromCard('${b.batchId}')" type="button" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg transition min-h-[34px]">Add</button>
-          </div>
-        </div>`;
-    }).join('');
-  }
-
-  const dirBody = document.getElementById('studentDirectoryBody');
-  if (dirBody) {
-    let rowIdx = 1;
-    let tableRows = [];
-
-    filteredBatches.forEach(b => {
-      b.students.forEach(student => {
-        const stats = AppData.getStudentAttendanceStats(b.batchId, student);
-        const encStudent = encodeURIComponent(student);
-        tableRows.push(`
-          <tr class="hover:bg-slate-50 transition">
-            <td class="py-2.5 px-3 text-slate-400 font-bold">${rowIdx++}</td>
-            <td class="py-2.5 px-3 font-bold text-slate-900 cursor-pointer hover:text-blue-600" onclick="promptRenameStudent('${b.batchId}', decodeURIComponent('${encStudent}'))">
-              ${escapeHtml(student)}
-            </td>
-            <td class="py-2.5 px-3 font-semibold text-slate-700">${escapeHtml(b.title)}</td>
-            <td class="py-2.5 px-3">
-              <span class="text-xs font-medium text-slate-500">${b.daysArray.join(', ') || 'N/A'}</span>
-            </td>
-            <td class="py-2.5 px-3 text-center">
-              <span class="bg-slate-100 text-slate-800 font-bold text-xs px-2 py-0.5 rounded-full border border-slate-200">
-                ${stats.totalPresent} Present / ${stats.totalRecords} Logs
-              </span>
-            </td>
-            <td class="py-2.5 px-3 text-right">
-              <button onclick="promptRenameStudent('${b.batchId}', decodeURIComponent('${encStudent}'))" type="button" class="px-2 py-1 bg-slate-100 hover:bg-blue-50 text-blue-600 rounded text-xs font-bold mr-1">Rename</button>
-              <button onclick="AppData.removeStudent('${b.batchId}', decodeURIComponent('${encStudent}'))" type="button" class="px-2 py-1 bg-slate-100 hover:bg-rose-50 text-rose-600 rounded text-xs font-bold">Remove</button>
-            </td>
-          </tr>`);
-      });
-    });
-
-    dirBody.innerHTML = tableRows.length === 0 ? `<tr><td colspan="6" class="py-8 text-center text-xs font-semibold text-slate-400">No student records match your query</td></tr>` : tableRows.join('');
-  }
-}
-
-function addStudentFromCard(batchId) {
-  const input = document.getElementById(`addStInput_${batchId}`);
-  if (!input) return;
-  const res = AppData.addStudent(batchId, input.value);
-  if (res.success) input.value = '';
-  else showToast(res.message, 'error');
-}
-
-function promptRenameStudent(batchId, oldName) {
-  showActionModal({
-    title: 'Rename Student',
-    msg: `Change name for "${oldName}". Attendance logs migrate automatically:`,
-    hasInput: true,
-    inputVal: oldName,
-    onConfirm: (newName) => {
-      const res = AppData.renameStudent(batchId, oldName, newName);
-      if (!res.success) showToast(res.message, 'error');
-    }
-  });
-}
-
-function promptCreateNewBatch() {
-  showActionModal({
-    title: 'Create New Batch',
-    msg: 'Enter Batch Title (e.g. "Class XII CS – Morning Batch"):',
-    hasInput: true,
-    inputVal: '',
-    onConfirm: (title) => {
-      const res = AppData.createBatch(title);
-      if (!res.success) showToast(res.message, 'error');
     }
   });
 }
@@ -1341,7 +897,8 @@ function confirmAttendanceAndLaunchWhatsApp() {
     showActionModal({
       title: 'Topic Required',
       msg: `Please enter today's topic for "${item.task}" before sending:`,
-      hasInput: true,
+      
+            hasInput: true,
       inputVal: '',
       onConfirm: (tVal) => {
         item.topic = tVal.trim();
@@ -1407,162 +964,6 @@ function dispatchWhatsAppMessage(item) {
   showToast('Reminder sent & attendance saved', 'success');
 }
 
-/* ================= TIMETABLE MASTER EDITOR ================= */
-function renderTimetables() {
-  const renderGrid = (type, obj) => DAYS.map(d => {
-    return `
-      <div class="border border-slate-200 rounded-xl overflow-hidden bg-white">
-        <div class="px-3 py-1.5 bg-slate-50 border-b border-slate-200 font-black text-xs text-slate-700">${d}</div>
-        <div class="p-2 space-y-1.5">
-          ${((obj && obj[d]) || []).map((slot, i) => editMode[type] ? `
-            <div class="bg-slate-50 p-2 rounded-lg border border-slate-200 space-y-1.5">
-              <div class="flex items-center gap-1">
-                <input type="text" class="w-full text-xs font-semibold p-1 border rounded bg-white tt-time-${type}-${d}" data-idx="${i}" value="${escapeHtml(slot.time)}" placeholder="Time Range" aria-label="Time Range">
-                <button onclick="deleteTemplateSlot('${type}','${d}',${i})" type="button" aria-label="Delete period" class="text-rose-500 hover:text-rose-700 p-1 min-h-[32px] min-w-[32px] flex items-center justify-center">
-                  <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                </button>
-              </div>
-              <input type="text" class="w-full text-xs font-bold p-1 border rounded bg-white tt-task-${type}-${d}" data-idx="${i}" value="${escapeHtml(slot.task)}" placeholder="Class / Subject" aria-label="Class or Subject">
-              ${type === 'tuition' ? `<input type="text" class="w-full text-xs font-semibold p-1 border rounded bg-white tt-venue-${type}-${d}" data-idx="${i}" value="${escapeHtml(slot.venue || '')}" placeholder="Venue (e.g. Sant Nagar)" aria-label="Venue">` : ''}
-              ${type === 'school' ? `<input type="text" class="w-full text-xs font-semibold p-1 border rounded bg-white tt-mode-${type}-${d}" data-idx="${i}" value="${escapeHtml(slot.mode || '')}" placeholder="Mode (Class/Lab/Free)" aria-label="Mode">` : ''}
-              ${type !== 'study' ? `<input type="text" class="w-full text-xs font-medium p-1 border rounded bg-white tt-topic-${type}-${d}" data-idx="${i}" value="${escapeHtml(slot.topic || '')}" placeholder="Default Topic" aria-label="Default Topic">` : ''}
-            </div>` : `
-            <div class="p-1.5 border-b border-slate-100 last:border-none flex items-center justify-between text-xs">
-              <div>
-                <div class="font-bold text-slate-900">${escapeHtml(slot.task)}${slot.venue ? `<span class="text-[10px] text-slate-500 font-normal">(${escapeHtml(slot.venue)})</span>` : ''}</div>
-                ${slot.topic ? `<div class="text-[10px] text-blue-600 font-semibold">${escapeHtml(slot.topic)}</div>` : ''}
-                <div class="text-[10px] text-slate-500">${escapeHtml(slot.time)}</div>
-              </div>
-              <span class="text-[10px] font-black text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">${parseTimeRange(slot.time).hrs}h</span>
-            </div>`).join('')}
-          ${editMode[type] ? `<button onclick="addNewTemplateSlot('${type}','${d}')" type="button" class="w-full py-1 text-xs font-bold text-emerald-600 hover:bg-emerald-50 rounded-lg border border-dashed border-emerald-300 min-h-[34px]">+ Add Period</button>` : ''}
-          ${(!editMode[type] && (!obj || !obj[d] || obj[d].length === 0)) ? '<div class="text-xs p-1 text-slate-400 italic">No classes scheduled</div>' : ''}
-        </div>
-      </div>`;
-  }).join('');
-
-  document.getElementById('schoolTimetable').innerHTML = renderGrid('school', state.timetables.school);
-  document.getElementById('tuitionTimetable').innerHTML = renderGrid('tuition', state.timetables.tuition);
-  document.getElementById('studyTimetable').innerHTML = renderGrid('study', state.timetables.study);
-
-  ['school', 'tuition', 'study'].forEach(t => {
-    const btn = document.getElementById(`btnEdit${t.charAt(0).toUpperCase() + t.slice(1)}`);
-    if (btn) {
-      btn.textContent = editMode[t] ? 'Save Changes' : `Edit ${t.charAt(0).toUpperCase() + t.slice(1)}`;
-      btn.className = editMode[t]
-        ? 'text-xs font-bold px-3 py-1.5 rounded-lg bg-emerald-600 text-white min-h-[34px]'
-        : 'text-xs font-bold px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 border border-slate-200 min-h-[34px]';
-    }
-  });
-}
-
-function syncCurrentTimetableInputs(t) {
-  if (!editMode[t]) return;
-  const obj = state.timetables[t];
-  DAYS.forEach(d => {
-    const times = document.querySelectorAll(`.tt-time-${t}-${d}`);
-    const tasks = document.querySelectorAll(`.tt-task-${t}-${d}`);
-    const topics = document.querySelectorAll(`.tt-topic-${t}-${d}`);
-    const venues = document.querySelectorAll(`.tt-venue-${t}-${d}`);
-    const modes = document.querySelectorAll(`.tt-mode-${t}-${d}`);
-    const oldSlots = obj[d] || [];
-    const newSlots = [];
-
-    times.forEach((el, idx) => {
-      const timeVal = el.value.trim();
-      const taskVal = tasks[idx] ? tasks[idx].value.trim() : '';
-      const topicVal = topics[idx] ? topics[idx].value.trim() : '';
-      const venueVal = venues[idx] ? venues[idx].value.trim() : '';
-      const modeVal = modes[idx] ? modes[idx].value.trim() : '';
-
-      if (timeVal || taskVal) {
-        const oldSlot = oldSlots[idx];
-        const oldId = oldSlot?.id;
-        
-        let assignedBatchId = undefined;
-        if (t === 'tuition') {
-          if (oldSlot && oldSlot.task === taskVal && oldSlot.batchId) {
-            assignedBatchId = oldSlot.batchId;
-          } else {
-            assignedBatchId = normalizeBatchId(taskVal);
-          }
-          if (assignedBatchId && !state.rosters[assignedBatchId]) {
-            state.rosters[assignedBatchId] = [];
-          }
-        }
-
-        newSlots.push({
-          id: oldId || (t.slice(0, 3) + '_' + Math.random().toString(36).slice(2, 7)),
-          batchId: assignedBatchId,
-          time: timeVal,
-          task: taskVal,
-          venue: venueVal,
-          mode: modeVal,
-          topic: topicVal
-        });
-      }
-    });
-    obj[d] = newSlots;
-  });
-}
-
-function toggleEditMode(t) {
-  if (editMode[t]) {
-    syncCurrentTimetableInputs(t);
-    editMode[t] = false;
-    saveState();
-    ensureDayPopulated(state.activeDateStr);
-    renderAll();
-    showToast(`${t.toUpperCase()} schedule saved locally`, 'success');
-  } else {
-    editMode[t] = true;
-    renderTimetables();
-  }
-}
-
-function addNewTemplateSlot(t, d) {
-  syncCurrentTimetableInputs(t);
-  if (!state.timetables[t][d]) state.timetables[t][d] = [];
-  const uniqueBatchId = 'b_' + Math.random().toString(36).slice(2, 8);
-  state.timetables[t][d].push({
-    id: t.slice(0, 3) + '_' + Math.random().toString(36).slice(2, 7),
-    batchId: t === 'tuition' ? uniqueBatchId : undefined,
-    time: '04:00 PM - 05:00 PM',
-    task: 'New Session',
-    venue: t === 'tuition' ? 'Sant Nagar' : '',
-    mode: t === 'school' ? 'Class' : '',
-    topic: ''
-  });
-  renderTimetables();
-}
-
-function deleteTemplateSlot(t, d, i) {
-  syncCurrentTimetableInputs(t);
-  state.timetables[t][d].splice(i, 1);
-  renderTimetables();
-}
-
-function promptResetTimetableDefaults() {
-  showActionModal({
-    title: 'Clear Timetables',
-    msg: 'Clear all schedule templates to blank? Click "Pull from Sheet" afterwards if you want to re-download from Google Sheets.',
-    onConfirm: () => {
-      const prevTt = JSON.parse(JSON.stringify(state.timetables));
-      state.timetables = JSON.parse(JSON.stringify(EMPTY_TIMETABLES));
-      saveState();
-      ensureDayPopulated(state.activeDateStr);
-      renderAll();
-      showToastWithUndo('Timetables cleared', () => {
-        state.timetables = prevTt;
-        saveState();
-        ensureDayPopulated(state.activeDateStr);
-        renderAll();
-        showToast('Timetables restored', 'success');
-      });
-    }
-  });
-}
-
 /* ================= SECTION FILTERS & MODALS ================= */
 function setPlannerView(view) {
   currentPlannerView = view;
@@ -1586,9 +987,6 @@ function switchTab(tabId, btn) {
     btn.setAttribute('aria-selected', 'true');
   }
 
-  if (tabId === 'analytics') setTimeout(updateAnalytics, 60);
-  if (tabId === 'timetables') renderTimetables();
-  if (tabId === 'students') renderStudentsMaster();
 }
 
 function handleNavClick(view, btn) {
@@ -1690,42 +1088,6 @@ function exportBackup() {
   a.download = `singhPlanner_backup_${toISO(new Date())}.json`;
   a.click();
   showToast('Planner backup downloaded', 'success');
-}
-
-function importBackup(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = (evt) => {
-    try {
-      const data = JSON.parse(evt.result);
-      if (!data || (!data.planner && !data.timetables)) throw new Error('Invalid backup schema');
-
-      showActionModal({
-        title: 'Confirm Backup Import',
-        msg: 'Importing will replace your current schedule and student rosters. Continue?',
-        onConfirm: () => {
-          if (data.planner) {
-            state = Object.assign(state, data.planner);
-            if (data.attendance) attendanceStore = data.attendance;
-          } else {
-            state.timetables = data.timetables;
-            if (data.days) state.days = data.days;
-          }
-          saveState();
-          ensureDayPopulated(state.activeDateStr);
-          renderAll();
-          showToast('Backup restored successfully!', 'success');
-        }
-      });
-    } catch (err) {
-      showToast('Selected file is not a valid planner backup', 'error');
-    } finally {
-      e.target.value = '';
-    }
-  };
-  reader.readAsText(file);
 }
 
 function triggerPrint() {
