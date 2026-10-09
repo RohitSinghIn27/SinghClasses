@@ -1083,3 +1083,53 @@ footer .text-\[11px\] {
     height: 14px !important;
   }
 }
+
+/* ==========================================================================
+   DESKTOP FONT REDUCTION (overrides, placed last)
+   ========================================================================== */
+@media screen and (min-width: 641px) {
+  /* Header */
+  header h1 { font-size: 16px !important; }
+  header p { font-size: 12px !important; }
+  header button { font-size: 13px !important; }
+  #currentDateDisplay { font-size: 13.5px !important; }
+  #headerDateStr,
+  #headerTimeStr { font-size: 13.5px !important; }
+
+  /* Top navigation tabs + progress */
+  .nav-btn { font-size: 13.5px !important; }
+  #dailySummary .text-xs { font-size: 13.5px !important; }
+  #dailySummary .text-\[11px\] { font-size: 12.5px !important; }
+
+  /* Section headers */
+  section > header h2 { font-size: 16px !important; }
+  section > header p { font-size: 12px !important; }
+  section > header button { font-size: 12.5px !important; }
+  #schoolClassesSec header .text-sm { font-size: 15px !important; }
+  #schoolClassesSec header .text-\[10px\] { font-size: 11px !important; }
+  #schoolSecMeta,
+  #tuitionSecMeta { font-size: 12.5px !important; }
+
+  /* Tables */
+  table.mobile-table { font-size: 13.5px !important; }
+  table.mobile-table thead th { font-size: 12px !important; }
+  table.mobile-table tbody td { font-size: 13.5px !important; }
+  table.mobile-table tbody td.col-cb span { font-size: 13px !important; }
+  table.mobile-table tbody td.col-tm { font-size: 13.5px !important; }
+  table.mobile-table tbody td.col-tm span.bg-blue-600,
+  table.mobile-table tbody td.col-tm span.bg-amber-600 { font-size: 10px !important; }
+  table.mobile-table tbody td.col-cls { font-size: 14.5px !important; }
+  table.mobile-table tbody td.col-tpc span[onclick] { font-size: 13px !important; }
+  table.mobile-table tbody td.col-act button { font-size: 12.5px !important; }
+  table.mobile-table tbody td.col-act button svg { width: 12px !important; height: 12px !important; }
+  table.mobile-table tbody td.col-ven span,
+  table.mobile-table tbody td.col-nos span { font-size: 12.5px !important; }
+  table.mobile-table tbody td.col-mode span { font-size: 11.5px !important; }
+  table.mobile-table tbody td.col-dur { font-size: 13.5px !important; }
+  table.mobile-table tfoot td { font-size: 13px !important; }
+  table.mobile-table tfoot td span { font-size: 13.5px !important; }
+
+  /* Footer */
+  footer { font-size: 13.5px !important; }
+  footer .text-\[11px\] { font-size: 12px !important; }
+}
