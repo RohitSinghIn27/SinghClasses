@@ -511,12 +511,12 @@ body { -webkit-tap-highlight-color: transparent; }
             <div>
               <h3 class="text-xs font-black uppercase tracking-wide">Master Weekly Schedule Templates</h3>
               <p class="text-xs text-blue-800 mt-0.5 leading-relaxed">
-                Add/edit periods, custom timings, and default lesson topics. Synchronizes with your Google Sheet tab during Cloud Sync.
+                Add/edit periods, custom timings, and default lesson topics. Synchronizes directly with your Google Sheets backend during Cloud Sync.
               </p>
             </div>
           </div>
           <button onclick="promptResetTimetableDefaults()" class="bg-white hover:bg-rose-50 text-rose-700 border border-rose-300 px-3 py-1.5 rounded-lg text-xs font-bold shrink-0 transition min-h-[34px]">
-            Reset to Defaults
+            Clear Timetables
           </button>
         </div>
 
@@ -566,7 +566,7 @@ body { -webkit-tap-highlight-color: transparent; }
               </div>
               <h2 class="text-sm font-black text-slate-900 tracking-wide uppercase">Students & Batches Master Sheet</h2>
             </div>
-            <p class="text-xs text-slate-500 mt-0.5">Central student directory. Changes reflect in attendance sheets and WhatsApp reminders.</p>
+            <p class="text-xs text-slate-500 mt-0.5">Central student directory. Pulled from Google Sheets or created locally.</p>
           </div>
 
           <div class="flex items-center gap-2 w-full sm:w-auto">
@@ -644,153 +644,29 @@ body { -webkit-tap-highlight-color: transparent; }
       <span>Designed with <span class="text-rose-500">💖</span> by <strong class="font-bold text-white">Rohit Singh</strong></span>
     </div>
     <div class="text-[11px] text-slate-400 hidden sm:block">
-      Master Roster Engine & Live Sync Active
+      Live Sync Active &bull; Zero Hardcoded Defaults
     </div>
   </footer>
 </div>
 
 <script>
 /* ==========================================================================
-   CONFIGURATION & STATE
+   CONFIGURATION & STATE (ZERO DEFAULT VALUES)
    ========================================================================== */
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzc0DmgsKIJwK8upyKUjK6hYhly_yKLdALZufu516D-BE0MpSItexJ46jXCLz1rEkb2/exec';
 
-const TEMPLATE_VERSION = '2026.2';
-const STORAGE_KEY_PLANNER = 'singhPlanner_core_v1';
-const STORAGE_KEY_ATTENDANCE = 'singhPlanner_attendance_v1';
-const STORAGE_KEY_RESCUE = 'singhPlanner_rescue_backup';
+const TEMPLATE_VERSION = '2026.3_clean';
+const STORAGE_KEY_PLANNER = 'singhPlanner_core_v2';
+const STORAGE_KEY_ATTENDANCE = 'singhPlanner_attendance_v2';
+const STORAGE_KEY_RESCUE = 'singhPlanner_rescue_backup_v2';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-window.DEFAULT_TIMETABLES = {
-  school: {
-    'Mon': [
-      { id: 'sch_m1', time: '08:40 AM - 09:15 AM', task: 'XI C lab', topic: 'Python Basics Lab' },
-      { id: 'sch_m2', time: '09:25 AM - 10:00 AM', task: 'XI C lab', topic: 'List Comprehensions' },
-      { id: 'sch_m3', time: '10:00 AM - 10:35 AM', task: 'FREE', topic: '' },
-      { id: 'sch_m4', time: '10:35 AM - 11:10 AM', task: 'XII C lab', topic: 'MySQL Connectivity' },
-      { id: 'sch_m5', time: '11:40 AM - 12:20 PM', task: 'XII C lab', topic: 'Pandas DataFrame Queries' },
-      { id: 'sch_m6', time: '12:20 PM - 12:55 PM', task: 'XI D', topic: 'Computer Systems' },
-      { id: 'sch_m7', time: '12:55 PM - 01:30 PM', task: 'XII D lab', topic: 'SQL Queries' },
-      { id: 'sch_m8', time: '01:30 PM - 02:00 PM', task: 'XII D lab', topic: 'Data Visualization' }
-    ],
-    'Tue': [
-      { id: 'sch_t1', time: '08:40 AM - 09:15 AM', task: 'XI C lab', topic: 'Strings & Tuples' },
-      { id: 'sch_t2', time: '09:25 AM - 10:00 AM', task: 'XI C lab', topic: 'Dictionary Practice' },
-      { id: 'sch_t3', time: '10:00 AM - 10:35 AM', task: 'FREE', topic: '' },
-      { id: 'sch_t4', time: '10:35 AM - 11:10 AM', task: 'XII C lab', topic: 'Matplotlib Plots' },
-      { id: 'sch_t5', time: '11:40 AM - 12:20 PM', task: 'XII C lab', topic: 'Bar & Line Charts' },
-      { id: 'sch_t6', time: '12:20 PM - 12:55 PM', task: 'XI D lab', topic: 'Algorithms' },
-      { id: 'sch_t7', time: '12:55 PM - 01:30 PM', task: 'XII D', topic: 'Cyber Safety & Ethics' },
-      { id: 'sch_t8', time: '01:30 PM - 02:00 PM', task: 'XII D lab', topic: 'Networking Commands' }
-    ],
-    'Wed': [
-      { id: 'sch_w1', time: '08:40 AM - 09:15 AM', task: 'XI C lab', topic: 'Conditional Statements' },
-      { id: 'sch_w2', time: '09:25 AM - 10:00 AM', task: 'X C lab', topic: 'HTML Forms & CSS' },
-      { id: 'sch_w3', time: '10:00 AM - 10:35 AM', task: 'FREE', topic: '' },
-      { id: 'sch_w4', time: '10:35 AM - 11:10 AM', task: 'XII C lab', topic: 'Aggregate Functions in SQL' },
-      { id: 'sch_w5', time: '11:40 AM - 12:20 PM', task: 'XI D lab', topic: 'Nested Loops' },
-      { id: 'sch_w6', time: '12:20 PM - 12:55 PM', task: 'XI D lab', topic: 'Functions & Scope' },
-      { id: 'sch_w7', time: '12:55 PM - 01:30 PM', task: 'XII D lab', topic: 'SQL Joins' },
-      { id: 'sch_w8', time: '01:30 PM - 02:00 PM', task: 'IX C lab', topic: 'Word Processing & Calc' }
-    ],
-    'Thu': [
-      { id: 'sch_th1', time: '08:40 AM - 09:15 AM', task: 'XI C lab', topic: 'List Methods' },
-      { id: 'sch_th2', time: '09:25 AM - 10:00 AM', task: 'X C lab', topic: 'Spreadsheet Formulas' },
-      { id: 'sch_th3', time: '10:00 AM - 10:35 AM', task: 'FREE', topic: '' },
-      { id: 'sch_th4', time: '10:35 AM - 11:10 AM', task: 'XII C lab', topic: 'Table Grouping (GROUP BY)' },
-      { id: 'sch_th5', time: '11:40 AM - 12:20 PM', task: 'XI D', topic: 'Boolean Logic' },
-      { id: 'sch_th6', time: '12:55 PM - 01:30 PM', task: 'XII D lab', topic: 'HAVING Clause' },
-      { id: 'sch_th7', time: '01:30 PM - 02:00 PM', task: 'X B lab', topic: 'Digital Documentation' }
-    ],
-    'Fri': [
-      { id: 'sch_f1', time: '08:40 AM - 09:15 AM', task: 'XI C lab', topic: 'Data Types & Casting' },
-      { id: 'sch_f2', time: '09:25 AM - 10:00 AM', task: 'X B', topic: 'Cyber Security Concepts' },
-      { id: 'sch_f3', time: '10:00 AM - 10:35 AM', task: 'FREE', topic: '' },
-      { id: 'sch_f4', time: '10:35 AM - 11:10 AM', task: 'XII C lab', topic: 'Practical Lab File Review' },
-      { id: 'sch_f5', time: '11:40 AM - 12:20 PM', task: 'XI D lab', topic: 'Python Math Module' },
-      { id: 'sch_f6', time: '12:20 PM - 12:55 PM', task: 'X C', topic: 'Internet Protocols' },
-      { id: 'sch_f7', time: '12:55 PM - 01:30 PM', task: 'XII D lab', topic: 'SQL Constraints' },
-      { id: 'sch_f8', time: '01:30 PM - 02:00 PM', task: 'IX C lab', topic: 'Presentation Software' }
-    ],
-    'Sat': [
-      { id: 'sch_s1', time: '08:40 AM - 09:15 AM', task: 'XI C lab', topic: 'Weekly Practical Test' },
-      { id: 'sch_s2', time: '09:25 AM - 10:00 AM', task: 'X B', topic: 'Revision' },
-      { id: 'sch_s3', time: '10:00 AM - 10:35 AM', task: 'FREE', topic: '' },
-      { id: 'sch_s4', time: '10:35 AM - 11:10 AM', task: 'XII C lab', topic: 'Board Practical Prep' },
-      { id: 'sch_s5', time: '11:40 AM - 12:20 PM', task: 'XI D lab', topic: 'Error Debugging' },
-      { id: 'sch_s6', time: '12:20 PM - 12:55 PM', task: 'XI D', topic: 'Operating Systems' },
-      { id: 'sch_s7', time: '12:55 PM - 01:30 PM', task: 'XII D lab', topic: 'Project Viva Prep' },
-      { id: 'sch_s8', time: '01:30 PM - 02:00 PM', task: 'IX C lab', topic: 'Touch Typing & Lab Tasks' }
-    ],
-    'Sun': []
-  },
-  tuition: {
-    'Mon': [
-      { id: 'tui_m1', batchId: 'b_xii_ip_santnagar', time: '04:00 PM - 04:50 PM', task: 'Class XII IP – Sant Nagar', topic: 'Series in Python' },
-      { id: 'tui_m2', batchId: 'b_xii_ip_sics', time: '05:10 PM - 06:00 PM', task: 'Class XII IP – SICS', topic: 'Series in Python' },
-      { id: 'tui_m3', batchId: 'b_xii_cs_santnagar', time: '07:10 PM - 08:00 PM', task: 'Class XII CS – Sant Nagar', topic: 'Functions in Python' },
-      { id: 'tui_m4', batchId: 'b_home_tuition', time: '08:00 PM - 09:00 PM', task: 'Home Tuition', topic: 'Series in Python' }
-    ],
-    'Tue': [
-      { id: 'tui_t1', batchId: 'b_xi_ip_santnagar', time: '04:10 PM - 05:00 PM', task: 'Class XI IP/CS – Sant Nagar', topic: 'Dictionary in Python' },
-      { id: 'tui_t2', batchId: 'b_xi_ai_sics', time: '06:00 PM - 07:00 PM', task: 'Class XI AI – SICS', topic: 'Capstone Project' },
-      { id: 'tui_t3', batchId: 'b_xi_ip_sics', time: '06:30 PM - 07:30 PM', task: 'Class XI IP/CS – SICS', topic: 'Dictionary in Python' },
-      { id: 'tui_t4', batchId: 'b_skillyards', time: '08:00 PM - 09:00 PM', task: 'SkillYards', topic: 'Functions in Python' }
-    ],
-    'Wed': [
-      { id: 'tui_w1', batchId: 'b_xii_ip_santnagar', time: '04:00 PM - 05:10 PM', task: 'Class XII IP – Sant Nagar', topic: 'MySQL Functions' },
-      { id: 'tui_w2', batchId: 'b_xii_ip_sics', time: '05:10 PM - 06:20 PM', task: 'Class XII IP – SICS', topic: 'Series in Python' },
-      { id: 'tui_w3', batchId: 'b_xii_cs_santnagar', time: '07:15 PM - 08:30 PM', task: 'Class XII CS – Sant Nagar', topic: 'Series in Python' },
-      { id: 'tui_w4', batchId: 'b_vidya_home', time: '08:10 PM - 09:15 PM', task: 'Vidya Home Tuition', topic: 'Series in Python' }
-    ],
-    'Thu': [
-      { id: 'tui_th1', batchId: 'b_xi_ip_santnagar', time: '04:00 PM - 05:30 PM', task: 'Class XI IP/CS – Sant Nagar', topic: 'Series in Python' },
-      { id: 'tui_th2', batchId: 'b_xi_ai_sics', time: '05:30 PM - 06:20 PM', task: 'Class XI AI – SICS', topic: 'Series in Python' },
-      { id: 'tui_th3', batchId: 'b_xi_ip_sics', time: '06:20 PM - 07:30 PM', task: 'Class XI IP/CS – SICS', topic: 'Series in Python' },
-      { id: 'tui_th4', batchId: 'b_skillyards', time: '08:00 PM - 09:00 PM', task: 'SkillYards', topic: 'Series in Python' }
-    ],
-    'Fri': [
-      { id: 'tui_f1', batchId: 'b_xii_ip_santnagar', time: '04:00 PM - 05:10 PM', task: 'Class XII IP – Sant Nagar', topic: 'Series in Python' },
-      { id: 'tui_f2', batchId: 'b_xii_ip_sics', time: '05:10 PM - 06:20 PM', task: 'Class XII IP – SICS', topic: 'Series in Python' },
-      { id: 'tui_f3', batchId: 'b_xii_cs_santnagar', time: '07:15 PM - 08:30 PM', task: 'Class XII CS – Sant Nagar', topic: 'Series in Python' },
-      { id: 'tui_f4', batchId: 'b_kriti', time: '08:00 PM - 09:00 PM', task: 'Kriti Class', topic: 'Series in Python' }
-    ],
-    'Sat': [
-      { id: 'tui_s1', batchId: 'b_xi_ip_santnagar', time: '04:00 PM - 05:30 PM', task: 'Class XI IP/CS – Sant Nagar', topic: 'Series in Python' },
-      { id: 'tui_s2', batchId: 'b_xi_ai_sics', time: '05:30 PM - 06:20 PM', task: 'Class XI AI – SICS', topic: 'Series in Python' },
-      { id: 'tui_s3', batchId: 'b_xi_ip_sics', time: '06:20 PM - 07:30 PM', task: 'Class XI IP/CS – SICS', topic: 'Series in Python' },
-      { id: 'tui_s4', batchId: 'b_skillyards', time: '08:00 PM - 09:00 PM', task: 'SkillYards', topic: 'Series in Python' }
-    ],
-    'Sun': [
-      { id: 'tui_su1', batchId: 'b_vidya_sun', time: '12:30 PM - 01:30 PM', task: 'Vidya Class', topic: 'Series in Python' },
-      { id: 'tui_su2', batchId: 'b_kirti_sun', time: '02:00 PM - 03:00 PM', task: 'Kirti Class', topic: 'Series in Python' }
-    ]
-  },
-  study: {
-    'Mon': [{ id: 'std_m', time: '10:00 PM - 11:30 PM', task: 'Mathematics' }],
-    'Tue': [{ id: 'std_t', time: '10:00 PM - 11:30 PM', task: 'English' }],
-    'Wed': [{ id: 'std_w', time: '10:00 PM - 11:30 PM', task: 'Reasoning' }],
-    'Thu': [{ id: 'std_th', time: '10:00 PM - 11:30 PM', task: 'Hindi' }],
-    'Fri': [{ id: 'std_f', time: '10:00 PM - 11:30 PM', task: 'Computer Science' }],
-    'Sat': [{ id: 'std_s', time: '10:00 PM - 11:30 PM', task: 'Computer Science' }],
-    'Sun': [{ id: 'std_su', time: '10:00 PM - 11:30 PM', task: 'CS + Teaching Aptitude' }]
-  }
-};
-
-window.DEFAULT_ROSTERS = {
-  'b_xii_ip_santnagar': ['Tapasya', 'Tanisha', 'Sherya', 'Yogita', 'Katherine'],
-  'b_xii_ip_sics': ['Aarav Sharma', 'Diya Patel', 'Rohan Gupta', 'Sneha Verma', 'Tanya Mehra'],
-  'b_xii_cs_santnagar': ['Angel'],
-  'b_xi_ip_santnagar': ['Ananya Roy', 'Daksh Malhotra', 'Ishaan Chawla', 'Rhea Kapoor', 'Tushar Negi'],
-  'b_xi_ai_sics': ['Devansh Nair', 'Kritika Sen', 'Samarjeet Singh', 'Zoya Khan'],
-  'b_xi_ip_sics': ['Ananya Roy', 'Daksh Malhotra', 'Ishaan Chawla', 'Rhea Kapoor', 'Tushar Negi'],
-  'b_skillyards': ['Aman Verma', 'Pooja Sharma', 'Vikas Yadav'],
-  'b_home_tuition': ['Vidya'],
-  'b_vidya_home': ['Vidya'],
-  'b_vidya_sun': ['Vidya'],
-  'b_kriti': ['Kriti'],
-  'b_kirti_sun': ['Kirti']
+// Pure empty structure without hardcoded demo/default entries
+const EMPTY_TIMETABLES = {
+  school: { Mon: [], Tue: [], Wed: [], Thu: [], Fri: [], Sat: [], Sun: [] },
+  tuition: { Mon: [], Tue: [], Wed: [], Thu: [], Fri: [], Sat: [], Sun: [] },
+  study: { Mon: [], Tue: [], Wed: [], Thu: [], Fri: [], Sat: [], Sun: [] }
 };
 
 let state = {
@@ -798,8 +674,8 @@ let state = {
   activeDateStr: toISO(new Date()),
   viewMondayStr: getMondayISO(new Date()),
   days: {},
-  timetables: JSON.parse(JSON.stringify(window.DEFAULT_TIMETABLES)),
-  rosters: JSON.parse(JSON.stringify(window.DEFAULT_ROSTERS)),
+  timetables: JSON.parse(JSON.stringify(EMPTY_TIMETABLES)),
+  rosters: {},
   lastBackup: null
 };
 
@@ -839,23 +715,19 @@ async function fetchFromAppsScript(showFeedback = true) {
     if (data.status === 'success') {
       let syncedItems = [];
 
-      // 1. Sync master timetables
+      // 1. Sync master timetables directly from Google Sheet
       if (data.timetables && typeof data.timetables === 'object') {
-        if (data.timetables.school && Object.keys(data.timetables.school).length) {
-          state.timetables.school = data.timetables.school;
-        }
-        if (data.timetables.tuition && Object.keys(data.timetables.tuition).length) {
-          state.timetables.tuition = data.timetables.tuition;
-        }
-        if (data.timetables.study && Object.keys(data.timetables.study).length) {
-          state.timetables.study = data.timetables.study;
-        }
+        state.timetables = {
+          school: Object.assign({ Mon: [], Tue: [], Wed: [], Thu: [], Fri: [], Sat: [], Sun: [] }, data.timetables.school || {}),
+          tuition: Object.assign({ Mon: [], Tue: [], Wed: [], Thu: [], Fri: [], Sat: [], Sun: [] }, data.timetables.tuition || {}),
+          study: Object.assign({ Mon: [], Tue: [], Wed: [], Thu: [], Fri: [], Sat: [], Sun: [] }, data.timetables.study || {})
+        };
         syncedItems.push('Timetables');
       }
 
-      // 2. Sync student rosters
-      if (data.rosters && Object.keys(data.rosters).length > 0) {
-        state.rosters = Object.assign({}, state.rosters, data.rosters);
+      // 2. Sync student rosters directly from Google Sheet
+      if (data.rosters && typeof data.rosters === 'object') {
+        state.rosters = data.rosters;
         syncedItems.push('Rosters');
       }
 
@@ -1126,7 +998,7 @@ function loadState() {
       }
     } catch (err) {
       localStorage.setItem(STORAGE_KEY_RESCUE, rawPlanner);
-      showToast('Restored default state after storage error', 'error');
+      showToast('Initialized clean state', 'info');
     }
   }
 
@@ -1179,7 +1051,7 @@ function ensureDayPopulated(dateStr) {
   const daySchoolMap = new Map((existing.school || []).map(t => [t.slotId || t.task, t]));
   const dayTuitionMap = new Map((existing.tuition_study || []).map(t => [t.slotId || t.task, t]));
 
-  const schSlots = state.timetables.school[dName] || [];
+  const schSlots = (state.timetables.school && state.timetables.school[dName]) || [];
   const populatedSchool = schSlots.map(slot => {
     const ex = daySchoolMap.get(slot.id);
     const range = parseTimeRange(slot.time);
@@ -1198,7 +1070,7 @@ function ensureDayPopulated(dateStr) {
     };
   });
 
-  const tuiSlots = state.timetables.tuition[dName] || [];
+  const tuiSlots = (state.timetables.tuition && state.timetables.tuition[dName]) || [];
   const populatedTuition = tuiSlots.map(slot => {
     const ex = dayTuitionMap.get(slot.id);
     const range = parseTimeRange(slot.time);
@@ -1215,7 +1087,7 @@ function ensureDayPopulated(dateStr) {
     };
   });
 
-  const stdSlots = state.timetables.study[dName] || [];
+  const stdSlots = (state.timetables.study && state.timetables.study[dName]) || [];
   const populatedStudy = stdSlots.map(slot => {
     const ex = dayTuitionMap.get(slot.id);
     const range = parseTimeRange(slot.time);
@@ -1274,16 +1146,16 @@ function calculateWeeklyStats() {
       });
     } else {
       const dName = DAYS[i];
-      (state.timetables.school[dName] || []).forEach(s => {
+      ((state.timetables.school && state.timetables.school[dName]) || []).forEach(s => {
         const range = parseTimeRange(s.time);
         const p = parseSchoolTask(s.task);
         if (!p.isFree) { totals.school += range.hrs; totalCount++; }
       });
-      (state.timetables.tuition[dName] || []).forEach(s => {
+      ((state.timetables.tuition && state.timetables.tuition[dName]) || []).forEach(s => {
         totals.tuition += parseTimeRange(s.time).hrs;
         totalCount++;
       });
-      (state.timetables.study[dName] || []).forEach(s => {
+      ((state.timetables.study && state.timetables.study[dName]) || []).forEach(s => {
         totals.study += parseTimeRange(s.time).hrs;
         totalCount++;
       });
@@ -1333,18 +1205,18 @@ function updateAnalytics() {
         }
       });
     } else {
-      (state.timetables.school[dName] || []).forEach(s => {
+      ((state.timetables.school && state.timetables.school[dName]) || []).forEach(s => {
         const p = parseSchoolTask(s.task);
         if (!p.isFree) {
           const h = parseTimeRange(s.time).hrs;
           dayPlan += h; plannedCat.School += h;
         }
       });
-      (state.timetables.tuition[dName] || []).forEach(s => {
+      ((state.timetables.tuition && state.timetables.tuition[dName]) || []).forEach(s => {
         const h = parseTimeRange(s.time).hrs;
         dayPlan += h; plannedCat.Tuition += h;
       });
-      (state.timetables.study[dName] || []).forEach(s => {
+      ((state.timetables.study && state.timetables.study[dName]) || []).forEach(s => {
         const h = parseTimeRange(s.time).hrs;
         dayPlan += h; plannedCat.Study += h;
       });
@@ -2110,7 +1982,7 @@ function renderTimetables() {
       <div class="border border-slate-200 rounded-xl overflow-hidden bg-white">
         <div class="px-3 py-1.5 bg-slate-50 border-b border-slate-200 font-black text-xs text-slate-700">${d}</div>
         <div class="p-2 space-y-1.5">
-          ${(obj[d] || []).map((slot, i) => editMode[type] ? `
+          ${((obj && obj[d]) || []).map((slot, i) => editMode[type] ? `
             <div class="bg-slate-50 p-2 rounded-lg border border-slate-200 space-y-1.5">
               <div class="flex items-center gap-1">
                 <input type="text" class="w-full text-xs font-semibold p-1 border rounded bg-white tt-time-${type}-${d}" data-idx="${i}" value="${escapeHtml(slot.time)}" placeholder="Time Range">
@@ -2129,7 +2001,7 @@ function renderTimetables() {
               <span class="text-[10px] font-black text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">${parseTimeRange(slot.time).hrs}h</span>
             </div>`).join('')}
           ${editMode[type] ? `<button onclick="addNewTemplateSlot('${type}','${d}')" class="w-full py-1 text-xs font-bold text-emerald-600 hover:bg-emerald-50 rounded-lg border border-dashed border-emerald-300 min-h-[34px]">+ Add Period</button>` : ''}
-          ${(!editMode[type] && (!obj[d] || obj[d].length === 0)) ? '<div class="text-xs p-1 text-slate-400 italic">No classes scheduled</div>' : ''}
+          ${(!editMode[type] && (!obj || !obj[d] || obj[d].length === 0)) ? '<div class="text-xs p-1 text-slate-400 italic">No classes scheduled</div>' : ''}
         </div>
       </div>`;
   }).join('');
@@ -2222,14 +2094,14 @@ function deleteTemplateSlot(t, d, i) {
 
 function promptResetTimetableDefaults() {
   showActionModal({
-    title: 'Reset Timetables',
-    msg: 'Reset all weekly templates to defaults? Any unexported edits will be replaced.',
+    title: 'Clear Timetables',
+    msg: 'Clear all schedule templates to blank? Click Cloud Sync afterwards if you want to re-download from Google Sheets.',
     onConfirm: () => {
-      state.timetables = JSON.parse(JSON.stringify(window.DEFAULT_TIMETABLES));
+      state.timetables = JSON.parse(JSON.stringify(EMPTY_TIMETABLES));
       saveState();
       ensureDayPopulated(state.activeDateStr);
       renderAll();
-      showToast('Timetables reset to defaults', 'info');
+      showToast('Timetables cleared to blank', 'info');
     }
   });
 }
@@ -2401,8 +2273,10 @@ function escapeHtml(str) {
 window.addEventListener('load', () => {
   loadState();
 
-  // Background fetch from Google Sheets
-  fetchFromAppsScript(false);
+  // Background fetch strictly from Google Sheets
+  if (APPS_SCRIPT_URL) {
+    fetchFromAppsScript(false);
+  }
 
   const updateClock = () => {
     const now = new Date();
