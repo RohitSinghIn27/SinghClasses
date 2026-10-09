@@ -1,16 +1,17 @@
 /* ==========================================================================
-   CONFIGURATION & STATE (ZERO DEFAULT VALUES)
+   CONFIG & CLIENT-SIDE STATE ENGINE
    ========================================================================== */
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzc0DmgsKIJwK8upyKUjK6hYhly_yKLdALZufu516D-BE0MpSItexJ46jXCLz1rEkb2/exec';
+const APPS_SCRIPT_SECRET_TOKEN = 'singh_planner_secure_2026'; // Configurable token for backend auth
 
-const TEMPLATE_VERSION = '2026.3_clean';
+const TEMPLATE_VERSION = '2026.4_clean';
 const STORAGE_KEY_PLANNER = 'singhPlanner_core_v2';
 const STORAGE_KEY_ATTENDANCE = 'singhPlanner_attendance_v2';
 const STORAGE_KEY_RESCUE = 'singhPlanner_rescue_backup_v2';
+const STORAGE_KEY_LAST_SYNC = 'singhPlanner_last_sync_time';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-// Pure empty structure without hardcoded demo/default entries
 const EMPTY_TIMETABLES = {
   school: { Mon: [], Tue: [], Wed: [], Thu: [], Fri: [], Sat: [], Sun: [] },
   tuition: { Mon: [], Tue: [], Wed: [], Thu: [], Fri: [], Sat: [], Sun: [] },
@@ -39,18 +40,25 @@ let currentAttBatchTitle = '';
 let currentAttTaskId = null;
 let currentAttTargetDate = toISO(new Date());
 let lastDeletedStudent = null;
+let activeModalTrigger = null;
 
-/* ================= APPS SCRIPT CLOUD FETCH ENGINE ================= */
+/* ================= APPS SCRIPT PULL ENGINE (AUTHENTICATED) ================= */
 async function fetchFromAppsScript(showFeedback = true) {
   if (!APPS_SCRIPT_URL) {
     if (showFeedback) showToast('Missing APPS_SCRIPT_URL', 'error');
     return;
   }
 
-  if (showFeedback) showToast('Syncing data from Google Sheets...', 'info');
+  const syncBtn = document.getElementById('cloudSyncBtn');
+  if (syncBtn) {
+    syncBtn.disabled = true;
+    syncBtn.classList.add('opacity-70', 'cursor-not-allowed');
+  }
+
+  if (showFeedback) showToast('Pulling data from Google Sheets...', 'info');
 
   try {
-    const fetchUrl = `${APPS_SCRIPT_URL}?action=getAll&_t=${Date.now()}`;
+    const fetchUrl = `${APPS_SCRIPT_URL}?action=getAll&token=${encodeURIComponent(APPS_SCRIPT_SECRET_TOKEN)}&_t=${Date.now()}`;
     const res = await fetch(fetchUrl, {
       method: 'GET',
       redirect: 'follow'
@@ -63,7 +71,6 @@ async function fetchFromAppsScript(showFeedback = true) {
     if (data.status === 'success') {
       let syncedItems = [];
 
-      // 1. Sync master timetables directly from Google Sheet
       if (data.timetables && typeof data.timetables === 'object') {
         state.timetables = {
           school: Object.assign({ Mon: [], Tue: [], Wed: [], Thu: [], Fri: [], Sat: [], Sun: [] }, data.timetables.school || {}),
@@ -73,11 +80,14 @@ async function fetchFromAppsScript(showFeedback = true) {
         syncedItems.push('Timetables');
       }
 
-      // 2. Sync student rosters directly from Google Sheet
       if (data.rosters && typeof data.rosters === 'object') {
         state.rosters = data.rosters;
         syncedItems.push('Rosters');
       }
+
+      const syncTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      localStorage.setItem(STORAGE_KEY_LAST_SYNC, syncTime);
+      updateSyncStatusUI(`Synced at ${syncTime}`);
 
       saveState();
       ensureDayPopulated(state.activeDateStr);
@@ -85,15 +95,26 @@ async function fetchFromAppsScript(showFeedback = true) {
 
       if (showFeedback) {
         const titleSuffix = data.spreadsheetTitle ? ` from "${data.spreadsheetTitle}"` : '';
-        showToast(`Synced ${syncedItems.join(' & ')}${titleSuffix} successfully!`, 'success');
+        showToast(`Pulled ${syncedItems.join(' & ')}${titleSuffix} successfully!`, 'success');
       }
     } else {
-      throw new Error(data.message || 'Error reported from Apps Script');
+      throw new Error(data.message || 'Error reported from Google Apps Script');
     }
   } catch (err) {
-    console.error('Apps Script Sync Error:', err);
-    if (showFeedback) showToast(`Sync failed: ${err.message}`, 'error');
+    console.error('Apps Script Fetch Error:', err);
+    updateSyncStatusUI('Sync Failed');
+    if (showFeedback) showToast(`Pull failed: ${err.message}`, 'error');
+  } finally {
+    if (syncBtn) {
+      syncBtn.disabled = false;
+      syncBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+    }
   }
+}
+
+function updateSyncStatusUI(statusText) {
+  const badge = document.getElementById('syncStatusBadge');
+  if (badge) badge.textContent = statusText;
 }
 
 /* ================= DATE / TIME UTILITIES ================= */
@@ -187,8 +208,9 @@ function getTimeStatus(timeStr, dateStr) {
   const now = new Date();
   const curM = now.getHours() * 60 + now.getMinutes();
   if (curM >= range.startMin && curM <= range.endMin) return 'active';
+  if (curM < range.startMin && curM >= range.startMin - 30) return 'upcoming';
   if (curM > range.endMin) return 'past';
-  return 'upcoming';
+  return 'normal';
 }
 
 function parseSchoolTask(taskStr) {
@@ -337,6 +359,9 @@ const AppData = {
 function loadState() {
   const rawPlanner = localStorage.getItem(STORAGE_KEY_PLANNER);
   const rawAtt = localStorage.getItem(STORAGE_KEY_ATTENDANCE);
+  const lastSync = localStorage.getItem(STORAGE_KEY_LAST_SYNC);
+
+  if (lastSync) updateSyncStatusUI(`Synced at ${lastSync}`);
 
   if (rawPlanner) {
     try {
@@ -361,11 +386,11 @@ function loadState() {
     navigator.storage.persist();
   }
 
-  // Backup banner auto-check (triggers if >7 days since last JSON export)
+  // Weekly backup reminder auto-check (>7 days)
   const sevenDays = 7 * 24 * 60 * 60 * 1000;
   if (!state.lastBackup || (Date.now() - state.lastBackup > sevenDays)) {
-    const nudge = document.getElementById('backupNudgeBanner');
-    if (nudge) nudge.classList.remove('hidden');
+    const banner = document.getElementById('backupNudgeBanner');
+    if (banner) banner.classList.remove('hidden');
   }
 
   pruneOldTasks(15);
@@ -462,9 +487,18 @@ function ensureDayPopulated(dateStr) {
 }
 
 function reloadDayFromTimetable(dateStr) {
+  const previousData = state.days[dateStr] ? JSON.parse(JSON.stringify(state.days[dateStr])) : null;
   if (state.days[dateStr]) delete state.days[dateStr];
   ensureDayPopulated(dateStr);
-  AppData.saveAndNotify(`Reset ${getDayName(dateStr)} from template`);
+  saveState();
+  renderAll();
+
+  showToastWithUndo(`Reset ${getDayName(dateStr)} from template`, () => {
+    if (previousData) {
+      state.days[dateStr] = previousData;
+      AppData.saveAndNotify(`Restored ${getDayName(dateStr)} state`);
+    }
+  });
 }
 
 function getPreviousClassDate(batchId, refDateStr) {
@@ -524,7 +558,7 @@ function calculateWeeklyStats() {
   const pct = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
   document.getElementById('completedCount').textContent = completedCount;
   document.getElementById('totalCount').textContent = totalCount;
-  document.getElementById('progressPercent').textContent = `${pct}%`;
+  document.getElementById('progressPercent').textContent = `${pct}% complete`;
 
   const ring = document.getElementById('progressRing');
   if (ring) {
@@ -588,15 +622,15 @@ function updateAnalytics() {
 
   document.getElementById('statsGrid').innerHTML = `
     <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-sm">
-      <span class="text-xs font-bold uppercase text-slate-400">Total Planned</span>
+      <span class="text-xs font-bold uppercase text-slate-500">Total Planned</span>
       <div class="text-xl font-black text-slate-800 mt-0.5">${grandPlanned.toFixed(1)} hrs</div>
     </div>
     <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-sm">
-      <span class="text-xs font-bold uppercase text-slate-400">Total Done</span>
+      <span class="text-xs font-bold uppercase text-slate-500">Total Done</span>
       <div class="text-xl font-black text-blue-600 mt-0.5">${grandDone.toFixed(1)} hrs</div>
     </div>
     <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-sm">
-      <span class="text-xs font-bold uppercase text-slate-400">Completion Rate</span>
+      <span class="text-xs font-bold uppercase text-slate-500">Completion Rate</span>
       <div class="text-xl font-black text-emerald-600 mt-0.5">${overallRate}%</div>
     </div>`;
 
@@ -673,48 +707,31 @@ function updatePrintDate() {
 function renderSidebarDaySelector() {
   const today = toISO(new Date());
   const container = document.getElementById('sidebarDayGrid');
-  const sunRowContainer = document.getElementById('sidebarSundayRow');
   if (!container) return;
 
-  container.innerHTML = DAYS.slice(0, 6).map((dName, i) => {
+  // Equal 7-day grid (Mon through Sun)
+  container.innerHTML = DAYS.map((dName, i) => {
     const dIso = addDays(state.viewMondayStr, i);
     const dNum = dIso.split('-')[2];
     const isActive = dIso === state.activeDateStr;
     const isToday = dIso === today;
+    const isSunday = dName === 'Sun';
 
     let cardClasses = 'bg-white hover:bg-slate-100 border border-slate-200 text-slate-800';
-    if (isActive) cardClasses = 'bg-blue-600 text-white border-blue-400 font-bold shadow-sm';
-    else if (isToday) cardClasses = 'bg-blue-50/80 border-blue-300 text-blue-900 font-bold';
+    if (isActive) {
+      cardClasses = 'bg-blue-600 text-white border-blue-400 font-bold shadow-sm';
+    } else if (isToday) {
+      cardClasses = 'bg-blue-50 border-blue-300 text-blue-900 font-bold';
+    } else if (isSunday) {
+      cardClasses = 'bg-amber-50/80 hover:bg-amber-100/80 border-amber-200 text-amber-900';
+    }
 
     return `
-      <button onclick="selectDate('${dIso}')" class="h-10 rounded-xl px-2 py-1 flex items-center gap-1.5 transition active:scale-95 text-left ${cardClasses} min-h-[40px]">
-        <div class="flex flex-col leading-none min-w-0">
-          <span class="text-[10px] font-black uppercase tracking-wider ${isActive ? 'text-white/80' : 'text-slate-500'}">${dName}</span>
-          <span class="text-xs font-black mt-0.5">${dNum}</span>
-        </div>
+      <button onclick="selectDate('${dIso}')" type="button" class="h-10 rounded-xl px-2.5 py-1 flex items-center justify-between transition active:scale-95 text-left ${cardClasses} min-h-[40px]">
+        <span class="text-[10px] font-black uppercase tracking-wider ${isActive ? 'text-white/80' : (isSunday ? 'text-amber-800' : 'text-slate-500')}">${dName}</span>
+        <span class="text-xs font-black">${dNum}</span>
       </button>`;
   }).join('');
-
-  if (sunRowContainer) {
-    const sunIso = addDays(state.viewMondayStr, 6);
-    const sunNum = sunIso.split('-')[2];
-    const isSunActive = sunIso === state.activeDateStr;
-
-    let sunClasses = 'bg-amber-50 hover:bg-amber-100 border-amber-200 text-amber-950';
-    if (isSunActive) sunClasses = 'bg-blue-600 text-white border-blue-400 font-bold shadow-sm';
-
-    sunRowContainer.innerHTML = `
-      <div class="mt-1.5">
-        <button onclick="selectDate('${sunIso}')" class="w-full h-9 rounded-xl px-2.5 py-1 flex items-center justify-between text-left border transition active:scale-95 ${sunClasses} min-h-[38px]">
-          <span class="text-[10px] font-black uppercase tracking-wider">SUNDAY</span>
-          <span class="text-xs font-black">${sunNum}</span>
-        </button>
-        <div class="mt-2 pt-2 border-t border-slate-200 grid grid-cols-2 gap-1.5">
-          <button onclick="checkAllToday()" class="py-1.5 bg-white hover:bg-emerald-50 text-emerald-700 border border-slate-200 font-bold text-xs rounded-xl transition active:scale-95 min-h-[36px]">Check All</button>
-          <button onclick="clearTodayChecks()" class="py-1.5 bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 font-bold text-xs rounded-xl transition active:scale-95 min-h-[36px]">Clear All</button>
-        </div>
-      </div>`;
-  }
 
   const lbl = document.getElementById('sidebarWeekLabel');
   if (lbl) lbl.textContent = formatWeekRange(state.viewMondayStr);
@@ -744,30 +761,41 @@ function jumpToday() {
   renderAll();
 }
 
-/* ================= TABLES ================= */
+/* ================= TABLES & PERIOD HIGHLIGHTING ================= */
 function renderTables() {
   const limitISO = toISO(new Date(Date.now() - 15 * 86400000));
   const isArchived = state.activeDateStr < limitISO;
   const dayData = state.days[state.activeDateStr] || { school: [], tuition_study: [] };
 
-  // School
+  // 1. School Classes
   const sTbody = document.getElementById('schoolBody');
   sTbody.innerHTML = '';
   if (isArchived) {
-    sTbody.innerHTML = `<tr class="empty-row"><td colspan="4" class="py-6 px-4 text-center text-xs font-bold text-slate-400">No record available (Date is older than 15 days)</td></tr>`;
+    sTbody.innerHTML = `<tr class="empty-row"><td colspan="4" class="py-6 px-4 text-center text-xs font-bold text-slate-500">No record available (Date is older than 15 days)</td></tr>`;
   } else if (!dayData.school.length) {
-    sTbody.innerHTML = `<tr class="empty-row"><td colspan="4" class="py-6 px-4 text-center text-xs font-semibold text-slate-400">No school classes scheduled for ${getDayName(state.activeDateStr)}</td></tr>`;
+    sTbody.innerHTML = `<tr class="empty-row"><td colspan="4" class="py-6 px-4 text-center text-xs font-semibold text-slate-500">No school classes scheduled for ${getDayName(state.activeDateStr)}</td></tr>`;
   } else {
     dayData.school.forEach(item => {
-      const isLive = getTimeStatus(item.time, state.activeDateStr) === 'active';
+      const status = getTimeStatus(item.time, state.activeDateStr);
+      const isLive = status === 'active';
+      const isUpcoming = status === 'upcoming';
+
+      let rowClass = 'hover:bg-slate-50/80';
+      if (item.completed) rowClass = 'bg-emerald-50/20';
+      else if (isLive) rowClass = 'active-period-row';
+      else if (isUpcoming) rowClass = 'bg-amber-50/40';
+
       const tr = document.createElement('tr');
-      tr.className = `border-b border-slate-100 transition ${item.completed ? 'bg-emerald-50/20' : (isLive ? 'bg-blue-50/80 border-l-4 border-blue-600' : 'hover:bg-slate-50/80')}`;
+      tr.className = `border-b border-slate-100 transition ${rowClass}`;
       tr.innerHTML = `
         <td class="py-2.5 px-3 text-center col-cb">
-          <input type="checkbox" ${item.completed ? 'checked' : ''} onchange="toggleTaskDone('${item.slotId}', 'school')" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer min-h-[20px] min-w-[20px]">
+          ${item.isFree ? '<span class="text-slate-300 font-bold" aria-label="Free period">—</span>' : `
+            <input type="checkbox" ${item.completed ? 'checked' : ''} onchange="toggleTaskDone('${item.slotId}', 'school')" aria-label="Mark ${escapeHtml(item.task)} as done" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer min-h-[20px] min-w-[20px]">
+          `}
         </td>
-        <td class="py-2.5 px-3 text-left col-tm whitespace-nowrap text-xs font-semibold text-slate-600">
-          ${isLive ? '<span class="inline-flex items-center gap-1 bg-blue-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm mr-1"><span class="w-1.5 h-1.5 rounded-full bg-white live-pulse"></span>LIVE</span>' : ''}
+        <td class="py-2.5 px-3 text-left col-tm whitespace-nowrap text-xs font-semibold text-slate-700">
+          ${isLive ? '<span class="inline-flex items-center gap-1 bg-blue-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm mr-1.5"><span class="w-1.5 h-1.5 rounded-full bg-white live-pulse"></span>LIVE</span>' : ''}
+          ${isUpcoming ? '<span class="inline-flex items-center gap-1 bg-amber-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm mr-1.5">NEXT</span>' : ''}
           ${escapeHtml(item.time)}
         </td>
         <td class="py-2.5 px-3 text-left col-tk">
@@ -778,13 +806,13 @@ function renderTables() {
             </div>
             ${!item.isFree ? `
               <div class="flex items-center gap-1.5 mt-0.5 text-xs">
-                <span class="text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200/80 cursor-pointer font-medium" onclick="editTopicPrompt('${item.slotId}', 'school')">
+                <span class="text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200/80 cursor-pointer font-medium hover:bg-blue-100 transition" onclick="editTopicPrompt('${item.slotId}', 'school')">
                   📚 Topic: <strong>${escapeHtml(item.topic || '+ Add topic')}</strong>
                 </span>
               </div>` : ''}
           </div>
         </td>
-        <td class="py-2.5 px-3 text-right col-hr whitespace-nowrap text-xs font-semibold text-slate-600">
+        <td class="py-2.5 px-3 text-right col-hr whitespace-nowrap text-xs font-semibold text-slate-700">
           ${Number(item.hrs).toFixed(2)} hrs
         </td>`;
       sTbody.appendChild(tr);
@@ -794,31 +822,44 @@ function renderTables() {
   const sTot = dayData.school.reduce((acc, i) => acc + (Number.isFinite(i.hrs) ? i.hrs : 0), 0);
   const sDone = dayData.school.filter(i => i.completed && !i.isFree).length;
   const sCount = dayData.school.filter(i => !i.isFree).length;
+  const sPct = sCount > 0 ? Math.round((sDone / sCount) * 100) : 0;
+  
   document.getElementById('schoolSecTotal').textContent = `${sTot.toFixed(2)} hrs`;
   document.getElementById('schoolSecMeta').textContent = `${sDone} of ${sCount} completed`;
+  const sBar = document.getElementById('schoolProgressBar');
+  if (sBar) sBar.style.width = `${sPct}%`;
 
-  // Tuition & Study
+  // 2. Tuition & Study
   const tTbody = document.getElementById('tuitionStudyBody');
   tTbody.innerHTML = '';
   if (isArchived) {
-    tTbody.innerHTML = `<tr class="empty-row"><td colspan="5" class="py-6 px-4 text-center text-xs font-bold text-slate-400">No record available (Date is older than 15 days)</td></tr>`;
+    tTbody.innerHTML = `<tr class="empty-row"><td colspan="5" class="py-6 px-4 text-center text-xs font-bold text-slate-500">No record available (Date is older than 15 days)</td></tr>`;
   } else if (!dayData.tuition_study.length) {
-    tTbody.innerHTML = `<tr class="empty-row"><td colspan="5" class="py-6 px-4 text-center text-xs font-semibold text-slate-400">No tuition or study tasks scheduled for ${getDayName(state.activeDateStr)}</td></tr>`;
+    tTbody.innerHTML = `<tr class="empty-row"><td colspan="5" class="py-6 px-4 text-center text-xs font-semibold text-slate-500">No tuition or study tasks scheduled for ${getDayName(state.activeDateStr)}</td></tr>`;
   } else {
     dayData.tuition_study.forEach(item => {
-      const isLive = getTimeStatus(item.time, state.activeDateStr) === 'active';
+      const status = getTimeStatus(item.time, state.activeDateStr);
+      const isLive = status === 'active';
+      const isUpcoming = status === 'upcoming';
       const isTuition = item.cat === 'Tuition';
       const bId = item.batchId || normalizeBatchId(item.task);
       const studentCount = (state.rosters[bId] || []).length;
+      const countLabel = `${studentCount} ${studentCount === 1 ? 'student' : 'students'}`;
+
+      let rowClass = 'hover:bg-slate-50/80';
+      if (item.completed) rowClass = 'bg-emerald-50/20';
+      else if (isLive) rowClass = 'active-period-row';
+      else if (isUpcoming) rowClass = 'bg-amber-50/40';
 
       const tr = document.createElement('tr');
-      tr.className = `border-b border-slate-100 transition ${item.completed ? 'bg-emerald-50/20' : (isLive ? 'bg-blue-50/80 border-l-4 border-blue-600' : 'hover:bg-slate-50/80')}`;
+      tr.className = `border-b border-slate-100 transition ${rowClass}`;
       tr.innerHTML = `
         <td class="py-2.5 px-3 text-center col-cb">
-          <input type="checkbox" ${item.completed ? 'checked' : ''} onchange="toggleTaskDone('${item.slotId}', 'tuition_study')" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer min-h-[20px] min-w-[20px]">
+          <input type="checkbox" ${item.completed ? 'checked' : ''} onchange="toggleTaskDone('${item.slotId}', 'tuition_study')" aria-label="Mark ${escapeHtml(item.task)} as done" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer min-h-[20px] min-w-[20px]">
         </td>
-        <td class="py-2.5 px-3 text-left col-tm whitespace-nowrap text-xs font-semibold text-slate-600">
-          ${isLive ? '<span class="inline-flex items-center gap-1 bg-blue-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm mr-1"><span class="w-1.5 h-1.5 rounded-full bg-white live-pulse"></span>LIVE</span>' : ''}
+        <td class="py-2.5 px-3 text-left col-tm whitespace-nowrap text-xs font-semibold text-slate-700">
+          ${isLive ? '<span class="inline-flex items-center gap-1 bg-blue-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm mr-1.5"><span class="w-1.5 h-1.5 rounded-full bg-white live-pulse"></span>LIVE</span>' : ''}
+          ${isUpcoming ? '<span class="inline-flex items-center gap-1 bg-amber-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm mr-1.5">NEXT</span>' : ''}
           ${escapeHtml(item.time)}
         </td>
         <td class="py-2.5 px-3 text-left col-tk">
@@ -826,19 +867,19 @@ function renderTables() {
             <div class="flex flex-col min-w-0">
               <div class="flex items-center gap-1.5">
                 <span class="text-xs sm:text-sm font-bold ${item.completed ? 'line-through text-slate-400' : 'text-slate-900'}">${escapeHtml(item.task)}</span>
-                ${isTuition ? `<span class="bg-slate-100 text-slate-600 font-bold text-[10px] px-1.5 py-0.5 rounded border border-slate-200">${studentCount} students</span>` : ''}
+                ${isTuition ? `<span class="bg-slate-100 text-slate-700 font-bold text-[10px] px-1.5 py-0.5 rounded border border-slate-200">${countLabel}</span>` : ''}
               </div>
               ${isTuition ? `
                 <div class="flex items-center gap-1.5 mt-0.5 text-xs">
-                  <span class="text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200/80 cursor-pointer font-medium" onclick="editTopicPrompt('${item.slotId}', 'tuition_study')">
+                  <span class="text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200/80 cursor-pointer font-medium hover:bg-blue-100 transition" onclick="editTopicPrompt('${item.slotId}', 'tuition_study')">
                     📚 Topic: <strong>${escapeHtml(item.topic || '+ Add topic')}</strong>
                   </span>
                 </div>` : ''}
             </div>
             ${isTuition ? `
               <div class="flex items-center gap-1">
-                <button onclick="openAttendanceModal('${item.slotId}')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg flex items-center gap-1 transition active:scale-95 shadow-sm min-h-[34px]">
-                  <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                <button onclick="openAttendanceModal('${item.slotId}', this)" type="button" aria-label="Mark Attendance and WhatsApp for ${escapeHtml(item.task)}" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg flex items-center gap-1 transition active:scale-95 shadow-sm min-h-[34px]">
+                  <i data-lucide="send" class="w-3.5 h-3.5" aria-hidden="true"></i>
                   <span>WhatsApp</span>
                 </button>
               </div>` : ''}
@@ -847,7 +888,7 @@ function renderTables() {
         <td class="py-2.5 px-3 text-center col-cat whitespace-nowrap">
           <span class="cat-pill ${item.cat}">${item.cat}</span>
         </td>
-        <td class="py-2.5 px-3 text-right col-hr whitespace-nowrap text-xs font-semibold text-slate-600">
+        <td class="py-2.5 px-3 text-right col-hr whitespace-nowrap text-xs font-semibold text-slate-700">
           ${Number(item.hrs).toFixed(2)} hrs
         </td>`;
       tTbody.appendChild(tr);
@@ -857,8 +898,12 @@ function renderTables() {
   const tTot = dayData.tuition_study.reduce((acc, i) => acc + (Number.isFinite(i.hrs) ? i.hrs : 0), 0);
   const tDone = dayData.tuition_study.filter(i => i.completed).length;
   const tCount = dayData.tuition_study.length;
+  const tPct = tCount > 0 ? Math.round((tDone / tCount) * 100) : 0;
+  
   document.getElementById('tuitionSecTotal').textContent = `${tTot.toFixed(2)} hrs`;
   document.getElementById('tuitionSecMeta').textContent = `${tDone} of ${tCount} completed`;
+  const tBar = document.getElementById('tuitionProgressBar');
+  if (tBar) tBar.style.width = `${tPct}%`;
 }
 
 function toggleTaskDone(slotId, sec) {
@@ -894,7 +939,9 @@ function checkAllToday() {
   const dayData = state.days[state.activeDateStr];
   if (!dayData) return;
   const prevCompletedState = JSON.stringify(dayData);
-  [...(dayData.school || []), ...(dayData.tuition_study || [])].forEach(i => i.completed = true);
+  [...(dayData.school || []), ...(dayData.tuition_study || [])].forEach(i => {
+    if (!i.isFree) i.completed = true;
+  });
   saveState();
   renderAll();
   showToastWithUndo('All tasks checked', () => {
@@ -956,19 +1003,19 @@ function renderStudentsMaster() {
   if (statsRow) {
     statsRow.innerHTML = `
       <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-sm">
-        <span class="text-[10px] font-bold uppercase text-slate-400">Total Batches</span>
+        <span class="text-[10px] font-bold uppercase text-slate-500">Total Batches</span>
         <div class="text-xl font-black text-slate-800 mt-0.5">${totalBatches}</div>
       </div>
       <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-sm">
-        <span class="text-[10px] font-bold uppercase text-slate-400">Total Enrolled</span>
+        <span class="text-[10px] font-bold uppercase text-slate-500">Total Enrolled</span>
         <div class="text-xl font-black text-emerald-600 mt-0.5">${totalEnrollments}</div>
       </div>
       <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-sm">
-        <span class="text-[10px] font-bold uppercase text-slate-400">Unique Students</span>
+        <span class="text-[10px] font-bold uppercase text-slate-500">Unique Students</span>
         <div class="text-xl font-black text-blue-600 mt-0.5">${allStudentNamesSet.size}</div>
       </div>
       <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-sm">
-        <span class="text-[10px] font-bold uppercase text-slate-400">Avg Batch Size</span>
+        <span class="text-[10px] font-bold uppercase text-slate-500">Avg Batch Size</span>
         <div class="text-xl font-black text-orange-500 mt-0.5">${totalBatches > 0 ? (totalEnrollments / totalBatches).toFixed(1) : '0'}</div>
       </div>`;
   }
@@ -994,7 +1041,7 @@ function renderStudentsMaster() {
                 <div class="flex items-center gap-1.5 mt-1 flex-wrap">${daysBadges}</div>
               </div>
               <span class="bg-emerald-100 text-emerald-800 text-xs font-black px-2 py-0.5 rounded-full shrink-0">
-                ${b.students.length}
+                ${b.students.length} ${b.students.length === 1 ? 'student' : 'students'}
               </span>
             </div>
 
@@ -1015,11 +1062,11 @@ function renderStudentsMaster() {
                       <span class="text-[10px] font-bold text-slate-500 bg-white px-1.5 py-0.5 rounded border border-slate-200">
                         ${stats.totalPresent}P / ${stats.totalRecords}
                       </span>
-                      <button onclick="promptRenameStudent('${b.batchId}', decodeURIComponent('${encStudent}'))" class="p-1 text-slate-400 hover:text-blue-600" title="Edit name">
-                        <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
+                      <button onclick="promptRenameStudent('${b.batchId}', decodeURIComponent('${encStudent}'))" type="button" class="p-1 text-slate-400 hover:text-blue-600" title="Edit name" aria-label="Edit student name">
+                        <i data-lucide="edit-2" class="w-3.5 h-3.5" aria-hidden="true"></i>
                       </button>
-                      <button onclick="AppData.removeStudent('${b.batchId}', decodeURIComponent('${encStudent}'))" class="p-1 text-slate-400 hover:text-rose-600" title="Remove student">
-                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                      <button onclick="AppData.removeStudent('${b.batchId}', decodeURIComponent('${encStudent}'))" type="button" class="p-1 text-slate-400 hover:text-rose-600" title="Remove student" aria-label="Remove student">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5" aria-hidden="true"></i>
                       </button>
                     </div>
                   </div>`;
@@ -1029,7 +1076,7 @@ function renderStudentsMaster() {
 
           <div class="p-2.5 bg-slate-50/80 border-t border-slate-200 flex items-center gap-1.5">
             <input type="text" id="addStInput_${b.batchId}" placeholder="Add student..." class="flex-1 px-2.5 py-1.5 text-xs font-semibold bg-white border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-emerald-500 min-h-[34px]" onkeydown="if(event.key==='Enter') addStudentFromCard('${b.batchId}')">
-            <button onclick="addStudentFromCard('${b.batchId}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg transition min-h-[34px]">Add</button>
+            <button onclick="addStudentFromCard('${b.batchId}')" type="button" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg transition min-h-[34px]">Add</button>
           </div>
         </div>`;
     }).join('');
@@ -1050,18 +1097,18 @@ function renderStudentsMaster() {
             <td class="py-2.5 px-3 font-bold text-slate-900 cursor-pointer hover:text-blue-600" onclick="promptRenameStudent('${b.batchId}', decodeURIComponent('${encStudent}'))">
               ${escapeHtml(student)}
             </td>
-            <td class="py-2.5 px-3 font-semibold text-slate-600">${escapeHtml(b.title)}</td>
+            <td class="py-2.5 px-3 font-semibold text-slate-700">${escapeHtml(b.title)}</td>
             <td class="py-2.5 px-3">
               <span class="text-xs font-medium text-slate-500">${b.daysArray.join(', ') || 'N/A'}</span>
             </td>
             <td class="py-2.5 px-3 text-center">
-              <span class="bg-slate-100 text-slate-700 font-bold text-xs px-2 py-0.5 rounded-full border border-slate-200">
+              <span class="bg-slate-100 text-slate-800 font-bold text-xs px-2 py-0.5 rounded-full border border-slate-200">
                 ${stats.totalPresent} Present / ${stats.totalRecords} Logs
               </span>
             </td>
             <td class="py-2.5 px-3 text-right">
-              <button onclick="promptRenameStudent('${b.batchId}', decodeURIComponent('${encStudent}'))" class="px-2 py-1 bg-slate-100 hover:bg-blue-50 text-blue-600 rounded text-xs font-bold mr-1">Rename</button>
-              <button onclick="AppData.removeStudent('${b.batchId}', decodeURIComponent('${encStudent}'))" class="px-2 py-1 bg-slate-100 hover:bg-rose-50 text-rose-600 rounded text-xs font-bold">Remove</button>
+              <button onclick="promptRenameStudent('${b.batchId}', decodeURIComponent('${encStudent}'))" type="button" class="px-2 py-1 bg-slate-100 hover:bg-blue-50 text-blue-600 rounded text-xs font-bold mr-1">Rename</button>
+              <button onclick="AppData.removeStudent('${b.batchId}', decodeURIComponent('${encStudent}'))" type="button" class="px-2 py-1 bg-slate-100 hover:bg-rose-50 text-rose-600 rounded text-xs font-bold">Remove</button>
             </td>
           </tr>`);
       });
@@ -1108,12 +1155,13 @@ function promptCreateNewBatch() {
 }
 
 /* ================= ATTENDANCE & WHATSAPP ================= */
-function openAttendanceModal(slotId) {
+function openAttendanceModal(slotId, triggerElement = null) {
   const dayData = state.days[state.activeDateStr];
   if (!dayData) return;
   const item = dayData.tuition_study.find(i => i.slotId === slotId);
   if (!item) return;
 
+  activeModalTrigger = triggerElement || document.activeElement;
   currentAttTaskId = slotId;
   currentAttBatchId = item.batchId || normalizeBatchId(item.task);
   currentAttBatchTitle = item.task;
@@ -1122,14 +1170,20 @@ function openAttendanceModal(slotId) {
   currentAttTargetDate = prevDate;
 
   document.getElementById('attBatchTitle').textContent = `Attendance: ${currentAttBatchTitle}`;
-  document.getElementById('attendanceModal').classList.remove('hidden');
+  const modal = document.getElementById('attendanceModal');
+  modal.classList.remove('hidden');
 
   updateAttDateButtons();
   renderAttendanceList();
 }
 
 function closeAttendanceModal() {
-  document.getElementById('attendanceModal').classList.add('hidden');
+  const modal = document.getElementById('attendanceModal');
+  modal.classList.add('hidden');
+  if (activeModalTrigger && typeof activeModalTrigger.focus === 'function') {
+    activeModalTrigger.focus();
+    activeModalTrigger = null;
+  }
 }
 
 function switchAttDate(mode) {
@@ -1150,10 +1204,10 @@ function updateAttDateButtons() {
 
   if (currentAttTargetDate === prevDate) {
     btnP.className = 'px-3 py-1.5 text-xs font-bold rounded-lg border border-orange-400 bg-orange-100 text-orange-900 shadow-sm min-h-[36px]';
-    btnT.className = 'px-3 py-1.5 text-xs font-bold rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 min-h-[36px]';
+    btnT.className = 'px-3 py-1.5 text-xs font-bold rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 min-h-[36px]';
   } else {
     btnT.className = 'px-3 py-1.5 text-xs font-bold rounded-lg border border-blue-400 bg-blue-100 text-blue-900 shadow-sm min-h-[36px]';
-    btnP.className = 'px-3 py-1.5 text-xs font-bold rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 min-h-[36px]';
+    btnP.className = 'px-3 py-1.5 text-xs font-bold rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 min-h-[36px]';
   }
 
   const hasPrevAtt = attendanceStore[prevDate]?.[currentAttBatchId] && Object.keys(attendanceStore[prevDate][currentAttBatchId]).length > 0;
@@ -1178,11 +1232,11 @@ function renderAttendanceList() {
       <div class="flex items-center justify-between p-2 bg-slate-50 hover:bg-slate-100 rounded-xl border border-slate-200 transition">
         <span class="text-xs font-bold text-slate-800 truncate pr-2">${escapeHtml(student)}</span>
         <div class="flex items-center gap-1.5 shrink-0" data-student-row="${escapeHtml(student)}">
-          <button data-action="status" data-val="P" class="px-2.5 py-1 text-xs font-black rounded-lg transition min-h-[34px] min-w-[34px] ${status === 'P' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-white border border-slate-200 text-slate-600'}">P</button>
-          <button data-action="status" data-val="A" class="px-2.5 py-1 text-xs font-black rounded-lg transition min-h-[34px] min-w-[34px] ${status === 'A' ? 'bg-rose-600 text-white shadow-sm' : 'bg-white border border-slate-200 text-slate-600'}">A</button>
-          <button data-action="status" data-val="L" class="px-2.5 py-1 text-xs font-black rounded-lg transition min-h-[34px] min-w-[34px] ${status === 'L' ? 'bg-amber-500 text-white shadow-sm' : 'bg-white border border-slate-200 text-slate-600'}">Late</button>
-          <button data-action="delete" class="text-slate-300 hover:text-rose-500 p-1 rounded min-h-[34px] min-w-[34px] flex items-center justify-center" title="Remove student">
-            <i data-lucide="trash-2" class="w-4 h-4"></i>
+          <button data-action="status" data-val="P" type="button" aria-label="Mark ${escapeHtml(student)} Present" class="px-2.5 py-1 text-xs font-black rounded-lg transition min-h-[34px] min-w-[34px] ${status === 'P' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-white border border-slate-200 text-slate-700'}">P</button>
+          <button data-action="status" data-val="A" type="button" aria-label="Mark ${escapeHtml(student)} Absent" class="px-2.5 py-1 text-xs font-black rounded-lg transition min-h-[34px] min-w-[34px] ${status === 'A' ? 'bg-rose-600 text-white shadow-sm' : 'bg-white border border-slate-200 text-slate-700'}">A</button>
+          <button data-action="status" data-val="L" type="button" aria-label="Mark ${escapeHtml(student)} Late" class="px-2.5 py-1 text-xs font-black rounded-lg transition min-h-[34px] min-w-[34px] ${status === 'L' ? 'bg-amber-500 text-white shadow-sm' : 'bg-white border border-slate-200 text-slate-700'}">Late</button>
+          <button data-action="delete" type="button" class="text-slate-400 hover:text-rose-500 p-1 rounded min-h-[34px] min-w-[34px] flex items-center justify-center" title="Remove student" aria-label="Remove ${escapeHtml(student)}">
+            <i data-lucide="trash-2" class="w-4 h-4" aria-hidden="true"></i>
           </button>
         </div>
       </div>`;
@@ -1342,13 +1396,13 @@ function renderTimetables() {
           ${((obj && obj[d]) || []).map((slot, i) => editMode[type] ? `
             <div class="bg-slate-50 p-2 rounded-lg border border-slate-200 space-y-1.5">
               <div class="flex items-center gap-1">
-                <input type="text" class="w-full text-xs font-semibold p-1 border rounded bg-white tt-time-${type}-${d}" data-idx="${i}" value="${escapeHtml(slot.time)}" placeholder="Time Range">
-                <button onclick="deleteTemplateSlot('${type}','${d}',${i})" class="text-rose-500 hover:text-rose-700 p-1 min-h-[32px] min-w-[32px] flex items-center justify-center">
-                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                <input type="text" class="w-full text-xs font-semibold p-1 border rounded bg-white tt-time-${type}-${d}" data-idx="${i}" value="${escapeHtml(slot.time)}" placeholder="Time Range" aria-label="Time Range">
+                <button onclick="deleteTemplateSlot('${type}','${d}',${i})" type="button" aria-label="Delete period" class="text-rose-500 hover:text-rose-700 p-1 min-h-[32px] min-w-[32px] flex items-center justify-center">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5" aria-hidden="true"></i>
                 </button>
               </div>
-              <input type="text" class="w-full text-xs font-bold p-1 border rounded bg-white tt-task-${type}-${d}" data-idx="${i}" value="${escapeHtml(slot.task)}" placeholder="Class / Subject">
-              ${type !== 'study' ? `<input type="text" class="w-full text-xs font-medium p-1 border rounded bg-white tt-topic-${type}-${d}" data-idx="${i}" value="${escapeHtml(slot.topic || '')}" placeholder="Default Topic">` : ''}
+              <input type="text" class="w-full text-xs font-bold p-1 border rounded bg-white tt-task-${type}-${d}" data-idx="${i}" value="${escapeHtml(slot.task)}" placeholder="Class / Subject" aria-label="Class or Subject">
+              ${type !== 'study' ? `<input type="text" class="w-full text-xs font-medium p-1 border rounded bg-white tt-topic-${type}-${d}" data-idx="${i}" value="${escapeHtml(slot.topic || '')}" placeholder="Default Topic" aria-label="Default Topic">` : ''}
             </div>` : `
             <div class="p-1.5 border-b border-slate-100 last:border-none flex items-center justify-between text-xs">
               <div>
@@ -1357,7 +1411,7 @@ function renderTimetables() {
               </div>
               <span class="text-[10px] font-black text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">${parseTimeRange(slot.time).hrs}h</span>
             </div>`).join('')}
-          ${editMode[type] ? `<button onclick="addNewTemplateSlot('${type}','${d}')" class="w-full py-1 text-xs font-bold text-emerald-600 hover:bg-emerald-50 rounded-lg border border-dashed border-emerald-300 min-h-[34px]">+ Add Period</button>` : ''}
+          ${editMode[type] ? `<button onclick="addNewTemplateSlot('${type}','${d}')" type="button" class="w-full py-1 text-xs font-bold text-emerald-600 hover:bg-emerald-50 rounded-lg border border-dashed border-emerald-300 min-h-[34px]">+ Add Period</button>` : ''}
           ${(!editMode[type] && (!obj || !obj[d] || obj[d].length === 0)) ? '<div class="text-xs p-1 text-slate-400 italic">No classes scheduled</div>' : ''}
         </div>
       </div>`;
@@ -1401,7 +1455,6 @@ function syncCurrentTimetableInputs(t) {
         
         let assignedBatchId = undefined;
         if (t === 'tuition') {
-          // If the task name has not changed, retain previous batchId; otherwise normalize from taskVal
           if (oldSlot && oldSlot.task === taskVal && oldSlot.batchId) {
             assignedBatchId = oldSlot.batchId;
           } else {
@@ -1462,13 +1515,20 @@ function deleteTemplateSlot(t, d, i) {
 function promptResetTimetableDefaults() {
   showActionModal({
     title: 'Clear Timetables',
-    msg: 'Clear all schedule templates to blank? Click Cloud Sync afterwards if you want to re-download from Google Sheets.',
+    msg: 'Clear all schedule templates to blank? Click "Pull from Sheet" afterwards if you want to re-download from Google Sheets.',
     onConfirm: () => {
+      const prevTt = JSON.parse(JSON.stringify(state.timetables));
       state.timetables = JSON.parse(JSON.stringify(EMPTY_TIMETABLES));
       saveState();
       ensureDayPopulated(state.activeDateStr);
       renderAll();
-      showToast('Timetables cleared to blank', 'info');
+      showToastWithUndo('Timetables cleared', () => {
+        state.timetables = prevTt;
+        saveState();
+        ensureDayPopulated(state.activeDateStr);
+        renderAll();
+        showToast('Timetables restored', 'success');
+      });
     }
   });
 }
@@ -1501,11 +1561,17 @@ function setPlannerView(view) {
 
 function switchTab(tabId, btn) {
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    b.classList.remove('active');
+    b.setAttribute('aria-selected', 'false');
+  });
 
   const target = document.getElementById(tabId);
   if (target) target.classList.add('active');
-  if (btn) btn.classList.add('active');
+  if (btn) {
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected', 'true');
+  }
 
   if (tabId === 'analytics') setTimeout(updateAnalytics, 60);
   if (tabId === 'timetables') renderTimetables();
@@ -1540,7 +1606,7 @@ function showToastWithUndo(msg, onUndo) {
     toast.remove();
   };
   container.appendChild(toast);
-  setTimeout(() => toast.remove(), 4500);
+  setTimeout(() => toast.remove(), 5000);
 }
 
 function showActionModal({ title, msg, hasInput = false, inputVal = '', onConfirm }) {
@@ -1551,6 +1617,8 @@ function showActionModal({ title, msg, hasInput = false, inputVal = '', onConfir
   const inputEl = document.getElementById('actionModalInput');
   const confirmBtn = document.getElementById('actionModalConfirmBtn');
   const cancelBtn = document.getElementById('actionModalCancelBtn');
+
+  activeModalTrigger = document.activeElement;
 
   titleEl.textContent = title;
   msgEl.textContent = msg;
@@ -1564,14 +1632,37 @@ function showActionModal({ title, msg, hasInput = false, inputVal = '', onConfir
 
   modal.classList.remove('hidden');
   if (hasInput) inputEl.focus();
+  else confirmBtn.focus();
 
-  const cleanup = () => modal.classList.add('hidden');
+  const cleanup = () => {
+    modal.classList.add('hidden');
+    if (activeModalTrigger && typeof activeModalTrigger.focus === 'function') {
+      activeModalTrigger.focus();
+      activeModalTrigger = null;
+    }
+  };
+
   cancelBtn.onclick = cleanup;
   confirmBtn.onclick = () => {
     cleanup();
     if (onConfirm) onConfirm(hasInput ? inputEl.value : true);
   };
 }
+
+/* Modal keyboard focus trap & Escape handling */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    const actModal = document.getElementById('actionModal');
+    const attModal = document.getElementById('attendanceModal');
+    if (!actModal.classList.contains('hidden')) {
+      actModal.classList.add('hidden');
+      return;
+    }
+    if (!attModal.classList.contains('hidden')) {
+      closeAttendanceModal();
+    }
+  }
+});
 
 /* ================= IMPORT / EXPORT ================= */
 function exportBackup() {
@@ -1599,7 +1690,7 @@ function importBackup(e) {
   reader.onload = (evt) => {
     try {
       const data = JSON.parse(evt.result);
-      if (!data || (!data.planner && !data.timetables)) throw new Error('Invalid schema');
+      if (!data || (!data.planner && !data.timetables)) throw new Error('Invalid backup schema');
 
       showActionModal({
         title: 'Confirm Backup Import',
@@ -1633,14 +1724,18 @@ function triggerPrint() {
 
 function escapeHtml(str) {
   if (str == null) return '';
-  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 /* ================= INITIALIZATION ================= */
 window.addEventListener('load', () => {
   loadState();
 
-  // Background fetch strictly from Google Sheets
   if (APPS_SCRIPT_URL) {
     fetchFromAppsScript(false);
   }
