@@ -1,10 +1,10 @@
 /* ==========================================================================
    CONFIG & CLIENT-SIDE STATE ENGINE
    ========================================================================== */
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzc0DmgsKIJwK8upyKUjK6hYhly_yKLdALZufu516D-BE0MpSItexJ46jXCLz1rEkb2/exec';
-const APPS_SCRIPT_SECRET_TOKEN = 'singh_planner_secure_2026'; // Configurable token for backend auth
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyjkicMk3BpVYLChh6YdcnrYDmh2Pd4x40FDAIguSNbjOWjuqzQuZz0_V5DLQ6IpeEY/exec';
+const APPS_SCRIPT_SECRET_TOKEN = 'singh_planner_secure_2026';
 
-const TEMPLATE_VERSION = '2026.4_clean';
+const TEMPLATE_VERSION = '2026.5_unified_cols';
 const STORAGE_KEY_PLANNER = 'singhPlanner_core_v2';
 const STORAGE_KEY_ATTENDANCE = 'singhPlanner_attendance_v2';
 const STORAGE_KEY_RESCUE = 'singhPlanner_rescue_backup_v2';
@@ -213,13 +213,39 @@ function getTimeStatus(timeStr, dateStr) {
   return 'normal';
 }
 
-function parseSchoolTask(taskStr) {
+function parseSchoolTask(taskStr, explicitMode = null) {
   const raw = taskStr || '';
-  const isFree = /\bfree\b/i.test(raw);
-  const isLab = /\blab\b/i.test(raw);
+  const isFree = /\bfree\b/i.test(raw) || (explicitMode && explicitMode.toLowerCase() === 'free');
+  const isLab = /\blab\b/i.test(raw) || (explicitMode && explicitMode.toLowerCase() === 'lab');
   let name = raw.replace(/\blab\b/gi, '').replace(/\bfree\b/gi, '').trim();
-  if (!name) name = isFree ? 'Free Period' : 'School Class';
-  return { name, isLab, isFree };
+  if (!name) name = isFree ? 'FREE' : 'School Class';
+  const mode = isFree ? 'Free' : (isLab ? 'Lab' : 'Class');
+  return { name, mode, isLab, isFree };
+}
+
+function parseTuitionTask(taskStr, explicitVenue = null) {
+  let raw = (taskStr || '').trim();
+  let venue = explicitVenue || 'Sant Nagar';
+  let batchName = raw;
+
+  if (!explicitVenue && raw.includes('–')) {
+    const parts = raw.split('–');
+    batchName = parts[0].trim();
+    venue = parts[1].trim();
+  } else if (!explicitVenue && raw.includes('-')) {
+    const parts = raw.split('-');
+    batchName = parts[0].trim();
+    venue = parts[1].trim();
+  }
+
+  if (!explicitVenue) {
+    if (/sics/i.test(raw)) venue = 'SICS';
+    else if (/skillyards/i.test(raw)) venue = 'SkillYards';
+    else if (/home\s*tuition/i.test(raw)) venue = 'Home Visit';
+    else if (/vidya/i.test(raw)) venue = 'Vidya Home';
+  }
+
+  return { batchName, venue };
 }
 
 function normalizeBatchId(name) {
@@ -386,7 +412,6 @@ function loadState() {
     navigator.storage.persist();
   }
 
-  // Weekly backup reminder auto-check (>7 days)
   const sevenDays = 7 * 24 * 60 * 60 * 1000;
   if (!state.lastBackup || (Date.now() - state.lastBackup > sevenDays)) {
     const banner = document.getElementById('backupNudgeBanner');
@@ -431,17 +456,20 @@ function ensureDayPopulated(dateStr) {
   const daySchoolMap = new Map((existing.school || []).map(t => [t.slotId || t.task, t]));
   const dayTuitionMap = new Map((existing.tuition_study || []).map(t => [t.slotId || t.task, t]));
 
+  // School Population
   const schSlots = (state.timetables.school && state.timetables.school[dName]) || [];
-  const populatedSchool = schSlots.map(slot => {
+  const populatedSchool = schSlots.map((slot, idx) => {
     const ex = daySchoolMap.get(slot.id);
     const range = parseTimeRange(slot.time);
-    const pInfo = parseSchoolTask(slot.task);
+    const pInfo = parseSchoolTask(slot.task, slot.mode);
     return {
       slotId: slot.id,
+      periodNum: slot.period || (idx + 1),
       time: slot.time,
       hrs: pInfo.isFree ? 0 : range.hrs,
       cat: 'School',
-      task: slot.task,
+      task: pInfo.name,
+      mode: pInfo.mode,
       topic: ex && ex.topicEdited ? ex.topic : slot.topic || '',
       topicEdited: ex ? !!ex.topicEdited : false,
       completed: ex ? !!ex.completed : false,
@@ -450,33 +478,40 @@ function ensureDayPopulated(dateStr) {
     };
   });
 
+  // Tuition Population
   const tuiSlots = (state.timetables.tuition && state.timetables.tuition[dName]) || [];
-  const populatedTuition = tuiSlots.map(slot => {
+  const populatedTuition = tuiSlots.map((slot, idx) => {
     const ex = dayTuitionMap.get(slot.id);
     const range = parseTimeRange(slot.time);
+    const tInfo = parseTuitionTask(slot.task, slot.venue);
     return {
       slotId: slot.id,
-      batchId: slot.batchId || normalizeBatchId(slot.task),
+      sno: slot.sno || (idx + 1),
+      batchId: slot.batchId || normalizeBatchId(tInfo.batchName),
       time: slot.time,
       hrs: range.hrs,
       cat: 'Tuition',
-      task: slot.task,
+      task: tInfo.batchName,
+      venue: tInfo.venue,
       topic: ex && ex.topicEdited ? ex.topic : slot.topic || '',
       topicEdited: ex ? !!ex.topicEdited : false,
       completed: ex ? !!ex.completed : false
     };
   });
 
+  // Study Population
   const stdSlots = (state.timetables.study && state.timetables.study[dName]) || [];
-  const populatedStudy = stdSlots.map(slot => {
+  const populatedStudy = stdSlots.map((slot, idx) => {
     const ex = dayTuitionMap.get(slot.id);
     const range = parseTimeRange(slot.time);
     return {
       slotId: slot.id,
+      sno: slot.sno || (populatedTuition.length + idx + 1),
       time: slot.time,
       hrs: range.hrs,
       cat: 'Study',
-      task: slot.task,
+      task: slot.task || 'Self Study',
+      venue: 'Self Study',
       topic: '',
       completed: ex ? !!ex.completed : false
     };
@@ -515,40 +550,39 @@ function getPreviousClassDate(batchId, refDateStr) {
 }
 
 /* ================= STATS & ANALYTICS ================= */
-function calculateWeeklyStats() {
+function calculateDailyStats() {
   const totals = { school: 0, tuition: 0, study: 0 };
   let completedCount = 0, totalCount = 0;
 
-  for (let i = 0; i < 7; i++) {
-    const curDate = addDays(state.viewMondayStr, i);
-    const dayData = state.days[curDate];
-    if (dayData) {
-      [...(dayData.school || []), ...(dayData.tuition_study || [])].forEach(item => {
-        const hrs = Number.isFinite(item.hrs) ? item.hrs : 0;
-        if (!item.isFree) {
-          if (item.cat === 'School') totals.school += hrs;
-          if (item.cat === 'Tuition') totals.tuition += hrs;
-          if (item.cat === 'Study') totals.study += hrs;
-          totalCount++;
-          if (item.completed) completedCount++;
-        }
-      });
-    } else {
-      const dName = DAYS[i];
-      ((state.timetables.school && state.timetables.school[dName]) || []).forEach(s => {
-        const range = parseTimeRange(s.time);
-        const p = parseSchoolTask(s.task);
-        if (!p.isFree) { totals.school += range.hrs; totalCount++; }
-      });
-      ((state.timetables.tuition && state.timetables.tuition[dName]) || []).forEach(s => {
-        totals.tuition += parseTimeRange(s.time).hrs;
+  const curDate = state.activeDateStr;
+  const dayData = state.days[curDate];
+
+  if (dayData) {
+    [...(dayData.school || []), ...(dayData.tuition_study || [])].forEach(item => {
+      const hrs = Number.isFinite(item.hrs) ? item.hrs : 0;
+      if (!item.isFree) {
+        if (item.cat === 'School') totals.school += hrs;
+        if (item.cat === 'Tuition') totals.tuition += hrs;
+        if (item.cat === 'Study') totals.study += hrs;
         totalCount++;
-      });
-      ((state.timetables.study && state.timetables.study[dName]) || []).forEach(s => {
-        totals.study += parseTimeRange(s.time).hrs;
-        totalCount++;
-      });
-    }
+        if (item.completed) completedCount++;
+      }
+    });
+  } else {
+    const dName = getDayName(curDate);
+    ((state.timetables.school && state.timetables.school[dName]) || []).forEach(s => {
+      const range = parseTimeRange(s.time);
+      const p = parseSchoolTask(s.task, s.mode);
+      if (!p.isFree) { totals.school += range.hrs; totalCount++; }
+    });
+    ((state.timetables.tuition && state.timetables.tuition[dName]) || []).forEach(s => {
+      totals.tuition += parseTimeRange(s.time).hrs;
+      totalCount++;
+    });
+    ((state.timetables.study && state.timetables.study[dName]) || []).forEach(s => {
+      totals.study += parseTimeRange(s.time).hrs;
+      totalCount++;
+    });
   }
 
   document.getElementById('totalSchool').textContent = totals.school.toFixed(1);
@@ -563,8 +597,13 @@ function calculateWeeklyStats() {
   const ring = document.getElementById('progressRing');
   if (ring) {
     ring.setAttribute('stroke-dasharray', `${pct}, 100`);
-    ring.setAttribute('class', pct === 100 && totalCount > 0 ? 'text-emerald-500' : (pct > 0 ? 'text-blue-500' : 'text-slate-300'));
+    ring.setAttribute('class', pct === 100 && totalCount > 0 ? 'text-emerald-400' : (pct > 0 ? 'text-blue-400' : 'text-white/15'));
   }
+}
+
+// Kept so existing calls (renderAll, selectDate) still work
+function calculateWeeklyStats() {
+  calculateDailyStats();
 }
 
 function updateAnalytics() {
@@ -595,7 +634,7 @@ function updateAnalytics() {
       });
     } else {
       ((state.timetables.school && state.timetables.school[dName]) || []).forEach(s => {
-        const p = parseSchoolTask(s.task);
+        const p = parseSchoolTask(s.task, s.mode);
         if (!p.isFree) {
           const h = parseTimeRange(s.time).hrs;
           dayPlan += h; plannedCat.School += h;
@@ -694,7 +733,6 @@ function renderAll() {
   renderTimetables();
   renderStudentsMaster();
   updatePrintDate();
-  if (window.lucide && lucide.createIcons) lucide.createIcons();
 }
 
 function updatePrintDate() {
@@ -705,36 +743,11 @@ function updatePrintDate() {
 }
 
 function renderSidebarDaySelector() {
-  const today = toISO(new Date());
-  const container = document.getElementById('sidebarDayGrid');
-  if (!container) return;
-
-  // Equal 7-day grid (Mon through Sun)
-  container.innerHTML = DAYS.map((dName, i) => {
-    const dIso = addDays(state.viewMondayStr, i);
-    const dNum = dIso.split('-')[2];
-    const isActive = dIso === state.activeDateStr;
-    const isToday = dIso === today;
-    const isSunday = dName === 'Sun';
-
-    let cardClasses = 'bg-white hover:bg-slate-100 border border-slate-200 text-slate-800';
-    if (isActive) {
-      cardClasses = 'bg-blue-600 text-white border-blue-400 font-bold shadow-sm';
-    } else if (isToday) {
-      cardClasses = 'bg-blue-50 border-blue-300 text-blue-900 font-bold';
-    } else if (isSunday) {
-      cardClasses = 'bg-amber-50/80 hover:bg-amber-100/80 border-amber-200 text-amber-900';
-    }
-
-    return `
-      <button onclick="selectDate('${dIso}')" type="button" class="h-10 rounded-xl px-2.5 py-1 flex items-center justify-between transition active:scale-95 text-left ${cardClasses} min-h-[40px]">
-        <span class="text-[10px] font-black uppercase tracking-wider ${isActive ? 'text-white/80' : (isSunday ? 'text-amber-800' : 'text-slate-500')}">${dName}</span>
-        <span class="text-xs font-black">${dNum}</span>
-      </button>`;
-  }).join('');
-
-  const lbl = document.getElementById('sidebarWeekLabel');
-  if (lbl) lbl.textContent = formatWeekRange(state.viewMondayStr);
+  const label = document.getElementById('dailyDateLabel');
+  if (!label) return;
+  const [y, m, d] = state.activeDateStr.split('-').map(Number);
+  const dt = new Date(y, m - 1, d);
+  label.textContent = `${getDayName(state.activeDateStr)}, ${String(d).padStart(2, '0')} ${dt.toLocaleDateString('en-US', { month: 'short' })} ${y}`;
 }
 
 function selectDate(isoStr) {
@@ -761,21 +774,30 @@ function jumpToday() {
   renderAll();
 }
 
+function shiftDay(dir) {
+  state.activeDateStr = addDays(state.activeDateStr, dir);
+  const [y, m, d] = state.activeDateStr.split('-').map(Number);
+  state.viewMondayStr = getMondayISO(new Date(y, m - 1, d));
+  ensureDayPopulated(state.activeDateStr);
+  saveState();
+  renderAll();
+}
+
 /* ================= TABLES & PERIOD HIGHLIGHTING ================= */
 function renderTables() {
   const limitISO = toISO(new Date(Date.now() - 15 * 86400000));
   const isArchived = state.activeDateStr < limitISO;
   const dayData = state.days[state.activeDateStr] || { school: [], tuition_study: [] };
 
-  // 1. School Classes
+  // 1. School: [Period, Time, Class, TopicName, Mode (Lab/Class), Duration]
   const sTbody = document.getElementById('schoolBody');
   sTbody.innerHTML = '';
   if (isArchived) {
-    sTbody.innerHTML = `<tr class="empty-row"><td colspan="4" class="py-6 px-4 text-center text-xs font-bold text-slate-500">No record available (Date is older than 15 days)</td></tr>`;
+    sTbody.innerHTML = `<tr class="empty-row"><td colspan="6" class="py-6 px-4 text-center text-xs font-bold text-slate-500">No record available (Date is older than 15 days)</td></tr>`;
   } else if (!dayData.school.length) {
-    sTbody.innerHTML = `<tr class="empty-row"><td colspan="4" class="py-6 px-4 text-center text-xs font-semibold text-slate-500">No school classes scheduled for ${getDayName(state.activeDateStr)}</td></tr>`;
+    sTbody.innerHTML = `<tr class="empty-row"><td colspan="6" class="py-6 px-4 text-center text-xs font-semibold text-slate-500">No school classes scheduled for ${getDayName(state.activeDateStr)}</td></tr>`;
   } else {
-    dayData.school.forEach(item => {
+    dayData.school.forEach((item, idx) => {
       const status = getTimeStatus(item.time, state.activeDateStr);
       const isLive = status === 'active';
       const isUpcoming = status === 'upcoming';
@@ -785,34 +807,44 @@ function renderTables() {
       else if (isLive) rowClass = 'active-period-row';
       else if (isUpcoming) rowClass = 'bg-amber-50/40';
 
+      let modeBadge = '';
+      if (item.isFree) {
+        modeBadge = `<span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded border border-amber-200">FREE</span>`;
+      } else if (item.isLab) {
+        modeBadge = `<span class="bg-cyan-100 text-cyan-800 text-[10px] font-bold px-2 py-0.5 rounded border border-cyan-200">LAB</span>`;
+      } else {
+        modeBadge = `<span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded border border-blue-200">CLASS</span>`;
+      }
+
       const tr = document.createElement('tr');
       tr.className = `border-b border-slate-100 transition ${rowClass}`;
       tr.innerHTML = `
         <td class="py-2.5 px-3 text-center col-cb">
-          ${item.isFree ? '<span class="text-slate-300 font-bold" aria-label="Free period">—</span>' : `
-            <input type="checkbox" ${item.completed ? 'checked' : ''} onchange="toggleTaskDone('${item.slotId}', 'school')" aria-label="Mark ${escapeHtml(item.task)} as done" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer min-h-[20px] min-w-[20px]">
-          `}
-        </td>
-        <td class="py-2.5 px-3 text-left col-tm whitespace-nowrap text-xs font-semibold text-slate-700">
-          ${isLive ? '<span class="inline-flex items-center gap-1 bg-blue-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm mr-1.5"><span class="w-1.5 h-1.5 rounded-full bg-white live-pulse"></span>LIVE</span>' : ''}
-          ${isUpcoming ? '<span class="inline-flex items-center gap-1 bg-amber-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm mr-1.5">NEXT</span>' : ''}
-          ${escapeHtml(item.time)}
-        </td>
-        <td class="py-2.5 px-3 text-left col-tk">
-          <div class="flex flex-col min-w-0">
-            <div class="flex items-center gap-2 flex-wrap">
-              <span class="text-xs sm:text-sm font-bold ${item.completed ? 'line-through text-slate-400' : 'text-slate-900'}">${escapeHtml(item.task)}</span>
-              ${item.isFree ? '<span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-1.5 py-0.5 rounded">FREE</span>' : (item.isLab ? '<span class="bg-cyan-100 text-cyan-800 text-[10px] font-bold px-1.5 py-0.5 rounded">LAB</span>' : '')}
-            </div>
-            ${!item.isFree ? `
-              <div class="flex items-center gap-1.5 mt-0.5 text-xs">
-                <span class="text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200/80 cursor-pointer font-medium hover:bg-blue-100 transition" onclick="editTopicPrompt('${item.slotId}', 'school')">
-                  📚 Topic: <strong>${escapeHtml(item.topic || '+ Add topic')}</strong>
-                </span>
-              </div>` : ''}
+          <div class="inline-flex items-center gap-1.5 justify-center">
+            ${item.isFree ? '<span class="text-slate-300 font-bold">—</span>' : `
+              <input type="checkbox" ${item.completed ? 'checked' : ''} onchange="toggleTaskDone('${item.slotId}', 'school')" aria-label="Mark period done" class="cursor-pointer">
+            `}
+            <span class="text-[11px] font-bold text-slate-500">${idx + 1}</span>
           </div>
         </td>
-        <td class="py-2.5 px-3 text-right col-hr whitespace-nowrap text-xs font-semibold text-slate-700">
+        <td class="py-2.5 px-3 text-left col-tm">
+          ${isLive ? '<span class="inline-flex items-center gap-1 bg-blue-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm mr-1"><span class="w-1.5 h-1.5 rounded-full bg-white live-pulse"></span>LIVE</span>' : ''}
+          ${isUpcoming ? '<span class="inline-flex items-center gap-1 bg-amber-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm mr-1">NEXT</span>' : ''}
+          ${escapeHtml(item.time)}
+        </td>
+        <td class="py-2.5 px-3 text-left col-cls">
+          <span class="${item.completed ? 'line-through text-slate-400' : 'text-slate-900'}">${escapeHtml(item.task)}</span>
+        </td>
+        <td class="py-2.5 px-3 text-left col-tpc">
+          ${!item.isFree ? `
+            <span onclick="editTopicPrompt('${item.slotId}', 'school')">
+              📚 Topic: <strong>${escapeHtml(item.topic || '+ Add topic')}</strong>
+            </span>` : '<span class="text-slate-300 font-bold">—</span>'}
+        </td>
+        <td class="py-2.5 px-3 text-center col-mode">
+          ${modeBadge}
+        </td>
+        <td class="py-2.5 px-3 text-right col-dur">
           ${Number(item.hrs).toFixed(2)} hrs
         </td>`;
       sTbody.appendChild(tr);
@@ -829,15 +861,15 @@ function renderTables() {
   const sBar = document.getElementById('schoolProgressBar');
   if (sBar) sBar.style.width = `${sPct}%`;
 
-  // 2. Tuition & Study
+  // 2. Tuition: [Sno, Time, BatchName, Venue, Topic, Action(msg), noofstudents, Duration]
   const tTbody = document.getElementById('tuitionStudyBody');
   tTbody.innerHTML = '';
   if (isArchived) {
-    tTbody.innerHTML = `<tr class="empty-row"><td colspan="5" class="py-6 px-4 text-center text-xs font-bold text-slate-500">No record available (Date is older than 15 days)</td></tr>`;
+    tTbody.innerHTML = `<tr class="empty-row"><td colspan="8" class="py-6 px-4 text-center text-xs font-bold text-slate-500">No record available (Date is older than 15 days)</td></tr>`;
   } else if (!dayData.tuition_study.length) {
-    tTbody.innerHTML = `<tr class="empty-row"><td colspan="5" class="py-6 px-4 text-center text-xs font-semibold text-slate-500">No tuition or study tasks scheduled for ${getDayName(state.activeDateStr)}</td></tr>`;
+    tTbody.innerHTML = `<tr class="empty-row"><td colspan="8" class="py-6 px-4 text-center text-xs font-semibold text-slate-500">No tuition or study tasks scheduled for ${getDayName(state.activeDateStr)}</td></tr>`;
   } else {
-    dayData.tuition_study.forEach(item => {
+    dayData.tuition_study.forEach((item, idx) => {
       const status = getTimeStatus(item.time, state.activeDateStr);
       const isLive = status === 'active';
       const isUpcoming = status === 'upcoming';
@@ -855,40 +887,39 @@ function renderTables() {
       tr.className = `border-b border-slate-100 transition ${rowClass}`;
       tr.innerHTML = `
         <td class="py-2.5 px-3 text-center col-cb">
-          <input type="checkbox" ${item.completed ? 'checked' : ''} onchange="toggleTaskDone('${item.slotId}', 'tuition_study')" aria-label="Mark ${escapeHtml(item.task)} as done" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer min-h-[20px] min-w-[20px]">
-        </td>
-        <td class="py-2.5 px-3 text-left col-tm whitespace-nowrap text-xs font-semibold text-slate-700">
-          ${isLive ? '<span class="inline-flex items-center gap-1 bg-blue-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm mr-1.5"><span class="w-1.5 h-1.5 rounded-full bg-white live-pulse"></span>LIVE</span>' : ''}
-          ${isUpcoming ? '<span class="inline-flex items-center gap-1 bg-amber-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm mr-1.5">NEXT</span>' : ''}
-          ${escapeHtml(item.time)}
-        </td>
-        <td class="py-2.5 px-3 text-left col-tk">
-          <div class="flex items-center justify-between gap-2 flex-wrap">
-            <div class="flex flex-col min-w-0">
-              <div class="flex items-center gap-1.5">
-                <span class="text-xs sm:text-sm font-bold ${item.completed ? 'line-through text-slate-400' : 'text-slate-900'}">${escapeHtml(item.task)}</span>
-                ${isTuition ? `<span class="bg-slate-100 text-slate-700 font-bold text-[10px] px-1.5 py-0.5 rounded border border-slate-200">${countLabel}</span>` : ''}
-              </div>
-              ${isTuition ? `
-                <div class="flex items-center gap-1.5 mt-0.5 text-xs">
-                  <span class="text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200/80 cursor-pointer font-medium hover:bg-blue-100 transition" onclick="editTopicPrompt('${item.slotId}', 'tuition_study')">
-                    📚 Topic: <strong>${escapeHtml(item.topic || '+ Add topic')}</strong>
-                  </span>
-                </div>` : ''}
-            </div>
-            ${isTuition ? `
-              <div class="flex items-center gap-1">
-                <button onclick="openAttendanceModal('${item.slotId}', this)" type="button" aria-label="Mark Attendance and WhatsApp for ${escapeHtml(item.task)}" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg flex items-center gap-1 transition active:scale-95 shadow-sm min-h-[34px]">
-                  <i data-lucide="send" class="w-3.5 h-3.5" aria-hidden="true"></i>
-                  <span>WhatsApp</span>
-                </button>
-              </div>` : ''}
+          <div class="inline-flex items-center gap-1.5 justify-center">
+            <input type="checkbox" ${item.completed ? 'checked' : ''} onchange="toggleTaskDone('${item.slotId}', 'tuition_study')" aria-label="Mark task done" class="cursor-pointer">
+            <span class="text-[11px] font-bold text-slate-500">${item.sno || (idx + 1)}</span>
           </div>
         </td>
-        <td class="py-2.5 px-3 text-center col-cat whitespace-nowrap">
-          <span class="cat-pill ${item.cat}">${item.cat}</span>
+        <td class="py-2.5 px-3 text-left col-tm">
+          ${isLive ? '<span class="inline-flex items-center gap-1 bg-blue-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm mr-1"><span class="w-1.5 h-1.5 rounded-full bg-white live-pulse"></span>LIVE</span>' : ''}
+          ${isUpcoming ? '<span class="inline-flex items-center gap-1 bg-amber-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm mr-1">NEXT</span>' : ''}
+          ${escapeHtml(item.time)}
         </td>
-        <td class="py-2.5 px-3 text-right col-hr whitespace-nowrap text-xs font-semibold text-slate-700">
+        <td class="py-2.5 px-3 text-left col-cls">
+          <span class="${item.completed ? 'line-through text-slate-400' : 'text-slate-900'}">${escapeHtml(item.task)}</span>
+        </td>
+        <td class="py-2.5 px-3 text-center col-ven">
+          <span class="bg-slate-100 text-slate-700 font-semibold text-[11px] px-2 py-0.5 rounded border border-slate-200">${escapeHtml(item.venue || 'Center')}</span>
+        </td>
+        <td class="py-2.5 px-3 text-left col-tpc">
+          ${isTuition ? `
+            <span onclick="editTopicPrompt('${item.slotId}', 'tuition_study')">
+              📚 Topic: <strong>${escapeHtml(item.topic || '+ Add topic')}</strong>
+            </span>` : '<span class="text-slate-300 font-bold">—</span>'}
+        </td>
+        <td class="py-2.5 px-3 text-center col-act">
+          ${isTuition ? `
+            <button onclick="openAttendanceModal('${item.slotId}', this)" type="button" aria-label="Mark Attendance and send reminder for ${escapeHtml(item.task)}" class="bg-emerald-600 hover:bg-emerald-700 text-white transition active:scale-95">
+              <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+              <span>Msg</span>
+            </button>` : '<span class="text-slate-300 font-bold">—</span>'}
+        </td>
+        <td class="py-2.5 px-3 text-center col-nos">
+          ${isTuition ? `<span class="bg-blue-50 text-blue-700 font-bold text-[10.5px] px-2 py-0.5 rounded border border-blue-200">${countLabel}</span>` : '<span class="text-slate-400 text-[10.5px] italic">Self</span>'}
+        </td>
+        <td class="py-2.5 px-3 text-right col-dur">
           ${Number(item.hrs).toFixed(2)} hrs
         </td>`;
       tTbody.appendChild(tr);
@@ -1063,10 +1094,10 @@ function renderStudentsMaster() {
                         ${stats.totalPresent}P / ${stats.totalRecords}
                       </span>
                       <button onclick="promptRenameStudent('${b.batchId}', decodeURIComponent('${encStudent}'))" type="button" class="p-1 text-slate-400 hover:text-blue-600" title="Edit name" aria-label="Edit student name">
-                        <i data-lucide="edit-2" class="w-3.5 h-3.5" aria-hidden="true"></i>
+                        <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                       </button>
                       <button onclick="AppData.removeStudent('${b.batchId}', decodeURIComponent('${encStudent}'))" type="button" class="p-1 text-slate-400 hover:text-rose-600" title="Remove student" aria-label="Remove student">
-                        <i data-lucide="trash-2" class="w-3.5 h-3.5" aria-hidden="true"></i>
+                        <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                       </button>
                     </div>
                   </div>`;
@@ -1116,8 +1147,6 @@ function renderStudentsMaster() {
 
     dirBody.innerHTML = tableRows.length === 0 ? `<tr><td colspan="6" class="py-8 text-center text-xs font-semibold text-slate-400">No student records match your query</td></tr>` : tableRows.join('');
   }
-
-  if (window.lucide && lucide.createIcons) lucide.createIcons();
 }
 
 function addStudentFromCard(batchId) {
@@ -1236,14 +1265,13 @@ function renderAttendanceList() {
           <button data-action="status" data-val="A" type="button" aria-label="Mark ${escapeHtml(student)} Absent" class="px-2.5 py-1 text-xs font-black rounded-lg transition min-h-[34px] min-w-[34px] ${status === 'A' ? 'bg-rose-600 text-white shadow-sm' : 'bg-white border border-slate-200 text-slate-700'}">A</button>
           <button data-action="status" data-val="L" type="button" aria-label="Mark ${escapeHtml(student)} Late" class="px-2.5 py-1 text-xs font-black rounded-lg transition min-h-[34px] min-w-[34px] ${status === 'L' ? 'bg-amber-500 text-white shadow-sm' : 'bg-white border border-slate-200 text-slate-700'}">Late</button>
           <button data-action="delete" type="button" class="text-slate-400 hover:text-rose-500 p-1 rounded min-h-[34px] min-w-[34px] flex items-center justify-center" title="Remove student" aria-label="Remove ${escapeHtml(student)}">
-            <i data-lucide="trash-2" class="w-4 h-4" aria-hidden="true"></i>
+            <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
           </button>
         </div>
       </div>`;
   }).join('');
 
   document.getElementById('attStatsCounter').textContent = `${pCount} Present / ${roster.length} Total`;
-  if (window.lucide && lucide.createIcons) lucide.createIcons();
 }
 
 document.getElementById('attStudentList').addEventListener('click', (e) => {
@@ -1333,15 +1361,8 @@ function dispatchWhatsAppMessage(item) {
   if (/^(IX|X|XI|XII)\b/i.test(cleanSubject) && !/^Class\b/i.test(cleanSubject)) {
     cleanSubject = 'Class ' + cleanSubject;
   }
-  cleanSubject = cleanSubject.replace(/SantNagar/gi, 'Sant Nagar');
 
-  let venue = 'Sant Nagar';
-  if (/sics/i.test(cleanSubject)) venue = 'SICS';
-  else if (/skillyards/i.test(cleanSubject)) venue = 'SkillYards';
-  else if (/home\s*tuition/i.test(cleanSubject)) venue = 'Home Visit';
-  else if (/vidya/i.test(cleanSubject)) venue = 'Vidya Home';
-  else if (/kriti|kirti/i.test(cleanSubject)) venue = 'Private Coaching';
-
+  let venue = item.venue || 'Sant Nagar';
   const range = parseTimeRange(item.time);
   let startTime = range.formatted.split('-')[0]?.trim() || '';
   let endTime = range.formatted.split('-')[1]?.trim() || '';
@@ -1383,7 +1404,7 @@ function dispatchWhatsAppMessage(item) {
   window.open(url, '_blank');
 
   closeAttendanceModal();
-  showToast('WhatsApp launched & attendance saved', 'success');
+  showToast('Reminder sent & attendance saved', 'success');
 }
 
 /* ================= TIMETABLE MASTER EDITOR ================= */
@@ -1398,15 +1419,18 @@ function renderTimetables() {
               <div class="flex items-center gap-1">
                 <input type="text" class="w-full text-xs font-semibold p-1 border rounded bg-white tt-time-${type}-${d}" data-idx="${i}" value="${escapeHtml(slot.time)}" placeholder="Time Range" aria-label="Time Range">
                 <button onclick="deleteTemplateSlot('${type}','${d}',${i})" type="button" aria-label="Delete period" class="text-rose-500 hover:text-rose-700 p-1 min-h-[32px] min-w-[32px] flex items-center justify-center">
-                  <i data-lucide="trash-2" class="w-3.5 h-3.5" aria-hidden="true"></i>
+                  <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                 </button>
               </div>
               <input type="text" class="w-full text-xs font-bold p-1 border rounded bg-white tt-task-${type}-${d}" data-idx="${i}" value="${escapeHtml(slot.task)}" placeholder="Class / Subject" aria-label="Class or Subject">
+              ${type === 'tuition' ? `<input type="text" class="w-full text-xs font-semibold p-1 border rounded bg-white tt-venue-${type}-${d}" data-idx="${i}" value="${escapeHtml(slot.venue || '')}" placeholder="Venue (e.g. Sant Nagar)" aria-label="Venue">` : ''}
+              ${type === 'school' ? `<input type="text" class="w-full text-xs font-semibold p-1 border rounded bg-white tt-mode-${type}-${d}" data-idx="${i}" value="${escapeHtml(slot.mode || '')}" placeholder="Mode (Class/Lab/Free)" aria-label="Mode">` : ''}
               ${type !== 'study' ? `<input type="text" class="w-full text-xs font-medium p-1 border rounded bg-white tt-topic-${type}-${d}" data-idx="${i}" value="${escapeHtml(slot.topic || '')}" placeholder="Default Topic" aria-label="Default Topic">` : ''}
             </div>` : `
             <div class="p-1.5 border-b border-slate-100 last:border-none flex items-center justify-between text-xs">
               <div>
-                <div class="font-bold text-slate-900">${escapeHtml(slot.task)}</div>${slot.topic ? `<div class="text-[10px] text-blue-600 font-semibold">${escapeHtml(slot.topic)}</div>` : ''}
+                <div class="font-bold text-slate-900">${escapeHtml(slot.task)}${slot.venue ? `<span class="text-[10px] text-slate-500 font-normal">(${escapeHtml(slot.venue)})</span>` : ''}</div>
+                ${slot.topic ? `<div class="text-[10px] text-blue-600 font-semibold">${escapeHtml(slot.topic)}</div>` : ''}
                 <div class="text-[10px] text-slate-500">${escapeHtml(slot.time)}</div>
               </div>
               <span class="text-[10px] font-black text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">${parseTimeRange(slot.time).hrs}h</span>
@@ -1430,8 +1454,6 @@ function renderTimetables() {
         : 'text-xs font-bold px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 border border-slate-200 min-h-[34px]';
     }
   });
-
-  if (window.lucide && lucide.createIcons) lucide.createIcons();
 }
 
 function syncCurrentTimetableInputs(t) {
@@ -1441,6 +1463,8 @@ function syncCurrentTimetableInputs(t) {
     const times = document.querySelectorAll(`.tt-time-${t}-${d}`);
     const tasks = document.querySelectorAll(`.tt-task-${t}-${d}`);
     const topics = document.querySelectorAll(`.tt-topic-${t}-${d}`);
+    const venues = document.querySelectorAll(`.tt-venue-${t}-${d}`);
+    const modes = document.querySelectorAll(`.tt-mode-${t}-${d}`);
     const oldSlots = obj[d] || [];
     const newSlots = [];
 
@@ -1448,6 +1472,8 @@ function syncCurrentTimetableInputs(t) {
       const timeVal = el.value.trim();
       const taskVal = tasks[idx] ? tasks[idx].value.trim() : '';
       const topicVal = topics[idx] ? topics[idx].value.trim() : '';
+      const venueVal = venues[idx] ? venues[idx].value.trim() : '';
+      const modeVal = modes[idx] ? modes[idx].value.trim() : '';
 
       if (timeVal || taskVal) {
         const oldSlot = oldSlots[idx];
@@ -1470,6 +1496,8 @@ function syncCurrentTimetableInputs(t) {
           batchId: assignedBatchId,
           time: timeVal,
           task: taskVal,
+          venue: venueVal,
+          mode: modeVal,
           topic: topicVal
         });
       }
@@ -1501,6 +1529,8 @@ function addNewTemplateSlot(t, d) {
     batchId: t === 'tuition' ? uniqueBatchId : undefined,
     time: '04:00 PM - 05:00 PM',
     task: 'New Session',
+    venue: t === 'tuition' ? 'Sant Nagar' : '',
+    mode: t === 'school' ? 'Class' : '',
     topic: ''
   });
   renderTimetables();
@@ -1538,25 +1568,8 @@ function setPlannerView(view) {
   currentPlannerView = view;
   const sSec = document.getElementById('schoolClassesSec');
   const tSec = document.getElementById('tuitionStudySec');
-  const pS = document.getElementById('pillBtnSchool');
-  const pT = document.getElementById('pillBtnTuition');
-  const pA = document.getElementById('pillBtnAll');
-
-  [pS, pT, pA].forEach(b => b.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 text-slate-600 hover:bg-slate-100 min-h-[34px]');
-
-  if (view === 'school') {
-    sSec.style.display = 'block';
-    tSec.style.display = 'none';
-    pS.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-blue-600 text-white min-h-[34px]';
-  } else if (view === 'tuition') {
-    sSec.style.display = 'none';
-    tSec.style.display = 'block';
-    pT.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-orange-600 text-white min-h-[34px]';
-  } else {
-    sSec.style.display = 'block';
-    tSec.style.display = 'block';
-    pA.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-slate-800 text-white min-h-[34px]';
-  }
+  if (sSec) sSec.style.display = (view === 'school' || view === 'all') ? 'block' : 'none';
+  if (tSec) tSec.style.display = (view === 'tuition' || view === 'all') ? 'block' : 'none';
 }
 
 function switchTab(tabId, btn) {
@@ -1576,7 +1589,6 @@ function switchTab(tabId, btn) {
   if (tabId === 'analytics') setTimeout(updateAnalytics, 60);
   if (tabId === 'timetables') renderTimetables();
   if (tabId === 'students') renderStudentsMaster();
-  if (window.lucide && lucide.createIcons) lucide.createIcons();
 }
 
 function handleNavClick(view, btn) {
@@ -1619,7 +1631,6 @@ function showActionModal({ title, msg, hasInput = false, inputVal = '', onConfir
   const cancelBtn = document.getElementById('actionModalCancelBtn');
 
   activeModalTrigger = document.activeElement;
-
   titleEl.textContent = title;
   msgEl.textContent = msg;
 
@@ -1649,7 +1660,6 @@ function showActionModal({ title, msg, hasInput = false, inputVal = '', onConfir
   };
 }
 
-/* Modal keyboard focus trap & Escape handling */
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     const actModal = document.getElementById('actionModal');

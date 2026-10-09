@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- Tailwind CSS Play CDN & Configuration -->
+  <!-- Tailwind CSS Play CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -55,7 +55,7 @@
     <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl border border-slate-200 overflow-hidden p-4 space-y-3" role="document">
       <div class="flex items-center gap-2">
         <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-black" aria-hidden="true">
-          <i data-lucide="help-circle" class="w-5 h-5"></i>
+          <svg class="w-5 h-5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
         </div>
         <h3 id="actionModalTitle" class="text-sm font-bold text-slate-900">Confirmation</h3>
       </div>
@@ -77,15 +77,15 @@
       <div class="p-3.5 sm:p-4 bg-brandNavy text-white flex items-center justify-between border-b border-slate-800">
         <div class="flex items-center gap-2.5">
           <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0" aria-hidden="true">
-            <i data-lucide="check-square" class="w-4 h-4"></i>
+            <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
           </div>
           <div class="min-w-0">
             <h3 id="attBatchTitle" class="text-sm font-extrabold text-white leading-tight truncate">Mark Attendance</h3>
-            <p id="attBatchSubtitle" class="text-[11px] text-slate-300 font-medium">Verify attendance before launching WhatsApp reminder</p>
+            <p id="attBatchSubtitle" class="text-[11px] text-slate-300 font-medium">Verify attendance before launching reminder message</p>
           </div>
         </div>
         <button onclick="closeAttendanceModal()" type="button" aria-label="Close Attendance Dialog" class="text-slate-400 hover:text-white p-2 rounded-lg transition min-h-[36px] min-w-[36px] flex items-center justify-center">
-          <i data-lucide="x" class="w-4 h-4"></i>
+          <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
       </div>
 
@@ -98,17 +98,17 @@
       </div>
 
       <div id="attPrevWarningBanner" class="px-4 py-2 bg-amber-50 border-b border-amber-200 text-amber-800 text-xs font-semibold flex items-center gap-2 hidden">
-        <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-600 shrink-0" aria-hidden="true"></i>
+        <svg class="w-4 h-4 text-amber-600 shrink-0 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
         <span>Previous class attendance was never recorded. Mark it now or continue.</span>
       </div>
 
       <div class="px-4 py-2 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2">
         <div class="flex items-center gap-1.5">
           <button onclick="markAllAttendance('P')" type="button" class="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-300 font-bold rounded-lg text-xs flex items-center gap-1 transition active:scale-95 min-h-[36px]">
-            <i data-lucide="check-check" class="w-3.5 h-3.5" aria-hidden="true"></i> All Present
+            <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg> All Present
           </button>
           <button onclick="markAllAttendance('A')" type="button" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300 font-bold rounded-lg text-xs flex items-center gap-1 transition active:scale-95 min-h-[36px]">
-            <i data-lucide="x" class="w-3.5 h-3.5" aria-hidden="true"></i> All Absent
+            <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> All Absent
           </button>
         </div>
         <div id="attStatsCounter" class="text-xs font-black text-slate-700 bg-white px-2.5 py-1 rounded-lg border border-slate-200">
@@ -120,7 +120,7 @@
 
       <div class="p-2.5 bg-slate-50 border-t border-slate-200 flex items-center gap-2">
         <div class="relative flex-1">
-          <i data-lucide="user-plus" class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" aria-hidden="true"></i>
+          <svg class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7.5" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
           <input type="text" id="newStudentInput" placeholder="Add student name to batch roster..." class="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white min-h-[38px]" onkeydown="if(event.key==='Enter') addStudentFromModal()">
         </div>
         <button onclick="addStudentFromModal()" type="button" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs rounded-lg transition active:scale-95 shrink-0 min-h-[38px]">Add</button>
@@ -129,17 +129,15 @@
       <div class="px-4 py-2 bg-slate-100 border-t border-slate-200 flex items-center justify-between">
         <label class="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer select-none">
           <input type="checkbox" id="includeAbsenteeToggle" checked class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500">
-          <span>Include absentee list in WhatsApp reminder</span>
+          <span>Include absentee list in reminder message</span>
         </label>
       </div>
 
       <div class="p-3 bg-white border-t border-slate-200 flex items-center justify-between gap-2">
         <button onclick="saveAttendanceOnly()" type="button" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition min-h-[40px]">Save Attendance Only</button>
         <button onclick="confirmAttendanceAndLaunchWhatsApp()" type="button" class="flex-1 py-2 px-3 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl flex items-center justify-center gap-1.5 shadow-sm transition active:scale-95 min-h-[40px]">
-          <svg class="w-4 h-4 fill-white shrink-0" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M17.472 14.382c-.301-.15-1.781-.879-2.056-.98-.277-.101-.479-.15-.68.15-.202.301-.782.98-.959 1.182-.176.201-.353.226-.653.076-.301-.15-1.27-.468-2.42-1.493-.894-.798-1.498-1.784-1.674-2.086-.176-.301-.019-.464.131-.614.136-.134.301-.351.451-.527.15-.176.201-.301.301-.502.101-.201.05-.376-.025-.526-.075-.15-.68-1.637-.93-2.24-.244-.588-.492-.508-.68-.518l-.58-.01c-.201 0-.528.075-.804.376-.276.301-1.055 1.03-1.055 2.511 0 1.481 1.08 2.91 1.23 3.111.151.201 2.125 3.245 5.148 4.551.719.311 1.28.497 1.718.636.722.23 1.378.197 1.898.12.578-.087 1.781-.728 2.032-1.431.251-.703.251-1.306.176-1.431-.076-.125-.276-.201-.577-.351zm-5.466 7.426h-.008c-1.802 0-3.57-.485-5.115-1.402l-.367-.218-3.805.998 1.016-3.708-.239-.381c-1.01-1.607-1.543-3.473-1.542-5.388.004-5.577 4.542-10.115 10.122-10.115 2.701 0 5.241 1.053 7.151 2.964 1.911 1.912 2.963 4.453 2.961 7.156-.005 5.579-4.543 10.116-10.124 10.116zm8.566-18.681c-2.288-2.29-5.33-3.553-8.568-3.555-6.673 0-12.099 5.424-12.102 12.099-.001 2.133.557 4.215 1.617 6.052l-1.717 6.273 6.42-1.684c1.764.962 3.748 1.469 5.774 1.47h.005c6.671 0 12.099-5.425 12.102-12.1 0-3.234-1.258-6.276-3.531-8.555z"/>
-          </svg>
-          <span>Send WhatsApp Reminder</span>
+          <svg class="w-4 h-4 fill-none stroke-current stroke-2 shrink-0" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+          <span>Send Reminder Msg</span>
         </button>
       </div>
     </div>
@@ -151,7 +149,7 @@
     <header class="bg-brandNavy text-white rounded-xl px-3.5 py-2.5 sm:px-4 flex flex-wrap items-center justify-between gap-3 shadow-md border border-slate-800/80 print-hide">
       <div class="flex items-center gap-2.5">
         <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white shadow-sm shrink-0" aria-hidden="true">
-          <i data-lucide="layout-grid" class="w-4 h-4"></i>
+          <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
         </div>
         <div>
           <h1 class="text-sm font-black tracking-wider leading-none text-white">PLANNER</h1>
@@ -161,419 +159,372 @@
 
       <!-- Center: Date & Time Pill -->
       <div class="bg-white/[0.06] border border-white/10 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-200 flex items-center gap-2.5 shadow-inner" id="currentDateDisplay">
-        <i data-lucide="calendar" class="w-3.5 h-3.5 text-blue-400" aria-hidden="true"></i>
+        <svg class="w-3.5 h-3.5 text-blue-400 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
         <span id="headerDateStr">Loading date...</span>
         <span class="text-slate-500 font-light" aria-hidden="true">|</span>
-        <i data-lucide="clock" class="w-3.5 h-3.5 text-slate-300" aria-hidden="true"></i>
+        <svg class="w-3.5 h-3.5 text-slate-300 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
         <span id="headerTimeStr">Loading time...</span>
       </div>
 
-      <!-- Right: Action Buttons with Cloud Pull -->
+      <!-- Right: Action Buttons -->
       <div class="flex items-center gap-1.5">
         <button onclick="fetchFromAppsScript(true)" id="cloudSyncBtn" type="button" aria-label="Pull schedules and rosters from Google Sheets" class="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition active:scale-95 shadow-sm min-h-[34px]">
-          <i data-lucide="cloud-download" class="w-3.5 h-3.5" aria-hidden="true"></i>
+          <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path><path d="M12 12v9"></path><path d="m8 17 4 4 4-4"></path></svg>
           <span>Pull from Sheet</span>
         </button>
-        <button onclick="exportBackup()" id="exportBtn" type="button" aria-label="Export JSON Backup" class="bg-white/[0.08] hover:bg-white/[0.14] text-slate-200 border border-white/10 font-bold text-xs px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition active:scale-95 min-h-[34px]">
-          <i data-lucide="download" class="w-3.5 h-3.5 text-blue-400" aria-hidden="true"></i>
-          <span>Export</span>
-        </button>
-        <button onclick="document.getElementById('importFile').click()" type="button" aria-label="Import JSON Backup" class="bg-white/[0.08] hover:bg-white/[0.14] text-slate-200 border border-white/10 font-bold text-xs px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition active:scale-95 min-h-[34px]">
-          <i data-lucide="upload" class="w-3.5 h-3.5 text-slate-300" aria-hidden="true"></i>
-          <span>Import</span>
-        </button>
         <button onclick="triggerPrint()" type="button" aria-label="Print Current Planner View" class="bg-white/[0.08] hover:bg-white/[0.14] text-slate-200 border border-white/10 font-bold text-xs px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition active:scale-95 min-h-[34px]">
-          <i data-lucide="printer" class="w-3.5 h-3.5 text-purple-400" aria-hidden="true"></i>
+          <svg class="w-3.5 h-3.5 text-purple-400 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
           <span>Print</span>
         </button>
-        <input type="file" id="importFile" class="hidden" accept=".json" onchange="importBackup(event)">
       </div>
     </header>
 
     <!-- Weekly Backup Alert Banner -->
     <div id="backupNudgeBanner" class="bg-amber-500/10 border border-amber-500/30 text-amber-900 rounded-xl px-4 py-2 flex items-center justify-between gap-3 text-xs font-semibold hidden print-hide" role="alert">
       <div class="flex items-center gap-2">
-        <i data-lucide="shield-alert" class="w-4 h-4 text-amber-600 shrink-0" aria-hidden="true"></i>
-        <span>Weekly Backup Reminder: Export your JSON backup to ensure your rosters and schedule are safe across devices.</span>
+        <svg class="w-4 h-4 text-amber-600 shrink-0 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        <span>Weekly Backup Reminder: Export your JSON backup to keep your schedules and rosters secure across devices.</span>
       </div>
       <button onclick="exportBackup(); document.getElementById('backupNudgeBanner').classList.add('hidden');" type="button" class="bg-amber-600 hover:bg-amber-700 text-white font-bold px-2.5 py-1 rounded-lg text-[11px] shrink-0">
         Export Now
       </button>
     </div>
 
-    <!-- MAIN BODY -->
-    <div class="flex flex-col lg:flex-row items-start gap-3 flex-1">
+    <!-- TOP NAVIGATION BAR + DAILY SUMMARY -->
+    <nav class="bg-brandNavy text-white rounded-xl px-2.5 py-1.5 flex flex-wrap items-center gap-2 shadow-md border border-slate-800/80 print-hide" id="topNav" role="tablist" aria-label="Planner Views">
+      <div class="flex items-center gap-1.5 overflow-x-auto shrink-0 max-w-full" id="sidebarNav">
+        <button id="tabBtnSchool" type="button" role="tab" aria-selected="true" aria-controls="planner" onclick="handleNavClick('school', this)" class="nav-btn active flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold text-slate-300 hover:text-white hover:bg-white/5 transition whitespace-nowrap min-h-[38px]">
+          <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+          <span>School Classes</span>
+        </button>
+        <button id="tabBtnTuition" type="button" role="tab" aria-selected="false" aria-controls="planner" onclick="handleNavClick('tuition', this)" class="nav-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold text-slate-300 hover:text-white hover:bg-white/5 transition whitespace-nowrap min-h-[38px]">
+          <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+          <span>Tuition & Study</span>
+        </button>
+        <button id="tabBtnTimetables" type="button" role="tab" aria-selected="false" aria-controls="timetables" onclick="switchTab('timetables', this)" class="nav-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold text-slate-300 hover:text-white hover:bg-white/5 transition whitespace-nowrap min-h-[38px]">
+          <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          <span>Timetables</span>
+        </button>
+        <button id="tabBtnStudents" type="button" role="tab" aria-selected="false" aria-controls="students" onclick="switchTab('students', this)" class="nav-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold text-slate-300 hover:text-white hover:bg-white/5 transition whitespace-nowrap min-h-[38px]">
+          <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <span>Students Master</span>
+        </button>
+        <button id="tabBtnAnalytics" type="button" role="tab" aria-selected="false" aria-controls="analytics" onclick="switchTab('analytics', this)" class="nav-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold text-slate-300 hover:text-white hover:bg-white/5 transition whitespace-nowrap min-h-[38px]">
+          <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          <span>Analytics</span>
+        </button>
+      </div>
 
-      <!-- LEFT SIDEBAR -->
-      <aside id="plannerSidebar" class="w-full lg:w-56 xl:w-64 bg-sidebarNavy text-white rounded-2xl p-2.5 flex flex-col gap-2.5 shrink-0 shadow-lg print-hide lg:sticky lg:top-2.5 lg:self-start">
-        <nav class="flex flex-col gap-1" id="sidebarNav" role="tablist" aria-label="Planner Views">
-          <button id="tabBtnSchool" type="button" role="tab" aria-selected="true" aria-controls="planner" onclick="handleNavClick('school', this)" class="nav-btn active w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs font-bold text-slate-300 hover:text-white hover:bg-white/5 transition text-left min-h-[38px]">
-            <i data-lucide="graduation-cap" class="w-4 h-4" aria-hidden="true"></i>
-            <span>School Classes</span>
-          </button>
-          <button id="tabBtnTuition" type="button" role="tab" aria-selected="false" aria-controls="planner" onclick="handleNavClick('tuition', this)" class="nav-btn w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs font-bold text-slate-300 hover:text-white hover:bg-white/5 transition text-left min-h-[38px]">
-            <i data-lucide="book-marked" class="w-4 h-4" aria-hidden="true"></i>
-            <span>Tuition & Study</span>
-          </button>
-          <button id="tabBtnTimetables" type="button" role="tab" aria-selected="false" aria-controls="timetables" onclick="switchTab('timetables', this)" class="nav-btn w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs font-bold text-slate-300 hover:text-white hover:bg-white/5 transition text-left min-h-[38px]">
-            <i data-lucide="clock" class="w-4 h-4" aria-hidden="true"></i>
-            <span>Timetables</span>
-          </button>
-          <button id="tabBtnStudents" type="button" role="tab" aria-selected="false" aria-controls="students" onclick="switchTab('students', this)" class="nav-btn w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs font-bold text-slate-300 hover:text-white hover:bg-white/5 transition text-left min-h-[38px]">
-            <i data-lucide="users" class="w-4 h-4" aria-hidden="true"></i>
-            <span>Students Master</span>
-          </button>
-          <button id="tabBtnAnalytics" type="button" role="tab" aria-selected="false" aria-controls="analytics" onclick="switchTab('analytics', this)" class="nav-btn w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs font-bold text-slate-300 hover:text-white hover:bg-white/5 transition text-left min-h-[38px]">
-            <i data-lucide="bar-chart-2" class="w-4 h-4" aria-hidden="true"></i>
-            <span>Analytics</span>
-          </button>
-        </nav>
+      <!-- Daily Summary (enhanced card) -->
+      <div id="dailySummary" class="flex-1 min-w-[360px] flex flex-col gap-2 lg:pl-3 lg:border-l lg:border-white/10">
 
-        <!-- Date & Week Selector Widget (Uniform 7-Day Grid) -->
-        <div class="bg-[#f8fafc] text-slate-800 rounded-2xl p-2.5 shadow-sm border border-slate-200/80">
-          <div class="flex items-center justify-between gap-1.5 mb-2">
-            <button onclick="shiftWeek(-1)" type="button" class="w-9 h-8 rounded-xl bg-white hover:bg-slate-200/70 border border-slate-200 text-slate-700 flex items-center justify-center transition active:scale-95" aria-label="Previous week">
-              <i data-lucide="chevron-left" class="w-4 h-4 stroke-[2.5]" aria-hidden="true"></i>
+        <!-- Row 1: date controls + progress -->
+        <div class="flex flex-wrap items-center gap-2">
+          <div class="flex items-center gap-1 bg-white/[0.06] border border-white/10 rounded-xl p-1">
+            <button onclick="shiftDay(-1)" type="button" aria-label="Previous day" class="w-7 h-7 rounded-lg hover:bg-white/10 text-slate-200 flex items-center justify-center transition active:scale-95">
+              <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-[2.5]" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
             </button>
-            <button onclick="jumpToday()" type="button" class="flex-1 h-8 rounded-xl bg-blue-50/80 hover:bg-blue-100 border border-blue-200/60 text-blue-700 font-extrabold text-xs flex items-center justify-center gap-1 transition active:scale-95">
-              <i data-lucide="calendar" class="w-3.5 h-3.5 stroke-[2.5]" aria-hidden="true"></i>
-              <span>Today</span>
-            </button>
-            <button onclick="shiftWeek(1)" type="button" class="w-9 h-8 rounded-xl bg-white hover:bg-slate-200/70 border border-slate-200 text-slate-700 flex items-center justify-center transition active:scale-95" aria-label="Next week">
-              <i data-lucide="chevron-right" class="w-4 h-4 stroke-[2.5]" aria-hidden="true"></i>
+            <span id="dailyDateLabel" class="h-7 px-3 flex items-center justify-center min-w-[190px] rounded-lg bg-blue-600 text-white text-sm font-extrabold whitespace-nowrap shadow-sm">Loading...</span>
+            <button onclick="shiftDay(1)" type="button" aria-label="Next day" class="w-7 h-7 rounded-lg hover:bg-white/10 text-slate-200 flex items-center justify-center transition active:scale-95">
+              <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-[2.5]" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
             </button>
           </div>
 
-          <div class="text-center mb-2">
-            <h2 class="text-xs font-black text-slate-900 tracking-tight leading-tight" id="sidebarWeekLabel">Loading...</h2>
-            <p class="text-[10px] font-semibold text-slate-500 leading-tight">Select day to view or record</p>
-          </div>
-          
-          <!-- Unified Mon-Sun Equal-Tile Grid -->
-          <div class="grid grid-cols-2 gap-1.5" id="sidebarDayGrid"></div>
+          <button onclick="jumpToday()" type="button" class="h-9 px-3 rounded-xl bg-blue-500/15 hover:bg-blue-500/25 border border-blue-400/40 text-blue-200 text-xs font-bold flex items-center gap-1.5 transition active:scale-95 whitespace-nowrap">
+            <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <span>Today</span>
+          </button>
 
-          <div class="mt-2 pt-2 border-t border-slate-200 grid grid-cols-2 gap-1.5">
-            <button onclick="checkAllToday()" type="button" class="py-1.5 bg-white hover:bg-emerald-50 text-emerald-700 border border-slate-200 font-bold text-xs rounded-xl transition active:scale-95 min-h-[36px]">Check All</button>
-            <button onclick="clearTodayChecks()" type="button" class="py-1.5 bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 font-bold text-xs rounded-xl transition active:scale-95 min-h-[36px]">Clear All</button>
-          </div>
-        </div>
-
-        <!-- Weekly Summary -->
-        <div class="bg-[#f8fafc] text-slate-800 rounded-2xl p-2.5 shadow-sm space-y-2 border border-slate-200/80">
-          <div class="text-center">
-            <h3 class="text-[10px] font-black text-slate-900 tracking-wider uppercase">WEEKLY SUMMARY</h3>
-            <p class="text-[10px] font-semibold text-slate-500 leading-tight">Monday &ndash; Sunday Totals</p>
-          </div>
-
-          <!-- Prominent Progress Display -->
-          <div class="bg-white border border-slate-200/80 rounded-xl p-2 flex items-center justify-between gap-2">
-            <div class="relative w-9 h-9 flex items-center justify-center shrink-0">
-              <svg class="w-9 h-9 -rotate-90" viewBox="0 0 36 36" aria-hidden="true">
-                <path class="text-slate-100" stroke-width="4" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
-                <path id="progressRing" class="text-emerald-500 transition-all duration-300" stroke-dasharray="0, 100" stroke-width="4" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+          <div class="ml-auto flex items-center gap-2.5 bg-white/[0.06] border border-white/10 rounded-xl px-2.5 h-9">
+            <div class="relative w-6 h-6 flex items-center justify-center shrink-0" aria-hidden="true">
+              <svg class="w-6 h-6 -rotate-90" viewBox="0 0 36 36">
+                <path class="text-white/15" stroke-width="4" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                <path id="progressRing" class="text-emerald-400 transition-all duration-300" stroke-dasharray="0, 100" stroke-width="4" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
               </svg>
-              <i data-lucide="check" class="w-4 h-4 text-emerald-600 absolute" aria-hidden="true"></i>
             </div>
-            <div class="flex-1 min-w-0 text-right">
-              <div class="text-xs font-black text-slate-900 leading-tight">
-                <span id="completedCount" class="text-emerald-600">0</span> of <span id="totalCount">0</span> done
-              </div>
-              <div class="text-[10px] font-extrabold text-slate-500" id="progressPercent">0% complete</div>
+            <div class="text-xs font-black text-white whitespace-nowrap">
+              <span id="completedCount" class="text-emerald-400">0</span> <span class="text-slate-400 font-semibold">of</span> <span id="totalCount">0</span> <span class="text-slate-400 font-semibold">done</span>
             </div>
-          </div>
-
-          <div class="grid grid-cols-3 gap-1.5 pt-0.5">
-            <div class="bg-white border border-slate-200/70 rounded-xl p-1.5 flex flex-col items-center justify-center text-center">
-              <div class="text-[9px] font-extrabold text-slate-500 uppercase tracking-wide">SCHOOL</div>
-              <div class="text-xs font-black text-blue-600 mt-0.5 leading-none"><span id="totalSchool">0.0</span>H</div>
-            </div>
-
-            <div class="bg-white border border-slate-200/70 rounded-xl p-1.5 flex flex-col items-center justify-center text-center">
-              <div class="text-[9px] font-extrabold text-slate-500 uppercase tracking-wide">TUITION</div>
-              <div class="text-xs font-black text-orange-500 mt-0.5 leading-none"><span id="totalTuition">0.0</span>H</div>
-            </div>
-
-            <div class="bg-white border border-slate-200/70 rounded-xl p-1.5 flex flex-col items-center justify-center text-center">
-              <div class="text-[9px] font-extrabold text-slate-500 uppercase tracking-wide">STUDY</div>
-              <div class="text-xs font-black text-purple-600 mt-0.5 leading-none"><span id="totalStudy">0.0</span>H</div>
-            </div>
+            <span class="text-[11px] font-extrabold text-slate-300 whitespace-nowrap" id="progressPercent">0% complete</span>
           </div>
         </div>
-      </aside>
 
-      <!-- RIGHT MAIN WORKSPACE -->
-      <main id="mainWorkspace" class="flex-1 w-full space-y-3 transition-all">
-
-        <!-- TAB 1: PLANNER -->
-        <div id="planner" class="tab-content active space-y-3" role="tabpanel" aria-labelledby="tabBtnSchool">
-          
-          <!-- Unified Section Filter Controls -->
-          <div class="bg-white p-1.5 rounded-xl border border-slate-200 flex items-center justify-between gap-2 print-hide">
-            <div class="flex items-center gap-1" role="group" aria-label="Section filter">
-              <button onclick="setPlannerView('school')" type="button" id="pillBtnSchool" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-blue-600 text-white min-h-[34px]">
-                <i data-lucide="graduation-cap" class="w-3.5 h-3.5" aria-hidden="true"></i>
-                <span>School Classes</span>
-              </button>
-              <button onclick="setPlannerView('tuition')" type="button" id="pillBtnTuition" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 text-slate-600 hover:bg-slate-100 min-h-[34px]">
-                <i data-lucide="book-marked" class="w-3.5 h-3.5" aria-hidden="true"></i>
-                <span>Tuition & Study</span>
-              </button>
-              <button onclick="setPlannerView('all')" type="button" id="pillBtnAll" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 text-slate-600 hover:bg-slate-100 min-h-[34px]">
-                <i data-lucide="layers" class="w-3.5 h-3.5" aria-hidden="true"></i>
-                <span>All Sections</span>
-              </button>
-            </div>
-            <div class="text-xs font-semibold text-slate-500 pr-2 hidden sm:flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full bg-emerald-500" aria-hidden="true"></span>
-              <span id="syncStatusBadge">Offline Ready</span>
-            </div>
+        <!-- Row 2: category hour tiles -->
+        <div class="grid grid-cols-3 gap-2">
+          <div class="bg-blue-500/15 border border-blue-400/40 border-t-2 border-t-blue-400 rounded-xl px-3 py-1.5 flex items-center justify-between gap-2">
+            <span class="text-[10px] font-extrabold text-blue-300 uppercase tracking-wider">School</span>
+            <span class="text-sm font-black text-blue-100 whitespace-nowrap"><span id="totalSchool">0.0</span>H</span>
           </div>
-
-          <!-- 1. School Section -->
-          <section id="schoolClassesSec" class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden" aria-labelledby="schoolSecTitle">
-            <header class="bg-cardNavy text-white px-3.5 sm:px-4 py-2.5 flex items-center justify-between">
-              <div class="flex items-center gap-2.5">
-                <div class="w-7 h-7 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center" aria-hidden="true">
-                  <i data-lucide="school" class="w-4 h-4"></i>
-                </div>
-                <div>
-                  <h2 id="schoolSecTitle" class="text-xs sm:text-sm font-extrabold tracking-wide text-white">SCHOOL CLASSES</h2>
-                  <p class="text-[10px] text-slate-300 font-medium">Daily periods, practical computer labs & lesson topics</p>
-                </div>
-              </div>
-              <div class="flex items-center gap-1.5">
-                <button onclick="reloadDayFromTimetable(state.activeDateStr)" type="button" class="bg-white/10 hover:bg-white/20 text-slate-200 border border-white/10 text-xs font-semibold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition active:scale-95 print-hide min-h-[34px]">
-                  <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-slate-300" aria-hidden="true"></i>
-                  <span>Reset Day</span>
-                </button>
-                <button onclick="switchTab('timetables', document.getElementById('tabBtnTimetables'))" type="button" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm transition active:scale-95 print-hide min-h-[34px]">
-                  <i data-lucide="pencil" class="w-3.5 h-3.5" aria-hidden="true"></i>
-                  <span>Edit Timetable</span>
-                </button>
-              </div>
-            </header>
-
-            <!-- School Section Progress Bar -->
-            <div class="w-full bg-slate-100 h-1.5 overflow-hidden" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="schoolProgressBarWrapper">
-              <div id="schoolProgressBar" class="bg-blue-600 h-full transition-all duration-300" style="width: 0%"></div>
-            </div>
-
-            <div class="overflow-x-auto">
-              <table class="w-full text-left border-collapse mobile-table">
-                <thead>
-                  <tr class="bg-slate-50 text-slate-500 text-[11px] font-bold uppercase tracking-wider border-b border-slate-200">
-                    <th scope="col" class="py-2.5 px-3 w-12 text-center">DONE</th>
-                    <th scope="col" class="py-2.5 px-3 w-48 text-left whitespace-nowrap">TIME</th>
-                    <th scope="col" class="py-2.5 px-3 text-left">PERIOD & TOPIC</th>
-                    <th scope="col" class="py-2.5 px-3 w-24 text-right">HOURS</th>
-                  </tr>
-                </thead>
-                <tbody id="schoolBody" class="divide-y divide-slate-100 text-xs"></tbody>
-                <tfoot class="bg-slate-50/90 border-t border-slate-200 text-slate-600 text-xs font-semibold">
-                  <tr>
-                    <td class="py-2.5 px-3 text-center"></td>
-                    <td class="py-2.5 px-3 text-left text-slate-500 font-bold uppercase tracking-wider text-[11px] whitespace-nowrap">Section Total</td>
-                    <td class="py-2.5 px-3 text-left text-slate-600 font-medium text-xs" id="schoolSecMeta">0 of 0 completed</td>
-                    <td class="py-2.5 px-3 text-right whitespace-nowrap">
-                      <span class="inline-block bg-slate-100 text-slate-800 font-black text-xs px-2.5 py-0.5 rounded-md border border-slate-200" id="schoolSecTotal">0.00 hrs</span>
-                    </td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-          </section>
-
-          <!-- 2. Tuition & Study Section -->
-          <section id="tuitionStudySec" class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden" aria-labelledby="tuitionSecTitle">
-            <header class="bg-cardNavy text-white px-3.5 sm:px-4 py-2.5 flex items-center justify-between">
-              <div class="flex items-center gap-2.5">
-                <div class="w-7 h-7 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center" aria-hidden="true">
-                  <i data-lucide="book-marked" class="w-4 h-4"></i>
-                </div>
-                <div>
-                  <h2 id="tuitionSecTitle" class="text-xs sm:text-sm font-extrabold tracking-wide text-white">TUITION & STUDY</h2>
-                  <p class="text-[10px] text-slate-300 font-medium">Batches, attendance logging, reminders & personal study</p>
-                </div>
-              </div>
-              <div class="flex items-center gap-1.5">
-                <button onclick="reloadDayFromTimetable(state.activeDateStr)" type="button" class="bg-white/10 hover:bg-white/20 text-slate-200 border border-white/10 text-xs font-semibold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition active:scale-95 print-hide min-h-[34px]">
-                  <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-slate-300" aria-hidden="true"></i>
-                  <span>Reset Day</span>
-                </button>
-                <button onclick="switchTab('students', document.getElementById('tabBtnStudents'))" type="button" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm transition active:scale-95 print-hide min-h-[34px]">
-                  <i data-lucide="users" class="w-3.5 h-3.5" aria-hidden="true"></i>
-                  <span>Manage Students</span>
-                </button>
-              </div>
-            </header>
-
-            <!-- Tuition Section Progress Bar -->
-            <div class="w-full bg-slate-100 h-1.5 overflow-hidden" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="tuitionProgressBarWrapper">
-              <div id="tuitionProgressBar" class="bg-orange-500 h-full transition-all duration-300" style="width: 0%"></div>
-            </div>
-
-            <div class="overflow-x-auto">
-              <table class="w-full text-left border-collapse mobile-table">
-                <thead>
-                  <tr class="bg-slate-50 text-slate-500 text-[11px] font-bold uppercase tracking-wider border-b border-slate-200">
-                    <th scope="col" class="py-2.5 px-3 w-12 text-center">DONE</th>
-                    <th scope="col" class="py-2.5 px-3 w-48 text-left whitespace-nowrap">TIME</th>
-                    <th scope="col" class="py-2.5 px-3 text-left">BATCH / SUBJECT & ACTIONS</th>
-                    <th scope="col" class="py-2.5 px-3 w-28 text-center">CATEGORY</th>
-                    <th scope="col" class="py-2.5 px-3 w-24 text-right">HOURS</th>
-                  </tr>
-                </thead>
-                <tbody id="tuitionStudyBody" class="divide-y divide-slate-100 text-xs"></tbody>
-                <tfoot class="bg-slate-50/90 border-t border-slate-200 text-slate-600 text-xs font-semibold">
-                  <tr>
-                    <td class="py-2.5 px-3 text-center"></td>
-                    <td class="py-2.5 px-3 text-left text-slate-500 font-bold uppercase tracking-wider text-[11px] whitespace-nowrap">Section Total</td>
-                    <td class="py-2.5 px-3 text-left text-slate-600 font-medium text-xs" id="tuitionSecMeta">0 of 0 completed</td>
-                    <td class="py-2.5 px-3 text-center"></td>
-                    <td class="py-2.5 px-3 text-right whitespace-nowrap">
-                      <span class="inline-block bg-slate-100 text-slate-800 font-black text-xs px-2.5 py-0.5 rounded-md border border-slate-200" id="tuitionSecTotal">0.00 hrs</span>
-                    </td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-          </section>
+          <div class="bg-orange-500/15 border border-orange-400/40 border-t-2 border-t-orange-400 rounded-xl px-3 py-1.5 flex items-center justify-between gap-2">
+            <span class="text-[10px] font-extrabold text-orange-300 uppercase tracking-wider">Tuition</span>
+            <span class="text-sm font-black text-orange-100 whitespace-nowrap"><span id="totalTuition">0.0</span>H</span>
+          </div>
+          <div class="bg-purple-500/15 border border-purple-400/40 border-t-2 border-t-purple-400 rounded-xl px-3 py-1.5 flex items-center justify-between gap-2">
+            <span class="text-[10px] font-extrabold text-purple-300 uppercase tracking-wider">Study</span>
+            <span class="text-sm font-black text-purple-100 whitespace-nowrap"><span id="totalStudy">0.0</span>H</span>
+          </div>
         </div>
+      </div>
+    </nav>
 
-        <!-- TAB 2: TIMETABLES -->
-        <div id="timetables" class="tab-content space-y-3" role="tabpanel" aria-labelledby="tabBtnTimetables">
-          <div class="bg-blue-50 border border-blue-200 rounded-xl p-3.5 flex items-start justify-between gap-3 text-blue-900">
-            <div class="flex items-start gap-3">
-              <i data-lucide="info" class="w-5 h-5 text-blue-600 shrink-0 mt-0.5" aria-hidden="true"></i>
+    <!-- MAIN WORKSPACE (FULL WIDTH) -->
+    <main id="mainWorkspace" class="w-full space-y-3 transition-all min-w-0 flex-1">
+
+      <!-- TAB 1: PLANNER -->
+      <div id="planner" class="tab-content active space-y-3" role="tabpanel" aria-labelledby="tabBtnSchool">
+
+        <!-- 1. School Section: 6 Columns -->
+        <section id="schoolClassesSec" class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden" aria-labelledby="schoolSecTitle">
+          <header class="bg-cardNavy text-white px-3.5 sm:px-4 py-2.5 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <div class="w-7 h-7 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center" aria-hidden="true">
+                <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+              </div>
               <div>
-                <h3 class="text-xs font-black uppercase tracking-wide">Master Weekly Schedule Templates</h3>
-                <p class="text-xs text-blue-800 mt-0.5 leading-relaxed">
-                  Add/edit periods, custom timings, and default lesson topics. Synchronizes seamlessly with your Google Sheets backend during "Pull from Sheet".
-                </p>
+                <h2 id="schoolSecTitle" class="text-xs sm:text-sm font-extrabold tracking-wide text-white">SCHOOL CLASSES</h2>
+                <p class="text-[10px] text-slate-300 font-medium">Daily periods, practical computer labs & lesson topics</p>
               </div>
             </div>
-            <button onclick="promptResetTimetableDefaults()" type="button" class="bg-white hover:bg-rose-50 text-rose-700 border border-rose-300 px-3 py-1.5 rounded-lg text-xs font-bold shrink-0 transition min-h-[34px]">
-              Clear Timetables
+            <div class="flex items-center gap-1.5">
+              <button onclick="reloadDayFromTimetable(state.activeDateStr)" type="button" class="bg-white/10 hover:bg-white/20 text-slate-200 border border-white/10 text-xs font-semibold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition active:scale-95 print-hide min-h-[34px]">
+                <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+                <span>Reset Day</span>
+              </button>
+              <button onclick="switchTab('timetables', document.getElementById('tabBtnTimetables'))" type="button" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm transition active:scale-95 print-hide min-h-[34px]">
+                <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                <span>Edit Timetable</span>
+              </button>
+            </div>
+          </header>
+
+          <div class="w-full bg-slate-100 h-1.5 overflow-hidden" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+            <div id="schoolProgressBar" class="bg-blue-600 h-full transition-all duration-300" style="width: 0%"></div>
+          </div>
+
+          <div class="overflow-x-auto w-full">
+            <table class="w-full text-left border-collapse mobile-table">
+              <thead>
+                <tr class="bg-slate-50 text-slate-500 text-[11px] font-bold uppercase tracking-wider border-b border-slate-200">
+                  <th scope="col" class="py-2.5 px-3 w-16 text-center whitespace-nowrap">PERIOD</th>
+                  <th scope="col" class="py-2.5 px-3 w-44 text-left whitespace-nowrap">TIME</th>
+                  <th scope="col" class="py-2.5 px-3 w-32 text-left whitespace-nowrap">CLASS</th>
+                  <th scope="col" class="py-2.5 px-3 text-left whitespace-nowrap">TOPICNAME</th>
+                  <th scope="col" class="py-2.5 px-3 w-32 text-center whitespace-nowrap">MODE (LAB/CLASS)</th>
+                  <th scope="col" class="py-2.5 px-3 w-28 text-right whitespace-nowrap">DURATION</th>
+                </tr>
+              </thead>
+              <tbody id="schoolBody" class="divide-y divide-slate-100 text-xs"></tbody>
+              <tfoot class="bg-slate-50/90 border-t border-slate-200 text-slate-600 text-xs font-semibold">
+                <tr>
+                  <td class="py-2.5 px-3 text-center"></td>
+                  <td class="py-2.5 px-3 text-left text-slate-500 font-bold uppercase tracking-wider text-[11px] whitespace-nowrap">Section Total</td>
+                  <td class="py-2.5 px-3 text-left text-slate-600 font-medium text-xs whitespace-nowrap" id="schoolSecMeta">0 of 0 completed</td>
+                  <td class="py-2.5 px-3"></td>
+                  <td class="py-2.5 px-3 text-center"></td>
+                  <td class="py-2.5 px-3 text-right whitespace-nowrap">
+                    <span class="inline-block bg-slate-100 text-slate-800 font-black text-xs px-2.5 py-0.5 rounded-md border border-slate-200" id="schoolSecTotal">0.00 hrs</span>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </section>
+
+        <!-- 2. Tuition Section: 8 Columns -->
+        <section id="tuitionStudySec" class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden" aria-labelledby="tuitionSecTitle">
+          <header class="bg-cardNavy text-white px-3.5 sm:px-4 py-2.5 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <div class="w-7 h-7 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center" aria-hidden="true">
+                <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+              </div>
+              <div>
+                <h2 id="tuitionSecTitle" class="text-xs sm:text-sm font-extrabold tracking-wide text-white">TUITION & STUDY</h2>
+                <p class="text-[10px] text-slate-300 font-medium">Batches, attendance logging, reminders & personal study</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button onclick="reloadDayFromTimetable(state.activeDateStr)" type="button" class="bg-white/10 hover:bg-white/20 text-slate-200 border border-white/10 text-xs font-semibold px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition active:scale-95 print-hide min-h-[34px]">
+                <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+                <span>Reset Day</span>
+              </button>
+              <button onclick="switchTab('students', document.getElementById('tabBtnStudents'))" type="button" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm transition active:scale-95 print-hide min-h-[34px]">
+                <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                <span>Manage Students</span>
+              </button>
+            </div>
+          </header>
+
+          <div class="w-full bg-slate-100 h-1.5 overflow-hidden" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+            <div id="tuitionProgressBar" class="bg-orange-500 h-full transition-all duration-300" style="width: 0%"></div>
+          </div>
+
+          <div class="overflow-x-auto w-full">
+            <table class="w-full text-left border-collapse mobile-table">
+              <thead>
+                <tr class="bg-slate-50 text-slate-500 text-[11px] font-bold uppercase tracking-wider border-b border-slate-200">
+                  <th scope="col" class="py-2.5 px-3 w-16 text-center whitespace-nowrap">SNO</th>
+                  <th scope="col" class="py-2.5 px-3 w-44 text-left whitespace-nowrap">TIME</th>
+                  <th scope="col" class="py-2.5 px-3 text-left whitespace-nowrap">BATCHNAME</th>
+                  <th scope="col" class="py-2.5 px-3 w-32 text-center whitespace-nowrap">VENUE</th>
+                  <th scope="col" class="py-2.5 px-3 text-left whitespace-nowrap">TOPIC</th>
+                  <th scope="col" class="py-2.5 px-3 w-28 text-center whitespace-nowrap">ACTION(MSG)</th>
+                  <th scope="col" class="py-2.5 px-3 w-32 text-center whitespace-nowrap">NOOFSTUDENTS</th>
+                  <th scope="col" class="py-2.5 px-3 w-28 text-right whitespace-nowrap">DURATION</th>
+                </tr>
+              </thead>
+              <tbody id="tuitionStudyBody" class="divide-y divide-slate-100 text-xs"></tbody>
+              <tfoot class="bg-slate-50/90 border-t border-slate-200 text-slate-600 text-xs font-semibold">
+                <tr>
+                  <td class="py-2.5 px-3 text-center"></td>
+                  <td class="py-2.5 px-3 text-left text-slate-500 font-bold uppercase tracking-wider text-[11px] whitespace-nowrap">Section Total</td>
+                  <td class="py-2.5 px-3 text-left text-slate-600 font-medium text-xs whitespace-nowrap" id="tuitionSecMeta">0 of 0 completed</td>
+                  <td class="py-2.5 px-3"></td>
+                  <td class="py-2.5 px-3"></td>
+                  <td class="py-2.5 px-3"></td>
+                  <td class="py-2.5 px-3"></td>
+                  <td class="py-2.5 px-3 text-right whitespace-nowrap">
+                    <span class="inline-block bg-slate-100 text-slate-800 font-black text-xs px-2.5 py-0.5 rounded-md border border-slate-200" id="tuitionSecTotal">0.00 hrs</span>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <!-- TAB 2: TIMETABLES -->
+      <div id="timetables" class="tab-content space-y-3" role="tabpanel" aria-labelledby="tabBtnTimetables">
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-3.5 flex items-start justify-between gap-3 text-blue-900">
+          <div class="flex items-start gap-3">
+            <svg class="w-5 h-5 text-blue-600 shrink-0 mt-0.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            <div>
+              <h3 class="text-xs font-black uppercase tracking-wide">Master Weekly Schedule Templates</h3>
+              <p class="text-xs text-blue-800 mt-0.5 leading-relaxed">
+                Add/edit periods, custom timings, venues, and default lesson topics. Synchronizes with your Google Sheet via "Pull from Sheet".
+              </p>
+            </div>
+          </div>
+          <button onclick="promptResetTimetableDefaults()" type="button" class="bg-white hover:bg-rose-50 text-rose-700 border border-rose-300 px-3 py-1.5 rounded-lg text-xs font-bold shrink-0 transition min-h-[34px]">
+            Clear Timetables
+          </button>
+        </div>
+
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-5">
+          <div>
+            <div class="flex items-center justify-between mb-2.5">
+              <div class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-blue-600 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+                <h2 class="text-xs font-black uppercase tracking-wider text-slate-800">School Timetable Template</h2>
+              </div>
+              <button onclick="toggleEditMode('school')" type="button" class="text-xs font-bold px-3 py-1.5 rounded-lg border transition min-h-[34px]" id="btnEditSchool">Edit School</button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5" id="schoolTimetable"></div>
+          </div>
+
+          <div class="border-t border-slate-100 pt-4">
+            <div class="flex items-center justify-between mb-2.5">
+              <div class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-orange-500 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                <h2 class="text-xs font-black uppercase tracking-wider text-slate-800">Tuition Batches Template</h2>
+              </div>
+              <button onclick="toggleEditMode('tuition')" type="button" class="text-xs font-bold px-3 py-1.5 rounded-lg border transition min-h-[34px]" id="btnEditTuition">Edit Tuition</button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5" id="tuitionTimetable"></div>
+          </div>
+
+          <div class="border-t border-slate-100 pt-4">
+            <div class="flex items-center justify-between mb-2.5">
+              <div class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-purple-600 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                <h2 class="text-xs font-black uppercase tracking-wider text-slate-800">Self Study Plan Template</h2>
+              </div>
+              <button onclick="toggleEditMode('study')" type="button" class="text-xs font-bold px-3 py-1.5 rounded-lg border transition min-h-[34px]" id="btnEditStudy">Edit Study</button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5" id="studyTimetable"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: STUDENTS MASTER -->
+      <div id="students" class="tab-content space-y-3" role="tabpanel" aria-labelledby="tabBtnStudents">
+        <div class="bg-white rounded-xl border border-slate-200 p-3.5 sm:p-4 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold" aria-hidden="true">
+                <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+              </div>
+              <h2 class="text-sm font-black text-slate-900 tracking-wide uppercase">Students & Batches Master Sheet</h2>
+            </div>
+            <p class="text-xs text-slate-500 mt-0.5">Central student directory pulled from Google Sheets or managed locally.</p>
+          </div>
+
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <div class="relative flex-1 sm:w-56">
+              <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <label for="studentMasterSearch" class="sr-only">Search student or batch</label>
+              <input type="text" id="studentMasterSearch" oninput="renderStudentsMaster()" placeholder="Search student or batch..." class="w-full pl-8 pr-3 py-1.5 border border-slate-300 rounded-lg text-xs font-semibold focus:ring-2 focus:ring-emerald-500 outline-none min-h-[36px]">
+            </div>
+            <button onclick="promptCreateNewBatch()" type="button" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 shadow-sm transition active:scale-95 shrink-0 min-h-[36px]">
+              <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+              <span>New Batch</span>
             </button>
           </div>
-
-          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-5">
-            <div>
-              <div class="flex items-center justify-between mb-2.5">
-                <div class="flex items-center gap-2">
-                  <i data-lucide="school" class="w-4 h-4 text-blue-600" aria-hidden="true"></i>
-                  <h2 class="text-xs font-black uppercase tracking-wider text-slate-800">School Timetable Template</h2>
-                </div>
-                <button onclick="toggleEditMode('school')" type="button" class="text-xs font-bold px-3 py-1.5 rounded-lg border transition min-h-[34px]" id="btnEditSchool">Edit School</button>
-              </div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5" id="schoolTimetable"></div>
-            </div>
-
-            <div class="border-t border-slate-100 pt-4">
-              <div class="flex items-center justify-between mb-2.5">
-                <div class="flex items-center gap-2">
-                  <i data-lucide="users" class="w-4 h-4 text-orange-500" aria-hidden="true"></i>
-                  <h2 class="text-xs font-black uppercase tracking-wider text-slate-800">Tuition Batches Template</h2>
-                </div>
-                <button onclick="toggleEditMode('tuition')" type="button" class="text-xs font-bold px-3 py-1.5 rounded-lg border transition min-h-[34px]" id="btnEditTuition">Edit Tuition</button>
-              </div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5" id="tuitionTimetable"></div>
-            </div>
-
-            <div class="border-t border-slate-100 pt-4">
-              <div class="flex items-center justify-between mb-2.5">
-                <div class="flex items-center gap-2">
-                  <i data-lucide="book-open" class="w-4 h-4 text-purple-600" aria-hidden="true"></i>
-                  <h2 class="text-xs font-black uppercase tracking-wider text-slate-800">Self Study Plan Template</h2>
-                </div>
-                <button onclick="toggleEditMode('study')" type="button" class="text-xs font-bold px-3 py-1.5 rounded-lg border transition min-h-[34px]" id="btnEditStudy">Edit Study</button>
-              </div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5" id="studyTimetable"></div>
-            </div>
-          </div>
         </div>
 
-        <!-- TAB 3: STUDENTS MASTER -->
-        <div id="students" class="tab-content space-y-3" role="tabpanel" aria-labelledby="tabBtnStudents">
-          <div class="bg-white rounded-xl border border-slate-200 p-3.5 sm:p-4 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <div>
-              <div class="flex items-center gap-2">
-                <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold" aria-hidden="true">
-                  <i data-lucide="users" class="w-4 h-4"></i>
-                </div>
-                <h2 class="text-sm font-black text-slate-900 tracking-wide uppercase">Students & Batches Master Sheet</h2>
-              </div>
-              <p class="text-xs text-slate-500 mt-0.5">Central student directory. Pulled from Google Sheets or managed locally.</p>
-            </div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5" id="studentsMasterStats"></div>
 
-            <div class="flex items-center gap-2 w-full sm:w-auto">
-              <div class="relative flex-1 sm:w-56">
-                <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" aria-hidden="true"></i>
-                <label for="studentMasterSearch" class="sr-only">Search student or batch</label>
-                <input type="text" id="studentMasterSearch" oninput="renderStudentsMaster()" placeholder="Search student or batch..." class="w-full pl-8 pr-3 py-1.5 border border-slate-300 rounded-lg text-xs font-semibold focus:ring-2 focus:ring-emerald-500 outline-none min-h-[36px]">
-              </div>
-              <button onclick="promptCreateNewBatch()" type="button" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 shadow-sm transition active:scale-95 shrink-0 min-h-[36px]">
-                <i data-lucide="plus-circle" class="w-4 h-4" aria-hidden="true"></i>
-                <span>New Batch</span>
-              </button>
-            </div>
+        <div class="flex items-center justify-between bg-white px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold">
+          <div class="flex items-center gap-1" role="group" aria-label="Student display view">
+            <button onclick="setStudentMasterView('cards')" type="button" id="btnViewCards" class="px-3 py-1.5 rounded-lg font-bold bg-emerald-600 text-white transition min-h-[32px]">Batch Cards</button>
+            <button onclick="setStudentMasterView('directory')" type="button" id="btnViewDirectory" class="px-3 py-1.5 rounded-lg font-bold text-slate-600 hover:bg-slate-100 transition min-h-[32px]">Master Directory Table</button>
           </div>
-
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5" id="studentsMasterStats"></div>
-
-          <div class="flex items-center justify-between bg-white px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold">
-            <div class="flex items-center gap-1" role="group" aria-label="Student display view">
-              <button onclick="setStudentMasterView('cards')" type="button" id="btnViewCards" class="px-3 py-1.5 rounded-lg font-bold bg-emerald-600 text-white transition min-h-[32px]">Batch Cards</button>
-              <button onclick="setStudentMasterView('directory')" type="button" id="btnViewDirectory" class="px-3 py-1.5 rounded-lg font-bold text-slate-600 hover:bg-slate-100 transition min-h-[32px]">Master Directory Table</button>
-            </div>
-            <span class="text-slate-500 text-[11px] hidden sm:inline">Click any student name to edit</span>
-          </div>
-
-          <div id="studentBatchCardsContainer" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3"></div>
-          <div id="studentDirectoryContainer" class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden hidden">
-            <div class="overflow-x-auto">
-              <table class="w-full text-left border-collapse">
-                <thead>
-                  <tr class="bg-slate-50 text-slate-500 text-[11px] font-bold uppercase tracking-wider border-b border-slate-200">
-                    <th scope="col" class="py-2.5 px-3">#</th>
-                    <th scope="col" class="py-2.5 px-3">STUDENT NAME</th>
-                    <th scope="col" class="py-2.5 px-3">BATCH</th>
-                    <th scope="col" class="py-2.5 px-3">SCHEDULED DAYS</th>
-                    <th scope="col" class="py-2.5 px-3 text-center">RECORDS</th>
-                    <th scope="col" class="py-2.5 px-3 text-right">ACTIONS</th>
-                  </tr>
-                </thead>
-                <tbody id="studentDirectoryBody" class="divide-y divide-slate-100 text-xs"></tbody>
-              </table>
-            </div>
-          </div>
+          <span class="text-slate-500 text-[11px] hidden sm:inline">Click any student name to edit</span>
         </div>
 
-        <!-- TAB 4: ANALYTICS -->
-        <div id="analytics" class="tab-content space-y-3" role="tabpanel" aria-labelledby="tabBtnAnalytics">
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5" id="statsGrid"></div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm">
-              <h3 class="text-xs font-black uppercase text-slate-500 tracking-wider text-center mb-2">Weekly Planned Hours by Category</h3>
-              <div class="relative h-48 w-full"><canvas id="categoryChart"></canvas></div>
-            </div>
-            <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm">
-              <h3 class="text-xs font-black uppercase text-slate-500 tracking-wider text-center mb-2">Category Completion Rate (%)</h3>
-              <div class="relative h-48 w-full"><canvas id="completionChart"></canvas></div>
-            </div>
-            <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm">
-              <h3 class="text-xs font-black uppercase text-slate-500 tracking-wider text-center mb-2">Daily Hours (Planned vs Done)</h3>
-              <div class="relative h-48 w-full"><canvas id="trendChart"></canvas></div>
-            </div>
-            <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm">
-              <h3 class="text-xs font-black uppercase text-slate-500 tracking-wider text-center mb-2">Daily Completion Rate Trend (%)</h3>
-              <div class="relative h-48 w-full"><canvas id="completionTrendChart"></canvas></div>
-            </div>
+        <div id="studentBatchCardsContainer" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3"></div>
+        <div id="studentDirectoryContainer" class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-50 text-slate-500 text-[11px] font-bold uppercase tracking-wider border-b border-slate-200">
+                  <th scope="col" class="py-2.5 px-3">#</th>
+                  <th scope="col" class="py-2.5 px-3">STUDENT NAME</th>
+                  <th scope="col" class="py-2.5 px-3">BATCH</th>
+                  <th scope="col" class="py-2.5 px-3">SCHEDULED DAYS</th>
+                  <th scope="col" class="py-2.5 px-3 text-center">RECORDS</th>
+                  <th scope="col" class="py-2.5 px-3 text-right">ACTIONS</th>
+                </tr>
+              </thead>
+              <tbody id="studentDirectoryBody" class="divide-y divide-slate-100 text-xs"></tbody>
+            </table>
           </div>
         </div>
+      </div>
 
-      </main>
-    </div>
+      <!-- TAB 4: ANALYTICS -->
+      <div id="analytics" class="tab-content space-y-3" role="tabpanel" aria-labelledby="tabBtnAnalytics">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5" id="statsGrid"></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm">
+            <h3 class="text-xs font-black uppercase text-slate-500 tracking-wider text-center mb-2">Weekly Planned Hours by Category</h3>
+            <div class="relative h-48 w-full"><canvas id="categoryChart"></canvas></div>
+          </div>
+          <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm">
+            <h3 class="text-xs font-black uppercase text-slate-500 tracking-wider text-center mb-2">Category Completion Rate (%)</h3>
+            <div class="relative h-48 w-full"><canvas id="completionChart"></canvas></div>
+          </div>
+          <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm">
+            <h3 class="text-xs font-black uppercase text-slate-500 tracking-wider text-center mb-2">Daily Hours (Planned vs Done)</h3>
+            <div class="relative h-48 w-full"><canvas id="trendChart"></canvas></div>
+          </div>
+          <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-sm">
+            <h3 class="text-xs font-black uppercase text-slate-500 tracking-wider text-center mb-2">Daily Completion Rate Trend (%)</h3>
+            <div class="relative h-48 w-full"><canvas id="completionTrendChart"></canvas></div>
+          </div>
+        </div>
+      </div>
+
+    </main>
 
     <!-- FOOTER -->
     <footer class="w-full bg-brandNavy text-slate-300 rounded-xl px-4 py-2.5 flex items-center justify-between shadow-md border border-slate-800/80 print-hide mt-1 text-xs">
@@ -588,7 +539,6 @@
     </footer>
   </div>
 
-  <!-- Client-Side Engine -->
   <script src="plan.js"></script>
 </body>
 </html>
