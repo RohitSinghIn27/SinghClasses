@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<title>Planner & Analytics</title>
+<title>Planner & Analytics | Master Suite</title>
 
 <!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -207,9 +207,9 @@ body { -webkit-tap-highlight-color: transparent; }
     <div class="p-2.5 bg-slate-50 border-t border-slate-200 flex items-center gap-2">
       <div class="relative flex-1">
         <i data-lucide="user-plus" class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
-        <input type="text" id="newStudentInput" placeholder="Add student name to batch roster..." class="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white min-h-[38px]" onkeydown="if(event.key==='Enter') addStudentToRoster()">
+        <input type="text" id="newStudentInput" placeholder="Add student name to batch roster..." class="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white min-h-[38px]" onkeydown="if(event.key==='Enter') addStudentFromModal()">
       </div>
-      <button onclick="addStudentToRoster()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs rounded-lg transition active:scale-95 shrink-0 min-h-[38px]">
+      <button onclick="addStudentFromModal()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs rounded-lg transition active:scale-95 shrink-0 min-h-[38px]">
         Add
       </button>
     </div>
@@ -310,6 +310,10 @@ body { -webkit-tap-highlight-color: transparent; }
           <i data-lucide="clock" class="w-4 h-4"></i>
           <span>Timetables</span>
         </button>
+        <button id="tabBtnStudents" onclick="switchTab('students', this)" class="nav-btn w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs font-bold text-slate-300 hover:text-white hover:bg-white/5 transition text-left min-h-[38px]">
+          <i data-lucide="users" class="w-4 h-4"></i>
+          <span>Students Master</span>
+        </button>
         <button id="tabBtnAnalytics" onclick="switchTab('analytics', this)" class="nav-btn w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs font-bold text-slate-300 hover:text-white hover:bg-white/5 transition text-left min-h-[38px]">
           <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
           <span>Analytics</span>
@@ -393,7 +397,7 @@ body { -webkit-tap-highlight-color: transparent; }
     <!-- RIGHT MAIN WORKSPACE -->
     <main id="mainWorkspace" class="flex-1 w-full space-y-3 transition-all">
 
-      <!-- ================= TAB: PLANNER ================= -->
+      <!-- ================= TAB 1: PLANNER ================= -->
       <div id="planner" class="tab-content active space-y-3" role="tabpanel">
 
         <!-- PLANNER VIEW SELECTOR PILL -->
@@ -486,9 +490,9 @@ body { -webkit-tap-highlight-color: transparent; }
                 <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-slate-400"></i>
                 <span>Sync</span>
               </button>
-              <button onclick="switchTab('timetables', document.getElementById('tabBtnTimetables'))" class="bg-amber-400/15 hover:bg-amber-400/25 text-amber-300 border border-amber-400/35 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm transition active:scale-95 print-hide min-h-[34px]">
-                <i data-lucide="pencil" class="w-3.5 h-3.5 text-amber-400"></i>
-                <span>Edit Timetable</span>
+              <button onclick="switchTab('students', document.getElementById('tabBtnStudents'))" class="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm transition active:scale-95 print-hide min-h-[34px]">
+                <i data-lucide="users" class="w-3.5 h-3.5 text-emerald-400"></i>
+                <span>Manage Students</span>
               </button>
             </div>
           </header>
@@ -525,7 +529,7 @@ body { -webkit-tap-highlight-color: transparent; }
 
       </div>
 
-      <!-- ================= TAB: TIMETABLES ================= -->
+      <!-- ================= TAB 2: TIMETABLES ================= -->
       <div id="timetables" class="tab-content space-y-3" role="tabpanel">
         <div class="bg-blue-50 border border-blue-200 rounded-xl p-3.5 flex items-start justify-between gap-3 text-blue-900">
           <div class="flex items-start gap-3">
@@ -533,7 +537,7 @@ body { -webkit-tap-highlight-color: transparent; }
             <div>
               <h3 class="text-xs font-black uppercase tracking-wide">Master Weekly Schedule Templates</h3>
               <p class="text-xs text-blue-800 mt-0.5 leading-relaxed">
-                Add/edit periods, custom timings, and default lesson topics. Hours calculate automatically from time ranges.
+                Add/edit periods, custom timings, and default lesson topics. Hours calculate automatically from time ranges, and changes synchronize across your planner days.
               </p>
             </div>
           </div>
@@ -581,7 +585,72 @@ body { -webkit-tap-highlight-color: transparent; }
         </div>
       </div>
 
-      <!-- ================= TAB: ANALYTICS ================= -->
+      <!-- ================= TAB 3: STUDENTS MASTER SHEET ================= -->
+      <div id="students" class="tab-content space-y-3" role="tabpanel">
+        
+        <!-- Header Banner & Action Bar -->
+        <div class="bg-white rounded-xl border border-slate-200 p-3.5 sm:p-4 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+                <i data-lucide="users" class="w-4 h-4"></i>
+              </div>
+              <h2 class="text-sm font-black text-slate-900 tracking-wide uppercase">Students & Batches Master Sheet</h2>
+            </div>
+            <p class="text-xs text-slate-500 mt-0.5">
+              Central student directory. Changes here instantly reflect in attendance sheets, WhatsApp reminders, and timetables.
+            </p>
+          </div>
+
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <div class="relative flex-1 sm:w-56">
+              <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2"></i>
+              <input type="text" id="studentMasterSearch" oninput="renderStudentsMaster()" placeholder="Search student or batch..." class="w-full pl-8 pr-3 py-1.5 border border-slate-300 rounded-lg text-xs font-semibold focus:ring-2 focus:ring-emerald-500 outline-none min-h-[36px]">
+            </div>
+            <button onclick="promptCreateNewBatch()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 shadow-sm transition active:scale-95 shrink-0 min-h-[36px]">
+              <i data-lucide="plus-circle" class="w-4 h-4"></i>
+              <span>New Batch</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Master Statistics Row -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5" id="studentsMasterStats"></div>
+
+        <!-- View Mode Switcher -->
+        <div class="flex items-center justify-between bg-white px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold">
+          <div class="flex items-center gap-1">
+            <button onclick="setStudentMasterView('cards')" id="btnViewCards" class="px-3 py-1.5 rounded-lg font-bold bg-emerald-600 text-white transition min-h-[32px]">Batch Cards</button>
+            <button onclick="setStudentMasterView('directory')" id="btnViewDirectory" class="px-3 py-1.5 rounded-lg font-bold text-slate-600 hover:bg-slate-100 transition min-h-[32px]">Master Directory Table</button>
+          </div>
+          <span class="text-slate-400 text-[11px] hidden sm:inline">Click any student name to edit</span>
+        </div>
+
+        <!-- Cards View -->
+        <div id="studentBatchCardsContainer" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3"></div>
+
+        <!-- Directory Table View -->
+        <div id="studentDirectoryContainer" class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-50 text-slate-400 text-[11px] font-bold uppercase tracking-wider border-b border-slate-200">
+                  <th class="py-2.5 px-3">#</th>
+                  <th class="py-2.5 px-3">STUDENT NAME</th>
+                  <th class="py-2.5 px-3">BATCH</th>
+                  <th class="py-2.5 px-3">SCHEDULED DAYS</th>
+                  <th class="py-2.5 px-3 text-center">RECORDS</th>
+                  <th class="py-2.5 px-3 text-right">ACTIONS</th>
+                </tr>
+              </thead>
+              <tbody id="studentDirectoryBody" class="divide-y divide-slate-100 text-xs"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ================= TAB 4: ANALYTICS ================= -->
       <div id="analytics" class="tab-content space-y-3" role="tabpanel">
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5" id="statsGrid"></div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -615,7 +684,7 @@ body { -webkit-tap-highlight-color: transparent; }
       <span>Designed with <span class="text-rose-500">💖</span> by <strong class="font-bold text-white">Rohit Singh</strong></span>
     </div>
     <div class="text-[11px] text-slate-400 hidden sm:block">
-      Persistent Attendance Store & Data Safety Active
+      Master Roster Engine & Live Sync Active
     </div>
   </footer>
 
@@ -625,7 +694,7 @@ body { -webkit-tap-highlight-color: transparent; }
 /* ==========================================================================
    CONSTANTS & MASTER SCHEDULE DEFINITIONS
    ========================================================================== */
-const TEMPLATE_VERSION = '2026.1';
+const TEMPLATE_VERSION = '2026.2';
 const STORAGE_KEY_PLANNER = 'singhPlanner_core_v1';
 const STORAGE_KEY_ATTENDANCE = 'singhPlanner_attendance_v1';
 const STORAGE_KEY_RESCUE = 'singhPlanner_rescue_backup';
@@ -778,6 +847,7 @@ let state = {
 let attendanceStore = {};
 
 let currentPlannerView = 'school';
+let studentMasterView = 'cards';
 let charts = {};
 let editMode = { school: false, tuition: false, study: false };
 let lastCheckedDate = toISO(new Date());
@@ -845,7 +915,6 @@ function parseMinutes(t, fallbackMod) {
   return h * 60 + min;
 }
 
-// Single unified time-range parser
 function parseTimeRange(timeStr) {
   if (!timeStr || typeof timeStr !== 'string') {
     return { valid: false, startMin: 99999, endMin: 99999, durationMin: 0, hrs: 0, formatted: '' };
@@ -893,6 +962,168 @@ function parseSchoolTask(taskStr) {
   if (!name) name = isFree ? 'Free Period' : 'School Class';
   return { name, isLab, isFree };
 }
+
+function normalizeBatchId(name) {
+  return 'b_' + (name || '').toLowerCase().replace(/[^a-z0-9]/g, '_').replace(/_+/g, '_').slice(0, 30);
+}
+
+/* ==========================================================================
+   CENTRALIZED REACTIVE DATA LAYER (AppData)
+   Reused by Planner, Attendance, Master Timetables, and Master Rosters
+   ========================================================================== */
+const AppData = {
+  // Batch & Student Roster Operations
+  getAllBatches() {
+    const batchMap = new Map();
+
+    // 1. Scan from existing rosters
+    Object.keys(state.rosters || {}).forEach(batchId => {
+      batchMap.set(batchId, {
+        batchId,
+        title: this.getBatchDisplayName(batchId),
+        students: [...(state.rosters[batchId] || [])],
+        scheduledDays: new Set()
+      });
+    });
+
+    // 2. Cross-reference scheduled days from master tuition timetable
+    DAYS.forEach(day => {
+      (state.timetables.tuition[day] || []).forEach(slot => {
+        const bId = slot.batchId || normalizeBatchId(slot.task);
+        if (!batchMap.has(bId)) {
+          batchMap.set(bId, {
+            batchId: bId,
+            title: slot.task || this.getBatchDisplayName(bId),
+            students: [...(state.rosters[bId] || [])],
+            scheduledDays: new Set()
+          });
+        }
+        const b = batchMap.get(bId);
+        b.scheduledDays.add(day);
+        if (slot.task && (!b.title || b.title === bId)) {
+          b.title = slot.task;
+        }
+      });
+    });
+
+    return Array.from(batchMap.values()).map(b => ({
+      ...b,
+      daysArray: Array.from(b.scheduledDays)
+    }));
+  },
+
+  getBatchDisplayName(batchId) {
+    for (const d of DAYS) {
+      const slot = (state.timetables.tuition[d] || []).find(s => (s.batchId || normalizeBatchId(s.task)) === batchId);
+      if (slot && slot.task) return slot.task;
+    }
+    return batchId.replace(/^b_/, '').replace(/_/g, ' ').toUpperCase();
+  },
+
+  getRoster(batchId) {
+    if (!state.rosters[batchId]) {
+      state.rosters[batchId] = [];
+    }
+    return state.rosters[batchId];
+  },
+
+  addStudent(batchId, studentName) {
+    const clean = (studentName || '').trim();
+    if (!clean) return { success: false, message: 'Name cannot be blank' };
+    if (!state.rosters[batchId]) state.rosters[batchId] = [];
+
+    if (state.rosters[batchId].includes(clean)) {
+      return { success: false, message: 'Student already exists in this batch' };
+    }
+
+    state.rosters[batchId].push(clean);
+    this.saveAndNotify(`Added "${clean}" to roster`);
+    return { success: true };
+  },
+
+  renameStudent(batchId, oldName, newName) {
+    const cleanNew = (newName || '').trim();
+    if (!cleanNew) return { success: false, message: 'New name cannot be blank' };
+    if (!state.rosters[batchId]) return { success: false, message: 'Batch not found' };
+
+    const idx = state.rosters[batchId].indexOf(oldName);
+    if (idx === -1) return { success: false, message: 'Student not found in batch' };
+
+    state.rosters[batchId][idx] = cleanNew;
+
+    // Migrate attendance ledger safely
+    Object.keys(attendanceStore).forEach(dateStr => {
+      if (attendanceStore[dateStr] && attendanceStore[dateStr][batchId]) {
+        if (attendanceStore[dateStr][batchId][oldName] !== undefined) {
+          attendanceStore[dateStr][batchId][cleanNew] = attendanceStore[dateStr][batchId][oldName];
+          delete attendanceStore[dateStr][batchId][oldName];
+        }
+      }
+    });
+
+    this.saveAndNotify(`Renamed "${oldName}" to "${cleanNew}"`);
+    return { success: true };
+  },
+
+  removeStudent(batchId, studentName) {
+    if (!state.rosters[batchId]) return;
+    lastDeletedStudent = { batchId, name: studentName };
+    state.rosters[batchId] = state.rosters[batchId].filter(s => s !== studentName);
+
+    this.saveAndNotify(`Removed "${studentName}"`);
+    showToastWithUndo(`Removed ${studentName}`, () => {
+      if (lastDeletedStudent) {
+        state.rosters[lastDeletedStudent.batchId].push(lastDeletedStudent.name);
+        AppData.saveAndNotify(`Restored "${lastDeletedStudent.name}"`);
+      }
+    });
+  },
+
+  createBatch(batchTitle, batchIdCustom) {
+    const title = (batchTitle || '').trim();
+    if (!title) return { success: false, message: 'Batch title is required' };
+    const bId = batchIdCustom ? normalizeBatchId(batchIdCustom) : normalizeBatchId(title);
+
+    if (state.rosters[bId]) {
+      return { success: false, message: 'Batch ID already exists' };
+    }
+
+    state.rosters[bId] = [];
+    this.saveAndNotify(`Batch "${title}" created`);
+    return { success: true, batchId: bId };
+  },
+
+  deleteBatch(batchId) {
+    if (state.rosters[batchId]) {
+      delete state.rosters[batchId];
+    }
+    this.saveAndNotify(`Batch deleted`);
+  },
+
+  getStudentAttendanceStats(batchId, studentName) {
+    let totalPresent = 0;
+    let totalAbsent = 0;
+    let totalRecords = 0;
+
+    Object.keys(attendanceStore).forEach(dateStr => {
+      const dayBatch = attendanceStore[dateStr]?.[batchId];
+      if (dayBatch && dayBatch[studentName]) {
+        totalRecords++;
+        if (dayBatch[studentName] === 'P') totalPresent++;
+        if (dayBatch[studentName] === 'A') totalAbsent++;
+      }
+    });
+
+    return { totalPresent, totalAbsent, totalRecords };
+  },
+
+  // State Persistence & Global Synchronizer
+  saveAndNotify(toastMsg = null) {
+    saveState();
+    renderAll();
+    if (toastMsg) showToast(toastMsg, 'success');
+  }
+};
 
 /* ================= STORAGE & RECOVERY SAFEGUARDS ================= */
 function loadState() {
@@ -955,7 +1186,6 @@ function saveState() {
   }
 }
 
-// Prunes only daily checklist instances older than 15 days, NEVER prunes attendanceStore
 function pruneOldTasks(keepDays = 15) {
   if (!state.days) return;
   const now = new Date();
@@ -1045,16 +1275,10 @@ function reloadDayFromTimetable(dateStr) {
     delete state.days[dateStr];
   }
   ensureDayPopulated(dateStr);
-  saveState();
-  renderAll();
-  showToast(`Synced ${getDayName(dateStr)} from weekly templates`, 'success');
+  AppData.saveAndNotify(`Synced ${getDayName(dateStr)} from weekly templates`);
 }
 
 /* ================= PREVIOUS CLASS LOOKUP ================= */
-function normalizeBatchId(name) {
-  return 'b_' + (name || '').toLowerCase().replace(/[^a-z0-9]/g, '_').replace(/_+/g, '_').slice(0, 30);
-}
-
 function getPreviousClassDate(batchId, refDateStr) {
   if (!batchId || !refDateStr) return addDays(refDateStr, -1);
 
@@ -1062,11 +1286,8 @@ function getPreviousClassDate(batchId, refDateStr) {
     const candDate = addDays(refDateStr, -i);
     const dName = getDayName(candDate);
 
-    // 1. Check in weekly timetable
     const ttSlots = (state.timetables && state.timetables.tuition && state.timetables.tuition[dName]) || [];
     const inTimetable = ttSlots.some(s => (s.batchId || normalizeBatchId(s.task)) === batchId);
-
-    // 2. Check in saved attendance ledger
     const hasAtt = attendanceStore[candDate] && attendanceStore[candDate][batchId] && Object.keys(attendanceStore[candDate][batchId]).length > 0;
 
     if (inTimetable || hasAtt) {
@@ -1259,6 +1480,7 @@ function renderAll() {
   renderTables();
   calculateWeeklyStats();
   renderTimetables();
+  renderStudentsMaster();
   updatePrintDate();
   if (window.lucide && lucide.createIcons) lucide.createIcons();
 }
@@ -1302,7 +1524,6 @@ function renderSidebarDaySelector() {
     const sunIso = addDays(state.viewMondayStr, 6);
     const sunNum = sunIso.split('-')[2];
     const isSunActive = sunIso === state.activeDateStr;
-    const isSunToday = sunIso === today;
 
     let sunClasses = 'bg-amber-50 hover:bg-amber-100 border-amber-200 text-amber-950';
     if (isSunActive) sunClasses = 'bg-blue-600 text-white border-blue-400 font-bold shadow-sm';
@@ -1419,6 +1640,9 @@ function renderTables() {
     dayData.tuition_study.forEach(item => {
       const isLive = getTimeStatus(item.time, state.activeDateStr) === 'active';
       const isTuition = item.cat === 'Tuition';
+      const bId = item.batchId || normalizeBatchId(item.task);
+      const studentCount = (state.rosters[bId] || []).length;
+
       const tr = document.createElement('tr');
       tr.className = `border-b border-slate-100 transition ${item.completed ? 'bg-emerald-50/20' : (isLive ? 'bg-blue-50/80 border-l-4 border-blue-600' : 'hover:bg-slate-50/80')}`;
       tr.innerHTML = `
@@ -1432,7 +1656,10 @@ function renderTables() {
         <td class="py-2.5 px-3 text-left col-tk">
           <div class="flex items-center justify-between gap-2 flex-wrap">
             <div class="flex flex-col min-w-0">
-              <span class="text-xs sm:text-sm font-bold ${item.completed ? 'line-through text-slate-400' : 'text-slate-900'}">${escapeHtml(item.task)}</span>
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs sm:text-sm font-bold ${item.completed ? 'line-through text-slate-400' : 'text-slate-900'}">${escapeHtml(item.task)}</span>
+                ${isTuition ? `<span class="bg-slate-100 text-slate-600 font-bold text-[10px] px-1.5 py-0.5 rounded border border-slate-200">${studentCount} students</span>` : ''}
+              </div>
               ${isTuition ? `
                 <div class="flex items-center gap-1.5 mt-0.5 text-xs">
                   <span class="text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200/80 cursor-pointer font-medium" onclick="editTopicPrompt('${item.slotId}', 'tuition_study')">
@@ -1441,10 +1668,12 @@ function renderTables() {
                 </div>` : ''}
             </div>
             ${isTuition ? `
-              <button onclick="openAttendanceModal('${item.slotId}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg flex items-center gap-1 transition active:scale-95 shadow-sm min-h-[36px]">
-                <i data-lucide="send" class="w-3.5 h-3.5"></i>
-                <span>WhatsApp</span>
-              </button>` : ''}
+              <div class="flex items-center gap-1">
+                <button onclick="openAttendanceModal('${item.slotId}')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg flex items-center gap-1 transition active:scale-95 shadow-sm min-h-[34px]">
+                  <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                  <span>WhatsApp</span>
+                </button>
+              </div>` : ''}
           </div>
         </td>
         <td class="py-2.5 px-3 text-center col-cat whitespace-nowrap">
@@ -1471,9 +1700,7 @@ function toggleTaskDone(slotId, sec) {
   const item = dayData[sec].find(i => i.slotId === slotId);
   if (item) {
     item.completed = !item.completed;
-    saveState();
-    calculateWeeklyStats();
-    renderTables();
+    AppData.saveAndNotify();
   }
 }
 
@@ -1491,9 +1718,7 @@ function editTopicPrompt(slotId, sec) {
     onConfirm: (val) => {
       item.topic = val.trim();
       item.topicEdited = true;
-      saveState();
-      renderTables();
-      showToast('Topic updated', 'success');
+      AppData.saveAndNotify('Topic updated');
     }
   });
 }
@@ -1507,8 +1732,7 @@ function checkAllToday() {
   renderAll();
   showToastWithUndo('All tasks checked', () => {
     state.days[state.activeDateStr] = JSON.parse(prevCompletedState);
-    saveState();
-    renderAll();
+    AppData.saveAndNotify('Checks reverted');
   });
 }
 
@@ -1521,8 +1745,217 @@ function clearTodayChecks() {
   renderAll();
   showToastWithUndo('All tasks cleared', () => {
     state.days[state.activeDateStr] = JSON.parse(prevCompletedState);
-    saveState();
-    renderAll();
+    AppData.saveAndNotify('Checks reverted');
+  });
+}
+
+/* ==========================================================================
+   STUDENTS MASTER SHEET RENDERER & DIRECTORY
+   ========================================================================== */
+function setStudentMasterView(mode) {
+  studentMasterView = mode;
+  const cards = document.getElementById('studentBatchCardsContainer');
+  const dir = document.getElementById('studentDirectoryContainer');
+  const btnC = document.getElementById('btnViewCards');
+  const btnD = document.getElementById('btnViewDirectory');
+
+  if (mode === 'cards') {
+    cards.classList.remove('hidden');
+    dir.classList.add('hidden');
+    btnC.className = 'px-3 py-1.5 rounded-lg font-bold bg-emerald-600 text-white transition min-h-[32px]';
+    btnD.className = 'px-3 py-1.5 rounded-lg font-bold text-slate-600 hover:bg-slate-100 transition min-h-[32px]';
+  } else {
+    cards.classList.add('hidden');
+    dir.classList.remove('hidden');
+    btnD.className = 'px-3 py-1.5 rounded-lg font-bold bg-emerald-600 text-white transition min-h-[32px]';
+    btnC.className = 'px-3 py-1.5 rounded-lg font-bold text-slate-600 hover:bg-slate-100 transition min-h-[32px]';
+  }
+  renderStudentsMaster();
+}
+
+function renderStudentsMaster() {
+  const batches = AppData.getAllBatches();
+  const searchInput = document.getElementById('studentMasterSearch');
+  const query = (searchInput?.value || '').toLowerCase().trim();
+
+  // Aggregate stats
+  let totalBatches = batches.length;
+  let totalEnrollments = 0;
+  let allStudentNamesSet = new Set();
+
+  batches.forEach(b => {
+    totalEnrollments += b.students.length;
+    b.students.forEach(s => allStudentNamesSet.add(s.toLowerCase()));
+  });
+
+  const statsRow = document.getElementById('studentsMasterStats');
+  if (statsRow) {
+    statsRow.innerHTML = `
+      <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-sm">
+        <span class="text-[10px] font-bold uppercase text-slate-400">Total Batches</span>
+        <div class="text-xl font-black text-slate-800 mt-0.5">${totalBatches}</div>
+      </div>
+      <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-sm">
+        <span class="text-[10px] font-bold uppercase text-slate-400">Total Enrolled</span>
+        <div class="text-xl font-black text-emerald-600 mt-0.5">${totalEnrollments}</div>
+      </div>
+      <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-sm">
+        <span class="text-[10px] font-bold uppercase text-slate-400">Unique Students</span>
+        <div class="text-xl font-black text-blue-600 mt-0.5">${allStudentNamesSet.size}</div>
+      </div>
+      <div class="bg-white p-3 rounded-xl border border-slate-200 text-center shadow-sm">
+        <span class="text-[10px] font-bold uppercase text-slate-400">Avg Batch Size</span>
+        <div class="text-xl font-black text-orange-500 mt-0.5">${totalBatches > 0 ? (totalEnrollments / totalBatches).toFixed(1) : '0'}</div>
+      </div>`;
+  }
+
+  // Filter batches by query
+  const filteredBatches = batches.filter(b => {
+    if (!query) return true;
+    if (b.title.toLowerCase().includes(query)) return true;
+    if (b.batchId.toLowerCase().includes(query)) return true;
+    return b.students.some(s => s.toLowerCase().includes(query));
+  });
+
+  // 1. Render Batch Cards View
+  const cardsContainer = document.getElementById('studentBatchCardsContainer');
+  if (cardsContainer) {
+    cardsContainer.innerHTML = filteredBatches.map(b => {
+      const daysBadges = b.daysArray.map(d => `<span class="bg-blue-50 text-blue-700 font-bold px-1.5 py-0.5 rounded text-[10px]">${d}</span>`).join(' ') || '<span class="text-slate-400 text-[10px] italic">Not scheduled</span>';
+
+      return `
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col justify-between">
+          <div>
+            <div class="p-3 bg-slate-50 border-b border-slate-200 flex items-start justify-between gap-2">
+              <div class="min-w-0">
+                <h3 class="text-xs font-black text-slate-900 truncate">${escapeHtml(b.title)}</h3>
+                <div class="flex items-center gap-1.5 mt-1 flex-wrap">${daysBadges}</div>
+              </div>
+              <span class="bg-emerald-100 text-emerald-800 text-xs font-black px-2 py-0.5 rounded-full shrink-0">
+                ${b.students.length}
+              </span>
+            </div>
+
+            <!-- Student List -->
+            <div class="p-3 space-y-1.5 max-h-56 overflow-y-auto">
+              ${b.students.length === 0 ? '<div class="text-xs text-slate-400 italic py-2 text-center">No students enrolled yet</div>' : ''}
+              ${b.students.map((student, idx) => {
+                const stats = AppData.getStudentAttendanceStats(b.batchId, student);
+                return `
+                  <div class="flex items-center justify-between p-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 transition text-xs">
+                    <div class="flex items-center gap-1.5 min-w-0">
+                      <span class="text-slate-400 font-bold text-[10px] w-4 text-center">${idx + 1}</span>
+                      <span class="font-bold text-slate-800 truncate cursor-pointer hover:text-blue-600" onclick="promptRenameStudent('${b.batchId}', '${escapeHtml(student)}')">
+                        ${escapeHtml(student)}
+                      </span>
+                    </div>
+                    <div class="flex items-center gap-1 shrink-0">
+                      <span class="text-[10px] font-bold text-slate-500 bg-white px-1.5 py-0.5 rounded border border-slate-200" title="Present: ${stats.totalPresent}, Absent: ${stats.totalAbsent}">
+                        ${stats.totalPresent}P / ${stats.totalRecords}
+                      </span>
+                      <button onclick="promptRenameStudent('${b.batchId}', '${escapeHtml(student)}')" class="p-1 text-slate-400 hover:text-blue-600" title="Edit name">
+                        <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
+                      </button>
+                      <button onclick="AppData.removeStudent('${b.batchId}', '${escapeHtml(student)}')" class="p-1 text-slate-400 hover:text-rose-600" title="Remove student">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                      </button>
+                    </div>
+                  </div>`;
+              }).join('')}
+            </div>
+          </div>
+
+          <!-- Add student inline form -->
+          <div class="p-2.5 bg-slate-50/80 border-t border-slate-200 flex items-center gap-1.5">
+            <input type="text" id="addStInput_${b.batchId}" placeholder="Add student..." class="flex-1 px-2.5 py-1.5 text-xs font-semibold bg-white border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-emerald-500 min-h-[34px]" onkeydown="if(event.key==='Enter') addStudentFromCard('${b.batchId}')">
+            <button onclick="addStudentFromCard('${b.batchId}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg transition min-h-[34px]">
+              Add
+            </button>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  // 2. Render Directory Table View
+  const dirBody = document.getElementById('studentDirectoryBody');
+  if (dirBody) {
+    let rowIdx = 1;
+    let tableRows = [];
+
+    filteredBatches.forEach(b => {
+      b.students.forEach(student => {
+        const stats = AppData.getStudentAttendanceStats(b.batchId, student);
+        tableRows.push(`
+          <tr class="hover:bg-slate-50 transition">
+            <td class="py-2.5 px-3 text-slate-400 font-bold">${rowIdx++}</td>
+            <td class="py-2.5 px-3 font-bold text-slate-900 cursor-pointer hover:text-blue-600" onclick="promptRenameStudent('${b.batchId}', '${escapeHtml(student)}')">
+              ${escapeHtml(student)}
+            </td>
+            <td class="py-2.5 px-3 font-semibold text-slate-600">${escapeHtml(b.title)}</td>
+            <td class="py-2.5 px-3">
+              <span class="text-xs font-medium text-slate-500">${b.daysArray.join(', ') || 'N/A'}</span>
+            </td>
+            <td class="py-2.5 px-3 text-center">
+              <span class="bg-slate-100 text-slate-700 font-bold text-xs px-2 py-0.5 rounded-full border border-slate-200">
+                ${stats.totalPresent} Present / ${stats.totalRecords} Logs
+              </span>
+            </td>
+            <td class="py-2.5 px-3 text-right">
+              <button onclick="promptRenameStudent('${b.batchId}', '${escapeHtml(student)}')" class="px-2 py-1 bg-slate-100 hover:bg-blue-50 text-blue-600 rounded text-xs font-bold mr-1">
+                Rename
+              </button>
+              <button onclick="AppData.removeStudent('${b.batchId}', '${escapeHtml(student)}')" class="px-2 py-1 bg-slate-100 hover:bg-rose-50 text-rose-600 rounded text-xs font-bold">
+                Remove
+              </button>
+            </td>
+          </tr>`);
+      });
+    });
+
+    if (tableRows.length === 0) {
+      dirBody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-xs font-semibold text-slate-400">No student records match your query</td></tr>`;
+    } else {
+      dirBody.innerHTML = tableRows.join('');
+    }
+  }
+
+  if (window.lucide && lucide.createIcons) lucide.createIcons();
+}
+
+function addStudentFromCard(batchId) {
+  const input = document.getElementById(`addStInput_${batchId}`);
+  if (!input) return;
+  const res = AppData.addStudent(batchId, input.value);
+  if (res.success) {
+    input.value = '';
+  } else {
+    showToast(res.message, 'error');
+  }
+}
+
+function promptRenameStudent(batchId, oldName) {
+  showActionModal({
+    title: 'Rename Student',
+    msg: `Change name for "${oldName}" in this batch. All attendance logs will migrate seamlessly:`,
+    hasInput: true,
+    inputVal: oldName,
+    onConfirm: (newName) => {
+      const res = AppData.renameStudent(batchId, oldName, newName);
+      if (!res.success) showToast(res.message, 'error');
+    }
+  });
+}
+
+function promptCreateNewBatch() {
+  showActionModal({
+    title: 'Create New Batch',
+    msg: 'Enter Title for the new batch (e.g. "Class XII CS – Special Batch"):',
+    hasInput: true,
+    inputVal: '',
+    onConfirm: (title) => {
+      const res = AppData.createBatch(title);
+      if (!res.success) showToast(res.message, 'error');
+    }
   });
 }
 
@@ -1537,7 +1970,7 @@ function openAttendanceModal(slotId) {
   currentAttBatchId = item.batchId || normalizeBatchId(item.task);
   currentAttBatchTitle = item.task;
 
-  // Compute smart previous class date
+  // Compute previous class date
   const prevDate = getPreviousClassDate(currentAttBatchId, state.activeDateStr);
   currentAttTargetDate = prevDate;
 
@@ -1578,7 +2011,6 @@ function updateAttDateButtons() {
     btnP.className = 'px-3 py-1.5 text-xs font-bold rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 min-h-[36px]';
   }
 
-  // Warning banner if previous class has zero attendance
   const hasPrevAtt = attendanceStore[prevDate] && attendanceStore[prevDate][currentAttBatchId] && Object.keys(attendanceStore[prevDate][currentAttBatchId]).length > 0;
   const banner = document.getElementById('attPrevWarningBanner');
   if (banner) {
@@ -1592,12 +2024,12 @@ function updateAttDateButtons() {
 
 function renderAttendanceList() {
   const container = document.getElementById('attStudentList');
-  const roster = state.rosters[currentAttBatchId] || [];
+  const roster = AppData.getRoster(currentAttBatchId);
   const dayAtt = (attendanceStore[currentAttTargetDate] && attendanceStore[currentAttTargetDate][currentAttBatchId]) || {};
 
   let pCount = 0;
   container.innerHTML = roster.map(student => {
-    const status = dayAtt[student] || null; // Unmarked default
+    const status = dayAtt[student] || null;
     if (status === 'P' || status === 'L') pCount++;
 
     return `
@@ -1618,7 +2050,6 @@ function renderAttendanceList() {
   if (window.lucide && lucide.createIcons) lucide.createIcons();
 }
 
-// Delegated event listener avoiding inline quote injection bugs
 document.getElementById('attStudentList').addEventListener('click', (e) => {
   const btn = e.target.closest('button[data-action]');
   if (!btn) return;
@@ -1631,7 +2062,8 @@ document.getElementById('attStudentList').addEventListener('click', (e) => {
     const val = btn.getAttribute('data-val');
     setStudentStatus(student, val);
   } else if (action === 'delete') {
-    removeStudentFromRoster(student);
+    AppData.removeStudent(currentAttBatchId, student);
+    renderAttendanceList();
   }
 });
 
@@ -1644,7 +2076,7 @@ function setStudentStatus(student, status) {
 }
 
 function markAllAttendance(status) {
-  const roster = state.rosters[currentAttBatchId] || [];
+  const roster = AppData.getRoster(currentAttBatchId);
   if (!attendanceStore[currentAttTargetDate]) attendanceStore[currentAttTargetDate] = {};
   if (!attendanceStore[currentAttTargetDate][currentAttBatchId]) attendanceStore[currentAttTargetDate][currentAttBatchId] = {};
   roster.forEach(st => attendanceStore[currentAttTargetDate][currentAttBatchId][st] = status);
@@ -1652,40 +2084,18 @@ function markAllAttendance(status) {
   renderAttendanceList();
 }
 
-function addStudentToRoster() {
+function addStudentFromModal() {
   const input = document.getElementById('newStudentInput');
   const name = input.value.trim();
   if (!name) return;
-  if (!state.rosters[currentAttBatchId]) state.rosters[currentAttBatchId] = [];
-  if (!state.rosters[currentAttBatchId].includes(name)) {
-    state.rosters[currentAttBatchId].push(name);
+  const res = AppData.addStudent(currentAttBatchId, name);
+  if (res.success) {
     setStudentStatus(name, 'P');
     input.value = '';
     renderAttendanceList();
-    showToast(`Added ${name} to roster`, 'success');
   } else {
-    showToast('Student already exists in roster', 'info');
+    showToast(res.message, 'error');
   }
-}
-
-function removeStudentFromRoster(student) {
-  showActionModal({
-    title: 'Remove Student',
-    msg: `Remove "${student}" permanently from this roster?`,
-    onConfirm: () => {
-      lastDeletedStudent = { batchId: currentAttBatchId, name: student };
-      state.rosters[currentAttBatchId] = (state.rosters[currentAttBatchId] || []).filter(s => s !== student);
-      saveState();
-      renderAttendanceList();
-      showToastWithUndo(`Removed ${student}`, () => {
-        if (lastDeletedStudent) {
-          state.rosters[lastDeletedStudent.batchId].push(lastDeletedStudent.name);
-          saveState();
-          renderAttendanceList();
-        }
-      });
-    }
-  });
 }
 
 function saveAttendanceOnly() {
@@ -1704,7 +2114,6 @@ function confirmAttendanceAndLaunchWhatsApp() {
     return;
   }
 
-  // Ensure topic is present, prompt if blank
   if (!item.topic || !item.topic.trim()) {
     showActionModal({
       title: 'Topic Required',
@@ -1742,11 +2151,9 @@ function dispatchWhatsAppMessage(item) {
   let startTime = range.formatted.split('-')[0]?.trim() || '';
   let endTime = range.formatted.split('-')[1]?.trim() || '';
 
-  // Determine dynamic day header
   const isToday = state.activeDateStr === toISO(new Date());
   const dayHeader = isToday ? 'Today’s' : `${getDayName(state.activeDateStr)}’s`;
 
-  // Look up previous class absentees
   const prevDate = getPreviousClassDate(currentAttBatchId, state.activeDateStr);
   const formattedBackDate = formatFullDisplayDate(prevDate);
   const includeAbsentees = document.getElementById('includeAbsenteeToggle')?.checked;
@@ -1769,7 +2176,6 @@ ${listText}
 *=✦=✦=✦=✦=✦=✦=✦==✦=✦=✦=✦=*`;
   }
 
-  // Exact Requested Message Structure
   const message = `
 *=•=•=•=•=•=•=•=•==•=•=•=•=•=•=•=•=*
 ⏰*Gentle Reminder*
@@ -1854,9 +2260,16 @@ function syncCurrentTimetableInputs(t) {
 
       if (timeVal || taskVal) {
         const oldId = oldSlots[idx]?.id;
+        const assignedBatchId = t === 'tuition' ? (oldSlots[idx]?.batchId || normalizeBatchId(taskVal)) : undefined;
+
+        // Ensure roster key exists for tuition
+        if (t === 'tuition' && assignedBatchId && !state.rosters[assignedBatchId]) {
+          state.rosters[assignedBatchId] = [];
+        }
+
         newSlots.push({
           id: oldId || (t.slice(0, 3) + '_' + Math.random().toString(36).slice(2, 7)),
-          batchId: t === 'tuition' ? (oldSlots[idx]?.batchId || normalizeBatchId(taskVal)) : undefined,
+          batchId: assignedBatchId,
           time: timeVal,
           task: taskVal,
           topic: topicVal
@@ -1950,6 +2363,7 @@ function switchTab(tabId, btn) {
 
   if (tabId === 'analytics') setTimeout(updateAnalytics, 60);
   if (tabId === 'timetables') renderTimetables();
+  if (tabId === 'students') renderStudentsMaster();
   if (window.lucide && lucide.createIcons) lucide.createIcons();
 }
 
@@ -2039,7 +2453,7 @@ function importBackup(e) {
   const reader = new FileReader();
   reader.onload = (evt) => {
     try {
-      const data = JSON.parse(evt.target.result);
+      const data = JSON.parse(evt.result);
       if (!data || (!data.planner && !data.timetables)) throw new Error('Invalid schema');
 
       showActionModal({
@@ -2062,7 +2476,7 @@ function importBackup(e) {
     } catch (err) {
       showToast('Selected file is not a valid planner backup', 'error');
     } finally {
-      e.target.value = ''; // Reset input to allow re-importing identical file
+      e.target.value = '';
     }
   };
   reader.readAsText(file);
