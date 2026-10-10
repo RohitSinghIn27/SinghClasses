@@ -1,14 +1,13 @@
 /* ==========================================================================
-   CONFIG & CLIENT-SIDE STATE ENGINE
+   CONFIG & STATE ENGINE
    ========================================================================== */
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzm4iBslm1kCUUstcD3n8kMRCoulq_M40bayLw_OLCaRcGntkT4ZMot_ipK5zBgmreEAw/exec';
 const APPS_SCRIPT_SECRET_TOKEN = 'singh_planner_secure_2026';
 
-const TEMPLATE_VERSION = '2026.5_unified_cols';
+const TEMPLATE_VERSION = '2026.7_premium_edtech';
 const STORAGE_KEY_PLANNER = 'singhPlanner_core_v2';
 const STORAGE_KEY_ATTENDANCE = 'singhPlanner_attendance_v2';
 const STORAGE_KEY_RESCUE = 'singhPlanner_rescue_backup_v2';
-const STORAGE_KEY_LAST_SYNC = 'singhPlanner_last_sync_time';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
@@ -36,12 +35,12 @@ let currentAttBatchId = null;
 let currentAttBatchTitle = '';
 let currentAttTaskId = null;
 let currentAttTargetDate = toISO(new Date());
+let attWeekBaseDate = toISO(new Date());
 let lastDeletedStudent = null;
 let activeModalTrigger = null;
-
-/* ================= APPS SCRIPT PULL ENGINE (AUTHENTICATED) ================= */
 let syncInFlight = false;
 
+/* ================= APPS SCRIPT PULL ENGINE ================= */
 function logRosterEdit(op, batchId, name) {
   state.rosterEdits = state.rosterEdits || [];
   state.rosterEdits.push({ op, batchId, name });
@@ -50,7 +49,6 @@ function logRosterEdit(op, batchId, name) {
 function mergeRosterFromSheet(sheetRosters) {
   const result = {};
   Object.keys(sheetRosters).forEach(b => { result[b] = [...sheetRosters[b]]; });
-
   const kept = [];
   (state.rosterEdits || []).forEach(e => {
     const list = result[e.batchId] || (result[e.batchId] = []);
@@ -73,24 +71,17 @@ async function fetchFromAppsScript(showFeedback = true) {
     if (showFeedback) showToast('Missing APPS_SCRIPT_URL', 'error');
     return;
   }
-
   if (showFeedback) showToast('Pulling data from Google Sheets...', 'info');
 
   syncInFlight = true;
   try {
     const fetchUrl = `${APPS_SCRIPT_URL}?action=getAll&token=${encodeURIComponent(APPS_SCRIPT_SECRET_TOKEN)}&_t=${Date.now()}`;
-    const res = await fetch(fetchUrl, {
-      method: 'GET',
-      redirect: 'follow'
-    });
-
+    const res = await fetch(fetchUrl, { method: 'GET', redirect: 'follow' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
     const data = await res.json();
 
     if (data.status === 'success') {
       let syncedItems = [];
-
       if (data.timetables && typeof data.timetables === 'object') {
         state.timetables = {
           school: Object.assign({ Mon: [], Tue: [], Wed: [], Thu: [], Fri: [], Sat: [], Sun: [] }, data.timetables.school || {}),
@@ -99,16 +90,13 @@ async function fetchFromAppsScript(showFeedback = true) {
         };
         syncedItems.push('Timetables');
       }
-
       if (data.rosters && typeof data.rosters === 'object') {
         state.rosters = mergeRosterFromSheet(data.rosters);
         syncedItems.push('Rosters');
       }
-
       saveState();
       ensureDayPopulated(state.activeDateStr);
       renderAll();
-
       if (showFeedback) {
         const titleSuffix = data.spreadsheetTitle ? ` from "${data.spreadsheetTitle}"` : '';
         showToast(`Pulled ${syncedItems.join(' & ')}${titleSuffix} successfully!`, 'success');
@@ -124,7 +112,7 @@ async function fetchFromAppsScript(showFeedback = true) {
   }
 }
 
-/* ================= DATE / TIME UTILITIES ================= */
+/* ================= DATE & TIME UTILITIES ================= */
 function toISO(dateObj) {
   const d = new Date(dateObj);
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -262,13 +250,12 @@ function normalizeBatchId(name) {
   return 'b_' + (name || '').toLowerCase().replace(/[^a-z0-9]/g, '_').replace(/_+/g, '_').slice(0, 30);
 }
 
-/* ================= APPDATA INTERFACE ================= */
+/* ================= DATA ACCESS LAYER ================= */
 const AppData = {
   getRoster(batchId) {
     if (!state.rosters[batchId]) state.rosters[batchId] = [];
     return state.rosters[batchId];
   },
-
   addStudent(batchId, studentName) {
     const clean = (studentName || '').trim();
     if (!clean) return { success: false, message: 'Name cannot be blank' };
@@ -281,7 +268,6 @@ const AppData = {
     this.saveAndNotify(`Added "${clean}" to roster`);
     return { success: true };
   },
-
   removeStudent(batchId, studentName) {
     if (!state.rosters[batchId]) return;
     lastDeletedStudent = { batchId, name: studentName };
@@ -296,7 +282,6 @@ const AppData = {
       }
     });
   },
-
   saveAndNotify(toastMsg = null) {
     saveState();
     renderAll();
@@ -304,7 +289,7 @@ const AppData = {
   }
 };
 
-/* ================= STORAGE MANAGEMENT ================= */
+/* ================= LOCAL STORAGE ENGINE ================= */
 function loadState() {
   const rawPlanner = localStorage.getItem(STORAGE_KEY_PLANNER);
   const rawAtt = localStorage.getItem(STORAGE_KEY_ATTENDANCE);
@@ -459,7 +444,7 @@ function getPreviousClassDate(batchId, refDateStr) {
   return addDays(refDateStr, -1);
 }
 
-/* ================= RENDERING ================= */
+/* ================= PLANNER RENDERING & TABLE LOGIC ================= */
 function setText(id, value) {
   const el = document.getElementById(id);
   if (el) el.textContent = value;
@@ -481,7 +466,9 @@ function updatePrintDate() {
   const [y, m, d] = state.activeDateStr.split('-');
   const dt = new Date(y, m - 1, d);
   const target = document.getElementById('headerDateStr');
-  if (target) target.textContent = dt.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+  if (target) {
+    target.textContent = dt.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+  }
 }
 
 function jumpToday() {
@@ -499,13 +486,12 @@ function shiftDay(dir) {
   renderAll();
 }
 
-/* ================= TABLES & PERIOD HIGHLIGHTING ================= */
 function renderTables() {
   const limitISO = toISO(new Date(Date.now() - 15 * 86400000));
   const isArchived = state.activeDateStr < limitISO;
   const dayData = state.days[state.activeDateStr] || { school: [], tuition_study: [] };
 
-  // 1. School
+  // 1. School Classes
   const sTbody = document.getElementById('schoolBody');
   sTbody.innerHTML = '';
   if (isArchived) {
@@ -525,41 +511,103 @@ function renderTables() {
 
       let modeBadge = '';
       if (item.isFree) {
-        modeBadge = `<span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded border border-amber-200">FREE</span>`;
+        modeBadge = `<span class="inline-flex items-center gap-1 bg-amber-50 text-amber-800 text-[11px] font-black px-2.5 py-1 rounded-lg border border-amber-200">☕ FREE</span>`;
       } else if (item.isLab) {
-        modeBadge = `<span class="bg-cyan-100 text-cyan-800 text-[10px] font-bold px-2 py-0.5 rounded border border-cyan-200">LAB</span>`;
+        modeBadge = `<span class="inline-flex items-center gap-1 bg-cyan-50 text-cyan-800 text-[11px] font-black px-2.5 py-1 rounded-lg border border-cyan-200">🧪 LAB</span>`;
       } else {
-        modeBadge = `<span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded border border-blue-200">CLASS</span>`;
+        modeBadge = `<span class="inline-flex items-center gap-1 bg-blue-50 text-blue-800 text-[11px] font-black px-2.5 py-1 rounded-lg border border-blue-200">👥 CLASS</span>`;
       }
 
       const tr = document.createElement('tr');
-      tr.className = `border-b border-slate-100 transition ${rowClass}`;
+      tr.className = `border-b border-slate-200 transition ${rowClass}`;
       tr.innerHTML = `
         <td class="py-2.5 px-3 text-center col-cb">
-          <div class="inline-flex items-center gap-1.5 justify-center">
+          <div class="hidden sm:inline-flex items-center gap-1.5 justify-center">
             ${item.isFree ? '<span class="text-slate-300 font-bold">—</span>' : ''}
-            <span class="text-[11px] font-bold text-slate-500">${idx + 1}</span>
+            <span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-700 font-black text-xs flex items-center justify-center border border-slate-200">${idx + 1}</span>
+          </div>
+          <div class="sm:hidden flex items-center gap-2 w-full">
+            <span class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center font-black text-sm shrink-0">${idx + 1}</span>
+            <div class="text-left">
+              <span class="block text-[9px] font-black text-slate-400 uppercase tracking-wider">SESSION</span>
+              <span class="block text-xs font-black text-slate-800">${idx + 1}</span>
+            </div>
           </div>
         </td>
         <td class="py-2.5 px-3 text-left col-tm">
-          ${isLive ? '<span class="inline-flex items-center gap-1 bg-blue-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm mr-1"><span class="w-1.5 h-1.5 rounded-full bg-white live-pulse"></span>LIVE</span>' : ''}
-          ${isUpcoming ? '<span class="inline-flex items-center gap-1 bg-amber-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm mr-1">NEXT</span>' : ''}
-          ${escapeHtml(item.time)}
+          <div class="hidden sm:flex items-center gap-1.5">
+            ${isLive ? '<span class="inline-flex items-center gap-1 bg-blue-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm mr-1"><span class="w-1.5 h-1.5 rounded-full bg-white live-pulse"></span>LIVE</span>' : ''}
+            ${isUpcoming ? '<span class="inline-flex items-center gap-1 bg-amber-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm mr-1">NEXT</span>' : ''}
+            <span class="font-extrabold text-slate-800 text-xs">${escapeHtml(item.time)}</span>
+          </div>
+          <div class="sm:hidden flex items-center gap-2 w-full">
+            <div class="w-7 h-7 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </div>
+            <div class="text-left min-w-0">
+              <span class="block text-[9px] font-black text-slate-400 uppercase tracking-wider">TIME</span>
+              <span class="block text-[11px] font-black text-slate-800 truncate">${escapeHtml(item.time)}</span>
+            </div>
+          </div>
         </td>
         <td class="py-2.5 px-3 text-left col-cls" ${item.isFree ? '' : `onclick="toggleTaskDone('${item.slotId}', 'school')" title="Click to mark done or undo"`}>
-          <span class="${item.completed ? 'line-through text-slate-400' : 'text-slate-900'}">${escapeHtml(item.task)}</span>
+          <div class="hidden sm:block">
+            <span class="px-3 py-1 rounded-lg font-black text-xs ${item.isFree ? 'bg-amber-50 text-amber-800 border border-amber-200' : 'bg-blue-50 text-blue-700 border border-blue-200/80'} ${item.completed ? 'line-through opacity-60' : ''}">
+              ${escapeHtml(item.task)}
+            </span>
+          </div>
+          <div class="sm:hidden flex items-center gap-2 w-full">
+            <div class="w-7 h-7 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+            </div>
+            <div class="text-left min-w-0">
+              <span class="block text-[9px] font-black text-slate-400 uppercase tracking-wider">CLASS</span>
+              <span class="block text-xs font-black text-slate-900 truncate">${escapeHtml(item.task)}</span>
+            </div>
+          </div>
         </td>
         <td class="py-2.5 px-3 text-left col-tpc">
-          ${!item.isFree ? `
-            <span onclick="editTopicPrompt('${item.slotId}', 'school')">
-              <strong>${escapeHtml(item.topic || '+ Add topic')}</strong>
-            </span>` : '<span class="text-slate-300 font-bold">—</span>'}
+          <div class="hidden sm:block">
+            ${!item.isFree ? `
+              <span onclick="editTopicPrompt('${item.slotId}', 'school')" class="inline-block px-3 py-1 bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-200 rounded-lg text-blue-600 font-bold text-xs cursor-pointer shadow-sm transition">
+                <strong>${escapeHtml(item.topic || '+ Add topic')}</strong>
+              </span>` : '<span class="text-slate-300 font-bold">—</span>'}
+          </div>
+          <div class="sm:hidden flex items-center gap-2 w-full" onclick="editTopicPrompt('${item.slotId}', 'school')">
+            <div class="w-7 h-7 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+            </div>
+            <div class="text-left min-w-0">
+              <span class="block text-[9px] font-black text-slate-400 uppercase tracking-wider">TOPIC</span>
+              <span class="block text-[11px] font-black text-blue-600 truncate">${escapeHtml(item.topic || 'List in Python')}</span>
+            </div>
+          </div>
         </td>
         <td class="py-2.5 px-3 text-center col-mode">
-          ${modeBadge}
+          <div class="hidden sm:block">${modeBadge}</div>
+          <div class="sm:hidden flex items-center gap-2 w-full">
+            <div class="w-7 h-7 rounded-full bg-cyan-100 text-cyan-700 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M10 2v7.31L4.22 19.4A2 2 0 0 0 5.91 22h12.18a2 2 0 0 0 1.69-2.6L14 9.31V2z"></path></svg>
+            </div>
+            <div class="text-left">
+              <span class="block text-[9px] font-black text-slate-400 uppercase tracking-wider">MODE</span>
+              <span class="block text-[10px] font-black text-cyan-800 bg-cyan-100 px-1.5 py-0.5 rounded border border-cyan-300">${item.mode || 'LAB'}</span>
+            </div>
+          </div>
         </td>
-        <td class="py-2.5 px-3 text-right col-dur">
-          ${formatDuration(item.hrs)}
+        <td class="py-2.5 px-3 text-center col-dur">
+          <div class="hidden sm:inline-block text-xs font-black text-slate-800">
+            <span>${formatDuration(item.hrs)}</span>
+          </div>
+          <div class="sm:hidden flex items-center gap-2 w-full">
+            <div class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4 fill-none stroke-currentColor stroke-width-2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </div>
+            <div class="text-left min-w-0">
+              <span class="block text-[9px] font-black text-slate-400 uppercase tracking-wider">DURATION</span>
+              <span class="block text-xs font-black text-slate-800">${formatDuration(item.hrs)}</span>
+            </div>
+          </div>
         </td>`;
       sTbody.appendChild(tr);
     });
@@ -576,7 +624,7 @@ function renderTables() {
   const sBar = document.getElementById('schoolProgressBar');
   if (sBar) sBar.style.width = `${sPct}%`;
 
-  // 2. Tuition
+  // 2. Tuition & Study
   const tTbody = document.getElementById('tuitionStudyBody');
   tTbody.innerHTML = '';
   if (isArchived) {
@@ -603,46 +651,136 @@ function renderTables() {
       else if (isUpcoming) rowClass = 'bg-amber-50/40';
 
       const tr = document.createElement('tr');
-      tr.className = `border-b border-slate-100 transition ${rowClass}`;
+      tr.className = `border-b border-slate-200 transition ${rowClass}`;
       tr.innerHTML = `
         <td class="py-2.5 px-3 text-center col-cb">
-          <div class="inline-flex items-center gap-1.5 justify-center">
-            <span class="text-[11px] font-bold text-slate-500">${item.sno || (idx + 1)}</span>
+          <div class="hidden sm:inline-flex items-center gap-1.5 justify-center">
+            <span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-700 font-black text-xs flex items-center justify-center border border-slate-200">${item.sno || (idx + 1)}</span>
+          </div>
+          <div class="sm:hidden flex items-center gap-1.5 w-full">
+            <div class="w-7 h-7 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
+              <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line></svg>
+            </div>
+            <div class="text-left">
+              <span class="block text-[8px] font-black text-slate-400 uppercase tracking-wider">SESSION</span>
+              <span class="block text-xs font-black text-slate-800">${item.sno || (idx + 1)}</span>
+            </div>
           </div>
         </td>
         <td class="py-2.5 px-3 text-left col-tm">
-          ${isLive ? '<span class="inline-flex items-center gap-1 bg-blue-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm mr-1"><span class="w-1.5 h-1.5 rounded-full bg-white live-pulse"></span>LIVE</span>' : ''}
-          ${isUpcoming ? '<span class="inline-flex items-center gap-1 bg-amber-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm mr-1">NEXT</span>' : ''}
-          ${escapeHtml(item.time)}
+          <div class="hidden sm:flex items-center gap-1.5">
+            ${isLive ? '<span class="inline-flex items-center gap-1 bg-blue-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm mr-1"><span class="w-1.5 h-1.5 rounded-full bg-white live-pulse"></span>LIVE</span>' : ''}
+            ${isUpcoming ? '<span class="inline-flex items-center gap-1 bg-amber-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm mr-1">NEXT</span>' : ''}
+            <span class="font-extrabold text-slate-800 text-xs">${escapeHtml(item.time)}</span>
+          </div>
+          <div class="sm:hidden flex items-center gap-1.5 w-full">
+            <div class="w-7 h-7 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+              <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </div>
+            <div class="text-left min-w-0">
+              <span class="block text-[8px] font-black text-slate-400 uppercase tracking-wider">TIME</span>
+              <span class="block text-[10px] font-black text-slate-800 truncate">${escapeHtml(item.time)}</span>
+            </div>
+          </div>
         </td>
         <td class="py-2.5 px-3 text-left col-cls" onclick="toggleTaskDone('${item.slotId}', 'tuition_study')" title="Click to mark done or undo">
-          <span class="${item.completed ? 'line-through text-slate-400' : 'text-slate-900'}">${escapeHtml(item.task)}</span>
+          <div class="hidden sm:block">
+            <span class="font-black text-slate-900 text-xs ${item.completed ? 'line-through text-slate-400' : ''}">${escapeHtml(item.task)}</span>
+          </div>
+          <div class="sm:hidden flex items-center gap-1.5 w-full">
+            <div class="w-7 h-7 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
+              <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+            </div>
+            <div class="text-left min-w-0">
+              <span class="block text-[8px] font-black text-slate-400 uppercase tracking-wider">CLASS</span>
+              <span class="block text-[11px] font-black text-slate-900 truncate">${escapeHtml(item.task)}</span>
+            </div>
+          </div>
         </td>
         <td class="py-2.5 px-3 text-center col-ven">
-          <span class="bg-slate-100 text-slate-700 font-semibold text-[11px] px-2 py-0.5 rounded border border-slate-200">${escapeHtml(item.venue || 'Center')}</span>
+          <div class="hidden sm:block">
+            <span class="inline-block bg-slate-100 text-slate-700 font-extrabold text-[11px] px-2.5 py-1 rounded-lg border border-slate-200">
+              ${escapeHtml(item.venue || 'Center')}
+            </span>
+          </div>
+          <div class="sm:hidden flex items-center gap-1.5 w-full">
+            <div class="w-7 h-7 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center shrink-0">
+              <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            </div>
+            <div class="text-left min-w-0">
+              <span class="block text-[8px] font-black text-slate-400 uppercase tracking-wider">VENUE</span>
+              <span class="block text-[10px] font-black text-slate-800 truncate">${escapeHtml(item.venue || 'Sant Nagar')}</span>
+            </div>
+          </div>
         </td>
         <td class="py-2.5 px-3 text-left col-tpc">
-          ${isTuition ? `
-            <span onclick="editTopicPrompt('${item.slotId}', 'tuition_study')">
-              <strong>${escapeHtml(item.topic || '+ Add topic')}</strong>
-            </span>` : '<span class="text-slate-300 font-bold">—</span>'}
+          <div class="hidden sm:block">
+            ${isTuition ? `
+              <span onclick="editTopicPrompt('${item.slotId}', 'tuition_study')" class="inline-block px-3 py-1 bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-200 rounded-lg text-blue-600 font-bold text-xs cursor-pointer shadow-sm transition">
+                <strong>${escapeHtml(item.topic || '+ Add topic')}</strong>
+              </span>` : '<span class="text-slate-300 font-bold">—</span>'}
+          </div>
+          <div class="sm:hidden flex items-center gap-1.5 w-full" onclick="editTopicPrompt('${item.slotId}', 'tuition_study')">
+            <div class="w-7 h-7 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
+              <svg class="w-3.5 h-3.5 fill-none stroke-currentColor stroke-width-2" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+            </div>
+            <div class="text-left min-w-0">
+              <span class="block text-[8px] font-black text-slate-400 uppercase tracking-wider">TOPIC</span>
+              <span class="block text-[10px] font-black text-blue-600 truncate">${escapeHtml(item.topic || 'Database Concepts')}</span>
+            </div>
+          </div>
         </td>
         <td class="py-2.5 px-3 text-center col-act">
-          ${isTuition ? (sentAt ? `
-            <button onclick="openAttendanceModal('${item.slotId}', this)" type="button" aria-label="Reminder sent at ${sentAt} for${escapeHtml(item.task)}. Send again" class="bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition active:scale-95 px-2 py-1 rounded-md text-[11px] font-bold whitespace-nowrap">
-              ✓ Sent ${sentAt}
-            </button>` : `
-            <button onclick="openAttendanceModal('${item.slotId}', this)" type="button" aria-label="Mark Attendance and send reminder for ${escapeHtml(item.task)}" class="bg-emerald-600 hover:bg-emerald-700 text-white transition active:scale-95">
-              <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-              <span>Msg</span>
-            </button>`) : '<span class="text-slate-300 font-bold">—</span>'}
+          <div class="hidden sm:block">
+            ${isTuition ? (sentAt ? `
+              <button onclick="openAttendanceModal('${item.slotId}', this)" type="button" class="bg-emerald-50 text-emerald-700 border border-emerald-300 hover:bg-emerald-100 transition active:scale-95 px-3 py-1 rounded-lg text-xs font-black shadow-sm">
+                ✓ Sent ${sentAt}
+              </button>` : `
+              <button onclick="openAttendanceModal('${item.slotId}', this)" type="button" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black px-3.5 py-1 rounded-lg text-xs flex items-center justify-center gap-1.5 mx-auto transition active:scale-95 shadow-sm">
+                <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                <span>Msg</span>
+              </button>`) : '<span class="text-slate-300 font-bold">—</span>'}
+          </div>
+          <div class="sm:hidden w-full">
+            <button onclick="openAttendanceModal('${item.slotId}', this)" type="button" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2 px-1.5 rounded-xl flex items-center justify-center gap-1 text-[10px] shadow-sm">
+              <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2 shrink-0" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+              <span class="truncate">${sentAt ? 'Sent ' + sentAt : 'Send Reminder'}</span>
+            </button>
+          </div>
         </td>
         <td class="py-2.5 px-3 text-center col-nos">
-          ${isTuition ? `<span class="bg-blue-50 text-blue-700 font-bold text-[10.5px] px-2 py-0.5 rounded border border-blue-200">${countLabel}</span>
-          <div class="text-[10px] mt-0.5 ${attMarked ? 'text-slate-500' : 'text-amber-600 font-bold'}">${attLabel}</div>` : '<span class="text-slate-400 text-[10.5px] italic">Self</span>'}
+          <div class="hidden sm:block">
+            ${isTuition ? `
+              <span class="inline-flex items-center gap-1 bg-blue-50 text-blue-700 font-black text-[11px] px-2.5 py-1 rounded-lg border border-blue-200">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                ${countLabel}
+              </span>
+              <div class="text-[10px] mt-0.5 ${attMarked ? 'text-slate-500 font-semibold' : 'text-accentRed font-black'}">${attLabel}</div>` : '<span class="text-slate-400 text-xs italic">Self</span>'}
+          </div>
+          <div class="sm:hidden flex items-center gap-1.5 w-full">
+            <div class="w-7 h-7 rounded-full bg-rose-100 text-accentRed flex items-center justify-center shrink-0">
+              <svg class="w-3.5 h-3.5 fill-none stroke-currentColor stroke-width-2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+            </div>
+            <div class="text-left min-w-0">
+              <span class="block text-[8px] font-black text-slate-400 uppercase tracking-wider">STUDENTS</span>
+              <span class="block text-[10px] font-black text-blue-700 truncate">${countLabel}</span>
+              <span class="block text-[9px] font-black ${attMarked ? 'text-slate-500' : 'text-accentRed'} truncate">${attLabel}</span>
+            </div>
+          </div>
         </td>
-        <td class="py-2.5 px-3 text-right col-dur">
-          ${formatDuration(item.hrs)}
+        <td class="py-2.5 px-3 text-center col-dur">
+          <div class="hidden sm:inline-block text-xs font-black text-slate-800">
+            <span>${formatDuration(item.hrs)}</span>
+          </div>
+          <div class="sm:hidden flex items-center gap-1.5 w-full">
+            <div class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+              <svg class="w-3.5 h-3.5 fill-none stroke-currentColor stroke-width-2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </div>
+            <div class="text-left min-w-0">
+              <span class="block text-[8px] font-black text-slate-400 uppercase tracking-wider">DURATION</span>
+              <span class="block text-xs font-black text-slate-800">${formatDuration(item.hrs)}</span>
+            </div>
+          </div>
         </td>`;
       tTbody.appendChild(tr);
     });
@@ -689,7 +827,67 @@ function editTopicPrompt(slotId, sec) {
   });
 }
 
-/* ================= ATTENDANCE & WHATSAPP ================= */
+/* ================= ATTENDANCE & 7-DAY CALENDAR ENGINE ================= */
+function getWeekDays(refDateStr) {
+  const [y, m, d] = refDateStr.split('-').map(Number);
+  const dt = new Date(y, m - 1, d);
+  const day = dt.getDay();
+  const diffToMon = day === 0 ? -6 : 1 - day;
+  const monDate = new Date(y, m - 1, d + diffToMon);
+  const week = [];
+  for (let i = 0; i < 7; i++) {
+    const cur = new Date(monDate.getFullYear(), monDate.getMonth(), monDate.getDate() + i);
+    week.push(toISO(cur));
+  }
+  return week;
+}
+
+function shiftAttWeek(dir) {
+  attWeekBaseDate = addDays(attWeekBaseDate, dir * 7);
+  renderAttCalendar();
+}
+
+function selectAttDate(dateStr) {
+  currentAttTargetDate = dateStr;
+  renderAttCalendar();
+  renderAttendanceList();
+  fetchAttendanceFromSheet(currentAttTargetDate, currentAttBatchId);
+}
+
+function renderAttCalendar() {
+  const container = document.getElementById('attDateCalendarStrip');
+  if (!container) return;
+  const weekDays = getWeekDays(attWeekBaseDate);
+  const prevClassDate = getPreviousClassDate(currentAttBatchId, state.activeDateStr);
+
+  container.innerHTML = weekDays.map(dateStr => {
+    const [y, m, d] = dateStr.split('-').map(Number);
+    const dt = new Date(y, m - 1, d);
+    const dayName = dt.toLocaleDateString('en-US', { weekday: 'short' });
+    const dateNum = `${dt.getDate()} ${dt.toLocaleDateString('en-US', { month: 'short' })}`;
+    const isSelected = dateStr === currentAttTargetDate;
+
+    const activeClass = isSelected
+      ? 'bg-gradient-to-br from-amber-400 to-amber-500 text-slate-950 font-black border-amber-400 shadow-sm'
+      : 'bg-[#0c1f38] text-slate-300 hover:text-white hover:bg-slate-700/80 border-slate-700/70';
+
+    return `
+      <button type="button" onclick="selectAttDate('${dateStr}')" 
+        class="flex flex-col items-center justify-center px-1.5 py-0.5 rounded-md text-center border transition min-w-[38px] sm:min-w-[42px] min-h-[26px] ${activeClass}">
+        <span class="text-[8px] font-bold leading-tight ${isSelected ? 'text-slate-950' : 'text-slate-400'}">${dayName}</span>
+        <span class="text-[9.5px] font-black leading-tight whitespace-nowrap">${dateNum}</span>
+      </button>
+    `;
+  }).join('');
+
+  const hasPrevAtt = attendanceStore[prevClassDate]?.[currentAttBatchId] && Object.keys(attendanceStore[prevClassDate][currentAttBatchId]).length > 0;
+  const banner = document.getElementById('attPrevWarningBanner');
+  if (banner) {
+    if (!hasPrevAtt && currentAttTargetDate === prevClassDate) banner.classList.remove('hidden');
+    else banner.classList.add('hidden');
+  }
+}
+
 function openAttendanceModal(slotId, triggerElement = null) {
   const dayData = state.days[state.activeDateStr];
   if (!dayData) return;
@@ -701,14 +899,14 @@ function openAttendanceModal(slotId, triggerElement = null) {
   currentAttBatchId = item.batchId || normalizeBatchId(item.task);
   currentAttBatchTitle = item.task;
 
-  const prevDate = getPreviousClassDate(currentAttBatchId, state.activeDateStr);
-  currentAttTargetDate = prevDate;
+  currentAttTargetDate = state.activeDateStr;
+  attWeekBaseDate = state.activeDateStr;
 
-  document.getElementById('attBatchTitle').textContent = `Attendance: ${currentAttBatchTitle}`;
+  document.getElementById('attBatchTitle').textContent = currentAttBatchTitle;
   const modal = document.getElementById('attendanceModal');
   modal.classList.remove('hidden');
 
-  updateAttDateButtons();
+  renderAttCalendar();
   renderAttendanceList();
   fetchAttendanceFromSheet(currentAttTargetDate, currentAttBatchId);
 }
@@ -722,64 +920,36 @@ function closeAttendanceModal() {
   }
 }
 
-function switchAttDate(mode) {
-  currentAttTargetDate = (mode === 'previous')
-    ? getPreviousClassDate(currentAttBatchId, state.activeDateStr)
-    : state.activeDateStr;
-  updateAttDateButtons();
-  renderAttendanceList();
-  fetchAttendanceFromSheet(currentAttTargetDate, currentAttBatchId);
-}
-
-function updateAttDateButtons() {
-  const prevDate = getPreviousClassDate(currentAttBatchId, state.activeDateStr);
-  const btnP = document.getElementById('btnDatePrevious');
-  const btnT = document.getElementById('btnDateToday');
-
-  btnP.textContent = `Previous Class (${formatShortDate(prevDate)})`;
-  btnT.textContent = `Today (${formatShortDate(state.activeDateStr)})`;
-
-  if (currentAttTargetDate === prevDate) {
-    btnP.className = 'px-3 py-1.5 text-xs font-bold rounded-lg border border-orange-400 bg-orange-100 text-orange-900 shadow-sm min-h-[36px]';
-    btnT.className = 'px-3 py-1.5 text-xs font-bold rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 min-h-[36px]';
-  } else {
-    btnT.className = 'px-3 py-1.5 text-xs font-bold rounded-lg border border-blue-400 bg-blue-100 text-blue-900 shadow-sm min-h-[36px]';
-    btnP.className = 'px-3 py-1.5 text-xs font-bold rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 min-h-[36px]';
-  }
-
-  const hasPrevAtt = attendanceStore[prevDate]?.[currentAttBatchId] && Object.keys(attendanceStore[prevDate][currentAttBatchId]).length > 0;
-  const banner = document.getElementById('attPrevWarningBanner');
-  if (banner) {
-    if (!hasPrevAtt && currentAttTargetDate === prevDate) banner.classList.remove('hidden');
-    else banner.classList.add('hidden');
-  }
-}
-
 function renderAttendanceList() {
   const container = document.getElementById('attStudentList');
   const roster = AppData.getRoster(currentAttBatchId);
   const dayAtt = (attendanceStore[currentAttTargetDate] && attendanceStore[currentAttTargetDate][currentAttBatchId]) || {};
 
   let pCount = 0;
-  container.innerHTML = roster.map(student => {
+  container.innerHTML = roster.map((student, idx) => {
     const status = dayAtt[student] || null;
     if (status === 'P' || status === 'L') pCount++;
 
     return `
-      <div class="flex items-center justify-between p-2 bg-slate-50 hover:bg-slate-100 rounded-xl border border-slate-200 transition">
-        <span class="text-xs font-bold text-slate-800 truncate pr-2">${escapeHtml(student)}</span>
-        <div class="flex items-center gap-1.5 shrink-0" data-student-row="${escapeHtml(student)}">
-          <button data-action="status" data-val="P" type="button" aria-label="Mark ${escapeHtml(student)} Present" class="px-2.5 py-1 text-xs font-black rounded-lg transition min-h-[34px] min-w-[34px] ${status === 'P' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-white border border-slate-200 text-slate-700'}">P</button>
-          <button data-action="status" data-val="A" type="button" aria-label="Mark ${escapeHtml(student)} Absent" class="px-2.5 py-1 text-xs font-black rounded-lg transition min-h-[34px] min-w-[34px] ${status === 'A' ? 'bg-rose-600 text-white shadow-sm' : 'bg-white border border-slate-200 text-slate-700'}">A</button>
-          <button data-action="status" data-val="L" type="button" aria-label="Mark ${escapeHtml(student)} Late" class="px-2.5 py-1 text-xs font-black rounded-lg transition min-h-[34px] min-w-[34px] ${status === 'L' ? 'bg-amber-500 text-white shadow-sm' : 'bg-white border border-slate-200 text-slate-700'}">Late</button>
-          <button data-action="delete" type="button" class="text-slate-400 hover:text-rose-500 p-1 rounded min-h-[34px] min-w-[34px] flex items-center justify-center" title="Remove student" aria-label="Remove ${escapeHtml(student)}">
-            <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-          </button>
+      <div class="flex items-center justify-between px-2 py-1 bg-white rounded-lg border border-slate-200/90 shadow-[0_1px_2px_rgba(0,0,0,0.03)] hover:border-slate-300 transition">
+        <div class="flex items-center gap-1.5 min-w-0 pr-1">
+          <span class="w-5 h-5 rounded bg-blue-50 text-blue-700 font-black text-[10px] flex items-center justify-center shrink-0 border border-blue-200/80">${idx + 1}</span>
+          <span class="text-[11.5px] font-bold text-slate-800 truncate">${escapeHtml(student)}</span>
+        </div>
+        <div class="flex items-center gap-1 shrink-0" data-student-row="${escapeHtml(student)}">
+          <button data-action="status" data-val="P" type="button" aria-label="Mark ${escapeHtml(student)} Present" class="px-2 py-0 text-[10.5px] font-black rounded-md transition min-h-[24px] min-w-[24px] ${status === 'P' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-slate-50 border border-slate-200 text-slate-700 hover:bg-slate-100'}">P</button>
+          <button data-action="status" data-val="A" type="button" aria-label="Mark ${escapeHtml(student)} Absent" class="px-2 py-0 text-[10.5px] font-black rounded-md transition min-h-[24px] min-w-[24px] ${status === 'A' ? 'bg-accentRed text-white shadow-sm' : 'bg-slate-50 border border-slate-200 text-slate-700 hover:bg-slate-100'}">A</button>
+          <button data-action="status" data-val="L" type="button" aria-label="Mark ${escapeHtml(student)} Late" class="px-1.5 py-0 text-[10.5px] font-black rounded-md transition min-h-[24px] min-w-[28px] ${status === 'L' ? 'bg-amber-500 text-white shadow-sm' : 'bg-slate-50 border border-slate-200 text-slate-700 hover:bg-slate-100'}">Late</button>
         </div>
       </div>`;
   }).join('');
 
+  const pct = roster.length > 0 ? Math.round((pCount / roster.length) * 100) : 0;
   document.getElementById('attStatsCounter').textContent = `${pCount} Present / ${roster.length} Total`;
+  const bar = document.getElementById('attStatsBar');
+  if (bar) bar.style.width = `${pct}%`;
+  const pctBadge = document.getElementById('attPctBadge');
+  if (pctBadge) pctBadge.textContent = `${pct}%`;
 }
 
 document.getElementById('attStudentList').addEventListener('click', (e) => {
@@ -793,9 +963,6 @@ document.getElementById('attStudentList').addEventListener('click', (e) => {
   if (action === 'status') {
     const val = btn.getAttribute('data-val');
     setStudentStatus(student, val);
-  } else if (action === 'delete') {
-    AppData.removeStudent(currentAttBatchId, student);
-    renderAttendanceList();
   }
 });
 
@@ -882,7 +1049,7 @@ async function fetchAttendanceFromSheet(dateStr, batchId) {
     saveState();
 
     if (dateStr === currentAttTargetDate && batchId === currentAttBatchId) {
-      updateAttDateButtons();
+      renderAttCalendar();
       renderAttendanceList();
     }
   } catch (err) {
@@ -926,6 +1093,7 @@ function confirmAttendanceAndLaunchWhatsApp() {
   }
 }
 
+/* ================= WHATSAPP DISPATCH & REMINDERS ================= */
 function dispatchWhatsAppMessage(item) {
   let cleanSubject = (item.task || 'Class').trim();
   if (/^(IX|X|XI|XII)\b/i.test(cleanSubject) && !/^Class\b/i.test(cleanSubject)) {
@@ -980,7 +1148,7 @@ function dispatchWhatsAppMessage(item) {
   showToast('Reminder sent & attendance saved', 'success');
 }
 
-/* ================= SECTION FILTERS & MODALS ================= */
+/* ================= MODALS, TOASTS & NAVIGATION ================= */
 function setPlannerView(view) {
   const sSec = document.getElementById('schoolClassesSec');
   const tSec = document.getElementById('tuitionStudySec');
@@ -1011,8 +1179,8 @@ function handleNavClick(view, btn) {
 function showToast(msg, type = 'info') {
   const container = document.getElementById('toastContainer');
   const toast = document.createElement('div');
-  const bg = type === 'error' ? 'bg-rose-600' : (type === 'success' ? 'bg-emerald-600' : 'bg-slate-900');
-  toast.className = `${bg} text-white font-semibold text-xs px-3.5 py-2.5 rounded-xl shadow-lg flex items-center gap-2 pointer-events-auto transition transform duration-200`;
+  const bg = type === 'error' ? 'bg-accentRed' : (type === 'success' ? 'bg-emerald-600' : 'bg-brandNavy');
+  toast.className = `${bg} text-white font-extrabold text-xs px-4 py-2.5 rounded-xl shadow-xl flex items-center gap-2 pointer-events-auto transition transform duration-200 border border-white/10`;
   toast.innerHTML = `<span>${escapeHtml(msg)}</span>`;
   container.appendChild(toast);
   setTimeout(() => toast.remove(), 3200);
@@ -1021,10 +1189,10 @@ function showToast(msg, type = 'info') {
 function showToastWithUndo(msg, onUndo) {
   const container = document.getElementById('toastContainer');
   const toast = document.createElement('div');
-  toast.className = 'bg-slate-900 text-white font-semibold text-xs px-3.5 py-2 rounded-xl shadow-lg flex items-center justify-between gap-3 pointer-events-auto';
+  toast.className = 'bg-brandNavy text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-xl flex items-center justify-between gap-3 pointer-events-auto border border-white/10';
   toast.innerHTML = `
     <span>${escapeHtml(msg)}</span>
-    <button class="bg-amber-400 hover:bg-amber-300 text-slate-900 px-2 py-1 rounded font-black text-[11px] min-h-[28px]">Undo</button>`;
+    <button class="bg-amber-400 hover:bg-amber-300 text-slate-950 px-2.5 py-1 rounded-lg font-black text-[11px]">Undo</button>`;
   toast.querySelector('button').onclick = () => {
     onUndo();
     toast.remove();
@@ -1086,7 +1254,7 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-/* ================= IMPORT / EXPORT ================= */
+/* ================= BACKUP, EXPORT & INITIALIZATION ================= */
 function exportBackup() {
   state.lastBackup = Date.now();
   saveState();
@@ -1118,7 +1286,6 @@ function escapeHtml(str) {
     .replace(/'/g, '&#39;');
 }
 
-/* ================= BACKGROUND SYNC ================= */
 const BACKGROUND_SYNC_MS = 5 * 60 * 1000;
 const MIN_PULL_GAP_MS = 60 * 1000;
 let lastPullAt = 0;
@@ -1130,7 +1297,6 @@ function backgroundPull(force = false) {
   fetchFromAppsScript(false);
 }
 
-/* ================= INITIALIZATION ================= */
 window.addEventListener('load', () => {
   loadState();
   setPlannerView('school');
@@ -1159,8 +1325,4 @@ window.addEventListener('load', () => {
 
   updateClock();
   setInterval(updateClock, 30000);
-
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') updateClock();
-  });
 });

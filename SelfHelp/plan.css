@@ -1,17 +1,15 @@
 /* ==========================================================================
    PLANNER & ANALYTICS — MASTER STYLESHEET (plan.css)
-   Larger text + roomier spacing (desktop-first, zero horizontal overflow)
+   Clean Modern Navy & Amber SaaS Palette
    ========================================================================== */
 
-/* Global Smoothing */
+/* 1. Global Smoothing */
 body {
   -webkit-tap-highlight-color: transparent;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-size: 15px;
 }
 
-/* Tab Switching */
 .tab-content {
   display: none;
   opacity: 0;
@@ -23,522 +21,138 @@ body {
   opacity: 1;
 }
 
-/* Live Pulse Indicator */
 @keyframes livePulseGlow {
-  0% { transform: scale(0.95); opacity: 0.8; }
+  0% { transform: scale(0.9); opacity: 0.8; }
   50% { transform: scale(1.25); opacity: 1; }
-  100% { transform: scale(0.95); opacity: 0.8; }
+  100% { transform: scale(0.9); opacity: 0.8; }
 }
 
 .live-pulse {
-  animation: livePulseGlow 1.6s infinite ease-in-out;
+  animation: livePulseGlow 1.5s infinite ease-in-out;
 }
 
-/* ==========================================================================
-   HEADER BAR (PLANNER / DATE PILL / ACTIONS)
-   ========================================================================== */
-
-header h1 {
-  font-size: 18px !important;
-  letter-spacing: 0.06em;
-}
-
-header p {
-  font-size: 13px !important;
-  margin-top: 3px !important;
-}
-
-header button {
-  font-size: 14px !important;
-  padding-top: 8px !important;
-  padding-bottom: 8px !important;
-  padding-left: 12px !important;
-  padding-right: 12px !important;
-  min-height: 38px !important;
-  gap: 8px !important;
-}
-
-#currentDateDisplay {
-  font-size: 15px !important;
-  gap: 12px !important;
-  padding-top: 6px !important;
-  padding-bottom: 6px !important;
-  padding-left: 8px !important;
-  padding-right: 14px !important;
-}
-
-#currentDateDisplay button {
-  min-height: 32px !important;
-  height: 32px !important;
-  font-size: 13px !important;
-}
-
-#headerDateStr,
-#headerTimeStr {
-  font-size: 15px !important;
-}
-
-/* ==========================================================================
-   TOP NAVIGATION BAR (TABS + PROGRESS)
-   ========================================================================== */
-
-#topNav {
-  padding-top: 8px !important;
-  padding-bottom: 8px !important;
-  padding-left: 10px !important;
-  padding-right: 10px !important;
-  gap: 12px !important;
-}
-
-#sidebarNav {
-  gap: 8px !important;
-}
-
+/* 2. Top Navigation Tabs */
 .nav-btn {
-  transition: all 0.15s ease-in-out;
-  border-bottom: 2.5px solid transparent;
-  border-left: none !important;
-  font-size: 15px !important;
-  padding-top: 10px !important;
-  padding-bottom: 10px !important;
-  padding-left: 16px !important;
-  padding-right: 16px !important;
-  gap: 9px !important;
-  min-height: 44px !important;
+  background-color: #0c1f38;
+  color: #cbd5e1;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.nav-btn svg {
-  width: 17px !important;
-  height: 17px !important;
+.nav-btn:hover {
+  background-color: #142a4a;
+  color: #ffffff;
 }
 
 .nav-btn.active {
-  background-color: rgba(254, 240, 138, 0.16) !important;
-  color: #fef08a !important;
-  font-weight: 800 !important;
-  border-bottom-color: #facc15 !important;
-  border-left-color: transparent !important;
-  padding-bottom: 8px !important;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%) !important;
+  color: #07152b !important;
+  border-color: #f59e0b !important;
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.25);
 }
 
-/* Daily progress panel in the nav */
-#dailySummary {
-  gap: 10px !important;
-}
-
-#dailySummary > div {
-  gap: 12px !important;
-  padding-left: 14px !important;
-  padding-right: 14px !important;
-  height: 44px !important;
-  border-radius: 12px !important;
-}
-
-#dailySummary .text-xs {
-  font-size: 15px !important;
-}
-
-#dailySummary .text-\[11px\] {
-  font-size: 14px !important;
-}
-
-/* ==========================================================================
-   SECTION HEADERS (SCHOOL / TUITION & STUDY)
-   ========================================================================== */
-
-section > header {
-  padding-top: 14px !important;
-  padding-bottom: 14px !important;
-  padding-left: 18px !important;
-  padding-right: 18px !important;
-  gap: 14px !important;
-}
-
-section > header > div {
-  gap: 12px !important;
-}
-
-section > header h2 {
-  font-size: 18px !important;
-  letter-spacing: 0.04em !important;
-}
-
-section > header > div:first-child > div:first-child {
-  width: 34px !important;
-  height: 34px !important;
-}
-
-section > header svg {
-  width: 17px !important;
-  height: 17px !important;
-}
-
-/* Section progress bar a little thicker */
-section > .h-1\.5 {
-  height: 6px !important;
-}
-
-/* Section status text */
-#schoolSecMeta,
-#tuitionSecMeta {
-  font-size: 14px !important;
-}
-
-/* ==========================================================================
-   DESKTOP GRID TABLE (ROOMIER, ZERO HORIZONTAL SCROLL)
-   ========================================================================== */
-
+/* 3. Desktop Tables (min-width: 641px) */
 @media screen and (min-width: 641px) {
   table.mobile-table {
     width: 100% !important;
     border-collapse: collapse !important;
     border-spacing: 0 !important;
-    border: 1px solid #cbd5e1 !important;
+    border: 1px solid #e2e8f0 !important;
     background-color: #ffffff;
-    font-size: 15px !important;
   }
 
-  /* Header row */
   table.mobile-table thead tr {
-    background-color: #f1f5f9 !important;
-    border-bottom: 1.5px solid #cbd5e1 !important;
+    background-color: #f8fafc !important;
+    border-bottom: 2px solid #e2e8f0 !important;
   }
 
   table.mobile-table thead th {
-    padding: 12px 14px !important;
-    font-size: 13px !important;
-    font-weight: 800 !important;
+    padding: 10px 14px !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
     letter-spacing: 0.05em !important;
     color: #475569 !important;
     text-transform: uppercase !important;
-    border-right: 1px solid #cbd5e1 !important;
+    border-right: 1px solid #e2e8f0 !important;
+    border-bottom: 2px solid #e2e8f0 !important;
     vertical-align: middle !important;
-    white-space: nowrap !important;
   }
 
   table.mobile-table thead th:last-child {
     border-right: none !important;
   }
 
-  /* Body rows */
   table.mobile-table tbody tr {
     border-bottom: 1px solid #e2e8f0 !important;
     transition: background-color 0.15s ease;
   }
 
   table.mobile-table tbody tr:nth-child(even) {
-    background-color: #f8fafc;
+    background-color: #fcfdfe;
   }
 
   table.mobile-table tbody tr:hover {
     background-color: #f1f5f9 !important;
   }
 
-  /* Body cells: more padding + bigger text */
   table.mobile-table tbody td {
-    padding: 12px 14px !important;
+    padding: 9px 14px !important;
     border-right: 1px solid #e2e8f0 !important;
+    border-bottom: 1px solid #e2e8f0 !important;
     vertical-align: middle !important;
-    line-height: 1.35 !important;
-    white-space: nowrap !important;
-    font-size: 15px !important;
   }
 
   table.mobile-table tbody td:last-child {
     border-right: none !important;
   }
 
-  /* Column 1: PERIOD / SNO (checkbox + label) */
-  table.mobile-table tbody td.col-cb {
-    width: 76px !important;
-    max-width: 84px !important;
-    text-align: center !important;
-    padding: 10px 6px !important;
-    background-color: rgba(248, 250, 252, 0.4);
-  }
-
-  table.mobile-table tbody td.col-cb .inline-flex {
-    gap: 8px !important;
-  }
-
-  table.mobile-table tbody td.col-cb input[type="checkbox"] {
-    width: 18px !important;
-    height: 18px !important;
-    cursor: pointer;
-    border: 1px solid #94a3b8 !important;
-    border-radius: 4px;
-    accent-color: #2563eb;
-    vertical-align: middle;
-  }
-
-  table.mobile-table tbody td.col-cb span {
-    font-size: 14.5px !important;
-    display: inline-block !important;
-    vertical-align: middle !important;
-  }
-
-  /* Column 2: TIME */
-  table.mobile-table tbody td.col-tm {
-    width: 200px !important;
-    max-width: 220px !important;
-    font-size: 15px !important;
-    font-weight: 700 !important;
-    color: #334155 !important;
-    white-space: nowrap !important;
-  }
-
-  table.mobile-table tbody td.col-tm span.bg-blue-600,
-  table.mobile-table tbody td.col-tm span.bg-amber-600 {
-    font-size: 11px !important;
-    padding: 2px 6px !important;
-    border-radius: 4px !important;
-    margin-right: 6px !important;
-  }
-
-  /* Column 3: CLASS (School) & BATCHNAME (Tuition) */
-  table.mobile-table tbody td.col-cls {
-    font-size: 16px !important;
-    font-weight: 800 !important;
-    color: #0f172a !important;
-    white-space: nowrap !important;
-  }
-
-  #schoolClassesSec table.mobile-table thead th:nth-child(3),
-  #schoolClassesSec table.mobile-table tbody td.col-cls {
-    width: 110px !important;
-    max-width: 130px !important;
-  }
-
-  #tuitionStudySec table.mobile-table thead th:nth-child(3),
-  #tuitionStudySec table.mobile-table tbody td.col-cls {
-    width: 230px !important;
-    max-width: 260px !important;
-  }
-
-  /* Venue (Tuition) */
-  table.mobile-table tbody td.col-ven {
-    width: 130px !important;
-    max-width: 140px !important;
-    text-align: center !important;
-    white-space: nowrap !important;
-    padding: 10px 8px !important;
-  }
-
-  table.mobile-table tbody td.col-ven span {
-    font-size: 14px !important;
-    padding: 4px 10px !important;
-    border-radius: 6px !important;
-  }
-
-  /* TOPIC / TOPICNAME */
-  table.mobile-table tbody td.col-tpc {
-    white-space: nowrap !important;
-  }
-
-  table.mobile-table tbody td.col-tpc span[onclick] {
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 6px !important;
-    white-space: nowrap !important;
-    padding: 5px 12px !important;
-    font-size: 14.5px !important;
-    font-weight: 600 !important;
+  table.mobile-table tbody tr.active-period-row {
     background-color: #eff6ff !important;
-    border: 1px solid #bfdbfe !important;
-    border-radius: 6px !important;
-    color: #1d4ed8 !important;
-    cursor: pointer;
-    line-height: 1.3 !important;
-    transition: all 0.15s ease;
   }
 
-  table.mobile-table tbody td.col-tpc span[onclick]:hover {
-    background-color: #dbeafe !important;
-    border-color: #93c5fd !important;
+  table.mobile-table tbody tr.active-period-row td:first-child {
+    border-left: 4px solid #2563eb !important;
   }
 
-  table.mobile-table tbody td.col-tpc span[onclick] strong {
-    font-weight: 800 !important;
-    white-space: nowrap !important;
-  }
-
-  /* ACTION (MSG) button */
-  table.mobile-table tbody td.col-act {
-    width: 96px !important;
-    max-width: 104px !important;
-    text-align: center !important;
-    padding: 8px !important;
-  }
-
-  table.mobile-table tbody td.col-act button {
-    height: 34px !important;
-    padding: 0 12px !important;
-    border-radius: 7px !important;
-    font-size: 14px !important;
-    font-weight: 800 !important;
-    letter-spacing: 0.01em !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 6px !important;
-    box-shadow: 0 1px 2px rgba(16, 185, 129, 0.12) !important;
-    white-space: nowrap !important;
-  }
-
-  table.mobile-table tbody td.col-act button svg {
-    width: 14px !important;
-    height: 14px !important;
-  }
-
-  /* NOOFSTUDENTS (Tuition) */
-  table.mobile-table tbody td.col-nos {
-    width: 130px !important;
-    max-width: 140px !important;
-    text-align: center !important;
-    padding: 8px !important;
-  }
-
-  table.mobile-table tbody td.col-nos span {
-    font-size: 14px !important;
-    padding: 4px 10px !important;
-    border-radius: 6px !important;
-  }
-
-  /* MODE (LAB / CLASS) (School) */
-  table.mobile-table tbody td.col-mode {
-    width: 120px !important;
-    max-width: 130px !important;
-    text-align: center !important;
-    padding: 8px !important;
-  }
-
-  table.mobile-table tbody td.col-mode span {
-    font-size: 12.5px !important;
-    font-weight: 800 !important;
-    padding: 3px 10px !important;
-    border-radius: 6px !important;
-  }
-
-  /* DURATION */
-  table.mobile-table tbody td.col-dur {
-    width: 130px !important;
-    max-width: 140px !important;
-    text-align: right !important;
-    font-size: 15px !important;
-    font-weight: 800 !important;
-    color: #475569 !important;
-    white-space: nowrap !important;
-    padding-right: 16px !important;
-  }
-
-  /* Footer / totals row */
   table.mobile-table tfoot tr {
-    background-color: #f1f5f9 !important;
-    border-top: 1.5px solid #cbd5e1 !important;
+    background-color: #f8fafc !important;
+    border-top: 2px solid #e2e8f0 !important;
   }
 
   table.mobile-table tfoot td {
-    padding: 13px 14px !important;
-    border-right: 1px solid #cbd5e1 !important;
+    padding: 10px 14px !important;
+    border-right: 1px solid #e2e8f0 !important;
     vertical-align: middle !important;
-    color: #334155 !important;
-    white-space: nowrap !important;
-    font-size: 14.5px !important;
   }
 
   table.mobile-table tfoot td:last-child {
     border-right: none !important;
   }
-
-  table.mobile-table tfoot td span {
-    font-size: 15px !important;
-    padding: 4px 12px !important;
-  }
 }
 
-/* Active highlighted row */
-.active-period-row {
-  background-color: #eff6ff !important;
-  box-shadow: inset 4px 0 0 #2563eb !important;
+/* 4. Attendance Modal & 7-Day Calendar Strip */
+#attendanceModal > div {
+  max-width: 760px !important;
 }
 
-.active-period-row td {
-  color: #1e3a8a !important;
+#attDateCalendarStrip {
+  scrollbar-width: none;
 }
 
-/* ==========================================================================
-   ANALYTICS, TIMETABLES, STUDENTS, MODALS, FOOTER
-   ========================================================================== */
-
-.tab-content h2 {
-  font-size: 16px !important;
+#attDateCalendarStrip::-webkit-scrollbar {
+  display: none;
 }
 
-.tab-content button {
-  font-size: 14px !important;
-  padding-top: 8px !important;
-  padding-bottom: 8px !important;
+#attStudentList {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
 }
 
-#attendanceModal h3 {
-  font-size: 17px !important;
+#attendanceModal button[data-action="delete"],
+#attendanceModal button[title="Remove student"] {
+  display: none !important;
 }
 
-#attendanceModal p,
-#attendanceModal label,
-#attendanceModal span,
-#attendanceModal button,
-#attendanceModal input {
-  font-size: 14.5px !important;
-}
-
-#attendanceModal > div > div {
-  padding-top: 14px !important;
-  padding-bottom: 14px !important;
-  padding-left: 16px !important;
-  padding-right: 16px !important;
-}
-
-#actionModal h3 {
-  font-size: 17px !important;
-}
-
-#actionModal p,
-#actionModal button,
-#actionModal input {
-  font-size: 14.5px !important;
-}
-
-#actionModal input {
-  padding-top: 9px !important;
-  padding-bottom: 9px !important;
-}
-
-/* Footer */
-footer {
-  font-size: 15px !important;
-  padding-top: 14px !important;
-  padding-bottom: 14px !important;
-  padding-left: 18px !important;
-  padding-right: 18px !important;
-  gap: 12px !important;
-}
-
-footer .text-\[11px\] {
-  font-size: 13.5px !important;
-}
-
-/* Backup banner */
-#backupNudgeBanner {
-  font-size: 14.5px !important;
-  padding-top: 12px !important;
-  padding-bottom: 12px !important;
-  gap: 12px !important;
-}
-
-/* ==========================================================================
-   MOBILE CARD TRANSFORMATIONS (< 640px)
-   ========================================================================== */
-
+/* 5. Mobile Cards Engine (max-width: 640px) */
 @media screen and (max-width: 640px) {
   .mobile-table thead {
     display: none !important;
@@ -549,1904 +163,137 @@ footer .text-\[11px\] {
     display: flex !important;
     flex-direction: column !important;
     width: 100% !important;
-    gap: 12px !important;
-    padding: 4px !important;
-    border: none !important;
-  }
-
-  .mobile-table tr {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 9px !important;
-    background: #ffffff !important;
-    border: 1px solid #cbd5e1 !important;
-    border-radius: 12px !important;
-    padding: 14px 16px !important;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
-  }
-
-  .mobile-table tr.empty-row {
-    padding: 20px !important;
-    text-align: center !important;
-  }
-
-  .mobile-table td {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    border: none !important;
-    padding: 0 !important;
-    width: 100% !important;
-    font-size: 15px !important;
-  }
-
-  .col-cb {
-    justify-content: flex-start !important;
-    gap: 10px !important;
-  }
-
-  .col-cb span {
-    font-size: 15px !important;
-  }
-
-  .col-tm {
-    font-size: 14px !important;
-    color: #64748b !important;
-  }
-
-  .col-cls {
-    font-size: 16.5px !important;
-    font-weight: 800 !important;
-  }
-
-  .col-tpc {
-    width: 100% !important;
-    margin: 4px 0 !important;
-  }
-
-  .col-tpc span[onclick] {
-    width: 100% !important;
-    justify-content: center !important;
-    font-size: 14.5px !important;
-    padding: 7px 10px !important;
-  }
-
-  .col-ven span,
-  .col-nos span,
-  .col-mode span {
-    font-size: 13.5px !important;
-  }
-
-  .col-act button {
-    width: 100% !important;
-    justify-content: center !important;
-    height: 38px !important;
-    font-size: 15px !important;
-  }
-
-  .col-dur {
-    justify-content: flex-end !important;
-    font-weight: 800 !important;
-    font-size: 15.5px !important;
-  }
-}
-
-/* ==========================================================================
-   MOBILE LAYOUT FIX (max-width: 640px) — compact, stacked, no cramping
-   ========================================================================== */
-
-@media screen and (max-width: 640px) {
-  body {
-    padding: 8px !important;
-    font-size: 14px !important;
-  }
-
-  /* ---- Header ---- */
-  header {
-    padding: 10px 12px !important;
-    gap: 10px !important;
-    flex-direction: column !important;
-    align-items: stretch !important;
-  }
-
-  header > div:first-child {
-    width: 100%;
-  }
-
-  header h1 {
-    font-size: 16px !important;
-  }
-
-  header p {
-    font-size: 11.5px !important;
-  }
-
-  /* Date + time pill: full width, wraps cleanly, no broken lines */
-  #currentDateDisplay {
-    width: 100% !important;
-    flex-wrap: wrap !important;
-    justify-content: space-between !important;
-    gap: 6px 8px !important;
-    padding: 6px 8px !important;
-    font-size: 12px !important;
-    white-space: nowrap;
-  }
-
-  #currentDateDisplay > span[aria-hidden="true"] {
-    display: none !important;
-  }
-
-  #headerDateStr,
-  #headerTimeStr {
-    font-size: 12px !important;
-    white-space: nowrap !important;
-  }
-
-  #currentDateDisplay button {
-    height: 30px !important;
-    min-height: 30px !important;
-    padding: 0 8px !important;
-  }
-
-  /* Pull + Print: side by side, equal width */
-  header > div:last-child {
-    width: 100% !important;
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 8px !important;
-  }
-
-  header > div:last-child button {
-    width: 100% !important;
-    justify-content: center !important;
-    font-size: 13px !important;
-    min-height: 36px !important;
-    padding: 6px 8px !important;
-  }
-
-  /* ---- Backup reminder banner ---- */
-  #backupNudgeBanner {
-    flex-direction: column !important;
-    align-items: stretch !important;
-    font-size: 12px !important;
-    padding: 10px 12px !important;
-    gap: 8px !important;
-  }
-
-  #backupNudgeBanner > button {
-    width: 100%;
-    font-size: 12px !important;
-  }
-
-  /* ---- Top navigation ---- */
-  #topNav {
-    flex-direction: column !important;
-    align-items: stretch !important;
-    padding: 8px !important;
-    gap: 8px !important;
-  }
-
-  #sidebarNav {
-    width: 100% !important;
-    overflow-x: auto !important;
-    flex-wrap: nowrap !important;
-    padding-bottom: 2px;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .nav-btn {
-    font-size: 13px !important;
-    padding: 8px 12px !important;
-    min-height: 38px !important;
-    gap: 6px !important;
-  }
-
-  .nav-btn svg {
-    width: 15px !important;
-    height: 15px !important;
-  }
-
-  /* Progress panel: full width, single line */
-  #dailySummary {
-    width: 100% !important;
-    min-width: 0 !important;
-    padding-left: 0 !important;
-    border-left: none !important;
-    justify-content: stretch !important;
-  }
-
-  #dailySummary > div {
-    width: 100% !important;
-    height: auto !important;
-    min-height: 40px !important;
-    justify-content: space-between !important;
-    padding: 8px 12px !important;
-    gap: 8px !important;
-  }
-
-  #dailySummary .text-xs {
-    font-size: 13px !important;
-  }
-
-  #dailySummary .text-\[11px\] {
-    font-size: 12px !important;
-  }
-
-  /* ---- Section headers (School / Tuition & Study) ---- */
-  section > header {
-    flex-direction: column !important;
-    align-items: stretch !important;
-    padding: 12px !important;
-    gap: 10px !important;
-  }
-
-  section > header > div:first-child {
-    gap: 10px !important;
-  }
-
-  section > header h2 {
-    font-size: 15px !important;
-    letter-spacing: 0.03em !important;
-  }
-
-  /* Section headers hold only their title now, so keep it a plain flex row */
-  section > header > div:first-child {
-    display: flex !important;
-    grid-template-columns: none !important;
-    gap: 10px !important;
-    width: 100%;
-  }
-
-  /* ---- Table cards ---- */
-  .mobile-table,
-  .mobile-table tbody {
     gap: 10px !important;
     padding: 2px !important;
-  }
-
-  .mobile-table tr {
-    gap: 8px !important;
-    padding: 12px 12px !important;
-    border-radius: 10px !important;
-  }
-
-  .mobile-table td {
-    font-size: 14px !important;
-    gap: 8px !important;
-  }
-
-  .col-cb {
-    gap: 8px !important;
-  }
-
-  .col-cb span {
-    font-size: 14px !important;
-  }
-
-  .col-tm {
-    font-size: 13px !important;
-    flex-wrap: wrap !important;
-    gap: 4px !important;
-  }
-
-  .col-cls {
-    font-size: 15px !important;
-  }
-
-  .col-tpc span[onclick] {
-    font-size: 13px !important;
-    padding: 6px 10px !important;
-  }
-
-  .col-ven span,
-  .col-nos span,
-  .col-mode span {
-    font-size: 12px !important;
-  }
-
-  /* Msg button: compact and centred, not a giant bar */
-  .col-act button {
-    width: 100% !important;
-    max-width: 100% !important;
-    height: 34px !important;
-    font-size: 13px !important;
-    border-radius: 8px !important;
-    justify-content: center !important;
-  }
-
-  .col-dur {
-    font-size: 14px !important;
-  }
-
-  /* ---- Footer ---- */
-  footer {
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 6px !important;
-    padding: 12px !important;
-    font-size: 12.5px !important;
-  }
-
-  footer > div {
-    flex-wrap: wrap !important;
-  }
-
-  footer .text-\[11px\] {
-    font-size: 11.5px !important;
-  }
-}
-
-/* ==========================================================================
-   PRINT SPECIFICATIONS
-   ========================================================================== */
-
-@media print {
-  @page {
-    size: A4 portrait;
-    margin: 5mm;
-  }
-
-  * {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
-
-  body {
-    background: #ffffff !important;
-    padding: 0 !important;
-    font-size: 9px !important;
-  }
-
-  table.mobile-table,
-  table.mobile-table th,
-  table.mobile-table td {
-    border: 1px solid #000000 !important;
-  }
-
-  .print-hide {
-    display: none !important;
-  }
-}
-
-/* ==========================================================================
-   MOBILE FIXES (<= 640px) — date pill, tab grid, Msg buttons
-   ========================================================================== */
-@media screen and (max-width: 640px) {
-  /* Date pill: keep date, time and Today on one line */
-  #currentDateDisplay {
-    flex-wrap: nowrap !important;
-    gap: 6px !important;
-    padding-left: 4px !important;
-    padding-right: 6px !important;
-  }
-
-  #currentDateDisplay > svg {
-    display: none !important;
-  }
-
-  #headerDateStr,
-  #headerTimeStr {
-    white-space: nowrap !important;
-    flex-shrink: 0;
-  }
-
-  #currentDateDisplay > button {
-    padding: 0 6px !important;
-    flex-shrink: 0;
-  }
-
-  /* Tabs: 2-column grid so every tab is visible (no hidden overflow) */
-  #sidebarNav {
-    display: grid !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    overflow: visible !important;
-    gap: 6px !important;
-    width: 100% !important;
-  }
-
-  #sidebarNav > .nav-btn {
-    justify-content: center !important;
-    white-space: normal !important;
-    width: 100%;
-    font-size: 13px !important;
-  }
-
-  #sidebarNav > .nav-btn:last-child:nth-child(odd) {
-    grid-column: 1 / -1;
-  }
-
-  /* Msg buttons inside mobile cards: centred icon + label */
-  .col-act button {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 6px !important;
-    height: auto !important;
-    min-height: 36px !important;
-    padding: 6px 10px !important;
-    line-height: 1.2 !important;
-  }
-
-  .col-act button svg {
-    flex-shrink: 0;
-    width: 14px !important;
-    height: 14px !important;
-  }
-}
-
-/* ==========================================================================
-   DESKTOP FONT REDUCTION (overrides, placed last)
-   ========================================================================== */
-@media screen and (min-width: 641px) {
-  /* Header */
-  header h1 { font-size: 16px !important; }
-  header p { font-size: 12px !important; }
-  header button { font-size: 13px !important; }
-  #currentDateDisplay { font-size: 13.5px !important; }
-  #headerDateStr,
-  #headerTimeStr { font-size: 13.5px !important; }
-
-  /* Top navigation tabs + progress */
-  .nav-btn { font-size: 13.5px !important; }
-  #dailySummary .text-xs { font-size: 13.5px !important; }
-  #dailySummary .text-\[11px\] { font-size: 12.5px !important; }
-
-  /* Section headers */
-  section > header h2 { font-size: 16px !important; }
-  #schoolSecMeta,
-  #tuitionSecMeta { font-size: 12.5px !important; }
-
-  /* Tables */
-  table.mobile-table { font-size: 13.5px !important; }
-  table.mobile-table thead th { font-size: 12px !important; }
-  table.mobile-table tbody td { font-size: 13.5px !important; }
-  table.mobile-table tbody td.col-cb span { font-size: 13px !important; }
-  table.mobile-table tbody td.col-tm { font-size: 13.5px !important; }
-  table.mobile-table tbody td.col-tm span.bg-blue-600,
-  table.mobile-table tbody td.col-tm span.bg-amber-600 { font-size: 10px !important; }
-  table.mobile-table tbody td.col-cls { font-size: 14.5px !important; }
-  table.mobile-table tbody td.col-tpc span[onclick] { font-size: 13px !important; }
-  table.mobile-table tbody td.col-act button { font-size: 12.5px !important; }
-  table.mobile-table tbody td.col-act button svg { width: 12px !important; height: 12px !important; }
-  table.mobile-table tbody td.col-ven span,
-  table.mobile-table tbody td.col-nos span { font-size: 12.5px !important; }
-  table.mobile-table tbody td.col-mode span { font-size: 11.5px !important; }
-  table.mobile-table tbody td.col-dur { font-size: 13.5px !important; }
-  table.mobile-table tfoot td { font-size: 13px !important; }
-  table.mobile-table tfoot td span { font-size: 13.5px !important; }
-
-  /* Footer */
-  footer { font-size: 13.5px !important; }
-  footer .text-\[11px\] { font-size: 12px !important; }
-}
-/* ==========================================================================
-   COMPACT RECTANGULAR ATTENDANCE MODAL (overrides, placed last)
-   ========================================================================== */
-#attendanceModal > div {
-  width: min(420px, calc(100% - 16px)) !important;
-  max-width: 420px !important;
-  max-height: 88vh !important;
-  border-radius: 0 !important;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3) !important;
-}
-
-/* Square corners everywhere inside the modal */
-#attendanceModal *,
-#attendanceModal *::before,
-#attendanceModal *::after {
-  border-radius: 0 !important;
-}
-
-/* Compact type */
-#attendanceModal h3 { font-size: 13px !important; }
-#attendanceModal p,
-#attendanceModal label,
-#attendanceModal span,
-#attendanceModal button,
-#attendanceModal input {
-  font-size: 11.5px !important;
-}
-
-/* Section bands, tightened */
-#attendanceModal > div > div:nth-child(1) { padding: 8px 10px !important; }   /* title bar */
-#attendanceModal > div > div:nth-child(2) { padding: 5px 10px !important; }   /* attendance for */
-#attendanceModal > div > div:nth-child(3) { padding: 4px 10px !important; }   /* warning */
-#attendanceModal > div > div:nth-child(4) { padding: 5px 10px !important; }   /* bulk actions */
-#attendanceModal > div > div:nth-child(5) { padding: 0 !important; }          /* roster */
-#attendanceModal > div > div:nth-child(6) { padding: 6px 10px !important; }   /* add student */
-#attendanceModal > div > div:nth-child(7) { padding: 4px 10px !important; }   /* absentee toggle */
-#attendanceModal > div > div:nth-child(8) { padding: 6px 10px !important; }   /* footer buttons */
-
-/* Hide the subtitle line to save height */
-#attBatchSubtitle { display: none !important; }
-
-/* Title icon smaller */
-#attendanceModal > div > div:first-child > div:first-child {
-  width: 24px !important;
-  height: 24px !important;
-}
-
-/* Roster: compact, scrollable */
-#attStudentList {
-  min-height: 120px !important;
-  max-height: 34vh !important;
-  padding: 4px !important;
-  gap: 3px !important;
-}
-
-#attStudentList > div {
-  padding: 3px 6px !important;
-  gap: 6px !important;
-  border-width: 1px !important;
-}
-
-#attStudentList button {
-  min-height: 24px !important;
-  min-width: 0 !important;
-  height: 24px !important;
-  padding: 0 7px !important;
-}
-
-#attStudentList button[data-action="delete"] {
-  padding: 0 4px !important;
-  min-width: 24px !important;
-}
-
-#attStudentList button svg {
-  width: 12px !important;
-  height: 12px !important;
-}
-
-/* Inputs, toggles and action buttons */
-#attendanceModal input[type="text"] {
-  min-height: 30px !important;
-  padding-top: 4px !important;
-  padding-bottom: 4px !important;
-}
-
-#attendanceModal > div > div:nth-child(6) button,
-#attendanceModal > div > div:nth-child(4) button,
-#attendanceModal > div > div:nth-child(8) button {
-  min-height: 28px !important;
-  padding-top: 4px !important;
-  padding-bottom: 4px !important;
-}
-
-#attendanceModal > div > div:nth-child(7) input[type="checkbox"] {
-  width: 13px !important;
-  height: 13px !important;
-}
-
-/* Keep the warning banner on one tight line */
-#attPrevWarningBanner { gap: 6px !important; }
-#attPrevWarningBanner svg { width: 12px !important; height: 12px !important; }
-
-/* ==========================================================================
-   DAY SHIFTER (prev / next) — segmented control, placed last
-   ========================================================================== */
-#currentDateDisplay > div:first-child {
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 2px !important;
-  padding: 2px !important;
-  background-color: rgba(255, 255, 255, 0.06) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
-  border-radius: 8px !important;
-}
-
-#currentDateDisplay > div:first-child > button {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 30px !important;
-  min-width: 30px !important;
-  height: 28px !important;
-  min-height: 28px !important;
-  padding: 0 !important;
-  border: none !important;
-  border-radius: 6px !important;
-  background-color: transparent !important;
-  color: #cbd5e1 !important;
-  cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease !important;
-}
-
-#currentDateDisplay > div:first-child > button:hover {
-  background-color: rgba(59, 130, 246, 0.25) !important;
-  color: #ffffff !important;
-}
-
-#currentDateDisplay > div:first-child > button:active {
-  transform: scale(0.92) !important;
-}
-
-#currentDateDisplay > div:first-child > button:focus-visible {
-  outline: 2px solid #60a5fa !important;
-  outline-offset: 1px !important;
-}
-
-#currentDateDisplay > div:first-child > button svg {
-  width: 16px !important;
-  height: 16px !important;
-  stroke-width: 2.5 !important;
-  flex-shrink: 0;
-}
-
-/* ==========================================================================
-   WIDE ATTENDANCE MODAL: two students per row, no delete / add controls
-   ========================================================================== */
-#attendanceModal > div {
-  width: min(720px, calc(100% - 16px)) !important;
-  max-width: 720px !important;
-}
-
-/* Roster becomes a two-column grid */
-#attStudentList {
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  gap: 6px !important;
-  max-height: 42vh !important;
-}
-
-/* Remove the per-student delete (trash) icon */
-#attStudentList button[data-action="delete"] {
-  display: none !important;
-}
-
-/* Remove the "Add student" bar */
-#attendanceModal > div > div:nth-child(6) {
-  display: none !important;
-}
-
-/* ==========================================================================
-   CENTRED TABLE CONTENT + CLICK-TO-TOGGLE TASK NAMES
-   ========================================================================== */
-table.mobile-table thead th,
-table.mobile-table tbody td {
-  text-align: center !important;
-}
-
-table.mobile-table tbody td.col-cls[onclick] {
-  cursor: pointer;
-}
-
-table.mobile-table tbody td.col-cls[onclick]:hover span {
-  text-decoration: underline;
-}
-
-@media screen and (max-width: 640px) {
-  table.mobile-table tbody td {
-    justify-content: center !important;
-  }
-}
-
-/* ==========================================================================
-   ATTENDANCE MODAL: card look matching the reference (placed last)
-   ========================================================================== */
-/* Fix: title row must not be sized as the icon */
-#attendanceModal > div > div:nth-child(1) > div:first-child {
-  width: auto !important;
-  height: auto !important;
-}
-#attendanceModal > div > div:nth-child(1) > div:first-child > div:first-child {
-  width: 34px !important;
-  height: 34px !important;
-}
-#attendanceModal > div > div:nth-child(1) { padding: 14px 18px !important; }
-#attendanceModal > div > div:nth-child(1) h3 { font-size: 17px !important; }
-
-/* Readable type */
-#attendanceModal > div span,
-#attendanceModal > div label,
-#attendanceModal > div button,
-#attendanceModal > div input,
-#attendanceModal > div p { font-size: 13px !important; }
-
-/* Section spacing */
-#attendanceModal > div > div:nth-child(2) { padding: 10px 14px !important; }
-#attendanceModal > div > div:nth-child(3) { padding: 8px 14px !important; }
-#attendanceModal > div > div:nth-child(4) { padding: 10px 14px !important; }
-#attendanceModal > div > div:nth-child(4) button { min-height: 32px !important; padding: 6px 12px !important; }
-#attendanceModal > div > div:nth-child(7) { padding: 10px 14px !important; }
-
-/* Roster: two numbered cards per row */
-#attStudentList {
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  gap: 10px !important;
-  padding: 14px !important;
-  min-height: 120px !important;
-  max-height: 46vh !important;
-  background-color: #f8fafc !important;
-  counter-reset: att;
-}
-
-#attStudentList > div {
-  counter-increment: att;
-  display: flex !important;
-  align-items: center !important;
-  gap: 10px !important;
-  padding: 8px 10px !important;
-  background-color: #ffffff !important;
-  border: 1px solid #e2e8f0 !important;
-}
-
-#attStudentList > div::before {
-  content: counter(att);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  min-width: 28px;
-  flex-shrink: 0;
-  background-color: #e2e8f0;
-  color: #334155;
-  font-size: 12px !important;
-  font-weight: 800;
-}
-
-#attStudentList > div > span {
-  flex: 1 1 auto !important;
-  min-width: 0;
-  font-size: 14px !important;
-  font-weight: 700 !important;
-}
-
-#attStudentList > div > div {
-  gap: 6px !important;
-}
-
-#attStudentList button {
-  height: 30px !important;
-  min-height: 30px !important;
-  font-size: 12.5px !important;
-  font-weight: 800 !important;
-}
-
-#attStudentList button[data-val="P"],
-#attStudentList button[data-val="A"] {
-  min-width: 36px !important;
-  padding: 0 8px !important;
-}
-
-#attStudentList button[data-val="L"] {
-  min-width: 60px !important;
-  padding: 0 10px !important;
-}
-
-/* Footer: Save and Send side by side, equal width */
-#attendanceModal > div > div:nth-child(8) {
-  display: grid !important;
-  grid-template-columns: 1fr 1fr !important;
-  gap: 10px !important;
-  padding: 12px 14px !important;
-}
-
-#attendanceModal > div > div:nth-child(8) button {
-  width: 100% !important;
-  min-height: 40px !important;
-  padding: 10px 14px !important;
-  justify-content: center !important;
-  font-size: 13px !important;
-}
-
-#attPrevWarningBanner {
-  padding: 8px 14px !important;
-  font-size: 13px !important;
-}
-/* ==========================================================================
-   UPDATE: COMPACT TOP BAR, MODAL STACKING, TABLE HEADER CASE
-   ========================================================================== */
-
-/* Attendance and action dialogs always sit above the top bar and tables */
-#attendanceModal,
-#actionModal {
-  z-index: 9999 !important;
-}
-
-#topNav {
-  padding-top: 6px !important;
-  padding-bottom: 6px !important;
-  padding-left: 8px !important;
-  padding-right: 8px !important;
-  gap: 8px !important;
-}
-
-#topNav .nav-btn {
-  font-size: 12px !important;
-  padding-top: 6px !important;
-  padding-bottom: 6px !important;
-  padding-left: 10px !important;
-  padding-right: 10px !important;
-  min-height: 32px !important;
-  gap: 6px !important;
-  border-bottom-width: 2px !important;
-}
-
-#topNav .nav-btn svg {
-  width: 14px !important;
-  height: 14px !important;
-}
-
-#topNav #currentDateDisplay {
-  font-size: 12px !important;
-  gap: 6px !important;
-  padding-top: 2px !important;
-  padding-bottom: 2px !important;
-  padding-left: 4px !important;
-  padding-right: 10px !important;
-}
-
-#topNav #currentDateDisplay > div:first-child > button {
-  height: 24px !important;
-  min-height: 24px !important;
-  width: 24px !important;
-  font-size: 12px !important;
-}
-
-#topNav #headerDateStr,
-#topNav #headerTimeStr {
-  font-size: 12px !important;
-}
-
-#topNav #dailySummary > div {
-  height: 32px !important;
-  padding-left: 8px !important;
-  padding-right: 8px !important;
-  gap: 6px !important;
-  border-radius: 8px !important;
-}
-
-#topNav #dailySummary .text-xs {
-  font-size: 12px !important;
-}
-
-#topNav #dailySummary .text-\[11px\] {
-  font-size: 11px !important;
-}
-
-#topNav #cloudSyncBtn,
-#topNav .print-btn {
-  font-size: 12px !important;
-  padding-top: 6px !important;
-  padding-bottom: 6px !important;
-  padding-left: 10px !important;
-  padding-right: 10px !important;
-  min-height: 32px !important;
-}
-
-/* Column headers: sentence case instead of forced uppercase on small screens */
-table.mobile-table thead th {
-  text-transform: none !important;
-  letter-spacing: 0.01em !important;
-}
-
-/* ==========================================================================
-   UPDATE: VISIBLE TABLE LINES, CENTRED DURATION, COMPACT ATTENDANCE MODAL
-   ========================================================================== */
-
-/* --- Table: stronger row and column lines --- */
-table.mobile-table thead th,
-table.mobile-table tbody td,
-table.mobile-table tfoot td {
-  border-right: 1px solid #cbd5e1 !important;
-}
-
-table.mobile-table tbody tr {
-  border-top: 1px solid #94a3b8 !important;
-  border-bottom: 1px solid #94a3b8 !important;
-}
-
-table.mobile-table tfoot tr {
-  border-top: 1.5px solid #94a3b8 !important;
-}
-
-table.mobile-table thead th {
-  border-bottom: 1.5px solid #94a3b8 !important;
-}
-
-/* --- Duration column centred (header, body and section total) --- */
-table.mobile-table thead th:last-child,
-table.mobile-table tbody td.col-dur,
-table.mobile-table tfoot td:last-child {
-  text-align: center !important;
-  justify-content: center !important;
-}
-
-/* --- Attendance modal: tighter spacing, nothing functional removed --- */
-#attendanceModal > div {
-  max-width: 400px !important;
-}
-
-/* Title bar */
-#attendanceModal > div > div:nth-child(1) {
-  padding: 6px 10px !important;
-}
-#attendanceModal > div > div:nth-child(1) h3 {
-  font-size: 13px !important;
-}
-#attendanceModal > div > div:nth-child(1) > div:first-child > div:first-child {
-  display: none !important;
-}
-
-/* Date selector row: label hidden, buttons kept */
-#attendanceModal > div > div:nth-child(2) {
-  padding: 4px 8px !important;
-}
-#attendanceModal > div > div:nth-child(2) > span:first-child {
-  display: none !important;
-}
-#attendanceModal > div > div:nth-child(2) button {
-  padding-top: 3px !important;
-  padding-bottom: 3px !important;
-  min-height: 28px !important;
-  font-size: 11px !important;
-}
-
-/* Warning banner */
-#attendanceModal > div > div:nth-child(3) {
-  padding: 3px 8px !important;
-}
-
-/* Bulk actions and counter */
-#attendanceModal > div > div:nth-child(4) {
-  padding: 4px 8px !important;
-}
-#attendanceModal > div > div:nth-child(4) button {
-  min-height: 28px !important;
-  padding-top: 3px !important;
-  padding-bottom: 3px !important;
-  font-size: 11px !important;
-}
-
-/* Student roster: shorter rows and a tighter list */
-#attStudentList {
-  padding: 4px 6px !important;
-  gap: 3px !important;
-  max-height: 40vh !important;
-  min-height: 0 !important;
-}
-#attStudentList > div {
-  padding-top: 3px !important;
-  padding-bottom: 3px !important;
-  padding-left: 6px !important;
-  padding-right: 4px !important;
-}
-#attStudentList button {
-  min-height: 26px !important;
-  min-width: 30px !important;
-  padding-top: 2px !important;
-  padding-bottom: 2px !important;
-  font-size: 11px !important;
-}
-
-/* Absentee toggle row */
-#attendanceModal > div > div:nth-child(7) {
-  padding: 3px 8px !important;
-}
-
-/* Footer buttons */
-#attendanceModal > div > div:nth-child(8) {
-  padding: 4px 8px !important;
-  gap: 6px !important;
-}
-#attendanceModal > div > div:nth-child(8) button {
-  min-height: 30px !important;
-  padding-top: 4px !important;
-  padding-bottom: 4px !important;
-  font-size: 11px !important;
-}
-
-/* ==========================================================================
-   UPDATE: ATTENDANCE HEADER ON ONE LINE (desktop; phones keep stacking)
-   Title, date buttons, bulk buttons and counter sit in one row.
-   Warning, roster, add bar, absentee toggle and footer follow below.
-   ========================================================================== */
-@media screen and (min-width: 768px) {
-  #attendanceModal > div {
-    max-width: 1000px !important;
-    flex-direction: row !important;
-    flex-wrap: wrap !important;
-    align-items: stretch !important;
-  }
-
-  /* Title */
-  #attendanceModal > div > div:nth-child(1) {
-    order: 1 !important;
-    flex: 1 1 auto !important;
-    min-width: 0 !important;
-    width: auto !important;
-    padding: 6px 10px !important;
-    border-bottom: 0 !important;
-    border-right: 1px solid #1e293b !important;
-  }
-
-  /* Date selector */
-  #attendanceModal > div > div:nth-child(2) {
-    order: 2 !important;
-    flex: 0 0 auto !important;
-    width: auto !important;
-    padding: 4px 8px !important;
-    border-bottom: 0 !important;
-    border-right: 1px solid #e2e8f0 !important;
-  }
-
-  /* Bulk actions and counter */
-  #attendanceModal > div > div:nth-child(4) {
-    order: 3 !important;
-    flex: 1 1 auto !important;
-    width: auto !important;
-    padding: 4px 8px !important;
-    border-bottom: 0 !important;
-  }
-
-  /* Full-width rows below the header line */
-  #attendanceModal > div > div:nth-child(3) { order: 4 !important; flex-basis: 100% !important; }
-  #attendanceModal > div > div:nth-child(5) { order: 5 !important; flex-basis: 100% !important; }
-  #attendanceModal > div > div:nth-child(6) { order: 6 !important; flex-basis: 100% !important; }
-  #attendanceModal > div > div:nth-child(7) { order: 7 !important; flex-basis: 100% !important; }
-  #attendanceModal > div > div:nth-child(8) { order: 8 !important; flex-basis: 100% !important; }
-}
-
-/* ==========================================================================
-   UPDATE: MODERN ATTENDANCE MODAL (visual refresh, no controls removed)
-   ========================================================================== */
-
-/* Card */
-#attendanceModal > div {
-  border-radius: 16px !important;
-  border: 1px solid rgba(15, 23, 42, 0.08) !important;
-  box-shadow: 0 25px 50px -12px rgba(2, 6, 23, 0.45) !important;
-  overflow: hidden !important;
-  background: #ffffff !important;
-}
-
-/* Header: title and date selector share one navy bar */
-#attendanceModal > div > div:nth-child(1) {
-  background: #07152b !important;
-  padding: 12px 16px !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
-}
-#attendanceModal > div > div:nth-child(1) h3 {
-  font-size: 15px !important;
-  font-weight: 700 !important;
-  letter-spacing: -0.01em !important;
-  color: #f8fafc !important;
-}
-
-#attendanceModal > div > div:nth-child(2) {
-  background: #07152b !important;
-  padding: 8px 12px !important;
-  border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
-}
-
-/* Date segmented buttons */
-#attendanceModal #attDateButtonsGroup {
-  display: flex !important;
-  gap: 6px !important;
-}
-#attendanceModal #attDateButtonsGroup button {
-  background: rgba(255, 255, 255, 0.06) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
-  color: #cbd5e1 !important;
-  border-radius: 8px !important;
-  font-size: 12px !important;
-  font-weight: 600 !important;
-  padding: 6px 12px !important;
-  min-height: 32px !important;
-  transition: background-color 0.15s ease !important;
-}
-#attendanceModal #attDateButtonsGroup button:hover {
-  background: rgba(255, 255, 255, 0.12) !important;
-}
-#attendanceModal #btnDatePrevious.bg-orange-100 {
-  background: #f59e0b !important;
-  border-color: #f59e0b !important;
-  color: #1c1917 !important;
-}
-#attendanceModal #btnDateToday.bg-blue-100 {
-  background: #3b82f6 !important;
-  border-color: #3b82f6 !important;
-  color: #ffffff !important;
-}
-
-/* Warning banner */
-#attendanceModal > div > div:nth-child(3) {
-  background: #fffbeb !important;
-  border-bottom: 1px solid #fde68a !important;
-  padding: 8px 16px !important;
-  font-size: 12px !important;
-}
-
-/* Bulk bar */
-#attendanceModal > div > div:nth-child(4) {
-  background: #ffffff !important;
-  border-bottom: 1px solid #e2e8f0 !important;
-  padding: 10px 16px !important;
-  gap: 8px !important;
-}
-#attendanceModal > div > div:nth-child(4) button {
-  border-radius: 8px !important;
-  font-size: 12px !important;
-  font-weight: 600 !important;
-  min-height: 32px !important;
-  padding: 6px 12px !important;
-}
-#attStatsCounter {
-  background: #f1f5f9 !important;
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 999px !important;
-  padding: 5px 12px !important;
-  font-size: 12px !important;
-  font-weight: 600 !important;
-  color: #334155 !important;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-/* Roster: aligned card grid */
-#attStudentList {
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  gap: 8px !important;
-  align-items: stretch !important;
-  padding: 12px 16px !important;
-  background: #f8fafc !important;
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 transparent;
-}
-#attStudentList > div {
-  margin: 0 !important;
-  background: #ffffff !important;
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 12px !important;
-  padding: 8px 8px 8px 12px !important;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
-  min-width: 0 !important;
-}
-#attStudentList > div > span {
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  color: #0f172a !important;
-}
-
-/* Status buttons: unselected */
-#attStudentList button:not(.bg-emerald-600):not(.bg-rose-600):not(.bg-amber-500) {
-  background: #ffffff !important;
-  border: 1px solid #e2e8f0 !important;
-  color: #475569 !important;
-  border-radius: 8px !important;
-  font-size: 12px !important;
-  font-weight: 700 !important;
-  min-width: 36px !important;
-  min-height: 30px !important;
-  padding: 4px 8px !important;
-  transition: all 0.15s ease !important;
-}
-#attStudentList button:not(.bg-emerald-600):not(.bg-rose-600):not(.bg-amber-500):hover {
-  background: #f1f5f9 !important;
-  border-color: #cbd5e1 !important;
-}
-/* Status buttons: selected */
-#attStudentList button.bg-emerald-600,
-#attStudentList button.bg-rose-600,
-#attStudentList button.bg-amber-500 {
-  border-radius: 8px !important;
-  font-size: 12px !important;
-  font-weight: 700 !important;
-  min-width: 36px !important;
-  min-height: 30px !important;
-  padding: 4px 8px !important;
-  border: 1px solid transparent !important;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.12) !important;
-}
-#attStudentList > div > div {
-  gap: 4px !important;
-}
-
-/* Absentee toggle row */
-#attendanceModal > div > div:nth-child(7) {
-  background: #f8fafc !important;
-  border-top: 1px solid #e2e8f0 !important;
-  padding: 10px 16px !important;
-}
-#attendanceModal > div > div:nth-child(7) span {
-  font-size: 12px !important;
-  font-weight: 500 !important;
-  color: #475569 !important;
-}
-#includeAbsenteeToggle {
-  accent-color: #059669;
-}
-
-/* Footer buttons */
-#attendanceModal > div > div:nth-child(8) {
-  background: #ffffff !important;
-  border-top: 1px solid #e2e8f0 !important;
-  padding: 12px 16px !important;
-  gap: 10px !important;
-}
-#attendanceModal > div > div:nth-child(8) button {
-  border-radius: 10px !important;
-  min-height: 40px !important;
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  transition: all 0.15s ease !important;
-}
-#attendanceModal > div > div:nth-child(8) button:first-child {
-  background: #ffffff !important;
-  border: 1px solid #cbd5e1 !important;
-  color: #334155 !important;
-}
-#attendanceModal > div > div:nth-child(8) button:first-child:hover {
-  background: #f8fafc !important;
-}
-#attendanceModal > div > div:nth-child(8) button:last-child {
-  background: #059669 !important;
-  color: #ffffff !important;
-  font-weight: 700 !important;
-  box-shadow: 0 1px 2px rgba(5, 150, 105, 0.3), 0 4px 12px rgba(5, 150, 105, 0.25) !important;
-}
-#attendanceModal > div > div:nth-child(8) button:last-child:hover {
-  background: #047857 !important;
-}
-
-/* ==========================================================================
-   UPDATE: CLOSE BUTTON AT THE FAR RIGHT OF THE HEADER
-   ========================================================================== */
-#attendanceModal > div {
-  position: relative !important;
-}
-
-/* Reserve room at the end of the header row for the close button */
-#attendanceModal > div > div:nth-child(2) {
-  margin-right: 48px !important;
-}
-
-/* Close button pinned to the top-right corner */
-#attendanceModal > div > div:nth-child(1) > button {
-  position: absolute !important;
-  top: 14px !important;
-  right: 12px !important;
-  z-index: 1 !important;
-  color: #94a3b8 !important;
-  min-height: 36px !important;
-  min-width: 36px !important;
-}
-#attendanceModal > div > div:nth-child(1) > button:hover {
-  color: #ffffff !important;
-  background: rgba(255, 255, 255, 0.08) !important;
-}
-/* ==========================================================================
-   FIX: ATTENDANCE MODAL — CLEAN LAYOUT (CSS only, overrides earlier blocks)
-   Fixes: roster flush to edges (nth-child(5) padding:0 override),
-   white gap + floating X in header, invisible "Attendance For" label,
-   uneven status-button sizes, card alignment.
-   ========================================================================== */
-
-/* Card is the positioning context for the close button */
-#attendanceModal > div {
-  position: relative !important;
-  max-width: 1000px !important;
-}
-
-/* 1. Header: one continuous navy bar (title + date selector) */
-#attendanceModal > div > div:nth-child(1),
-#attendanceModal > div > div:nth-child(2) {
-  background: #07152b !important;
-  border-bottom: 0 !important;
-  margin-right: 0 !important;
-  box-sizing: border-box !important;
-}
-#attendanceModal > div > div:nth-child(1) {
-  border-right: 0 !important;
-  padding: 12px 52px 12px 16px !important;   /* room for close button */
-}
-#attendanceModal > div > div:nth-child(2) {
-  border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
-  padding: 10px 16px !important;
-  gap: 10px !important;
-  flex-wrap: wrap !important;
-}
-#attendanceModal > div > div:nth-child(2) > span:first-child {
-  color: #94a3b8 !important;
-  font-size: 11px !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.06em !important;
-  text-transform: uppercase !important;
-  white-space: nowrap !important;
-}
-#attendanceModal #attDateButtonsGroup button {
-  height: 34px !important;
-  min-height: 34px !important;
-  padding: 0 14px !important;
-  white-space: nowrap !important;
-  display: inline-flex !important;
-  align-items: center !important;
-}
-
-/* Close button: sits inside the header bar, vertically centred */
-#attendanceModal > div > div:nth-child(1) > button {
-  position: absolute !important;
-  top: 14px !important;
-  right: 12px !important;
-  width: 36px !important;
-  height: 36px !important;
-  padding: 0 !important;
-  border-radius: 8px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-@media screen and (min-width: 768px) {
-  /* Same fixed height so the 36px close button centres at top:14px */
-  #attendanceModal > div > div:nth-child(1),
-  #attendanceModal > div > div:nth-child(2) {
-    height: 64px !important;
-    align-items: center !important;
-  }
-  #attendanceModal > div > div:nth-child(1) {
-    padding-right: 16px !important;
-  }
-  #attendanceModal > div > div:nth-child(2) {
-    padding-right: 56px !important;   /* keeps buttons clear of the X */
-  }
-}
-
-/* 2. Roster: restore the padding that the nth-child(5) rule removed */
-#attendanceModal #attStudentList {
-  padding: 12px 16px !important;
-  gap: 8px !important;
-  background: #f8fafc !important;
-  min-height: 160px !important;
-  max-height: 46vh !important;
-  align-items: stretch !important;
-}
-
-/* 3. Student cards: consistent row layout */
-#attendanceModal #attStudentList > div {
-  display: flex !important;
-  align-items: center !important;
-  gap: 10px !important;
-  min-height: 52px !important;
-  padding: 8px 10px 8px 8px !important;
-  margin: 0 !important;
-  border-radius: 12px !important;
-  background: #ffffff !important;
-  border: 1px solid #e2e8f0 !important;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
-  min-width: 0 !important;
-}
-
-/* Number badge (counter pseudo-element) */
-#attendanceModal #attStudentList > div::before {
-  flex: 0 0 28px !important;
-  width: 28px !important;
-  height: 28px !important;
-  line-height: 28px !important;
-  text-align: center !important;
-  border-radius: 6px !important;
-  background: #e2e8f0 !important;
-  color: #334155 !important;
-  font-size: 12px !important;
-  font-weight: 800 !important;
-  padding: 0 !important;
-}
-
-/* Student name: takes spare width, truncates cleanly */
-#attendanceModal #attStudentList > div > span {
-  flex: 1 1 auto !important;
-  min-width: 0 !important;
-  font-size: 14px !important;
-  font-weight: 700 !important;
-  color: #0f172a !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-}
-
-/* Status button group: pinned to the right, equal widths */
-#attendanceModal #attStudentList > div > div {
-  display: flex !important;
-  align-items: center !important;
-  gap: 4px !important;
-  margin-left: auto !important;
-  flex: 0 0 auto !important;
-}
-#attendanceModal #attStudentList > div > div button {
-  width: 44px !important;
-  min-width: 44px !important;
-  height: 32px !important;
-  min-height: 32px !important;
-  padding: 0 !important;
-  font-size: 12px !important;
-  font-weight: 700 !important;
-  border-radius: 8px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-/* 4. Bulk bar and footer: even vertical rhythm */
-#attendanceModal > div > div:nth-child(4) {
-  padding: 10px 16px !important;
-}
-#attendanceModal > div > div:nth-child(7) {
-  padding: 10px 16px !important;
-}
-#attendanceModal > div > div:nth-child(8) {
-  padding: 12px 16px !important;
-}
-#attendanceModal > div > div:nth-child(8) button:last-child {
-  flex: 1 1 auto !important;
-}
-
-/* Phones: header stacks, keep the close button clear of the title */
-@media screen and (max-width: 767px) {
-  #attendanceModal > div > div:nth-child(2) {
-    padding-right: 16px !important;
-  }
-  #attendanceModal > div > div:nth-child(1) > button {
-    top: 10px !important;
-    right: 8px !important;
-  }
-}
-
-/* ==========================================================================
-   Hide per-student delete (trash) button in attendance roster
-   ========================================================================== */
-#attendanceModal #attStudentList button[data-action="delete"],
-#attendanceModal #attStudentList button[title="Remove student"],
-#attendanceModal #attStudentList button[aria-label^="Remove "] {
-  display: none !important;
-}
-/* ==========================================================================
-   MOBILE OVERFLOW FIX (<= 640px) — placed last
-   1. Date pill wraps instead of pushing "Today" past the screen edge
-   2. Section counter ("0 of 3 done 0%") is one row, not a 2-column grid
-   3. Card rows lose the stray desktop cell dividers
-   4. Safety net: the page can never be panned sideways
-   ========================================================================== */
-@media screen and (max-width: 640px) {
-  body {
-    overflow-x: clip !important;
-    max-width: 100% !important;
-  }
-
-  /* 1. Date pill: allow wrapping, hide the separator, keep the Today button inside */
-  #topNav #currentDateDisplay {
-    flex-wrap: wrap !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
-    row-gap: 6px !important;
-    column-gap: 6px !important;
-    justify-content: flex-start !important;
-    padding: 4px 6px !important;
-  }
-
-  #topNav #currentDateDisplay > span[aria-hidden="true"] {
-    display: none !important;
-  }
-
-  #topNav #currentDateDisplay > button {
-    margin-left: auto !important;
-    flex-shrink: 0 !important;
-  }
-
-  #topNav #headerDateStr,
-  #topNav #headerTimeStr {
-    font-size: 12px !important;
-    white-space: nowrap !important;
-  }
-
-  #topNav #currentDateDisplay > div:first-child {
-    flex-shrink: 0 !important;
-  }
-
-  #topNav {
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-  }
-
-  /* 2. Section header counter: single row, centred, full width */
-  section > header > div:last-child {
-    display: flex !important;
-    grid-template-columns: none !important;
-    flex-wrap: wrap !important;
-    justify-content: center !important;
-    align-items: center !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-    gap: 6px !important;
-  }
-
-  /* 3. Cards: remove the vertical cell dividers that show on the card edge */
-  table.mobile-table thead th,
-  table.mobile-table tbody td,
-  table.mobile-table tfoot td {
-    border-right: none !important;
-  }
-
-  table.mobile-table tr {
-    border: 1px solid #cbd5e1 !important;
-  }
-
-  /* Totals row can wrap, so long labels never widen the card */
-  table.mobile-table tfoot,
-  table.mobile-table tfoot tr {
-    display: flex !important;
-    flex-direction: column !important;
-    width: 100% !important;
-  }
-
-  table.mobile-table tfoot td {
-    white-space: normal !important;
-  }
-
-  table.mobile-table tfoot td:empty {
-    display: none !important;
-  }
-
-  /* Table wrapper never grows past the card */
-  section > .overflow-x-auto {
-    max-width: 100% !important;
-  }
-}
-
-/* ==========================================================================
-   MOBILE BOX + GRID CARDS (<= 640px) — placed last
-   Each class row becomes a 2-column grid of labelled tiles.
-   Every track is minmax(0, 1fr) and every tile can shrink, so nothing
-   can push past the screen edge.
-   ========================================================================== */
-@media screen and (max-width: 640px) {
-
-  /* Containers never grow wider than the screen */
-  #mainWorkspace,
-  #planner,
-  #planner > section,
-  section > .overflow-x-auto {
-    min-width: 0 !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-  }
-
-  /* Card = grid of tiles */
-  table.mobile-table tbody tr {
-    display: grid !important;
-    grid-template-columns: minmax(0, 0.6fr) minmax(0, 1.4fr) !important;
-    grid-auto-flow: row dense !important;
-    gap: 8px !important;
-    padding: 10px !important;
-    margin: 0 !important;
-    border: 1px solid #cbd5e1 !important;
-    border-radius: 14px !important;
-    background: #ffffff !important;
-    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06) !important;
-    box-sizing: border-box !important;
-    min-width: 0 !important;
-    max-width: 100% !important;
-  }
-
-  /* Tile = one labelled box */
-  table.mobile-table tbody td {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    text-align: center !important;
-    min-width: 0 !important;
-    max-width: 100% !important;
-    width: auto !important;
-    margin: 0 !important;
-    padding: 8px 6px !important;
-    background: #f8fafc !important;
-    border: 1px solid #e2e8f0 !important;
-    border-radius: 10px !important;
-    font-size: 13px !important;
-    line-height: 1.3 !important;
-    overflow-wrap: anywhere !important;
-    word-break: break-word !important;
-    white-space: normal !important;
-  }
-
-  /* Empty-state row: a single full-width box */
-  table.mobile-table tbody tr.empty-row {
-    display: block !important;
-    padding: 16px !important;
-  }
-  table.mobile-table tbody tr.empty-row td {
-    background: transparent !important;
     border: none !important;
   }
 
-  /* Period and time sit side by side on the top row */
-  table.mobile-table tbody td.col-cb,
-  table.mobile-table tbody td.col-tm {
-    grid-column: span 1;
-  }
-  table.mobile-table tbody td.col-tm {
-    font-size: 12.5px !important;
-    white-space: nowrap !important;
-    font-weight: 700 !important;
-    color: #334155 !important;
-  }
-  table.mobile-table tbody td.col-cb {
-    background: #eef2ff !important;
-    border-color: #c7d2fe !important;
-  }
-
-  /* Class and topic span the full card width */
-  table.mobile-table tbody td.col-cls,
-  table.mobile-table tbody td.col-tpc,
-  table.mobile-table tbody td.col-act {
-    grid-column: 1 / -1 !important;
-  }
-  table.mobile-table tbody td.col-cls {
-    font-size: 15px !important;
-    font-weight: 800 !important;
-    color: #0f172a !important;
-  }
-
-  /* Duration and mode/venue/students sit in the bottom row */
-  table.mobile-table tbody td.col-mode,
-  table.mobile-table tbody td.col-ven,
-  table.mobile-table tbody td.col-nos,
-  table.mobile-table tbody td.col-dur {
-    grid-column: span 1;
-  }
-  table.mobile-table tbody td.col-dur {
-    font-size: 14px !important;
-    font-weight: 800 !important;
-    color: #334155 !important;
-    background: #f1f5f9 !important;
-  }
-
-  /* Topic pill fills its tile */
-  table.mobile-table tbody td.col-tpc span[onclick] {
-    display: block !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-    padding: 6px 8px !important;
-    font-size: 13px !important;
-    text-align: center !important;
-  }
-
-  /* Msg button fills its full-width tile */
-  table.mobile-table tbody td.col-act button {
-    width: 100% !important;
-    justify-content: center !important;
-    height: 36px !important;
-    font-size: 13px !important;
-  }
-
-  /* Totals row sits as its own box under the cards */
-  table.mobile-table tfoot tr {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) auto !important;
-    gap: 6px 10px !important;
-    align-items: center !important;
-    padding: 12px !important;
-    margin-top: 6px !important;
-    background: #f1f5f9 !important;
-    border: 1px solid #cbd5e1 !important;
-    border-radius: 14px !important;
-  }
-  table.mobile-table tfoot td {
-    display: block !important;
-    min-width: 0 !important;
-    padding: 0 !important;
-    font-size: 13px !important;
-    text-align: left !important;
-    justify-content: flex-start !important;
-  }
-  table.mobile-table tfoot td:empty {
-    display: none !important;
-  }
-  table.mobile-table tfoot td:nth-child(2) {
-    grid-column: 1;
-    font-weight: 800 !important;
-    letter-spacing: 0.04em !important;
-  }
-  table.mobile-table tfoot td:nth-child(3) {
-    grid-column: 1;
-  }
-  table.mobile-table tfoot td:last-child {
-    grid-column: 2;
-    grid-row: 1 / span 2;
-    text-align: right !important;
-  }
-}
-
-/* Tuition card: duration spans the full card so the grid stays balanced */
-@media screen and (max-width: 640px) {
-  #tuitionStudySec table.mobile-table tbody td.col-dur {
-    grid-column: 1 / -1 !important;
-  }
-}
-
-/* ==========================================================================
-   MOBILE CARD COLOURS (<= 640px) — placed last
-   Each card gets its own tint and accent edge. Colours cycle through four
-   families so neighbouring cards always look different.
-   ========================================================================== */
-@media screen and (max-width: 640px) {
-
-  /* Card separation: more space between cards */
-  table.mobile-table tbody {
-    gap: 14px !important;
-  }
-
-  /* Card colour cycle: tint + accent edge */
-  table.mobile-table tbody tr:nth-child(4n+1) {
-    --card-accent: #2563eb;
-    --card-tint: #eff6ff;
-    --card-tile: #dbeafe;
-    --card-tile-border: #93c5fd;
-  }
-  table.mobile-table tbody tr:nth-child(4n+2) {
-    --card-accent: #7c3aed;
-    --card-tint: #f5f3ff;
-    --card-tile: #ede9fe;
-    --card-tile-border: #c4b5fd;
-  }
-  table.mobile-table tbody tr:nth-child(4n+3) {
-    --card-accent: #059669;
-    --card-tint: #ecfdf5;
-    --card-tile: #d1fae5;
-    --card-tile-border: #6ee7b7;
-  }
-  table.mobile-table tbody tr:nth-child(4n+4) {
-    --card-accent: #ea580c;
-    --card-tint: #fff7ed;
-    --card-tile: #ffedd5;
-    --card-tile-border: #fdba74;
-  }
-
-  table.mobile-table tbody tr {
-    background: var(--card-tint) !important;
-    border: 1px solid var(--card-tile-border) !important;
-    box-shadow: inset 0 4px 0 var(--card-accent), 0 2px 6px rgba(15, 23, 42, 0.08) !important;
-  }
-
-  /* Period tile takes the card's colour */
-  table.mobile-table tbody td.col-cb {
-    background: var(--card-tile) !important;
-    border-color: var(--card-tile-border) !important;
-  }
-  table.mobile-table tbody td.col-cb span {
-    color: var(--card-accent) !important;
-    font-weight: 800 !important;
-  }
-
-  /* Topic pill uses the card's colour */
-  table.mobile-table tbody td.col-tpc span[onclick] {
-    background: #ffffff !important;
-    border-color: var(--card-tile-border) !important;
-    color: var(--card-accent) !important;
-  }
-
-  /* Totals box: dark navy band so it stands apart from the cards */
-  table.mobile-table tfoot tr {
-    background: #0f2a4a !important;
-    border: 1px solid #0f2a4a !important;
-    box-shadow: inset 0 4px 0 #facc15, 0 2px 6px rgba(15, 23, 42, 0.15) !important;
-  }
-  table.mobile-table tfoot td {
-    color: #e2e8f0 !important;
-  }
-  table.mobile-table tfoot td:nth-child(2),
-  table.mobile-table tfoot td:nth-child(3) {
-    color: #cbd5e1 !important;
-  }
-  table.mobile-table tfoot td span {
-    background: #facc15 !important;
-    color: #0f172a !important;
-    border-color: #facc15 !important;
-  }
-
-  /* Active (current) period keeps its highlight above the colour cycle */
-  table.mobile-table tbody tr.active-period-row {
-    background: #fef9c3 !important;
-    border-color: #facc15 !important;
-  }
-}
-
-/* ==========================================================================
-   SCHOOL CARDS: TWO ROWS (<= 640px) — placed last
-   Row 1: Period | Time | Duration
-   Row 2: Class  | Topic | Mode
-   ========================================================================== */
-@media screen and (max-width: 640px) {
+  /* School Cards: 2 Rows x 3 Columns */
   #schoolClassesSec table.mobile-table tbody tr {
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.3fr) minmax(0, 0.9fr) !important;
-    grid-auto-flow: row !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    grid-template-rows: auto auto !important;
+    gap: 6px !important;
+    padding: 8px !important;
+    margin: 0 !important;
+    background: #ffffff !important;
+    border: 1.5px solid #60a5fa !important;
+    border-radius: 16px !important;
+    box-shadow: 0 1px 4px rgba(37, 99, 235, 0.08) !important;
+    box-sizing: border-box !important;
   }
 
-  #schoolClassesSec table.mobile-table tbody td.col-cb  { grid-column: 1 !important; grid-row: 1 !important; }
-  #schoolClassesSec table.mobile-table tbody td.col-tm  { grid-column: 2 !important; grid-row: 1 !important; white-space: normal !important; }
-  #schoolClassesSec table.mobile-table tbody td.col-dur { grid-column: 3 !important; grid-row: 1 !important; }
-
+  #schoolClassesSec table.mobile-table tbody td.col-cb   { grid-column: 1 !important; grid-row: 1 !important; }
+  #schoolClassesSec table.mobile-table tbody td.col-tm   { grid-column: 2 !important; grid-row: 1 !important; }
+  #schoolClassesSec table.mobile-table tbody td.col-dur  { grid-column: 3 !important; grid-row: 1 !important; }
   #schoolClassesSec table.mobile-table tbody td.col-cls  { grid-column: 1 !important; grid-row: 2 !important; }
   #schoolClassesSec table.mobile-table tbody td.col-tpc  { grid-column: 2 !important; grid-row: 2 !important; }
   #schoolClassesSec table.mobile-table tbody td.col-mode { grid-column: 3 !important; grid-row: 2 !important; }
 
-  /* Keep tiles compact so three fit side by side */
   #schoolClassesSec table.mobile-table tbody td {
-    padding: 8px 4px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 6px !important;
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
   }
-  #schoolClassesSec table.mobile-table tbody td.col-tm {
-    font-size: 12px !important;
-  }
-  #schoolClassesSec table.mobile-table tbody td.col-cls {
-    font-size: 13px !important;
-    word-break: normal !important;
-    overflow-wrap: normal !important;
-  }
-  #schoolClassesSec table.mobile-table tbody td.col-tpc span[onclick] {
-    font-size: 12px !important;
-    padding: 5px 4px !important;
-  }
-  #schoolClassesSec table.mobile-table tbody td.col-dur {
-    font-size: 13px !important;
-  }
-}
 
-/* ==========================================================================
-   TUITION CARDS: THREE ROWS (<= 640px) — placed last
-   Two rows of three cannot hold all eight fields, so three rows are used.
-   Row 1: Period | Time    | Duration
-   Row 2: Class  | Topic   | Venue
-   Row 3: Students | Msg (spans two columns)
-   ========================================================================== */
-@media screen and (max-width: 640px) {
+  #schoolClassesSec table.mobile-table tbody td.col-tm {
+    background: #fffbeb !important;
+    border-color: #fef3c7 !important;
+  }
+
+  #schoolClassesSec table.mobile-table tbody td.col-dur {
+    background: #f0fdf4 !important;
+    border-color: #dcfce7 !important;
+  }
+
+  /* Tuition Cards: 2 Rows x 4 Columns */
   #tuitionStudySec table.mobile-table tbody tr {
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.3fr) minmax(0, 0.9fr) !important;
-    grid-auto-flow: row !important;
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    grid-template-rows: auto auto !important;
+    gap: 6px !important;
+    padding: 8px !important;
+    margin: 0 !important;
+    background: #ffffff !important;
+    border: 1.5px solid #2563eb !important;
+    border-radius: 16px !important;
+    box-shadow: 0 1px 4px rgba(37, 99, 235, 0.1) !important;
+    box-sizing: border-box !important;
   }
 
   #tuitionStudySec table.mobile-table tbody td.col-cb  { grid-column: 1 !important; grid-row: 1 !important; }
-  #tuitionStudySec table.mobile-table tbody td.col-tm  { grid-column: 2 !important; grid-row: 1 !important; white-space: normal !important; }
+  #tuitionStudySec table.mobile-table tbody td.col-tm  { grid-column: 2 !important; grid-row: 1 !important; }
   #tuitionStudySec table.mobile-table tbody td.col-dur { grid-column: 3 !important; grid-row: 1 !important; }
+  #tuitionStudySec table.mobile-table tbody td.col-cls { grid-column: 4 !important; grid-row: 1 !important; }
 
-  #tuitionStudySec table.mobile-table tbody td.col-cls { grid-column: 1 !important; grid-row: 2 !important; }
-  #tuitionStudySec table.mobile-table tbody td.col-tpc { grid-column: 2 !important; grid-row: 2 !important; }
-  #tuitionStudySec table.mobile-table tbody td.col-ven { grid-column: 3 !important; grid-row: 2 !important; }
+  #tuitionStudySec table.mobile-table tbody td.col-tpc { grid-column: 1 !important; grid-row: 2 !important; }
+  #tuitionStudySec table.mobile-table tbody td.col-ven { grid-column: 2 !important; grid-row: 2 !important; }
+  #tuitionStudySec table.mobile-table tbody td.col-nos { grid-column: 3 !important; grid-row: 2 !important; }
+  #tuitionStudySec table.mobile-table tbody td.col-act { grid-column: 4 !important; grid-row: 2 !important; }
 
-  #tuitionStudySec table.mobile-table tbody td.col-nos { grid-column: 1 !important; grid-row: 3 !important; }
-  #tuitionStudySec table.mobile-table tbody td.col-act { grid-column: 2 / span 2 !important; grid-row: 3 !important; }
-
-  /* Compact tiles so three fit side by side */
   #tuitionStudySec table.mobile-table tbody td {
-    padding: 8px 4px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 6px 5px !important;
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
   }
+
   #tuitionStudySec table.mobile-table tbody td.col-tm {
-    font-size: 12px !important;
+    background: #fffbeb !important;
+    border-color: #fef3c7 !important;
   }
-  #tuitionStudySec table.mobile-table tbody td.col-cls {
-    font-size: 13px !important;
-    word-break: normal !important;
-    overflow-wrap: normal !important;
-  }
-  #tuitionStudySec table.mobile-table tbody td.col-tpc span[onclick] {
-    font-size: 12px !important;
-    padding: 5px 4px !important;
-  }
-  #tuitionStudySec table.mobile-table tbody td.col-ven span {
-    font-size: 11px !important;
-    padding: 2px 6px !important;
-  }
+
   #tuitionStudySec table.mobile-table tbody td.col-dur {
-    font-size: 13px !important;
+    background: #f0fdf4 !important;
+    border-color: #dcfce7 !important;
   }
-  #tuitionStudySec table.mobile-table tbody td.col-act button {
-    width: 100% !important;
-    height: 36px !important;
-    font-size: 13px !important;
-    justify-content: center !important;
+
+  #tuitionStudySec table.mobile-table tbody td.col-nos {
+    background: #fff1f2 !important;
+    border-color: #ffe4e6 !important;
+  }
+
+  #tuitionStudySec table.mobile-table tbody td.col-act {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+
+  table.mobile-table tbody tr.empty-row {
+    display: block !important;
+    padding: 16px !important;
+  }
+
+  table.mobile-table tfoot tr {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 8px 12px !important;
+    border-radius: 12px !important;
+  }
+
+  table.mobile-table tfoot td:empty {
+    display: none !important;
+  }
+}
+
+/* 6. Print Styles */
+@media print {
+  body {
+    background: #ffffff !important;
+    padding: 0 !important;
+  }
+  .print-hide {
+    display: none !important;
   }
 }
