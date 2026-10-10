@@ -1,7 +1,7 @@
 /* ==========================================================================
    CONFIG & CLIENT-SIDE STATE ENGINE
    ========================================================================== */
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx8rgSRJvpkBam6PZYzVqR3dqPoSFbrXUdVBz9L2tJDY2lYBkKl1zTbO-pj-piOjwxf/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzm4iBslm1kCUUstcD3n8kMRCoulq_M40bayLw_OLCaRcGntkT4ZMot_ipK5zBgmreEAw/exec';
 const APPS_SCRIPT_SECRET_TOKEN = 'singh_planner_secure_2026';
 
 const TEMPLATE_VERSION = '2026.5_unified_cols';
@@ -42,9 +42,6 @@ let activeModalTrigger = null;
 /* ================= APPS SCRIPT PULL ENGINE (AUTHENTICATED) ================= */
 let syncInFlight = false;
 
-/* ---------- Roster edits made in the app ----------
-   Edits are remembered until the sheet contains the same change.
-   A background pull therefore never undoes a student added or removed in the app. */
 function logRosterEdit(op, batchId, name) {
   state.rosterEdits = state.rosterEdits || [];
   state.rosterEdits.push({ op, batchId, name });
@@ -65,7 +62,6 @@ function mergeRosterFromSheet(sheetRosters) {
       result[e.batchId] = list.filter(n => n !== e.name);
       kept.push(e);
     }
-    // Otherwise the sheet already reflects this edit, so it is dropped
   });
   state.rosterEdits = kept;
   return result;
@@ -108,7 +104,6 @@ async function fetchFromAppsScript(showFeedback = true) {
         state.rosters = mergeRosterFromSheet(data.rosters);
         syncedItems.push('Rosters');
       }
-
 
       saveState();
       ensureDayPopulated(state.activeDateStr);
@@ -199,7 +194,6 @@ function parseTimeRange(timeStr) {
   return { valid: false, startMin: 99999, endMin: 99999, durationMin: 0, hrs: 0, formatted: timeStr.trim() };
 }
 
-/* Shows 0.58 hrs as "35 min", 1.17 hrs as "1h 10m" */
 function formatDuration(hrs) {
   const mins = Math.round((Number(hrs) || 0) * 60);
   if (!mins) return '0 min';
@@ -270,7 +264,6 @@ function normalizeBatchId(name) {
 
 /* ================= APPDATA INTERFACE ================= */
 const AppData = {
-
   getRoster(batchId) {
     if (!state.rosters[batchId]) state.rosters[batchId] = [];
     return state.rosters[batchId];
@@ -289,7 +282,6 @@ const AppData = {
     return { success: true };
   },
 
-
   removeStudent(batchId, studentName) {
     if (!state.rosters[batchId]) return;
     lastDeletedStudent = { batchId, name: studentName };
@@ -305,8 +297,6 @@ const AppData = {
     });
   },
 
-
-
   saveAndNotify(toastMsg = null) {
     saveState();
     renderAll();
@@ -318,7 +308,6 @@ const AppData = {
 function loadState() {
   const rawPlanner = localStorage.getItem(STORAGE_KEY_PLANNER);
   const rawAtt = localStorage.getItem(STORAGE_KEY_ATTENDANCE);
-
 
   if (rawPlanner) {
     try {
@@ -470,7 +459,6 @@ function getPreviousClassDate(batchId, refDateStr) {
   return addDays(refDateStr, -1);
 }
 
-/* ================= STATS & ANALYTICS ================= */
 /* ================= RENDERING ================= */
 function setText(id, value) {
   const el = document.getElementById(id);
@@ -517,7 +505,7 @@ function renderTables() {
   const isArchived = state.activeDateStr < limitISO;
   const dayData = state.days[state.activeDateStr] || { school: [], tuition_study: [] };
 
-  // 1. School: [Period, Time, Class, TopicName, Mode (Lab/Class), Duration]
+  // 1. School
   const sTbody = document.getElementById('schoolBody');
   sTbody.innerHTML = '';
   if (isArchived) {
@@ -551,7 +539,7 @@ function renderTables() {
           <div class="inline-flex items-center gap-1.5 justify-center">
             ${item.isFree ? '<span class="text-slate-300 font-bold">—</span>' : ''}
             <span class="text-[11px] font-bold text-slate-500">${idx + 1}</span>
-                      </div>
+          </div>
         </td>
         <td class="py-2.5 px-3 text-left col-tm">
           ${isLive ? '<span class="inline-flex items-center gap-1 bg-blue-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm mr-1"><span class="w-1.5 h-1.5 rounded-full bg-white live-pulse"></span>LIVE</span>' : ''}
@@ -581,14 +569,14 @@ function renderTables() {
   const sDone = dayData.school.filter(i => i.completed && !i.isFree).length;
   const sCount = dayData.school.filter(i => !i.isFree).length;
   const sPct = sCount > 0 ? Math.round((sDone / sCount) * 100) : 0;
-  
+
   setSectionCounter('school', sDone, sCount);
   document.getElementById('schoolSecTotal').textContent = `${sTot.toFixed(2)} hrs`;
   document.getElementById('schoolSecMeta').textContent = `${sDone} of ${sCount} completed`;
   const sBar = document.getElementById('schoolProgressBar');
   if (sBar) sBar.style.width = `${sPct}%`;
 
-  // 2. Tuition: [Sno, Time, BatchName, Venue, Topic, Action(msg), noofstudents, Duration]
+  // 2. Tuition
   const tTbody = document.getElementById('tuitionStudyBody');
   tTbody.innerHTML = '';
   if (isArchived) {
@@ -641,7 +629,7 @@ function renderTables() {
         </td>
         <td class="py-2.5 px-3 text-center col-act">
           ${isTuition ? (sentAt ? `
-            <button onclick="openAttendanceModal('${item.slotId}', this)" type="button" aria-label="Reminder sent at ${sentAt} for ${escapeHtml(item.task)}. Send again" class="bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition active:scale-95 px-2 py-1 rounded-md text-[11px] font-bold whitespace-nowrap">
+            <button onclick="openAttendanceModal('${item.slotId}', this)" type="button" aria-label="Reminder sent at ${sentAt} for${escapeHtml(item.task)}. Send again" class="bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition active:scale-95 px-2 py-1 rounded-md text-[11px] font-bold whitespace-nowrap">
               ✓ Sent ${sentAt}
             </button>` : `
             <button onclick="openAttendanceModal('${item.slotId}', this)" type="button" aria-label="Mark Attendance and send reminder for ${escapeHtml(item.task)}" class="bg-emerald-600 hover:bg-emerald-700 text-white transition active:scale-95">
@@ -664,7 +652,7 @@ function renderTables() {
   const tDone = dayData.tuition_study.filter(i => i.completed).length;
   const tCount = dayData.tuition_study.length;
   const tPct = tCount > 0 ? Math.round((tDone / tCount) * 100) : 0;
-  
+
   setSectionCounter('tuition', tDone, tCount);
   document.getElementById('tuitionSecTotal').textContent = `${tTot.toFixed(2)} hrs`;
   document.getElementById('tuitionSecMeta').textContent = `${tDone} of ${tCount} completed`;
@@ -851,6 +839,10 @@ async function pushAttendanceToSheet() {
     .map(n => ({ name: n, status: dayAtt[n] }));
   if (!records.length) return false;
 
+  const dayData = state.days[state.activeDateStr];
+  const item = dayData ? dayData.tuition_study.find(i => i.slotId === currentAttTaskId) : null;
+  const topic = item ? (item.topic || '') : '';
+
   try {
     const res = await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
@@ -862,6 +854,7 @@ async function pushAttendanceToSheet() {
         section: 'tuition',
         batchId: currentAttBatchId,
         className: currentAttBatchTitle,
+        topic: topic,
         records
       })
     });
@@ -888,7 +881,6 @@ async function fetchAttendanceFromSheet(dateStr, batchId) {
     attendanceStore[dateStr][batchId] = Object.assign({}, attendanceStore[dateStr][batchId] || {}, data.attendance);
     saveState();
 
-    // Refresh only if the modal is still showing this batch and date
     if (dateStr === currentAttTargetDate && batchId === currentAttBatchId) {
       updateAttDateButtons();
       renderAttendanceList();
@@ -919,8 +911,7 @@ function confirmAttendanceAndLaunchWhatsApp() {
     showActionModal({
       title: 'Topic Required',
       msg: `Please enter today's topic for "${item.task}" before sending:`,
-      
-            hasInput: true,
+      hasInput: true,
       inputVal: '',
       onConfirm: (tVal) => {
         item.topic = tVal.trim();
@@ -1010,7 +1001,6 @@ function switchTab(tabId, btn) {
     btn.classList.add('active');
     btn.setAttribute('aria-selected', 'true');
   }
-
 }
 
 function handleNavClick(view, btn) {
