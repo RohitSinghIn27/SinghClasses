@@ -1,7 +1,7 @@
 /* ==========================================================================
    CONFIG & CLIENT-SIDE STATE ENGINE
    ========================================================================== */
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyjkicMk3BpVYLChh6YdcnrYDmh2Pd4x40FDAIguSNbjOWjuqzQuZz0_V5DLQ6IpeEY/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx8rgSRJvpkBam6PZYzVqR3dqPoSFbrXUdVBz9L2tJDY2lYBkKl1zTbO-pj-piOjwxf/exec';
 const APPS_SCRIPT_SECRET_TOKEN = 'singh_planner_secure_2026';
 
 const TEMPLATE_VERSION = '2026.5_unified_cols';
@@ -21,15 +21,15 @@ const EMPTY_TIMETABLES = {
 let state = {
   templateVersion: TEMPLATE_VERSION,
   activeDateStr: toISO(new Date()),
-  viewMondayStr: getMondayISO(new Date()),
   days: {},
   timetables: JSON.parse(JSON.stringify(EMPTY_TIMETABLES)),
   rosters: {},
-  lastBackup: null
+  lastBackup: null,
+  sentLog: {},
+  rosterEdits: []
 };
 
 let attendanceStore = {};
-let currentPlannerView = 'school';
 let lastCheckedDate = toISO(new Date());
 
 let currentAttBatchId = null;
@@ -40,20 +40,47 @@ let lastDeletedStudent = null;
 let activeModalTrigger = null;
 
 /* ================= APPS SCRIPT PULL ENGINE (AUTHENTICATED) ================= */
+let syncInFlight = false;
+
+/* ---------- Roster edits made in the app ----------
+   Edits are remembered until the sheet contains the same change.
+   A background pull therefore never undoes a student added or removed in the app. */
+function logRosterEdit(op, batchId, name) {
+  state.rosterEdits = state.rosterEdits || [];
+  state.rosterEdits.push({ op, batchId, name });
+}
+
+function mergeRosterFromSheet(sheetRosters) {
+  const result = {};
+  Object.keys(sheetRosters).forEach(b => { result[b] = [...sheetRosters[b]]; });
+
+  const kept = [];
+  (state.rosterEdits || []).forEach(e => {
+    const list = result[e.batchId] || (result[e.batchId] = []);
+    const inSheet = list.includes(e.name);
+    if (e.op === 'add' && !inSheet) {
+      list.push(e.name);
+      kept.push(e);
+    } else if (e.op === 'remove' && inSheet) {
+      result[e.batchId] = list.filter(n => n !== e.name);
+      kept.push(e);
+    }
+    // Otherwise the sheet already reflects this edit, so it is dropped
+  });
+  state.rosterEdits = kept;
+  return result;
+}
+
 async function fetchFromAppsScript(showFeedback = true) {
+  if (syncInFlight) return;
   if (!APPS_SCRIPT_URL) {
     if (showFeedback) showToast('Missing APPS_SCRIPT_URL', 'error');
     return;
   }
 
-  const syncBtn = document.getElementById('cloudSyncBtn');
-  if (syncBtn) {
-    syncBtn.disabled = true;
-    syncBtn.classList.add('opacity-70', 'cursor-not-allowed');
-  }
-
   if (showFeedback) showToast('Pulling data from Google Sheets...', 'info');
 
+  syncInFlight = true;
   try {
     const fetchUrl = `${APPS_SCRIPT_URL}?action=getAll&token=${encodeURIComponent(APPS_SCRIPT_SECRET_TOKEN)}&_t=${Date.now()}`;
     const res = await fetch(fetchUrl, {
@@ -78,12 +105,10 @@ async function fetchFromAppsScript(showFeedback = true) {
       }
 
       if (data.rosters && typeof data.rosters === 'object') {
-        state.rosters = data.rosters;
+        state.rosters = mergeRosterFromSheet(data.rosters);
         syncedItems.push('Rosters');
       }
 
-      const syncTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      localStorage.setItem(STORAGE_KEY_LAST_SYNC, syncTime);
 
       saveState();
       ensureDayPopulated(state.activeDateStr);
@@ -100,10 +125,7 @@ async function fetchFromAppsScript(showFeedback = true) {
     console.error('Apps Script Fetch Error:', err);
     if (showFeedback) showToast(`Pull failed: ${err.message}`, 'error');
   } finally {
-    if (syncBtn) {
-      syncBtn.disabled = false;
-      syncBtn.classList.remove('opacity-70', 'cursor-not-allowed');
-    }
+    syncInFlight = false;
   }
 }
 
@@ -111,14 +133,6 @@ async function fetchFromAppsScript(showFeedback = true) {
 function toISO(dateObj) {
   const d = new Date(dateObj);
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-}
-
-function getMondayISO(refDate) {
-  const d = new Date(refDate);
-  const day = d.getDay();
-  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
-  d.setDate(diff);
-  return toISO(d);
 }
 
 function addDays(isoStr, num) {
@@ -185,6 +199,24 @@ function parseTimeRange(timeStr) {
   return { valid: false, startMin: 99999, endMin: 99999, durationMin: 0, hrs: 0, formatted: timeStr.trim() };
 }
 
+/* Shows 0.58 hrs as "35 min", 1.17 hrs as "1h 10m" */
+function formatDuration(hrs) {
+  const mins = Math.round((Number(hrs) || 0) * 60);
+  if (!mins) return '0 min';
+  const h = Math.floor(mins / 60), m = mins % 60;
+  return h ? (m ? `${h}h ${m}m` : `${h}h`) : `${m} min`;
+}
+
+function getSentTime(slotId) {
+  return (state.sentLog && state.sentLog[state.activeDateStr + '|' + slotId]) || null;
+}
+
+function markSent(slotId) {
+  state.sentLog = state.sentLog || {};
+  state.sentLog[state.activeDateStr + '|' + slotId] =
+    new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
 function getTimeStatus(timeStr, dateStr) {
   if (dateStr !== toISO(new Date())) return 'normal';
   const range = parseTimeRange(timeStr);
@@ -239,14 +271,6 @@ function normalizeBatchId(name) {
 /* ================= APPDATA INTERFACE ================= */
 const AppData = {
 
-  getBatchDisplayName(batchId) {
-    for (const d of DAYS) {
-      const slot = (state.timetables.tuition[d] || []).find(s => (s.batchId || normalizeBatchId(s.task)) === batchId);
-      if (slot && slot.task) return slot.task;
-    }
-    return batchId.replace(/^b_/, '').replace(/_/g, ' ').toUpperCase();
-  },
-
   getRoster(batchId) {
     if (!state.rosters[batchId]) state.rosters[batchId] = [];
     return state.rosters[batchId];
@@ -260,6 +284,7 @@ const AppData = {
       return { success: false, message: 'Student already exists in this batch' };
     }
     state.rosters[batchId].push(clean);
+    logRosterEdit('add', batchId, clean);
     this.saveAndNotify(`Added "${clean}" to roster`);
     return { success: true };
   },
@@ -269,10 +294,12 @@ const AppData = {
     if (!state.rosters[batchId]) return;
     lastDeletedStudent = { batchId, name: studentName };
     state.rosters[batchId] = state.rosters[batchId].filter(s => s !== studentName);
+    logRosterEdit('remove', batchId, studentName);
     this.saveAndNotify(`Removed "${studentName}"`);
     showToastWithUndo(`Removed ${studentName}`, () => {
       if (lastDeletedStudent) {
         state.rosters[lastDeletedStudent.batchId].push(lastDeletedStudent.name);
+        state.rosterEdits = (state.rosterEdits || []).filter(e => !(e.op === 'remove' && e.batchId === lastDeletedStudent.batchId && e.name === lastDeletedStudent.name));
         AppData.saveAndNotify(`Restored "${lastDeletedStudent.name}"`);
       }
     });
@@ -339,9 +366,14 @@ function saveState() {
 }
 
 function pruneOldTasks(keepDays = 15) {
-  if (!state.days) return;
   const now = new Date();
   const limitISO = toISO(new Date(now.getFullYear(), now.getMonth(), now.getDate() - keepDays));
+  if (state.sentLog) {
+    Object.keys(state.sentLog).forEach(k => {
+      if (k.split('|')[0] < limitISO) delete state.sentLog[k];
+    });
+  }
+  if (!state.days) return;
   Object.keys(state.days).forEach(dateStr => {
     if (dateStr < limitISO) delete state.days[dateStr];
   });
@@ -425,21 +457,6 @@ function ensureDayPopulated(dateStr) {
   state.days[dateStr].tuition_study = [...populatedTuition, ...populatedStudy];
 }
 
-function reloadDayFromTimetable(dateStr) {
-  const previousData = state.days[dateStr] ? JSON.parse(JSON.stringify(state.days[dateStr])) : null;
-  if (state.days[dateStr]) delete state.days[dateStr];
-  ensureDayPopulated(dateStr);
-  saveState();
-  renderAll();
-
-  showToastWithUndo(`Reset ${getDayName(dateStr)} from template`, () => {
-    if (previousData) {
-      state.days[dateStr] = previousData;
-      AppData.saveAndNotify(`Restored ${getDayName(dateStr)} state`);
-    }
-  });
-}
-
 function getPreviousClassDate(batchId, refDateStr) {
   if (!batchId || !refDateStr) return addDays(refDateStr, -1);
   for (let i = 1; i <= 7; i++) {
@@ -454,62 +471,21 @@ function getPreviousClassDate(batchId, refDateStr) {
 }
 
 /* ================= STATS & ANALYTICS ================= */
-function calculateDailyStats() {
-  const totals = { school: 0, tuition: 0, study: 0 };
-  let completedCount = 0, totalCount = 0;
-
-  const curDate = state.activeDateStr;
-  const dayData = state.days[curDate];
-
-  if (dayData) {
-    [...(dayData.school || []), ...(dayData.tuition_study || [])].forEach(item => {
-      const hrs = Number.isFinite(item.hrs) ? item.hrs : 0;
-      if (!item.isFree) {
-        if (item.cat === 'School') totals.school += hrs;
-        if (item.cat === 'Tuition') totals.tuition += hrs;
-        if (item.cat === 'Study') totals.study += hrs;
-        totalCount++;
-        if (item.completed) completedCount++;
-      }
-    });
-  } else {
-    const dName = getDayName(curDate);
-    ((state.timetables.school && state.timetables.school[dName]) || []).forEach(s => {
-      const range = parseTimeRange(s.time);
-      const p = parseSchoolTask(s.task, s.mode);
-      if (!p.isFree) { totals.school += range.hrs; totalCount++; }
-    });
-    ((state.timetables.tuition && state.timetables.tuition[dName]) || []).forEach(s => {
-      totals.tuition += parseTimeRange(s.time).hrs;
-      totalCount++;
-    });
-    ((state.timetables.study && state.timetables.study[dName]) || []).forEach(s => {
-      totals.study += parseTimeRange(s.time).hrs;
-      totalCount++;
-    });
-  }
-
-  document.getElementById('totalSchool').textContent = totals.school.toFixed(1);
-  document.getElementById('totalTuition').textContent = totals.tuition.toFixed(1);
-  document.getElementById('totalStudy').textContent = totals.study.toFixed(1);
-
-  const pct = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
-  document.getElementById('completedCount').textContent = completedCount;
-  document.getElementById('totalCount').textContent = totalCount;
-  document.getElementById('progressPercent').textContent = `${pct}% complete`;
-
-}
-
-// Kept so existing calls (renderAll, selectDate) still work
-function calculateWeeklyStats() {
-  calculateDailyStats();
-}
-
 /* ================= RENDERING ================= */
+function setText(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = value;
+}
+
+function setSectionCounter(prefix, done, total) {
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  setText(prefix + 'DoneCount', done);
+  setText(prefix + 'TotalCount', total);
+  setText(prefix + 'Pct', `${pct}%`);
+}
+
 function renderAll() {
-  renderSidebarDaySelector();
   renderTables();
-  calculateWeeklyStats();
   updatePrintDate();
 }
 
@@ -520,28 +496,9 @@ function updatePrintDate() {
   if (target) target.textContent = dt.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
 }
 
-function renderSidebarDaySelector() {
-  const label = document.getElementById('dailyDateLabel');
-  if (!label) return;
-  const [y, m, d] = state.activeDateStr.split('-').map(Number);
-  const dt = new Date(y, m - 1, d);
-  label.textContent = `${getDayName(state.activeDateStr)}, ${String(d).padStart(2, '0')} ${dt.toLocaleDateString('en-US', { month: 'short' })} ${y}`;
-}
-
-function selectDate(isoStr) {
-  state.activeDateStr = isoStr;
-  ensureDayPopulated(isoStr);
-  saveState();
-  renderTables();
-  calculateWeeklyStats();
-  renderSidebarDaySelector();
-  updatePrintDate();
-}
-
 function jumpToday() {
   const t = toISO(new Date());
   state.activeDateStr = t;
-  state.viewMondayStr = getMondayISO(new Date());
   ensureDayPopulated(t);
   saveState();
   renderAll();
@@ -549,8 +506,6 @@ function jumpToday() {
 
 function shiftDay(dir) {
   state.activeDateStr = addDays(state.activeDateStr, dir);
-  const [y, m, d] = state.activeDateStr.split('-').map(Number);
-  state.viewMondayStr = getMondayISO(new Date(y, m - 1, d));
   ensureDayPopulated(state.activeDateStr);
   saveState();
   renderAll();
@@ -594,9 +549,7 @@ function renderTables() {
       tr.innerHTML = `
         <td class="py-2.5 px-3 text-center col-cb">
           <div class="inline-flex items-center gap-1.5 justify-center">
-            ${item.isFree ? '<span class="text-slate-300 font-bold">—</span>' : `
-              <input type="checkbox" ${item.completed ? 'checked' : ''} onchange="toggleTaskDone('${item.slotId}', 'school')" aria-label="Mark period done" class="cursor-pointer">
-            `}
+            ${item.isFree ? '<span class="text-slate-300 font-bold">—</span>' : ''}
             <span class="text-[11px] font-bold text-slate-500">${idx + 1}</span>
                       </div>
         </td>
@@ -605,20 +558,20 @@ function renderTables() {
           ${isUpcoming ? '<span class="inline-flex items-center gap-1 bg-amber-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm mr-1">NEXT</span>' : ''}
           ${escapeHtml(item.time)}
         </td>
-        <td class="py-2.5 px-3 text-left col-cls">
+        <td class="py-2.5 px-3 text-left col-cls" ${item.isFree ? '' : `onclick="toggleTaskDone('${item.slotId}', 'school')" title="Click to mark done or undo"`}>
           <span class="${item.completed ? 'line-through text-slate-400' : 'text-slate-900'}">${escapeHtml(item.task)}</span>
         </td>
         <td class="py-2.5 px-3 text-left col-tpc">
           ${!item.isFree ? `
             <span onclick="editTopicPrompt('${item.slotId}', 'school')">
-              📚 Topic: <strong>${escapeHtml(item.topic || '+ Add topic')}</strong>
+              <strong>${escapeHtml(item.topic || '+ Add topic')}</strong>
             </span>` : '<span class="text-slate-300 font-bold">—</span>'}
         </td>
         <td class="py-2.5 px-3 text-center col-mode">
           ${modeBadge}
         </td>
         <td class="py-2.5 px-3 text-right col-dur">
-          ${Number(item.hrs).toFixed(2)} hrs
+          ${formatDuration(item.hrs)}
         </td>`;
       sTbody.appendChild(tr);
     });
@@ -629,6 +582,7 @@ function renderTables() {
   const sCount = dayData.school.filter(i => !i.isFree).length;
   const sPct = sCount > 0 ? Math.round((sDone / sCount) * 100) : 0;
   
+  setSectionCounter('school', sDone, sCount);
   document.getElementById('schoolSecTotal').textContent = `${sTot.toFixed(2)} hrs`;
   document.getElementById('schoolSecMeta').textContent = `${sDone} of ${sCount} completed`;
   const sBar = document.getElementById('schoolProgressBar');
@@ -650,6 +604,10 @@ function renderTables() {
       const bId = item.batchId || normalizeBatchId(item.task);
       const studentCount = (state.rosters[bId] || []).length;
       const countLabel = `${studentCount} ${studentCount === 1 ? 'student' : 'students'}`;
+      const sentAt = isTuition ? getSentTime(item.slotId) : null;
+      const attDate = isTuition ? getPreviousClassDate(bId, state.activeDateStr) : null;
+      const attMarked = Object.keys((attDate && attendanceStore[attDate] && attendanceStore[attDate][bId]) || {}).length;
+      const attLabel = attMarked ? `Att ${attMarked}/${studentCount}` : 'Att not marked';
 
       let rowClass = 'hover:bg-slate-50/80';
       if (item.completed) rowClass = 'bg-emerald-50/20';
@@ -661,7 +619,6 @@ function renderTables() {
       tr.innerHTML = `
         <td class="py-2.5 px-3 text-center col-cb">
           <div class="inline-flex items-center gap-1.5 justify-center">
-            <input type="checkbox" ${item.completed ? 'checked' : ''} onchange="toggleTaskDone('${item.slotId}', 'tuition_study')" aria-label="Mark task done" class="cursor-pointer">
             <span class="text-[11px] font-bold text-slate-500">${item.sno || (idx + 1)}</span>
           </div>
         </td>
@@ -670,7 +627,7 @@ function renderTables() {
           ${isUpcoming ? '<span class="inline-flex items-center gap-1 bg-amber-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm mr-1">NEXT</span>' : ''}
           ${escapeHtml(item.time)}
         </td>
-        <td class="py-2.5 px-3 text-left col-cls">
+        <td class="py-2.5 px-3 text-left col-cls" onclick="toggleTaskDone('${item.slotId}', 'tuition_study')" title="Click to mark done or undo">
           <span class="${item.completed ? 'line-through text-slate-400' : 'text-slate-900'}">${escapeHtml(item.task)}</span>
         </td>
         <td class="py-2.5 px-3 text-center col-ven">
@@ -679,21 +636,25 @@ function renderTables() {
         <td class="py-2.5 px-3 text-left col-tpc">
           ${isTuition ? `
             <span onclick="editTopicPrompt('${item.slotId}', 'tuition_study')">
-              📚 Topic: <strong>${escapeHtml(item.topic || '+ Add topic')}</strong>
+              <strong>${escapeHtml(item.topic || '+ Add topic')}</strong>
             </span>` : '<span class="text-slate-300 font-bold">—</span>'}
         </td>
         <td class="py-2.5 px-3 text-center col-act">
-          ${isTuition ? `
+          ${isTuition ? (sentAt ? `
+            <button onclick="openAttendanceModal('${item.slotId}', this)" type="button" aria-label="Reminder sent at ${sentAt} for ${escapeHtml(item.task)}. Send again" class="bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition active:scale-95 px-2 py-1 rounded-md text-[11px] font-bold whitespace-nowrap">
+              ✓ Sent ${sentAt}
+            </button>` : `
             <button onclick="openAttendanceModal('${item.slotId}', this)" type="button" aria-label="Mark Attendance and send reminder for ${escapeHtml(item.task)}" class="bg-emerald-600 hover:bg-emerald-700 text-white transition active:scale-95">
               <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
               <span>Msg</span>
-            </button>` : '<span class="text-slate-300 font-bold">—</span>'}
+            </button>`) : '<span class="text-slate-300 font-bold">—</span>'}
         </td>
         <td class="py-2.5 px-3 text-center col-nos">
-          ${isTuition ? `<span class="bg-blue-50 text-blue-700 font-bold text-[10.5px] px-2 py-0.5 rounded border border-blue-200">${countLabel}</span>` : '<span class="text-slate-400 text-[10.5px] italic">Self</span>'}
+          ${isTuition ? `<span class="bg-blue-50 text-blue-700 font-bold text-[10.5px] px-2 py-0.5 rounded border border-blue-200">${countLabel}</span>
+          <div class="text-[10px] mt-0.5 ${attMarked ? 'text-slate-500' : 'text-amber-600 font-bold'}">${attLabel}</div>` : '<span class="text-slate-400 text-[10.5px] italic">Self</span>'}
         </td>
         <td class="py-2.5 px-3 text-right col-dur">
-          ${Number(item.hrs).toFixed(2)} hrs
+          ${formatDuration(item.hrs)}
         </td>`;
       tTbody.appendChild(tr);
     });
@@ -704,6 +665,7 @@ function renderTables() {
   const tCount = dayData.tuition_study.length;
   const tPct = tCount > 0 ? Math.round((tDone / tCount) * 100) : 0;
   
+  setSectionCounter('tuition', tDone, tCount);
   document.getElementById('tuitionSecTotal').textContent = `${tTot.toFixed(2)} hrs`;
   document.getElementById('tuitionSecMeta').textContent = `${tDone} of ${tCount} completed`;
   const tBar = document.getElementById('tuitionProgressBar');
@@ -760,6 +722,7 @@ function openAttendanceModal(slotId, triggerElement = null) {
 
   updateAttDateButtons();
   renderAttendanceList();
+  fetchAttendanceFromSheet(currentAttTargetDate, currentAttBatchId);
 }
 
 function closeAttendanceModal() {
@@ -777,6 +740,7 @@ function switchAttDate(mode) {
     : state.activeDateStr;
   updateAttDateButtons();
   renderAttendanceList();
+  fetchAttendanceFromSheet(currentAttTargetDate, currentAttBatchId);
 }
 
 function updateAttDateButtons() {
@@ -878,14 +842,72 @@ function addStudentFromModal() {
   }
 }
 
+/* ================= ATTENDANCE SHEET SYNC ================= */
+async function pushAttendanceToSheet() {
+  if (!APPS_SCRIPT_URL || !currentAttBatchId || !currentAttTargetDate) return false;
+  const dayAtt = (attendanceStore[currentAttTargetDate] && attendanceStore[currentAttTargetDate][currentAttBatchId]) || {};
+  const records = Object.keys(dayAtt)
+    .filter(n => ['P', 'A', 'L'].includes(dayAtt[n]))
+    .map(n => ({ name: n, status: dayAtt[n] }));
+  if (!records.length) return false;
+
+  try {
+    const res = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'saveAttendance',
+        token: APPS_SCRIPT_SECRET_TOKEN,
+        date: currentAttTargetDate,
+        section: 'tuition',
+        batchId: currentAttBatchId,
+        className: currentAttBatchTitle,
+        records
+      })
+    });
+    const data = await res.json();
+    if (data.status !== 'success') throw new Error(data.message || 'Save failed');
+    return true;
+  } catch (err) {
+    console.error('Attendance sync error:', err);
+    showToast(`Sheet sync failed (${err.message}). Saved on this device only.`, 'error');
+    return false;
+  }
+}
+
+async function fetchAttendanceFromSheet(dateStr, batchId) {
+  if (!APPS_SCRIPT_URL || !dateStr || !batchId) return;
+  try {
+    const url = `${APPS_SCRIPT_URL}?action=getAttendance&date=${encodeURIComponent(dateStr)}` +
+      `&batch=${encodeURIComponent(batchId)}&token=${encodeURIComponent(APPS_SCRIPT_SECRET_TOKEN)}&_t=${Date.now()}`;
+    const res = await fetch(url, { method: 'GET', redirect: 'follow' });
+    const data = await res.json();
+    if (data.status !== 'success' || !data.attendance || !Object.keys(data.attendance).length) return;
+
+    attendanceStore[dateStr] = attendanceStore[dateStr] || {};
+    attendanceStore[dateStr][batchId] = Object.assign({}, attendanceStore[dateStr][batchId] || {}, data.attendance);
+    saveState();
+
+    // Refresh only if the modal is still showing this batch and date
+    if (dateStr === currentAttTargetDate && batchId === currentAttBatchId) {
+      updateAttDateButtons();
+      renderAttendanceList();
+    }
+  } catch (err) {
+    console.warn('Attendance load from sheet failed:', err);
+  }
+}
+
 function saveAttendanceOnly() {
   saveState();
+  pushAttendanceToSheet();
   closeAttendanceModal();
   showToast('Attendance recorded', 'success');
 }
 
 function confirmAttendanceAndLaunchWhatsApp() {
   saveState();
+  pushAttendanceToSheet();
   const dayData = state.days[state.activeDateStr];
   const item = dayData ? dayData.tuition_study.find(i => i.slotId === currentAttTaskId) : null;
   if (!item) {
@@ -959,6 +981,9 @@ function dispatchWhatsAppMessage(item) {
 
   const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(message.trim())}`;
   window.open(url, '_blank');
+  markSent(item.slotId);
+  saveState();
+  renderTables();
 
   closeAttendanceModal();
   showToast('Reminder sent & attendance saved', 'success');
@@ -966,7 +991,6 @@ function dispatchWhatsAppMessage(item) {
 
 /* ================= SECTION FILTERS & MODALS ================= */
 function setPlannerView(view) {
-  currentPlannerView = view;
   const sSec = document.getElementById('schoolClassesSec');
   const tSec = document.getElementById('tuitionStudySec');
   if (sSec) sSec.style.display = (view === 'school' || view === 'all') ? 'block' : 'none';
@@ -1104,13 +1128,29 @@ function escapeHtml(str) {
     .replace(/'/g, '&#39;');
 }
 
+/* ================= BACKGROUND SYNC ================= */
+const BACKGROUND_SYNC_MS = 5 * 60 * 1000;
+const MIN_PULL_GAP_MS = 60 * 1000;
+let lastPullAt = 0;
+
+function backgroundPull(force = false) {
+  if (!APPS_SCRIPT_URL) return;
+  if (!force && Date.now() - lastPullAt < MIN_PULL_GAP_MS) return;
+  lastPullAt = Date.now();
+  fetchFromAppsScript(false);
+}
+
 /* ================= INITIALIZATION ================= */
 window.addEventListener('load', () => {
   loadState();
+  setPlannerView('school');
 
-  if (APPS_SCRIPT_URL) {
-    fetchFromAppsScript(false);
-  }
+  backgroundPull(true);
+  setInterval(() => backgroundPull(false), BACKGROUND_SYNC_MS);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') backgroundPull(false);
+  });
+  window.addEventListener('online', () => backgroundPull(true));
 
   const updateClock = () => {
     const now = new Date();
@@ -1121,7 +1161,6 @@ window.addEventListener('load', () => {
     if (curISO !== lastCheckedDate) {
       lastCheckedDate = curISO;
       state.activeDateStr = curISO;
-      state.viewMondayStr = getMondayISO(now);
       ensureDayPopulated(curISO);
       saveState();
       renderAll();

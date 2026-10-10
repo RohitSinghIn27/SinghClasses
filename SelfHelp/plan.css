@@ -23,25 +23,6 @@ body {
   opacity: 1;
 }
 
-/* Category Badges */
-.cat-pill {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 800;
-  border-radius: 5px;
-  padding: 3px 10px !important;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-size: 11.5px;
-  line-height: 1;
-  white-space: nowrap !important;
-}
-
-.cat-pill.School { background-color: #2563eb; color: #ffffff; }
-.cat-pill.Tuition { background-color: #f97316; color: #ffffff; }
-.cat-pill.Study { background-color: #8b5cf6; color: #ffffff; }
-
 /* Live Pulse Indicator */
 @keyframes livePulseGlow {
   0% { transform: scale(0.95); opacity: 0.8; }
@@ -182,11 +163,6 @@ section > header h2 {
   letter-spacing: 0.04em !important;
 }
 
-section > header p {
-  font-size: 13.5px !important;
-  margin-top: 3px !important;
-}
-
 section > header > div:first-child > div:first-child {
   width: 34px !important;
   height: 34px !important;
@@ -195,41 +171,6 @@ section > header > div:first-child > div:first-child {
 section > header svg {
   width: 17px !important;
   height: 17px !important;
-}
-
-section > header button {
-  font-size: 14px !important;
-  padding-top: 8px !important;
-  padding-bottom: 8px !important;
-  padding-left: 14px !important;
-  padding-right: 14px !important;
-  min-height: 40px !important;
-  gap: 8px !important;
-  border-radius: 10px !important;
-}
-
-/* Hour tiles inside the School section header */
-#schoolClassesSec header .text-\[10px\] {
-  font-size: 12px !important;
-  letter-spacing: 0.06em !important;
-}
-
-#schoolClassesSec header .text-sm {
-  font-size: 17px !important;
-}
-
-#schoolClassesSec header > div:nth-child(2) {
-  gap: 10px !important;
-}
-
-#schoolClassesSec header > div:nth-child(2) > div {
-  padding-top: 6px !important;
-  padding-bottom: 6px !important;
-  padding-left: 12px !important;
-  padding-right: 12px !important;
-  min-width: 128px !important;
-  gap: 10px !important;
-  border-radius: 10px !important;
 }
 
 /* Section progress bar a little thicker */
@@ -532,22 +473,10 @@ section > .h-1\.5 {
   font-size: 16px !important;
 }
 
-.tab-content h3 {
-  font-size: 14.5px !important;
-}
-
-.tab-content p {
-  font-size: 14px !important;
-}
-
 .tab-content button {
   font-size: 14px !important;
   padding-top: 8px !important;
   padding-bottom: 8px !important;
-}
-
-.tab-content > div {
-  gap: 12px;
 }
 
 #attendanceModal h3 {
@@ -860,51 +789,12 @@ footer .text-\[11px\] {
     letter-spacing: 0.03em !important;
   }
 
-  section > header p {
-    font-size: 12px !important;
-    line-height: 1.35 !important;
-  }
-
-  /* Hour tiles: three equal columns */
-  #schoolClassesSec header > div:nth-child(2) {
-    width: 100% !important;
-    display: grid !important;
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    gap: 6px !important;
-  }
-
-  #schoolClassesSec header > div:nth-child(2) > div {
-    min-width: 0 !important;
-    width: 100% !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    justify-content: center !important;
-    gap: 2px !important;
-    padding: 6px 8px !important;
-  }
-
-  #schoolClassesSec header .text-\[10px\] {
-    font-size: 10px !important;
-  }
-
-  #schoolClassesSec header .text-sm {
-    font-size: 14px !important;
-  }
-
-  /* Action buttons: two equal columns */
-  section > header > div:last-child {
-    width: 100% !important;
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 8px !important;
-  }
-
-  section > header > div:last-child button {
-    width: 100% !important;
-    justify-content: center !important;
-    font-size: 13px !important;
-    padding: 8px 8px !important;
-    min-height: 38px !important;
+  /* Section headers hold only their title now, so keep it a plain flex row */
+  section > header > div:first-child {
+    display: flex !important;
+    grid-template-columns: none !important;
+    gap: 10px !important;
+    width: 100%;
   }
 
   /* ---- Table cards ---- */
@@ -1103,10 +993,6 @@ footer .text-\[11px\] {
 
   /* Section headers */
   section > header h2 { font-size: 16px !important; }
-  section > header p { font-size: 12px !important; }
-  section > header button { font-size: 12.5px !important; }
-  #schoolClassesSec header .text-sm { font-size: 15px !important; }
-  #schoolClassesSec header .text-\[10px\] { font-size: 11px !important; }
   #schoolSecMeta,
   #tuitionSecMeta { font-size: 12.5px !important; }
 
@@ -1132,4 +1018,987 @@ footer .text-\[11px\] {
   /* Footer */
   footer { font-size: 13.5px !important; }
   footer .text-\[11px\] { font-size: 12px !important; }
+}
+/* ==========================================================================
+   COMPACT RECTANGULAR ATTENDANCE MODAL (overrides, placed last)
+   ========================================================================== */
+#attendanceModal > div {
+  width: min(420px, calc(100% - 16px)) !important;
+  max-width: 420px !important;
+  max-height: 88vh !important;
+  border-radius: 0 !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Square corners everywhere inside the modal */
+#attendanceModal *,
+#attendanceModal *::before,
+#attendanceModal *::after {
+  border-radius: 0 !important;
+}
+
+/* Compact type */
+#attendanceModal h3 { font-size: 13px !important; }
+#attendanceModal p,
+#attendanceModal label,
+#attendanceModal span,
+#attendanceModal button,
+#attendanceModal input {
+  font-size: 11.5px !important;
+}
+
+/* Section bands, tightened */
+#attendanceModal > div > div:nth-child(1) { padding: 8px 10px !important; }   /* title bar */
+#attendanceModal > div > div:nth-child(2) { padding: 5px 10px !important; }   /* attendance for */
+#attendanceModal > div > div:nth-child(3) { padding: 4px 10px !important; }   /* warning */
+#attendanceModal > div > div:nth-child(4) { padding: 5px 10px !important; }   /* bulk actions */
+#attendanceModal > div > div:nth-child(5) { padding: 0 !important; }          /* roster */
+#attendanceModal > div > div:nth-child(6) { padding: 6px 10px !important; }   /* add student */
+#attendanceModal > div > div:nth-child(7) { padding: 4px 10px !important; }   /* absentee toggle */
+#attendanceModal > div > div:nth-child(8) { padding: 6px 10px !important; }   /* footer buttons */
+
+/* Hide the subtitle line to save height */
+#attBatchSubtitle { display: none !important; }
+
+/* Title icon smaller */
+#attendanceModal > div > div:first-child > div:first-child {
+  width: 24px !important;
+  height: 24px !important;
+}
+
+/* Roster: compact, scrollable */
+#attStudentList {
+  min-height: 120px !important;
+  max-height: 34vh !important;
+  padding: 4px !important;
+  gap: 3px !important;
+}
+
+#attStudentList > div {
+  padding: 3px 6px !important;
+  gap: 6px !important;
+  border-width: 1px !important;
+}
+
+#attStudentList button {
+  min-height: 24px !important;
+  min-width: 0 !important;
+  height: 24px !important;
+  padding: 0 7px !important;
+}
+
+#attStudentList button[data-action="delete"] {
+  padding: 0 4px !important;
+  min-width: 24px !important;
+}
+
+#attStudentList button svg {
+  width: 12px !important;
+  height: 12px !important;
+}
+
+/* Inputs, toggles and action buttons */
+#attendanceModal input[type="text"] {
+  min-height: 30px !important;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+}
+
+#attendanceModal > div > div:nth-child(6) button,
+#attendanceModal > div > div:nth-child(4) button,
+#attendanceModal > div > div:nth-child(8) button {
+  min-height: 28px !important;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+}
+
+#attendanceModal > div > div:nth-child(7) input[type="checkbox"] {
+  width: 13px !important;
+  height: 13px !important;
+}
+
+/* Keep the warning banner on one tight line */
+#attPrevWarningBanner { gap: 6px !important; }
+#attPrevWarningBanner svg { width: 12px !important; height: 12px !important; }
+
+/* ==========================================================================
+   DAY SHIFTER (prev / next) — segmented control, placed last
+   ========================================================================== */
+#currentDateDisplay > div:first-child {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 2px !important;
+  padding: 2px !important;
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 8px !important;
+}
+
+#currentDateDisplay > div:first-child > button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 30px !important;
+  min-width: 30px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 6px !important;
+  background-color: transparent !important;
+  color: #cbd5e1 !important;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease !important;
+}
+
+#currentDateDisplay > div:first-child > button:hover {
+  background-color: rgba(59, 130, 246, 0.25) !important;
+  color: #ffffff !important;
+}
+
+#currentDateDisplay > div:first-child > button:active {
+  transform: scale(0.92) !important;
+}
+
+#currentDateDisplay > div:first-child > button:focus-visible {
+  outline: 2px solid #60a5fa !important;
+  outline-offset: 1px !important;
+}
+
+#currentDateDisplay > div:first-child > button svg {
+  width: 16px !important;
+  height: 16px !important;
+  stroke-width: 2.5 !important;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   WIDE ATTENDANCE MODAL: two students per row, no delete / add controls
+   ========================================================================== */
+#attendanceModal > div {
+  width: min(720px, calc(100% - 16px)) !important;
+  max-width: 720px !important;
+}
+
+/* Roster becomes a two-column grid */
+#attStudentList {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 6px !important;
+  max-height: 42vh !important;
+}
+
+/* Remove the per-student delete (trash) icon */
+#attStudentList button[data-action="delete"] {
+  display: none !important;
+}
+
+/* Remove the "Add student" bar */
+#attendanceModal > div > div:nth-child(6) {
+  display: none !important;
+}
+
+/* ==========================================================================
+   CENTRED TABLE CONTENT + CLICK-TO-TOGGLE TASK NAMES
+   ========================================================================== */
+table.mobile-table thead th,
+table.mobile-table tbody td {
+  text-align: center !important;
+}
+
+table.mobile-table tbody td.col-cls[onclick] {
+  cursor: pointer;
+}
+
+table.mobile-table tbody td.col-cls[onclick]:hover span {
+  text-decoration: underline;
+}
+
+@media screen and (max-width: 640px) {
+  table.mobile-table tbody td {
+    justify-content: center !important;
+  }
+}
+
+/* ==========================================================================
+   ATTENDANCE MODAL: card look matching the reference (placed last)
+   ========================================================================== */
+/* Fix: title row must not be sized as the icon */
+#attendanceModal > div > div:nth-child(1) > div:first-child {
+  width: auto !important;
+  height: auto !important;
+}
+#attendanceModal > div > div:nth-child(1) > div:first-child > div:first-child {
+  width: 34px !important;
+  height: 34px !important;
+}
+#attendanceModal > div > div:nth-child(1) { padding: 14px 18px !important; }
+#attendanceModal > div > div:nth-child(1) h3 { font-size: 17px !important; }
+
+/* Readable type */
+#attendanceModal > div span,
+#attendanceModal > div label,
+#attendanceModal > div button,
+#attendanceModal > div input,
+#attendanceModal > div p { font-size: 13px !important; }
+
+/* Section spacing */
+#attendanceModal > div > div:nth-child(2) { padding: 10px 14px !important; }
+#attendanceModal > div > div:nth-child(3) { padding: 8px 14px !important; }
+#attendanceModal > div > div:nth-child(4) { padding: 10px 14px !important; }
+#attendanceModal > div > div:nth-child(4) button { min-height: 32px !important; padding: 6px 12px !important; }
+#attendanceModal > div > div:nth-child(7) { padding: 10px 14px !important; }
+
+/* Roster: two numbered cards per row */
+#attStudentList {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+  padding: 14px !important;
+  min-height: 120px !important;
+  max-height: 46vh !important;
+  background-color: #f8fafc !important;
+  counter-reset: att;
+}
+
+#attStudentList > div {
+  counter-increment: att;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 8px 10px !important;
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+#attStudentList > div::before {
+  content: counter(att);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  flex-shrink: 0;
+  background-color: #e2e8f0;
+  color: #334155;
+  font-size: 12px !important;
+  font-weight: 800;
+}
+
+#attStudentList > div > span {
+  flex: 1 1 auto !important;
+  min-width: 0;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+}
+
+#attStudentList > div > div {
+  gap: 6px !important;
+}
+
+#attStudentList button {
+  height: 30px !important;
+  min-height: 30px !important;
+  font-size: 12.5px !important;
+  font-weight: 800 !important;
+}
+
+#attStudentList button[data-val="P"],
+#attStudentList button[data-val="A"] {
+  min-width: 36px !important;
+  padding: 0 8px !important;
+}
+
+#attStudentList button[data-val="L"] {
+  min-width: 60px !important;
+  padding: 0 10px !important;
+}
+
+/* Footer: Save and Send side by side, equal width */
+#attendanceModal > div > div:nth-child(8) {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 10px !important;
+  padding: 12px 14px !important;
+}
+
+#attendanceModal > div > div:nth-child(8) button {
+  width: 100% !important;
+  min-height: 40px !important;
+  padding: 10px 14px !important;
+  justify-content: center !important;
+  font-size: 13px !important;
+}
+
+#attPrevWarningBanner {
+  padding: 8px 14px !important;
+  font-size: 13px !important;
+}
+/* ==========================================================================
+   UPDATE: COMPACT TOP BAR, MODAL STACKING, TABLE HEADER CASE
+   ========================================================================== */
+
+/* Attendance and action dialogs always sit above the top bar and tables */
+#attendanceModal,
+#actionModal {
+  z-index: 9999 !important;
+}
+
+#topNav {
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+  gap: 8px !important;
+}
+
+#topNav .nav-btn {
+  font-size: 12px !important;
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+  min-height: 32px !important;
+  gap: 6px !important;
+  border-bottom-width: 2px !important;
+}
+
+#topNav .nav-btn svg {
+  width: 14px !important;
+  height: 14px !important;
+}
+
+#topNav #currentDateDisplay {
+  font-size: 12px !important;
+  gap: 6px !important;
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  padding-left: 4px !important;
+  padding-right: 10px !important;
+}
+
+#topNav #currentDateDisplay > div:first-child > button {
+  height: 24px !important;
+  min-height: 24px !important;
+  width: 24px !important;
+  font-size: 12px !important;
+}
+
+#topNav #headerDateStr,
+#topNav #headerTimeStr {
+  font-size: 12px !important;
+}
+
+#topNav #dailySummary > div {
+  height: 32px !important;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+  gap: 6px !important;
+  border-radius: 8px !important;
+}
+
+#topNav #dailySummary .text-xs {
+  font-size: 12px !important;
+}
+
+#topNav #dailySummary .text-\[11px\] {
+  font-size: 11px !important;
+}
+
+#topNav #cloudSyncBtn,
+#topNav .print-btn {
+  font-size: 12px !important;
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+  min-height: 32px !important;
+}
+
+/* Column headers: sentence case instead of forced uppercase on small screens */
+table.mobile-table thead th {
+  text-transform: none !important;
+  letter-spacing: 0.01em !important;
+}
+
+/* ==========================================================================
+   UPDATE: VISIBLE TABLE LINES, CENTRED DURATION, COMPACT ATTENDANCE MODAL
+   ========================================================================== */
+
+/* --- Table: stronger row and column lines --- */
+table.mobile-table thead th,
+table.mobile-table tbody td,
+table.mobile-table tfoot td {
+  border-right: 1px solid #cbd5e1 !important;
+}
+
+table.mobile-table tbody tr {
+  border-top: 1px solid #94a3b8 !important;
+  border-bottom: 1px solid #94a3b8 !important;
+}
+
+table.mobile-table tfoot tr {
+  border-top: 1.5px solid #94a3b8 !important;
+}
+
+table.mobile-table thead th {
+  border-bottom: 1.5px solid #94a3b8 !important;
+}
+
+/* --- Duration column centred (header, body and section total) --- */
+table.mobile-table thead th:last-child,
+table.mobile-table tbody td.col-dur,
+table.mobile-table tfoot td:last-child {
+  text-align: center !important;
+  justify-content: center !important;
+}
+
+/* --- Attendance modal: tighter spacing, nothing functional removed --- */
+#attendanceModal > div {
+  max-width: 400px !important;
+}
+
+/* Title bar */
+#attendanceModal > div > div:nth-child(1) {
+  padding: 6px 10px !important;
+}
+#attendanceModal > div > div:nth-child(1) h3 {
+  font-size: 13px !important;
+}
+#attendanceModal > div > div:nth-child(1) > div:first-child > div:first-child {
+  display: none !important;
+}
+
+/* Date selector row: label hidden, buttons kept */
+#attendanceModal > div > div:nth-child(2) {
+  padding: 4px 8px !important;
+}
+#attendanceModal > div > div:nth-child(2) > span:first-child {
+  display: none !important;
+}
+#attendanceModal > div > div:nth-child(2) button {
+  padding-top: 3px !important;
+  padding-bottom: 3px !important;
+  min-height: 28px !important;
+  font-size: 11px !important;
+}
+
+/* Warning banner */
+#attendanceModal > div > div:nth-child(3) {
+  padding: 3px 8px !important;
+}
+
+/* Bulk actions and counter */
+#attendanceModal > div > div:nth-child(4) {
+  padding: 4px 8px !important;
+}
+#attendanceModal > div > div:nth-child(4) button {
+  min-height: 28px !important;
+  padding-top: 3px !important;
+  padding-bottom: 3px !important;
+  font-size: 11px !important;
+}
+
+/* Student roster: shorter rows and a tighter list */
+#attStudentList {
+  padding: 4px 6px !important;
+  gap: 3px !important;
+  max-height: 40vh !important;
+  min-height: 0 !important;
+}
+#attStudentList > div {
+  padding-top: 3px !important;
+  padding-bottom: 3px !important;
+  padding-left: 6px !important;
+  padding-right: 4px !important;
+}
+#attStudentList button {
+  min-height: 26px !important;
+  min-width: 30px !important;
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  font-size: 11px !important;
+}
+
+/* Absentee toggle row */
+#attendanceModal > div > div:nth-child(7) {
+  padding: 3px 8px !important;
+}
+
+/* Footer buttons */
+#attendanceModal > div > div:nth-child(8) {
+  padding: 4px 8px !important;
+  gap: 6px !important;
+}
+#attendanceModal > div > div:nth-child(8) button {
+  min-height: 30px !important;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+  font-size: 11px !important;
+}
+
+/* ==========================================================================
+   UPDATE: ATTENDANCE HEADER ON ONE LINE (desktop; phones keep stacking)
+   Title, date buttons, bulk buttons and counter sit in one row.
+   Warning, roster, add bar, absentee toggle and footer follow below.
+   ========================================================================== */
+@media screen and (min-width: 768px) {
+  #attendanceModal > div {
+    max-width: 1000px !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    align-items: stretch !important;
+  }
+
+  /* Title */
+  #attendanceModal > div > div:nth-child(1) {
+    order: 1 !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    width: auto !important;
+    padding: 6px 10px !important;
+    border-bottom: 0 !important;
+    border-right: 1px solid #1e293b !important;
+  }
+
+  /* Date selector */
+  #attendanceModal > div > div:nth-child(2) {
+    order: 2 !important;
+    flex: 0 0 auto !important;
+    width: auto !important;
+    padding: 4px 8px !important;
+    border-bottom: 0 !important;
+    border-right: 1px solid #e2e8f0 !important;
+  }
+
+  /* Bulk actions and counter */
+  #attendanceModal > div > div:nth-child(4) {
+    order: 3 !important;
+    flex: 1 1 auto !important;
+    width: auto !important;
+    padding: 4px 8px !important;
+    border-bottom: 0 !important;
+  }
+
+  /* Full-width rows below the header line */
+  #attendanceModal > div > div:nth-child(3) { order: 4 !important; flex-basis: 100% !important; }
+  #attendanceModal > div > div:nth-child(5) { order: 5 !important; flex-basis: 100% !important; }
+  #attendanceModal > div > div:nth-child(6) { order: 6 !important; flex-basis: 100% !important; }
+  #attendanceModal > div > div:nth-child(7) { order: 7 !important; flex-basis: 100% !important; }
+  #attendanceModal > div > div:nth-child(8) { order: 8 !important; flex-basis: 100% !important; }
+}
+
+/* ==========================================================================
+   UPDATE: MODERN ATTENDANCE MODAL (visual refresh, no controls removed)
+   ========================================================================== */
+
+/* Card */
+#attendanceModal > div {
+  border-radius: 16px !important;
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 25px 50px -12px rgba(2, 6, 23, 0.45) !important;
+  overflow: hidden !important;
+  background: #ffffff !important;
+}
+
+/* Header: title and date selector share one navy bar */
+#attendanceModal > div > div:nth-child(1) {
+  background: #07152b !important;
+  padding: 12px 16px !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+#attendanceModal > div > div:nth-child(1) h3 {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+  color: #f8fafc !important;
+}
+
+#attendanceModal > div > div:nth-child(2) {
+  background: #07152b !important;
+  padding: 8px 12px !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Date segmented buttons */
+#attendanceModal #attDateButtonsGroup {
+  display: flex !important;
+  gap: 6px !important;
+}
+#attendanceModal #attDateButtonsGroup button {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  color: #cbd5e1 !important;
+  border-radius: 8px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  padding: 6px 12px !important;
+  min-height: 32px !important;
+  transition: background-color 0.15s ease !important;
+}
+#attendanceModal #attDateButtonsGroup button:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+}
+#attendanceModal #btnDatePrevious.bg-orange-100 {
+  background: #f59e0b !important;
+  border-color: #f59e0b !important;
+  color: #1c1917 !important;
+}
+#attendanceModal #btnDateToday.bg-blue-100 {
+  background: #3b82f6 !important;
+  border-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+/* Warning banner */
+#attendanceModal > div > div:nth-child(3) {
+  background: #fffbeb !important;
+  border-bottom: 1px solid #fde68a !important;
+  padding: 8px 16px !important;
+  font-size: 12px !important;
+}
+
+/* Bulk bar */
+#attendanceModal > div > div:nth-child(4) {
+  background: #ffffff !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  padding: 10px 16px !important;
+  gap: 8px !important;
+}
+#attendanceModal > div > div:nth-child(4) button {
+  border-radius: 8px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  min-height: 32px !important;
+  padding: 6px 12px !important;
+}
+#attStatsCounter {
+  background: #f1f5f9 !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 999px !important;
+  padding: 5px 12px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #334155 !important;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Roster: aligned card grid */
+#attStudentList {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  align-items: stretch !important;
+  padding: 12px 16px !important;
+  background: #f8fafc !important;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+#attStudentList > div {
+  margin: 0 !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  padding: 8px 8px 8px 12px !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+  min-width: 0 !important;
+}
+#attStudentList > div > span {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #0f172a !important;
+}
+
+/* Status buttons: unselected */
+#attStudentList button:not(.bg-emerald-600):not(.bg-rose-600):not(.bg-amber-500) {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #475569 !important;
+  border-radius: 8px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  min-width: 36px !important;
+  min-height: 30px !important;
+  padding: 4px 8px !important;
+  transition: all 0.15s ease !important;
+}
+#attStudentList button:not(.bg-emerald-600):not(.bg-rose-600):not(.bg-amber-500):hover {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+}
+/* Status buttons: selected */
+#attStudentList button.bg-emerald-600,
+#attStudentList button.bg-rose-600,
+#attStudentList button.bg-amber-500 {
+  border-radius: 8px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  min-width: 36px !important;
+  min-height: 30px !important;
+  padding: 4px 8px !important;
+  border: 1px solid transparent !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.12) !important;
+}
+#attStudentList > div > div {
+  gap: 4px !important;
+}
+
+/* Absentee toggle row */
+#attendanceModal > div > div:nth-child(7) {
+  background: #f8fafc !important;
+  border-top: 1px solid #e2e8f0 !important;
+  padding: 10px 16px !important;
+}
+#attendanceModal > div > div:nth-child(7) span {
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: #475569 !important;
+}
+#includeAbsenteeToggle {
+  accent-color: #059669;
+}
+
+/* Footer buttons */
+#attendanceModal > div > div:nth-child(8) {
+  background: #ffffff !important;
+  border-top: 1px solid #e2e8f0 !important;
+  padding: 12px 16px !important;
+  gap: 10px !important;
+}
+#attendanceModal > div > div:nth-child(8) button {
+  border-radius: 10px !important;
+  min-height: 40px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  transition: all 0.15s ease !important;
+}
+#attendanceModal > div > div:nth-child(8) button:first-child {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #334155 !important;
+}
+#attendanceModal > div > div:nth-child(8) button:first-child:hover {
+  background: #f8fafc !important;
+}
+#attendanceModal > div > div:nth-child(8) button:last-child {
+  background: #059669 !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  box-shadow: 0 1px 2px rgba(5, 150, 105, 0.3), 0 4px 12px rgba(5, 150, 105, 0.25) !important;
+}
+#attendanceModal > div > div:nth-child(8) button:last-child:hover {
+  background: #047857 !important;
+}
+
+/* ==========================================================================
+   UPDATE: CLOSE BUTTON AT THE FAR RIGHT OF THE HEADER
+   ========================================================================== */
+#attendanceModal > div {
+  position: relative !important;
+}
+
+/* Reserve room at the end of the header row for the close button */
+#attendanceModal > div > div:nth-child(2) {
+  margin-right: 48px !important;
+}
+
+/* Close button pinned to the top-right corner */
+#attendanceModal > div > div:nth-child(1) > button {
+  position: absolute !important;
+  top: 14px !important;
+  right: 12px !important;
+  z-index: 1 !important;
+  color: #94a3b8 !important;
+  min-height: 36px !important;
+  min-width: 36px !important;
+}
+#attendanceModal > div > div:nth-child(1) > button:hover {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+/* ==========================================================================
+   FIX: ATTENDANCE MODAL — CLEAN LAYOUT (CSS only, overrides earlier blocks)
+   Fixes: roster flush to edges (nth-child(5) padding:0 override),
+   white gap + floating X in header, invisible "Attendance For" label,
+   uneven status-button sizes, card alignment.
+   ========================================================================== */
+
+/* Card is the positioning context for the close button */
+#attendanceModal > div {
+  position: relative !important;
+  max-width: 1000px !important;
+}
+
+/* 1. Header: one continuous navy bar (title + date selector) */
+#attendanceModal > div > div:nth-child(1),
+#attendanceModal > div > div:nth-child(2) {
+  background: #07152b !important;
+  border-bottom: 0 !important;
+  margin-right: 0 !important;
+  box-sizing: border-box !important;
+}
+#attendanceModal > div > div:nth-child(1) {
+  border-right: 0 !important;
+  padding: 12px 52px 12px 16px !important;   /* room for close button */
+}
+#attendanceModal > div > div:nth-child(2) {
+  border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding: 10px 16px !important;
+  gap: 10px !important;
+  flex-wrap: wrap !important;
+}
+#attendanceModal > div > div:nth-child(2) > span:first-child {
+  color: #94a3b8 !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+}
+#attendanceModal #attDateButtonsGroup button {
+  height: 34px !important;
+  min-height: 34px !important;
+  padding: 0 14px !important;
+  white-space: nowrap !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+/* Close button: sits inside the header bar, vertically centred */
+#attendanceModal > div > div:nth-child(1) > button {
+  position: absolute !important;
+  top: 14px !important;
+  right: 12px !important;
+  width: 36px !important;
+  height: 36px !important;
+  padding: 0 !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+@media screen and (min-width: 768px) {
+  /* Same fixed height so the 36px close button centres at top:14px */
+  #attendanceModal > div > div:nth-child(1),
+  #attendanceModal > div > div:nth-child(2) {
+    height: 64px !important;
+    align-items: center !important;
+  }
+  #attendanceModal > div > div:nth-child(1) {
+    padding-right: 16px !important;
+  }
+  #attendanceModal > div > div:nth-child(2) {
+    padding-right: 56px !important;   /* keeps buttons clear of the X */
+  }
+}
+
+/* 2. Roster: restore the padding that the nth-child(5) rule removed */
+#attendanceModal #attStudentList {
+  padding: 12px 16px !important;
+  gap: 8px !important;
+  background: #f8fafc !important;
+  min-height: 160px !important;
+  max-height: 46vh !important;
+  align-items: stretch !important;
+}
+
+/* 3. Student cards: consistent row layout */
+#attendanceModal #attStudentList > div {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  min-height: 52px !important;
+  padding: 8px 10px 8px 8px !important;
+  margin: 0 !important;
+  border-radius: 12px !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+  min-width: 0 !important;
+}
+
+/* Number badge (counter pseudo-element) */
+#attendanceModal #attStudentList > div::before {
+  flex: 0 0 28px !important;
+  width: 28px !important;
+  height: 28px !important;
+  line-height: 28px !important;
+  text-align: center !important;
+  border-radius: 6px !important;
+  background: #e2e8f0 !important;
+  color: #334155 !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  padding: 0 !important;
+}
+
+/* Student name: takes spare width, truncates cleanly */
+#attendanceModal #attStudentList > div > span {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+/* Status button group: pinned to the right, equal widths */
+#attendanceModal #attStudentList > div > div {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  margin-left: auto !important;
+  flex: 0 0 auto !important;
+}
+#attendanceModal #attStudentList > div > div button {
+  width: 44px !important;
+  min-width: 44px !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  padding: 0 !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  border-radius: 8px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* 4. Bulk bar and footer: even vertical rhythm */
+#attendanceModal > div > div:nth-child(4) {
+  padding: 10px 16px !important;
+}
+#attendanceModal > div > div:nth-child(7) {
+  padding: 10px 16px !important;
+}
+#attendanceModal > div > div:nth-child(8) {
+  padding: 12px 16px !important;
+}
+#attendanceModal > div > div:nth-child(8) button:last-child {
+  flex: 1 1 auto !important;
+}
+
+/* Phones: header stacks, keep the close button clear of the title */
+@media screen and (max-width: 767px) {
+  #attendanceModal > div > div:nth-child(2) {
+    padding-right: 16px !important;
+  }
+  #attendanceModal > div > div:nth-child(1) > button {
+    top: 10px !important;
+    right: 8px !important;
+  }
+}
+
+/* ==========================================================================
+   Hide per-student delete (trash) button in attendance roster
+   ========================================================================== */
+#attendanceModal #attStudentList button[data-action="delete"],
+#attendanceModal #attStudentList button[title="Remove student"],
+#attendanceModal #attStudentList button[aria-label^="Remove "] {
+  display: none !important;
 }
