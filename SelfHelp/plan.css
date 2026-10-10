@@ -2002,3 +2002,451 @@ table.mobile-table tfoot td:last-child {
 #attendanceModal #attStudentList button[aria-label^="Remove "] {
   display: none !important;
 }
+/* ==========================================================================
+   MOBILE OVERFLOW FIX (<= 640px) — placed last
+   1. Date pill wraps instead of pushing "Today" past the screen edge
+   2. Section counter ("0 of 3 done 0%") is one row, not a 2-column grid
+   3. Card rows lose the stray desktop cell dividers
+   4. Safety net: the page can never be panned sideways
+   ========================================================================== */
+@media screen and (max-width: 640px) {
+  body {
+    overflow-x: clip !important;
+    max-width: 100% !important;
+  }
+
+  /* 1. Date pill: allow wrapping, hide the separator, keep the Today button inside */
+  #topNav #currentDateDisplay {
+    flex-wrap: wrap !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    row-gap: 6px !important;
+    column-gap: 6px !important;
+    justify-content: flex-start !important;
+    padding: 4px 6px !important;
+  }
+
+  #topNav #currentDateDisplay > span[aria-hidden="true"] {
+    display: none !important;
+  }
+
+  #topNav #currentDateDisplay > button {
+    margin-left: auto !important;
+    flex-shrink: 0 !important;
+  }
+
+  #topNav #headerDateStr,
+  #topNav #headerTimeStr {
+    font-size: 12px !important;
+    white-space: nowrap !important;
+  }
+
+  #topNav #currentDateDisplay > div:first-child {
+    flex-shrink: 0 !important;
+  }
+
+  #topNav {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* 2. Section header counter: single row, centred, full width */
+  section > header > div:last-child {
+    display: flex !important;
+    grid-template-columns: none !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    gap: 6px !important;
+  }
+
+  /* 3. Cards: remove the vertical cell dividers that show on the card edge */
+  table.mobile-table thead th,
+  table.mobile-table tbody td,
+  table.mobile-table tfoot td {
+    border-right: none !important;
+  }
+
+  table.mobile-table tr {
+    border: 1px solid #cbd5e1 !important;
+  }
+
+  /* Totals row can wrap, so long labels never widen the card */
+  table.mobile-table tfoot,
+  table.mobile-table tfoot tr {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+  }
+
+  table.mobile-table tfoot td {
+    white-space: normal !important;
+  }
+
+  table.mobile-table tfoot td:empty {
+    display: none !important;
+  }
+
+  /* Table wrapper never grows past the card */
+  section > .overflow-x-auto {
+    max-width: 100% !important;
+  }
+}
+
+/* ==========================================================================
+   MOBILE BOX + GRID CARDS (<= 640px) — placed last
+   Each class row becomes a 2-column grid of labelled tiles.
+   Every track is minmax(0, 1fr) and every tile can shrink, so nothing
+   can push past the screen edge.
+   ========================================================================== */
+@media screen and (max-width: 640px) {
+
+  /* Containers never grow wider than the screen */
+  #mainWorkspace,
+  #planner,
+  #planner > section,
+  section > .overflow-x-auto {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Card = grid of tiles */
+  table.mobile-table tbody tr {
+    display: grid !important;
+    grid-template-columns: minmax(0, 0.6fr) minmax(0, 1.4fr) !important;
+    grid-auto-flow: row dense !important;
+    gap: 8px !important;
+    padding: 10px !important;
+    margin: 0 !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 14px !important;
+    background: #ffffff !important;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06) !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  /* Tile = one labelled box */
+  table.mobile-table tbody td {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: auto !important;
+    margin: 0 !important;
+    padding: 8px 6px !important;
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+    font-size: 13px !important;
+    line-height: 1.3 !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+    white-space: normal !important;
+  }
+
+  /* Empty-state row: a single full-width box */
+  table.mobile-table tbody tr.empty-row {
+    display: block !important;
+    padding: 16px !important;
+  }
+  table.mobile-table tbody tr.empty-row td {
+    background: transparent !important;
+    border: none !important;
+  }
+
+  /* Period and time sit side by side on the top row */
+  table.mobile-table tbody td.col-cb,
+  table.mobile-table tbody td.col-tm {
+    grid-column: span 1;
+  }
+  table.mobile-table tbody td.col-tm {
+    font-size: 12.5px !important;
+    white-space: nowrap !important;
+    font-weight: 700 !important;
+    color: #334155 !important;
+  }
+  table.mobile-table tbody td.col-cb {
+    background: #eef2ff !important;
+    border-color: #c7d2fe !important;
+  }
+
+  /* Class and topic span the full card width */
+  table.mobile-table tbody td.col-cls,
+  table.mobile-table tbody td.col-tpc,
+  table.mobile-table tbody td.col-act {
+    grid-column: 1 / -1 !important;
+  }
+  table.mobile-table tbody td.col-cls {
+    font-size: 15px !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+  }
+
+  /* Duration and mode/venue/students sit in the bottom row */
+  table.mobile-table tbody td.col-mode,
+  table.mobile-table tbody td.col-ven,
+  table.mobile-table tbody td.col-nos,
+  table.mobile-table tbody td.col-dur {
+    grid-column: span 1;
+  }
+  table.mobile-table tbody td.col-dur {
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    color: #334155 !important;
+    background: #f1f5f9 !important;
+  }
+
+  /* Topic pill fills its tile */
+  table.mobile-table tbody td.col-tpc span[onclick] {
+    display: block !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 6px 8px !important;
+    font-size: 13px !important;
+    text-align: center !important;
+  }
+
+  /* Msg button fills its full-width tile */
+  table.mobile-table tbody td.col-act button {
+    width: 100% !important;
+    justify-content: center !important;
+    height: 36px !important;
+    font-size: 13px !important;
+  }
+
+  /* Totals row sits as its own box under the cards */
+  table.mobile-table tfoot tr {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    gap: 6px 10px !important;
+    align-items: center !important;
+    padding: 12px !important;
+    margin-top: 6px !important;
+    background: #f1f5f9 !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 14px !important;
+  }
+  table.mobile-table tfoot td {
+    display: block !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    font-size: 13px !important;
+    text-align: left !important;
+    justify-content: flex-start !important;
+  }
+  table.mobile-table tfoot td:empty {
+    display: none !important;
+  }
+  table.mobile-table tfoot td:nth-child(2) {
+    grid-column: 1;
+    font-weight: 800 !important;
+    letter-spacing: 0.04em !important;
+  }
+  table.mobile-table tfoot td:nth-child(3) {
+    grid-column: 1;
+  }
+  table.mobile-table tfoot td:last-child {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    text-align: right !important;
+  }
+}
+
+/* Tuition card: duration spans the full card so the grid stays balanced */
+@media screen and (max-width: 640px) {
+  #tuitionStudySec table.mobile-table tbody td.col-dur {
+    grid-column: 1 / -1 !important;
+  }
+}
+
+/* ==========================================================================
+   MOBILE CARD COLOURS (<= 640px) — placed last
+   Each card gets its own tint and accent edge. Colours cycle through four
+   families so neighbouring cards always look different.
+   ========================================================================== */
+@media screen and (max-width: 640px) {
+
+  /* Card separation: more space between cards */
+  table.mobile-table tbody {
+    gap: 14px !important;
+  }
+
+  /* Card colour cycle: tint + accent edge */
+  table.mobile-table tbody tr:nth-child(4n+1) {
+    --card-accent: #2563eb;
+    --card-tint: #eff6ff;
+    --card-tile: #dbeafe;
+    --card-tile-border: #93c5fd;
+  }
+  table.mobile-table tbody tr:nth-child(4n+2) {
+    --card-accent: #7c3aed;
+    --card-tint: #f5f3ff;
+    --card-tile: #ede9fe;
+    --card-tile-border: #c4b5fd;
+  }
+  table.mobile-table tbody tr:nth-child(4n+3) {
+    --card-accent: #059669;
+    --card-tint: #ecfdf5;
+    --card-tile: #d1fae5;
+    --card-tile-border: #6ee7b7;
+  }
+  table.mobile-table tbody tr:nth-child(4n+4) {
+    --card-accent: #ea580c;
+    --card-tint: #fff7ed;
+    --card-tile: #ffedd5;
+    --card-tile-border: #fdba74;
+  }
+
+  table.mobile-table tbody tr {
+    background: var(--card-tint) !important;
+    border: 1px solid var(--card-tile-border) !important;
+    box-shadow: inset 0 4px 0 var(--card-accent), 0 2px 6px rgba(15, 23, 42, 0.08) !important;
+  }
+
+  /* Period tile takes the card's colour */
+  table.mobile-table tbody td.col-cb {
+    background: var(--card-tile) !important;
+    border-color: var(--card-tile-border) !important;
+  }
+  table.mobile-table tbody td.col-cb span {
+    color: var(--card-accent) !important;
+    font-weight: 800 !important;
+  }
+
+  /* Topic pill uses the card's colour */
+  table.mobile-table tbody td.col-tpc span[onclick] {
+    background: #ffffff !important;
+    border-color: var(--card-tile-border) !important;
+    color: var(--card-accent) !important;
+  }
+
+  /* Totals box: dark navy band so it stands apart from the cards */
+  table.mobile-table tfoot tr {
+    background: #0f2a4a !important;
+    border: 1px solid #0f2a4a !important;
+    box-shadow: inset 0 4px 0 #facc15, 0 2px 6px rgba(15, 23, 42, 0.15) !important;
+  }
+  table.mobile-table tfoot td {
+    color: #e2e8f0 !important;
+  }
+  table.mobile-table tfoot td:nth-child(2),
+  table.mobile-table tfoot td:nth-child(3) {
+    color: #cbd5e1 !important;
+  }
+  table.mobile-table tfoot td span {
+    background: #facc15 !important;
+    color: #0f172a !important;
+    border-color: #facc15 !important;
+  }
+
+  /* Active (current) period keeps its highlight above the colour cycle */
+  table.mobile-table tbody tr.active-period-row {
+    background: #fef9c3 !important;
+    border-color: #facc15 !important;
+  }
+}
+
+/* ==========================================================================
+   SCHOOL CARDS: TWO ROWS (<= 640px) — placed last
+   Row 1: Period | Time | Duration
+   Row 2: Class  | Topic | Mode
+   ========================================================================== */
+@media screen and (max-width: 640px) {
+  #schoolClassesSec table.mobile-table tbody tr {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.3fr) minmax(0, 0.9fr) !important;
+    grid-auto-flow: row !important;
+  }
+
+  #schoolClassesSec table.mobile-table tbody td.col-cb  { grid-column: 1 !important; grid-row: 1 !important; }
+  #schoolClassesSec table.mobile-table tbody td.col-tm  { grid-column: 2 !important; grid-row: 1 !important; white-space: normal !important; }
+  #schoolClassesSec table.mobile-table tbody td.col-dur { grid-column: 3 !important; grid-row: 1 !important; }
+
+  #schoolClassesSec table.mobile-table tbody td.col-cls  { grid-column: 1 !important; grid-row: 2 !important; }
+  #schoolClassesSec table.mobile-table tbody td.col-tpc  { grid-column: 2 !important; grid-row: 2 !important; }
+  #schoolClassesSec table.mobile-table tbody td.col-mode { grid-column: 3 !important; grid-row: 2 !important; }
+
+  /* Keep tiles compact so three fit side by side */
+  #schoolClassesSec table.mobile-table tbody td {
+    padding: 8px 4px !important;
+  }
+  #schoolClassesSec table.mobile-table tbody td.col-tm {
+    font-size: 12px !important;
+  }
+  #schoolClassesSec table.mobile-table tbody td.col-cls {
+    font-size: 13px !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+  }
+  #schoolClassesSec table.mobile-table tbody td.col-tpc span[onclick] {
+    font-size: 12px !important;
+    padding: 5px 4px !important;
+  }
+  #schoolClassesSec table.mobile-table tbody td.col-dur {
+    font-size: 13px !important;
+  }
+}
+
+/* ==========================================================================
+   TUITION CARDS: THREE ROWS (<= 640px) — placed last
+   Two rows of three cannot hold all eight fields, so three rows are used.
+   Row 1: Period | Time    | Duration
+   Row 2: Class  | Topic   | Venue
+   Row 3: Students | Msg (spans two columns)
+   ========================================================================== */
+@media screen and (max-width: 640px) {
+  #tuitionStudySec table.mobile-table tbody tr {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.3fr) minmax(0, 0.9fr) !important;
+    grid-auto-flow: row !important;
+  }
+
+  #tuitionStudySec table.mobile-table tbody td.col-cb  { grid-column: 1 !important; grid-row: 1 !important; }
+  #tuitionStudySec table.mobile-table tbody td.col-tm  { grid-column: 2 !important; grid-row: 1 !important; white-space: normal !important; }
+  #tuitionStudySec table.mobile-table tbody td.col-dur { grid-column: 3 !important; grid-row: 1 !important; }
+
+  #tuitionStudySec table.mobile-table tbody td.col-cls { grid-column: 1 !important; grid-row: 2 !important; }
+  #tuitionStudySec table.mobile-table tbody td.col-tpc { grid-column: 2 !important; grid-row: 2 !important; }
+  #tuitionStudySec table.mobile-table tbody td.col-ven { grid-column: 3 !important; grid-row: 2 !important; }
+
+  #tuitionStudySec table.mobile-table tbody td.col-nos { grid-column: 1 !important; grid-row: 3 !important; }
+  #tuitionStudySec table.mobile-table tbody td.col-act { grid-column: 2 / span 2 !important; grid-row: 3 !important; }
+
+  /* Compact tiles so three fit side by side */
+  #tuitionStudySec table.mobile-table tbody td {
+    padding: 8px 4px !important;
+  }
+  #tuitionStudySec table.mobile-table tbody td.col-tm {
+    font-size: 12px !important;
+  }
+  #tuitionStudySec table.mobile-table tbody td.col-cls {
+    font-size: 13px !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+  }
+  #tuitionStudySec table.mobile-table tbody td.col-tpc span[onclick] {
+    font-size: 12px !important;
+    padding: 5px 4px !important;
+  }
+  #tuitionStudySec table.mobile-table tbody td.col-ven span {
+    font-size: 11px !important;
+    padding: 2px 6px !important;
+  }
+  #tuitionStudySec table.mobile-table tbody td.col-dur {
+    font-size: 13px !important;
+  }
+  #tuitionStudySec table.mobile-table tbody td.col-act button {
+    width: 100% !important;
+    height: 36px !important;
+    font-size: 13px !important;
+    justify-content: center !important;
+  }
+}
