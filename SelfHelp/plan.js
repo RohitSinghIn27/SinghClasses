@@ -223,7 +223,7 @@ function parseSchoolTask(taskStr, explicitMode = null) {
 
 function parseTuitionTask(taskStr, explicitVenue = null) {
   let raw = (taskStr || '').trim();
-  let venue = explicitVenue || 'Sant Nagar';
+  let venue = explicitVenue || 'Sant Nagar / Online';
   let batchName = raw;
 
   if (!explicitVenue && raw.includes('–')) {
@@ -526,11 +526,11 @@ function renderTables() {
             ${item.isFree ? '<span class="text-slate-300 font-bold">—</span>' : ''}
             <span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-700 font-black text-xs flex items-center justify-center border border-slate-200">${idx + 1}</span>
           </div>
-          <div class="sm:hidden flex items-center gap-2 w-full">
-            <span class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center font-black text-sm shrink-0">${idx + 1}</span>
-            <div class="text-left">
-              <span class="block text-[9px] font-black text-slate-400 uppercase tracking-wider">SESSION</span>
-              <span class="block text-xs font-black text-slate-800">${idx + 1}</span>
+          <div class="sm:hidden flex items-center gap-2.5 w-full">
+            <span class="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-black text-lg shrink-0">${idx + 1}</span>
+            <div class="text-left min-w-0">
+              <span class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider leading-tight">SESSION</span>
+              <span class="block text-sm font-black text-slate-900 leading-tight mt-0.5">${idx + 1}</span>
             </div>
           </div>
         </td>
@@ -540,13 +540,13 @@ function renderTables() {
             ${isUpcoming ? '<span class="inline-flex items-center gap-1 bg-amber-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm mr-1">NEXT</span>' : ''}
             <span class="font-extrabold text-slate-800 text-xs">${escapeHtml(item.time)}</span>
           </div>
-          <div class="sm:hidden flex items-center gap-2 w-full">
-            <div class="w-7 h-7 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          <div class="sm:hidden flex items-center gap-2.5 w-full">
+            <div class="w-10 h-10 rounded-full bg-amber-100 text-slate-900 flex items-center justify-center shrink-0">
+              <svg class="w-5 h-5 text-slate-900 fill-none stroke-current stroke-[2.5]" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
             </div>
             <div class="text-left min-w-0">
-              <span class="block text-[9px] font-black text-slate-400 uppercase tracking-wider">TIME</span>
-              <span class="block text-[11px] font-black text-slate-800 truncate">${escapeHtml(item.time)}</span>
+              <span class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider leading-tight">TIME</span>
+              <span class="block text-xs font-black text-slate-900 truncate leading-tight mt-0.5">${escapeHtml(item.time)}</span>
             </div>
           </div>
         </td>
@@ -556,13 +556,13 @@ function renderTables() {
               ${escapeHtml(item.task)}
             </span>
           </div>
-          <div class="sm:hidden flex items-center gap-2 w-full">
-            <div class="w-7 h-7 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
-              <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+          <div class="sm:hidden flex items-center gap-2.5 w-full">
+            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+              <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="#1d4ed8" d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/><path fill="#f59e0b" d="M21 9v8h1.5V9H21z"/></svg>
             </div>
             <div class="text-left min-w-0">
-              <span class="block text-[9px] font-black text-slate-400 uppercase tracking-wider">CLASS</span>
-              <span class="block text-xs font-black text-slate-900 truncate">${escapeHtml(item.task)}</span>
+              <span class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider leading-tight">CLASS</span>
+              <span class="block text-xs sm:text-sm font-black text-slate-900 truncate leading-tight mt-0.5 ${item.completed ? 'line-through opacity-60' : ''}">${escapeHtml(item.task)}</span>
             </div>
           </div>
         </td>
@@ -573,25 +573,25 @@ function renderTables() {
                 <strong>${escapeHtml(item.topic || '+ Add topic')}</strong>
               </span>` : '<span class="text-slate-300 font-bold">—</span>'}
           </div>
-          <div class="sm:hidden flex items-center gap-2 w-full" onclick="editTopicPrompt('${item.slotId}', 'school')">
-            <div class="w-7 h-7 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
-              <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+          <div class="sm:hidden flex items-center gap-2.5 w-full" onclick="editTopicPrompt('${item.slotId}', 'school')">
+            <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center shrink-0">
+              <svg class="w-5 h-5 fill-blue-600" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zm3 9H8v-2h8v2zm0-4H8v-2h8v2z"/></svg>
             </div>
             <div class="text-left min-w-0">
-              <span class="block text-[9px] font-black text-slate-400 uppercase tracking-wider">TOPIC</span>
-              <span class="block text-[11px] font-black text-blue-600 truncate">${escapeHtml(item.topic || 'List in Python')}</span>
+              <span class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider leading-tight">TOPIC</span>
+              <span class="block text-xs sm:text-sm font-black text-blue-600 truncate leading-tight mt-0.5">${escapeHtml(item.topic || 'List in Python')}</span>
             </div>
           </div>
         </td>
         <td class="py-2.5 px-3 text-center col-mode">
           <div class="hidden sm:block">${modeBadge}</div>
-          <div class="sm:hidden flex items-center gap-2 w-full">
-            <div class="w-7 h-7 rounded-full bg-cyan-100 text-cyan-700 flex items-center justify-center shrink-0">
-              <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M10 2v7.31L4.22 19.4A2 2 0 0 0 5.91 22h12.18a2 2 0 0 0 1.69-2.6L14 9.31V2z"></path></svg>
+          <div class="sm:hidden flex items-center gap-2.5 w-full">
+            <div class="w-10 h-10 rounded-full bg-cyan-100 text-cyan-700 flex items-center justify-center shrink-0">
+              <svg class="w-5 h-5 text-cyan-700 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M10 2v7.31L4.22 19.4A2 2 0 0 0 5.91 22h12.18a2 2 0 0 0 1.69-2.6L14 9.31V2z"></path><path d="M8.5 2h7"></path><path d="M7 16h10"></path></svg>
             </div>
-            <div class="text-left">
-              <span class="block text-[9px] font-black text-slate-400 uppercase tracking-wider">MODE</span>
-              <span class="block text-[10px] font-black text-cyan-800 bg-cyan-100 px-1.5 py-0.5 rounded border border-cyan-300">${item.mode || 'LAB'}</span>
+            <div class="text-left min-w-0">
+              <span class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider leading-tight">MODE</span>
+              <span class="inline-block text-[11px] font-black text-cyan-800 bg-cyan-100/80 px-3 py-0.5 rounded-lg border border-cyan-200 leading-tight mt-0.5">${item.mode ? item.mode.toUpperCase() : (item.isFree ? 'FREE' : (item.isLab ? 'LAB' : 'CLASS'))}</span>
             </div>
           </div>
         </td>
@@ -599,13 +599,13 @@ function renderTables() {
           <div class="hidden sm:inline-block text-xs font-black text-slate-800">
             <span>${formatDuration(item.hrs)}</span>
           </div>
-          <div class="sm:hidden flex items-center gap-2 w-full">
-            <div class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
-              <svg class="w-4 h-4 fill-none stroke-currentColor stroke-width-2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          <div class="sm:hidden flex items-center gap-2.5 w-full">
+            <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+              <svg class="w-5 h-5 text-emerald-700 fill-none stroke-current stroke-[2.5]" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"></circle><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="2" x2="12" y2="5"></line><line x1="10" y1="2" x2="14" y2="2"></line><line x1="17.5" y1="7.5" x2="19.5" y2="5.5"></line></svg>
             </div>
             <div class="text-left min-w-0">
-              <span class="block text-[9px] font-black text-slate-400 uppercase tracking-wider">DURATION</span>
-              <span class="block text-xs font-black text-slate-800">${formatDuration(item.hrs)}</span>
+              <span class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider leading-tight">DURATION</span>
+              <span class="block text-xs sm:text-sm font-black text-slate-900 leading-tight mt-0.5">${formatDuration(item.hrs)}</span>
             </div>
           </div>
         </td>`;
@@ -639,7 +639,7 @@ function renderTables() {
       const isTuition = item.cat === 'Tuition';
       const bId = item.batchId || normalizeBatchId(item.task);
       const studentCount = (state.rosters[bId] || []).length;
-      const countLabel = `${studentCount} ${studentCount === 1 ? 'student' : 'students'}`;
+      const countLabel = `${studentCount} students`;
       const sentAt = isTuition ? getSentTime(item.slotId) : null;
       const attDate = isTuition ? getPreviousClassDate(bId, state.activeDateStr) : null;
       const attMarked = Object.keys((attDate && attendanceStore[attDate] && attendanceStore[attDate][bId]) || {}).length;
@@ -657,13 +657,13 @@ function renderTables() {
           <div class="hidden sm:inline-flex items-center gap-1.5 justify-center">
             <span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-700 font-black text-xs flex items-center justify-center border border-slate-200">${item.sno || (idx + 1)}</span>
           </div>
-          <div class="sm:hidden flex items-center gap-1.5 w-full">
-            <div class="w-7 h-7 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
-              <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line></svg>
+          <div class="sm:hidden flex items-center gap-2 w-full">
+            <div class="w-9 h-9 rounded-xl bg-blue-100 flex items-center justify-center shrink-0">
+              <svg class="w-4.5 h-4.5 fill-blue-600" viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/><circle cx="8" cy="13" r="1.2"/><circle cx="12" cy="13" r="1.2"/><circle cx="16" cy="13" r="1.2"/><circle cx="8" cy="17" r="1.2"/><circle cx="12" cy="17" r="1.2"/></svg>
             </div>
-            <div class="text-left">
-              <span class="block text-[8px] font-black text-slate-400 uppercase tracking-wider">SESSION</span>
-              <span class="block text-xs font-black text-slate-800">${item.sno || (idx + 1)}</span>
+            <div class="text-left min-w-0">
+              <span class="block text-[9px] font-bold text-slate-500 uppercase tracking-wider leading-tight">SESSION</span>
+              <span class="block text-sm font-black text-slate-900 leading-tight mt-0.5">${item.sno || (idx + 1)}</span>
             </div>
           </div>
         </td>
@@ -673,13 +673,13 @@ function renderTables() {
             ${isUpcoming ? '<span class="inline-flex items-center gap-1 bg-amber-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-sm mr-1">NEXT</span>' : ''}
             <span class="font-extrabold text-slate-800 text-xs">${escapeHtml(item.time)}</span>
           </div>
-          <div class="sm:hidden flex items-center gap-1.5 w-full">
-            <div class="w-7 h-7 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
-              <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          <div class="sm:hidden flex items-center gap-2 w-full">
+            <div class="w-9 h-9 rounded-full bg-amber-100 text-slate-900 flex items-center justify-center shrink-0">
+              <svg class="w-4.5 h-4.5 text-slate-900 fill-none stroke-current stroke-[2.5]" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
             </div>
             <div class="text-left min-w-0">
-              <span class="block text-[8px] font-black text-slate-400 uppercase tracking-wider">TIME</span>
-              <span class="block text-[10px] font-black text-slate-800 truncate">${escapeHtml(item.time)}</span>
+              <span class="block text-[9px] font-bold text-slate-500 uppercase tracking-wider leading-tight">TIME</span>
+              <span class="block text-[11px] font-black text-slate-900 truncate leading-tight mt-0.5">${escapeHtml(item.time)}</span>
             </div>
           </div>
         </td>
@@ -687,13 +687,13 @@ function renderTables() {
           <div class="hidden sm:block">
             <span class="font-black text-slate-900 text-xs ${item.completed ? 'line-through text-slate-400' : ''}">${escapeHtml(item.task)}</span>
           </div>
-          <div class="sm:hidden flex items-center gap-1.5 w-full">
-            <div class="w-7 h-7 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
-              <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+          <div class="sm:hidden flex items-center gap-2 w-full">
+            <div class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+              <svg class="w-4.5 h-4.5" viewBox="0 0 24 24"><path fill="#1d4ed8" d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/><path fill="#f59e0b" d="M21 9v8h1.5V9H21z"/></svg>
             </div>
             <div class="text-left min-w-0">
-              <span class="block text-[8px] font-black text-slate-400 uppercase tracking-wider">CLASS</span>
-              <span class="block text-[11px] font-black text-slate-900 truncate">${escapeHtml(item.task)}</span>
+              <span class="block text-[9px] font-bold text-slate-500 uppercase tracking-wider leading-tight">CLASS</span>
+              <span class="block text-xs sm:text-sm font-black text-slate-900 truncate leading-tight mt-0.5 ${item.completed ? 'line-through opacity-60' : ''}">${escapeHtml(item.task)}</span>
             </div>
           </div>
         </td>
@@ -703,13 +703,13 @@ function renderTables() {
               ${escapeHtml(item.venue || 'Center')}
             </span>
           </div>
-          <div class="sm:hidden flex items-center gap-1.5 w-full">
-            <div class="w-7 h-7 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center shrink-0">
-              <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          <div class="sm:hidden flex items-center gap-2 w-full">
+            <div class="w-9 h-9 rounded-full bg-slate-200 text-slate-800 flex items-center justify-center shrink-0">
+              <svg class="w-4.5 h-4.5 fill-slate-800" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
             </div>
             <div class="text-left min-w-0">
-              <span class="block text-[8px] font-black text-slate-400 uppercase tracking-wider">VENUE</span>
-              <span class="block text-[10px] font-black text-slate-800 truncate">${escapeHtml(item.venue || 'Sant Nagar')}</span>
+              <span class="block text-[9px] font-bold text-slate-500 uppercase tracking-wider leading-tight">VENUE</span>
+              <span class="block text-[11px] sm:text-xs font-black text-slate-900 truncate leading-tight mt-0.5">${escapeHtml(item.venue || 'Sant Nagar / Online')}</span>
             </div>
           </div>
         </td>
@@ -720,13 +720,13 @@ function renderTables() {
                 <strong>${escapeHtml(item.topic || '+ Add topic')}</strong>
               </span>` : '<span class="text-slate-300 font-bold">—</span>'}
           </div>
-          <div class="sm:hidden flex items-center gap-1.5 w-full" onclick="editTopicPrompt('${item.slotId}', 'tuition_study')">
-            <div class="w-7 h-7 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
-              <svg class="w-3.5 h-3.5 fill-none stroke-currentColor stroke-width-2" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+          <div class="sm:hidden flex items-center gap-2 w-full" onclick="editTopicPrompt('${item.slotId}', 'tuition_study')">
+            <div class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+              <svg class="w-4.5 h-4.5 fill-blue-600" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
             </div>
             <div class="text-left min-w-0">
-              <span class="block text-[8px] font-black text-slate-400 uppercase tracking-wider">TOPIC</span>
-              <span class="block text-[10px] font-black text-blue-600 truncate">${escapeHtml(item.topic || 'Database Concepts')}</span>
+              <span class="block text-[9px] font-bold text-slate-500 uppercase tracking-wider leading-tight">TOPIC</span>
+              <span class="block text-xs sm:text-sm font-black text-blue-600 truncate leading-tight mt-0.5">${escapeHtml(item.topic || (isTuition ? 'Database Concepts' : 'Self Study'))}</span>
             </div>
           </div>
         </td>
@@ -741,11 +741,16 @@ function renderTables() {
                 <span>Msg</span>
               </button>`) : '<span class="text-slate-300 font-bold">—</span>'}
           </div>
-          <div class="sm:hidden w-full">
-            <button onclick="openAttendanceModal('${item.slotId}', this)" type="button" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2 px-1.5 rounded-xl flex items-center justify-center gap-1 text-[10px] shadow-sm">
-              <svg class="w-3.5 h-3.5 fill-none stroke-current stroke-2 shrink-0" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-              <span class="truncate">${sentAt ? 'Sent ' + sentAt : 'Send Reminder'}</span>
-            </button>
+          <div class="sm:hidden w-full h-full">
+            ${isTuition ? `
+              <button onclick="openAttendanceModal('${item.slotId}', this)" type="button" class="w-full h-full min-h-[46px] bg-[#15803d] hover:bg-[#166534] active:scale-[0.98] text-white font-bold px-2 py-2 rounded-xl flex items-center justify-center gap-2 shadow-sm transition">
+                <svg class="w-4 h-4 text-white fill-none stroke-current stroke-2 shrink-0 -rotate-45" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                <span class="w-[1px] h-4 bg-white/30 shrink-0"></span>
+                <span class="text-xs font-bold whitespace-nowrap">${sentAt ? 'Sent ' + sentAt : 'Send Reminder Message'}</span>
+              </button>` : `
+              <div class="w-full h-full min-h-[46px] bg-slate-100 text-slate-500 rounded-xl flex items-center justify-center text-xs font-bold border border-slate-200">
+                Self Study
+              </div>`}
           </div>
         </td>
         <td class="py-2.5 px-3 text-center col-nos">
@@ -757,14 +762,14 @@ function renderTables() {
               </span>
               <div class="text-[10px] mt-0.5 ${attMarked ? 'text-slate-500 font-semibold' : 'text-accentRed font-black'}">${attLabel}</div>` : '<span class="text-slate-400 text-xs italic">Self</span>'}
           </div>
-          <div class="sm:hidden flex items-center gap-1.5 w-full">
-            <div class="w-7 h-7 rounded-full bg-rose-100 text-accentRed flex items-center justify-center shrink-0">
-              <svg class="w-3.5 h-3.5 fill-none stroke-currentColor stroke-width-2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+          <div class="sm:hidden flex items-center gap-2 w-full">
+            <div class="w-9 h-9 rounded-full bg-rose-100 flex items-center justify-center shrink-0">
+              <svg class="w-4.5 h-4.5 fill-rose-600" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
             </div>
             <div class="text-left min-w-0">
-              <span class="block text-[8px] font-black text-slate-400 uppercase tracking-wider">STUDENTS</span>
-              <span class="block text-[10px] font-black text-blue-700 truncate">${countLabel}</span>
-              <span class="block text-[9px] font-black ${attMarked ? 'text-slate-500' : 'text-accentRed'} truncate">${attLabel}</span>
+              <span class="block text-[9px] font-bold text-slate-500 uppercase tracking-wider leading-tight">STUDENTS</span>
+              <span class="inline-block bg-blue-100 text-blue-700 font-bold text-[10px] px-1.5 py-0.5 rounded leading-tight mt-0.5">${countLabel}</span>
+              <span class="block text-[9px] font-bold ${attMarked ? 'text-slate-500' : 'text-amber-600'} truncate leading-tight mt-0.5">${attLabel}</span>
             </div>
           </div>
         </td>
@@ -772,13 +777,13 @@ function renderTables() {
           <div class="hidden sm:inline-block text-xs font-black text-slate-800">
             <span>${formatDuration(item.hrs)}</span>
           </div>
-          <div class="sm:hidden flex items-center gap-1.5 w-full">
-            <div class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
-              <svg class="w-3.5 h-3.5 fill-none stroke-currentColor stroke-width-2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          <div class="sm:hidden flex items-center gap-2 w-full">
+            <div class="w-9 h-9 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+              <svg class="w-4.5 h-4.5 text-emerald-700 fill-none stroke-current stroke-[2.5]" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"></circle><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="2" x2="12" y2="5"></line><line x1="10" y1="2" x2="14" y2="2"></line><line x1="17.5" y1="7.5" x2="19.5" y2="5.5"></line></svg>
             </div>
             <div class="text-left min-w-0">
-              <span class="block text-[8px] font-black text-slate-400 uppercase tracking-wider">DURATION</span>
-              <span class="block text-xs font-black text-slate-800">${formatDuration(item.hrs)}</span>
+              <span class="block text-[9px] font-bold text-slate-500 uppercase tracking-wider leading-tight">DURATION</span>
+              <span class="block text-xs sm:text-sm font-black text-slate-900 leading-tight mt-0.5">${formatDuration(item.hrs)}</span>
             </div>
           </div>
         </td>`;
@@ -1100,7 +1105,7 @@ function dispatchWhatsAppMessage(item) {
     cleanSubject = 'Class ' + cleanSubject;
   }
 
-  let venue = item.venue || 'Sant Nagar';
+  let venue = item.venue || 'Sant Nagar / Online';
   const range = parseTimeRange(item.time);
   let startTime = range.formatted.split('-')[0]?.trim() || '';
   let endTime = range.formatted.split('-')[1]?.trim() || '';
