@@ -168,9 +168,7 @@ body {
     border: none !important;
   }
 
-  /* ----------------------------------------------------
-     School Cards: 2 Rows x 3 Columns (Fully Visible)
-     ---------------------------------------------------- */
+  /* School Cards */
   #schoolClassesSec table.mobile-table tbody tr {
     display: grid !important;
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
@@ -219,9 +217,7 @@ body {
     border-color: #ccfbf1 !important;
   }
 
-  /* ----------------------------------------------------
-     Tuition Cards: 4 Rows x 2 Columns (Zero Overflow)
-     ---------------------------------------------------- */
+  /* Tuition Cards */
   #tuitionStudySec table.mobile-table tbody tr {
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
@@ -237,19 +233,12 @@ body {
     width: 100% !important;
   }
 
-  /* Row 1: Session & Time */
   #tuitionStudySec table.mobile-table tbody td.col-cb  { grid-column: 1 !important; grid-row: 1 !important; }
   #tuitionStudySec table.mobile-table tbody td.col-tm  { grid-column: 2 !important; grid-row: 1 !important; }
-
-  /* Row 2: Class & Duration */
   #tuitionStudySec table.mobile-table tbody td.col-cls { grid-column: 1 !important; grid-row: 2 !important; }
   #tuitionStudySec table.mobile-table tbody td.col-dur { grid-column: 2 !important; grid-row: 2 !important; }
-
-  /* Row 3: Topic & Venue */
   #tuitionStudySec table.mobile-table tbody td.col-tpc { grid-column: 1 !important; grid-row: 3 !important; }
   #tuitionStudySec table.mobile-table tbody td.col-ven { grid-column: 2 !important; grid-row: 3 !important; }
-
-  /* Row 4: Students & Reminder Button */
   #tuitionStudySec table.mobile-table tbody td.col-nos { grid-column: 1 !important; grid-row: 4 !important; }
   #tuitionStudySec table.mobile-table tbody td.col-act { grid-column: 2 !important; grid-row: 4 !important; }
 
@@ -318,4 +307,96 @@ body {
   .print-hide {
     display: none !important;
   }
+}
+
+/* 7. Exact Pill Button & To-Do List Modal Engine */
+.btn-todo-list,
+#btnOpenTodoList {
+  background-color: #fbca4a !important;
+  color: #07152b !important;
+  font-weight: 800;
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  transition: all 0.15s ease-in-out;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.btn-todo-list:hover,
+#btnOpenTodoList:hover {
+  background-color: #f5be38 !important;
+  box-shadow: 0 2px 6px rgba(245, 190, 56, 0.35);
+}
+
+.btn-todo-list:active,
+#btnOpenTodoList:active {
+  transform: scale(0.96);
+}
+
+#todoModal > div {
+  animation: todoModalEnter 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  max-width: 520px !important;
+}
+
+@keyframes todoModalEnter {
+  0% { transform: scale(0.95) translateY(10px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+#todoContainer {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+#todoContainer::-webkit-scrollbar {
+  width: 6px;
+}
+
+#todoContainer::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 9999px;
+}
+
+.todo-check-box {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 2px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease-in-out;
+  background-color: #ffffff;
+  flex-shrink: 0;
+}
+
+.todo-check-box.checked {
+  background-color: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+}
+
+.todo-task-title {
+  transition: color 0.15s ease, text-decoration 0.15s ease, opacity 0.15s ease;
+}
+
+.todo-task-title.done {
+  text-decoration: line-through;
+  color: #94a3b8 !important;
+  opacity: 0.75;
+}
+
+.todo-card-chevron {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.todo-card-chevron.collapsed {
+  transform: rotate(180deg);
 }

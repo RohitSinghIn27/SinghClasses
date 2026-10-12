@@ -33,7 +33,7 @@
   <!-- Notifications -->
   <div id="toastContainer" class="fixed bottom-4 right-4 z-[90] flex flex-col gap-2 pointer-events-none" aria-live="assertive"></div>
 
-  <!-- Prompt Modal -->
+  <!-- Prompt / Confirmation Modal -->
   <div id="actionModal" class="fixed inset-0 z-[80] bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-3 hidden" role="dialog" aria-modal="true" aria-labelledby="actionModalTitle">
     <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl border border-slate-200 overflow-hidden p-4 space-y-3" role="document">
       <div class="flex items-center gap-2">
@@ -54,10 +54,31 @@
     </div>
   </div>
 
-  <!-- Compact Attendance & WhatsApp Modal -->
+  <!-- To-Do List Modal -->
+  <div id="todoModal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-3 hidden" role="dialog" aria-modal="true" aria-labelledby="todoModalTitle">
+    <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[88vh]" role="document">
+      <div class="px-4 py-3 bg-[#07152b] text-white flex items-center justify-between border-b border-slate-800">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-400 to-amber-500 text-slate-950 flex items-center justify-center font-black shadow-sm">
+            <svg class="w-4 h-4 fill-none stroke-current stroke-[2.5]" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          </div>
+          <div>
+            <h3 id="todoModalTitle" class="text-sm font-black text-white leading-tight">TO-DO LIST</h3>
+            <p class="text-[10px] text-slate-300 font-medium">Daily Tasks &amp; Priorities</p>
+          </div>
+        </div>
+        <button onclick="closeTodoModal()" type="button" aria-label="Close" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition active:scale-95">
+          <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="p-3.5 overflow-y-auto flex-1 bg-[#f8fafc]" id="todoContainer"></div>
+    </div>
+  </div>
+
+  <!-- Attendance & WhatsApp Reminder Modal -->
   <div id="attendanceModal" class="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-2 hidden" role="dialog" aria-modal="true" aria-labelledby="attBatchTitle">
     <div class="bg-white w-full max-w-[760px] rounded-xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]" role="document">
-      <!-- Title & 7-Day Calendar Strip -->
+      <!-- Header & Calendar Strip -->
       <div class="px-3.5 py-2.5 bg-brandNavy text-white flex flex-wrap items-center justify-between gap-2 border-b border-slate-800">
         <div class="flex items-center gap-2.5 min-w-0">
           <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-amber-500 text-slate-950 flex items-center justify-center shrink-0 shadow-sm" aria-hidden="true">
@@ -67,7 +88,7 @@
             <h3 class="text-xs sm:text-[13px] font-extrabold text-white leading-tight truncate">
               Attendance: <span id="attBatchTitle" class="text-amber-400">Loading...</span>
             </h3>
-            <p id="attBatchSubtitle" class="text-[10px] text-slate-300 font-medium">Verify today's attendance and send reminders.</p>
+            <p id="attBatchSubtitle" class="text-[10px] text-slate-300 font-medium">Verify attendance and send reminders.</p>
           </div>
         </div>
         <div class="flex items-center gap-0.5 bg-[#0a1b33] border border-slate-700/80 p-0.5 rounded-lg shrink-0 overflow-x-auto max-w-full">
@@ -84,7 +105,7 @@
         </button>
       </div>
 
-      <!-- Bulk Selection & Counter Bar -->
+      <!-- Bulk Actions & Counter Bar -->
       <div class="px-3.5 py-1.5 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-1.5">
         <div class="flex items-center gap-1.5">
           <button onclick="markAllAttendance('P')" type="button" class="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-300 font-extrabold rounded-md text-[11px] flex items-center gap-1 transition active:scale-95 shadow-sm min-h-[26px]">
@@ -108,13 +129,7 @@
         </div>
       </div>
 
-      <!-- Warning Indicator -->
-      <div id="attPrevWarningBanner" class="px-3.5 py-1 bg-amber-50 border-b border-amber-200 text-amber-900 text-[11px] font-semibold flex items-center gap-1.5 hidden">
-        <svg class="w-3.5 h-3.5 text-amber-600 shrink-0 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-        <span>Previous class attendance was never recorded. Mark it now or continue.</span>
-      </div>
-
-      <!-- Attendance Roster Grid -->
+      <!-- Roster List -->
       <div class="p-2.5 overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-1.5 flex-1 min-h-[140px] max-h-[44vh] bg-[#f8fafc]" id="attStudentList"></div>
 
       <!-- Add Roster Name -->
@@ -132,13 +147,9 @@
           <input type="checkbox" id="includeAbsenteeToggle" checked class="w-3.5 h-3.5 text-blue-600 rounded border-slate-300 focus:ring-blue-500">
           <div>
             <span>Include absentee list in reminder message</span>
-            <span class="block text-[10px] font-normal text-slate-500">Absent students will be listed in the message.</span>
+            <span class="block text-[10px] font-normal text-slate-500">Absent students will be listed in the WhatsApp reminder.</span>
           </div>
         </label>
-        <button type="button" class="px-2 py-0.5 bg-white border border-slate-300 rounded-md text-slate-700 font-bold text-[10.5px] flex items-center gap-1 hover:bg-slate-50 shadow-sm shrink-0">
-          <svg class="w-3 h-3 text-slate-600 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-          <span>Message Settings</span>
-        </button>
       </div>
 
       <!-- Footer Actions -->
@@ -155,6 +166,7 @@
     </div>
   </div>
 
+  <!-- Main Workspace Container -->
   <div class="max-w-[1600px] mx-auto flex flex-col gap-2.5 min-h-screen">
     <!-- Top Navigation Header -->
     <nav class="bg-brandNavy text-white rounded-2xl px-3.5 py-2 flex flex-wrap items-center justify-between gap-2.5 shadow-md border border-slate-800/80 print-hide" id="topNav" role="tablist" aria-label="Planner Views">
@@ -169,11 +181,11 @@
       </div>
 
       <div class="flex items-center gap-1.5 shrink-0" id="sidebarNav">
-        <button id="tabBtnSchool" type="button" role="tab" aria-selected="true" aria-controls="planner" onclick="handleNavClick('school', this)" class="nav-btn active flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-black transition whitespace-nowrap min-h-[34px]">
+        <button id="tabBtnSchool" type="button" role="tab" aria-selected="true" onclick="handleNavClick('school', this)" class="nav-btn active flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-black transition whitespace-nowrap min-h-[34px]">
           <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
           <span>School Classes</span>
         </button>
-        <button id="tabBtnTuition" type="button" role="tab" aria-selected="false" aria-controls="planner" onclick="handleNavClick('tuition', this)" class="nav-btn flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-black transition whitespace-nowrap min-h-[34px]">
+        <button id="tabBtnTuition" type="button" role="tab" aria-selected="false" onclick="handleNavClick('tuition', this)" class="nav-btn flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-black transition whitespace-nowrap min-h-[34px]">
           <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
           <span>Tuition &amp; Study</span>
         </button>
@@ -209,15 +221,6 @@
       </div>
     </nav>
 
-    <!-- Backup Alert -->
-    <div id="backupNudgeBanner" class="bg-amber-500/10 border border-amber-500/30 text-amber-950 rounded-xl px-4 py-2 flex items-center justify-between gap-3 text-xs font-semibold hidden print-hide" role="alert">
-      <div class="flex items-center gap-2">
-        <svg class="w-4 h-4 text-amber-600 shrink-0 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-        <span>Weekly Backup Reminder: Export your JSON backup to keep your schedules and rosters secure across devices.</span>
-      </div>
-      <button onclick="exportBackup(); document.getElementById('backupNudgeBanner').classList.add('hidden');" type="button" class="bg-amber-600 hover:bg-amber-700 text-white font-bold px-2.5 py-1 rounded-lg text-[11px] shrink-0">Export Now</button>
-    </div>
-
     <!-- Main Workspace -->
     <main id="mainWorkspace" class="w-full space-y-3 transition-all min-w-0 flex-1">
       <div id="planner" class="tab-content active space-y-3" role="tabpanel" aria-labelledby="tabBtnSchool">
@@ -234,16 +237,35 @@
                 <p class="text-[11px] text-slate-300 font-medium">Today's Period-wise Schedule</p>
               </div>
             </div>
-            <div class="flex items-center gap-2.5 bg-[#07152b] border border-slate-700/80 rounded-xl px-3 py-1.5 text-xs font-bold whitespace-nowrap">
-              <svg class="w-3.5 h-3.5 text-blue-400 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-              <span id="schoolDoneCount" class="text-amber-400 font-black">0</span>
-              <span class="text-slate-300">of</span>
-              <span id="schoolTotalCount" class="text-white font-black">0</span>
-              <span class="text-slate-300">completed</span>
-              <div class="w-16 bg-slate-800 rounded-full h-1.5 overflow-hidden ml-1 border border-slate-700">
-                <div id="schoolProgressBar" class="bg-amber-400 h-full transition-all duration-300" style="width: 0%"></div>
+
+            <!-- Right Controls: To-Do List Button + Counter -->
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <button onclick="openTodoModal()" type="button" class="btn-todo-list" aria-label="Open To-Do List">
+                <svg class="w-4 h-4 text-[#07152b] fill-none stroke-current stroke-[2.5]" viewBox="0 0 24 24">
+                  <rect x="3" y="4" width="4" height="4" rx="1"></rect>
+                  <line x1="10" y1="6" x2="20" y2="6"></line>
+                  <rect x="3" y="10" width="4" height="4" rx="1"></rect>
+                  <line x1="10" y1="12" x2="20" y2="12"></line>
+                  <rect x="3" y="16" width="4" height="4" rx="1"></rect>
+                  <line x1="10" y1="18" x2="20" y2="18"></line>
+                </svg>
+                <span>To-Do List</span>
+                <svg class="w-3.5 h-3.5 text-[#07152b] fill-none stroke-current stroke-[2.5]" viewBox="0 0 24 24">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+
+              <div class="flex items-center gap-2.5 bg-[#07152b] border border-slate-700/80 rounded-xl px-3 py-1.5 text-xs font-bold whitespace-nowrap">
+                <svg class="w-3.5 h-3.5 text-blue-400 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                <span id="schoolDoneCount" class="text-amber-400 font-black">0</span>
+                <span class="text-slate-300">of</span>
+                <span id="schoolTotalCount" class="text-white font-black">0</span>
+                <span class="text-slate-300">completed</span>
+                <div class="w-16 bg-slate-800 rounded-full h-1.5 overflow-hidden ml-1 border border-slate-700">
+                  <div id="schoolProgressBar" class="bg-amber-400 h-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <span id="schoolPct" class="text-amber-400 font-black text-[11px]">0%</span>
               </div>
-              <span id="schoolPct" class="text-amber-400 font-black text-[11px]">0%</span>
             </div>
           </header>
 
@@ -289,16 +311,35 @@
                 <p class="text-[11px] text-slate-300 font-medium">Today's Classes and Upcoming Sessions</p>
               </div>
             </div>
-            <div class="flex items-center gap-2.5 bg-[#07152b] border border-slate-700/80 rounded-xl px-3 py-1.5 text-xs font-bold whitespace-nowrap">
-              <svg class="w-3.5 h-3.5 text-blue-400 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-              <span id="tuitionDoneCount" class="text-amber-400 font-black">0</span>
-              <span class="text-slate-300">of</span>
-              <span id="tuitionTotalCount" class="text-white font-black">0</span>
-              <span class="text-slate-300">completed</span>
-              <div class="w-16 bg-slate-800 rounded-full h-1.5 overflow-hidden ml-1 border border-slate-700">
-                <div id="tuitionProgressBar" class="bg-amber-400 h-full transition-all duration-300" style="width: 0%"></div>
+
+            <!-- Right Controls: To-Do List Button + Counter -->
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <button onclick="openTodoModal()" type="button" class="btn-todo-list" aria-label="Open To-Do List">
+                <svg class="w-4 h-4 text-[#07152b] fill-none stroke-current stroke-[2.5]" viewBox="0 0 24 24">
+                  <rect x="3" y="4" width="4" height="4" rx="1"></rect>
+                  <line x1="10" y1="6" x2="20" y2="6"></line>
+                  <rect x="3" y="10" width="4" height="4" rx="1"></rect>
+                  <line x1="10" y1="12" x2="20" y2="12"></line>
+                  <rect x="3" y="16" width="4" height="4" rx="1"></rect>
+                  <line x1="10" y1="18" x2="20" y2="18"></line>
+                </svg>
+                <span>To-Do List</span>
+                <svg class="w-3.5 h-3.5 text-[#07152b] fill-none stroke-current stroke-[2.5]" viewBox="0 0 24 24">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+
+              <div class="flex items-center gap-2.5 bg-[#07152b] border border-slate-700/80 rounded-xl px-3 py-1.5 text-xs font-bold whitespace-nowrap">
+                <svg class="w-3.5 h-3.5 text-blue-400 fill-none stroke-current stroke-2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                <span id="tuitionDoneCount" class="text-amber-400 font-black">0</span>
+                <span class="text-slate-300">of</span>
+                <span id="tuitionTotalCount" class="text-white font-black">0</span>
+                <span class="text-slate-300">completed</span>
+                <div class="w-16 bg-slate-800 rounded-full h-1.5 overflow-hidden ml-1 border border-slate-700">
+                  <div id="tuitionProgressBar" class="bg-amber-400 h-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <span id="tuitionPct" class="text-amber-400 font-black text-[11px]">0%</span>
               </div>
-              <span id="tuitionPct" class="text-amber-400 font-black text-[11px]">0%</span>
             </div>
           </header>
 
