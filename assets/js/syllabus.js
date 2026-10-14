@@ -298,4 +298,88 @@ roadmap: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="cu
       draw();
     });
   });
+
+  // 10. Reusable CBT Button Component
+  function buildCBTButtonHTML(href = '#', highlight = 'Attempt the CBT', text = 'of objective questions') {
+    const targetAttr = href && href !== '#' ? ' target="_blank" rel="noopener noreferrer"' : '';
+    return `
+      <div class="sc-cbt-wrapper">
+        <span class="sc-cbt-sparks sc-cbt-sparks-left" aria-hidden="true">
+          <svg viewBox="0 0 28 36" fill="none">
+            <line x1="22" y1="6" x2="10" y2="1" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round"/>
+            <line x1="18" y1="16" x2="3" y2="13" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round"/>
+            <line x1="20" y1="25" x2="8" y2="27" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <a href="${href}" class="sc-cbt-btn"${targetAttr}>
+          <span class="sc-cbt-doc-icon" aria-hidden="true">
+            <svg width="26" height="28" viewBox="0 0 32 34" fill="none">
+              <path d="M4 4C4 2.34315 5.34315 1 7 1H19L26 8V27C26 28.6569 24.6569 30 23 30H7C5.34315 30 4 28.6569 4 27V4Z" fill="#ffffff"/>
+              <path d="M19 1L26 8H21C19.8954 8 19 7.10457 19 6V1Z" fill="#bfdbfe"/>
+              <rect x="8" y="12" width="12" height="2" rx="1" fill="#60a5fa"/>
+              <rect x="8" y="16" width="12" height="2" rx="1" fill="#60a5fa"/>
+              <rect x="8" y="20" width="8" height="2" rx="1" fill="#60a5fa"/>
+              <circle cx="24" cy="26" r="7" fill="#fbbf24"/>
+              <path d="M21.2 26.2L23.1 28.1L26.8 24.2" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="sc-cbt-label">
+            <strong class="sc-cbt-highlight">${highlight}</strong>
+            <span class="sc-cbt-subtext">${text}</span>
+          </span>
+          <span class="sc-cbt-divider" aria-hidden="true"></span>
+          <span class="sc-cbt-arrow" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </span>
+        </a>
+        <span class="sc-cbt-sparks sc-cbt-sparks-right" aria-hidden="true">
+          <svg viewBox="0 0 28 36" fill="none">
+            <line x1="6" y1="6" x2="18" y2="1" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round"/>
+            <line x1="10" y1="16" x2="25" y2="13" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round"/>
+            <line x1="8" y1="25" x2="20" y2="27" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </div>
+    `;
+  }
+
+  function initCBTButtons() {
+    document.querySelectorAll('.sc-cbt-section').forEach(section => {
+      const href = section.getAttribute('data-cbt-href') || '#';
+      const highlight = section.getAttribute('data-cbt-highlight') || 'Attempt the CBT';
+      const text = section.getAttribute('data-cbt-text') || 'of objective questions';
+
+      if (!section.querySelector('.sc-cbt-btn')) {
+        section.innerHTML = buildCBTButtonHTML(href, highlight, text);
+      }
+
+      const btn = section.querySelector('.sc-cbt-btn');
+      if (btn) {
+        btn.addEventListener('click', (e) => {
+          const currentHref = btn.getAttribute('href');
+          if (!currentHref || currentHref === '#' || currentHref.trim() === '') {
+            e.preventDefault();
+            showToast('🚧 We are currently preparing this material. Coming soon!');
+          }
+        });
+      }
+    });
+  }
+
+  window.renderCBTButton = function(targetSelector, options = {}) {
+    const container = typeof targetSelector === 'string' ? document.querySelector(targetSelector) : targetSelector;
+    if (!container) return;
+    const section = document.createElement('div');
+    section.className = 'sc-cbt-section';
+    section.setAttribute('data-cbt-href', options.href || '#');
+    section.setAttribute('data-cbt-highlight', options.highlight || 'Attempt the CBT');
+    section.setAttribute('data-cbt-text', options.text || 'of objective questions');
+    container.appendChild(section);
+    initCBTButtons();
+  };
+
+  initCBTButtons();
 });
