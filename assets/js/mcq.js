@@ -300,7 +300,7 @@ function upgradeSteppersToFourSteps() {
     const stepper2 = step2.querySelector('.modal-stepper');
     if (stepper2 && stepper2.querySelectorAll('.step-item').length === 3) {
       stepper2.innerHTML = `
-        <div class="step-item"><span class="step-badge">1</span><span class="step-text">Details</span></div><div class="step-divider"></div>
+        <div class="step-item active"><span class="step-badge">1</span><span class="step-text">Details</span></div><div class="step-divider"></div>
         <div class="step-item"><span class="step-badge">2</span><span class="step-text">Section</span></div><div class="step-divider"></div>
         <div class="step-item active"><span class="step-badge">3</span><span class="step-text">Instructions</span></div><div class="step-divider"></div>
         <div class="step-item"><span class="step-badge">4</span><span class="step-text">Test</span></div>
@@ -349,7 +349,7 @@ function renderDynamicSectionPickerCards() {
       <div class="sec-card-badge">${badgeNum}</div>
       <div class="sec-card-info">
         <span class="sec-card-title">${labelTitle}</span>
-        <span class="sec-card-sub">${qCount} Questions · ${qCount} Mins</span>
+        <span class="sec-card-sub">${qCount} Ques. · ${qCount} mins</span>
       </div>
       <span class="sec-card-check">✓</span>
     `;
@@ -358,7 +358,7 @@ function renderDynamicSectionPickerCards() {
 
   const allSub = $('lbl-all-sec-sub');
   if (allSub && totalQuestionsCount > 0) {
-    allSub.innerText = `${CBTState.listExamPapers.length} Sections · ${totalQuestionsCount} Questions (${totalQuestionsCount} Mins)`;
+    allSub.innerText = `${CBTState.listExamPapers.length} Sections · ${totalQuestionsCount} Ques. (${totalQuestionsCount} mins)`;
   }
 }
 
@@ -1385,7 +1385,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   ensureSectionSelectionModalExists();
   await loadQuestionsFromSheet(); 
   await fetchAndRenderSidebarToppers();
-
 
   const eyes = document.querySelectorAll('.desktop-eyes .eye-ball'), pupils = document.querySelectorAll('.desktop-eyes .pupil'); 
   document.addEventListener('mousemove', e => { 
