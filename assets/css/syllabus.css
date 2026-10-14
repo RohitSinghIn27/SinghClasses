@@ -451,6 +451,119 @@ a { text-decoration: none; transition: var(--transition-smooth); }
 .sc-card-links a.sc-locked { background-color: #f1f5f9 !important; color: #94a3b8 !important; border-color: #e2e8f0 !important; cursor: not-allowed; }
 
 /* ==========================================================================
+   CBT BUTTON COMPONENT (REUSABLE SECTION)
+   ========================================================================== */
+.sc-cbt-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 22px;
+  margin-bottom: 4px;
+  position: relative;
+  z-index: 2;
+}
+
+.sc-cbt-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sc-cbt-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #0b4fd6 0%, #0942b8 100%);
+  color: #ffffff;
+  padding: 9px 18px 9px 20px;
+  border-radius: 999px;
+  box-shadow: 0 8px 20px rgba(11, 79, 214, 0.32), 0 2px 6px rgba(11, 79, 214, 0.18);
+  transition: transform 0.22s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.22s ease, background 0.22s ease;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  line-height: 1.2;
+}
+
+.sc-cbt-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(11, 79, 214, 0.4), 0 4px 8px rgba(11, 79, 214, 0.22);
+  background: linear-gradient(135deg, #1258e6 0%, #0b4fd6 100%);
+}
+
+.sc-cbt-doc-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.14));
+}
+
+.sc-cbt-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  letter-spacing: 0.1px;
+}
+
+.sc-cbt-highlight {
+  color: #facc15;
+  font-weight: 700;
+}
+
+.sc-cbt-subtext {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.sc-cbt-divider {
+  width: 1px;
+  height: 22px;
+  background-color: rgba(255, 255, 255, 0.28);
+  margin: 0 2px;
+  flex-shrink: 0;
+}
+
+.sc-cbt-arrow {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  color: #0b4fd6;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.22s ease;
+}
+
+.sc-cbt-btn:hover .sc-cbt-arrow {
+  transform: translateX(3px);
+}
+
+.sc-cbt-sparks {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-54%);
+  width: 24px;
+  height: 32px;
+  pointer-events: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sc-cbt-sparks-left {
+  left: -30px;
+}
+
+.sc-cbt-sparks-right {
+  right: -30px;
+}
+
+/* ==========================================================================
    BANNER, FOOTER, TOAST & MODAL
    ========================================================================== */
 .sc-subscribe-banner-green { background: var(--dark-slate); border-radius: 12px; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; margin-top: 10px; box-shadow: var(--shadow-soft); position: relative; overflow: hidden; }
@@ -516,4 +629,7 @@ a { text-decoration: none; transition: var(--transition-smooth); }
   .sc-subscribe-banner-green { flex-direction: column; text-align: center; gap: 14px; }
   .sc-sbg-left { flex-direction: column; }
   .pie-layout { flex-direction: column; text-align: center; }
+  .sc-cbt-btn { padding: 8px 14px; gap: 8px; font-size: 0.78rem; }
+  .sc-cbt-label { white-space: normal; text-align: left; }
+  .sc-cbt-sparks { display: none; }
 }
