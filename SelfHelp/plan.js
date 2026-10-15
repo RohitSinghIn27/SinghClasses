@@ -22,7 +22,7 @@ let state = {
   days: {},
   timetables: JSON.parse(JSON.stringify(EMPTY_TIMETABLES)),
   rosters: {},
-  todos: [], // Populated live from Google Sheets todolist
+  todos: [],
   collapsedTodoCategories: {},
   sentLog: {}
 };
@@ -143,7 +143,7 @@ function updateSectionStats(prefix, done, total, totalHrs) {
   if (bar) bar.style.width = `${pct}%`;
 }
 
-/* ================= REUSABLE UI BUILDERS ================= */
+/* ================= REUSABLE UI BUILDERS (IMAGE 1 SPEC) ================= */
 function buildSessionCell(index) {
   return `
     <td class="py-2.5 px-3 text-center col-cb">
@@ -188,28 +188,6 @@ function buildTimeCell(timeStr, status) {
     </td>`;
 }
 
-function buildDurationCell(hrs) {
-  return `
-    <td class="py-2.5 px-3 text-center col-dur">
-      <div class="hidden sm:inline-block text-xs font-black text-slate-800">
-        <span>${formatDuration(hrs)}</span>
-      </div>
-      <div class="sm:hidden flex items-center gap-2 w-full">
-        <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
-          <svg style="width:16px;height:16px;" class="text-emerald-700 fill-none stroke-current stroke-[2.5]" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"></circle><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="2" x2="12" y2="5"></line><line x1="10" y1="2" x2="14" y2="2"></line><line x1="17.5" y1="7.5" x2="19.5" y2="5.5"></line></svg>
-        </div>
-        <div class="text-left min-w-0">
-          <span class="block text-[8.5px] font-bold text-slate-400 uppercase tracking-tight leading-tight">DURATION</span>
-          <span class="block text-xs font-black text-slate-900 leading-tight mt-0.5">${formatDuration(hrs)}</span>
-        </div>
-      </div>
-    </td>`;
-}
-
-/**
- * Read-Only Topic Cell: Renders pure text/badge from Google Sheets
- * Non-clickable, non-editable, no hover prompt
- */
 function buildTopicCell(topic, isFree = false) {
   const cleanTopic = (topic || '').trim();
   if (isFree || !cleanTopic || cleanTopic === '—') {
@@ -229,6 +207,86 @@ function buildTopicCell(topic, isFree = false) {
         <div class="text-left min-w-0">
           <span class="block text-[8.5px] font-bold text-slate-400 uppercase tracking-tight leading-tight">TOPIC</span>
           <span class="block text-[10.5px] font-bold text-blue-600 leading-tight line-clamp-2 mt-0.5 select-text">${escapeHtml(cleanTopic)}</span>
+        </div>
+      </div>
+    </td>`;
+}
+
+function buildVenueCell(venue) {
+  return `
+    <td class="py-2.5 px-3 text-center col-ven">
+      <span class="bg-slate-100 text-slate-700 font-extrabold text-[11px] px-2.5 py-1 rounded-lg border border-slate-200">
+        ${escapeHtml(venue || 'Center')}
+      </span>
+    </td>`;
+}
+
+/* Image 1 Spec: 3-Dot Speech Bubble Green Button */
+function buildReminderCell(slotId, isTuition, sentAt) {
+  if (!isTuition) {
+    return `<td class="py-2.5 px-3 text-center col-act"><span class="text-slate-300 font-bold">—</span></td>`;
+  }
+  return `
+    <td class="py-2.5 px-3 text-center col-act">
+      <button onclick="openAttendanceModal('${slotId}', this)" type="button" class="inline-flex items-center justify-center gap-1.5 ${sentAt ? 'bg-emerald-50 text-emerald-700 border-emerald-300' : 'bg-[#00875a] hover:bg-[#00734d] text-white border-transparent'} border font-black px-3.5 py-1.5 rounded-xl text-xs transition active:scale-95 shadow-sm">
+        <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M4 4C2.89543 4 2 4.89543 2 6V15C2 16.1046 2.89543 17 4 17H6V20.5C6 20.85 6.4 21.08 6.7 20.88L11.5 17H20C21.1046 17 22 16.1046 22 15V6C22 4.89543 21.1046 4 20 4H4ZM7.5 11.5C8.05228 11.5 8.5 11.0523 8.5 10.5C8.5 9.94772 8.05228 9.5 7.5 9.5C6.94772 9.5 6.5 9.94772 6.5 10.5C6.5 11.0523 6.94772 11.5 7.5 11.5ZM12 11.5C12.5523 11.5 13 11.0523 13 10.5C13 9.94772 12.5523 9.5 12 9.5C11.4477 9.5 11 9.94772 11 10.5C11 11.0523 11.4477 11.5 12 11.5ZM16.5 11.5C17.0523 11.5 17.5 11.0523 17.5 10.5C17.5 9.94772 17.0523 9.5 16.5 9.5C15.9477 9.5 15.5 9.94772 15.5 10.5C15.5 11.0523 15.9477 11.5 16.5 11.5Z"/>
+        </svg>
+        <span>${sentAt ? `✓ Sent ${sentAt}` : 'Msg'}</span>
+      </button>
+    </td>`;
+}
+
+/* Image 1 Spec: 3-Student Silhouette Silhouette + Rounded Pill */
+function buildStudentsCell(count, isTuition) {
+  if (!isTuition) {
+    return `<td class="py-2.5 px-3 text-center col-nos"><span class="text-slate-400 text-xs italic">Self</span></td>`;
+  }
+  return `
+    <td class="py-2.5 px-3 text-center col-nos">
+      <div class="hidden sm:inline-flex flex-col items-center justify-center gap-1">
+        <svg class="w-8 h-6 shrink-0" viewBox="0 0 36 26" fill="none" aria-hidden="true">
+          <circle cx="10" cy="8.5" r="4" fill="#60a5fa" />
+          <path d="M3 20.5C3 17 6 15 10 15C11.8 15 13.3 15.7 14.4 16.8C13.5 17.9 13 19.3 13 20.5H3Z" fill="#60a5fa" />
+          <circle cx="26" cy="8.5" r="4" fill="#60a5fa" />
+          <path d="M33 20.5C33 17 30 15 26 15C24.2 15 22.7 15.7 21.6 16.8C22.5 17.9 23 19.3 23 20.5H33Z" fill="#60a5fa" />
+          <circle cx="18" cy="7.5" r="5" fill="#1d4ed8" />
+          <path d="M9.5 21C9.5 16.8 13.3 14 18 14C22.7 14 26.5 16.8 26.5 21H9.5Z" fill="#1d4ed8" />
+        </svg>
+        <span class="bg-blue-50 text-blue-700 font-extrabold text-[11px] px-3 py-0.5 rounded-full border border-blue-200/90 shadow-xs whitespace-nowrap">
+          ${count} students
+        </span>
+      </div>
+      <div class="sm:hidden flex items-center gap-2 w-full">
+        <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+          <svg class="w-4 h-4 fill-blue-700" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        </div>
+        <div class="text-left min-w-0">
+          <span class="block text-[8.5px] font-bold text-slate-400 uppercase tracking-tight leading-tight">STUDENTS</span>
+          <span class="block text-xs font-black text-blue-700 leading-tight mt-0.5">${count} students</span>
+        </div>
+      </div>
+    </td>`;
+}
+
+/* Image 1 Spec: Minimal Circular Clock Icon + Bold Duration */
+function buildDurationCell(hrs) {
+  return `
+    <td class="py-2.5 px-3 text-center col-dur">
+      <div class="hidden sm:inline-flex flex-col items-center justify-center gap-1">
+        <svg class="w-6 h-6 text-slate-700 fill-none stroke-current stroke-[2.75]" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="9.5"></circle>
+          <polyline points="12 7 12 12 15.5 14"></polyline>
+        </svg>
+        <span class="text-xs font-black text-slate-900 whitespace-nowrap">${formatDuration(hrs)}</span>
+      </div>
+      <div class="sm:hidden flex items-center gap-2 w-full">
+        <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+          <svg style="width:16px;height:16px;" class="text-emerald-700 fill-none stroke-current stroke-[2.5]" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"></circle><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="2" x2="12" y2="5"></line><line x1="10" y1="2" x2="14" y2="2"></line><line x1="17.5" y1="7.5" x2="19.5" y2="5.5"></line></svg>
+        </div>
+        <div class="text-left min-w-0">
+          <span class="block text-[8.5px] font-bold text-slate-400 uppercase tracking-tight leading-tight">DURATION</span>
+          <span class="block text-xs font-black text-slate-900 leading-tight mt-0.5">${formatDuration(hrs)}</span>
         </div>
       </div>
     </td>`;
@@ -274,7 +332,6 @@ async function fetchFromAppsScript(showFeedback = true) {
       renderAll();
       renderTodoList();
 
-      // Automatically show To-Do List once on initial session launch
       if (!sessionStorage.getItem('planner_todo_modal_opened') && state.todos.length > 0) {
         sessionStorage.setItem('planner_todo_modal_opened', 'true');
         setTimeout(() => openTodoModal(), 300);
@@ -316,7 +373,6 @@ async function toggleTodoItem(todoId) {
   saveState();
   renderTodoList();
 
-  // Sync state back to Google Sheet
   if (item.rowIndex && APPS_SCRIPT_URL) {
     try {
       await fetch(APPS_SCRIPT_URL, {
@@ -516,7 +572,7 @@ function ensureDayPopulated(dateStr) {
   const schMap = new Map((existing.school || []).map(t => [t.slotId, t]));
   const tuiMap = new Map((existing.tuition_study || []).map(t => [t.slotId, t]));
 
-  // School
+  // School Slots
   const schSlots = (state.timetables.school && state.timetables.school[dName]) || [];
   state.days[dateStr].school = schSlots.map((slot, idx) => {
     const ex = schMap.get(slot.id);
@@ -531,14 +587,14 @@ function ensureDayPopulated(dateStr) {
       cat: 'School',
       task: slot.task || (isFree ? 'FREE' : 'School Class'),
       mode: isFree ? 'Free' : (isLab ? 'Lab' : 'Class'),
-      topic: slot.topic || '', // Directly mirrors Google Sheets (Read-Only)
+      topic: slot.topic || '',
       completed: ex ? !!ex.completed : false,
       isFree,
       isLab
     };
   });
 
-  // Tuition
+  // Tuition Slots
   const tuiSlots = (state.timetables.tuition && state.timetables.tuition[dName]) || [];
   const populatedTuition = tuiSlots.map((slot, idx) => {
     const ex = tuiMap.get(slot.id);
@@ -553,12 +609,12 @@ function ensureDayPopulated(dateStr) {
       cat: 'Tuition',
       task: slot.task,
       venue: slot.venue || 'Sant Nagar / Online',
-      topic: slot.topic || '', // Directly mirrors Google Sheets (Read-Only)
+      topic: slot.topic || '',
       completed: ex ? !!ex.completed : false
     };
   });
 
-  // Study
+  // Study Slots
   const stdSlots = (state.timetables.study && state.timetables.study[dName]) || [];
   const populatedStudy = stdSlots.map((slot, idx) => {
     const ex = tuiMap.get(slot.id);
@@ -670,21 +726,10 @@ function renderTuitionTable() {
           ${escapeHtml(item.task)}
         </span>
       </td>
-      <td class="py-2.5 px-3 text-center col-ven">
-        <span class="bg-slate-100 text-slate-700 font-extrabold text-[11px] px-2.5 py-1 rounded-lg border border-slate-200">
-          ${escapeHtml(item.venue || 'Center')}
-        </span>
-      </td>
+      ${buildVenueCell(item.venue)}
       ${buildTopicCell(item.topic, !isTuition)}
-      <td class="py-2.5 px-3 text-center col-act">
-        ${isTuition ? `
-          <button onclick="openAttendanceModal('${item.slotId}', this)" type="button" class="${sentAt ? 'bg-emerald-50 text-emerald-700 border-emerald-300' : 'bg-emerald-600 hover:bg-emerald-700 text-white'} border font-black px-3 py-1 rounded-lg text-xs transition active:scale-95 shadow-sm">
-            ${sentAt ? `✓ Sent ${sentAt}` : 'Msg'}
-          </button>` : '<span class="text-slate-300 font-bold">—</span>'}
-      </td>
-      <td class="py-2.5 px-3 text-center col-nos">
-        ${isTuition ? `<span class="bg-blue-50 text-blue-700 font-black text-[11px] px-2.5 py-1 rounded-lg border border-blue-200">${count} students</span>` : '<span class="text-slate-400 text-xs italic">Self</span>'}
-      </td>
+      ${buildReminderCell(item.slotId, isTuition, sentAt)}
+      ${buildStudentsCell(count, isTuition)}
       ${buildDurationCell(item.hrs)}
     `;
     tTbody.appendChild(tr);
@@ -951,12 +996,10 @@ window.addEventListener('load', () => {
   loadState();
   setPlannerView('school');
   ensureTodoModalDOM();
-  ensureHeaderTodoButtons(); // Wires To-Do button into both School and Tuition sections
+  ensureHeaderTodoButtons();
 
-  // Live pull from Google Sheets backend
   fetchFromAppsScript(false);
 
-  // Clock tick
   setInterval(() => {
     const now = new Date();
     setText('headerTimeStr', now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));

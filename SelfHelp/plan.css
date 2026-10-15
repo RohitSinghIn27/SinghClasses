@@ -121,6 +121,7 @@ body {
   table.mobile-table tfoot td {
     padding: 10px 14px !important;
     border-right: 1px solid #e2e8f0 !important;
+    border-bottom: 1px solid #e2e8f0 !important;
     vertical-align: middle !important;
   }
 
