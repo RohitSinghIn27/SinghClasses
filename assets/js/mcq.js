@@ -58,6 +58,28 @@ function getFormattedTimestamp() {
   return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}-${pad(now.getMinutes())}-${pad(now.getSeconds())}`;
 }
 
+// Function to safely navigate one page back in browser history
+function goPageBack() {
+  if (document.referrer && window.history.length > 1) {
+    window.history.back();
+  } else if (document.referrer) {
+    window.location.href = document.referrer;
+  } else if (window.history.length > 1) {
+    window.history.back();
+  } else {
+    window.location.href = "../";
+  }
+}
+window.goPageBack = goPageBack;
+
+window.handleHeaderBack = function() {
+  if (CBTState.isExamActive && !CBTState.sections[CBTState.currentYearIndex]?.submitted) {
+    triggerVerifyModal('back');
+  } else {
+    goPageBack();
+  }
+};
+
 window.sharePage = async function() {
   const currentUrl = window.location.href, btn = $('btn-share-page'), badge = $('share-copied-badge'), icon = $('share-icon-svg');
   const showFeedback = () => {
@@ -227,10 +249,6 @@ async function loadQuestionsFromSheet(retries = 3) {
   CBTState.isQuestionsLoading = false;
 }
 
-/* ==========================================================
-   SECTION SELECTION MODAL INJECTION & FLOW
-   ========================================================== */
-
 function ensureSectionSelectionModalExists() {
   let modalSection = $('welcome-step-section');
   if (!modalSection) {
@@ -368,7 +386,43 @@ window.proceedToRegisterStep = () => {
   if ($('welcome-step-1')) $('welcome-step-1').style.display = 'block';
 };
 
+const DETAIL_FIELDS = [
+  { id: 'student-name-input', label: 'Student Name' },
+  { id: 'student-class-input', label: 'Class' },
+  { id: 'student-section-input', label: 'Section' },
+  { id: 'student-school-input', label: 'School Name' }
+];
+
+function setupDetailsFieldValidation() {
+  DETAIL_FIELDS.forEach(f => {
+    const el = $(f.id);
+    if (!el) return;
+    const clearError = () => { const box = el.closest('.field-box'); if (box) box.classList.remove('field-error'); };
+    el.addEventListener('input', clearError);
+    el.addEventListener('change', clearError);
+  });
+}
+
+function validateStudentDetails() {
+  const missing = [];
+  let firstInvalid = null;
+  DETAIL_FIELDS.forEach(f => {
+    const el = $(f.id);
+    const filled = !!el && el.value.trim() !== "";
+    const box = el ? el.closest('.field-box') : null;
+    if (box) box.classList.toggle('field-error', !filled);
+    if (!filled) { missing.push(f.label); if (!firstInvalid) firstInvalid = el; }
+  });
+  if (missing.length) {
+    showToastAlert(`Please fill in: ${missing.join(', ')}`);
+    if (firstInvalid && typeof firstInvalid.focus === 'function') firstInvalid.focus();
+    return false;
+  }
+  return true;
+}
+
 window.goToSectionSelectionStep = () => {
+  if (!validateStudentDetails()) return;
   ensureSectionSelectionModalExists();
   const nameInput = $('student-name-input'), rawClass = $('student-class-input') ? $('student-class-input').value : "Class 12";
   CBTState.studentNameVal = (nameInput ? nameInput.value.trim() : "").toUpperCase();
@@ -432,11 +486,13 @@ window.backToSectionStep = () => {
   renderDynamicSectionPickerCards();
 };
 
-/* ==========================================================
-   EXAM INITIALIZATION (SINGLE SECTION VS FULL MOCK)
-   ========================================================= */
-
 window.beginExam = async () => { 
+  if (!CBTState.studentNameVal || !CBTState.schoolNameVal) {
+    ['welcome-step-2', 'welcome-step-section'].forEach(id => { if ($(id)) $(id).style.display = 'none'; });
+    if ($('welcome-step-1')) $('welcome-step-1').style.display = 'block';
+    showToastAlert("Please fill in your student details to continue");
+    return;
+  }
   if ($('modal-welcome')) $('modal-welcome').style.display = 'none'; 
   const loading = $('quiz-loading-overlay'); 
   if (loading) loading.style.display = 'flex'; 
@@ -479,10 +535,6 @@ window.beginExam = async () => {
   enableDesktopFullscreen();
   buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion(); saveSessionToLocalStorage(); fetchAndRenderSidebarToppers();
 };
-
-/* ==========================================================
-   STRICT SECTION NAVIGATION BUILDER (NO RETURNING TO PAST)
-   ========================================================== */
 
 window.buildYearNav = () => { 
   let c = $('year-nav-container'); 
@@ -528,10 +580,6 @@ window.buildYearNav = () => {
     c.appendChild(t); 
   }); 
 };
-
-/* ==========================================================
-   TOP PERFORMERS & LEADERBOARD
-   ========================================================== */
 
 async function fetchAndRenderSidebarToppers() {
   const fetchRecordUrl = getFetchRecordOfCBT(), container = $('sidebar-toppers');
@@ -753,12 +801,20 @@ function triggerVerifyModal(type) {
     if (text) text.innerText = "Are you sure you want to go back? Your current progress is saved."; 
     if (actionBtn) { 
       actionBtn.innerText = "Leave"; 
-      actionBtn.onclick = () => { closeVerifyModal(); if (window.history.length > 1) window.history.back(); else window.location.href = getHomeUrl(); }; 
+      actionBtn.onclick = () => { 
+        closeVerifyModal(); 
+        goPageBack(); 
+      }; 
     }
   }
 }
+window.triggerVerifyModal = triggerVerifyModal;
+
 function closeVerifyModal() { if ($('verify-resource-modal')) $('verify-resource-modal').style.display = 'none'; }
+window.closeVerifyModal = closeVerifyModal;
+
 function goToHome() { triggerVerifyModal('back'); }
+window.goToHome = goToHome;
 
 window.closeSecurityModal = () => { 
   if ($('modal-security')) $('modal-security').style.display = 'none'; 
@@ -1086,10 +1142,6 @@ window.showSubmitModal = () => {
 window.closeSubmitModal = () => { if ($('modal-submit'))$('modal-submit').style.display = 'none'; CBTState.isTimerPaused = false; };
 window.confirmSubmitExam = () => { if ($('modal-submit'))$('modal-submit').style.display = 'none'; CBTState.isTimerPaused = false; window.processSectionSubmission(); };
 
-/* ==========================================================
-   SECTION SUBMISSION & SCORECARD EVALUATION
-   ========================================================== */
-
 window.processSectionSubmission = async function() { 
   cancelAutoAdvance();
   let sec = CBTState.sections[CBTState.currentYearIndex]; 
@@ -1209,10 +1261,6 @@ function executeProgressionAdvance() {
     showFinalCumulativeEvaluation();
   }
 }
-
-/* ==========================================================
-   FEEDBACK & REVIEW SYSTEM
-   ========================================================== */
 
 function triggerSlowMotionStarsAnimation() {
   if (CBTState.hasAnimatedStars) return;
@@ -1363,10 +1411,6 @@ window.toggleAllSubmissions = function() {
   renderSubmissionsShowcase(CBTState.feedbackDataStore);
 };
 
-/* ==========================================================
-   APP BOOTSTRAPPER
-   ========================================================== */
-
 document.addEventListener('DOMContentLoaded', async () => {
   const activeName = getTestName(), chNum = getChapterNumber(), weight = getChapterWeightage();
   if ($('header-ch-num'))$('header-ch-num').innerText = `Ch ${chNum}`;
@@ -1377,6 +1421,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if ($('welcome-incorrect-lbl'))$('welcome-incorrect-lbl').innerText = `-${getIncorrectMarks()} Incorrect`;
 
   setFeedbackRating(1.5, false); setupStarScrollObserver(); setupFeedbackSectionObserver(); setupMobileGestures(); placeActionMatrix();
+  setupDetailsFieldValidation();
 
   const saved = getSavedSession();
   if (saved) { CBTState.pendingRestoreData = saved; if ($('modal-resume'))$('modal-resume').style.display = 'flex'; }
