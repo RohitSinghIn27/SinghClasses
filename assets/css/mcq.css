@@ -798,7 +798,7 @@ h1, h2, h3, h4 { color: var(--text-color); font-weight: 800; }
   .input-row-half { gap: 7px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .field-box { height: 40px; padding: 0 9px; gap: 6px; border-radius: 10px; }
   .field-icon, #welcome-step-1 .field-box:not(:has(.field-icon))::before { width: 15px !important; height: 15px !important; min-width: 15px !important; min-height: 15px !important; }
-  .field-control { font-size: 0.78rem; min-width: 0; }
+  .field-control { font-size: 16px; min-width: 0; }
   .select-control { padding-right: 17px; text-overflow: ellipsis; }
   .chevron-icon { right: 8px; width: 13px; height: 13px; }
   .field-error-msg { font-size: 0.59rem; bottom: -12px; left: 6px; }
@@ -950,7 +950,7 @@ h1, h2, h3, h4 { color: var(--text-color); font-weight: 800; }
   /* Feedback Form & Submissions Showcase */
   .fb-card-row-top { padding: 8px 10px 4px 10px; }
   .fb-input-wrapper-embedded { padding: 8px 10px; }
-  .fb-input-wrapper-embedded textarea { font-size: 0.82rem; padding-right: 42px; }
+  .fb-input-wrapper-embedded textarea { font-size: 16px; padding-right: 42px; }
   .fb-card-row-bottom { flex-direction: column; align-items: stretch; gap: 8px; padding: 6px 10px 10px 10px; }
   .fb-row2-left { justify-content: space-between; width: 100%; flex-wrap: wrap; gap: 6px; }
   .fb-stars-picker-row2 { margin-left: auto; }
@@ -985,4 +985,36 @@ h1, h2, h3, h4 { color: var(--text-color); font-weight: 800; }
   .input-row-half { grid-template-columns: 1fr; gap: 10px; }
   #welcome-step-section .modal-btn-row, #welcome-step-2 .modal-start-btn-row { grid-template-columns: 1fr !important; }
   .matrix-row-secondary button { font-size: 0.64rem; padding: 0 3px; }
+}
+
+/* ==========================================================================
+   SECTION 14: MOBILE FIXES - NO AUTO-ZOOM ON FIELD FOCUS, NO SIDEWAYS OVERFLOW
+   ========================================================================== */
+/* iOS Safari zooms the whole page when a focused field has a font size below 16px,
+   and it does not zoom back out, so the layout looks enlarged until the user pinches. */
+@media (max-width: 1024px), (pointer: coarse) {
+  input, select, textarea,
+  .field-control,
+  .fb-input-wrapper-embedded textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Keep wide blocks inside the screen width so the page is never pushed sideways. */
+@media (max-width: 640px) {
+  body > *,
+  .main-content,
+  .sc-widget-container,
+  .main-wrapper,
+  .cbt-container,
+  .palette-container,
+  .unified-nav,
+  .img5-modern-header,
+  .unfixed-site-footer {
+    max-width: 100%;
+    min-width: 0;
+  }
+  img, video, iframe, table {
+    max-width: 100%;
+  }
 }
