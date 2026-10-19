@@ -1,3 +1,6 @@
+/* ==========================================================================
+   SECTION 1: CORE HELPERS, CONFIG GETTERS & ICONS
+   ========================================================================== */
 const $ = id => document.getElementById(id);
 const isProctoringEnabled = () => window.CBT_CONFIG?.ENABLE_PROCTORING ?? true;
 const getCorrectMarks = () => Number(window.CBT_CONFIG?.MARKS_CORRECT ?? 1);
@@ -17,18 +20,61 @@ const getNotesUrl = () => window.CBT_CONFIG?.NOTES_URL ?? "#";
 const ICON_ALERT = `<svg class="sc-svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`;
 const ICON_FULLSCREEN = `<polyline points="15 3 21 3 21 9"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><polyline points="9 21 3 21 3 15"></polyline><line x1="3" y1="21" x2="10" y2="14"></line>`;
 const ICON_MINIMIZE = `<polyline points="4 14 10 14 10 20"></polyline><line x1="10" y1="14" x2="3" y2="21"></line><polyline points="20 10 14 10 14 4"></polyline><line x1="14" y1="10" x2="21" y2="3"></line>`;
+const ICON_CHECK_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+const ICON_EMPTY_FOLDER = `<svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="2.5"></circle><line x1="13.8" y1="14.8" x2="16" y2="17"></line></svg>`;
 
+/* ==========================================================================
+   SECTION 2: APPLICATION STATE & UTILITY FUNCTIONS
+   ========================================================================== */
 window.CBTState = {
-  listExamPapers: [], isQuestionsLoading: false, questions: [], sections: [], currentYearIndex: 0, currentQuestion: 0,
-  studentNameVal: "", studentClassVal: "Class 12", studentSectionVal: "A", schoolNameVal: "", studentName: "",
-  selectedSectionMode: "ALL",
-  userAnswers: [], visitedQuestions: [], lockedAnswers: [], sectionTimes: [], timerInterval: null, isTimerPaused: true,
-  isTimerFrozen: false, securityWarnings: 0, isExamActive: false, currentFilter: 'all', activeResourceUrl: "",
-  lastWT: 0, sectionToppersFetched: [], pendingRestoreData: null, feedbackRating: 1.5, feedbackCategory: "Suggestion",
-  feedbackDataStore: [], hasAnimatedStars: false, isExpandedSubmissions: false, allFetchedRecords: [], hasFetchedFeedback: false
+  listExamPapers: [], isQuestionsLoading: false, fetchFailed: false, questions: [], sections: [],
+  currentYearIndex: 0, currentQuestion: 0, studentNameVal: "", studentClassVal: "Class 12",
+  studentSectionVal: "A", schoolNameVal: "", studentName: "", selectedSectionMode: "ALL",
+  userAnswers: [], visitedQuestions: [], lockedAnswers: [], markedQuestions: [], sectionTimes: [],
+  timerInterval: null, isTimerPaused: true, isTimerFrozen: false, securityWarnings: 0,
+  isExamActive: false, currentFilter: 'all', activeResourceUrl: "", lastWT: 0,
+  sectionToppersFetched: [], pendingRestoreData: null, feedbackRating: 1.5,
+  feedbackCategory: "Suggestion", feedbackDataStore: [], hasAnimatedStars: false,
+  isExpandedSubmissions: false, allFetchedRecords: [], hasFetchedFeedback: false
 };
 
 let spacePressTimestamps = [], autoAdvanceTimer = null;
+let touchStartX = 0, touchStartY = 0, lastOptionTapTime = 0, lastTappedIndex = -1;
+
+const debounce = (fn, delay = 150) => {
+  let timer = null;
+  return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn.apply(null, args), delay); };
+};
+
+const escapeHTML = str => str == null ? "" : str.toString()
+  .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;").replace(/'/g, "&#039;").replace(/\n/g, "<br>");
+
+const getVerbatim = (obj, keys, fallback = "") => {
+  for (const k of keys) if (obj[k] !== undefined && obj[k] !== null) return obj[k];
+  return fallback;
+};
+
+const shuffleArray = a => {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+};
+
+const getFormattedTimestamp = () => {
+  const now = new Date(), pad = n => (n < 10 ? '0' + n : n);
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}-${pad(now.getMinutes())}-${pad(now.getSeconds())}`;
+};
+
+function showToastAlert(m) {
+  const t = $('custom-alert-toast'), txt = $('custom-alert-text');
+  if (t && txt) {
+    txt.innerHTML = `${ICON_ALERT} ${m}`;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3500);
+  }
+}
 
 function cancelAutoAdvance() {
   if (autoAdvanceTimer) { clearTimeout(autoAdvanceTimer); autoAdvanceTimer = null; }
@@ -48,36 +94,20 @@ function scheduleAutoAdvance(delay = 2000) {
   }, delay);
 }
 
-function debounce(fn, delay = 150) {
-  let timer = null;
-  return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn.apply(this, args), delay); };
-}
-
-function getFormattedTimestamp() {
-  const now = new Date(), pad = n => (n < 10 ? '0' + n : n);
-  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}-${pad(now.getMinutes())}-${pad(now.getSeconds())}`;
-}
-
-// Function to safely navigate one page back in browser history
+/* ==========================================================================
+   SECTION 3: HEADER ACTIONS, NAVIGATION & FULLSCREEN
+   ========================================================================== */
 function goPageBack() {
-  if (document.referrer && window.history.length > 1) {
-    window.history.back();
-  } else if (document.referrer) {
-    window.location.href = document.referrer;
-  } else if (window.history.length > 1) {
-    window.history.back();
-  } else {
-    window.location.href = "../";
-  }
+  if (document.referrer && window.history.length > 1) window.history.back();
+  else if (document.referrer) window.location.href = document.referrer;
+  else if (window.history.length > 1) window.history.back();
+  else window.location.href = "../";
 }
 window.goPageBack = goPageBack;
 
 window.handleHeaderBack = function() {
-  if (CBTState.isExamActive && !CBTState.sections[CBTState.currentYearIndex]?.submitted) {
-    triggerVerifyModal('back');
-  } else {
-    goPageBack();
-  }
+  if (CBTState.isExamActive && !CBTState.sections[CBTState.currentYearIndex]?.submitted) triggerVerifyModal('back');
+  else goPageBack();
 };
 
 window.sharePage = async function() {
@@ -119,7 +149,10 @@ function updateFullscreenIconState() {
 }
 document.addEventListener('fullscreenchange', updateFullscreenIconState);
 
-function getSingleSessionKey() { return `cbt_active_attempt_${getTestName().replace(/\s+/g, '_')}`; }
+/* ==========================================================================
+   SECTION 4: LOCAL STORAGE SESSION MANAGEMENT
+   ========================================================================== */
+const getSingleSessionKey = () => `cbt_active_attempt_${getTestName().replace(/\s+/g, '_')}`;
 
 function getSavedSession() {
   try {
@@ -127,25 +160,23 @@ function getSavedSession() {
     if (!raw) return null;
     const data = JSON.parse(raw);
     if (!data?.questions?.length || !data.studentNameVal) return null;
-    const ONE_HOUR_MS = 60 * 60 * 1000;
-    if (!data.savedAt || (Date.now() - data.savedAt > ONE_HOUR_MS)) { clearSessionLocalStorage(); return null; }
+    if (!data.savedAt || (Date.now() - data.savedAt > 3600000)) { clearSessionLocalStorage(); return null; }
     return data;
-  } catch (e) { console.warn("Storage check:", e); }
-  return null;
+  } catch (e) { return null; }
 }
 
-function saveSessionToLocalStorage() { 
-  if (!CBTState.isExamActive || !CBTState.studentNameVal) return; 
-  try { 
-    localStorage.setItem(getSingleSessionKey(), JSON.stringify({ 
-      savedAt: Date.now(), currentYearIndex: CBTState.currentYearIndex, currentQuestion: CBTState.currentQuestion, userAnswers: CBTState.userAnswers,
-      visitedQuestions: CBTState.visitedQuestions, lockedAnswers: CBTState.lockedAnswers, sectionTimes: CBTState.sectionTimes,
-      securityWarnings: CBTState.securityWarnings, questions: CBTState.questions, sections: CBTState.sections,
-      studentNameVal: CBTState.studentNameVal, studentClassVal: CBTState.studentClassVal, studentSectionVal: CBTState.studentSectionVal,
-      schoolNameVal: CBTState.schoolNameVal, studentName: CBTState.studentName, selectedSectionMode: CBTState.selectedSectionMode,
-      sectionToppersFetched: CBTState.sectionToppersFetched 
-    })); 
-  } catch (e) { console.warn("Save session failed:", e); } 
+function saveSessionToLocalStorage() {
+  if (!CBTState.isExamActive || !CBTState.studentNameVal) return;
+  try {
+    localStorage.setItem(getSingleSessionKey(), JSON.stringify({
+      savedAt: Date.now(), currentYearIndex: CBTState.currentYearIndex, currentQuestion: CBTState.currentQuestion,
+      userAnswers: CBTState.userAnswers, visitedQuestions: CBTState.visitedQuestions, lockedAnswers: CBTState.lockedAnswers,
+      markedQuestions: CBTState.markedQuestions, sectionTimes: CBTState.sectionTimes, securityWarnings: CBTState.securityWarnings,
+      questions: CBTState.questions, sections: CBTState.sections, studentNameVal: CBTState.studentNameVal,
+      studentClassVal: CBTState.studentClassVal, studentSectionVal: CBTState.studentSectionVal, schoolNameVal: CBTState.schoolNameVal,
+      studentName: CBTState.studentName, selectedSectionMode: CBTState.selectedSectionMode, sectionToppersFetched: CBTState.sectionToppersFetched
+    }));
+  } catch (e) {}
 }
 
 function clearSessionLocalStorage() { try { localStorage.removeItem(getSingleSessionKey()); } catch (e) {} }
@@ -153,12 +184,18 @@ function clearSessionLocalStorage() { try { localStorage.removeItem(getSingleSes
 function restoreSession(data) {
   let restoredClass = data.studentClassVal || "Class 12";
   if (!restoredClass.toString().startsWith("Class") && restoredClass !== "OTHER") restoredClass = `Class ${restoredClass}`;
+  const qLen = (data.questions || []).length;
   Object.assign(CBTState, {
-    currentYearIndex: data.currentYearIndex || 0, currentQuestion: data.currentQuestion || 0, userAnswers: data.userAnswers || [],
-    visitedQuestions: data.visitedQuestions || [], lockedAnswers: data.lockedAnswers || [], sectionTimes: data.sectionTimes || [],
-    securityWarnings: data.securityWarnings || 0, questions: data.questions || [], sections: data.sections || [],
-    studentNameVal: data.studentNameVal || "", studentClassVal: restoredClass, studentSectionVal: data.studentSectionVal || "A",
-    schoolNameVal: data.schoolNameVal || "", studentName: data.studentName || "", selectedSectionMode: data.selectedSectionMode || "ALL",
+    currentYearIndex: data.currentYearIndex || 0, currentQuestion: data.currentQuestion || 0,
+    userAnswers: data.userAnswers || new Array(qLen).fill(null),
+    visitedQuestions: data.visitedQuestions || new Array(qLen).fill(false),
+    lockedAnswers: data.lockedAnswers || new Array(qLen).fill(false),
+    markedQuestions: data.markedQuestions || new Array(qLen).fill(false),
+    sectionTimes: data.sectionTimes || [], securityWarnings: data.securityWarnings || 0,
+    questions: data.questions || [], sections: data.sections || [],
+    studentNameVal: data.studentNameVal || "", studentClassVal: restoredClass,
+    studentSectionVal: data.studentSectionVal || "A", schoolNameVal: data.schoolNameVal || "",
+    studentName: data.studentName || "", selectedSectionMode: data.selectedSectionMode || "ALL",
     sectionToppersFetched: data.sectionToppersFetched || [], isExamActive: true, isTimerPaused: false, isTimerFrozen: false
   });
   if ($('student-name-input')) $('student-name-input').value = CBTState.studentNameVal;
@@ -170,7 +207,7 @@ function restoreSession(data) {
   document.body.classList.add('exam-in-progress');
   if ($('quiz-screen')) $('quiz-screen').style.display = 'block';
   if ($('unified-nav')) $('unified-nav').style.display = 'flex';
-  enableDesktopFullscreen();
+  ensureReviewControlsExist(); enableDesktopFullscreen();
   buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion();
   if (CBTState.userAnswers.some(ans => ans !== null)) triggerFeedbackSectionAnimation();
   showToastAlert("Previous exam attempt restored successfully!");
@@ -179,83 +216,182 @@ function restoreSession(data) {
 window.confirmResumeSession = function() { if (CBTState.pendingRestoreData) { restoreSession(CBTState.pendingRestoreData); CBTState.pendingRestoreData = null; } };
 window.dismissResumeSession = function() { clearSessionLocalStorage(); CBTState.pendingRestoreData = null; if ($('modal-resume')) $('modal-resume').style.display = 'none'; if ($('modal-welcome')) $('modal-welcome').style.display = 'flex'; };
 
-function escapeHTML(str) { return str == null ? "" : str.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;").replace(/\n/g, "<br>"); }
-function getVerbatim(obj, keys, fallback = "") { for (let k of keys) { if (obj[k] !== undefined && obj[k] !== null) return obj[k]; } return fallback; }
-
-function resolveCorrectText(rawValue, optionsArray) { 
-  if (rawValue == null || rawValue === "") return optionsArray[0] || ""; 
-  let v = rawValue.toString().trim(), textMatch = optionsArray.find(opt => opt != null && opt.toString().trim().toLowerCase() === v.toLowerCase()); 
-  if (textMatch !== undefined) return textMatch.toString(); 
-  let letter = v.toLowerCase(); 
-  if (['a', 'b', 'c', 'd', 'e'].includes(letter)) { let idx = { 'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4 }[letter]; if (idx < optionsArray.length) return optionsArray[idx].toString(); } 
-  const n = parseInt(v); 
-  return (!isNaN(n) && n >= 0 && n < optionsArray.length) ? optionsArray[n].toString() : (optionsArray[0] ? optionsArray[0].toString() : ""); 
+/* ==========================================================================
+   SECTION 5: QUESTION FETCHING & ANSWER RESOLUTION
+   ========================================================================== */
+function resolveCorrectText(rawValue, optionsArray) {
+  if (rawValue == null || rawValue === "") return optionsArray[0] || "";
+  const v = rawValue.toString().trim();
+  const textMatch = optionsArray.find(opt => opt != null && opt.toString().trim().toLowerCase() === v.toLowerCase());
+  if (textMatch !== undefined) return textMatch.toString();
+  const letter = v.toLowerCase();
+  if (['a', 'b', 'c', 'd', 'e'].includes(letter)) {
+    const idx = { a: 0, b: 1, c: 2, d: 3, e: 4 }[letter];
+    if (idx < optionsArray.length) return optionsArray[idx].toString();
+  }
+  const n = parseInt(v, 10);
+  return (!isNaN(n) && n >= 0 && n < optionsArray.length) ? optionsArray[n].toString() : (optionsArray[0]?.toString() || "");
 }
 
-function textToIndex(correctText, optionsArray) { 
-  let idx = optionsArray.findIndex(opt => opt != null && opt.toString().trim().toLowerCase() === correctText.toLowerCase()); 
-  return idx !== -1 ? idx : 0; 
+function textToIndex(correctText, optionsArray) {
+  const idx = optionsArray.findIndex(opt => opt != null && opt.toString().trim().toLowerCase() === correctText.toLowerCase());
+  return idx !== -1 ? idx : 0;
 }
 
 async function loadQuestionsFromSheet(retries = 3) {
   if (CBTState.isQuestionsLoading || CBTState.listExamPapers.length > 0) return;
   CBTState.isQuestionsLoading = true;
-  let baseUrl = getFetchQuestionsOfCBT();
-  if (!baseUrl) { CBTState.isQuestionsLoading = false; return; }
+  CBTState.fetchFailed = false;
+  const baseUrl = getFetchQuestionsOfCBT();
+  if (!baseUrl) {
+    CBTState.isQuestionsLoading = false;
+    CBTState.fetchFailed = true;
+    renderDynamicSectionPickerCards();
+    return;
+  }
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
       const response = await fetch(baseUrl, { method: "GET", redirect: "follow" });
-      if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const raw = await response.json();
-      if (!Array.isArray(raw) || raw.length === 0) throw new Error("Empty response.");
+      if (!Array.isArray(raw) || raw.length === 0) throw new Error("Empty dataset");
       if (raw[0] && Array.isArray(raw[0].questions)) {
         CBTState.listExamPapers = raw.map(paper => ({
           title: getVerbatim(paper, ['sectiontitle', 'SectionTitle', 'title', 'Title'], "Section"),
           year: getVerbatim(paper, ['section', 'Section', 'year', 'Year'], "1"),
           questions: (paper.questions || []).map(q => {
-            let cleanOpts = (Array.isArray(q.options) ? q.options : [getVerbatim(q, ['optiona', 'OptionA', 'option1', '0'], ""), getVerbatim(q, ['optionb', 'OptionB', 'option2', '1'], ""), getVerbatim(q, ['optionc', 'OptionC', 'option3', '2'], ""), getVerbatim(q, ['optiond', 'OptionD', 'option4', '3'], "")]).map(o => (o ?? "").toString());
+            const cleanOpts = (Array.isArray(q.options) ? q.options : [
+              getVerbatim(q, ['optiona', 'OptionA', 'option1', '0'], ""),
+              getVerbatim(q, ['optionb', 'OptionB', 'option2', '1'], ""),
+              getVerbatim(q, ['optionc', 'OptionC', 'option3', '2'], ""),
+              getVerbatim(q, ['optiond', 'OptionD', 'option4', '3'], "")
+            ]).map(o => (o ?? "").toString());
             return {
               text: getVerbatim(q, ['text', 'Text', 'question', 'Question'], "").toString(),
               tag: getVerbatim(q, ['tag', 'Tag', 'TAG', 'column', 'info', 'Info', 'metadata'], "CBSE").toString().trim(),
-              options: cleanOpts, image: getVerbatim(q, ['image', 'Image', 'imageurl'], "").toString(),
+              options: cleanOpts,
+              image: getVerbatim(q, ['image', 'Image', 'imageurl'], "").toString(),
               explanation: getVerbatim(q, ['explanation', 'Explanation', 'exp', 'Exp', 'solution'], "").toString(),
               correctAnswerText: resolveCorrectText(getVerbatim(q, ['correctIndex', 'correct', 'answer', 'ans', '4'], "A"), cleanOpts)
             };
           }).filter(q => q.text !== "")
-        }));
+        })).filter(p => p.questions.length > 0);
       } else {
         const sectionsMap = {};
         raw.forEach(row => {
           const r = {};
           Object.keys(row).forEach(k => { r[k.toLowerCase().replace(/[^a-z0-9]/g, '')] = row[k]; });
-          let sNum = getVerbatim(r, ['section', 'set'], "1").toString().trim();
-          let sTitle = getVerbatim(r, ['sectiontitle', 'title', 'label'], "Part A").toString().trim();
-          let qText = getVerbatim(r, ['question', 'questions', 'questiontext', 'text', 'q'], null);
+          const sNum = getVerbatim(r, ['section', 'set'], "1").toString().trim();
+          const sTitle = getVerbatim(r, ['sectiontitle', 'title', 'label'], "Part A").toString().trim();
+          const qText = getVerbatim(r, ['question', 'questions', 'questiontext', 'text', 'q'], null);
           if (!qText) return;
-          const options = [getVerbatim(r, ['optiona', 'option1', 'a'], ""), getVerbatim(r, ['optionb', 'option2', 'b'], ""), getVerbatim(r, ['optionc', 'option3', 'c'], ""), getVerbatim(r, ['optiond', 'option4', 'd'], "")].map(o => o.toString());
+          const options = [
+            getVerbatim(r, ['optiona', 'option1', 'a'], ""),
+            getVerbatim(r, ['optionb', 'option2', 'b'], ""),
+            getVerbatim(r, ['optionc', 'option3', 'c'], ""),
+            getVerbatim(r, ['optiond', 'option4', 'd'], "")
+          ].map(o => o.toString());
           if (!sectionsMap[sNum]) sectionsMap[sNum] = { title: sTitle, year: sNum, questions: [] };
-          sectionsMap[sNum].questions.push({ text: qText.toString(), tag: getVerbatim(r, ['tag', 'tagname', 'info', 'metadata'], "CBSE").toString().trim(), options, correctAnswerText: resolveCorrectText(getVerbatim(r, ['correct', 'correctanswer', 'correctindex', 'answer', 'ans'], "A"), options), image: getVerbatim(r, ['image', 'imageurl', 'img'], "").toString(), explanation: getVerbatim(r, ['explanation', 'exp', 'solution'], "").toString() });
+          sectionsMap[sNum].questions.push({
+            text: qText.toString(),
+            tag: getVerbatim(r, ['tag', 'tagname', 'info', 'metadata'], "CBSE").toString().trim(),
+            options,
+            correctAnswerText: resolveCorrectText(getVerbatim(r, ['correct', 'correctanswer', 'correctindex', 'answer', 'ans'], "A"), options),
+            image: getVerbatim(r, ['image', 'imageurl', 'img'], "").toString(),
+            explanation: getVerbatim(r, ['explanation', 'exp', 'solution'], "").toString()
+          });
         });
-        CBTState.listExamPapers = Object.values(sectionsMap);
+        CBTState.listExamPapers = Object.values(sectionsMap).filter(p => p.questions.length > 0);
       }
       if (CBTState.listExamPapers.length > 0) {
         CBTState.listExamPapers.forEach(p => (p.questions || []).forEach(q => { if (q.image) { const i = new Image(); i.src = q.image; } }));
         CBTState.isQuestionsLoading = false;
+        CBTState.fetchFailed = false;
         renderDynamicSectionPickerCards();
         return;
       }
-    } catch (err) { if (attempt < retries) await new Promise(res => setTimeout(res, 800)); } 
+    } catch (err) {
+      if (attempt < retries) await new Promise(res => setTimeout(res, 800));
+    }
   }
   CBTState.isQuestionsLoading = false;
+  CBTState.fetchFailed = true;
+  renderDynamicSectionPickerCards();
+}
+
+window.retryLoadSections = async function() {
+  const container = $('dynamic-sections-container');
+  if (container) container.innerHTML = '';
+  await loadQuestionsFromSheet(3);
+};
+
+/* ==========================================================================
+   SECTION 6: ONBOARDING FLOW, STEPPER NAVIGATION & FORM VALIDATION
+   ========================================================================== */
+const DETAIL_FIELDS = [
+  { id: 'student-name-input', label: 'Student Name', err: 'Student Name is required' },
+  { id: 'student-class-input', label: 'Class', err: 'Class is required' },
+  { id: 'student-section-input', label: 'Section', err: 'Section is required' },
+  { id: 'student-school-input', label: 'School Name', err: 'School Name is required' }
+];
+
+function setupDetailsFieldValidation() {
+  DETAIL_FIELDS.forEach(f => {
+    const el = $(f.id);
+    if (!el) return;
+    const box = el.closest('.field-box');
+    if (box && !box.querySelector('.field-error-msg')) {
+      const msg = document.createElement('span');
+      msg.className = 'field-error-msg';
+      msg.innerText = f.err;
+      box.appendChild(msg);
+    }
+    const clearError = () => { if (box) box.classList.remove('field-error'); };
+    el.addEventListener('input', clearError);
+    el.addEventListener('change', clearError);
+  });
+}
+
+function validateStudentDetails() {
+  const missing = [];
+  let firstInvalid = null;
+  DETAIL_FIELDS.forEach(f => {
+    const el = $(f.id);
+    const filled = !!el && el.value.trim() !== "";
+    const box = el ? el.closest('.field-box') : null;
+    if (box) {
+      let msgEl = box.querySelector('.field-error-msg');
+      if (!msgEl) {
+        msgEl = document.createElement('span');
+        msgEl.className = 'field-error-msg';
+        box.appendChild(msgEl);
+      }
+      msgEl.innerText = f.err;
+      box.classList.toggle('field-error', !filled);
+    }
+    if (!filled) { missing.push(f.label); if (!firstInvalid) firstInvalid = el; }
+  });
+  if (missing.length) {
+    showToastAlert(`Please complete: ${missing.join(', ')}`);
+    if (firstInvalid && typeof firstInvalid.focus === 'function') firstInvalid.focus();
+    return false;
+  }
+  return true;
+}
+
+function syncMarkingLabelsInDOM() {
+  const cMarks = getCorrectMarks(), iMarks = getIncorrectMarks(), pMarks = getPenaltyMarks();
+  if ($('welcome-correct-lbl')) $('welcome-correct-lbl').innerText = `+${cMarks} for correct answer`;
+  if ($('welcome-incorrect-lbl')) $('welcome-incorrect-lbl').innerHTML = `<strong>-${iMarks}</strong> for incorrect answer`;
+  if ($('welcome-penalty-lbl')) $('welcome-penalty-lbl').innerText = `-${pMarks} marks`;
+  if ($('welcome-penalty-inline')) $('welcome-penalty-inline').innerText = `penalty of ${pMarks} marks.`;
 }
 
 function ensureSectionSelectionModalExists() {
   let modalSection = $('welcome-step-section');
   if (!modalSection) {
-    const welcomeOverlay = $('modal-welcome');
-    const step1 = $('welcome-step-1');
+    const welcomeOverlay = $('modal-welcome'), step1 = $('welcome-step-1');
     if (!welcomeOverlay || !step1) return;
-
     modalSection = document.createElement('div');
     modalSection.id = 'welcome-step-section';
     modalSection.className = 'custom-modal-box registration-card';
@@ -266,14 +402,14 @@ function ensureSectionSelectionModalExists() {
         <div class="modal-topic-title"><svg class="topic-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#046a38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg><span class="topic-text">Select Test Mode</span></div>
         <div class="banner-line"></div>
       </div>
-      <div class="modal-stepper" style="margin-bottom:12px;">
-        <div class="step-item"><span class="step-badge">1</span><span class="step-text">Details</span></div><div class="step-divider"></div>
-        <div class="step-item active"><span class="step-badge">2</span><span class="step-text">Section</span></div><div class="step-divider"></div>
-        <div class="step-item"><span class="step-badge">3</span><span class="step-text">Instructions</span></div><div class="step-divider"></div>
-        <div class="step-item"><span class="step-badge">4</span><span class="step-text">Test</span></div>
+      <div class="modal-stepper">
+        <div class="step-item completed clickable" data-step="1" onclick="navigateStepper(1)" title="Edit Student Details"><span class="step-badge">1</span><span class="step-text">Details</span></div><div class="step-divider"></div>
+        <div class="step-item active" data-step="2"><span class="step-badge">2</span><span class="step-text">Section</span></div><div class="step-divider"></div>
+        <div class="step-item" data-step="3"><span class="step-badge">3</span><span class="step-text">Instructions</span></div><div class="step-divider"></div>
+        <div class="step-item" data-step="4"><span class="step-badge">4</span><span class="step-text">Test</span></div>
       </div>
-      <div class="section-picker-container" style="text-align:left;margin-bottom:12px;">
-        <p style="font-size:0.84rem;color:#475569;margin:0 0 10px 0;text-align:center;font-weight:600;">Choose a specific section or attempt the complete test:</p>
+      <div class="section-picker-container">
+        <p class="sec-picker-heading">Choose a specific section or attempt the complete test:</p>
         <div class="section-picker-grid" id="section-picker-options-grid">
           <label class="section-opt-card active" id="opt-section-all" onclick="handleSectionOptChange('ALL')">
             <input type="radio" name="cbt-section-select" value="ALL" checked />
@@ -282,95 +418,137 @@ function ensureSectionSelectionModalExists() {
               <span class="sec-card-title">Full Mock Test (All Sections)</span>
               <span class="sec-card-sub" id="lbl-all-sec-sub">Attempt all sections sequentially</span>
             </div>
-            <span class="sec-card-check">✓</span>
+            <span class="sec-card-check" aria-hidden="true">${ICON_CHECK_SVG}</span>
           </label>
           <div id="dynamic-sections-container"></div>
         </div>
       </div>
-      <div class="modal-btn-row" style="display:flex;gap:8px;">
-        <button type="button" class="btn-back-home" style="flex:1;height:42px;border-radius:9px;font-weight:700;" onclick="backToDetailsStep()">&larr; Back</button>
-        <button type="button" class="btn-green-submit" style="flex:2;" onclick="confirmSectionAndProceed()">Proceed to Instructions &rarr;</button>
-      </div>
-    `;
-
+      <div class="modal-btn-row">
+        <button type="button" class="btn-back-home" onclick="backToDetailsStep()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg><span>Back</span></button>
+        <button type="button" class="btn-green-submit" onclick="confirmSectionAndProceed()"><span>Proceed to Instructions</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
+      </div>`;
     step1.parentNode.insertBefore(modalSection, step1.nextSibling);
   }
-
   upgradeSteppersToFourSteps();
 }
 
 function upgradeSteppersToFourSteps() {
   const step1 = $('welcome-step-1');
   if (step1) {
-    const stepper1 = step1.querySelector('.modal-stepper');
-    if (stepper1 && stepper1.querySelectorAll('.step-item').length === 3) {
-      stepper1.innerHTML = `
-        <div class="step-item active"><span class="step-badge">1</span><span class="step-text">Details</span></div><div class="step-divider"></div>
-        <div class="step-item"><span class="step-badge">2</span><span class="step-text">Section</span></div><div class="step-divider"></div>
-        <div class="step-item"><span class="step-badge">3</span><span class="step-text">Instructions</span></div><div class="step-divider"></div>
-        <div class="step-item"><span class="step-badge">4</span><span class="step-text">Test</span></div>
-      `;
-    }
+    const s1 = step1.querySelector('.modal-stepper');
+    if (s1) s1.innerHTML = `
+      <div class="step-item active" data-step="1"><span class="step-badge">1</span><span class="step-text">Details</span></div><div class="step-divider"></div>
+      <div class="step-item" data-step="2"><span class="step-badge">2</span><span class="step-text">Section</span></div><div class="step-divider"></div>
+      <div class="step-item" data-step="3"><span class="step-badge">3</span><span class="step-text">Instructions</span></div><div class="step-divider"></div>
+      <div class="step-item" data-step="4"><span class="step-badge">4</span><span class="step-text">Test</span></div>`;
   }
-
+  const stepSec = $('welcome-step-section');
+  if (stepSec) {
+    const sSec = stepSec.querySelector('.modal-stepper');
+    if (sSec) sSec.innerHTML = `
+      <div class="step-item completed clickable" data-step="1" onclick="navigateStepper(1)" title="Jump to Student Details"><span class="step-badge">1</span><span class="step-text">Details</span></div><div class="step-divider"></div>
+      <div class="step-item active" data-step="2"><span class="step-badge">2</span><span class="step-text">Section</span></div><div class="step-divider"></div>
+      <div class="step-item" data-step="3"><span class="step-badge">3</span><span class="step-text">Instructions</span></div><div class="step-divider"></div>
+      <div class="step-item" data-step="4"><span class="step-badge">4</span><span class="step-text">Test</span></div>`;
+    const allCheck = stepSec.querySelector('#opt-section-all .sec-card-check');
+    if (allCheck && !allCheck.querySelector('svg')) allCheck.innerHTML = ICON_CHECK_SVG;
+  }
   const step2 = $('welcome-step-2');
   if (step2) {
-    const stepper2 = step2.querySelector('.modal-stepper');
-    if (stepper2 && stepper2.querySelectorAll('.step-item').length === 3) {
-      stepper2.innerHTML = `
-        <div class="step-item active"><span class="step-badge">1</span><span class="step-text">Details</span></div><div class="step-divider"></div>
-        <div class="step-item"><span class="step-badge">2</span><span class="step-text">Section</span></div><div class="step-divider"></div>
-        <div class="step-item active"><span class="step-badge">3</span><span class="step-text">Instructions</span></div><div class="step-divider"></div>
-        <div class="step-item"><span class="step-badge">4</span><span class="step-text">Test</span></div>
-      `;
-    }
-    const btnRow = step2.querySelector('.modal-start-btn-row');
-    if (btnRow && !btnRow.querySelector('.btn-back-home')) {
-      btnRow.style.display = 'flex';
-      btnRow.style.gap = '8px';
-      btnRow.innerHTML = `
-        <button type="button" class="btn-back-home" style="flex:1;height:42px;border-radius:9px;font-weight:700;" onclick="backToSectionStep()">&larr; Back</button>
-        <button type="button" class="btn-green-submit" style="flex:2;" onclick="beginExam()">Start Mock Test</button>
-      `;
+    step2.classList.add('instructions-modal-card');
+    const s2 = step2.querySelector('.modal-stepper');
+    if (s2) s2.innerHTML = `
+      <div class="step-item completed clickable" data-step="1" onclick="navigateStepper(1)" title="Jump to Student Details"><span class="step-badge">1</span><span class="step-text">Details</span></div><div class="step-divider"></div>
+      <div class="step-item completed clickable" data-step="2" onclick="navigateStepper(2)" title="Jump to Section Selection"><span class="step-badge">2</span><span class="step-text">Section</span></div><div class="step-divider"></div>
+      <div class="step-item active" data-step="3"><span class="step-badge">3</span><span class="step-text">Instructions</span></div><div class="step-divider"></div>
+      <div class="step-item" data-step="4"><span class="step-badge">4</span><span class="step-text">Test</span></div>`;
+    const instContainer = step2.querySelector('.instructions-container');
+    if (instContainer && !instContainer.querySelector('.ig-cards-grid')) {
+      instContainer.className = 'instructions-container';
+      instContainer.innerHTML = `
+        <div class="ig-hero-banner">
+          <div class="ig-hero-top">
+            <span class="ig-hero-icon-circle"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#046a38" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg></span>
+            <h2 class="ig-hero-title" id="instructions-mode-title">Full Mock Test Instructions</h2>
+          </div>
+          <p class="ig-hero-sub">Read the instructions below carefully before starting the test.</p>
+        </div>
+        <div class="ig-cards-grid">
+          <div class="ig-card ig-card-time">
+            <div class="ig-card-icon-col"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0066ff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15 14"></polyline></svg></div>
+            <div class="ig-card-body"><span class="ig-card-label">Time Limit:</span><strong class="ig-time-highlight">1 minute</strong><span class="ig-time-sub">for each question</span></div>
+          </div>
+          <div class="ig-card ig-card-marking">
+            <div class="ig-card-icon-col"><span class="ig-marking-icon-ring"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#046a38" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg></span></div>
+            <div class="ig-card-body"><span class="ig-card-label">Marking Scheme:</span><span class="ig-mark-pos" id="welcome-correct-lbl">+1 for correct answer</span><span class="ig-mark-neg" id="welcome-incorrect-lbl"><strong>-0.25</strong> for incorrect answer</span></div>
+          </div>
+          <div class="ig-card ig-card-penalty">
+            <div class="ig-card-icon-col"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><line x1="5.7" y1="5.7" x2="18.3" y2="18.3"></line></svg></div>
+            <div class="ig-card-body"><span class="ig-card-label">Tab Switching Penalty:</span><strong class="ig-penalty-highlight" id="welcome-penalty-lbl">-2 marks</strong></div>
+          </div>
+        </div>
+        <div class="ig-warning-strip">
+          <span class="ig-warn-circle" aria-hidden="true">!</span><span class="ig-warn-divider" aria-hidden="true"></span>
+          <span class="ig-warn-badge">Important:</span>
+          <p class="ig-warn-text">Do not switch tabs or leave the test window. It will result in a <strong id="welcome-penalty-inline">penalty of 2 marks.</strong></p>
+        </div>`;
+      syncMarkingLabelsInDOM();
     }
   }
 }
 
+window.navigateStepper = function(targetStep) {
+  if (targetStep === 1) {
+    if ($('welcome-step-section')) $('welcome-step-section').style.display = 'none';
+    if ($('welcome-step-2')) $('welcome-step-2').style.display = 'none';
+    if ($('welcome-step-1')) $('welcome-step-1').style.display = 'block';
+  } else if (targetStep === 2) {
+    if (!validateStudentDetails()) return;
+    if ($('welcome-step-1')) $('welcome-step-1').style.display = 'none';
+    if ($('welcome-step-2')) $('welcome-step-2').style.display = 'none';
+    if ($('welcome-step-section')) $('welcome-step-section').style.display = 'block';
+    renderDynamicSectionPickerCards();
+  }
+};
+
 function renderDynamicSectionPickerCards() {
   const container = $('dynamic-sections-container');
   if (!container) return;
-
+  if (CBTState.isQuestionsLoading) {
+    container.innerHTML = '';
+    return;
+  }
   if (CBTState.listExamPapers.length === 0) {
     container.innerHTML = `
-      <div style="grid-column: 1 / -1; text-align:center; padding:14px; color:#64748b; font-size:0.80rem; font-weight:600;">
-        <div class="fetch-spinner" style="margin:0 auto 8px auto; width:22px; height:22px;"></div>
-        Fetching sections from database...
+      <div class="sec-empty-state-box">
+        <div class="sec-empty-svg-wrap">${ICON_EMPTY_FOLDER}</div>
+        <div class="sec-empty-title">No Sections Found</div>
+        <p class="sec-empty-sub">${CBTState.fetchFailed ? 'Unable to load sections from the server. Check your connection and retry.' : 'No question sections are currently available for this test.'}</p>
+        <button type="button" class="btn-retry-sections" onclick="retryLoadSections()">↻ Retry Fetch</button>
       </div>`;
     return;
   }
 
   container.innerHTML = '';
   let totalQuestionsCount = 0;
-
   CBTState.listExamPapers.forEach((paper, idx) => {
     const qCount = (paper.questions || []).length;
     totalQuestionsCount += qCount;
     const badgeNum = String(idx + 1).padStart(2, '0');
     const labelTitle = escapeHTML(paper.title || `Section ${badgeNum}`);
-    
+    const isSelected = CBTState.selectedSectionMode === String(idx);
     const card = document.createElement('label');
-    card.className = `section-opt-card ${CBTState.selectedSectionMode === String(idx) ? 'active' : ''}`;
+    card.className = `section-opt-card ${isSelected ? 'active' : ''}`;
     card.id = `opt-section-${idx}`;
     card.onclick = () => handleSectionOptChange(String(idx));
     card.innerHTML = `
-      <input type="radio" name="cbt-section-select" value="${idx}" ${CBTState.selectedSectionMode === String(idx) ? 'checked' : ''} />
+      <input type="radio" name="cbt-section-select" value="${idx}" ${isSelected ? 'checked' : ''} />
       <div class="sec-card-badge">${badgeNum}</div>
       <div class="sec-card-info">
         <span class="sec-card-title">${labelTitle}</span>
         <span class="sec-card-sub">${qCount} Ques. · ${qCount} mins</span>
       </div>
-      <span class="sec-card-check">✓</span>
-    `;
+      <span class="sec-card-check" aria-hidden="true">${ICON_CHECK_SVG}</span>`;
     container.appendChild(card);
   });
 
@@ -386,41 +564,6 @@ window.proceedToRegisterStep = () => {
   if ($('welcome-step-1')) $('welcome-step-1').style.display = 'block';
 };
 
-const DETAIL_FIELDS = [
-  { id: 'student-name-input', label: 'Student Name' },
-  { id: 'student-class-input', label: 'Class' },
-  { id: 'student-section-input', label: 'Section' },
-  { id: 'student-school-input', label: 'School Name' }
-];
-
-function setupDetailsFieldValidation() {
-  DETAIL_FIELDS.forEach(f => {
-    const el = $(f.id);
-    if (!el) return;
-    const clearError = () => { const box = el.closest('.field-box'); if (box) box.classList.remove('field-error'); };
-    el.addEventListener('input', clearError);
-    el.addEventListener('change', clearError);
-  });
-}
-
-function validateStudentDetails() {
-  const missing = [];
-  let firstInvalid = null;
-  DETAIL_FIELDS.forEach(f => {
-    const el = $(f.id);
-    const filled = !!el && el.value.trim() !== "";
-    const box = el ? el.closest('.field-box') : null;
-    if (box) box.classList.toggle('field-error', !filled);
-    if (!filled) { missing.push(f.label); if (!firstInvalid) firstInvalid = el; }
-  });
-  if (missing.length) {
-    showToastAlert(`Please fill in: ${missing.join(', ')}`);
-    if (firstInvalid && typeof firstInvalid.focus === 'function') firstInvalid.focus();
-    return false;
-  }
-  return true;
-}
-
 window.goToSectionSelectionStep = () => {
   if (!validateStudentDetails()) return;
   ensureSectionSelectionModalExists();
@@ -430,7 +573,6 @@ window.goToSectionSelectionStep = () => {
   CBTState.studentSectionVal = $('student-section-input') ? $('student-section-input').value : "A";
   CBTState.schoolNameVal = ($('student-school-input') ? $('student-school-input').value.trim() : "").toUpperCase();
   CBTState.studentName = `${CBTState.studentNameVal} | ${CBTState.studentClassVal} | SEC: ${CBTState.studentSectionVal} | ${CBTState.schoolNameVal}`;
-
   renderDynamicSectionPickerCards();
   if ($('welcome-step-1')) $('welcome-step-1').style.display = 'none';
   if ($('welcome-step-section')) $('welcome-step-section').style.display = 'block';
@@ -438,515 +580,345 @@ window.goToSectionSelectionStep = () => {
 
 window.goToGuidelinesStep = () => {
   const step1 = $('welcome-step-1');
-  if (step1 && step1.style.display !== 'none') {
-    goToSectionSelectionStep();
-    return;
-  }
+  if (step1 && step1.style.display !== 'none') { goToSectionSelectionStep(); return; }
   confirmSectionAndProceed();
 };
 
-window.backToDetailsStep = () => {
-  if ($('welcome-step-section')) $('welcome-step-section').style.display = 'none';
-  if ($('welcome-step-1')) $('welcome-step-1').style.display = 'block';
-};
+window.backToDetailsStep = () => navigateStepper(1);
 
 window.handleSectionOptChange = function(val) {
   CBTState.selectedSectionMode = String(val);
-  document.querySelectorAll('.section-opt-card').forEach(c => c.classList.remove('active'));
-  if (val === 'ALL') {
-    const card = $('opt-section-all');
-    if (card) { card.classList.add('active'); const r = card.querySelector('input'); if (r) r.checked = true; }
-  } else {
-    const card = $(`opt-section-${val}`);
-    if (card) { card.classList.add('active'); const r = card.querySelector('input'); if (r) r.checked = true; }
+  document.querySelectorAll('.section-opt-card').forEach(c => {
+    c.classList.remove('active');
+    const chk = c.querySelector('.sec-card-check');
+    if (chk) chk.classList.remove('check-pop');
+  });
+  const targetCard = val === 'ALL' ? $('opt-section-all') : $(`opt-section-${val}`);
+  if (targetCard) {
+    targetCard.classList.add('active');
+    const r = targetCard.querySelector('input');
+    if (r) r.checked = true;
+    const chk = targetCard.querySelector('.sec-card-check');
+    if (chk) {
+      void chk.offsetWidth;
+      chk.classList.add('check-pop');
+    }
   }
 };
 
 window.confirmSectionAndProceed = () => {
   if ($('welcome-step-section')) $('welcome-step-section').style.display = 'none';
   if ($('welcome-step-2')) $('welcome-step-2').style.display = 'block';
-
-  const modeLbl = $('lbl-instruct-chosen-mode');
+  syncMarkingLabelsInDOM();
   const titleLbl = $('instructions-mode-title');
   if (CBTState.selectedSectionMode === 'ALL') {
-    if (modeLbl) modeLbl.innerText = "Full Mock Test (All Sections Sequentially)";
     if (titleLbl) titleLbl.innerText = "Full Mock Test Instructions";
   } else {
-    const secIdx = parseInt(CBTState.selectedSectionMode);
+    const secIdx = parseInt(CBTState.selectedSectionMode, 10);
     const chosenPaper = CBTState.listExamPapers[secIdx];
     const secTitle = chosenPaper ? chosenPaper.title : `Section ${secIdx + 1}`;
-    if (modeLbl) modeLbl.innerText = `Dedicated Test: ${secTitle} Only`;
     if (titleLbl) titleLbl.innerText = `${secTitle} Instructions`;
   }
 };
 
-window.backToSectionStep = () => {
-  if ($('welcome-step-2')) $('welcome-step-2').style.display = 'none';
-  if ($('welcome-step-section')) $('welcome-step-section').style.display = 'block';
-  renderDynamicSectionPickerCards();
-};
+window.backToSectionStep = () => navigateStepper(2);
 
-window.beginExam = async () => { 
+/* ==========================================================================
+   SECTION 7: EXAM INITIALIZATION, NAVIGATION & MARK FOR REVIEW
+   ========================================================================== */
+function ensureReviewControlsExist() {
+  const secRow = document.querySelector('.matrix-row-secondary');
+  if (secRow && !$('btn-review')) {
+    const btnRev = document.createElement('button');
+    btnRev.type = 'button';
+    btnRev.className = 'btn-review';
+    btnRev.id = 'btn-review';
+    btnRev.title = 'Mark or unmark question for review (Shortcut: M)';
+    btnRev.onclick = () => window.toggleMarkForReview();
+    btnRev.innerHTML = `<svg class="btn-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg><span id="btn-review-label">REVIEW</span>`;
+    const btnClear = $('btn-clear');
+    if (btnClear) secRow.insertBefore(btnRev, btnClear);
+    else secRow.appendChild(btnRev);
+  }
+  const filterBar = document.querySelector('.palette-filter-bar');
+  if (filterBar && !$('filter-marked')) {
+    const btnFilterMarked = document.createElement('button');
+    btnFilterMarked.type = 'button';
+    btnFilterMarked.className = 'filter-pill-btn';
+    btnFilterMarked.id = 'filter-marked';
+    btnFilterMarked.onclick = () => window.filterPalette('marked');
+    btnFilterMarked.innerText = 'Marked';
+    const unv = $('filter-unvisited');
+    if (unv) filterBar.insertBefore(btnFilterMarked, unv);
+    else filterBar.appendChild(btnFilterMarked);
+  }
+}
+
+window.beginExam = async () => {
   if (!CBTState.studentNameVal || !CBTState.schoolNameVal) {
     ['welcome-step-2', 'welcome-step-section'].forEach(id => { if ($(id)) $(id).style.display = 'none'; });
     if ($('welcome-step-1')) $('welcome-step-1').style.display = 'block';
     showToastAlert("Please fill in your student details to continue");
     return;
   }
-  if ($('modal-welcome')) $('modal-welcome').style.display = 'none'; 
-  const loading = $('quiz-loading-overlay'); 
-  if (loading) loading.style.display = 'flex'; 
-  document.body.classList.add('exam-in-progress'); 
-  CBTState.isExamActive = true; 
-  let checks = 0; 
-  while (CBTState.isQuestionsLoading && checks < 300) { await new Promise(r => setTimeout(r, 100)); checks++; } 
+  if ($('modal-welcome')) $('modal-welcome').style.display = 'none';
+  const loading = $('quiz-loading-overlay');
+  if (loading) loading.style.display = 'flex';
+  document.body.classList.add('exam-in-progress');
+  CBTState.isExamActive = true;
+  let checks = 0;
+  while (CBTState.isQuestionsLoading && checks < 300) { await new Promise(r => setTimeout(r, 100)); checks++; }
   if (CBTState.listExamPapers.length === 0) await loadQuestionsFromSheet(3);
-  if (loading) loading.style.display = 'none'; 
+  if (loading) loading.style.display = 'none';
 
-  let targetPapers = [];
-  if (CBTState.selectedSectionMode === 'ALL' || !CBTState.listExamPapers[parseInt(CBTState.selectedSectionMode)]) {
-    targetPapers = CBTState.listExamPapers;
-  } else {
-    targetPapers = [ CBTState.listExamPapers[parseInt(CBTState.selectedSectionMode)] ];
+  const targetPapers = (CBTState.selectedSectionMode === 'ALL' || !CBTState.listExamPapers[parseInt(CBTState.selectedSectionMode, 10)])
+    ? CBTState.listExamPapers
+    : [CBTState.listExamPapers[parseInt(CBTState.selectedSectionMode, 10)]];
+
+  if (!targetPapers || targetPapers.length === 0) {
+    CBTState.isExamActive = false;
+    document.body.classList.remove('exam-in-progress');
+    if ($('modal-welcome')) $('modal-welcome').style.display = 'flex';
+    navigateStepper(2);
+    showToastAlert("Unable to load questions. Please retry fetching sections.");
+    return;
   }
 
-  CBTState.questions = []; 
-  CBTState.sections = []; 
-  let qt = 0; 
-  targetPapers.forEach((p, idx) => { 
-    let st = qt, sq = p.questions.map(q => ({ question: q.text, tag: q.tag ?? "CBSE", options: [...q.options], image: q.image ?? "", correctAnswerText: q.correctAnswerText, explanation: q.explanation ?? "" })); 
-    shuffleArray(sq); 
-    sq.forEach(q => { CBTState.questions.push(q); qt++; }); 
-    CBTState.sections.push({ index: idx, title: p.title, year: p.year, start: st, end: qt, submitted: false, timeSpent: 0 }); 
-  }); 
+  CBTState.questions = [];
+  CBTState.sections = [];
+  let qt = 0;
+  targetPapers.forEach((p, idx) => {
+    const st = qt, sq = p.questions.map(q => ({
+      question: q.text, tag: q.tag ?? "CBSE", options: [...q.options],
+      image: q.image ?? "", correctAnswerText: q.correctAnswerText, explanation: q.explanation ?? ""
+    }));
+    shuffleArray(sq);
+    sq.forEach(q => { CBTState.questions.push(q); qt++; });
+    CBTState.sections.push({ index: idx, title: p.title, year: p.year, start: st, end: qt, submitted: false, timeSpent: 0 });
+  });
 
-  clearSessionLocalStorage(); 
-  CBTState.userAnswers = new Array(CBTState.questions.length).fill(null); 
-  CBTState.visitedQuestions = new Array(CBTState.questions.length).fill(false); 
-  CBTState.lockedAnswers = new Array(CBTState.questions.length).fill(false); 
-  CBTState.sectionTimes = CBTState.sections.map(s => (s.end - s.start) * 60); 
-  CBTState.currentYearIndex = 0; 
-  CBTState.currentQuestion = CBTState.sections[0].start; 
-  CBTState.isTimerPaused = false; 
+  clearSessionLocalStorage();
+  CBTState.userAnswers = new Array(CBTState.questions.length).fill(null);
+  CBTState.visitedQuestions = new Array(CBTState.questions.length).fill(false);
+  CBTState.lockedAnswers = new Array(CBTState.questions.length).fill(false);
+  CBTState.markedQuestions = new Array(CBTState.questions.length).fill(false);
+  CBTState.sectionTimes = CBTState.sections.map(s => (s.end - s.start) * 60);
+  CBTState.currentYearIndex = 0;
+  CBTState.currentQuestion = CBTState.sections[0].start;
+  CBTState.isTimerPaused = false;
   CBTState.isTimerFrozen = false;
 
-  if ($('quiz-screen')) $('quiz-screen').style.display = 'block'; 
-  if ($('unified-nav')) $('unified-nav').style.display = 'flex'; 
-  enableDesktopFullscreen();
+  if ($('quiz-screen')) $('quiz-screen').style.display = 'block';
+  if ($('unified-nav')) $('unified-nav').style.display = 'flex';
+  ensureReviewControlsExist(); enableDesktopFullscreen();
   buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion(); saveSessionToLocalStorage(); fetchAndRenderSidebarToppers();
 };
 
-window.buildYearNav = () => { 
-  let c = $('year-nav-container'); 
-  if (!c) return; 
-  c.innerHTML = ''; 
-
-  CBTState.sections.forEach((p, idx) => { 
-    let t = document.createElement('div'); 
-    const isCurrent = (idx === CBTState.currentYearIndex);
-    const isPast = (idx < CBTState.currentYearIndex || p.submitted);
-    const isFuture = (idx > CBTState.currentYearIndex);
-
-    let stateClass = isCurrent ? 'active' : (isPast ? 'locked-past' : 'locked-future');
-    t.className = `year-tab ${stateClass}`; 
+window.buildYearNav = () => {
+  const c = $('year-nav-container');
+  if (!c) return;
+  c.innerHTML = '';
+  CBTState.sections.forEach((p, idx) => {
+    const t = document.createElement('div');
+    const isCurrent = idx === CBTState.currentYearIndex;
+    const isPast = idx < CBTState.currentYearIndex || p.submitted;
+    const isFuture = idx > CBTState.currentYearIndex;
+    t.className = `year-tab ${isCurrent ? 'active' : (isPast ? 'locked-past' : 'locked-future')}`;
     const numBadge = String(idx + 1).padStart(2, '0'), rawLabel = (p.title || "").trim();
     const match = rawLabel.match(/^(.*?)[\s\-_]+(\b[A-Za-z0-9]+)$/);
-    let mainLabel = (match && match[1].trim()) ? match[1].trim().toUpperCase() : rawLabel.toUpperCase();
-    let accentLabel = (match && match[1].trim()) ? match[2].trim().toUpperCase() : "";
-
-    let lockBadge = isPast ? `<span class="yt-lock-badge" title="Submitted & Locked"></span>` : (isFuture ? `<span class="yt-lock-badge" title="Locked"></span>` : '');
-
+    const mainLabel = (match && match[1].trim()) ? match[1].trim().toUpperCase() : rawLabel.toUpperCase();
+    const accentLabel = (match && match[1].trim()) ? match[2].trim().toUpperCase() : "";
     t.innerHTML = `
       <div class="yt-icon-circle">${isPast ? '✓' : numBadge}</div>
       <div class="yt-title-group">
         <span class="yt-title-main">${escapeHTML(mainLabel)}</span>
         ${accentLabel ? `<span class="yt-title-accent">${escapeHTML(accentLabel)}</span>` : ''}
-        ${lockBadge}
-      </div>
-    `; 
-
-    t.onclick = () => { 
+      </div>`;
+    t.onclick = () => {
       cancelAutoAdvance();
-      if (idx === CBTState.currentYearIndex) return;
-      if (isPast) { 
-        showToastAlert("Submitted sections are locked and cannot be revisited."); 
-        return;
-      }
-      if (isFuture) { 
-        showToastAlert("Submit your current section to unlock the next section."); 
-        return;
-      }
-    }; 
-    c.appendChild(t); 
-  }); 
-};
-
-async function fetchAndRenderSidebarToppers() {
-  const fetchRecordUrl = getFetchRecordOfCBT(), container = $('sidebar-toppers');
-  if (!fetchRecordUrl) return;
-  try {
-    const testName = getTestName(), sec = CBTState.sections[CBTState.currentYearIndex], currentSection = sec ? `${sec.year} - ${sec.title}` : "";
-    const res = await fetch(`${fetchRecordUrl}?testName=${encodeURIComponent(testName)}&currentSection=${encodeURIComponent(currentSection)}&_t=${Date.now()}`);
-    const data = await res.json();
-    let recordsList = data ? (data.records || data.top7 || data.top5 || data.toppers || (Array.isArray(data) ? data : [])) : [];
-    if ((!recordsList || recordsList.length === 0) && currentSection) {
-      try {
-        const broadRes = await fetch(`${fetchRecordUrl}?testName=${encodeURIComponent(testName)}&_t=${Date.now()}`);
-        const broadData = await broadRes.json();
-        recordsList = broadData ? (broadData.records || broadData.top7 || broadData.top5 || broadData.toppers || (Array.isArray(broadData) ? data : [])) : [];
-      } catch (e) {}
-    }
-    CBTState.allFetchedRecords = recordsList || [];
-    if (recordsList && recordsList.length > 0) { 
-      renderSidebarToppers(recordsList); 
-      updateUserDynamicRank(); 
-    } else if (container) {
-      container.style.display = 'none';
-    }
-  } catch (err) { 
-    if (container) container.style.display = 'none'; 
-  }
-}
-
-function getSectionRankedCandidates() {
-  const sec = CBTState.sections[CBTState.currentYearIndex];
-  const curSec = sec ? `${sec.year} - ${sec.title}`.trim().toLowerCase() : "";
-  let list = (CBTState.allFetchedRecords || []).filter(t => {
-    if (!t) return false;
-    const name = String(t.studentName || t.name || "").trim();
-    if (!name || name.toLowerCase() === "awaiting...") return false;
-    const recSec = String(t.currentSection || t.section || "").trim().toLowerCase();
-    if (curSec && recSec) {
-      return recSec === curSec || recSec.includes(curSec) || curSec.includes(recSec);
-    }
-    return true;
+      if (isCurrent) return;
+      if (isPast) showToastAlert("Submitted sections are locked and cannot be revisited.");
+      else if (isFuture) showToastAlert("Submit your current section to unlock the next section.");
+    };
+    c.appendChild(t);
   });
-  const getMarks = t => parseFloat(t.obtainedScore ?? t.score ?? t.totalMarks ?? t.marks ?? 0) || 0;
-  const getAccuracy = t => parseFloat((t.accuracy || "0").toString().replace("%", "")) || 0;
-  list.sort((a, b) => (getMarks(b) - getMarks(a)) || (getAccuracy(b) - getAccuracy(a)));
-  return list;
-}
-
-window.openLeaderboardModal = async function() {
-  let modal = $('modal-leaderboard');
-  if (!modal) {
-    modal = document.createElement('div');
-    modal.id = 'modal-leaderboard';
-    modal.className = 'custom-modal-overlay';
-    modal.onclick = e => { if (e.target === modal) closeLeaderboardModal(); };
-    document.body.appendChild(modal);
-  }
-
-  const sec = CBTState.sections[CBTState.currentYearIndex];
-  const curSecTitle = sec ? `${sec.year} - ${sec.title}` : (sec ? sec.title : "Current Section");
-
-  const buildModalContent = (isLoading = false) => {
-    const candidates = getSectionRankedCandidates();
-    const getMarks = t => parseFloat(t.obtainedScore ?? t.score ?? t.totalMarks ?? t.marks ?? 0) || 0;
-
-    const rowsHTML = candidates.length === 0 
-      ? `<div class="lb-empty-state">${isLoading ? 'Syncing latest records...' : 'No candidate scores recorded for this section yet.'}</div>`
-      : candidates.map((t, idx) => {
-          const rank = idx + 1;
-          const badgeClass = rank === 1 ? 'rank-1' : (rank === 2 ? 'rank-2' : (rank === 3 ? 'rank-3' : 'rank-rest'));
-          const badgeText = rank <= 3 ? `${rank}` : `#${rank}`;
-          const rawName = (t.studentName || t.name || '').replace(/\s*\(Reload\s*Dropout\)/gi, '').trim();
-          const name = escapeHTML(rawName);
-          const marksVal = getMarks(t);
-          const marksText = `${marksVal % 1 === 0 ? marksVal : marksVal.toFixed(2)}`;
-          let cls = (t.studentClass || t.classVal || "").toString().replace(/^Class\s*/i, '').trim();
-          let sSec = (t.studentSection || t.sectionVal || "").toString().replace(/^Sec\s*/i, '').trim();
-          const clsSec = (cls && sSec) ? `${cls}-${sSec}` : (cls || sSec || "-");
-          const rawSchool = (t.schoolName || t.school || "").toString().trim();
-          const school = escapeHTML(rawSchool && rawSchool.toUpperCase() !== "N/A" ? rawSchool : "-");
-          const isUser = CBTState.studentNameVal && rawName.toLowerCase() === CBTState.studentNameVal.trim().toLowerCase();
-
-          return `<div class="lb-table-row ${badgeClass} ${isUser ? 'lb-current-user' : ''}">
-            <div class="lb-col-rank"><span class="tp6-badge-shape">${badgeText}</span></div>
-            <div class="lb-col-name" title="${name}">
-              <span class="lb-name-text">${name}</span>
-              ${isUser ? `<span class="lb-you-tag">You</span>` : ''}
-            </div>
-            <div class="lb-col-school" title="${school !== '-' ? school : ''}">${school}</div>
-            <div class="lb-col-class"><span class="lb-class-pill">${escapeHTML(clsSec)}</span></div>
-            <div class="lb-col-marks"><span class="lb-marks-badge ${marksVal < 0 ? 'negative' : ''}">${marksText}</span></div>
-          </div>`;
-        }).join('');
-
-    modal.innerHTML = `
-      <div class="custom-modal-box leaderboard-modal-box">
-        <div class="lb-modal-header">
-          <div class="lb-modal-title-group">
-            <h3 class="lb-modal-title">🏆 Section Leaderboard ${isLoading ? '<span style="font-size:0.78rem;color:#2563eb;font-weight:600;margin-left:4px;">(Refreshing...)</span>' : ''}</h3>
-            <span class="lb-modal-subtitle">${escapeHTML(curSecTitle)} · ${candidates.length} Candidate${candidates.length === 1 ? '' : 's'}</span>
-          </div>
-          <button type="button" class="lb-close-btn" onclick="closeLeaderboardModal()" title="Close">✕</button>
-        </div>
-        <div class="lb-table-wrap">
-          <div class="lb-table-header">
-            <div class="lb-col-rank">Rank</div>
-            <div class="lb-col-name">Name</div>
-            <div class="lb-col-school">School Name</div>
-            <div class="lb-col-class">Class&amp;Sec</div>
-            <div class="lb-col-marks">Marks</div>
-          </div>
-          <div class="lb-candidate-list">${rowsHTML}</div>
-        </div>
-        <div class="modal-btn-row" style="margin-top:12px;">
-          <button type="button" class="modal-btn-confirm-cancel" onclick="closeLeaderboardModal()" style="width:100%;height:42px;border-radius:10px;font-weight:700;">Close Leaderboard</button>
-        </div>
-      </div>
-    `;
-  };
-
-  buildModalContent(true);
-  modal.style.display = 'flex';
-
-  await fetchAndRenderSidebarToppers();
-  buildModalContent(false);
 };
 
-window.closeLeaderboardModal = function() {
-  const modal = $('modal-leaderboard');
-  if (modal) modal.style.display = 'none';
+window.toggleMarkForReview = function() {
+  cancelAutoAdvance();
+  const s = CBTState.sections[CBTState.currentYearIndex];
+  if (!s || s.submitted) return;
+  const qIdx = CBTState.currentQuestion;
+  if (!Array.isArray(CBTState.markedQuestions)) CBTState.markedQuestions = new Array(CBTState.questions.length).fill(false);
+  CBTState.markedQuestions[qIdx] = !CBTState.markedQuestions[qIdx];
+  loadQuestion();
 };
 
-function renderSidebarToppers(toppersArray) { 
-  const container = $('sidebar-toppers'), listEl = $('sidebar-toppers-list');
-  if (!container || !listEl) return;
-  let realToppers = (toppersArray || []).filter(t => t && (t.studentName || t.name) && String(t.studentName || t.name).trim() !== "" && String(t.studentName || t.name).toLowerCase() !== "awaiting...");
-  
-  const getMarks = t => parseFloat(t.obtainedScore ?? t.score ?? t.totalMarks ?? t.marks ?? 0) || 0; 
-  const getAccuracy = t => parseFloat((t.accuracy || "0").toString().replace("%", "")) || 0; 
-  realToppers.sort((a, b) => (getMarks(b) - getMarks(a)) || (getAccuracy(b) - getAccuracy(a))); 
-  
-  const top7 = realToppers.slice(0, 7);
-  const buildCardHTML = (t, idx) => {
-    const rank = idx + 1;
-    let cardTheme = rank === 1 ? 'rank-1' : (rank === 2 ? 'rank-2' : (rank === 3 ? 'rank-3' : 'rank-rest'));
-    let badgeText = rank <= 3 ? `${rank}` : `#${rank}`;
-    let rawName = (t.studentName || t.name || '').replace(/\s*\(Reload\s*Dropout\)/gi, '').trim();
-    const name = escapeHTML(rawName), marksVal = getMarks(t), marksText = `${marksVal} ${marksVal === 1 ? 'Mark' : 'Marks'}`;
-    let cls = (t.studentClass || t.classVal || "").toString().replace(/^Class\s*/i, '').trim();
-    let sec = (t.studentSection || t.sectionVal || "").toString().replace(/^Sec\s*/i, '').trim();
-    const clsSec = (cls && sec) ? `${cls}-${sec}` : (cls || sec || ""), school = escapeHTML((t.schoolName || t.school || "").toString().trim());
-    return `<div class="tp6-compact-card ${cardTheme}"><span class="tp6-badge-shape">${badgeText}</span><span class="tp6-name-text" title="${name}">${name}</span>${marksText ? `<span class="tp6-pipe">|</span><span class="tp6-score-text">${marksText}</span>` : ''}${clsSec ? `<span class="tp6-pipe">|</span><span class="tp6-class-text">${clsSec}</span>` : ''}${school ? `<span class="tp6-school-tag">${school}</span>` : ''}</div>`;
-  };
-
-  let cardsHTML = top7.map((t, i) => buildCardHTML(t, i)).join('');
-  if (top7.length < 7) {
-    cardsHTML += `<div class="tp6-compact-card tp6-next-card"><span class="tp6-next-trophy">🏆</span><span class="tp6-next-text">You Could Be Next!</span></div>`;
-  }
-
-  listEl.innerHTML = `<div class="tp6-row">${cardsHTML}</div>`;
-  container.style.display = 'flex';
+/* ==========================================================================
+   SECTION 8: QUESTION RENDERING, PALETTE & EXPLANATION DRAWER
+   ========================================================================== */
+function isAnswerCorrect(qIdx) {
+  if (CBTState.userAnswers[qIdx] === null) return false;
+  const q = CBTState.questions[qIdx];
+  return (q.options[CBTState.userAnswers[qIdx]] ?? "").toString().trim().toLowerCase() === (q.correctAnswerText ?? "").toString().trim().toLowerCase();
 }
 
-function calculateCurrentExamScore() {
-  let s = CBTState.sections[CBTState.currentYearIndex];
-  if (!s) return 0;
-  let sc = 0;
+const getCorrectIndex = qIdx => textToIndex(CBTState.questions[qIdx].correctAnswerText, CBTState.questions[qIdx].options);
+
+window.loadQuestion = () => {
+  CBTState.visitedQuestions[CBTState.currentQuestion] = true;
+  const s = CBTState.sections[CBTState.currentYearIndex], qy = CBTState.currentQuestion - s.start, tot = s.end - s.start, curQ = CBTState.questions[CBTState.currentQuestion];
+  if ($('q-number')) $('q-number').innerText = (window.innerWidth <= 640) ? `Q${qy + 1} of ${tot}` : `Question ${qy + 1} of ${tot}`;
+  const tagEl = $('q-tag-pill');
+  if (tagEl) tagEl.innerText = (curQ?.tag?.trim().length > 0) ? curQ.tag.trim().toUpperCase() : "CBSE";
+  const pBar = $('qhc-progress-bar');
+  if (pBar && tot > 0) pBar.style.width = `${Math.round(((qy + 1) / tot) * 100)}%`;
+
+  const isMarked = !!(CBTState.markedQuestions && CBTState.markedQuestions[CBTState.currentQuestion]);
+  const reviewPill = isMarked ? `<span class="q-marked-inline-pill">★ Marked for Review</span>` : '';
+  let baseText = `<span style="font-weight:800;color:var(--q-num-color);margin-right:6px;">Q${qy + 1}.</span>${escapeHTML(curQ.question)}${reviewPill}`;
+  if (curQ.image) baseText += `<div class="question-image-wrap" style="margin:8px 0 12px 0;text-align:left;max-width:100%;"><img src="${curQ.image}" alt="Question Image" style="max-width:100%;max-height:220px;border-radius:8px;border:1px solid var(--border-color);object-fit:contain;display:block;"></div>`;
+  if ($('q-text')) $('q-text').innerHTML = baseText;
+
+  const ol = $('q-options'), isL = CBTState.lockedAnswers[CBTState.currentQuestion] || s.submitted;
+  const userChoice = CBTState.userAnswers[CBTState.currentQuestion], ci = getCorrectIndex(CBTState.currentQuestion), lt = ['A', 'B', 'C', 'D', 'E'];
+  if (ol) {
+    ol.innerHTML = curQ.options.map((opt, i) => {
+      let cls = "", badgeHtml = "";
+      if (isL && userChoice !== null) {
+        if (i === ci && userChoice === i) { cls = "disabled-label correct-answer"; badgeHtml = `<span class="option-status-pill correct">Your Answer (Correct) ✓</span>`; }
+        else if (i === ci) { cls = "disabled-label correct-answer"; badgeHtml = `<span class="option-status-pill correct">Correct Answer ✓</span>`; }
+        else if (userChoice === i) { cls = "disabled-label wrong-answer"; badgeHtml = `<span class="option-status-pill wrong">Your Answer (Incorrect) ✕</span>`; }
+        else cls = "disabled-label";
+      } else if (userChoice === i) cls = "selected" + (isL ? " disabled-label" : "");
+      else if (isL) cls = "disabled-label";
+      return `<li><label class="${cls}" ontouchend="handleOptionDoubleTap(event, ${i})" ondblclick="handleOptionDesktopDblClick(event, ${i})"><div class="option-left-content"><input type="radio" name="option" value="${i}" ${userChoice === i ? "checked" : ""} ${isL ? "disabled" : ""} onchange="saveAnswer(${i})"><span class="option-letter">${lt[i]}</span><span class="option-text">${escapeHTML(opt)}</span></div>${badgeHtml}</label></li>`;
+    }).join('');
+  }
+
+  const btnExp = $('btn-toggle-exp'), boxExp = $('explanation-box'), contentExp = $('explanation-text-content');
+  const expChar = $('exp-correct-char'), expVerdict = $('exp-verdict-text'), btnExpLabel = $('btn-exp-label'), wrapper = $('q-explanation-wrapper');
+  if (btnExp && boxExp && contentExp) {
+    boxExp.classList.remove('open'); btnExp.classList.remove('open');
+    if (wrapper) wrapper.classList.remove('has-open-content');
+    if (btnExpLabel) btnExpLabel.innerText = "View Explanation";
+    contentExp.innerHTML = (curQ.explanation?.trim().length > 0)
+      ? curQ.explanation.replace(/^(?:explanation\s*[:\/-]?\s*(?:solution\s*[:\/-]?\s*)?)/i, '').trim()
+      : `The correct answer is option <strong>(${lt[ci]}) ${escapeHTML(curQ.correctAnswerText)}</strong>.`;
+    if (expChar) expChar.innerText = lt[ci];
+    if (isL) {
+      btnExp.classList.remove('disabled');
+      if (expVerdict) expVerdict.innerHTML = (userChoice === ci) ? `<strong>Well done!</strong> Great effort.` : `<strong>Review the solution above to understand the concept.</strong>`;
+    } else btnExp.classList.add('disabled');
+  }
+
+  if ($('btn-prev')) $('btn-prev').disabled = CBTState.currentQuestion === s.start;
+  if ($('btn-clear')) $('btn-clear').disabled = userChoice === null || isL;
+  const btnRev = $('btn-review'), btnRevLbl = $('btn-review-label');
+  if (btnRev) {
+    btnRev.disabled = s.submitted;
+    btnRev.classList.toggle('active-marked', isMarked);
+    if (btnRevLbl) btnRevLbl.innerText = isMarked ? 'MARKED ★' : 'REVIEW';
+  }
+  const nb = $('btn-next');
+  if (nb) {
+    if (s.submitted) { nb.innerHTML = `<span>NEXT QUESTION</span>`; nb.disabled = CBTState.currentQuestion === s.end - 1; }
+    else nb.innerHTML = (CBTState.currentQuestion === s.end - 1) ? `<span>SUBMIT SECTION &rarr;</span>` : `<span>SAVE &amp; NEXT &rarr;</span>`;
+  }
+  updatePalette(); updateUserDynamicRank(); placeActionMatrix(); saveSessionToLocalStorage();
+};
+
+window.saveAnswer = i => {
+  cancelAutoAdvance();
+  if (CBTState.lockedAnswers[CBTState.currentQuestion] || CBTState.sections[CBTState.currentYearIndex].submitted) return;
+  CBTState.userAnswers[CBTState.currentQuestion] = i;
+  triggerFeedbackSectionAnimation();
+  if ($('btn-clear')) $('btn-clear').disabled = false;
+  if (!CBTState.sectionToppersFetched[CBTState.currentYearIndex]) {
+    CBTState.sectionToppersFetched[CBTState.currentYearIndex] = true;
+    fetchAndRenderSidebarToppers();
+  }
+  loadQuestion();
+  if (CBTState.isTimerFrozen && $('timer-box')) $('timer-box').classList.add('timer-frozen');
+};
+
+window.clearResponse = () => {
+  cancelAutoAdvance();
+  if (CBTState.lockedAnswers[CBTState.currentQuestion] || CBTState.sections[CBTState.currentYearIndex].submitted) return;
+  CBTState.userAnswers[CBTState.currentQuestion] = null;
+  loadQuestion();
+};
+
+window.nextQuestion = () => {
+  cancelAutoAdvance();
+  if (CBTState.userAnswers[CBTState.currentQuestion] !== null && !CBTState.sections[CBTState.currentYearIndex].submitted) {
+    CBTState.lockedAnswers[CBTState.currentQuestion] = true;
+  }
+  if (CBTState.currentQuestion < CBTState.sections[CBTState.currentYearIndex].end - 1) {
+    CBTState.currentQuestion++;
+    loadQuestion();
+  } else if (!CBTState.sections[CBTState.currentYearIndex].submitted) showSubmitModal();
+};
+
+window.prevQuestion = () => {
+  cancelAutoAdvance();
+  if (CBTState.currentQuestion > CBTState.sections[CBTState.currentYearIndex].start) {
+    CBTState.currentQuestion--;
+    loadQuestion();
+  }
+};
+
+window.jumpToQuestion = i => { cancelAutoAdvance(); CBTState.currentQuestion = i; loadQuestion(); };
+
+window.filterPalette = type => {
+  CBTState.currentFilter = type;
+  document.querySelectorAll('.palette-filter-bar .filter-pill-btn').forEach(btn => btn.classList.remove('active'));
+  const active = $('filter-' + type);
+  if (active) active.classList.add('active');
+  updatePalette();
+};
+
+function updatePalette() {
+  const s = CBTState.sections[CBTState.currentYearIndex], g = $('palette-grid');
+  if (!g || !s) return;
+  let rc = 0, wc = 0, sc = 0, html = '';
   for (let i = s.start; i < s.end; i++) {
-    if (CBTState.userAnswers[i] !== null && (CBTState.lockedAnswers[i] || s.submitted)) {
-      if (isAnswerCorrect(i)) sc += getCorrectMarks();
-      else sc -= getIncorrectMarks();
+    const isAnswered = CBTState.userAnswers[i] !== null;
+    const isLockedOrSub = CBTState.lockedAnswers[i] || s.submitted;
+    const isMarked = !!(CBTState.markedQuestions && CBTState.markedQuestions[i]);
+    if (isAnswered && isLockedOrSub) {
+      if (isAnswerCorrect(i)) { rc++; sc += getCorrectMarks(); }
+      else { wc++; sc -= getIncorrectMarks(); }
     }
-  }
-  return Number((sc - (CBTState.securityWarnings * getPenaltyMarks())).toFixed(2));
-}
+    const baseState = CBTState.visitedQuestions[i] ? (isAnswered ? 'answered' : 'not-answered') : 'unvisited';
+    const isEvaluatedWrong = isLockedOrSub && isAnswered && !isAnswerCorrect(i);
+    let dsp = isEvaluatedWrong ? 'wrong' : (isMarked ? 'marked' : baseState);
+    const extraMarkedAns = (isMarked && isAnswered && !isEvaluatedWrong) ? ' has-answer' : '';
 
-function updateUserDynamicRank() {
-  if (!CBTState.allFetchedRecords || CBTState.allFetchedRecords.length === 0) return;
-  const currentScore = calculateCurrentExamScore(), getMarks = t => parseFloat(t.obtainedScore ?? t.score ?? t.totalMarks ?? t.marks ?? 0) || 0;
-  const validScores = CBTState.allFetchedRecords.filter(t => t && (t.studentName || t.name)).map(getMarks);
-  if (validScores.length === 0) return;
-  let higherCount = 0;
-  validScores.forEach(score => { if (score > currentScore) higherCount++; });
-  const rankStr = `${higherCount + 1} / ${validScores.length + 1}`, rankBadge = $('user-current-rank-badge'), rankText = $('user-current-rank-text'), rsRankVal = $('lbl-rs-rank-val');
-  if (rankBadge && rankText) { rankText.innerText = rankStr; rankBadge.style.display = 'inline-flex'; }
-  if (rsRankVal) rsRankVal.innerText = rankStr;
-}
-
-window.handleSectionProgression = function() {
-  if (CBTState.currentYearIndex < CBTState.sections.length - 1) {
-    executeProgressionAdvance();
-  } else {
-    showFinalCumulativeEvaluation();
-  }
-};
-
-function shuffleArray(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } }
-
-function showToastAlert(m) { 
-  let t = $('custom-alert-toast'), txt = $('custom-alert-text'); 
-  if (t && txt) { txt.innerHTML = `${ICON_ALERT} ${m}`; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3500); } 
-}
-
-function triggerVerifyModal(type) { 
-  const modal = $('verify-resource-modal'), heading = $('verify-modal-heading'), text = $('verify-modal-text'), actionBtn = $('verify-proceed-action-btn'); 
-  if (!modal) return;
-  modal.style.display = 'flex'; 
-  if (type === 'yt') { 
-    CBTState.activeResourceUrl = getYoutubeUrl(); 
-    if (heading) heading.innerText = "Watch Video Lesson?"; 
-    if (text) text.innerText = "Open educational video tutorial in a new tab?"; 
-    if (actionBtn) { actionBtn.innerText = "Watch Video"; actionBtn.onclick = () => { window.open(CBTState.activeResourceUrl, '_blank'); closeVerifyModal(); }; }
-  } else if (type === 'notes') {
-    CBTState.activeResourceUrl = getNotesUrl(); 
-    if (heading) heading.innerText = "Open Study Notes?"; 
-    if (text) text.innerText = "Open study notes in a new tab while keeping your exam active?"; 
-    if (actionBtn) { actionBtn.innerText = "Open Notes"; actionBtn.onclick = () => { window.open(CBTState.activeResourceUrl, '_blank'); closeVerifyModal(); }; }
-  } else if (type === 'back') {
-    if (heading) heading.innerText = "Leave Exam Session?"; 
-    if (text) text.innerText = "Are you sure you want to go back? Your current progress is saved."; 
-    if (actionBtn) { 
-      actionBtn.innerText = "Leave"; 
-      actionBtn.onclick = () => { 
-        closeVerifyModal(); 
-        goPageBack(); 
-      }; 
+    let flt = false;
+    if (CBTState.currentFilter !== 'all') {
+      if (CBTState.currentFilter === 'answered' && !isAnswered) flt = true;
+      else if (CBTState.currentFilter === 'not-answered' && baseState !== 'not-answered') flt = true;
+      else if (CBTState.currentFilter === 'marked' && !isMarked) flt = true;
+      else if (CBTState.currentFilter === 'unvisited' && baseState !== 'unvisited') flt = true;
     }
+    const badgeOverlay = isEvaluatedWrong
+      ? `<span class="badge-status-cross">✕</span>`
+      : (isMarked && isAnswered ? `<span class="badge-status-saved" title="Answered & Marked for Review">✓</span>` : '');
+    html += `<button type="button" class="palette-btn dsp-${dsp}${extraMarkedAns}${i === CBTState.currentQuestion ? ' current-question' : ''}${flt ? ' filtered-out' : ''}" onclick="jumpToQuestion(${i})">${(i - s.start) + 1}${badgeOverlay}</button>`;
   }
-}
-window.triggerVerifyModal = triggerVerifyModal;
-
-function closeVerifyModal() { if ($('verify-resource-modal')) $('verify-resource-modal').style.display = 'none'; }
-window.closeVerifyModal = closeVerifyModal;
-
-function goToHome() { triggerVerifyModal('back'); }
-window.goToHome = goToHome;
-
-window.closeSecurityModal = () => { 
-  if ($('modal-security')) $('modal-security').style.display = 'none'; 
-  const widget = document.querySelector('.sc-widget-container');
-  if (widget) widget.classList.remove('sc-blur-active'); 
-  CBTState.isTimerPaused = false; 
-};
-
-function applySecurityPenalty() { 
-  if (!isProctoringEnabled() || Date.now() - CBTState.lastWT < 1000) return; 
-  CBTState.lastWT = Date.now(); CBTState.securityWarnings++; 
-  if ($('warning-count-display')) $('warning-count-display').innerText = `Total Warnings: ${CBTState.securityWarnings} (Penalty: -${CBTState.securityWarnings * getPenaltyMarks()} Marks)`; 
-  const w = document.querySelector('.sc-widget-container');
-  if (w) w.classList.add('sc-blur-active'); 
-  if ($('modal-security')) $('modal-security').style.display = 'flex'; 
-  CBTState.isTimerPaused = true; updatePalette(); saveSessionToLocalStorage(); 
-}
-
-function handleSpaceBarTripleTap() {
-  const now = Date.now();
-  spacePressTimestamps.push(now);
-  spacePressTimestamps = spacePressTimestamps.filter(t => now - t <= 1200);
-  if (spacePressTimestamps.length >= 3) {
-    spacePressTimestamps = []; CBTState.isTimerFrozen = true;
-    const timerBox = $('timer-box'); if (timerBox) timerBox.classList.add('timer-frozen');
-  }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  const timerBox = $('timer-box');
-  if (timerBox) {
-    timerBox.addEventListener('dblclick', () => {
-      if (CBTState.isTimerFrozen) { CBTState.isTimerFrozen = false; timerBox.classList.remove('timer-frozen'); }
-    });
-  }
-});
-
-['contextmenu', 'copy', 'cut', 'dragstart'].forEach(ev => document.addEventListener(ev, e => { if (isProctoringEnabled() && CBTState.isExamActive) e.preventDefault(); }));
-
-document.addEventListener('keydown', e => {
-  const activeEl = document.activeElement;
-  if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.tagName === 'SELECT' || activeEl.isContentEditable)) return;
-  if (e.code === 'Space' || e.key === ' ' || e.keyCode === 32) {
-    if (CBTState.isExamActive && $('quiz-screen')?.style.display === 'block') { e.preventDefault(); handleSpaceBarTripleTap(); return; }
-  }
-  if (CBTState.isExamActive && $('quiz-screen')?.style.display === 'block') {
-    const key = e.key ? e.key.toUpperCase() : "", keyMap = { 'A': 0, '1': 0, 'B': 1, '2': 1, 'C': 2, '3': 2, 'D': 3, '4': 3 };
-    if (key in keyMap) {
-      e.preventDefault(); const curQ = CBTState.questions[CBTState.currentQuestion];
-      if (curQ?.options && keyMap[key] < curQ.options.length) saveAnswer(keyMap[key]);
-      return;
-    }
-    if (e.key === 'Enter') { e.preventDefault(); nextQuestion(); return; }
-    if (e.key === 'Backspace') { e.preventDefault(); prevQuestion(); return; }
-    if (e.key === 'Delete') { e.preventDefault(); clearResponse(); return; }
-  }
-  if (!CBTState.isExamActive || !isProctoringEnabled()) return;
-  const keyLow = e.key ? e.key.toLowerCase() : "", codeLow = e.code ? e.code.toLowerCase() : "";
-  if (keyLow === 'printscreen' || codeLow === 'printscreen' || e.keyCode === 44 || ((e.metaKey || e.ctrlKey) && e.shiftKey && ['3','4','5','s'].includes(keyLow))) {
-    e.preventDefault(); try { navigator.clipboard.writeText(''); } catch (err) {}
-    applySecurityPenalty(); return false;
-  }
-  let ic = e.ctrlKey || e.metaKey; 
-  if (e.key === 'F12' || e.keyCode === 123 || (ic && e.shiftKey && ['i', 'j', 'c'].includes(keyLow)) || (ic && ['u', 'p', 's', 'r'].includes(keyLow)) || e.key === 'F5') { 
-    e.preventDefault(); applySecurityPenalty(); return false; 
-  }
-});
-
-function handleBlurOrHide() { 
-  if (!CBTState.isExamActive || !isProctoringEnabled() || CBTState.isTimerPaused) return; 
-  if (document.visibilityState === 'hidden' || !document.hasFocus()) applySecurityPenalty(); 
-}
-document.addEventListener("visibilitychange", () => { if (document.visibilityState === 'hidden') handleBlurOrHide(); });
-window.addEventListener("blur", handleBlurOrHide);
-
-function triggerFeedbackSectionAnimation() {
-  const container = $('cbt-interactive-feedback-wrapper');
-  if (container && !container.classList.contains('section-entered')) container.classList.add('section-entered');
-  if (!CBTState.hasFetchedFeedback) { CBTState.hasFetchedFeedback = true; fetchFeedbackSubmissions(); }
-}
-
-function setupFeedbackSectionObserver() {
-  const container = $('cbt-interactive-feedback-wrapper');
-  if (!container) return;
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) { triggerFeedbackSectionAnimation(); observer.unobserve(entry.target); }
-    });
-  }, { rootMargin: "150px 0px", threshold: 0.05 });
-  observer.observe(container);
-}
-
-function isAnswerCorrect(qIdx) { 
-  if (CBTState.userAnswers[qIdx] === null) return false; 
-  let q = CBTState.questions[qIdx]; 
-  return (q.options[CBTState.userAnswers[qIdx]] ?? "").toString().trim().toLowerCase() === (q.correctAnswerText ?? "").toString().trim().toLowerCase(); 
-}
-
-function getCorrectIndex(qIdx) { return textToIndex(CBTState.questions[qIdx].correctAnswerText, CBTState.questions[qIdx].options); }
-
-function updateTimerDisplay() { 
-  let t = CBTState.sectionTimes[CBTState.currentYearIndex] || 0, m = Math.floor(t / 60), s = t % 60, timeStr = `${m}:${s < 10 ? '0' : ''}${s}`; 
-  if ($('time-left'))$('time-left').innerText = timeStr; 
-}
-
-function startTimer() { 
-  if (CBTState.timerInterval) clearInterval(CBTState.timerInterval); 
-  let ticks = 0;
-  CBTState.timerInterval = setInterval(() => { 
-    if (CBTState.isTimerPaused || CBTState.isTimerFrozen || !CBTState.isExamActive || (CBTState.sections[CBTState.currentYearIndex]?.submitted)) return; 
-    if (CBTState.sectionTimes[CBTState.currentYearIndex] > 0) { 
-      CBTState.sectionTimes[CBTState.currentYearIndex]--; 
-      CBTState.sections[CBTState.currentYearIndex].timeSpent++; 
-    } 
-    updateTimerDisplay(); ticks++;
-    if (ticks % 5 === 0) saveSessionToLocalStorage(); 
-    if (CBTState.sectionTimes[CBTState.currentYearIndex] <= 0) autoLockAndSubmitSection(); 
-  }, 1000); 
-}
-
-function autoLockAndSubmitSection() { 
-  cancelAutoAdvance(); CBTState.isTimerPaused = true; 
-  let m = $('modal-timeout'); 
-  if (m) m.style.display = 'flex'; 
-  setTimeout(() => { if (m) m.style.display = 'none'; if (typeof window.processSectionSubmission === 'function') window.processSectionSubmission(); }, 2000); 
+  g.innerHTML = html;
+  const calculatedScore = Number((sc - (CBTState.securityWarnings * getPenaltyMarks())).toFixed(2));
+  if ($('stat-right')) $('stat-right').innerText = rc;
+  if ($('stat-wrong')) $('stat-wrong').innerText = wc;
+  if ($('stat-score')) $('stat-score').innerText = calculatedScore;
 }
 
 window.toggleExplanation = function() {
-  let isL = CBTState.lockedAnswers[CBTState.currentQuestion] || CBTState.sections[CBTState.currentYearIndex].submitted;
+  const isL = CBTState.lockedAnswers[CBTState.currentQuestion] || CBTState.sections[CBTState.currentYearIndex].submitted;
   if (!isL) { showToastAlert("Select and submit an answer to view the explanation."); return; }
   cancelAutoAdvance();
-  const box = $('explanation-box'), btn =$('btn-toggle-exp'), label = $('btn-exp-label'), wrapper =$('q-explanation-wrapper');
+  const box = $('explanation-box'), btn = $('btn-toggle-exp'), label = $('btn-exp-label'), wrapper = $('q-explanation-wrapper');
   if (!box) return;
   const isOpen = box.classList.contains('open');
   box.classList.toggle('open', !isOpen);
@@ -955,8 +927,106 @@ window.toggleExplanation = function() {
   if (wrapper) wrapper.classList.toggle('has-open-content', !isOpen);
 };
 
+/* ==========================================================================
+   SECTION 9: TIMERS, PROCTORING, GESTURES & KEYBOARD SHORTCUTS
+   ========================================================================== */
+function updateTimerDisplay() {
+  const t = CBTState.sectionTimes[CBTState.currentYearIndex] || 0, m = Math.floor(t / 60), s = t % 60;
+  if ($('time-left')) $('time-left').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+}
+
+function startTimer() {
+  if (CBTState.timerInterval) clearInterval(CBTState.timerInterval);
+  let ticks = 0;
+  CBTState.timerInterval = setInterval(() => {
+    if (CBTState.isTimerPaused || CBTState.isTimerFrozen || !CBTState.isExamActive || CBTState.sections[CBTState.currentYearIndex]?.submitted) return;
+    if (CBTState.sectionTimes[CBTState.currentYearIndex] > 0) {
+      CBTState.sectionTimes[CBTState.currentYearIndex]--;
+      CBTState.sections[CBTState.currentYearIndex].timeSpent++;
+    }
+    updateTimerDisplay();
+    if (++ticks % 5 === 0) saveSessionToLocalStorage();
+    if (CBTState.sectionTimes[CBTState.currentYearIndex] <= 0) autoLockAndSubmitSection();
+  }, 1000);
+}
+
+function autoLockAndSubmitSection() {
+  cancelAutoAdvance();
+  CBTState.isTimerPaused = true;
+  const m = $('modal-timeout');
+  if (m) m.style.display = 'flex';
+  setTimeout(() => { if (m) m.style.display = 'none'; window.processSectionSubmission(); }, 2000);
+}
+
+window.closeSecurityModal = () => {
+  if ($('modal-security')) $('modal-security').style.display = 'none';
+  document.querySelector('.sc-widget-container')?.classList.remove('sc-blur-active');
+  CBTState.isTimerPaused = false;
+};
+
+function applySecurityPenalty() {
+  if (!isProctoringEnabled() || Date.now() - CBTState.lastWT < 1000) return;
+  CBTState.lastWT = Date.now();
+  CBTState.securityWarnings++;
+  if ($('warning-count-display')) $('warning-count-display').innerText = `Total Warnings: ${CBTState.securityWarnings} (Penalty: -${CBTState.securityWarnings * getPenaltyMarks()} Marks)`;
+  document.querySelector('.sc-widget-container')?.classList.add('sc-blur-active');
+  if ($('modal-security')) $('modal-security').style.display = 'flex';
+  CBTState.isTimerPaused = true;
+  updatePalette(); saveSessionToLocalStorage();
+}
+
+function handleSpaceBarTripleTap() {
+  const now = Date.now();
+  spacePressTimestamps.push(now);
+  spacePressTimestamps = spacePressTimestamps.filter(t => now - t <= 1200);
+  if (spacePressTimestamps.length >= 3) {
+    spacePressTimestamps = [];
+    CBTState.isTimerFrozen = true;
+    $('timer-box')?.classList.add('timer-frozen');
+  }
+}
+
+['contextmenu', 'copy', 'cut', 'dragstart'].forEach(ev => document.addEventListener(ev, e => { if (isProctoringEnabled() && CBTState.isExamActive) e.preventDefault(); }));
+
+document.addEventListener('keydown', e => {
+  const activeEl = document.activeElement;
+  if (activeEl && (['INPUT', 'TEXTAREA', 'SELECT'].includes(activeEl.tagName) || activeEl.isContentEditable)) return;
+  if ((e.code === 'Space' || e.key === ' ' || e.keyCode === 32) && CBTState.isExamActive && $('quiz-screen')?.style.display === 'block') {
+    e.preventDefault(); handleSpaceBarTripleTap(); return;
+  }
+  if (CBTState.isExamActive && $('quiz-screen')?.style.display === 'block') {
+    const key = e.key ? e.key.toUpperCase() : "", keyMap = { A: 0, 1: 0, B: 1, 2: 1, C: 2, 3: 2, D: 3, 4: 3 };
+    if (key in keyMap) {
+      e.preventDefault();
+      const curQ = CBTState.questions[CBTState.currentQuestion];
+      if (curQ?.options && keyMap[key] < curQ.options.length) saveAnswer(keyMap[key]);
+      return;
+    }
+    if (key === 'M') { e.preventDefault(); toggleMarkForReview(); return; }
+    if (e.key === 'Enter') { e.preventDefault(); nextQuestion(); return; }
+    if (e.key === 'Backspace') { e.preventDefault(); prevQuestion(); return; }
+    if (e.key === 'Delete') { e.preventDefault(); clearResponse(); return; }
+  }
+  if (!CBTState.isExamActive || !isProctoringEnabled()) return;
+  const keyLow = e.key ? e.key.toLowerCase() : "", codeLow = e.code ? e.code.toLowerCase() : "", ic = e.ctrlKey || e.metaKey;
+  if (keyLow === 'printscreen' || codeLow === 'printscreen' || e.keyCode === 44 || (ic && e.shiftKey && ['3', '4', '5', 's'].includes(keyLow))) {
+    e.preventDefault(); try { navigator.clipboard.writeText(''); } catch (err) {}
+    applySecurityPenalty(); return false;
+  }
+  if (e.key === 'F12' || e.keyCode === 123 || (ic && e.shiftKey && ['i', 'j', 'c'].includes(keyLow)) || (ic && ['u', 'p', 's', 'r'].includes(keyLow)) || e.key === 'F5') {
+    e.preventDefault(); applySecurityPenalty(); return false;
+  }
+});
+
+function handleBlurOrHide() {
+  if (!CBTState.isExamActive || !isProctoringEnabled() || CBTState.isTimerPaused) return;
+  if (document.visibilityState === 'hidden' || !document.hasFocus()) applySecurityPenalty();
+}
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === 'hidden') handleBlurOrHide(); });
+window.addEventListener("blur", handleBlurOrHide);
+
 function placeActionMatrix() {
-  const matrix = $('action-matrix-slot'), contentArea = $('question-content'), palette =$('palette-column-container');
+  const matrix = $('action-matrix-slot'), contentArea = $('question-content'), palette = $('palette-column-container');
   if (!matrix || !contentArea || !palette) return;
   if (window.innerWidth <= 640) {
     const toppers = $('sidebar-toppers');
@@ -965,14 +1035,10 @@ function placeActionMatrix() {
   } else palette.appendChild(matrix);
 }
 
-const handleAppResize = debounce(() => {
+window.addEventListener('resize', debounce(() => {
   placeActionMatrix();
-  if (CBTState.allFetchedRecords && CBTState.allFetchedRecords.length > 0) renderSidebarToppers(CBTState.allFetchedRecords);
-}, 150);
-
-window.addEventListener('resize', handleAppResize);
-
-let touchStartX = 0, touchStartY = 0, lastOptionTapTime = 0, lastTappedIndex = -1;
+  if (CBTState.allFetchedRecords?.length > 0) renderSidebarToppers(CBTState.allFetchedRecords);
+}, 150));
 
 function setupMobileGestures() {
   const contentArea = $('question-content');
@@ -996,7 +1062,7 @@ window.handleOptionDoubleTap = function(e, idx) {
   if (currentTime - lastOptionTapTime < 350 && lastTappedIndex === idx) {
     e.preventDefault();
     if (!CBTState.lockedAnswers[CBTState.currentQuestion] && !CBTState.sections[CBTState.currentYearIndex].submitted) {
-      if (navigator.vibrate) { try { navigator.vibrate(35); } catch (err) {} }
+      try { navigator.vibrate?.(35); } catch (err) {}
       saveAnswer(idx); CBTState.lockedAnswers[CBTState.currentQuestion] = true; loadQuestion(); scheduleAutoAdvance(2000);
     }
     lastOptionTapTime = 0; lastTappedIndex = -1;
@@ -1010,183 +1076,218 @@ window.handleOptionDesktopDblClick = function(e, idx) {
   }
 };
 
-window.loadQuestion = () => { 
-  CBTState.visitedQuestions[CBTState.currentQuestion] = true; 
-  let s = CBTState.sections[CBTState.currentYearIndex], qy = CBTState.currentQuestion - s.start, tot = s.end - s.start, curQ = CBTState.questions[CBTState.currentQuestion];
-  if ($('q-number'))$('q-number').innerText = (window.innerWidth <= 640) ? `Q${qy + 1} of ${tot}` : `Question ${qy + 1} of ${tot}`;
-  const tagEl = $('q-tag-pill');
-  if (tagEl) tagEl.innerText = (curQ && curQ.tag?.trim().length > 0) ? curQ.tag.trim().toUpperCase() : "CBSE";
-  const pBar = $('qhc-progress-bar');
-  if (pBar && tot > 0) pBar.style.width = `${Math.round(((qy + 1) / tot) * 100)}%`;
-  
-  let baseText = `<span style="font-weight:800;color:var(--q-num-color);margin-right:6px;">Q${qy + 1}.</span>` + escapeHTML(curQ.question); 
-  if (curQ.image) baseText += `<div class="question-image-wrap" style="margin:0 0 12px 0;text-align:left;max-width:100%;"><img src="${curQ.image}" alt="Question Image" style="max-width:100%;max-height:220px;border-radius:8px;border:1px solid var(--border-color);object-fit:contain;display:block;"></div>`; 
-  if ($('q-text'))$('q-text').innerHTML = baseText; 
-
-  let ol = $('q-options'), isL = CBTState.lockedAnswers[CBTState.currentQuestion] || s.submitted;
-  let userChoice = CBTState.userAnswers[CBTState.currentQuestion], ci = getCorrectIndex(CBTState.currentQuestion), lt = ['A', 'B', 'C', 'D', 'E'];
-  if (ol) {
-    ol.innerHTML = ''; 
-    curQ.options.forEach((opt, i) => { 
-      let cls = "", badgeHtml = "";
-      if (isL && userChoice !== null) { 
-        if (i === ci && userChoice === i) { cls = "disabled-label correct-answer"; badgeHtml = `<span class="option-status-pill correct">Your Answer (Correct) ✓</span>`; }
-        else if (i === ci) { cls = "disabled-label correct-answer"; badgeHtml = `<span class="option-status-pill correct">Correct Answer ✓</span>`; }
-        else if (userChoice === i) { cls = "disabled-label wrong-answer"; badgeHtml = `<span class="option-status-pill wrong">Your Answer (Incorrect) ✕</span>`; }
-        else cls = "disabled-label";
-      } else if (userChoice === i) cls = "selected" + (isL ? " disabled-label" : ""); 
-      else if (isL) cls = "disabled-label"; 
-      ol.innerHTML += `<li><label class="${cls}" ontouchend="handleOptionDoubleTap(event, ${i})" ondblclick="handleOptionDesktopDblClick(event, ${i})"><div class="option-left-content"><input type="radio" name="option" value="${i}" ${userChoice === i ? "checked" : ""} ${isL ? "disabled" : ""} onchange="saveAnswer(${i})"><span class="option-letter">${lt[i]}</span><span class="option-text">${escapeHTML(opt)}</span></div>${badgeHtml}</label></li>`; 
-    }); 
-  }
-
-  const btnExp = $('btn-toggle-exp'), boxExp = $('explanation-box'), contentExp =$('explanation-text-content');
-  const expChar = $('exp-correct-char'), expVerdict =$('exp-verdict-text'), btnExpLabel = $('btn-exp-label'), wrapper =$('q-explanation-wrapper');
-  if (btnExp && boxExp && contentExp) {
-    boxExp.classList.remove('open'); btnExp.classList.remove('open');
-    if (wrapper) wrapper.classList.remove('has-open-content');
-    if (btnExpLabel) btnExpLabel.innerText = "View Explanation";
-    contentExp.innerHTML = (curQ.explanation?.trim().length > 0) ? curQ.explanation.replace(/^(?:explanation\s*[:\/-]?\s*(?:solution\s*[:\/-]?\s*)?)/i, '').trim() : `The correct answer is option <strong>(${lt[ci]}) ${escapeHTML(curQ.correctAnswerText)}</strong>.`;
-    if (expChar) expChar.innerText = lt[ci];
-    if (isL) {
-      btnExp.classList.remove('disabled');
-      if (expVerdict) expVerdict.innerHTML = (userChoice === ci) ? `<strong>Well done!</strong> Great effort.` : `<strong>Review the solution above to understand the concept.</strong>`;
-    } else btnExp.classList.add('disabled');
-  }
-
-  if ($('btn-prev'))$('btn-prev').disabled = CBTState.currentQuestion === s.start; 
-  if ($('btn-clear'))$('btn-clear').disabled = userChoice === null || isL; 
-  let nb = $('btn-next'); 
-  if (nb) {
-    if (s.submitted) { nb.innerHTML = `<span>NEXT QUESTION</span>`; nb.disabled = CBTState.currentQuestion === s.end - 1; }
-    else nb.innerHTML = (CBTState.currentQuestion === s.end - 1) ? `<span>SUBMIT SECTION →</span>` : `<span>SAVE & NEXT →</span>`; 
-  }
-  updatePalette(); updateUserDynamicRank(); placeActionMatrix(); saveSessionToLocalStorage(); 
-};
-
-window.saveAnswer = i => { 
-  cancelAutoAdvance(); 
-  if (CBTState.lockedAnswers[CBTState.currentQuestion] || CBTState.sections[CBTState.currentYearIndex].submitted) return; 
-  CBTState.userAnswers[CBTState.currentQuestion] = i; 
-  triggerFeedbackSectionAnimation();
-  if ($('btn-clear'))$('btn-clear').disabled = false; 
-  if (!CBTState.sectionToppersFetched[CBTState.currentYearIndex]) {
-    CBTState.sectionToppersFetched[CBTState.currentYearIndex] = true;
-    fetchAndRenderSidebarToppers();
-  }
-  loadQuestion(); 
-  if (CBTState.isTimerFrozen) { const timerBox = $('timer-box'); if (timerBox) timerBox.classList.add('timer-frozen'); }
-};
-
-window.clearResponse = () => { 
-  cancelAutoAdvance();
-  if (CBTState.lockedAnswers[CBTState.currentQuestion] || CBTState.sections[CBTState.currentYearIndex].submitted) return; 
-  CBTState.userAnswers[CBTState.currentQuestion] = null; 
-  loadQuestion(); 
-};
-
-window.nextQuestion = () => { 
-  cancelAutoAdvance();
-  if (CBTState.userAnswers[CBTState.currentQuestion] !== null && !CBTState.sections[CBTState.currentYearIndex].submitted) CBTState.lockedAnswers[CBTState.currentQuestion] = true; 
-  if (CBTState.currentQuestion < CBTState.sections[CBTState.currentYearIndex].end - 1) { CBTState.currentQuestion++; loadQuestion(); } 
-  else if (!CBTState.sections[CBTState.currentYearIndex].submitted) showSubmitModal(); 
-};
-
-window.prevQuestion = () => { 
-  cancelAutoAdvance();
-  if (CBTState.currentQuestion > CBTState.sections[CBTState.currentYearIndex].start) { CBTState.currentQuestion--; loadQuestion(); } 
-};
-
-window.jumpToQuestion = i => { cancelAutoAdvance(); CBTState.currentQuestion = i; loadQuestion(); };
-
-window.filterPalette = type => { 
-  CBTState.currentFilter = type; 
-  document.querySelectorAll('.palette-filter-bar .filter-pill-btn').forEach(btn => btn.classList.remove('active')); 
-  const active = $('filter-' + type); if (active) active.classList.add('active'); 
-  updatePalette(); 
-};
-
-function updatePalette() { 
-  let s = CBTState.sections[CBTState.currentYearIndex], g = $('palette-grid'); 
-  if (!g) return; 
-  g.innerHTML = ''; 
-  let rc = 0, wc = 0, sc = 0; 
-  for (let i = s.start; i < s.end; i++) { 
-    if (CBTState.userAnswers[i] !== null && (CBTState.lockedAnswers[i] || s.submitted)) { 
-      if (isAnswerCorrect(i)) { rc++; sc += getCorrectMarks(); } 
-      else { wc++; sc -= getIncorrectMarks(); } 
-    } 
-    let cls = CBTState.visitedQuestions[i] ? (CBTState.userAnswers[i] !== null ? 'answered' : 'not-answered') : 'unvisited'; 
-    let isEvaluatedWrong = (CBTState.lockedAnswers[i] || s.submitted) && CBTState.userAnswers[i] !== null && !isAnswerCorrect(i); 
-    let dsp = isEvaluatedWrong ? 'wrong' : cls, flt = false; 
-    if (CBTState.currentFilter !== 'all') { 
-      if (CBTState.currentFilter === 'answered' && cls !== 'answered' && !isEvaluatedWrong) flt = true; 
-      else if (CBTState.currentFilter === 'not-answered' && cls !== 'not-answered') flt = true; 
-      else if (CBTState.currentFilter === 'unvisited' && cls !== 'unvisited') flt = true; 
-    } 
-    g.innerHTML += `<button type="button" class="palette-btn dsp-${dsp}${i === CBTState.currentQuestion ? ' current-question' : ''}${flt ? ' filtered-out' : ''}" onclick="jumpToQuestion(${i})">${(i - s.start) + 1}${isEvaluatedWrong ? `<span class="badge-status-cross">✕</span>` : ''}</button>`; 
-  } 
-  let calculatedScore = Number((sc - (CBTState.securityWarnings * getPenaltyMarks())).toFixed(2));
-  if ($('stat-right'))$('stat-right').innerText = rc; 
-  if ($('stat-wrong'))$('stat-wrong').innerText = wc; 
-  if ($('stat-score'))$('stat-score').innerText = calculatedScore; 
+/* ==========================================================================
+   SECTION 10: LEADERBOARD, TOP PERFORMERS & DYNAMIC RANK
+   ========================================================================== */
+async function fetchAndRenderSidebarToppers() {
+  const fetchRecordUrl = getFetchRecordOfCBT(), container = $('sidebar-toppers');
+  if (!fetchRecordUrl) return;
+  try {
+    const testName = getTestName(), sec = CBTState.sections[CBTState.currentYearIndex], currentSection = sec ? `${sec.year} - ${sec.title}` : "";
+    const res = await fetch(`${fetchRecordUrl}?testName=${encodeURIComponent(testName)}&currentSection=${encodeURIComponent(currentSection)}&_t=${Date.now()}`);
+    const data = await res.json();
+    let recordsList = data ? (data.records || data.top7 || data.top5 || data.toppers || (Array.isArray(data) ? data : [])) : [];
+    if ((!recordsList || recordsList.length === 0) && currentSection) {
+      try {
+        const broadRes = await fetch(`${fetchRecordUrl}?testName=${encodeURIComponent(testName)}&_t=${Date.now()}`);
+        const broadData = await broadRes.json();
+        recordsList = broadData ? (broadData.records || broadData.top7 || broadData.top5 || broadData.toppers || (Array.isArray(broadData) ? broadData : [])) : [];
+      } catch (e) {}
+    }
+    CBTState.allFetchedRecords = recordsList || [];
+    if (recordsList?.length > 0) { renderSidebarToppers(recordsList); updateUserDynamicRank(); }
+    else if (container) container.style.display = 'none';
+  } catch (err) { if (container) container.style.display = 'none'; }
 }
 
-window.showSubmitModal = () => { 
+function getSectionRankedCandidates() {
+  const sec = CBTState.sections[CBTState.currentYearIndex];
+  const curSec = sec ? `${sec.year} - ${sec.title}`.trim().toLowerCase() : "";
+  const list = (CBTState.allFetchedRecords || []).filter(t => {
+    if (!t) return false;
+    const name = String(t.studentName || t.name || "").trim();
+    if (!name || name.toLowerCase() === "awaiting...") return false;
+    const recSec = String(t.currentSection || t.section || "").trim().toLowerCase();
+    return (curSec && recSec) ? (recSec === curSec || recSec.includes(curSec) || curSec.includes(recSec)) : true;
+  });
+  const getMarks = t => parseFloat(t.obtainedScore ?? t.score ?? t.totalMarks ?? t.marks ?? 0) || 0;
+  const getAccuracy = t => parseFloat((t.accuracy || "0").toString().replace("%", "")) || 0;
+  return list.sort((a, b) => (getMarks(b) - getMarks(a)) || (getAccuracy(b) - getAccuracy(a)));
+}
+
+window.openLeaderboardModal = async function() {
+  let modal = $('modal-leaderboard');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'modal-leaderboard';
+    modal.className = 'custom-modal-overlay';
+    modal.onclick = e => { if (e.target === modal) closeLeaderboardModal(); };
+    document.body.appendChild(modal);
+  }
+  const sec = CBTState.sections[CBTState.currentYearIndex];
+  const curSecTitle = sec ? `${sec.year} - ${sec.title}` : "Current Section";
+
+  const buildModalContent = (isLoading = false) => {
+    const candidates = getSectionRankedCandidates();
+    const getMarks = t => parseFloat(t.obtainedScore ?? t.score ?? t.totalMarks ?? t.marks ?? 0) || 0;
+    const rowsHTML = candidates.length === 0
+      ? `<div class="lb-empty-state">${isLoading ? 'Syncing latest records...' : 'No candidate scores recorded for this section yet.'}</div>`
+      : candidates.map((t, idx) => {
+          const rank = idx + 1;
+          const badgeClass = rank === 1 ? 'rank-1' : (rank === 2 ? 'rank-2' : (rank === 3 ? 'rank-3' : 'rank-rest'));
+          const badgeText = rank <= 3 ? `${rank}` : `#${rank}`;
+          const rawName = (t.studentName || t.name || '').replace(/\s*\(Reload\s*Dropout\)/gi, '').trim();
+          const name = escapeHTML(rawName), marksVal = getMarks(t), marksText = `${marksVal % 1 === 0 ? marksVal : marksVal.toFixed(2)}`;
+          const cls = (t.studentClass || t.classVal || "").toString().replace(/^Class\s*/i, '').trim();
+          const sSec = (t.studentSection || t.sectionVal || "").toString().replace(/^Sec\s*/i, '').trim();
+          const clsSec = (cls && sSec) ? `${cls}-${sSec}` : (cls || sSec || "-");
+          const rawSchool = (t.schoolName || t.school || "").toString().trim();
+          const school = escapeHTML(rawSchool && rawSchool.toUpperCase() !== "N/A" ? rawSchool : "-");
+          const isUser = CBTState.studentNameVal && rawName.toLowerCase() === CBTState.studentNameVal.trim().toLowerCase();
+          return `<div class="lb-table-row ${badgeClass} ${isUser ? 'lb-current-user' : ''}">
+            <div class="lb-col-rank"><span class="tp6-badge-shape">${badgeText}</span></div>
+            <div class="lb-col-name" title="${name}"><span class="lb-name-text">${name}</span>${isUser ? `<span class="lb-you-tag">You</span>` : ''}</div>
+            <div class="lb-col-school" title="${school !== '-' ? school : ''}">${school}</div>
+            <div class="lb-col-class"><span class="lb-class-pill">${escapeHTML(clsSec)}</span></div>
+            <div class="lb-col-marks"><span class="lb-marks-badge ${marksVal < 0 ? 'negative' : ''}">${marksText}</span></div>
+          </div>`;
+        }).join('');
+
+    modal.innerHTML = `
+      <div class="custom-modal-box leaderboard-modal-box">
+        <div class="lb-modal-header">
+          <div class="lb-modal-title-group">
+            <h3 class="lb-modal-title">🏆 Section Leaderboard ${isLoading ? '<span style="font-size:0.78rem;color:#2563eb;font-weight:600;margin-left:4px;">(Refreshing...)</span>' : ''}</h3>
+            <span class="lb-modal-subtitle">${escapeHTML(curSecTitle)} · ${candidates.length} Candidate${candidates.length === 1 ? '' : 's'}</span>
+          </div>
+          <button type="button" class="lb-close-btn" onclick="closeLeaderboardModal()" title="Close">✕</button>
+        </div>
+        <div class="lb-table-wrap">
+          <div class="lb-table-header">
+            <div class="lb-col-rank">Rank</div><div class="lb-col-name">Name</div><div class="lb-col-school">School Name</div><div class="lb-col-class">Class&amp;Sec</div><div class="lb-col-marks">Marks</div>
+          </div>
+          <div class="lb-candidate-list">${rowsHTML}</div>
+        </div>
+        <div class="modal-btn-row" style="margin-top:12px;"><button type="button" class="modal-btn-confirm-cancel" onclick="closeLeaderboardModal()" style="width:100%;height:42px;border-radius:10px;font-weight:700;">Close Leaderboard</button></div>
+      </div>`;
+  };
+  buildModalContent(true);
+  modal.style.display = 'flex';
+  await fetchAndRenderSidebarToppers();
+  buildModalContent(false);
+};
+
+window.closeLeaderboardModal = () => { if ($('modal-leaderboard')) $('modal-leaderboard').style.display = 'none'; };
+
+function renderSidebarToppers(toppersArray) {
+  const container = $('sidebar-toppers'), listEl = $('sidebar-toppers-list');
+  if (!container || !listEl) return;
+  const realToppers = (toppersArray || []).filter(t => t && (t.studentName || t.name) && String(t.studentName || t.name).trim() !== "" && String(t.studentName || t.name).toLowerCase() !== "awaiting...");
+  const getMarks = t => parseFloat(t.obtainedScore ?? t.score ?? t.totalMarks ?? t.marks ?? 0) || 0;
+  const getAccuracy = t => parseFloat((t.accuracy || "0").toString().replace("%", "")) || 0;
+  realToppers.sort((a, b) => (getMarks(b) - getMarks(a)) || (getAccuracy(b) - getAccuracy(a)));
+  const top7 = realToppers.slice(0, 7);
+  let cardsHTML = top7.map((t, idx) => {
+    const rank = idx + 1;
+    const cardTheme = rank === 1 ? 'rank-1' : (rank === 2 ? 'rank-2' : (rank === 3 ? 'rank-3' : 'rank-rest'));
+    const badgeText = rank <= 3 ? `${rank}` : `#${rank}`;
+    const rawName = (t.studentName || t.name || '').replace(/\s*\(Reload\s*Dropout\)/gi, '').trim();
+    const name = escapeHTML(rawName), marksVal = getMarks(t), marksText = `${marksVal} ${marksVal === 1 ? 'Mark' : 'Marks'}`;
+    const cls = (t.studentClass || t.classVal || "").toString().replace(/^Class\s*/i, '').trim();
+    const sec = (t.studentSection || t.sectionVal || "").toString().replace(/^Sec\s*/i, '').trim();
+    const clsSec = (cls && sec) ? `${cls}-${sec}` : (cls || sec || ""), school = escapeHTML((t.schoolName || t.school || "").toString().trim());
+    return `<div class="tp6-compact-card ${cardTheme}"><span class="tp6-badge-shape">${badgeText}</span><span class="tp6-name-text" title="${name}">${name}</span>${marksText ? `<span class="tp6-pipe">|</span><span class="tp6-score-text">${marksText}</span>` : ''}${clsSec ? `<span class="tp6-pipe">|</span><span class="tp6-class-text">${clsSec}</span>` : ''}${school ? `<span class="tp6-school-tag">${school}</span>` : ''}</div>`;
+  }).join('');
+  if (top7.length < 7) cardsHTML += `<div class="tp6-compact-card tp6-next-card"><span class="tp6-next-trophy">🏆</span><span class="tp6-next-text">You Could Be Next!</span></div>`;
+  listEl.innerHTML = `<div class="tp6-row">${cardsHTML}</div>`;
+  container.style.display = 'flex';
+}
+
+function calculateCurrentExamScore() {
+  const s = CBTState.sections[CBTState.currentYearIndex];
+  if (!s) return 0;
+  let sc = 0;
+  for (let i = s.start; i < s.end; i++) {
+    if (CBTState.userAnswers[i] !== null && (CBTState.lockedAnswers[i] || s.submitted)) {
+      if (isAnswerCorrect(i)) sc += getCorrectMarks(); else sc -= getIncorrectMarks();
+    }
+  }
+  return Number((sc - (CBTState.securityWarnings * getPenaltyMarks())).toFixed(2));
+}
+
+function updateUserDynamicRank() {
+  if (!CBTState.allFetchedRecords?.length) return;
+  const currentScore = calculateCurrentExamScore(), getMarks = t => parseFloat(t.obtainedScore ?? t.score ?? t.totalMarks ?? t.marks ?? 0) || 0;
+  const validScores = CBTState.allFetchedRecords.filter(t => t && (t.studentName || t.name)).map(getMarks);
+  if (!validScores.length) return;
+  const higherCount = validScores.filter(score => score > currentScore).length;
+  const rankStr = `${higherCount + 1} / ${validScores.length + 1}`;
+  if ($('user-current-rank-badge') && $('user-current-rank-text')) {$('user-current-rank-text').innerText = rankStr;
+    $('user-current-rank-badge').style.display = 'inline-flex';
+  }
+  if ($('lbl-rs-rank-val'))$('lbl-rs-rank-val').innerText = rankStr;
+}
+
+/* ==========================================================================
+   SECTION 11: SECTION SUBMISSION, SCORECARD & CUMULATIVE EVALUATION
+   ========================================================================== */
+window.showSubmitModal = () => {
   cancelAutoAdvance();
-  if (CBTState.userAnswers[CBTState.currentQuestion] !== null && !CBTState.sections[CBTState.currentYearIndex].submitted) CBTState.lockedAnswers[CBTState.currentQuestion] = true; 
-  if ($('submit-modal-text'))$('submit-modal-text').innerText = `Submit responses for ${CBTState.sections[CBTState.currentYearIndex].title}?`; 
-  CBTState.isTimerPaused = true; 
-  if ($('modal-submit'))$('modal-submit').style.display = 'flex'; 
+  if (CBTState.userAnswers[CBTState.currentQuestion] !== null && !CBTState.sections[CBTState.currentYearIndex].submitted) {
+    CBTState.lockedAnswers[CBTState.currentQuestion] = true;
+  }
+  if ($('submit-modal-text'))$('submit-modal-text').innerText = `Submit responses for ${CBTState.sections[CBTState.currentYearIndex].title}?`;
+  CBTState.isTimerPaused = true;
+  if ($('modal-submit'))$('modal-submit').style.display = 'flex';
 };
 window.closeSubmitModal = () => { if ($('modal-submit'))$('modal-submit').style.display = 'none'; CBTState.isTimerPaused = false; };
 window.confirmSubmitExam = () => { if ($('modal-submit'))$('modal-submit').style.display = 'none'; CBTState.isTimerPaused = false; window.processSectionSubmission(); };
 
-window.processSectionSubmission = async function() { 
+window.processSectionSubmission = async function() {
   cancelAutoAdvance();
-  let sec = CBTState.sections[CBTState.currentYearIndex]; 
-  sec.submitted = true; 
-  for (let i = sec.start; i < sec.end; i++) CBTState.lockedAnswers[i] = true; 
-  document.body.classList.remove('exam-in-progress'); 
-  if ($('quiz-screen'))$('quiz-screen').style.display = 'none'; 
-  if ($('unified-nav'))$('unified-nav').style.display = 'none'; 
-  
+  const sec = CBTState.sections[CBTState.currentYearIndex];
+  sec.submitted = true;
+  for (let i = sec.start; i < sec.end; i++) CBTState.lockedAnswers[i] = true;
+  document.body.classList.remove('exam-in-progress');
+  if ($('quiz-screen'))$('quiz-screen').style.display = 'none';
+  if ($('unified-nav'))$('unified-nav').style.display = 'none';
+
   const resScreen = $('result-screen'), loaderBox =$('processing-loader-box'), scFrame = $('capture-scorecard-frame'), sumCard =$('cumulative-matrix-container');
-  if (resScreen) resScreen.style.display = 'block'; 
-  if (loaderBox) loaderBox.style.display = 'flex'; 
-  if (scFrame) scFrame.style.display = 'none'; 
-  if (sumCard) sumCard.style.display = 'none'; 
+  if (resScreen) resScreen.style.display = 'block';
+  if (loaderBox) loaderBox.style.display = 'flex';
+  if (scFrame) scFrame.style.display = 'none';
+  if (sumCard) sumCard.style.display = 'none';
 
   if ($('lbl-user-greeting'))$('lbl-user-greeting').innerText = CBTState.studentNameVal || "";
   if ($('lbl-section-title'))$('lbl-section-title').innerText = `${sec.title} Completed,`;
 
   let secCorrect = 0, secIncorrect = 0, secUnattempted = 0, secMarks = 0;
-  let totalQuestions = sec.end - sec.start, totalSectionMarks = totalQuestions * getCorrectMarks();
+  const totalQuestions = sec.end - sec.start, totalSectionMarks = totalQuestions * getCorrectMarks();
   for (let i = sec.start; i < sec.end; i++) {
     if (CBTState.userAnswers[i] !== null) {
-      if (isAnswerCorrect(i)) { secCorrect++; secMarks += getCorrectMarks(); } 
+      if (isAnswerCorrect(i)) { secCorrect++; secMarks += getCorrectMarks(); }
       else { secIncorrect++; secMarks -= getIncorrectMarks(); }
     } else secUnattempted++;
   }
-
   secMarks = Number(secMarks.toFixed(2));
-  let formattedTime = `${Math.floor(sec.timeSpent / 60).toString().padStart(2, '0')}:${(sec.timeSpent % 60).toString().padStart(2, '0')}`;
-  if ($('lbl-score-obtained'))$('lbl-score-obtained').innerText = (secMarks % 1 === 0) ? secMarks : secMarks.toFixed(2); 
-  if ($('lbl-score-total'))$('lbl-score-total').innerText = (totalSectionMarks % 1 === 0) ? totalSectionMarks : totalSectionMarks.toFixed(2); 
-  if ($('lbl-stat-correct-val'))$('lbl-stat-correct-val').innerText = secCorrect; 
-  if ($('lbl-stat-incorrect-val'))$('lbl-stat-incorrect-val').innerText = secIncorrect; 
-  if ($('lbl-stat-unattempted-val'))$('lbl-stat-unattempted-val').innerText = secUnattempted; 
+  const formattedTime = `${Math.floor(sec.timeSpent / 60).toString().padStart(2, '0')}:${(sec.timeSpent % 60).toString().padStart(2, '0')}`;
+  if ($('lbl-score-obtained'))$('lbl-score-obtained').innerText = (secMarks % 1 === 0) ? secMarks : secMarks.toFixed(2);
+  if ($('lbl-score-total'))$('lbl-score-total').innerText = (totalSectionMarks % 1 === 0) ? totalSectionMarks : totalSectionMarks.toFixed(2);
+  if ($('lbl-stat-correct-val'))$('lbl-stat-correct-val').innerText = secCorrect;
+  if ($('lbl-stat-incorrect-val'))$('lbl-stat-incorrect-val').innerText = secIncorrect;
+  if ($('lbl-stat-unattempted-val'))$('lbl-stat-unattempted-val').innerText = secUnattempted;
   if ($('lbl-stat-time-val'))$('lbl-stat-time-val').innerText = formattedTime;
 
   updateUserDynamicRank();
 
-  let tg = $('table-body-matrix-target'); 
+  const tg = $('table-body-matrix-target');
   if (tg) {
     tg.innerHTML = '';
     let cM = 0, aS = 0, rC = 0, rI = 0, rL = 0, totalExamQ = 0;
     const fmtPct = v => (v % 1 === 0 ? v.toFixed(0) : v.toFixed(2)) + '%';
     CBTState.sections.forEach(s => {
-      let sC = 0, sI = 0, sL = 0, sS = 0, sT = s.end - s.start, sM = sT * getCorrectMarks();
+      let sC = 0, sI = 0, sL = 0, sS = 0;
+      const sT = s.end - s.start, sM = sT * getCorrectMarks();
       cM += sM; totalExamQ += sT;
       for (let i = s.start; i < s.end; i++) {
         if (CBTState.userAnswers[i] !== null) {
@@ -1195,7 +1296,7 @@ window.processSectionSubmission = async function() {
         } else sL++;
       }
       aS += sS; rC += sC; rI += sI; rL += sL;
-      let pR = sM > 0 && sS > 0 && s.submitted ? Math.round((sS / sM) * 100) : 0;
+      const pR = sM > 0 && sS > 0 && s.submitted ? Math.round((sS / sM) * 100) : 0;
       tg.innerHTML += `<div class="img4-row"><div class="img4-sec-col"><div class="img4-file-icon-box"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></div><div class="img4-sec-titles"><span class="img4-sec-name">${escapeHTML(s.title)}</span><span class="img4-sec-ques">${sT} Ques.</span></div></div><div class="img4-cell-stat"><span class="img4-pill-badge green">${s.submitted ? pR : 0}%</span><span class="img4-sub-ratio">(${s.submitted ? (sS % 1 === 0 ? sS : sS.toFixed(2)) : 0} / ${sM % 1 === 0 ? sM : sM.toFixed(2)})</span></div><div class="img4-cell-stat"><span class="img4-stat-num correct">${s.submitted ? sC : '0'}</span><span class="img4-sub-ratio">${fmtPct(sT > 0 && s.submitted ? ((sC / sT) * 100) : 0)}</span></div><div class="img4-cell-stat"><span class="img4-stat-num incorrect">${s.submitted ? sI : '0'}</span><span class="img4-sub-ratio">${fmtPct(sT > 0 && s.submitted ? ((sI / sT) * 100) : 0)}</span></div><div class="img4-cell-stat"><span class="img4-stat-num unattempted">${s.submitted ? sL : sT}</span><span class="img4-sub-ratio">${fmtPct(sT > 0 ? (((s.submitted ? sL : sT) / sT) * 100) : 0)}</span></div></div>`;
     });
     aS = Number((aS - (CBTState.securityWarnings * getPenaltyMarks())).toFixed(2));
@@ -1220,46 +1321,81 @@ window.processSectionSubmission = async function() {
     params.append("avgTimePerQuestion", totalQuestions > 0 ? (sec.timeSpent / totalQuestions).toFixed(1) + "s" : "0s");
     params.append("proctoringWarnings", CBTState.securityWarnings);
     params.append("activeTimeTaken", formattedTime);
-    try { await fetch(saveUrl, { method: "POST", body: params }); } catch (err) { console.warn("Save sync error:", err); }
+    try { await fetch(saveUrl, { method: "POST", body: params }); } catch (err) {}
   }
 
   await new Promise(res => setTimeout(res, 900));
   if (loaderBox) loaderBox.style.display = 'none';
   if (scFrame) scFrame.style.display = 'flex';
-  
-  let b = $('btn-dashboard-main-trigger'); 
-  if (b) { 
-    b.disabled = false; b.style.opacity = '1'; 
-    if (CBTState.currentYearIndex < CBTState.sections.length - 1) {
-      b.innerHTML = `CONTINUE TO NEXT SECTION →`;
-    } else {
-      b.innerHTML = `COMPLETE EVALUATION SUMMARY`;
-    }
-  } 
+  const b = $('btn-dashboard-main-trigger');
+  if (b) {
+    b.disabled = false; b.style.opacity = '1';
+    b.innerHTML = (CBTState.currentYearIndex < CBTState.sections.length - 1) ? `CONTINUE TO NEXT SECTION &rarr;` : `COMPLETE EVALUATION SUMMARY`;
+  }
 };
 
+window.handleSectionProgression = () => (CBTState.currentYearIndex < CBTState.sections.length - 1) ? executeProgressionAdvance() : showFinalCumulativeEvaluation();
+
 function showFinalCumulativeEvaluation() {
-  cancelAutoAdvance(); clearSessionLocalStorage(); 
+  cancelAutoAdvance(); clearSessionLocalStorage();
   if ($('capture-scorecard-frame'))$('capture-scorecard-frame').style.display = 'none';
-  if ($('cumulative-matrix-container')) { 
-    $('cumulative-matrix-container').style.display = 'block';$('cumulative-matrix-container').scrollIntoView({ behavior: 'smooth' }); 
+  if ($('cumulative-matrix-container')) {
+    $('cumulative-matrix-container').style.display = 'block';$('cumulative-matrix-container').scrollIntoView({ behavior: 'smooth' });
   }
 }
 
-function executeProgressionAdvance() { 
+function executeProgressionAdvance() {
   cancelAutoAdvance();
-  if (CBTState.currentYearIndex + 1 < CBTState.sections.length) { 
-    CBTState.currentYearIndex++; 
-    CBTState.currentQuestion = CBTState.sections[CBTState.currentYearIndex].start; 
-    if ($('result-screen'))$('result-screen').style.display = 'none'; 
-    if ($('quiz-screen'))$('quiz-screen').style.display = 'block'; 
-    if ($('unified-nav'))$('unified-nav').style.display = 'flex'; 
-    buildYearNav(); 
-    updateTimerDisplay(); 
-    loadQuestion(); 
-  } else {
-    showFinalCumulativeEvaluation();
+  if (CBTState.currentYearIndex + 1 < CBTState.sections.length) {
+    CBTState.currentYearIndex++;
+    CBTState.currentQuestion = CBTState.sections[CBTState.currentYearIndex].start;
+    if ($('result-screen'))$('result-screen').style.display = 'none';
+    if ($('quiz-screen'))$('quiz-screen').style.display = 'block';
+    if ($('unified-nav'))$('unified-nav').style.display = 'flex';
+    buildYearNav(); updateTimerDisplay(); loadQuestion();
+  } else showFinalCumulativeEvaluation();
+}
+
+/* ==========================================================================
+   SECTION 12: RESOURCE VERIFICATION MODAL & FEEDBACK SHOWCASE
+   ========================================================================== */
+function triggerVerifyModal(type) {
+  const modal = $('verify-resource-modal'), heading =$('verify-modal-heading'), text = $('verify-modal-text'), actionBtn =$('verify-proceed-action-btn');
+  if (!modal) return;
+  modal.style.display = 'flex';
+  if (type === 'yt') {
+    CBTState.activeResourceUrl = getYoutubeUrl();
+    if (heading) heading.innerText = "Watch Video Lesson?";
+    if (text) text.innerText = "Open educational video tutorial in a new tab?";
+    if (actionBtn) { actionBtn.innerText = "Watch Video"; actionBtn.onclick = () => { window.open(CBTState.activeResourceUrl, '_blank'); closeVerifyModal(); }; }
+  } else if (type === 'notes') {
+    CBTState.activeResourceUrl = getNotesUrl();
+    if (heading) heading.innerText = "Open Study Notes?";
+    if (text) text.innerText = "Open study notes in a new tab while keeping your exam active?";
+    if (actionBtn) { actionBtn.innerText = "Open Notes"; actionBtn.onclick = () => { window.open(CBTState.activeResourceUrl, '_blank'); closeVerifyModal(); }; }
+  } else if (type === 'back') {
+    if (heading) heading.innerText = "Leave Exam Session?";
+    if (text) text.innerText = "Are you sure you want to go back? Your current progress is saved.";
+    if (actionBtn) { actionBtn.innerText = "Leave"; actionBtn.onclick = () => { closeVerifyModal(); goPageBack(); }; }
   }
+}
+window.triggerVerifyModal = triggerVerifyModal;
+window.closeVerifyModal = () => { if ($('verify-resource-modal'))$('verify-resource-modal').style.display = 'none'; };
+window.goToHome = () => triggerVerifyModal('back');
+
+function triggerFeedbackSectionAnimation() {
+  const container = $('cbt-interactive-feedback-wrapper');
+  if (container && !container.classList.contains('section-entered')) container.classList.add('section-entered');
+  if (!CBTState.hasFetchedFeedback) { CBTState.hasFetchedFeedback = true; fetchFeedbackSubmissions(); }
+}
+
+function setupFeedbackSectionObserver() {
+  const container = $('cbt-interactive-feedback-wrapper');
+  if (!container) return;
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => { if (entry.isIntersecting) { triggerFeedbackSectionAnimation(); observer.unobserve(entry.target); } });
+  }, { rootMargin: "150px 0px", threshold: 0.05 });
+  observer.observe(container);
 }
 
 function triggerSlowMotionStarsAnimation() {
@@ -1289,39 +1425,35 @@ window.handleStarClick = function(e, starVal) {
   setFeedbackRating(isLeftHalf ? (starVal - 0.5) : starVal, true);
 };
 
-window.previewStars = function(rating) { 
+window.previewStars = function(rating) {
   document.querySelectorAll('#fb-stars-group .fb-star').forEach(s => {
-    const val = parseInt(s.getAttribute('data-val'));
+    const val = parseInt(s.getAttribute('data-val'), 10);
     s.classList.remove('hovered', 'hovered-half');
     if (val < Math.ceil(rating)) s.classList.add('hovered');
-    else if (val === Math.ceil(rating)) {
-      if (rating % 1 !== 0) s.classList.add('hovered-half'); else s.classList.add('hovered');
-    }
-  }); 
+    else if (val === Math.ceil(rating)) s.classList.add(rating % 1 !== 0 ? 'hovered-half' : 'hovered');
+  });
 };
 
-window.resetStarsPreview = function() { 
+window.resetStarsPreview = function() {
   document.querySelectorAll('#fb-stars-group .fb-star').forEach(s => s.classList.remove('hovered', 'hovered-half'));
   setFeedbackRating(CBTState.feedbackRating, false);
 };
 
-window.setFeedbackRating = function(rating, isUserAction = false) {
+window.setFeedbackRating = function(rating) {
   CBTState.feedbackRating = rating;
   document.querySelectorAll('#fb-stars-group .fb-star').forEach(s => {
-    const val = parseInt(s.getAttribute('data-val'));
+    const val = parseInt(s.getAttribute('data-val'), 10);
     s.classList.remove('half-active', 'active', 'hovered', 'hovered-half');
     if (val < Math.ceil(rating)) s.classList.add('active');
-    else if (val === Math.ceil(rating)) {
-      if (rating % 1 !== 0) s.classList.add('half-active'); else s.classList.add('active');
-    }
-  }); 
+    else if (val === Math.ceil(rating)) s.classList.add(rating % 1 !== 0 ? 'half-active' : 'active');
+  });
 };
 
-window.updateFbCharCount = function(textarea) { if ($('fb-char-counter'))$('fb-char-counter').innerText = `${textarea.value.length}/500`; };
-window.toggleFeedbackPill = function(radioInput) {
+window.updateFbCharCount = textarea => { if ($('fb-char-counter'))$('fb-char-counter').innerText = `${textarea.value.length}/500`; };
+window.toggleFeedbackPill = radioInput => {
   CBTState.feedbackCategory = radioInput.value;
   document.querySelectorAll('.fb-radio-pill-exact').forEach(pill => pill.classList.remove('active'));
-  radioInput.closest('.fb-radio-pill-exact').classList.add('active');
+  radioInput.closest('.fb-radio-pill-exact')?.classList.add('active');
 };
 
 window.submitUserFeedback = async function() {
@@ -1364,7 +1496,7 @@ async function fetchFeedbackSubmissions() {
       CBTState.feedbackDataStore = filtered;
       renderSubmissionsShowcase(filtered);
     }
-  } catch (err) { console.warn("Responses sync error:", err); }
+  } catch (err) {}
 }
 
 function renderSubmissionsShowcase(dataList) {
@@ -1377,13 +1509,12 @@ function renderSubmissionsShowcase(dataList) {
   const maxInitial = CBTState.isExpandedSubmissions ? 9999 : 20;
   const approvedToShow = approved.slice(0, maxInitial), pendingToShow = pending.slice(0, maxInitial);
   if (viewMoreWrap) {
-    if (approved.length > 20) {
-      viewMoreWrap.style.display = 'block';
-      if ($('lbl-load-more-text'))$('lbl-load-more-text').innerText = CBTState.isExpandedSubmissions ? 'Show Less ↑' : 'View More Responses (20+) ↓';
-    } else viewMoreWrap.style.display = 'none';
+    viewMoreWrap.style.display = approved.length > 20 ? 'block' : 'none';
+    if ($('lbl-load-more-text'))$('lbl-load-more-text').innerText = CBTState.isExpandedSubmissions ? 'Show Less ↑' : 'View More Responses (20+) ↓';
   }
   const buildStars = ratingRaw => {
-    let num = parseFloat(ratingRaw) || 5, starsStr = '';
+    const num = parseFloat(ratingRaw) || 5;
+    let starsStr = '';
     for (let i = 1; i <= 5; i++) {
       if (i <= Math.floor(num)) starsStr += `<svg class="ssc-star-svg filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
       else if (i === Math.ceil(num) && num % 1 !== 0) starsStr += `<svg class="ssc-star-svg" style="fill:url(#half-fill-grad);stroke:url(#half-stroke-grad);" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
@@ -1411,45 +1542,63 @@ window.toggleAllSubmissions = function() {
   renderSubmissionsShowcase(CBTState.feedbackDataStore);
 };
 
+/* ==========================================================================
+   SECTION 13: DOM CONTENT LOADED INITIALIZATION
+   ========================================================================== */
 document.addEventListener('DOMContentLoaded', async () => {
   const activeName = getTestName(), chNum = getChapterNumber(), weight = getChapterWeightage();
   if ($('header-ch-num'))$('header-ch-num').innerText = `Ch ${chNum}`;
   if ($('header-ch-title'))$('header-ch-title').innerText = activeName;
   if ($('header-weight-text'))$('header-weight-text').innerText = weight;
-  document.querySelectorAll('.topic-text').forEach(node => node.innerText = activeName);
-  if ($('welcome-correct-lbl'))$('welcome-correct-lbl').innerText = `+${getCorrectMarks()} Correct`;
-  if ($('welcome-incorrect-lbl'))$('welcome-incorrect-lbl').innerText = `-${getIncorrectMarks()} Incorrect`;
+  document.querySelectorAll('#welcome-step-1 .topic-text, #modal-resume .topic-text').forEach(node => { node.innerText = activeName; });
 
-  setFeedbackRating(1.5, false); setupStarScrollObserver(); setupFeedbackSectionObserver(); setupMobileGestures(); placeActionMatrix();
+  const timerBox = $('timer-box');
+  if (timerBox) {
+    timerBox.addEventListener('dblclick', () => {
+      if (CBTState.isTimerFrozen) { CBTState.isTimerFrozen = false; timerBox.classList.remove('timer-frozen'); }
+    });
+  }
+
+  ensureSectionSelectionModalExists();
+  ensureReviewControlsExist();
+  syncMarkingLabelsInDOM();
+  setFeedbackRating(1.5);
+  setupStarScrollObserver();
+  setupFeedbackSectionObserver();
+  setupMobileGestures();
+  placeActionMatrix();
   setupDetailsFieldValidation();
 
   const saved = getSavedSession();
-  if (saved) { CBTState.pendingRestoreData = saved; if ($('modal-resume'))$('modal-resume').style.display = 'flex'; }
-  else if ($('modal-welcome'))$('modal-welcome').style.display = 'flex'; 
+  if (saved) {
+    CBTState.pendingRestoreData = saved;
+    if ($('modal-resume'))$('modal-resume').style.display = 'flex';
+  } else if ($('modal-welcome')) {$('modal-welcome').style.display = 'flex';
+  }
 
-  ensureSectionSelectionModalExists();
-  await loadQuestionsFromSheet(); 
+  await loadQuestionsFromSheet();
   await fetchAndRenderSidebarToppers();
 
-  const eyes = document.querySelectorAll('.desktop-eyes .eye-ball'), pupils = document.querySelectorAll('.desktop-eyes .pupil'); 
-  document.addEventListener('mousemove', e => { 
+  const eyes = document.querySelectorAll('.desktop-eyes .eye-ball'), pupils = document.querySelectorAll('.desktop-eyes .pupil');
+  document.addEventListener('mousemove', e => {
     if (window.innerWidth <= 640) return;
-    eyes.forEach((eye, index) => { 
-      const pupil = pupils[index]; if (!pupil) return; 
-      const rect = eye.getBoundingClientRect(), cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2; 
-      const dx = e.clientX - cx, dy = e.clientY - cy, angle = Math.atan2(dy, dx); 
-      const maxRadius = (rect.width / 2) - (pupil.offsetWidth / 2) - 1.5, distance = Math.min(Math.hypot(dx, dy) / 10, maxRadius); 
-      pupil.style.transform = `translate(calc(-50% + ${Math.cos(angle) * distance}px), calc(-50% + ${Math.sin(angle) * distance}px))`; 
-    }); 
-  }); 
+    eyes.forEach((eye, index) => {
+      const pupil = pupils[index];
+      if (!pupil) return;
+      const rect = eye.getBoundingClientRect(), cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2;
+      const dx = e.clientX - cx, dy = e.clientY - cy, angle = Math.atan2(dy, dx);
+      const maxRadius = (rect.width / 2) - (pupil.offsetWidth / 2) - 1.5, distance = Math.min(Math.hypot(dx, dy) / 10, maxRadius);
+      pupil.style.transform = `translate(calc(-50% + ${Math.cos(angle) * distance}px), calc(-50% + ${Math.sin(angle) * distance}px))`;
+    });
+  });
 
-  const scheduleBlink = () => { 
-    setTimeout(() => { 
+  const scheduleBlink = () => {
+    setTimeout(() => {
       if (window.innerWidth > 640) {
-        eyes.forEach(eye => { eye.style.transform = 'scaleY(0.06)'; setTimeout(() => eye.style.transform = 'scaleY(1)', 110); }); 
+        eyes.forEach(eye => { eye.style.transform = 'scaleY(0.06)'; setTimeout(() => { eye.style.transform = 'scaleY(1)'; }, 110); });
       }
-      scheduleBlink(); 
-    }, 3000 + Math.random() * 4000); 
-  }; 
-  scheduleBlink(); 
+      scheduleBlink();
+    }, 3000 + Math.random() * 4000);
+  };
+  scheduleBlink();
 });
