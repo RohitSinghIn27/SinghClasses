@@ -3,15 +3,19 @@ document.addEventListener('DOMContentLoaded', function() {
   const yearEl = document.getElementById('current-year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  // 2. Centralized SVG Icons (Roadmap enhanced with Tailwind CSS utilities)
-const CARD_ICONS = {
-    download: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>`,
-    oneshot: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>`,
-    notes: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>`,
-    pro: `<span style="font-size: 11px; line-height: 1; display: inline-block;">💎</span>`,
-    pyq: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="2"></circle></svg>`,
-    pyqs: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="2"></circle></svg>`,
-roadmap: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"></path><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1z"></path></svg>`,    lock: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>`
+  // 2. Centralized SVG Icons
+  const CARD_ICONS = {
+    download: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>`,
+    oneshot: `<svg viewBox="0 0 26 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="4" width="17" height="16" rx="3.5" fill="currentColor"/><path d="M18 9.5L24.2 5.8C24.8 5.4 25.5 5.9 25.5 6.6V17.4C25.5 18.1 24.8 18.6 24.2 18.2L18 14.5V9.5Z" fill="currentColor"/><polygon points="7.5,8.3 7.5,15.7 13.8,12" fill="#ffffff"/></svg>`,
+    notes: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="8" y1="13" x2="16" y2="13"></line><line x1="8" y1="17" x2="13" y2="17"></line></svg>`,
+    pro: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 3H18L22 9L12 21L2 9L6 3Z" fill="#38bdf8" stroke="#0284c7" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 9H22" stroke="#bae6fd" stroke-width="1.5"/><path d="M12 21L8 9L10 3" stroke="#bae6fd" stroke-width="1.4" stroke-linejoin="round"/><path d="M12 21L16 9L14 3" stroke="#0284c7" stroke-width="1.4" stroke-linejoin="round"/></svg>`,
+    pyq: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1"></path><rect x="8" y="6" width="13" height="16" rx="2"></rect><line x1="11.5" y1="11" x2="17.5" y2="11"></line><line x1="11.5" y1="14.5" x2="17.5" y2="14.5"></line><line x1="11.5" y1="18" x2="15" y2="18"></line></svg>`,
+    pyqs: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1"></path><rect x="8" y="6" width="13" height="16" rx="2"></rect><line x1="11.5" y1="11" x2="17.5" y2="11"></line><line x1="11.5" y1="14.5" x2="17.5" y2="14.5"></line><line x1="11.5" y1="18" x2="15" y2="18"></line></svg>`,
+    mcq: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect><circle cx="9" cy="12" r="1" fill="currentColor"></circle><line x1="12.5" y1="12" x2="16.5" y2="12"></line><circle cx="9" cy="16" r="1" fill="currentColor"></circle><line x1="12.5" y1="16" x2="16.5" y2="16"></line></svg>`,
+    dpp: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h7"></path><path d="M14 2v6h6"></path><line x1="8" y1="11" x2="14" y2="11"></line><line x1="8" y1="15" x2="12" y2="15"></line><path d="M18.5 14.5a1.8 1.8 0 0 1 2.5 2.5L16 22l-3.5 1 1-3.5 5-5z"></path></svg>`,
+    roadmap: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"></path><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1z"></path></svg>`,
+    lock: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2.5" ry="2.5"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>`,
+    chevronRight: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>`
   };
 
   const toast = document.getElementById('scToast');
@@ -21,28 +25,56 @@ roadmap: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="cu
       toast.innerText = msg;
       toast.classList.add('show');
       clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
+      toastTimeout = setTimeout(() => toast.classList.remove('show'), 3200);
     }
   }
 
-  // 3. Prepend SVG icons dynamically (Cleans up any manual inline SVGs to prevent duplicates)
+  // 3. Format Unit Badge Left Pill
+  document.querySelectorAll('.sc-unit-badge').forEach(badge => {
+    const firstSpan = badge.querySelector('span:first-child');
+    if (!firstSpan || firstSpan.querySelector('.sc-badge-hl')) return;
+
+    const rawText = firstSpan.textContent.trim();
+    if (rawText.includes('·') || rawText.includes('•')) {
+      const parts = rawText.split(/[·•]/);
+      const prefix = parts[0].trim();
+      const suffix = parts.slice(1).join('·').trim();
+      firstSpan.innerHTML = `<span class="sc-badge-hl">${prefix}</span><span class="sc-badge-dot">•</span><span>${suffix}</span>`;
+    } else {
+      firstSpan.innerHTML = `<span class="sc-badge-hl">${rawText}</span>`;
+    }
+  });
+
+  // 4. Prepend SVG icons & append chevron badges
   document.querySelectorAll('.sc-card-links a').forEach(link => {
-    link.querySelectorAll('svg:not(.sc-svg-icon svg)').forEach(el => el.remove());
+    link.querySelectorAll('svg:not(.sc-svg-icon svg):not(.sc-btn-arrow svg)').forEach(el => el.remove());
 
     if (link.querySelector('.sc-svg-icon')) return;
     const text = link.textContent.trim();
     const key = text.toLowerCase().replace(/[\s_-]+/g, '');
 
-    let icon = CARD_ICONS[key] || CARD_ICONS[text.toLowerCase()] || (text === "Download Now" ? CARD_ICONS.download : '');
-    if (icon) {
-      link.innerHTML = `<span class="sc-svg-icon">${icon}</span><span>${text}</span>`;
-    }
+    let icon =
+      CARD_ICONS[key] ||
+      CARD_ICONS[text.toLowerCase()] ||
+      (link.classList.contains('sc-btn-oneshot') ? CARD_ICONS.oneshot : '') ||
+      (link.classList.contains('sc-btn-pro') ? CARD_ICONS.pro : '') ||
+      (link.classList.contains('sc-btn-pyq') ? CARD_ICONS.pyq : '') ||
+      (link.classList.contains('sc-btn-mcq') ? CARD_ICONS.mcq : '') ||
+      (link.classList.contains('sc-btn-dpp') ? CARD_ICONS.dpp : '') ||
+      (link.classList.contains('sc-btn-notes') ? CARD_ICONS.notes : '') ||
+      (text === 'Download Now' ? CARD_ICONS.download : CARD_ICONS.notes);
+
+    link.innerHTML = `
+      <span class="sc-svg-icon">${icon}</span>
+      <span class="sc-btn-label">${text}</span>
+      <span class="sc-btn-arrow" aria-hidden="true">${CARD_ICONS.chevronRight}</span>
+    `;
   });
 
-  // 4. Generate Donut SVG
+  // 5. Generate Donut SVG
   function generateDonutSVG(data, total, centerText) {
     if (total === 0) return '';
-    let svg = `<svg viewBox="-2 -2 104 104" style="width:100%;height:100%;display:block;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.06));">`;
+    let svg = `<svg viewBox="-2 -2 104 104" style="width:100%;height:100%;display:block;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.05));">`;
     let startAngle = -Math.PI / 2;
 
     data.forEach(slice => {
@@ -69,8 +101,8 @@ roadmap: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="cu
     return svg;
   }
 
-  // 5. Section-Wise Readiness Calculation & Legend Generator
-  function initPieChartReadiness() {
+  // 6. Section-Wise Resource Availability Calculation & Legend Generator
+  function initResourceAvailability() {
     const allLinks = document.querySelectorAll('.sc-custom-card .sc-card-links a');
     
     allLinks.forEach(link => {
@@ -78,6 +110,7 @@ roadmap: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="cu
       const isReady = href && href !== '#' && href.trim() !== '';
       if (!isReady) {
         link.classList.add('sc-locked');
+        link.setAttribute('aria-disabled', 'true');
         let iconSpan = link.querySelector('.sc-svg-icon');
         if (!iconSpan) {
           iconSpan = document.createElement('span');
@@ -87,7 +120,7 @@ roadmap: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="cu
         iconSpan.innerHTML = CARD_ICONS.lock;
         link.addEventListener('click', (e) => {
           e.preventDefault();
-          showToast('🚧 We are currently preparing this material. Coming soon!');
+          showToast('🚧 Coming Soon: This study resource is currently being prepared.');
         });
       }
     });
@@ -95,7 +128,7 @@ roadmap: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="cu
     let targetSections = document.querySelectorAll('.sc-column[data-count-to-content="true"]');
     if (targetSections.length === 0) targetSections = document.querySelectorAll('.sc-column');
 
-    const SECTION_PALETTE = ['#2563eb', '#ca8a04', '#ea580c', '#9333ea', '#059669', '#0284c7'];
+    const SECTION_PALETTE = ['#0649B8', '#D97706', '#059669', '#6D28D9', '#DC2626', '#0284C7'];
     let pieData = [];
     let totalTrackedLinks = 0;
     let totalReadyLinks = 0;
@@ -139,8 +172,8 @@ roadmap: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="cu
     });
 
     pieData.push({
-      label: 'Pending',
-      color: '#64748b',
+      label: 'Coming Soon',
+      color: '#94A3B8',
       count: totalLockedLinks,
       perc: Math.round((totalLockedLinks / totalTrackedLinks) * 100) || 0
     });
@@ -150,18 +183,20 @@ roadmap: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="cu
     const pieContainer = document.getElementById('dynamic-pie-container');
     const legendContainer = document.getElementById('dynamic-pie-legend');
     const subtitleEl = document.getElementById('mp-subtitle-custom');
+    const overallBarFill = document.getElementById('sc-overall-bar-fill');
 
     if (pieContainer && legendContainer && subtitleEl) {
-      subtitleEl.textContent = `${totalReadyLinks} of ${totalTrackedLinks}`;
+      subtitleEl.textContent = `${totalReadyLinks} of ${totalTrackedLinks} Live`;
+      if (overallBarFill) overallBarFill.style.width = `${overallPerc}%`;
       pieContainer.innerHTML = generateDonutSVG(pieData, totalTrackedLinks, overallPerc);
 
       legendContainer.innerHTML = pieData.map(d => `
         <div class="sc-legend-item">
           <div class="sc-legend-left">
             <span class="sc-legend-dot" style="background:${d.color};"></span>
-            <span class="sc-legend-label ${d.label === 'Pending' ? 'sc-legend-muted' : 'sc-legend-active'}">${d.label}</span>
+            <span class="sc-legend-label ${d.label === 'Coming Soon' ? 'sc-legend-muted' : 'sc-legend-active'}">${d.label}</span>
           </div>
-          <span class="sc-legend-val ${d.label === 'Pending' ? 'sc-legend-muted' : 'sc-legend-active'}">${d.count} (${d.perc}%)</span>
+          <span class="sc-legend-val ${d.label === 'Coming Soon' ? 'sc-legend-muted' : 'sc-legend-active'}">${d.count} (${d.perc}%)</span>
         </div>
       `).join('');
     }
@@ -181,9 +216,9 @@ roadmap: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="cu
     });
   }
 
-  initPieChartReadiness();
+  initResourceAvailability();
 
-  // 6. Video Modal Intercept
+  // 7. Video Modal Intercept
   const videoModal = document.getElementById('scVideoModal');
   const btnStay = document.getElementById('scModalStay');
   const btnWatch = document.getElementById('scModalWatch');
@@ -199,6 +234,7 @@ roadmap: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="cu
           e.preventDefault();
           currentVideoUrl = href;
           videoModal.classList.add('show');
+          btnWatch.focus();
         }
       }
     });
@@ -214,7 +250,7 @@ roadmap: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="cu
     }
   });
 
-  // 7. Hero Tabs Smooth Scroll
+  // 8. Hero Tabs Smooth Scroll
   const navTabs = document.querySelectorAll('.sc-hero-tab');
   navTabs.forEach(tab => {
     tab.addEventListener('click', function(e) {
@@ -231,7 +267,7 @@ roadmap: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="cu
     });
   });
 
-  // 8. Mobile Navigation Hamburger Menu Toggle
+  // 9. Mobile Navigation Hamburger Menu Toggle
   const hamburgerBtn = document.getElementById('hamburgerToggle');
   const navMenu = document.getElementById('nav-menu');
   if (hamburgerBtn && navMenu) {
@@ -242,85 +278,21 @@ roadmap: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="cu
     });
   }
 
-  // 9. Ambient Canvas Particles
-  ['canvasA', 'canvasB', 'canvasC', 'canvasD', 'canvasBottom'].forEach(id => {
-    const canvas = document.getElementById(id);
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    let animId;
-
-    const resize = () => {
-      if (canvas.parentElement) {
-        canvas.width = canvas.parentElement.clientWidth;
-        canvas.height = canvas.parentElement.clientHeight;
-      }
-    };
-
-    const init = () => {
-      particles = [];
-      const count = Math.floor((canvas.width * canvas.height) / 16000) || 10;
-      for (let i = 0; i < count; i++) {
-        particles.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          r: Math.random() * 2 + 1,
-          dx: (Math.random() - 0.5) * 0.35,
-          dy: (Math.random() - 0.5) * 0.35,
-          a: Math.random() * 0.25 + 0.1
-        });
-      }
-    };
-
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(p => {
-        p.x += p.dx;
-        p.y += p.dy;
-        if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(100, 116, 139, ${p.a})`;
-        ctx.fill();
-      });
-      animId = requestAnimationFrame(draw);
-    };
-
-    resize();
-    init();
-    draw();
-
-    window.addEventListener('resize', () => {
-      cancelAnimationFrame(animId);
-      resize();
-      init();
-      draw();
-    });
-  });
-
   // 10. Reusable CBT Button Component
-  function buildCBTButtonHTML(href = '#', highlight = 'Attempt the CBT', text = 'of objective questions') {
+  function buildCBTButtonHTML(href = '#', highlight = 'Attempt the CBT', text = 'of CBSE Objective Questions') {
     const targetAttr = href && href !== '#' ? ' target="_blank" rel="noopener noreferrer"' : '';
     return `
       <div class="sc-cbt-wrapper">
-        <span class="sc-cbt-sparks sc-cbt-sparks-left" aria-hidden="true">
-          <svg viewBox="0 0 28 36" fill="none">
-            <line x1="22" y1="6" x2="10" y2="1" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round"/>
-            <line x1="18" y1="16" x2="3" y2="13" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round"/>
-            <line x1="20" y1="25" x2="8" y2="27" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round"/>
-          </svg>
-        </span>
         <a href="${href}" class="sc-cbt-btn"${targetAttr}>
           <span class="sc-cbt-doc-icon" aria-hidden="true">
-            <svg width="26" height="28" viewBox="0 0 32 34" fill="none">
+            <svg width="24" height="26" viewBox="0 0 32 34" fill="none">
               <path d="M4 4C4 2.34315 5.34315 1 7 1H19L26 8V27C26 28.6569 24.6569 30 23 30H7C5.34315 30 4 28.6569 4 27V4Z" fill="#ffffff"/>
-              <path d="M19 1L26 8H21C19.8954 8 19 7.10457 19 6V1Z" fill="#bfdbfe"/>
-              <rect x="8" y="12" width="12" height="2" rx="1" fill="#60a5fa"/>
-              <rect x="8" y="16" width="12" height="2" rx="1" fill="#60a5fa"/>
-              <rect x="8" y="20" width="8" height="2" rx="1" fill="#60a5fa"/>
-              <circle cx="24" cy="26" r="7" fill="#fbbf24"/>
-              <path d="M21.2 26.2L23.1 28.1L26.8 24.2" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M19 1L26 8H21C19.8954 8 19 7.10457 19 6V1Z" fill="#BFDBFE"/>
+              <rect x="8" y="12" width="12" height="2" rx="1" fill="#0649B8"/>
+              <rect x="8" y="16" width="12" height="2" rx="1" fill="#0649B8"/>
+              <rect x="8" y="20" width="8" height="2" rx="1" fill="#0649B8"/>
+              <circle cx="24" cy="26" r="7" fill="#F5C400"/>
+              <path d="M21.2 26.2L23.1 28.1L26.8 24.2" stroke="#061B4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </span>
           <span class="sc-cbt-label">
@@ -335,13 +307,6 @@ roadmap: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="cu
             </svg>
           </span>
         </a>
-        <span class="sc-cbt-sparks sc-cbt-sparks-right" aria-hidden="true">
-          <svg viewBox="0 0 28 36" fill="none">
-            <line x1="6" y1="6" x2="18" y2="1" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round"/>
-            <line x1="10" y1="16" x2="25" y2="13" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round"/>
-            <line x1="8" y1="25" x2="20" y2="27" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round"/>
-          </svg>
-        </span>
       </div>
     `;
   }
@@ -350,7 +315,7 @@ roadmap: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="cu
     document.querySelectorAll('.sc-cbt-section').forEach(section => {
       const href = section.getAttribute('data-cbt-href') || '#';
       const highlight = section.getAttribute('data-cbt-highlight') || 'Attempt the CBT';
-      const text = section.getAttribute('data-cbt-text') || 'of objective questions';
+      const text = section.getAttribute('data-cbt-text') || 'of CBSE Objective Questions';
 
       if (!section.querySelector('.sc-cbt-btn')) {
         section.innerHTML = buildCBTButtonHTML(href, highlight, text);
@@ -362,7 +327,7 @@ roadmap: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="cu
           const currentHref = btn.getAttribute('href');
           if (!currentHref || currentHref === '#' || currentHref.trim() === '') {
             e.preventDefault();
-            showToast('🚧 We are currently preparing this material. Coming soon!');
+            showToast('🚧 Coming Soon: This study resource is currently being prepared.');
           }
         });
       }
@@ -376,7 +341,7 @@ roadmap: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="cu
     section.className = 'sc-cbt-section';
     section.setAttribute('data-cbt-href', options.href || '#');
     section.setAttribute('data-cbt-highlight', options.highlight || 'Attempt the CBT');
-    section.setAttribute('data-cbt-text', options.text || 'of objective questions');
+    section.setAttribute('data-cbt-text', options.text || 'of CBSE Objective Questions');
     container.appendChild(section);
     initCBTButtons();
   };
