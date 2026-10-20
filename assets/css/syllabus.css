@@ -74,7 +74,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
 .inline-svg-icon { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px; vertical-align: middle; margin-right: 6px; }
 .icon-orange { color: var(--royal-blue); }
 .announcement-bar { width: 100%; max-width: 1250px; background: var(--card); border: 1px solid var(--border); border-radius: 999px; padding: 7px 20px; margin: 10px auto 14px auto; display: flex; justify-content: center; align-items: center; gap: 12px; font-size: 0.80rem; font-weight: 600; color: var(--deep-navy); box-shadow: var(--shadow-card); }
-.announcement-cta { color: var(--royal-blue); font-weight: 700; text-decoration: underline; text-underline-offset: 2px; }
+.announcement-cta { color: var(--royal-blue); font-weight: 700; text-decoration: none; }
 .announcement-cta:hover { color: var(--deep-navy); }
 .announcement-bar .divider { color: var(--border-strong); font-weight: 400; }
 .sc-widget-container { width: 100% !important; max-width: 1250px !important; margin: 0 auto; padding: 18px; position: relative; background: var(--card); border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow-card); }
@@ -93,14 +93,14 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
 .pill-green { color: #065F46; background: #ECFDF5; border: 1px solid #A7F3D0; }
 .pill-purple { color: var(--deep-navy); background: var(--warm-cream); border: 1px solid #FDE68A; }
 
-/* 1-Liner Navigation Tabs (Auto-fit without clipping) */
+/* Navigation Tabs (Single line without truncation) */
 .sc-hero-nav { display: flex; width: 100%; }
-.sc-nav-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; width: 100%; }
+.sc-nav-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; width: 100%; }
 .sc-hero-tab {
   min-height: 29px;
-  padding: 3px 5px;
+  padding: 3px 4px;
   font-family: var(--font-body);
-  font-size: 0.65rem;
+  font-size: 0.61rem;
   font-weight: 600;
   border-radius: 6px;
   border: 1px solid var(--border-strong);
@@ -109,10 +109,8 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 3px;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   transition: var(--transition-smooth);
   width: 100%;
   line-height: 1;
@@ -121,12 +119,12 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
 .sc-hero-tab:hover { background: #EFF6FF; border-color: var(--royal-blue); color: var(--royal-blue); }
 .sc-hero-tab.active { background: var(--deep-navy) !important; color: #FFFFFF !important; border-color: var(--deep-navy) !important; box-shadow: 0 2px 0 var(--accent-yellow); }
 
-/* Resource Availability Panel (Single-Line Header) */
+/* Resource Availability Panel */
 .sc-multi-progress-card {
   position: relative;
   z-index: 2;
-  flex: 0 0 250px;
-  width: 250px;
+  flex: 0 0 280px;
+  width: 280px;
   background: var(--paper);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -290,7 +288,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
 .sc-custom-card h3::after, .sc-custom-card h4::after { content: ""; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 18px; height: 2px; background: var(--accent-yellow); border-radius: 99px; }
 .sc-card-meta { font-family: var(--font-body); font-size: 0.70rem; font-weight: 500; color: var(--muted); text-align: center; margin: -4px 0 8px 0; line-height: 1.35; }
 
-/* RESOURCE BUTTONS (Harmonized 2-Tone System) */
+/* RESOURCE BUTTONS (Context-Aware Multi-Tone System) */
 .sc-card-links { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: auto; width: 100%; }
 .sc-card-links.sc-links-sets { grid-template-columns: repeat(2, 1fr); gap: 5px; }
 
@@ -300,9 +298,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
   min-height: 31px;
   padding: 4px 6px;
   border-radius: 6px;
-  border: 1px solid #BFDBFE;
-  background: #EFF6FF;
-  color: var(--royal-blue);
   transition: all 0.18s ease;
   display: inline-flex;
   justify-content: center;
@@ -320,7 +315,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
   height: 12px;
   flex-shrink: 0;
   line-height: 1;
-  color: var(--royal-blue);
 }
 .sc-card-links .sc-svg-icon svg {
   width: 12px;
@@ -347,8 +341,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  background: #DBEAFE;
-  color: var(--royal-blue);
   transition: transform 0.18s ease, background-color 0.18s ease, color 0.18s ease;
 }
 .sc-card-links .sc-btn-arrow svg {
@@ -357,54 +349,92 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
   stroke-width: 3.2;
 }
 
-/* Core Study Resources (Navy / Royal Blue Palette) */
-.sc-btn-oneshot,
-.sc-btn-notes,
-.sc-btn-pyq,
-.sc-btn-roadmap,
-.sc-btn-dpp {
+/* 1. OneShot (Video Lecture Red) */
+.sc-btn-oneshot {
+  background: #FEF2F2;
+  color: #DC2626;
+  border: 1px solid #FECACA;
+}
+.sc-btn-oneshot .sc-svg-icon { color: #DC2626; }
+.sc-btn-oneshot .sc-btn-arrow { background: #FEE2E2; color: #DC2626; }
+.sc-btn-oneshot:hover:not(.sc-locked) {
+  background: #DC2626;
+  border-color: #DC2626;
+  color: #FFFFFF !important;
+}
+
+/* 2. Notes & Sets / Download (Brand Royal Navy Blue) */
+.sc-btn-notes {
   background: #EFF6FF;
   color: var(--royal-blue);
-  border-color: #BFDBFE;
+  border: 1px solid #BFDBFE;
 }
-.sc-btn-oneshot .sc-svg-icon,
-.sc-btn-notes .sc-svg-icon,
-.sc-btn-pyq .sc-svg-icon,
-.sc-btn-roadmap .sc-svg-icon,
-.sc-btn-dpp .sc-svg-icon {
-  color: var(--royal-blue);
-}
-.sc-btn-oneshot .sc-btn-arrow,
-.sc-btn-notes .sc-btn-arrow,
-.sc-btn-pyq .sc-btn-arrow,
-.sc-btn-roadmap .sc-btn-arrow,
-.sc-btn-dpp .sc-btn-arrow {
-  background: #DBEAFE;
-  color: var(--royal-blue);
-}
-
-/* Interactive Testing Resources (Subtle Purple Accent) */
-.sc-btn-mcq,
-.sc-btn-pro {
-  background: #F5F3FF;
-  color: #5B21B6;
-  border-color: #DDD6FE;
-}
-.sc-btn-mcq .sc-svg-icon,
-.sc-btn-pro .sc-svg-icon {
-  color: #6D28D9;
-}
-.sc-btn-mcq .sc-btn-arrow,
-.sc-btn-pro .sc-btn-arrow {
-  background: #EDE9FE;
-  color: #5B21B6;
-}
-
-/* Unified Hover States */
-.sc-card-links a:hover:not(.sc-locked) {
+.sc-btn-notes .sc-svg-icon { color: var(--royal-blue); }
+.sc-btn-notes .sc-btn-arrow { background: #DBEAFE; color: var(--royal-blue); }
+.sc-btn-notes:hover:not(.sc-locked) {
   background: var(--royal-blue);
   border-color: var(--royal-blue);
   color: #FFFFFF !important;
+}
+
+/* 3. PYQs & Previous Year Papers (Exam Amber / Gold) */
+.sc-btn-pyq {
+  background: #FFFBEB;
+  color: #B45309;
+  border: 1px solid #FDE68A;
+}
+.sc-btn-pyq .sc-svg-icon { color: #D97706; }
+.sc-btn-pyq .sc-btn-arrow { background: #FEF3C7; color: #B45309; }
+.sc-btn-pyq:hover:not(.sc-locked) {
+  background: #D97706;
+  border-color: #D97706;
+  color: #FFFFFF !important;
+}
+
+/* 4. DPP / Practice Worksheets (Success Emerald Green) */
+.sc-btn-dpp {
+  background: #ECFDF5;
+  color: #047857;
+  border: 1px solid #A7F3D0;
+}
+.sc-btn-dpp .sc-svg-icon { color: #059669; }
+.sc-btn-dpp .sc-btn-arrow { background: #D1FAE5; color: #047857; }
+.sc-btn-dpp:hover:not(.sc-locked) {
+  background: #059669;
+  border-color: #059669;
+  color: #FFFFFF !important;
+}
+
+/* 5. MCQs / Interactive Quizzes (Purple / Violet) */
+.sc-btn-mcq {
+  background: #F5F3FF;
+  color: #6D28D9;
+  border: 1px solid #DDD6FE;
+}
+.sc-btn-mcq .sc-svg-icon { color: #7C3AED; }
+.sc-btn-mcq .sc-btn-arrow { background: #EDE9FE; color: #6D28D9; }
+.sc-btn-mcq:hover:not(.sc-locked) {
+  background: #7C3AED;
+  border-color: #7C3AED;
+  color: #FFFFFF !important;
+}
+
+/* 6. Pro Content / Advanced Modules (Indigo Accent) */
+.sc-btn-pro {
+  background: #EEF2FF;
+  color: #4338CA;
+  border: 1px solid #C7D2FE;
+}
+.sc-btn-pro .sc-svg-icon { color: #4F46E5; }
+.sc-btn-pro .sc-btn-arrow { background: #E0E7FF; color: #4338CA; }
+.sc-btn-pro:hover:not(.sc-locked) {
+  background: #4F46E5;
+  border-color: #4F46E5;
+  color: #FFFFFF !important;
+}
+
+/* Universal Hover Transitions */
+.sc-card-links a:hover:not(.sc-locked) {
   transform: translateY(-1px);
   box-shadow: 0 3px 6px rgba(6, 27, 79, 0.12);
 }
@@ -415,12 +445,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
   background: rgba(255, 255, 255, 0.25) !important;
   color: #FFFFFF !important;
   transform: translateX(1.5px);
-}
-
-.sc-card-links a.sc-btn-mcq:hover:not(.sc-locked),
-.sc-card-links a.sc-btn-pro:hover:not(.sc-locked) {
-  background: #5B21B6;
-  border-color: #5B21B6;
 }
 
 /* Spans for Remainder Cards */
