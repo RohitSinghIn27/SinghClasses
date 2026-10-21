@@ -68,7 +68,7 @@ const getFormattedTimestamp = () => {
 };
 
 function showToastAlert(m) {
-  const t = $('custom-alert-toast'), txt = $('custom-alert-text');
+  const t = $('custom-alert-toast'), txt =$('custom-alert-text');
   if (t && txt) {
     txt.innerHTML = `${ICON_ALERT} ${m}`;
     t.classList.add('show');
@@ -111,7 +111,7 @@ window.handleHeaderBack = function() {
 };
 
 window.sharePage = async function() {
-  const currentUrl = window.location.href, btn = $('btn-share-page'), badge = $('share-copied-badge'), icon = $('share-icon-svg');
+  const currentUrl = window.location.href, btn = $('btn-share-page'), badge = $('share-copied-badge'), icon =$('share-icon-svg');
   const showFeedback = () => {
     if (badge) { badge.innerText = "Copied!"; badge.style.display = "inline-block"; }
     if (icon) icon.style.display = "none";
@@ -142,7 +142,7 @@ function enableDesktopFullscreen() {
 }
 
 function updateFullscreenIconState() {
-  const icon = $('fs-icon'), btn = $('fullscreen-toggle-btn');
+  const icon = $('fs-icon'), btn =$('fullscreen-toggle-btn');
   if (!icon) return;
   if (document.fullscreenElement) { icon.innerHTML = ICON_MINIMIZE; if (btn) btn.title = "Exit Fullscreen"; }
   else { icon.innerHTML = ICON_FULLSCREEN; if (btn) btn.title = "Fullscreen"; }
@@ -198,15 +198,15 @@ function restoreSession(data) {
     studentName: data.studentName || "", selectedSectionMode: data.selectedSectionMode || "ALL",
     sectionToppersFetched: data.sectionToppersFetched || [], isExamActive: true, isTimerPaused: false, isTimerFrozen: false
   });
-  if ($('student-name-input')) $('student-name-input').value = CBTState.studentNameVal;
-  if ($('student-class-input')) $('student-class-input').value = CBTState.studentClassVal;
-  if ($('student-section-input')) $('student-section-input').value = CBTState.studentSectionVal;
-  if ($('student-school-input')) $('student-school-input').value = CBTState.schoolNameVal;
-  if ($('modal-resume')) $('modal-resume').style.display = 'none';
-  if ($('modal-welcome')) $('modal-welcome').style.display = 'none';
+  if ($('student-name-input'))$('student-name-input').value = CBTState.studentNameVal;
+  if ($('student-class-input'))$('student-class-input').value = CBTState.studentClassVal;
+  if ($('student-section-input'))$('student-section-input').value = CBTState.studentSectionVal;
+  if ($('student-school-input'))$('student-school-input').value = CBTState.schoolNameVal;
+  if ($('modal-resume'))$('modal-resume').style.display = 'none';
+  if ($('modal-welcome'))$('modal-welcome').style.display = 'none';
   document.body.classList.add('exam-in-progress');
-  if ($('quiz-screen')) $('quiz-screen').style.display = 'block';
-  if ($('unified-nav')) $('unified-nav').style.display = 'flex';
+  if ($('quiz-screen'))$('quiz-screen').style.display = 'block';
+  if ($('unified-nav'))$('unified-nav').style.display = 'flex';
   ensureReviewControlsExist(); enableDesktopFullscreen();
   buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion();
   if (CBTState.userAnswers.some(ans => ans !== null)) triggerFeedbackSectionAnimation();
@@ -214,7 +214,7 @@ function restoreSession(data) {
 }
 
 window.confirmResumeSession = function() { if (CBTState.pendingRestoreData) { restoreSession(CBTState.pendingRestoreData); CBTState.pendingRestoreData = null; } };
-window.dismissResumeSession = function() { clearSessionLocalStorage(); CBTState.pendingRestoreData = null; if ($('modal-resume')) $('modal-resume').style.display = 'none'; if ($('modal-welcome')) $('modal-welcome').style.display = 'flex'; };
+window.dismissResumeSession = function() { clearSessionLocalStorage(); CBTState.pendingRestoreData = null; if ($('modal-resume'))$('modal-resume').style.display = 'none'; if ($('modal-welcome'))$('modal-welcome').style.display = 'flex'; };
 
 /* ==========================================================================
    SECTION 5: QUESTION FETCHING & ANSWER RESOLUTION
@@ -381,16 +381,16 @@ function validateStudentDetails() {
 
 function syncMarkingLabelsInDOM() {
   const cMarks = getCorrectMarks(), iMarks = getIncorrectMarks(), pMarks = getPenaltyMarks();
-  if ($('welcome-correct-lbl')) $('welcome-correct-lbl').innerText = `+${cMarks} for correct answer`;
-  if ($('welcome-incorrect-lbl')) $('welcome-incorrect-lbl').innerHTML = `<strong>-${iMarks}</strong> for incorrect answer`;
-  if ($('welcome-penalty-lbl')) $('welcome-penalty-lbl').innerText = `-${pMarks} marks`;
-  if ($('welcome-penalty-inline')) $('welcome-penalty-inline').innerText = `penalty of ${pMarks} marks.`;
+  if ($('welcome-correct-lbl'))$('welcome-correct-lbl').innerText = `+${cMarks} for correct answer`;
+  if ($('welcome-incorrect-lbl'))$('welcome-incorrect-lbl').innerHTML = `<strong>-${iMarks}</strong> for incorrect answer`;
+  if ($('welcome-penalty-lbl'))$('welcome-penalty-lbl').innerText = `-${pMarks} marks`;
+  if ($('welcome-penalty-inline'))$('welcome-penalty-inline').innerText = `penalty of ${pMarks} marks.`;
 }
 
 function ensureSectionSelectionModalExists() {
   let modalSection = $('welcome-step-section');
   if (!modalSection) {
-    const welcomeOverlay = $('modal-welcome'), step1 = $('welcome-step-1');
+    const welcomeOverlay = $('modal-welcome'), step1 =$('welcome-step-1');
     if (!welcomeOverlay || !step1) return;
     modalSection = document.createElement('div');
     modalSection.id = 'welcome-step-section';
@@ -499,14 +499,14 @@ function upgradeSteppersToFourSteps() {
 
 window.navigateStepper = function(targetStep) {
   if (targetStep === 1) {
-    if ($('welcome-step-section')) $('welcome-step-section').style.display = 'none';
-    if ($('welcome-step-2')) $('welcome-step-2').style.display = 'none';
-    if ($('welcome-step-1')) $('welcome-step-1').style.display = 'block';
+    if ($('welcome-step-section'))$('welcome-step-section').style.display = 'none';
+    if ($('welcome-step-2'))$('welcome-step-2').style.display = 'none';
+    if ($('welcome-step-1'))$('welcome-step-1').style.display = 'block';
   } else if (targetStep === 2) {
     if (!validateStudentDetails()) return;
-    if ($('welcome-step-1')) $('welcome-step-1').style.display = 'none';
-    if ($('welcome-step-2')) $('welcome-step-2').style.display = 'none';
-    if ($('welcome-step-section')) $('welcome-step-section').style.display = 'block';
+    if ($('welcome-step-1'))$('welcome-step-1').style.display = 'none';
+    if ($('welcome-step-2'))$('welcome-step-2').style.display = 'none';
+    if ($('welcome-step-section'))$('welcome-step-section').style.display = 'block';
     renderDynamicSectionPickerCards();
   }
 };
@@ -560,18 +560,18 @@ function renderDynamicSectionPickerCards() {
 
 window.proceedToRegisterStep = () => {
   ensureSectionSelectionModalExists();
-  if ($('welcome-step-intro')) $('welcome-step-intro').style.display = 'none';
-  if ($('welcome-step-1')) $('welcome-step-1').style.display = 'block';
+  if ($('welcome-step-intro'))$('welcome-step-intro').style.display = 'none';
+  if ($('welcome-step-1'))$('welcome-step-1').style.display = 'block';
 };
 
 window.goToSectionSelectionStep = () => {
   if (!validateStudentDetails()) return;
   ensureSectionSelectionModalExists();
-  const nameInput = $('student-name-input'), rawClass = $('student-class-input') ? $('student-class-input').value : "Class 12";
+  const nameInput = $('student-name-input'), rawClass = $('student-class-input') ?$('student-class-input').value : "Class 12";
   CBTState.studentNameVal = (nameInput ? nameInput.value.trim() : "").toUpperCase();
   CBTState.studentClassVal = (rawClass.toString().startsWith("Class") || rawClass === "OTHER") ? rawClass : `Class ${rawClass}`;
-  CBTState.studentSectionVal = $('student-section-input') ? $('student-section-input').value : "A";
-  CBTState.schoolNameVal = ($('student-school-input') ? $('student-school-input').value.trim() : "").toUpperCase();
+  CBTState.studentSectionVal = $('student-section-input') ?$('student-section-input').value : "A";
+  CBTState.schoolNameVal = ($('student-school-input') ?$('student-school-input').value.trim() : "").toUpperCase();
   CBTState.studentName = `${CBTState.studentNameVal} | ${CBTState.studentClassVal} | SEC: ${CBTState.studentSectionVal} | ${CBTState.schoolNameVal}`;
   renderDynamicSectionPickerCards();
   if ($('welcome-step-1')) $('welcome-step-1').style.display = 'none';
@@ -1222,26 +1222,27 @@ function updateUserDynamicRank() {
   if (!validScores.length) return;
   const higherCount = validScores.filter(score => score > currentScore).length;
   const rankStr = `${higherCount + 1} / ${validScores.length + 1}`;
-  if ($('user-current-rank-badge') && $('user-current-rank-text')) {$('user-current-rank-text').innerText = rankStr;
+  if ($('user-current-rank-badge') && $('user-current-rank-text')) {
+    $('user-current-rank-text').innerText = rankStr;
     $('user-current-rank-badge').style.display = 'inline-flex';
   }
-  if ($('lbl-rs-rank-val'))$('lbl-rs-rank-val').innerText = rankStr;
+  if ($('lbl-rs-rank-val')) $('lbl-rs-rank-val').innerText = rankStr;
 }
 
 /* ==========================================================================
-   SECTION 11: SECTION SUBMISSION, SCORECARD & CUMULATIVE EVALUATION
+   SECTION 11: SECTION SUBMISSION, SCORECARD, REATTEMPT & EVALUATION
    ========================================================================== */
 window.showSubmitModal = () => {
   cancelAutoAdvance();
   if (CBTState.userAnswers[CBTState.currentQuestion] !== null && !CBTState.sections[CBTState.currentYearIndex].submitted) {
     CBTState.lockedAnswers[CBTState.currentQuestion] = true;
   }
-  if ($('submit-modal-text'))$('submit-modal-text').innerText = `Submit responses for ${CBTState.sections[CBTState.currentYearIndex].title}?`;
+  if ($('submit-modal-text')) $('submit-modal-text').innerText = `Submit responses for ${CBTState.sections[CBTState.currentYearIndex].title}?`;
   CBTState.isTimerPaused = true;
-  if ($('modal-submit'))$('modal-submit').style.display = 'flex';
+  if ($('modal-submit')) $('modal-submit').style.display = 'flex';
 };
-window.closeSubmitModal = () => { if ($('modal-submit'))$('modal-submit').style.display = 'none'; CBTState.isTimerPaused = false; };
-window.confirmSubmitExam = () => { if ($('modal-submit'))$('modal-submit').style.display = 'none'; CBTState.isTimerPaused = false; window.processSectionSubmission(); };
+window.closeSubmitModal = () => { if ($('modal-submit')) $('modal-submit').style.display = 'none'; CBTState.isTimerPaused = false; };
+window.confirmSubmitExam = () => { if ($('modal-submit')) $('modal-submit').style.display = 'none'; CBTState.isTimerPaused = false; window.processSectionSubmission(); };
 
 window.processSectionSubmission = async function() {
   cancelAutoAdvance();
@@ -1249,17 +1250,17 @@ window.processSectionSubmission = async function() {
   sec.submitted = true;
   for (let i = sec.start; i < sec.end; i++) CBTState.lockedAnswers[i] = true;
   document.body.classList.remove('exam-in-progress');
-  if ($('quiz-screen'))$('quiz-screen').style.display = 'none';
-  if ($('unified-nav'))$('unified-nav').style.display = 'none';
+  if ($('quiz-screen')) $('quiz-screen').style.display = 'none';
+  if ($('unified-nav')) $('unified-nav').style.display = 'none';
 
-  const resScreen = $('result-screen'), loaderBox =$('processing-loader-box'), scFrame = $('capture-scorecard-frame'), sumCard =$('cumulative-matrix-container');
+  const resScreen = $('result-screen'), loaderBox = $('processing-loader-box'), scFrame = $('capture-scorecard-frame'), sumCard = $('cumulative-matrix-container');
   if (resScreen) resScreen.style.display = 'block';
   if (loaderBox) loaderBox.style.display = 'flex';
   if (scFrame) scFrame.style.display = 'none';
   if (sumCard) sumCard.style.display = 'none';
 
-  if ($('lbl-user-greeting'))$('lbl-user-greeting').innerText = CBTState.studentNameVal || "";
-  if ($('lbl-section-title'))$('lbl-section-title').innerText = `${sec.title} Completed,`;
+  if ($('lbl-user-greeting')) $('lbl-user-greeting').innerText = CBTState.studentNameVal || "";
+  if ($('lbl-section-title')) $('lbl-section-title').innerText = `${sec.title} Completed,`;
 
   let secCorrect = 0, secIncorrect = 0, secUnattempted = 0, secMarks = 0;
   const totalQuestions = sec.end - sec.start, totalSectionMarks = totalQuestions * getCorrectMarks();
@@ -1271,12 +1272,12 @@ window.processSectionSubmission = async function() {
   }
   secMarks = Number(secMarks.toFixed(2));
   const formattedTime = `${Math.floor(sec.timeSpent / 60).toString().padStart(2, '0')}:${(sec.timeSpent % 60).toString().padStart(2, '0')}`;
-  if ($('lbl-score-obtained'))$('lbl-score-obtained').innerText = (secMarks % 1 === 0) ? secMarks : secMarks.toFixed(2);
-  if ($('lbl-score-total'))$('lbl-score-total').innerText = (totalSectionMarks % 1 === 0) ? totalSectionMarks : totalSectionMarks.toFixed(2);
-  if ($('lbl-stat-correct-val'))$('lbl-stat-correct-val').innerText = secCorrect;
-  if ($('lbl-stat-incorrect-val'))$('lbl-stat-incorrect-val').innerText = secIncorrect;
-  if ($('lbl-stat-unattempted-val'))$('lbl-stat-unattempted-val').innerText = secUnattempted;
-  if ($('lbl-stat-time-val'))$('lbl-stat-time-val').innerText = formattedTime;
+  if ($('lbl-score-obtained')) $('lbl-score-obtained').innerText = (secMarks % 1 === 0) ? secMarks : secMarks.toFixed(2);
+  if ($('lbl-score-total')) $('lbl-score-total').innerText = (totalSectionMarks % 1 === 0) ? totalSectionMarks : totalSectionMarks.toFixed(2);
+  if ($('lbl-stat-correct-val')) $('lbl-stat-correct-val').innerText = secCorrect;
+  if ($('lbl-stat-incorrect-val')) $('lbl-stat-incorrect-val').innerText = secIncorrect;
+  if ($('lbl-stat-unattempted-val')) $('lbl-stat-unattempted-val').innerText = secUnattempted;
+  if ($('lbl-stat-time-val')) $('lbl-stat-time-val').innerText = formattedTime;
 
   updateUserDynamicRank();
 
@@ -1334,13 +1335,76 @@ window.processSectionSubmission = async function() {
   }
 };
 
+window.reAttemptExam = function() {
+  cancelAutoAdvance();
+  clearSessionLocalStorage();
+
+  const resScreen = $('result-screen'), loaderBox = $('processing-loader-box');
+  const scFrame = $('capture-scorecard-frame'), sumCard = $('cumulative-matrix-container');
+  if (resScreen) resScreen.style.display = 'none';
+  if (loaderBox) loaderBox.style.display = 'none';
+  if (scFrame) scFrame.style.display = 'none';
+  if (sumCard) sumCard.style.display = 'none';
+
+  const targetPapers = (CBTState.selectedSectionMode === 'ALL' || !CBTState.listExamPapers[parseInt(CBTState.selectedSectionMode, 10)])
+    ? CBTState.listExamPapers
+    : [CBTState.listExamPapers[parseInt(CBTState.selectedSectionMode, 10)]];
+
+  if (!targetPapers || targetPapers.length === 0) {
+    showToastAlert("Unable to restart quiz. Please reload the page.");
+    return;
+  }
+
+  CBTState.questions = [];
+  CBTState.sections = [];
+  let qt = 0;
+  targetPapers.forEach((p, idx) => {
+    const st = qt, sq = p.questions.map(q => ({
+      question: q.text, tag: q.tag ?? "CBSE", options: [...q.options],
+      image: q.image ?? "", correctAnswerText: q.correctAnswerText, explanation: q.explanation ?? ""
+    }));
+    shuffleArray(sq);
+    sq.forEach(q => { CBTState.questions.push(q); qt++; });
+    CBTState.sections.push({ index: idx, title: p.title, year: p.year, start: st, end: qt, submitted: false, timeSpent: 0 });
+  });
+
+  CBTState.userAnswers = new Array(CBTState.questions.length).fill(null);
+  CBTState.visitedQuestions = new Array(CBTState.questions.length).fill(false);
+  CBTState.lockedAnswers = new Array(CBTState.questions.length).fill(false);
+  CBTState.markedQuestions = new Array(CBTState.questions.length).fill(false);
+  CBTState.sectionTimes = CBTState.sections.map(s => (s.end - s.start) * 60);
+  CBTState.currentYearIndex = 0;
+  CBTState.currentQuestion = CBTState.sections[0].start;
+  CBTState.isTimerPaused = false;
+  CBTState.isTimerFrozen = false;
+  CBTState.securityWarnings = 0;
+  CBTState.isExamActive = true;
+
+  document.body.classList.add('exam-in-progress');
+  if ($('quiz-screen')) $('quiz-screen').style.display = 'block';
+  if ($('unified-nav')) $('unified-nav').style.display = 'flex';
+
+  ensureReviewControlsExist();
+  buildYearNav();
+  updateTimerDisplay();
+  startTimer();
+  loadQuestion();
+  saveSessionToLocalStorage();
+  fetchAndRenderSidebarToppers();
+  showToastAlert(`Restarting quiz for ${CBTState.studentNameVal || 'student'}!`);
+};
+
+window.openNotesAndOneShot = function() {
+  triggerVerifyModal('resources');
+};
+
 window.handleSectionProgression = () => (CBTState.currentYearIndex < CBTState.sections.length - 1) ? executeProgressionAdvance() : showFinalCumulativeEvaluation();
 
 function showFinalCumulativeEvaluation() {
   cancelAutoAdvance(); clearSessionLocalStorage();
-  if ($('capture-scorecard-frame'))$('capture-scorecard-frame').style.display = 'none';
+  if ($('capture-scorecard-frame')) $('capture-scorecard-frame').style.display = 'none';
   if ($('cumulative-matrix-container')) {
-    $('cumulative-matrix-container').style.display = 'block';$('cumulative-matrix-container').scrollIntoView({ behavior: 'smooth' });
+    $('cumulative-matrix-container').style.display = 'block'; $('cumulative-matrix-container').scrollIntoView({ behavior: 'smooth' });
   }
 }
 
@@ -1349,9 +1413,9 @@ function executeProgressionAdvance() {
   if (CBTState.currentYearIndex + 1 < CBTState.sections.length) {
     CBTState.currentYearIndex++;
     CBTState.currentQuestion = CBTState.sections[CBTState.currentYearIndex].start;
-    if ($('result-screen'))$('result-screen').style.display = 'none';
-    if ($('quiz-screen'))$('quiz-screen').style.display = 'block';
-    if ($('unified-nav'))$('unified-nav').style.display = 'flex';
+    if ($('result-screen')) $('result-screen').style.display = 'none';
+    if ($('quiz-screen')) $('quiz-screen').style.display = 'block';
+    if ($('unified-nav')) $('unified-nav').style.display = 'flex';
     buildYearNav(); updateTimerDisplay(); loadQuestion();
   } else showFinalCumulativeEvaluation();
 }
@@ -1360,7 +1424,7 @@ function executeProgressionAdvance() {
    SECTION 12: RESOURCE VERIFICATION MODAL & FEEDBACK SHOWCASE
    ========================================================================== */
 function triggerVerifyModal(type) {
-  const modal = $('verify-resource-modal'), heading =$('verify-modal-heading'), text = $('verify-modal-text'), actionBtn =$('verify-proceed-action-btn');
+  const modal = $('verify-resource-modal'), heading = $('verify-modal-heading'), text = $('verify-modal-text'), actionBtn = $('verify-proceed-action-btn');
   if (!modal) return;
   modal.style.display = 'flex';
   if (type === 'yt') {
@@ -1373,6 +1437,11 @@ function triggerVerifyModal(type) {
     if (heading) heading.innerText = "Open Study Notes?";
     if (text) text.innerText = "Open study notes in a new tab while keeping your exam active?";
     if (actionBtn) { actionBtn.innerText = "Open Notes"; actionBtn.onclick = () => { window.open(CBTState.activeResourceUrl, '_blank'); closeVerifyModal(); }; }
+  } else if (type === 'resources') {
+    CBTState.activeResourceUrl = getYoutubeUrl();
+    if (heading) heading.innerText = "Study Notes & OneShot Video";
+    if (text) text.innerText = "Open educational revision video and notes in a new tab?";
+    if (actionBtn) { actionBtn.innerText = "Open Resources"; actionBtn.onclick = () => { if (CBTState.activeResourceUrl && CBTState.activeResourceUrl !== "#") window.open(CBTState.activeResourceUrl, '_blank'); closeVerifyModal(); }; }
   } else if (type === 'back') {
     if (heading) heading.innerText = "Leave Exam Session?";
     if (text) text.innerText = "Are you sure you want to go back? Your current progress is saved.";
@@ -1380,7 +1449,7 @@ function triggerVerifyModal(type) {
   }
 }
 window.triggerVerifyModal = triggerVerifyModal;
-window.closeVerifyModal = () => { if ($('verify-resource-modal'))$('verify-resource-modal').style.display = 'none'; };
+window.closeVerifyModal = () => { if ($('verify-resource-modal')) $('verify-resource-modal').style.display = 'none'; };
 window.goToHome = () => triggerVerifyModal('back');
 
 function triggerFeedbackSectionAnimation() {
@@ -1449,7 +1518,7 @@ window.setFeedbackRating = function(rating) {
   });
 };
 
-window.updateFbCharCount = textarea => { if ($('fb-char-counter'))$('fb-char-counter').innerText = `${textarea.value.length}/500`; };
+window.updateFbCharCount = textarea => { if ($('fb-char-counter')) $('fb-char-counter').innerText = `${textarea.value.length}/500`; };
 window.toggleFeedbackPill = radioInput => {
   CBTState.feedbackCategory = radioInput.value;
   document.querySelectorAll('.fb-radio-pill-exact').forEach(pill => pill.classList.remove('active'));
@@ -1458,7 +1527,7 @@ window.toggleFeedbackPill = radioInput => {
 
 window.submitUserFeedback = async function() {
   const msgEl = $('feedback-user-message'), rawMessage = msgEl ? msgEl.value.trim() : "", finalMessage = rawMessage || "(Rating Submitted)";
-  const btn = $('btn-save-feedback'), sendIcon =$('fb-send-icon'), spinIcon = $('fb-spin-icon'), btnLabel =$('fb-btn-label');
+  const btn = $('btn-save-feedback'), sendIcon = $('fb-send-icon'), spinIcon = $('fb-spin-icon'), btnLabel = $('fb-btn-label');
   if (btn) {
     btn.disabled = true; btn.classList.add('saving-active');
     if (sendIcon) sendIcon.style.display = 'none';
@@ -1500,8 +1569,8 @@ async function fetchFeedbackSubmissions() {
 }
 
 function renderSubmissionsShowcase(dataList) {
-  const countApprovedEl = $('count-approved-badge'), countPendingEl =$('count-pending-badge');
-  const streamApproved = $('stream-approved-cards'), streamPending = $('stream-pending-cards'), viewMoreWrap =$('ssc-view-more-wrap');
+  const countApprovedEl = $('count-approved-badge'), countPendingEl = $('count-pending-badge');
+  const streamApproved = $('stream-approved-cards'), streamPending = $('stream-pending-cards'), viewMoreWrap = $('ssc-view-more-wrap');
   const approved = dataList.filter(item => (item.status || "").trim().toLowerCase() === "approved");
   const pending = dataList.filter(item => (item.status || "").trim().toLowerCase() !== "approved");
   if (countApprovedEl) countApprovedEl.innerText = approved.length;
@@ -1510,7 +1579,7 @@ function renderSubmissionsShowcase(dataList) {
   const approvedToShow = approved.slice(0, maxInitial), pendingToShow = pending.slice(0, maxInitial);
   if (viewMoreWrap) {
     viewMoreWrap.style.display = approved.length > 20 ? 'block' : 'none';
-    if ($('lbl-load-more-text'))$('lbl-load-more-text').innerText = CBTState.isExpandedSubmissions ? 'Show Less ↑' : 'View More Responses (20+) ↓';
+    if ($('lbl-load-more-text')) $('lbl-load-more-text').innerText = CBTState.isExpandedSubmissions ? 'Show Less ↑' : 'View More Responses (20+) ↓';
   }
   const buildStars = ratingRaw => {
     const num = parseFloat(ratingRaw) || 5;
@@ -1547,9 +1616,9 @@ window.toggleAllSubmissions = function() {
    ========================================================================== */
 document.addEventListener('DOMContentLoaded', async () => {
   const activeName = getTestName(), chNum = getChapterNumber(), weight = getChapterWeightage();
-  if ($('header-ch-num'))$('header-ch-num').innerText = `Ch ${chNum}`;
-  if ($('header-ch-title'))$('header-ch-title').innerText = activeName;
-  if ($('header-weight-text'))$('header-weight-text').innerText = weight;
+  if ($('header-ch-num')) $('header-ch-num').innerText = `Ch ${chNum}`;
+  if ($('header-ch-title')) $('header-ch-title').innerText = activeName;
+  if ($('header-weight-text')) $('header-weight-text').innerText = weight;
   document.querySelectorAll('#welcome-step-1 .topic-text, #modal-resume .topic-text').forEach(node => { node.innerText = activeName; });
 
   const timerBox = $('timer-box');
@@ -1572,8 +1641,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   const saved = getSavedSession();
   if (saved) {
     CBTState.pendingRestoreData = saved;
-    if ($('modal-resume'))$('modal-resume').style.display = 'flex';
-  } else if ($('modal-welcome')) {$('modal-welcome').style.display = 'flex';
+    if ($('modal-resume')) $('modal-resume').style.display = 'flex';
+  } else if ($('modal-welcome')) {
+    $('modal-welcome').style.display = 'flex';
   }
 
   await loadQuestionsFromSheet();
