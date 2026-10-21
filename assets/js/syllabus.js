@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // 5. Generate Donut SVG
   function generateDonutSVG(data, total, centerText) {
     if (total === 0) return '';
-    let svg = `<svg viewBox="-2 -2 104 104" style="width:100%;height:100%;display:block;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.05));">`;
+    let svg = `<svg viewBox="-2 -2 104 104" style="width:100%;height:100%;display:block;">`;
     let startAngle = -Math.PI / 2;
 
     data.forEach(slice => {
@@ -94,9 +94,9 @@ document.addEventListener('DOMContentLoaded', function() {
       startAngle = endAngle;
     });
 
-    svg += `<circle cx="50" cy="50" r="28" class="sc-donut-center" />
+    svg += `<circle cx="50" cy="50" r="31" class="sc-donut-center" />
             <text x="50" y="44" class="sc-donut-text-perc" text-anchor="middle" dominant-baseline="central">${centerText}%</text>
-            <text x="50" y="58" class="sc-donut-text-label" text-anchor="middle" dominant-baseline="central">READY</text>
+            <text x="50" y="59" class="sc-donut-text-label" text-anchor="middle" dominant-baseline="central">READY</text>
             </svg>`;
     return svg;
   }
@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let targetSections = document.querySelectorAll('.sc-column[data-count-to-content="true"]');
     if (targetSections.length === 0) targetSections = document.querySelectorAll('.sc-column');
 
-    const SECTION_PALETTE = ['#0649B8', '#D97706', '#059669', '#6D28D9', '#DC2626', '#0284C7'];
+    const SECTION_PALETTE = ['#0066EE', '#E67700', '#00A859', '#6B21FF', '#DC2626', '#0284C7'];
     let pieData = [];
     let totalTrackedLinks = 0;
     let totalReadyLinks = 0;
@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     pieData.push({
       label: 'Coming Soon',
-      color: '#94A3B8',
+      color: '#98A2B3',
       count: totalLockedLinks,
       perc: Math.round((totalLockedLinks / totalTrackedLinks) * 100) || 0
     });
@@ -184,21 +184,27 @@ document.addEventListener('DOMContentLoaded', function() {
     const legendContainer = document.getElementById('dynamic-pie-legend');
     const subtitleEl = document.getElementById('mp-subtitle-custom');
     const overallBarFill = document.getElementById('sc-overall-bar-fill');
+    const overallBarPerc = document.getElementById('sc-overall-bar-perc');
 
     if (pieContainer && legendContainer && subtitleEl) {
-      subtitleEl.textContent = `${totalReadyLinks} of ${totalTrackedLinks} Live`;
+      subtitleEl.textContent = `${totalReadyLinks} of ${totalTrackedLinks}`;
       if (overallBarFill) overallBarFill.style.width = `${overallPerc}%`;
+      if (overallBarPerc) overallBarPerc.textContent = `${overallPerc}%`;
       pieContainer.innerHTML = generateDonutSVG(pieData, totalTrackedLinks, overallPerc);
 
-      legendContainer.innerHTML = pieData.map(d => `
-        <div class="sc-legend-item">
-          <div class="sc-legend-left">
-            <span class="sc-legend-dot" style="background:${d.color};"></span>
-            <span class="sc-legend-label ${d.label === 'Coming Soon' ? 'sc-legend-muted' : 'sc-legend-active'}">${d.label}</span>
+      legendContainer.innerHTML = pieData.map(d => {
+        const stateClass = d.label === 'Coming Soon' ? 'sc-legend-muted' : 'sc-legend-active';
+        return `
+          <div class="sc-legend-item">
+            <div class="sc-legend-left">
+              <span class="sc-legend-dot" style="background:${d.color};"></span>
+              <span class="sc-legend-label ${stateClass}">${d.label}</span>
+            </div>
+            <span class="sc-legend-count ${stateClass}">${d.count}</span>
+            <span class="sc-legend-perc ${stateClass}">(${d.perc}%)</span>
           </div>
-          <span class="sc-legend-val ${d.label === 'Coming Soon' ? 'sc-legend-muted' : 'sc-legend-active'}">${d.count} (${d.perc}%)</span>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     document.querySelectorAll('.sc-column').forEach(col => {
