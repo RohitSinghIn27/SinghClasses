@@ -1539,7 +1539,7 @@ window.submitUserFeedback = async function() {
     if (btn) { btn.classList.remove('saving-active'); btn.classList.add('success-active'); }
     if (spinIcon) spinIcon.style.display = 'none';
     if (sendIcon) sendIcon.style.display = 'none';
-    if (btnLabel) btnLabel.innerHTML = `Noted, My Lord! 👑`;
+    if (btnLabel) btnLabel.innerHTML = `Response Submitted`;
     if (msgEl) { msgEl.value = ""; updateFbCharCount(msgEl); }
     setTimeout(() => {
       if (btn) { btn.disabled = false; btn.classList.remove('success-active'); }
