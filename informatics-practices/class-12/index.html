@@ -125,68 +125,173 @@
 
     <div class="sc-widget-container">
 
-      <!-- Hero Section -->
+      <!-- Hero Section (Redesigned 3-Column UI) -->
       <section class="sc-hero-wrapper" aria-labelledby="page-main-heading">
-        <div class="sc-hero-main">
-          <!-- Session Badge -->
+        <div class="sc-hero-decor-dots-top" aria-hidden="true"></div>
+        <div class="sc-hero-decor-circle" aria-hidden="true"></div>
+        <div class="sc-hero-decor-corner" aria-hidden="true"></div>
+        <div class="sc-hero-decor-wave" aria-hidden="true"></div>
+
+        <!-- Column 1: Hero Title, Trust Checks & Feature Cards -->
+        <div class="sc-hero-left">
           <div class="sc-hero-tag">
-            <span class="sc-tag-dot" aria-hidden="true"></span> CBSE CODE 065 • SESSION 2026-27
+            <span class="sc-tag-dot" aria-hidden="true"></span> CBSE CODE 065 • SESSION 2026–27
           </div>
 
-          <!-- Main Header -->
-          <h1 class="sc-hero-title" id="page-main-heading">Class 12 <span class="sc-title-gradient">Informatics Practices</span></h1>
-          
-          <!-- Key Feature Pills -->
-          <div class="sc-hero-pills">
-            <span class="sc-hero-pill pill-blue">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-              CBSE 2026-27
+          <h1 class="sc-hero-title" id="page-main-heading">
+            Class 12
+            <span class="sc-title-gradient">Informatics Practices</span>
+          </h1>
+          <div class="sc-hero-title-underline" aria-hidden="true"></div>
+
+          <!-- Checkmark Row -->
+          <div class="sc-hero-checks">
+            <span class="sc-check-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="8 12 11 15 16 9"></polyline>
+              </svg>
+              Syllabus Aligned
             </span>
-            <span class="sc-hero-pill pill-green">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-              Free PDF Notes
+            <span class="sc-check-divider" aria-hidden="true"></span>
+            <span class="sc-check-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="8 12 11 15 16 9"></polyline>
+              </svg>
+              Concept to Practice
             </span>
-            <span class="sc-hero-pill pill-purple">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="2"></circle></svg>
-              PYQs &amp; MCQs
+            <span class="sc-check-divider" aria-hidden="true"></span>
+            <span class="sc-check-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="8 12 11 15 16 9"></polyline>
+              </svg>
+              Exam Ready
             </span>
           </div>
 
-          <!-- Section Navigation Buttons -->
-          <nav class="sc-hero-nav" aria-label="Curriculum Jump Links">
-            <div class="sc-nav-row sc-nav-row-top">
-              <a href="#colA" class="sc-hero-tab tab-sec-a active">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-                Section A: CBSE Resources
-              </a>
-              <a href="#colB" class="sc-hero-tab tab-sec-b">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-                Section B: Theory Syllabus
-              </a>
-              <a href="#colC" class="sc-hero-tab tab-sec-c">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2v7.31"></path><path d="M14 9.3V1.99"></path><path d="M8.5 2h7"></path><path d="M14 9.3a6.5 6.5 0 1 1-4 0"></path><path d="M5.52 16h12.96"></path></svg>
-                Section C: Practical Preparation
-              </a>
-              <a href="#colD" class="sc-hero-tab tab-sec-d">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="m9 15 2 2 4-4"></path></svg>
-                Section D: Exam Practice
-              </a>
+          <!-- 3 Feature Cards -->
+          <div class="sc-hero-feature-cards">
+            <div class="sc-feature-card card-blue">
+              <div class="sc-fc-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                </svg>
+              </div>
+              <div class="sc-fc-text">
+                <strong>70M Theory +<br>30M Practical</strong>
+              </div>
             </div>
-          </nav>
+
+            <div class="sc-feature-card card-green">
+              <div class="sc-fc-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                </svg>
+              </div>
+              <div class="sc-fc-text">
+                <strong>Chapter-Wise<br>PDF Notes</strong>
+              </div>
+            </div>
+
+            <div class="sc-feature-card card-amber">
+              <div class="sc-fc-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <circle cx="12" cy="12" r="6"></circle>
+                  <circle cx="12" cy="12" r="2"></circle>
+                </svg>
+              </div>
+              <div class="sc-fc-text">
+                <strong>PYQs, MCQs<br>&amp; DPPs</strong>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <!-- Resource Availability Card -->
+        <!-- Column 2: Section Jump Directory Card -->
+        <nav class="sc-hero-sections-card" aria-label="Section Jump Navigation">
+          <a href="#colA" class="sc-hero-tab sc-sec-nav-item active">
+            <div class="sc-sec-nav-icon icon-sec-a" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                <line x1="8" y1="21" x2="16" y2="21"></line>
+                <line x1="12" y1="17" x2="12" y2="21"></line>
+              </svg>
+            </div>
+            <div class="sc-sec-nav-content">
+              <span class="sc-sec-nav-tag">SECTION A</span>
+              <strong class="sc-sec-nav-title">Study Resources</strong>
+            </div>
+          </a>
+
+          <a href="#colB" class="sc-hero-tab sc-sec-nav-item">
+            <div class="sc-sec-nav-icon icon-sec-b" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+              </svg>
+            </div>
+            <div class="sc-sec-nav-content">
+              <span class="sc-sec-nav-tag">SECTION B</span>
+              <strong class="sc-sec-nav-title">Theory Chapters</strong>
+            </div>
+          </a>
+
+          <a href="#colC" class="sc-hero-tab sc-sec-nav-item">
+            <div class="sc-sec-nav-icon icon-sec-c" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10 2v7.31"></path>
+                <path d="M14 9.3V1.99"></path>
+                <path d="M8.5 2h7"></path>
+                <path d="M14 9.3a6.5 6.5 0 1 1-4 0"></path>
+                <path d="M5.52 16h12.96"></path>
+              </svg>
+            </div>
+            <div class="sc-sec-nav-content">
+              <span class="sc-sec-nav-tag">SECTION C</span>
+              <strong class="sc-sec-nav-title">Practical Preparation</strong>
+            </div>
+          </a>
+
+          <a href="#colD" class="sc-hero-tab sc-sec-nav-item">
+            <div class="sc-sec-nav-icon icon-sec-d" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+            </div>
+            <div class="sc-sec-nav-content">
+              <span class="sc-sec-nav-tag">SECTION D</span>
+              <strong class="sc-sec-nav-title">Exam Practice</strong>
+            </div>
+          </a>
+        </nav>
+
+        <!-- Column 3: Resource Availability Card -->
         <aside class="sc-multi-progress-card" aria-label="Study Material Availability Summary">
           <div class="sc-mp-header">
-            <h2 class="sc-mp-title">
-              <svg class="sc-trending-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              RESOURCE AVAILABILITY
-            </h2>
-            <span id="mp-subtitle-custom" class="sc-mp-count">0 of 0 Live</span>
+            <h2 class="sc-mp-title">Resource Availability</h2>
+            <span id="mp-subtitle-custom" class="sc-mp-count">0 of 0</span>
           </div>
-          <div class="sc-overall-bar-track" aria-hidden="true">
-            <div id="sc-overall-bar-fill" class="sc-overall-bar-fill"></div>
+
+          <div class="sc-overall-bar-row" aria-hidden="true">
+            <div class="sc-overall-bar-track">
+              <div id="sc-overall-bar-fill" class="sc-overall-bar-fill"></div>
+            </div>
+            <span id="sc-overall-bar-perc" class="sc-overall-bar-perc">0%</span>
           </div>
+
+          <div class="sc-mp-divider" aria-hidden="true"></div>
+
           <div class="pie-layout">
             <div id="dynamic-pie-container" class="pie-container" aria-hidden="true"></div>
             <div id="dynamic-pie-legend" class="pie-legend"></div>
@@ -197,7 +302,7 @@
       <!-- Main Syllabus Grid -->
       <div class="sc-main-grid">
 
-        <!-- Section A: CBSE Resources -->
+        <!-- Section A: Study Resources -->
         <section class="sc-column sc-column-a" id="colA" data-count-to-content="true" aria-labelledby="sec-a-heading">
           <div class="sc-column-bg"><canvas id="canvasA" class="sc-canvas-bg"></canvas></div>
           <h2 class="sc-section-title" id="sec-a-heading">Section A: Study Resources • CBSE 2026–27</h2>
@@ -239,7 +344,7 @@
           </div>
         </section>
 
-        <!-- Section B: Theory Syllabus -->
+        <!-- Section B: Theory Chapters -->
         <section class="sc-column sc-column-b" id="colB" data-count-to-content="true" aria-labelledby="sec-b-heading">
           <div class="sc-column-bg"><canvas id="canvasB" class="sc-canvas-bg"></canvas></div>
           <h2 class="sc-section-title" id="sec-b-heading">Section B: Theory Syllabus • 70 Marks</h2>
@@ -255,7 +360,7 @@
                 <a href="../../informatics-practices/class-12/notes/python-pandas-series.html" target="_blank" rel="noopener noreferrer" class="sc-btn-notes">Notes</a>
                 <a href="../../informatics-practices/class-12/pro/python-pandas-series.html" target="_blank" rel="noopener noreferrer" class="sc-btn-pro">Pro</a>
                 <a href="#" class="sc-btn-pyq">PYQs</a>
-                <a href="../../informatics-practices/class-12/mcq/python-pandas-series.html" target="_blank" rel="noopener noreferrer" class="sc-btn-mcq">MCQ</a>
+                <a href="../../informatics-practices/class-12/mcq/python-pandas-series.html" target="_blank" rel="noopener noreferrer" class="sc-btn-mcq">MCQs</a>
                 <a href="../../informatics-practices/class-12/dpp/python-pandas-series.html" target="_blank" rel="noopener noreferrer" class="sc-btn-dpp">DPP</a>
               </div>
             </article>
@@ -268,7 +373,7 @@
                 <a href="../../informatics-practices/class-12/notes/python-pandas-dataframe.html" target="_blank" rel="noopener noreferrer" class="sc-btn-notes">Notes</a>
                 <a href="https://drive.google.com/file/d/1Y4DvKWIRr2iJ0ANsd0W-q3ordGUQowlu/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="sc-btn-pro">Pro</a>
                 <a href="#" class="sc-btn-pyq">PYQs</a>
-                <a href="../../informatics-practices/class-12/mcq/python-pandas-dataframe.html" target="_blank" rel="noopener noreferrer" class="sc-btn-mcq">MCQ</a>
+                <a href="../../informatics-practices/class-12/mcq/python-pandas-dataframe.html" target="_blank" rel="noopener noreferrer" class="sc-btn-mcq">MCQs</a>
                 <a href="#" class="sc-btn-dpp">DPP</a>
               </div>
             </article>
@@ -281,7 +386,7 @@
                 <a href="https://drive.google.com/file/d/1y5bx9jOrVm6BKxAjo0oWN9P02li6dQPl/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="sc-btn-notes">Notes</a>
                 <a href="https://drive.google.com/file/d/18ezEdvk1aR0XTz1L1m6AX1xt99Y3qzGw/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="sc-btn-pro">Pro</a>
                 <a href="#" class="sc-btn-pyq">PYQs</a>
-                <a href="../../informatics-practices/class-12/mcq/data-visualization.html" target="_blank" rel="noopener noreferrer" class="sc-btn-mcq">MCQ</a>
+                <a href="../../informatics-practices/class-12/mcq/data-visualization.html" target="_blank" rel="noopener noreferrer" class="sc-btn-mcq">MCQs</a>
                 <a href="#" class="sc-btn-dpp">DPP</a>
               </div>
             </article>
@@ -294,7 +399,7 @@
                 <a href="https://singhclasses.in/informatics-practices/class-11/notes/database-concepts-and-sql.html" target="_blank" rel="noopener noreferrer" class="sc-btn-notes">Notes</a>
                 <a href="https://drive.google.com/file/d/1C90vbKfJ4V3yT6Qr0uwnLO1mHke3kbIp/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="sc-btn-pro">Pro</a>
                 <a href="#" class="sc-btn-pyq">PYQs</a>
-                <a href="../class-12/mcq/database-concepts.html" target="_blank" rel="noopener noreferrer" class="sc-btn-mcq">MCQ</a>
+                <a href="../class-12/mcq/database-concepts.html" target="_blank" rel="noopener noreferrer" class="sc-btn-mcq">MCQs</a>
                 <a href="#" class="sc-btn-dpp">DPP</a>
               </div>
             </article>
@@ -307,7 +412,7 @@
                 <a href="#" class="sc-btn-notes">Notes</a>
                 <a href="https://drive.google.com/file/d/1Ecwn2wSDy2CKv9p1fqJ8mk8fnAsoSTi2/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="sc-btn-pro">Pro</a>
                 <a href="#" class="sc-btn-pyq">PYQs</a>
-                <a href="../class-12/mcq/MySQL-function.html" target="_blank" rel="noopener noreferrer" class="sc-btn-mcq">MCQ</a>
+                <a href="../class-12/mcq/MySQL-function.html" target="_blank" rel="noopener noreferrer" class="sc-btn-mcq">MCQs</a>
                 <a href="#" class="sc-btn-dpp">DPP</a>
               </div>
             </article>
@@ -320,7 +425,7 @@
                 <a href="#" class="sc-btn-notes">Notes</a>
                 <a href="https://drive.google.com/file/d/1Cbq_oRR7X-3lrGVsPiCRBX9rUnyg4q7K/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="sc-btn-pro">Pro</a>
                 <a href="#" class="sc-btn-pyq">PYQs</a>
-                <a href="../class-12/mcq/MySQL-joining.html" target="_blank" rel="noopener noreferrer" class="sc-btn-mcq">MCQ</a>
+                <a href="../class-12/mcq/MySQL-joining.html" target="_blank" rel="noopener noreferrer" class="sc-btn-mcq">MCQs</a>
                 <a href="#" class="sc-btn-dpp">DPP</a>
               </div>
             </article>
@@ -333,7 +438,7 @@
                 <a href="#" class="sc-btn-notes">Notes</a>
                 <a href="https://drive.google.com/file/d/1qgrGm4B062iU0o-esVJMl5LbNZpfGS3R/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="sc-btn-pro">Pro</a>
                 <a href="#" class="sc-btn-pyq">PYQs</a>
-                <a href="../../informatics-practices/class-12/mcq/computer-networking.html" target="_blank" rel="noopener noreferrer" class="sc-btn-mcq">MCQ</a>
+                <a href="../../informatics-practices/class-12/mcq/computer-networking.html" target="_blank" rel="noopener noreferrer" class="sc-btn-mcq">MCQs</a>
                 <a href="#" class="sc-btn-dpp">DPP</a>
               </div>
             </article>
@@ -346,7 +451,7 @@
                 <a href="../../informatics-practices/class-12/notes/society-law-and-ethics.html" target="_blank" rel="noopener noreferrer" class="sc-btn-notes">Notes</a>
                 <a href="https://drive.google.com/file/d/1yhnbDAQvPyJ3YPex3b84vKQ63kqgzPra/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="sc-btn-pro">Pro</a>
                 <a href="#" class="sc-btn-pyq">PYQs</a>
-                <a href="#" class="sc-btn-mcq">MCQ</a>
+                <a href="#" class="sc-btn-mcq">MCQs</a>
                 <a href="#" class="sc-btn-dpp">DPP</a>
               </div>
             </article>
@@ -428,7 +533,7 @@
               </div>
             </article>
 
-            <!-- Card 3: CBSE Previous-Year Questions -->
+            <!-- Card 3: Official CBSE Previous-Year Questions -->
             <article class="sc-custom-card">
               <div class="sc-unit-badge"><span>Board Archive</span><span>70 Marks</span></div>
               <h3>CBSE Previous-Year Questions</h3>
@@ -444,7 +549,7 @@
             </article>
           </div>
 
-          <!-- Primary CBT Action Button -->
+          <!-- Primary Mock Test Action (CBT) -->
           <div class="sc-cbt-section" data-cbt-href="../../informatics-practices/class-12/mcq/cbse-objective-questions.html" data-cbt-highlight="Attempt the CBT" data-cbt-text="of objective questions"></div>
         </section>
 
@@ -458,7 +563,7 @@
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
           </div>
           <div class="sc-sbg-text">
-            <h2>Master Concepts with One-Shot Revision Classes</h2>
+            <h2>Master Concepts with OneShot Revision Classes</h2>
             <p>Concise explanations. Exam-ready preparation.</p>
           </div>
         </div>
@@ -475,9 +580,7 @@
   <!-- Site Footer -->
   <footer class="site-footer" role="contentinfo">
     <div class="footer-bottom-bar">
-      <div class="copyright-text">
-        © <span id="current-year">2026</span> SinghClasses.in | Designed with <span class="heart-icon" aria-label="love">❤️</span> by Rohit Singh
-      </div>
+      <div class="copyright-text">© <span id="current-year">2026</span> SinghClasses.in | Designed with <span class="heart-icon" aria-label="love">❤️</span> by Rohit Singh</div>
       <div class="footer-legal-links">
         <a href="../../legal/privacy.html">Privacy Policy</a>
         <a href="../../legal/terms-and-condition.html">Terms of Service</a>
