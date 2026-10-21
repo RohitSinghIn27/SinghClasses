@@ -104,7 +104,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
   z-index: 2 !important;
   display: flex !important;
   flex-direction: column !important;
-  justify-content: flex-start !important; /* Fixed gap by aligning to top */
+  justify-content: flex-start !important;
   align-items: flex-start !important;
   min-width: 0 !important;
   max-width: 100% !important;
@@ -141,7 +141,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
 .sc-title-gradient { display: block !important; color: #0066EE !important; background: none !important; -webkit-text-fill-color: #0066EE !important; }
 .sc-hero-title-underline { width: 44px; height: 3px; background: #F59E0B; border-radius: 99px; margin-bottom: 8px; flex-shrink: 0; }
 
-.sc-hero-checks { display: flex !important; align-items: center !important; flex-wrap: nowrap !important; gap: 8px !important; margin-bottom: 10px !important; width: 100% !important; }
+.sc-hero-checks { display: flex !important; align-items: center !important; flex-wrap: nowrap !important; gap: 8px !important; margin-bottom: 6px !important; width: 100% !important; }
 .sc-check-item { display: inline-flex !important; align-items: center !important; gap: 4px !important; font-family: var(--font-body) !important; font-size: 0.70rem !important; font-weight: 600 !important; color: #1E293B !important; white-space: nowrap !important; }
 .sc-check-item svg { width: 14px !important; height: 14px !important; color: #061B4F !important; flex-shrink: 0 !important; }
 .sc-check-divider { width: 1px !important; height: 10px !important; background: #CBD5E1 !important; flex-shrink: 0 !important; }
@@ -153,7 +153,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
   gap: 6px !important;
   width: 100% !important;
   max-width: 100% !important;
-  margin-top: 4px !important; /* Pulled up close to checkmark row */
+  margin-top: 0 !important; /* Completely removed top margin gap */
 }
 .sc-feature-card {
   display: flex !important;
