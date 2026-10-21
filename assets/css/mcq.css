@@ -264,7 +264,7 @@ h1, h2, h3, h4 { color: var(--text-color); font-weight: 800; }
 #welcome-step-section .modal-btn-row, #welcome-step-2 .modal-start-btn-row { display: grid !important; grid-template-columns: 1fr 1.65fr !important; gap: 10px !important; margin-top: 4px !important; width: 100% !important; }
 #welcome-step-section .btn-back-home, #welcome-step-2 .btn-back-home { height: 40px !important; border-radius: var(--btn-radius) !important; font-weight: 800 !important; font-size: 0.85rem !important; background: #f8fafc !important; color: #0b1a3d !important; border: 1.5px solid #dce4ef !important; cursor: pointer !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; gap: 6px !important; text-transform: none !important; transition: background 0.15s ease, border-color 0.15s ease !important; }
 #welcome-step-section .btn-back-home:hover, #welcome-step-2 .btn-back-home:hover { background: #f1f5f9 !important; border-color: #cbd5e1 !important; }
-#welcome-step-section .btn-green-submit, #welcome-step-2 .btn-green-submit { height: 40px !important; border-radius: var(--btn-radius) !important; font-weight: 800 !important; font-size: 0.86rem !important; background: #046a38 !important; color: #ffffff !important; border: 1px solid #046a38 !important; cursor: pointer !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; gap: 7px !important; box-shadow: 0 5px 15px rgba(4, 106, 56, 0.24) !important; transition: background 0.15s ease, transform 0.15s ease !important; }
+#welcome-step-section .btn-green-submit, #welcome-step-2 .btn-green-submit { height: 40px !important; border-radius: var(--btn-radius) !important; font-weight: 800 !important; font-size: 0.86rem !important; background: #046a38 !important; color: #ffffff !important; border: 1px solid #046a38 !important; cursor: pointer !important; display: inline-flex !align-items: center !important; justify-content: center !important; gap: 7px !important; box-shadow: 0 5px 15px rgba(4, 106, 56, 0.24) !important; transition: background 0.15s ease, transform 0.15s ease !important; }
 #welcome-step-section .btn-green-submit:hover, #welcome-step-2 .btn-green-submit:hover { background: #03532c !important; transform: translateY(-1px); }
 #welcome-step-2 .btn-green-submit::after { content: none !important; display: none !important; }
 
@@ -546,10 +546,30 @@ h1, h2, h3, h4 { color: var(--text-color); font-weight: 800; }
 .rs-stat-box-icon.timetaken { background-color: #eff6ff; color: #2563eb; }
 .rs-stat-box-val { font-size: 1.15rem; font-weight: 800; color: #0f172a; line-height: 1; }
 .rs-stat-box-lbl { font-size: 0.67rem; font-weight: 600; color: #64748b; text-transform: uppercase; }
-.dashboard-action-row { display: grid; grid-template-columns: 1.2fr 1fr; gap: 8px; width: 100%; margin-top: 3px; }
-.dashboard-action-row button { height: 42px; display: inline-flex; align-items: center; justify-content: center; gap: 5px; font-size: 0.84rem; font-weight: 700; border-radius: var(--btn-radius); text-transform: uppercase; cursor: pointer; border: 1px solid transparent; }
-.btn-proceed-green { background-color: #046a38; color: #ffffff; border-color: #03522b; }
+
+/* Section Action Buttons & Action Grid (Image 4 Design) */
+.dashboard-action-row { width: 100%; margin-top: 4px; }
+.dashboard-action-row .btn-proceed-green { width: 100%; height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.88rem; font-weight: 800; border-radius: var(--btn-radius); text-transform: uppercase; cursor: pointer; border: 1px solid #03522b; background-color: #046a38; color: #ffffff; box-shadow: 0 4px 14px rgba(4, 106, 56, 0.22); transition: all 0.15s ease; }
+.dashboard-action-row .btn-proceed-green:hover { background-color: #03532c; transform: translateY(-1px); box-shadow: 0 6px 18px rgba(4, 106, 56, 0.30); }
 .btn-back-home { background-color: #f8fafc; color: #0f172a; border-color: var(--border-color); }
+
+.dashboard-action-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 100%; margin-top: 2px; }
+.btn-action-card { height: 42px; border-radius: var(--btn-radius); display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.74rem; font-weight: 750; cursor: pointer; border: 1.4px solid transparent; background: #ffffff; transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease; padding: 0 6px; white-space: nowrap; user-select: none; }
+.btn-action-card:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); }
+.btn-action-card:active { transform: translateY(0); }
+.btn-action-card svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+.btn-action-home { background: #f8fafc; border-color: #dce4ef; color: #0b1a3d; }
+.btn-action-home:hover { background: #f1f5f9; border-color: #cbd5e1; }
+
+.btn-action-leaderboard { background: #eff6ff; border-color: #bfdbfe; color: #0056f6; }
+.btn-action-leaderboard:hover { background: #dbeafe; border-color: #93c5fd; }
+
+.btn-action-reattempt { background: #fff7ed; border-color: #fed7aa; color: #ea580c; }
+.btn-action-reattempt:hover { background: #ffedd5; border-color: #fdba74; }
+
+.btn-action-resources { background: #faf5ff; border-color: #e9d5ff; color: #7c3aed; }
+.btn-action-resources:hover { background: #f3e8ff; border-color: #d8b4fe; }
 
 .img4-summary-card { width: 100%; max-width: 960px; margin: 20px auto; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px 22px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04); }
 .img4-summary-top-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
@@ -922,8 +942,10 @@ h1, h2, h3, h4 { color: var(--text-color); font-weight: 800; }
   .rs-stat-box-card { padding: 10px 6px; border-radius: 10px; }
   .rs-stat-box-val { font-size: 1.05rem; }
   .rs-stat-box-lbl { font-size: 0.64rem; }
-  .dashboard-action-row { grid-template-columns: 1fr; gap: 8px; }
-  .dashboard-action-row button { height: 40px; font-size: 0.80rem; width: 100%; }
+  .dashboard-action-row { width: 100%; margin-top: 2px; }
+  .dashboard-action-row .btn-proceed-green { height: 40px; font-size: 0.80rem; width: 100%; }
+  .dashboard-action-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+  .btn-action-card { height: 38px; font-size: 0.70rem; padding: 0 4px; }
 
   /* Mobile Card Layout for Cumulative Evaluation Table */
   .img4-summary-card { padding: 12px 10px; border-radius: 12px; margin: 10px auto; }
@@ -985,6 +1007,7 @@ h1, h2, h3, h4 { color: var(--text-color); font-weight: 800; }
   .input-row-half { grid-template-columns: 1fr; gap: 10px; }
   #welcome-step-section .modal-btn-row, #welcome-step-2 .modal-start-btn-row { grid-template-columns: 1fr !important; }
   .matrix-row-secondary button { font-size: 0.64rem; padding: 0 3px; }
+  .dashboard-action-grid { grid-template-columns: 1fr; }
 }
 
 /* ==========================================================================
