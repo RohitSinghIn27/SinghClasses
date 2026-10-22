@@ -3,11 +3,9 @@
    Read-only Topics • Live Google Sheets Sync • No Keyloggers • No Mock Data
    ========================================================================== */
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyG4UFan_caa9X-ol9OCXVm6e5F-0zH2d1ioAHSYGuLBjw5pzNKZ54CsyVviQ8mWDeW/exec';
-
 const TEMPLATE_VERSION = '2026.10_live_readonly';
 const STORAGE_KEY_PLANNER = 'singhPlanner_core_v2';
 const STORAGE_KEY_ATTENDANCE = 'singhPlanner_attendance_v2';
-
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 const EMPTY_TIMETABLES = {
@@ -29,7 +27,6 @@ let state = {
 
 let attendanceStore = {};
 let lastCheckedDate = toISO(new Date());
-
 let currentAttBatchId = null;
 let currentAttBatchTitle = '';
 let currentAttTaskId = null;
@@ -143,7 +140,96 @@ function updateSectionStats(prefix, done, total, totalHrs) {
   if (bar) bar.style.width = `${pct}%`;
 }
 
-/* ================= REUSABLE UI BUILDERS (IMAGE 1 SPEC) ================= */
+function updateClock() {
+  const now = new Date();
+  setText('headerTimeStr', now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+}
+
+function resolveRoster(batchId, batchTitle) {
+  if (!state.rosters || typeof state.rosters !== 'object') return [];
+  if (batchId && Array.isArray(state.rosters[batchId])) return state.rosters[batchId];
+  if (batchTitle && Array.isArray(state.rosters[batchTitle])) return state.rosters[batchTitle];
+  const normId = normalizeBatchId(batchId || '');
+  const normTitle = normalizeBatchId(batchTitle || '');
+  for (const k of Object.keys(state.rosters)) {
+    if (!Array.isArray(state.rosters[k])) continue;
+    const normK = normalizeBatchId(k);
+    if (normK === normId || normK === normTitle) return state.rosters[k];
+    const cleanK = k.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const cleanT = (batchTitle || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    if (cleanK && cleanT && (cleanK === cleanT || cleanK.includes(cleanT) || cleanT.includes(cleanK))) {
+      return state.rosters[k];
+    }
+  }
+  return [];
+}
+
+function getStoredAttendance(dateStr, batchId, batchTitle) {
+  if (!attendanceStore || !attendanceStore[dateStr]) return {};
+  const dateMap = attendanceStore[dateStr];
+  if (batchId && dateMap[batchId]) return dateMap[batchId];
+  if (batchTitle && dateMap[batchTitle]) return dateMap[batchTitle];
+  const normId = normalizeBatchId(batchId || '');
+  const normTitle = normalizeBatchId(batchTitle || '');
+  for (const k of Object.keys(dateMap)) {
+    const normK = normalizeBatchId(k);
+    if (normK === normId || normK === normTitle) return dateMap[k];
+    const cleanK = k.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const cleanT = (batchTitle || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    if (cleanK && cleanT && (cleanK === cleanT || cleanK.includes(cleanT) || cleanT.includes(cleanK))) {
+      return dateMap[k];
+    }
+  }
+  return {};
+}
+
+function getAbsentStudents(item) {
+  const bId = currentAttBatchId || (item && item.batchId) || (item && normalizeBatchId(item.task));
+  const bTitle = currentAttBatchTitle || (item && item.task) || '';
+  const targetDate = currentAttTargetDate || state.activeDateStr;
+  const roster = resolveRoster(bId, bTitle);
+  const attMap = getStoredAttendance(targetDate, bId, bTitle);
+  const absentees = [];
+
+  const listContainer = document.getElementById('attStudentList');
+  if (listContainer) {
+    listContainer.querySelectorAll('[data-student-row]').forEach(row => {
+      const studentName = row.getAttribute('data-student-row');
+      const buttons = Array.from(row.querySelectorAll('button'));
+      const aBtn = buttons.find(b => b.textContent.trim() === 'A');
+      if (aBtn) {
+        const isActive = aBtn.classList.contains('bg-accentRed') ||
+                         aBtn.classList.contains('text-white') ||
+                         !aBtn.classList.contains('bg-slate-50');
+        if (isActive && studentName && !absentees.includes(studentName)) {
+          absentees.push(studentName);
+        }
+      }
+    });
+  }
+
+  Object.keys(attMap).forEach(name => {
+    const val = String(attMap[name] || '').toUpperCase();
+    if (val === 'A' || val === 'ABSENT') {
+      if (!absentees.includes(name)) absentees.push(name);
+    }
+  });
+
+  if (absentees.length === 0 && roster.length > 0) {
+    const hasAnyPresent = Object.values(attMap).some(v => ['P', 'L', 'PRESENT', 'LATE'].includes(String(v).toUpperCase()));
+    if (hasAnyPresent) {
+      roster.forEach(st => {
+        const val = String(attMap[st] || '').toUpperCase();
+        if (!['P', 'L', 'PRESENT', 'LATE'].includes(val)) {
+          if (!absentees.includes(st)) absentees.push(st);
+        }
+      });
+    }
+  }
+  return absentees;
+}
+
+/* ================= REUSABLE UI BUILDERS ================= */
 function buildSessionCell(index) {
   return `
     <td class="py-2.5 px-3 text-center col-cb">
@@ -221,7 +307,6 @@ function buildVenueCell(venue) {
     </td>`;
 }
 
-/* Image 1 Spec: 3-Dot Speech Bubble Green Button */
 function buildReminderCell(slotId, isTuition, sentAt) {
   if (!isTuition) {
     return `<td class="py-2.5 px-3 text-center col-act"><span class="text-slate-300 font-bold">—</span></td>`;
@@ -237,7 +322,6 @@ function buildReminderCell(slotId, isTuition, sentAt) {
     </td>`;
 }
 
-/* Image 1 Spec: 3-Student Silhouette Silhouette + Rounded Pill */
 function buildStudentsCell(count, isTuition) {
   if (!isTuition) {
     return `<td class="py-2.5 px-3 text-center col-nos"><span class="text-slate-400 text-xs italic">Self</span></td>`;
@@ -269,7 +353,6 @@ function buildStudentsCell(count, isTuition) {
     </td>`;
 }
 
-/* Image 1 Spec: Minimal Circular Clock Icon + Bold Duration */
 function buildDurationCell(hrs) {
   return `
     <td class="py-2.5 px-3 text-center col-dur">
@@ -572,7 +655,6 @@ function ensureDayPopulated(dateStr) {
   const schMap = new Map((existing.school || []).map(t => [t.slotId, t]));
   const tuiMap = new Map((existing.tuition_study || []).map(t => [t.slotId, t]));
 
-  // School Slots
   const schSlots = (state.timetables.school && state.timetables.school[dName]) || [];
   state.days[dateStr].school = schSlots.map((slot, idx) => {
     const ex = schMap.get(slot.id);
@@ -594,7 +676,6 @@ function ensureDayPopulated(dateStr) {
     };
   });
 
-  // Tuition Slots
   const tuiSlots = (state.timetables.tuition && state.timetables.tuition[dName]) || [];
   const populatedTuition = tuiSlots.map((slot, idx) => {
     const ex = tuiMap.get(slot.id);
@@ -614,7 +695,6 @@ function ensureDayPopulated(dateStr) {
     };
   });
 
-  // Study Slots
   const stdSlots = (state.timetables.study && state.timetables.study[dName]) || [];
   const populatedStudy = stdSlots.map((slot, idx) => {
     const ex = tuiMap.get(slot.id);
@@ -708,7 +788,7 @@ function renderTuitionTable() {
     const status = getTimeStatus(item.time, state.activeDateStr);
     const isTuition = item.cat === 'Tuition';
     const bId = item.batchId || normalizeBatchId(item.task);
-    const count = (state.rosters[bId] || []).length;
+    const count = resolveRoster(bId, item.task).length;
     const sentAt = isTuition ? (state.sentLog && state.sentLog[`${state.activeDateStr}|${item.slotId}`]) : null;
 
     let rowClass = 'hover:bg-slate-50/80';
@@ -832,8 +912,8 @@ function closeAttendanceModal() {
 
 function renderAttendanceList() {
   const container = document.getElementById('attStudentList');
-  const roster = state.rosters[currentAttBatchId] || [];
-  const dayAtt = (attendanceStore[currentAttTargetDate] && attendanceStore[currentAttTargetDate][currentAttBatchId]) || {};
+  const roster = resolveRoster(currentAttBatchId, currentAttBatchTitle);
+  const dayAtt = getStoredAttendance(currentAttTargetDate, currentAttBatchId, currentAttBatchTitle);
 
   let pCount = 0;
   container.innerHTML = roster.map((student, idx) => {
@@ -864,17 +944,42 @@ function setStudentStatus(student, status) {
   if (!attendanceStore[currentAttTargetDate]) attendanceStore[currentAttTargetDate] = {};
   if (!attendanceStore[currentAttTargetDate][currentAttBatchId]) attendanceStore[currentAttTargetDate][currentAttBatchId] = {};
   attendanceStore[currentAttTargetDate][currentAttBatchId][student] = status;
+  if (currentAttBatchTitle && currentAttBatchTitle !== currentAttBatchId) {
+    attendanceStore[currentAttTargetDate][currentAttBatchTitle] = attendanceStore[currentAttTargetDate][currentAttBatchTitle] || {};
+    attendanceStore[currentAttTargetDate][currentAttBatchTitle][student] = status;
+  }
   saveState();
   renderAttendanceList();
 }
 
 function markAllAttendance(status) {
-  const roster = state.rosters[currentAttBatchId] || [];
+  const roster = resolveRoster(currentAttBatchId, currentAttBatchTitle);
   if (!attendanceStore[currentAttTargetDate]) attendanceStore[currentAttTargetDate] = {};
   if (!attendanceStore[currentAttTargetDate][currentAttBatchId]) attendanceStore[currentAttTargetDate][currentAttBatchId] = {};
-  roster.forEach(st => attendanceStore[currentAttTargetDate][currentAttBatchId][st] = status);
+  roster.forEach(st => {
+    attendanceStore[currentAttTargetDate][currentAttBatchId][st] = status;
+    if (currentAttBatchTitle && currentAttBatchTitle !== currentAttBatchId) {
+      attendanceStore[currentAttTargetDate][currentAttBatchTitle] = attendanceStore[currentAttTargetDate][currentAttBatchTitle] || {};
+      attendanceStore[currentAttTargetDate][currentAttBatchTitle][st] = status;
+    }
+  });
   saveState();
   renderAttendanceList();
+}
+
+function addStudentFromModal() {
+  const input = document.getElementById('newStudentInput');
+  if (!input) return;
+  const name = input.value.trim();
+  if (!name || !currentAttBatchId) return;
+  if (!state.rosters[currentAttBatchId]) state.rosters[currentAttBatchId] = [];
+  if (!state.rosters[currentAttBatchId].includes(name)) {
+    state.rosters[currentAttBatchId].push(name);
+    saveState();
+    renderAttendanceList();
+    renderTuitionTable();
+  }
+  input.value = '';
 }
 
 async function pushAttendanceToSheet() {
@@ -946,6 +1051,13 @@ function dispatchWhatsAppMessage(item) {
   const startTime = parts[0]?.trim() || item.time;
   const endTime = parts[1]?.trim() || '';
 
+  const includeToggle = document.getElementById('includeAbsenteeToggle');
+  const shouldInclude = includeToggle ? includeToggle.checked : true;
+  const absentees = getAbsentStudents(item);
+  const absentSection = (shouldInclude && absentees.length > 0)
+    ? `\n❌ *Absent Students:* ${absentees.join(', ')}`
+    : '';
+
   const message = `
 *=•=•=•=•=•=•=•=•==•=•=•=•=•=•=•=•=*
 ⏰*Gentle Reminder*
@@ -953,7 +1065,7 @@ function dispatchWhatsAppMessage(item) {
 🏛️ *${getDayName(state.activeDateStr)}’s* ${item.task}
 📍 *Venue:* ${item.venue || 'Sant Nagar / Online'}
 ⏰ *Time:* *${startTime}* to *${endTime}*
-📚 *Topic:* ${item.topic || 'Class Session'}
+📚 *Topic:* ${item.topic || 'Class Session'}${absentSection}
 *=•=•=•=•=•=•=•=•==•=•=•=•=•=•=•=•=*
 🌐 *Visit:* www.SinghClasses.in`;
 
@@ -980,6 +1092,10 @@ function handleNavClick(view, btn) {
   setPlannerView(view);
 }
 
+function triggerPrint() {
+  window.print();
+}
+
 function showToast(msg, type = 'info') {
   const container = document.getElementById('toastContainer');
   if (!container) return;
@@ -993,15 +1109,12 @@ function showToast(msg, type = 'info') {
 
 /* ================= LIFECYCLE & INITIAL LOAD ================= */
 window.addEventListener('load', () => {
+  updateClock();
   loadState();
   setPlannerView('school');
   ensureTodoModalDOM();
   ensureHeaderTodoButtons();
-
   fetchFromAppsScript(false);
 
-  setInterval(() => {
-    const now = new Date();
-    setText('headerTimeStr', now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
-  }, 30000);
+  setInterval(updateClock, 1000);
 });
