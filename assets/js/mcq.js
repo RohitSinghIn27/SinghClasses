@@ -33,8 +33,10 @@ window.CBTState = {
   userAnswers: [], visitedQuestions: [], lockedAnswers: [], markedQuestions: [], sectionTimes: [],
   timerInterval: null, isTimerPaused: true, isTimerFrozen: false, securityWarnings: 0,
   isExamActive: false, currentFilter: 'all', activeResourceUrl: "", lastWT: 0,
-  sectionToppersFetched: [], pendingRestoreData: null, feedbackRating: 1.5,
-  feedbackCategory: "Suggestion", feedbackDataStore: [], hasAnimatedStars: false,
+  sectionToppersFetched: [], pendingRestoreData: null,
+  feedbackRating: 0,
+  feedbackCategory: "",
+  feedbackDataStore: [], hasAnimatedStars: false,
   isExpandedSubmissions: false, allFetchedRecords: [], hasFetchedFeedback: false
 };
 
@@ -68,7 +70,7 @@ const getFormattedTimestamp = () => {
 };
 
 function showToastAlert(m) {
-  const t = $('custom-alert-toast'), txt =$('custom-alert-text');
+  const t = $('custom-alert-toast'), txt = $('custom-alert-text');
   if (t && txt) {
     txt.innerHTML = `${ICON_ALERT} ${m}`;
     t.classList.add('show');
@@ -111,7 +113,7 @@ window.handleHeaderBack = function() {
 };
 
 window.sharePage = async function() {
-  const currentUrl = window.location.href, btn = $('btn-share-page'), badge = $('share-copied-badge'), icon =$('share-icon-svg');
+  const currentUrl = window.location.href, btn = $('btn-share-page'), badge = $('share-copied-badge'), icon = $('share-icon-svg');
   const showFeedback = () => {
     if (badge) { badge.innerText = "Copied!"; badge.style.display = "inline-block"; }
     if (icon) icon.style.display = "none";
@@ -142,7 +144,7 @@ function enableDesktopFullscreen() {
 }
 
 function updateFullscreenIconState() {
-  const icon = $('fs-icon'), btn =$('fullscreen-toggle-btn');
+  const icon = $('fs-icon'), btn = $('fullscreen-toggle-btn');
   if (!icon) return;
   if (document.fullscreenElement) { icon.innerHTML = ICON_MINIMIZE; if (btn) btn.title = "Exit Fullscreen"; }
   else { icon.innerHTML = ICON_FULLSCREEN; if (btn) btn.title = "Fullscreen"; }
@@ -198,15 +200,15 @@ function restoreSession(data) {
     studentName: data.studentName || "", selectedSectionMode: data.selectedSectionMode || "ALL",
     sectionToppersFetched: data.sectionToppersFetched || [], isExamActive: true, isTimerPaused: false, isTimerFrozen: false
   });
-  if ($('student-name-input'))$('student-name-input').value = CBTState.studentNameVal;
-  if ($('student-class-input'))$('student-class-input').value = CBTState.studentClassVal;
-  if ($('student-section-input'))$('student-section-input').value = CBTState.studentSectionVal;
-  if ($('student-school-input'))$('student-school-input').value = CBTState.schoolNameVal;
-  if ($('modal-resume'))$('modal-resume').style.display = 'none';
-  if ($('modal-welcome'))$('modal-welcome').style.display = 'none';
+  if ($('student-name-input')) $('student-name-input').value = CBTState.studentNameVal;
+  if ($('student-class-input')) $('student-class-input').value = CBTState.studentClassVal;
+  if ($('student-section-input')) $('student-section-input').value = CBTState.studentSectionVal;
+  if ($('student-school-input')) $('student-school-input').value = CBTState.schoolNameVal;
+  if ($('modal-resume')) $('modal-resume').style.display = 'none';
+  if ($('modal-welcome')) $('modal-welcome').style.display = 'none';
   document.body.classList.add('exam-in-progress');
-  if ($('quiz-screen'))$('quiz-screen').style.display = 'block';
-  if ($('unified-nav'))$('unified-nav').style.display = 'flex';
+  if ($('quiz-screen')) $('quiz-screen').style.display = 'block';
+  if ($('unified-nav')) $('unified-nav').style.display = 'flex';
   ensureReviewControlsExist(); enableDesktopFullscreen();
   buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion();
   if (CBTState.userAnswers.some(ans => ans !== null)) triggerFeedbackSectionAnimation();
@@ -214,7 +216,7 @@ function restoreSession(data) {
 }
 
 window.confirmResumeSession = function() { if (CBTState.pendingRestoreData) { restoreSession(CBTState.pendingRestoreData); CBTState.pendingRestoreData = null; } };
-window.dismissResumeSession = function() { clearSessionLocalStorage(); CBTState.pendingRestoreData = null; if ($('modal-resume'))$('modal-resume').style.display = 'none'; if ($('modal-welcome'))$('modal-welcome').style.display = 'flex'; };
+window.dismissResumeSession = function() { clearSessionLocalStorage(); CBTState.pendingRestoreData = null; if ($('modal-resume')) $('modal-resume').style.display = 'none'; if ($('modal-welcome')) $('modal-welcome').style.display = 'flex'; };
 
 /* ==========================================================================
    SECTION 5: QUESTION FETCHING & ANSWER RESOLUTION
@@ -330,8 +332,8 @@ window.retryLoadSections = async function() {
    ========================================================================== */
 const DETAIL_FIELDS = [
   { id: 'student-name-input', label: 'Student Name', err: 'Student Name is required' },
-  { id: 'student-class-input', label: 'Class', err: 'Class is required' },
-  { id: 'student-section-input', label: 'Section', err: 'Section is required' },
+  { id: 'student-class-input', label: 'Class', err: '*required' },
+  { id: 'student-section-input', label: 'Section', err: '*required' },
   { id: 'student-school-input', label: 'School Name', err: 'School Name is required' }
 ];
 
@@ -381,16 +383,16 @@ function validateStudentDetails() {
 
 function syncMarkingLabelsInDOM() {
   const cMarks = getCorrectMarks(), iMarks = getIncorrectMarks(), pMarks = getPenaltyMarks();
-  if ($('welcome-correct-lbl'))$('welcome-correct-lbl').innerText = `+${cMarks} for correct answer`;
-  if ($('welcome-incorrect-lbl'))$('welcome-incorrect-lbl').innerHTML = `<strong>-${iMarks}</strong> for incorrect answer`;
-  if ($('welcome-penalty-lbl'))$('welcome-penalty-lbl').innerText = `-${pMarks} marks`;
-  if ($('welcome-penalty-inline'))$('welcome-penalty-inline').innerText = `penalty of ${pMarks} marks.`;
+  if ($('welcome-correct-lbl')) $('welcome-correct-lbl').innerText = `+${cMarks} for correct answer`;
+  if ($('welcome-incorrect-lbl')) $('welcome-incorrect-lbl').innerHTML = `<strong>-${iMarks}</strong> for incorrect answer`;
+  if ($('welcome-penalty-lbl')) $('welcome-penalty-lbl').innerText = `-${pMarks} marks`;
+  if ($('welcome-penalty-inline')) $('welcome-penalty-inline').innerText = `penalty of ${pMarks} marks.`;
 }
 
 function ensureSectionSelectionModalExists() {
   let modalSection = $('welcome-step-section');
   if (!modalSection) {
-    const welcomeOverlay = $('modal-welcome'), step1 =$('welcome-step-1');
+    const welcomeOverlay = $('modal-welcome'), step1 = $('welcome-step-1');
     if (!welcomeOverlay || !step1) return;
     modalSection = document.createElement('div');
     modalSection.id = 'welcome-step-section';
@@ -499,14 +501,14 @@ function upgradeSteppersToFourSteps() {
 
 window.navigateStepper = function(targetStep) {
   if (targetStep === 1) {
-    if ($('welcome-step-section'))$('welcome-step-section').style.display = 'none';
-    if ($('welcome-step-2'))$('welcome-step-2').style.display = 'none';
-    if ($('welcome-step-1'))$('welcome-step-1').style.display = 'block';
+    if ($('welcome-step-section')) $('welcome-step-section').style.display = 'none';
+    if ($('welcome-step-2')) $('welcome-step-2').style.display = 'none';
+    if ($('welcome-step-1')) $('welcome-step-1').style.display = 'block';
   } else if (targetStep === 2) {
     if (!validateStudentDetails()) return;
-    if ($('welcome-step-1'))$('welcome-step-1').style.display = 'none';
-    if ($('welcome-step-2'))$('welcome-step-2').style.display = 'none';
-    if ($('welcome-step-section'))$('welcome-step-section').style.display = 'block';
+    if ($('welcome-step-1')) $('welcome-step-1').style.display = 'none';
+    if ($('welcome-step-2')) $('welcome-step-2').style.display = 'none';
+    if ($('welcome-step-section')) $('welcome-step-section').style.display = 'block';
     renderDynamicSectionPickerCards();
   }
 };
@@ -560,18 +562,18 @@ function renderDynamicSectionPickerCards() {
 
 window.proceedToRegisterStep = () => {
   ensureSectionSelectionModalExists();
-  if ($('welcome-step-intro'))$('welcome-step-intro').style.display = 'none';
-  if ($('welcome-step-1'))$('welcome-step-1').style.display = 'block';
+  if ($('welcome-step-intro')) $('welcome-step-intro').style.display = 'none';
+  if ($('welcome-step-1')) $('welcome-step-1').style.display = 'block';
 };
 
 window.goToSectionSelectionStep = () => {
   if (!validateStudentDetails()) return;
   ensureSectionSelectionModalExists();
-  const nameInput = $('student-name-input'), rawClass = $('student-class-input') ?$('student-class-input').value : "Class 12";
+  const nameInput = $('student-name-input'), rawClass = $('student-class-input') ? $('student-class-input').value : "Class 12";
   CBTState.studentNameVal = (nameInput ? nameInput.value.trim() : "").toUpperCase();
   CBTState.studentClassVal = (rawClass.toString().startsWith("Class") || rawClass === "OTHER") ? rawClass : `Class ${rawClass}`;
-  CBTState.studentSectionVal = $('student-section-input') ?$('student-section-input').value : "A";
-  CBTState.schoolNameVal = ($('student-school-input') ?$('student-school-input').value.trim() : "").toUpperCase();
+  CBTState.studentSectionVal = $('student-section-input') ? $('student-section-input').value : "A";
+  CBTState.schoolNameVal = ($('student-school-input') ? $('student-school-input').value.trim() : "").toUpperCase();
   CBTState.studentName = `${CBTState.studentNameVal} | ${CBTState.studentClassVal} | SEC: ${CBTState.studentSectionVal} | ${CBTState.schoolNameVal}`;
   renderDynamicSectionPickerCards();
   if ($('welcome-step-1')) $('welcome-step-1').style.display = 'none';
@@ -1468,7 +1470,7 @@ function setupFeedbackSectionObserver() {
 }
 
 function triggerSlowMotionStarsAnimation() {
-  if (CBTState.hasAnimatedStars) return;
+  if (CBTState.hasAnimatedStars || !CBTState.feedbackRating) return;
   CBTState.hasAnimatedStars = true;
   document.querySelectorAll('#fb-stars-group .fb-star').forEach((star, index) => {
     setTimeout(() => {
@@ -1508,25 +1510,95 @@ window.resetStarsPreview = function() {
   setFeedbackRating(CBTState.feedbackRating, false);
 };
 
-window.setFeedbackRating = function(rating) {
-  CBTState.feedbackRating = rating;
+window.setFeedbackRating = function(rating, manual) {
+  CBTState.feedbackRating = Number(rating) || 0;
+  if (CBTState.feedbackRating > 0) {
+    document.querySelector('.fb-row2-left')?.classList.remove('field-error');
+  }
   document.querySelectorAll('#fb-stars-group .fb-star').forEach(s => {
     const val = parseInt(s.getAttribute('data-val'), 10);
     s.classList.remove('half-active', 'active', 'hovered', 'hovered-half');
-    if (val < Math.ceil(rating)) s.classList.add('active');
-    else if (val === Math.ceil(rating)) s.classList.add(rating % 1 !== 0 ? 'half-active' : 'active');
+    if (CBTState.feedbackRating > 0) {
+      if (val < Math.ceil(CBTState.feedbackRating)) s.classList.add('active');
+      else if (val === Math.ceil(CBTState.feedbackRating)) s.classList.add(CBTState.feedbackRating % 1 !== 0 ? 'half-active' : 'active');
+    }
   });
 };
 
 window.updateFbCharCount = textarea => { if ($('fb-char-counter')) $('fb-char-counter').innerText = `${textarea.value.length}/500`; };
+
 window.toggleFeedbackPill = radioInput => {
   CBTState.feedbackCategory = radioInput.value;
+  document.querySelector('.fb-type-selection-wrapper')?.classList.remove('field-error');
   document.querySelectorAll('.fb-radio-pill-exact').forEach(pill => pill.classList.remove('active'));
   radioInput.closest('.fb-radio-pill-exact')?.classList.add('active');
 };
 
+function clearFeedbackFieldErrors() {
+  document.querySelector('.fb-input-wrapper-embedded')?.classList.remove('field-error');
+  document.querySelector('.fb-row2-left')?.classList.remove('field-error');
+  document.querySelector('.fb-type-selection-wrapper')?.classList.remove('field-error');
+}
+
+function resetFeedbackForm() {
+  CBTState.feedbackRating = 0;
+  CBTState.feedbackCategory = "";
+  const msgEl = $('feedback-user-message');
+  if (msgEl) {
+    msgEl.value = "";
+    updateFbCharCount(msgEl);
+  }
+  setFeedbackRating(0);
+  document.querySelectorAll('.fb-radio-pill-exact').forEach(pill => pill.classList.remove('active'));
+  document.querySelectorAll('input[name="fb-category"]').forEach(radio => { radio.checked = false; });
+  clearFeedbackFieldErrors();
+}
+
 window.submitUserFeedback = async function() {
-  const msgEl = $('feedback-user-message'), rawMessage = msgEl ? msgEl.value.trim() : "", finalMessage = rawMessage || "(Rating Submitted)";
+  const msgEl = $('feedback-user-message');
+  const rawMessage = msgEl ? msgEl.value.trim() : "";
+  const inputWrap = msgEl ? msgEl.closest('.fb-input-wrapper-embedded') : null;
+  const ratingWrap = document.querySelector('.fb-row2-left');
+  const typeWrap = document.querySelector('.fb-type-selection-wrapper');
+
+  let hasError = false;
+
+  // 1. Textarea Validation + Tactile Shake
+  if (!rawMessage) {
+    hasError = true;
+    if (inputWrap) {
+      inputWrap.classList.remove('field-error');
+      void inputWrap.offsetWidth;
+      inputWrap.classList.add('field-error');
+    }
+  }
+
+  // 2. Star Rating Validation + Tactile Shake
+  if (!CBTState.feedbackRating || CBTState.feedbackRating <= 0) {
+    hasError = true;
+    if (ratingWrap) {
+      ratingWrap.classList.remove('field-error');
+      void ratingWrap.offsetWidth;
+      ratingWrap.classList.add('field-error');
+    }
+  }
+
+  // 3. Category Type Validation + Tactile Shake
+  if (!CBTState.feedbackCategory) {
+    hasError = true;
+    if (typeWrap) {
+      typeWrap.classList.remove('field-error');
+      void typeWrap.offsetWidth;
+      typeWrap.classList.add('field-error');
+    }
+  }
+
+  if (hasError) {
+    showToastAlert("Please complete the highlighted required fields.");
+    if (!rawMessage && msgEl) msgEl.focus();
+    return;
+  }
+
   const btn = $('btn-save-feedback'), sendIcon = $('fb-send-icon'), spinIcon = $('fb-spin-icon'), btnLabel = $('fb-btn-label');
   if (btn) {
     btn.disabled = true; btn.classList.add('saving-active');
@@ -1534,13 +1606,22 @@ window.submitUserFeedback = async function() {
     if (spinIcon) spinIcon.style.display = 'inline-block';
     if (btnLabel) btnLabel.innerText = "Saving...";
   }
-  const payload = { chapter: getTestName(), studentClass: CBTState.studentClassVal || "Class XII", category: CBTState.feedbackCategory, name: CBTState.studentNameVal || "", rating: `${CBTState.feedbackRating} Stars`, message: finalMessage };
+
+  const payload = {
+    chapter: getTestName(),
+    studentClass: CBTState.studentClassVal || "Class XII",
+    category: CBTState.feedbackCategory,
+    name: CBTState.studentNameVal || "",
+    rating: `${CBTState.feedbackRating} Stars`,
+    message: rawMessage
+  };
+
   const showSuccessBadge = () => {
     if (btn) { btn.classList.remove('saving-active'); btn.classList.add('success-active'); }
     if (spinIcon) spinIcon.style.display = 'none';
     if (sendIcon) sendIcon.style.display = 'none';
     if (btnLabel) btnLabel.innerHTML = `Response Submitted`;
-    if (msgEl) { msgEl.value = ""; updateFbCharCount(msgEl); }
+    resetFeedbackForm();
     setTimeout(() => {
       if (btn) { btn.disabled = false; btn.classList.remove('success-active'); }
       if (sendIcon) sendIcon.style.display = 'inline-block';
@@ -1548,6 +1629,7 @@ window.submitUserFeedback = async function() {
       if (btnLabel) btnLabel.innerText = "Submit Response";
     }, 2400);
   };
+
   try {
     await fetch(getFeedbackScriptURL(), { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) });
     showSuccessBadge(); await fetchFeedbackSubmissions();
@@ -1631,7 +1713,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   ensureSectionSelectionModalExists();
   ensureReviewControlsExist();
   syncMarkingLabelsInDOM();
-  setFeedbackRating(1.5);
+
+  // Reset feedback section so no values are pre-selected by default
+  resetFeedbackForm();
+
+  // Real-time error clearing when user begins typing feedback
+  $('feedback-user-message')?.addEventListener('input', () => {
+    $('feedback-user-message')?.closest('.fb-input-wrapper-embedded')?.classList.remove('field-error');
+  });
+
   setupStarScrollObserver();
   setupFeedbackSectionObserver();
   setupMobileGestures();
