@@ -1055,7 +1055,7 @@ function dispatchWhatsAppMessage(item) {
   const shouldInclude = includeToggle ? includeToggle.checked : true;
   const absentees = getAbsentStudents(item);
   const absentSection = (shouldInclude && absentees.length > 0)
-    ? `\n❌ *Absent Students:* ${absentees.join(', ')}`
+    ? `\n❌ *Previous Class Absentees:* ${absentees.join(', ')}`
     : '';
 
   const message = `
