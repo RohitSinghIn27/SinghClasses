@@ -1,38 +1,756 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Page Not Found</title>
-        <style>
-            body {
-                font-family: "Poppins", sans-serif;
-                background: #f0fdfa;
-                color: #1e293b;
-                text-align: center;
-                padding: 80px 20px;
-            }
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Something Went Wrong | SinghClasses.in</title>
+  <meta name="description" content="Aaaah! Something went wrong. Brace yourself till we get the error fixed. SinghClasses.in - Think Logic, Code Magic.">
+  <meta name="theme-color" content="#061B4F">
 
-            h1 {
-                color: #0d9488;
-                font-size: 4rem;
-                margin-bottom: 10px;
-            }
+  <!-- Google Fonts: Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-            a {
-                background: #0d9488;
-                color: #fff;
-                padding: 10px 24px;
-                border-radius: 8px;
-                font-weight: 600;
-                text-decoration: none;
-            }
-        </style>
-    </head>
+  <style>
+    /* ==========================================================================
+       DESIGN TOKENS & RESET
+       ========================================================================== */
+    :root {
+      --color-navy: #061B4F;
+      --color-navy-hover: #0a2566;
+      --color-yellow: #FFB800;
+      --color-yellow-hover: #ffa800;
+      --color-white: #FFFFFF;
+      --color-text-dark: #061B4F;
+      --color-text-muted: #4B5E78;
+      
+      --color-card-bg: #F4F8FD;
+      --color-card-border: #D2E4F9;
+      --color-card-shadow: rgba(6, 27, 79, 0.08);
 
-    <body>
-        <h1>Oops! Page Not Found (404)</h1>
-        <p>The page you are looking for doesn't exist or has been moved.</p>
-        <p><a href="/">Go Back to Home</a></p>
-    </body>
+      --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --transition-fast: 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Locked 100vh canvas for 16:9 presentation without page scrollbars */
+    html, body {
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      background-color: var(--color-white);
+      color: var(--color-text-dark);
+      font-family: var(--font-family);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      position: relative;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    button {
+      font-family: inherit;
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+
+    /* ==========================================================================
+       BACKGROUND VECTOR ART WITH AMBIENT FLOATING ANIMATIONS
+       ========================================================================== */
+    .bg-art-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .corner-wave {
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .wave-top-left-yellow {
+      top: 0;
+      left: 0;
+      width: clamp(220px, 22vw, 360px);
+      opacity: 0.85;
+      animation: floatSubtle1 14s ease-in-out infinite alternate;
+    }
+    .wave-top-left-blue {
+      top: 0;
+      left: 0;
+      width: clamp(260px, 26vw, 420px);
+      opacity: 0.75;
+      animation: floatSubtle2 18s ease-in-out infinite alternate;
+    }
+    .wave-top-right-yellow {
+      top: 0;
+      right: 0;
+      width: clamp(240px, 24vw, 380px);
+      opacity: 0.85;
+      animation: floatSubtle1 16s ease-in-out infinite alternate-reverse;
+    }
+    .wave-bottom-left-yellow {
+      bottom: 50px;
+      left: 0;
+      width: clamp(200px, 20vw, 320px);
+      opacity: 0.75;
+      animation: floatSubtle2 15s ease-in-out infinite alternate;
+    }
+    .wave-bottom-right-blue1 {
+      bottom: 50px;
+      right: 0;
+      width: clamp(280px, 28vw, 440px);
+      opacity: 0.75;
+      animation: floatSubtle1 17s ease-in-out infinite alternate-reverse;
+    }
+    .wave-bottom-right-blue2 {
+      bottom: 50px;
+      right: 0;
+      width: clamp(220px, 22vw, 360px);
+      opacity: 0.65;
+      animation: floatSubtle2 13s ease-in-out infinite alternate;
+    }
+
+    /* 4x4 Dot Grids */
+    .dot-grid {
+      position: absolute;
+      display: grid;
+      grid-template-columns: repeat(4, 7px);
+      gap: 12px;
+      z-index: 2;
+      opacity: 0.25;
+      animation: pulseSubtle 8s ease-in-out infinite;
+    }
+    .dot-grid span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      display: block;
+    }
+    .dot-grid-blue span {
+      background-color: #0649B8;
+    }
+    .dot-grid-yellow span {
+      background-color: #FFB800;
+    }
+
+    .grid-top-left {
+      top: clamp(25px, 4.5vh, 45px);
+      left: clamp(25px, 3.5vw, 55px);
+      animation-delay: 0s;
+    }
+    .grid-top-right {
+      top: clamp(25px, 4.5vh, 45px);
+      right: clamp(25px, 3.5vw, 55px);
+      animation-delay: 2.5s;
+    }
+
+    /* Soft Animated Rings & Dots */
+    .accent-ring-yellow {
+      position: absolute;
+      border-radius: 50%;
+      border: 3px solid #FFB800;
+      opacity: 0.28;
+      z-index: 2;
+    }
+    .accent-ring-blue {
+      position: absolute;
+      border-radius: 50%;
+      border: 2.5px solid #0649B8;
+      opacity: 0.22;
+      z-index: 2;
+    }
+    .accent-dot-blue {
+      position: absolute;
+      border-radius: 50%;
+      background-color: #0649B8;
+      opacity: 0.2;
+      z-index: 2;
+    }
+    .accent-dot-yellow {
+      position: absolute;
+      border-radius: 50%;
+      background-color: #FFB800;
+      opacity: 0.28;
+      z-index: 2;
+    }
+
+    .ring-tl {
+      width: 26px; height: 26px; top: 18%; left: 14%;
+      animation: driftFloat1 7s ease-in-out infinite;
+    }
+    .ring-bl {
+      width: 18px; height: 18px; bottom: 28%; left: 16%;
+      animation: driftFloat2 8.5s ease-in-out infinite;
+    }
+    .ring-tr {
+      width: 18px; height: 18px; top: 8%; right: 20%;
+      animation: driftFloat1 9s ease-in-out infinite 1s;
+    }
+    .ring-mr {
+      width: 24px; height: 24px; top: 25%; right: 21%;
+      animation: driftFloat2 6.5s ease-in-out infinite 0.5s;
+    }
+    .ring-br {
+      width: 20px; height: 20px; bottom: 36%; right: 15%;
+      animation: driftFloat1 8s ease-in-out infinite 2s;
+    }
+    .ring-mid-blue {
+      width: 16px; height: 16px; top: 40%; left: 7%;
+      animation: driftFloat2 7.5s ease-in-out infinite 1.5s;
+    }
+
+    .dot-tl-blue {
+      width: 12px; height: 12px; top: 22%; left: 24%;
+      animation: pulseSubtle 6s ease-in-out infinite 1s;
+    }
+    .dot-tr-yellow {
+      width: 12px; height: 12px; top: 16%; right: 32%;
+      animation: pulseSubtle 7s ease-in-out infinite 2s;
+    }
+    .dot-br-blue {
+      width: 12px; height: 12px; bottom: 34%; right: 17%;
+      animation: pulseSubtle 5.5s ease-in-out infinite 0.5s;
+    }
+
+    /* Glass Tile Accents with Gentle Float */
+    .glass-tile {
+      position: absolute;
+      background: rgba(225, 238, 253, 0.45);
+      border: 1.5px solid rgba(200, 222, 250, 0.6);
+      border-radius: 18px;
+      z-index: 2;
+      opacity: 0.28;
+    }
+    .tile-1 {
+      width: clamp(65px, 6vw, 90px);
+      height: clamp(65px, 6vw, 90px);
+      top: 16%;
+      left: 31%;
+      transform: rotate(-10deg);
+      animation: tileFloat1 9s ease-in-out infinite;
+    }
+    .tile-2 {
+      width: clamp(75px, 7vw, 105px);
+      height: clamp(75px, 7vw, 105px);
+      top: 15%;
+      right: 28%;
+      transform: rotate(15deg);
+      animation: tileFloat2 10s ease-in-out infinite;
+    }
+
+    /* Ambient Keyframe Definitions */
+    @keyframes driftFloat1 {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(4px, -8px); }
+    }
+    @keyframes driftFloat2 {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(-5px, 7px); }
+    }
+    @keyframes pulseSubtle {
+      0%, 100% { transform: scale(1); opacity: 0.24; }
+      50% { transform: scale(1.12); opacity: 0.34; }
+    }
+    @keyframes tileFloat1 {
+      0%, 100% { transform: translateY(0) rotate(-10deg); }
+      50% { transform: translateY(-7px) rotate(-8deg); }
+    }
+    @keyframes tileFloat2 {
+      0%, 100% { transform: translateY(0) rotate(15deg); }
+      50% { transform: translateY(8px) rotate(17deg); }
+    }
+    @keyframes floatSubtle1 {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-5px); }
+    }
+    @keyframes floatSubtle2 {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(6px); }
+    }
+
+    /* ==========================================================================
+       MAIN CENTERED STAGE
+       ========================================================================== */
+    .main-stage {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: clamp(0.5rem, 1.8vh, 1.4rem) 1.5rem clamp(1rem, 2.4vh, 2rem);
+      position: relative;
+      z-index: 10;
+      min-height: 0;
+    }
+
+    .stage-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      position: relative;
+      z-index: 5;
+    }
+
+    /* Mascot Image Container */
+    .turtle-container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: clamp(380px, 45vw, 600px);
+      margin-bottom: clamp(16px, 2.2vh, 24px);
+    }
+
+    .turtle-img {
+      width: 100%;
+      height: auto;
+      max-height: clamp(220px, 36vh, 360px);
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 12px 24px rgba(6, 27, 79, 0.08));
+      position: relative;
+      z-index: 5;
+    }
+
+    /* Deepened Contact Shadow */
+    .turtle-ground-shadow {
+      position: relative;
+      margin-top: -16px;
+      width: 76%;
+      height: clamp(16px, 2.4vh, 24px);
+      background: radial-gradient(
+        ellipse at center,
+        rgba(6, 27, 79, 0.45) 0%,
+        rgba(6, 41, 105, 0.28) 35%,
+        rgba(6, 73, 184, 0.12) 60%,
+        rgba(6, 73, 184, 0) 75%
+      );
+      border-radius: 50%;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    /* ==========================================================================
+       ERROR CARD & SIDE-BY-SIDE OVERLAPPING BUTTONS
+       ========================================================================== */
+    .card-action-group {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: clamp(480px, 46vw, 640px);
+    }
+
+    .error-card {
+      width: 100%;
+      background: var(--color-card-bg);
+      border: 1.5px solid var(--color-card-border);
+      border-radius: 20px;
+      padding: clamp(1rem, 2vh, 1.35rem) clamp(1.4rem, 2.8vw, 2.6rem) clamp(1.8rem, 3.2vh, 2.4rem);
+      box-shadow: 0 12px 32px var(--color-card-shadow);
+      text-align: center;
+      position: relative;
+      z-index: 6;
+    }
+
+    .error-card-title {
+      font-size: clamp(1.15rem, 1.45vw, 1.42rem);
+      font-weight: 800;
+      color: var(--color-navy);
+      letter-spacing: -0.3px;
+      margin-bottom: clamp(4px, 0.8vh, 6px);
+      white-space: nowrap;
+    }
+
+    .error-card-desc {
+      font-size: clamp(0.8rem, 0.94vw, 0.92rem);
+      font-weight: 500;
+      color: var(--color-text-muted);
+      line-height: 1.5;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* Unified Horizontal Button Row (Fixed Stacking Bug) */
+    .action-button-row {
+      display: inline-flex;
+      flex-direction: row; /* Strict single row layout */
+      align-items: center;
+      justify-content: center;
+      gap: clamp(0.75rem, 1.2vw, 1rem);
+      margin-top: clamp(-20px, -2.4vh, -22px);
+      position: relative;
+      z-index: 10;
+      width: auto;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      font-size: clamp(0.86rem, 0.96vw, 0.96rem);
+      font-weight: 600;
+      padding: clamp(0.68rem, 1.3vh, 0.82rem) clamp(1.4rem, 2vw, 1.9rem);
+      border-radius: 12px;
+      white-space: nowrap;
+      transition: all var(--transition-fast);
+      cursor: pointer;
+    }
+
+    /* Primary: Back to Home */
+    .btn-primary {
+      background-color: var(--color-navy);
+      color: var(--color-white);
+      box-shadow: 0 8px 24px rgba(6, 27, 79, 0.32);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--color-navy-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(6, 27, 79, 0.42);
+    }
+
+    /* Secondary: Refresh Page */
+    .btn-secondary {
+      background-color: var(--color-white);
+      color: var(--color-navy);
+      border: 1.6px solid var(--color-navy);
+      box-shadow: 0 6px 18px rgba(6, 27, 79, 0.1);
+    }
+
+    .btn-secondary:hover {
+      background-color: #EDF4FD;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(6, 27, 79, 0.16);
+    }
+
+    .btn-secondary svg,
+    .btn-primary svg {
+      flex-shrink: 0;
+    }
+
+    /* ==========================================================================
+       ONE-LINE CENTERED BRAND FOOTER
+       ========================================================================== */
+    .site-footer {
+      width: 100%;
+      background-color: var(--color-navy);
+      color: var(--color-white);
+      padding: clamp(0.8rem, 1.6vh, 1.1rem) clamp(2rem, 5vw, 5rem);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 20;
+    }
+
+    .footer-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center; /* Centered layout */
+      position: relative;
+    }
+
+    /* Single-line branding: SinghClasses.in | THINK LOGIC • CODE MAGIC */
+    .footer-brand {
+      display: inline-flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      white-space: nowrap;
+    }
+
+    .footer-logo {
+      font-size: clamp(1.1rem, 1.35vw, 1.3rem);
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .footer-singh {
+      color: var(--color-white);
+    }
+
+    .footer-classes {
+      color: var(--color-yellow);
+    }
+
+    .footer-divider {
+      width: 1px;
+      height: 15px;
+      background-color: rgba(255, 255, 255, 0.28);
+      display: inline-block;
+    }
+
+    .footer-tagline {
+      font-size: clamp(0.64rem, 0.78vw, 0.72rem);
+      font-weight: 600;
+      color: #94A3B8;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* Side glow decors */
+    .footer-decor-left {
+      position: absolute;
+      left: 0;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .footer-decor-right {
+      position: absolute;
+      right: 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .footer-glow-ring {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid #143575;
+    }
+
+    .footer-dot-matrix {
+      display: grid;
+      grid-template-columns: repeat(4, 5px);
+      gap: 6px;
+    }
+    .footer-dot-matrix span {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background-color: #143575;
+      display: block;
+    }
+
+    /* ==========================================================================
+       RESPONSIVE ADAPTATION
+       ========================================================================== */
+    @media (max-width: 680px) {
+      .action-button-row {
+        flex-direction: column;
+        width: 100%;
+        max-width: 270px;
+        margin-top: -14px;
+        gap: 0.5rem;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .footer-brand {
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+
+      .footer-divider {
+        display: none;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .footer-decor-left,
+      .footer-decor-right {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BACKGROUND VECTOR ART WITH ACCENT FLOATING ANIMATIONS -->
+  <div class="bg-art-layer" aria-hidden="true">
+
+    <!-- Top Left Corner Waves -->
+    <svg class="corner-wave wave-top-left-yellow" viewBox="0 0 350 250" fill="none">
+      <path d="M0 0H350C280 40 210 140 120 170C50 190 0 250 0 250V0Z" fill="#FFF6DC"/>
+    </svg>
+    <svg class="corner-wave wave-top-left-blue" viewBox="0 0 420 300" fill="none">
+      <path d="M0 0H260C220 80 160 140 90 190C40 230 0 300 0 300V0Z" fill="#E8F2FE"/>
+    </svg>
+
+    <!-- Top Right Corner Wave -->
+    <svg class="corner-wave wave-top-right-yellow" viewBox="0 0 380 260" fill="none">
+      <path d="M380 0V260C330 220 280 180 230 160C140 120 60 40 0 0H380Z" fill="#FFF5DC"/>
+    </svg>
+
+    <!-- Bottom Left Corner Wave -->
+    <svg class="corner-wave wave-bottom-left-yellow" viewBox="0 0 300 240" fill="none">
+      <path d="M0 240V40C50 90 120 130 180 140C240 150 280 200 300 240H0Z" fill="#FFF6DD"/>
+    </svg>
+
+    <!-- Bottom Right Layered Waves -->
+    <svg class="corner-wave wave-bottom-right-blue1" viewBox="0 0 440 280" fill="none">
+      <path d="M440 280H120C180 220 260 180 320 110C360 60 400 20 440 0V280Z" fill="#EAF3FD"/>
+    </svg>
+    <svg class="corner-wave wave-bottom-right-blue2" viewBox="0 0 360 220" fill="none">
+      <path d="M440 280H220C260 230 320 180 370 120C400 80 420 40 440 10V280Z" fill="#D8EAFA"/>
+    </svg>
+
+    <!-- 4x4 Dot Grids -->
+    <div class="dot-grid dot-grid-blue grid-top-left">
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+    </div>
+
+    <div class="dot-grid dot-grid-yellow grid-top-right">
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+    </div>
+
+    <!-- Soft Animated Accent Rings -->
+    <div class="accent-ring-yellow ring-tl"></div>
+    <div class="accent-ring-yellow ring-bl"></div>
+    <div class="accent-ring-yellow ring-mr"></div>
+    <div class="accent-ring-yellow ring-br"></div>
+    <div class="accent-ring-blue ring-tr"></div>
+    <div class="accent-ring-blue ring-mid-blue"></div>
+
+    <!-- Soft Animated Accent Dots -->
+    <div class="accent-dot-blue dot-tl-blue"></div>
+    <div class="accent-dot-blue dot-br-blue"></div>
+    <div class="accent-dot-yellow dot-tr-yellow"></div>
+
+    <!-- Floating Glass Squares -->
+    <div class="glass-tile tile-1"></div>
+    <div class="glass-tile tile-2"></div>
+  </div>
+
+  <!-- CENTERED MAIN CONTENT STAGE -->
+  <main class="main-stage" role="main">
+    <div class="stage-wrapper">
+
+      <!-- Turtle Mascot with Grounded Shadow -->
+      <div class="turtle-container">
+        <img 
+          src="assets/images/turtle.png" 
+          onerror="
+            if (!this.dataset.retried) {
+              this.dataset.retried = '1';
+              this.src = '../SinghClasses-main/assets/images/turtle.png';
+            } else if (this.dataset.retried === '1') {
+              this.dataset.retried = '2';
+              this.src = 'turtle.png';
+            } else if (this.dataset.retried === '2') {
+              this.dataset.retried = '3';
+              this.src = 'assets/images/turtle-cutting-wire.png';
+            }
+          "
+          alt="Playful turtle mascot cutting the connection wire" 
+          class="turtle-img"
+          loading="eager"
+        />
+        <div class="turtle-ground-shadow" aria-hidden="true"></div>
+      </div>
+
+      <!-- Error Card with Overlapping Action Buttons -->
+      <div class="card-action-group">
+        <div class="error-card">
+          <h1 class="error-card-title">Aaaah! Something went wrong</h1>
+          <p class="error-card-desc">Brace yourself till we get the error fixed. You may also refresh the page or try again later.</p>
+        </div>
+
+        <!-- Corrected Side-by-Side Button Row -->
+        <div class="action-button-row">
+          <!-- Primary CTA: Back to Home -->
+          <a href="/" class="btn btn-primary" id="btnBackHome">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+              <path d="M3 10.5l9-7.5 9 7.5v9a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-4a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-9z"/>
+            </svg>
+            <span>Back to Home</span>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6"/>
+            </svg>
+          </a>
+
+          <!-- Secondary CTA: Refresh Page -->
+          <button type="button" class="btn btn-secondary" id="btnRefreshPage" onclick="window.location.reload()" aria-label="Refresh this page">
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3L21.5 8M22 12.5a10 10 0 0 1-18.8 4.2L2.5 16"/>
+            </svg>
+            <span>Refresh Page</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- NAVY FOOTER (ONE LINE) -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-container">
+      
+      <!-- Left Footer Motif -->
+      <div class="footer-decor-left" aria-hidden="true">
+        <div class="footer-glow-ring"></div>
+        <div class="footer-dot-matrix">
+          <span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <!-- Single-Line Centered Brand -->
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <span class="footer-singh">Singh</span><span class="footer-classes">Classes.in</span>
+        </div>
+        <span class="footer-divider" aria-hidden="true"></span>
+        <div class="footer-tagline">THINK LOGIC • CODE MAGIC</div>
+      </div>
+
+      <!-- Right Footer Motif -->
+      <div class="footer-decor-right" aria-hidden="true">
+        <div class="footer-glow-ring"></div>
+      </div>
+
+    </div>
+  </footer>
+
+</body>
 </html>
