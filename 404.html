@@ -398,10 +398,10 @@
       margin: 0 auto;
     }
 
-    /* Unified Horizontal Button Row (Fixed Stacking Bug) */
+    /* Unified Horizontal Button Row */
     .action-button-row {
       display: inline-flex;
-      flex-direction: row; /* Strict single row layout */
+      flex-direction: row;
       align-items: center;
       justify-content: center;
       gap: clamp(0.75rem, 1.2vw, 1rem);
@@ -475,11 +475,11 @@
       margin: 0 auto;
       display: flex;
       align-items: center;
-      justify-content: center; /* Centered layout */
+      justify-content: center;
       position: relative;
     }
 
-    /* Single-line branding: SinghClasses.in | THINK LOGIC • CODE MAGIC */
+    /* Single-line branding */
     .footer-brand {
       display: inline-flex;
       flex-direction: row;
@@ -669,17 +669,11 @@
       <!-- Turtle Mascot with Grounded Shadow -->
       <div class="turtle-container">
         <img 
-          src="assets/images/turtle.png" 
+          src="/assets/images/chracter/turtle.png" 
           onerror="
             if (!this.dataset.retried) {
               this.dataset.retried = '1';
-              this.src = '../assets/images/turtle.png';
-            } else if (this.dataset.retried === '1') {
-              this.dataset.retried = '2';
-              this.src = 'turtle.png';
-            } else if (this.dataset.retried === '2') {
-              this.dataset.retried = '3';
-              this.src = 'assets/images/turtle-cutting-wire.png';
+              this.src = 'assets/images/chracter/turtle.png';
             }
           "
           alt="Playful turtle mascot cutting the connection wire" 
@@ -696,7 +690,7 @@
           <p class="error-card-desc">Brace yourself till we get the error fixed. You may also refresh the page or try again later.</p>
         </div>
 
-        <!-- Corrected Side-by-Side Button Row -->
+        <!-- Action Buttons -->
         <div class="action-button-row">
           <!-- Primary CTA: Back to Home -->
           <a href="/" class="btn btn-primary" id="btnBackHome">
