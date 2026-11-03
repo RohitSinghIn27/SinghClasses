@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CYBERSPACE // ARCADE MATRIX</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Orbitron (Arcade / Sci-Fi) & Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            arcade: ['Orbitron', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            cyber: {
+              black: '#07080d',
+              dark: '#0c0e17',
+              card: '#121524',
+              border: '#1f243d',
+              cyan: '#00f0ff',
+              magenta: '#ff0055',
+              yellow: '#ffe600',
+              green: '#00ff9d',
+              purple: '#8b5cf6'
+            }
+          },
+          animation: {
+            'glow-pulse': 'glowPulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'scanline': 'scanline 8s linear infinite',
+            'float': 'float 4s ease-in-out infinite',
+          },
+          keyframes: {
+            glowPulse: {
+              '0%, 100%': { opacity: '0.4', filter: 'drop-shadow(0 0 15px rgba(0,240,255,0.4))' },
+              '50%': { opacity: '0.9', filter: 'drop-shadow(0 0 25px rgba(0,240,255,0.8))' }
+            },
+            scanline: {
+              '0%': { transform: 'translateY(-100%)' },
+              '100%': { transform: 'translateY(1000%)' }
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-6px)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Cyberpunk effects & scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #07080d;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1f243d;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #00f0ff;
+    }
+
+    .neon-text-cyan {
+      text-shadow: 0 0 8px rgba(0, 240, 255, 0.6), 0 0 20px rgba(0, 240, 255, 0.3);
+    }
+    .neon-text-pink {
+      text-shadow: 0 0 8px rgba(255, 0, 85, 0.6), 0 0 20px rgba(255, 0, 85, 0.3);
+    }
+    .neon-border-cyan {
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.15), inset 0 0 15px rgba(0, 240, 255, 0.05);
+    }
+    .neon-border-pink {
+      box-shadow: 0 0 15px rgba(255, 0, 85, 0.15), inset 0 0 15px rgba(255, 0, 85, 0.05);
+    }
+    .grid-bg-overlay {
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+  </style>
+</head>
+
+<body class="bg-cyber-black text-slate-100 font-sans min-h-screen selection:bg-cyber-cyan selection:text-black overflow-x-hidden relative">
+
+  <!-- Interactive Dynamic Canvas Background -->
+  <canvas id="cyberCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
+  <div class="fixed inset-0 grid-bg-overlay pointer-events-none z-0"></div>
+
+  <!-- Scanline Screen Filter -->
+  <div class="fixed inset-0 pointer-events-none z-10 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(7,8,13,0.7)_100%)]"></div>
+
+  <!-- Main Container -->
+  <div class="relative z-20 flex flex-col min-h-screen">
+
+    <!-- Top Navigation Bar -->
+    <header class="border-b border-cyber-border/70 backdrop-blur-xl bg-cyber-dark/80 sticky top-0 z-40 transition-all duration-300">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        
+        <!-- Brand Logo -->
+        <a href="index.html" class="flex items-center gap-3.5 group cursor-pointer focus:outline-none" onclick="SoundFX.play('click')">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-cyber-cyan/20 to-cyber-magenta/20 border border-cyber-cyan/50 flex items-center justify-center relative overflow-hidden group-hover:border-cyber-cyan transition-all shadow-[0_0_15px_rgba(0,240,255,0.25)]">
+            <i class="fa-solid fa-gamepad text-xl text-cyber-cyan group-hover:scale-110 transition-transform"></i>
+            <span class="absolute -bottom-1 -right-1 w-2.5 h-2.5 bg-cyber-green rounded-full animate-ping"></span>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-arcade text-lg sm:text-xl font-bold tracking-wider text-white group-hover:text-cyber-cyan transition-colors">
+                NEXUS<span class="text-cyber-cyan">.</span>ARCADE
+              </span>
+              <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-cyber-cyan/10 border border-cyber-cyan/30 text-cyber-cyan font-semibold tracking-widest hidden sm:inline-block">
+                SYS_v2.6
+              </span>
+            </div>
+            <p class="text-[11px] font-mono text-slate-400 tracking-tight hidden sm:block">LOCAL PORTAL // 2 APPS ONLINE</p>
+          </div>
+        </a>
+
+        <!-- Quick Status Metrics & Controls -->
+        <div class="flex items-center gap-3 sm:gap-5">
+          <!-- Live Status Pill -->
+          <div class="hidden md:flex items-center gap-2 bg-cyber-card/80 border border-cyber-border px-3 py-1.5 rounded-full text-xs font-mono">
+            <span class="w-2 h-2 rounded-full bg-cyber-green animate-pulse"></span>
+            <span class="text-slate-300">CORE STATUS:</span>
+            <span class="text-cyber-green font-bold">READY</span>
+          </div>
+
+          <!-- Sound FX Toggle -->
+          <button id="soundToggleBtn" class="flex items-center gap-2 bg-cyber-card hover:bg-cyber-border/80 border border-cyber-border px-3 py-2 rounded-xl text-xs font-mono transition-all text-slate-300 hover:text-cyber-cyan" title="Toggle Sound FX (Shortcut: M)">
+            <i id="soundIcon" class="fa-solid fa-volume-high text-cyber-cyan"></i>
+            <span class="hidden sm:inline" id="soundLabel">SFX ON</span>
+          </button>
+
+          <!-- System Clock -->
+          <div class="hidden lg:flex items-center gap-1.5 text-xs font-mono text-slate-400 border border-cyber-border px-3 py-2 rounded-xl bg-cyber-card">
+            <i class="fa-regular fa-clock text-cyber-yellow"></i>
+            <span id="systemClock">00:00:00 UTC</span>
+          </div>
+
+          <!-- Quick Fullscreen Hub Button -->
+          <button id="hubFullscreenBtn" class="p-2.5 rounded-xl bg-cyber-card border border-cyber-border hover:border-cyber-cyan/60 hover:text-cyber-cyan text-slate-400 transition-all text-sm" title="Toggle Fullscreen">
+            <i class="fa-solid fa-expand"></i>
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 w-full">
+      
+      <!-- Hero Banner -->
+      <section class="relative rounded-3xl bg-gradient-to-r from-cyber-card via-[#15192d] to-cyber-card border border-cyber-border p-6 sm:p-10 mb-12 overflow-hidden shadow-2xl">
+        <!-- Background Neon Glows -->
+        <div class="absolute -top-24 -left-24 w-72 h-72 bg-cyber-cyan/20 rounded-full blur-[80px] pointer-events-none"></div>
+        <div class="absolute -bottom-24 -right-24 w-72 h-72 bg-cyber-magenta/20 rounded-full blur-[80px] pointer-events-none"></div>
+
+        <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div class="lg:col-span-8 space-y-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyber-cyan/10 border border-cyber-cyan/30 text-cyber-cyan text-xs font-mono tracking-wider">
+              <i class="fa-solid fa-bolt text-cyber-yellow animate-bounce"></i>
+              BROWSER-NATIVE ARCADE PROTOCOL
+            </div>
+            
+            <h1 class="text-3xl sm:text-5xl lg:text-6xl font-arcade font-black tracking-tight uppercase leading-tight">
+              LEVEL UP YOUR <br class="hidden sm:inline">
+              <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyber-cyan via-white to-cyber-magenta">
+                TACTICAL MIND
+              </span>
+            </h1>
+
+            <p class="text-slate-300 text-sm sm:text-base max-w-2xl font-sans leading-relaxed">
+              Launch into retro-futuristic logic hacking with <strong class="text-cyber-cyan">CyberBot</strong> or outwit rivals in the ultimate neon duel of <strong class="text-cyber-magenta">Tick Cross Pro</strong>. Instant launch in fullscreen or direct iframe containment.
+            </p>
+
+            <div class="flex flex-wrap items-center gap-3 pt-2 font-mono text-xs">
+              <div class="flex items-center gap-2 text-slate-400 bg-cyber-dark/80 px-3 py-1.5 rounded-lg border border-cyber-border">
+                <i class="fa-solid fa-microchip text-cyber-cyan"></i> Zero Install Required
+              </div>
+              <div class="flex items-center gap-2 text-slate-400 bg-cyber-dark/80 px-3 py-1.5 rounded-lg border border-cyber-border">
+                <i class="fa-solid fa-gamepad text-cyber-green"></i> Touch & Keyboard Enabled
+              </div>
+              <div class="flex items-center gap-2 text-slate-400 bg-cyber-dark/80 px-3 py-1.5 rounded-lg border border-cyber-border">
+                <i class="fa-solid fa-shield-halved text-cyber-yellow"></i> 100% Offline Capable
+              </div>
+            </div>
+          </div>
+
+          <!-- Fast Launch Highlight Widget -->
+          <div class="lg:col-span-4 bg-cyber-dark/90 border border-cyber-border/90 rounded-2xl p-5 backdrop-blur-md">
+            <div class="flex items-center justify-between mb-4 pb-3 border-b border-cyber-border">
+              <span class="text-xs font-mono uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                <i class="fa-solid fa-fire text-cyber-magenta"></i> Featured Quickmatch
+              </span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-cyber-magenta/20 text-cyber-magenta border border-cyber-magenta/40 font-bold">
+                HOT
+              </span>
+            </div>
+
+            <div class="flex items-center gap-4 mb-4">
+              <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-cyber-magenta/20 to-cyber-purple/30 border border-cyber-magenta/50 flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-xmark text-2xl text-cyber-magenta"></i>
+              </div>
+              <div>
+                <h4 class="font-arcade text-white text-base font-bold">Tick Cross Pro</h4>
+                <p class="text-xs text-slate-400 font-mono">Minimax AI &bull; Neon Duel</p>
+                <div class="text-[11px] text-cyber-yellow mt-0.5">
+                  <i class="fa-solid fa-star"></i> 4.9 <span class="text-slate-500">(Instant Duel)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5">
+              <button onclick="App.openModal('games/tick_cross_pro.html', 'Tick Cross Pro')" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-cyber-magenta to-pink-600 hover:from-pink-500 hover:to-cyber-magenta text-white font-arcade text-xs tracking-wider font-bold shadow-lg shadow-cyber-magenta/30 transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-play text-[10px]"></i> PLAY IN HUB
+              </button>
+              <a href="games/tick_cross_pro.html" target="_blank" onclick="SoundFX.play('launch')" class="w-full py-2.5 px-3 rounded-xl bg-cyber-card hover:bg-cyber-border border border-cyber-border text-slate-300 hover:text-white font-mono text-xs font-semibold transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-up-right-from-square text-[11px]"></i> TAB
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Search, Filters & Controls -->
+      <section class="mb-8 space-y-4">
+        <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+          
+          <!-- Category Filter Buttons -->
+          <div class="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-none" id="categoryButtons">
+            <button data-filter="all" class="category-btn active px-4 py-2 rounded-xl text-xs font-mono font-semibold transition-all flex items-center gap-2 shrink-0 bg-cyber-cyan text-cyber-black shadow-[0_0_15px_rgba(0,240,255,0.4)]">
+              <i class="fa-solid fa-border-all"></i> ALL CARTRIDGES (2)
+            </button>
+            <button data-filter="coding" class="category-btn px-4 py-2 rounded-xl text-xs font-mono font-semibold transition-all flex items-center gap-2 shrink-0 bg-cyber-card hover:bg-cyber-border text-slate-300 border border-cyber-border hover:border-cyber-cyan/50">
+              <i class="fa-solid fa-code text-cyber-cyan"></i> CODING & LOGIC
+            </button>
+            <button data-filter="strategy" class="category-btn px-4 py-2 rounded-xl text-xs font-mono font-semibold transition-all flex items-center gap-2 shrink-0 bg-cyber-card hover:bg-cyber-border text-slate-300 border border-cyber-border hover:border-cyber-magenta/50">
+              <i class="fa-solid fa-chess text-cyber-magenta"></i> STRATEGY & 2-PLAYER
+            </button>
+            <button data-filter="favorites" class="category-btn px-4 py-2 rounded-xl text-xs font-mono font-semibold transition-all flex items-center gap-2 shrink-0 bg-cyber-card hover:bg-cyber-border text-slate-300 border border-cyber-border hover:border-cyber-yellow/50">
+              <i class="fa-solid fa-star text-cyber-yellow"></i> BOOKMARKED
+            </button>
+          </div>
+
+          <!-- Search Input -->
+          <div class="relative w-full md:w-72">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+            <input 
+              type="text" 
+              id="gameSearchInput" 
+              placeholder="Search title, genre, tag... (Press /)" 
+              class="w-full bg-cyber-card border border-cyber-border focus:border-cyber-cyan rounded-xl pl-9 pr-8 py-2 text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-cyber-cyan transition-all"
+            >
+            <button id="clearSearchBtn" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white hidden text-xs">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Games Grid -->
+      <section class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16" id="gamesContainer">
+
+        <!-- ================= CARD 1: CyberBot: Code Quest ================= -->
+        <article 
+          class="game-card group bg-cyber-card rounded-3xl border border-cyber-border hover:border-cyber-cyan/80 transition-all duration-300 overflow-hidden flex flex-col hover:shadow-[0_0_30px_rgba(0,240,255,0.2)]"
+          data-id="cyberbot"
+          data-title="CyberBot: Code Quest"
+          data-category="coding"
+          data-url="games/cyberbot_code_quest.html"
+        >
+          <!-- Card Visual Canvas/Art Area -->
+          <div class="relative h-60 sm:h-64 bg-gradient-to-b from-[#0f1424] to-cyber-dark overflow-hidden flex items-center justify-center p-6 border-b border-cyber-border/80">
+            
+            <!-- Background Decorative Grid Lines -->
+            <div class="absolute inset-0 bg-[linear-gradient(to_right,#00f0ff08_1px,transparent_1px),linear-gradient(to_bottom,#00f0ff08_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+            
+            <!-- Animated Custom SVG Holographic Robot Illustration -->
+            <div class="relative z-10 transition-transform duration-500 group-hover:scale-105">
+              <svg class="w-48 h-48 drop-shadow-[0_0_20px_rgba(0,240,255,0.4)]" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Circuit lines in background -->
+                <path d="M20 100 H70 L90 80 H140" stroke="#00f0ff" stroke-opacity="0.3" stroke-width="2" stroke-dasharray="4 4" />
+                <path d="M180 120 H130 L110 140 H60" stroke="#00ff9d" stroke-opacity="0.3" stroke-width="2" stroke-dasharray="4 4" />
+                
+                <!-- Robot Antenna & Aura -->
+                <circle cx="100" cy="30" r="7" fill="#00f0ff" class="animate-pulse" />
+                <line x1="100" y1="37" x2="100" y2="55" stroke="#00f0ff" stroke-width="3" stroke-linecap="round"/>
+                
+                <!-- Robot Head Hexagon -->
+                <polygon points="60,60 140,60 155,100 140,140 60,140 45,100" fill="#0a1226" stroke="#00f0ff" stroke-width="3.5"/>
+                
+                <!-- Visor / Screen -->
+                <rect x="62" y="75" width="76" height="38" rx="8" fill="#030814" stroke="#00f0ff" stroke-width="1.5"/>
+                
+                <!-- Glowing Cyan Code Eyes / Scanlines -->
+                <path d="M72 90 H88 M112 90 H128" stroke="#00f0ff" stroke-width="4" stroke-linecap="round" />
+                <circle cx="80" cy="90" r="2" fill="#ffffff" />
+                <circle cx="120" cy="90" r="2" fill="#ffffff" />
+                
+                <!-- Code Matrix Binary Stream on Visor -->
+                <text x="75" y="106" fill="#00ff9d" font-family="monospace" font-size="8" font-weight="bold">0101 &gt;_ RUN</text>
+
+                <!-- Chassis Details -->
+                <path d="M80 140 L70 170 H130 L120 140" fill="#0d1b33" stroke="#00f0ff" stroke-width="2" />
+                <circle cx="100" cy="155" r="5" fill="#00ff9d" />
+                
+                <!-- Quantum Core Rings -->
+                <circle cx="100" cy="100" r="68" stroke="#00f0ff" stroke-opacity="0.2" stroke-width="1" stroke-dasharray="10 5" class="animate-spin" style="animation-duration: 20s;" />
+              </svg>
+            </div>
+
+            <!-- Badges Overlay -->
+            <div class="absolute top-4 left-4 flex flex-wrap gap-2 z-20">
+              <span class="px-2.5 py-1 rounded-md bg-cyber-cyan/20 border border-cyber-cyan/50 text-cyber-cyan font-arcade text-[10px] tracking-wider font-bold backdrop-blur-md">
+                <i class="fa-solid fa-terminal mr-1"></i> LOGIC & CODE
+              </span>
+              <span class="px-2.5 py-1 rounded-md bg-cyber-dark/80 border border-cyber-border text-slate-300 font-mono text-[10px] backdrop-blur-md">
+                SOLO CAMPAIGN
+              </span>
+            </div>
+
+            <!-- Favorite Toggle Button -->
+            <button 
+              onclick="App.toggleFavorite('cyberbot', event)" 
+              class="fav-btn absolute top-4 right-4 w-9 h-9 rounded-xl bg-cyber-dark/80 border border-cyber-border hover:border-cyber-yellow text-slate-400 hover:text-cyber-yellow transition-all flex items-center justify-center z-20"
+              title="Bookmark this game"
+            >
+              <i class="fa-regular fa-star text-sm"></i>
+            </button>
+
+            <!-- Quick Path Indicator -->
+            <div class="absolute bottom-3 right-4 font-mono text-[10px] text-slate-500 bg-cyber-dark/70 px-2 py-0.5 rounded border border-cyber-border/40">
+              games/cyberbot_code_quest.html
+            </div>
+          </div>
+
+          <!-- Card Content Body -->
+          <div class="p-6 sm:p-7 flex flex-col flex-grow justify-between space-y-6">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="text-2xl font-arcade font-bold text-white group-hover:text-cyber-cyan transition-colors">
+                  CyberBot: Code Quest
+                </h3>
+                <div class="flex items-center gap-1 text-cyber-yellow text-xs font-mono font-bold bg-cyber-yellow/10 px-2 py-1 rounded-lg border border-cyber-yellow/20">
+                  <i class="fa-solid fa-star"></i> 4.95
+                </div>
+              </div>
+
+              <p class="text-slate-300 text-sm leading-relaxed font-sans">
+                Take command of an autonomous recon unit inside a corrupted cyberspace mainframe. Construct sequential commands, debug algorithms, loop through grid obstacles, and collect security fragments.
+              </p>
+
+              <!-- Game Feature Tags -->
+              <div class="flex flex-wrap gap-2 pt-1 font-mono text-[11px]">
+                <span class="px-2.5 py-1 rounded-lg bg-cyber-dark border border-cyber-border text-slate-300">
+                  <i class="fa-solid fa-layer-group text-cyber-cyan mr-1"></i> Algorithmic Puzzles
+                </span>
+                <span class="px-2.5 py-1 rounded-lg bg-cyber-dark border border-cyber-border text-slate-300">
+                  <i class="fa-solid fa-arrows-split-up-and-left text-cyber-green mr-1"></i> Conditionals & Loops
+                </span>
+                <span class="px-2.5 py-1 rounded-lg bg-cyber-dark border border-cyber-border text-slate-300">
+                  <i class="fa-solid fa-brain text-cyber-purple mr-1"></i> Problem Solving
+                </span>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+              <!-- Play in Hub Modal -->
+              <button 
+                onclick="App.openModal('games/cyberbot_code_quest.html', 'CyberBot: Code Quest')" 
+                class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-cyber-cyan to-blue-600 hover:from-cyan-400 hover:to-cyber-cyan text-cyber-black font-arcade text-xs tracking-wider font-extrabold shadow-lg shadow-cyber-cyan/25 transition-all flex items-center justify-center gap-2 group-hover:scale-[1.02]"
+              >
+                <i class="fa-solid fa-play"></i> PLAY IN HUB
+              </button>
+
+              <!-- Launch Directly in New Tab -->
+              <a 
+                href="games/cyberbot_code_quest.html" 
+                target="_blank" 
+                onclick="SoundFX.play('launch')"
+                class="w-full py-3 px-4 rounded-xl bg-cyber-dark hover:bg-cyber-border border border-cyber-border hover:border-cyber-cyan/50 text-slate-300 hover:text-white font-mono text-xs font-semibold transition-all flex items-center justify-center gap-2"
+              >
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> FULLSCREEN TAB
+              </a>
+            </div>
+          </div>
+        </article>
+
+
+        <!-- ================= CARD 2: Tick Cross Pro ================= -->
+        <article 
+          class="game-card group bg-cyber-card rounded-3xl border border-cyber-border hover:border-cyber-magenta/80 transition-all duration-300 overflow-hidden flex flex-col hover:shadow-[0_0_30px_rgba(255,0,85,0.2)]"
+          data-id="tickcross"
+          data-title="Tick Cross Pro"
+          data-category="strategy"
+          data-url="games/tick_cross_pro.html"
+        >
+          <!-- Card Visual Canvas/Art Area -->
+          <div class="relative h-60 sm:h-64 bg-gradient-to-b from-[#220f1b] to-cyber-dark overflow-hidden flex items-center justify-center p-6 border-b border-cyber-border/80">
+            
+            <!-- Background Decorative Grid Lines -->
+            <div class="absolute inset-0 bg-[linear-gradient(to_right,#ff005508_1px,transparent_1px),linear-gradient(to_bottom,#ff005508_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+
+            <!-- Animated Custom SVG Holographic Tic-Tac-Toe Arena -->
+            <div class="relative z-10 transition-transform duration-500 group-hover:scale-105">
+              <svg class="w-48 h-48 drop-shadow-[0_0_20px_rgba(255,0,85,0.4)]" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- 3D Angled Grid Bars -->
+                <line x1="75" y1="20" x2="75" y2="180" stroke="#ff0055" stroke-opacity="0.5" stroke-width="3" stroke-linecap="round" />
+                <line x1="125" y1="20" x2="125" y2="180" stroke="#ff0055" stroke-opacity="0.5" stroke-width="3" stroke-linecap="round" />
+                <line x1="20" y1="75" x2="180" y2="75" stroke="#ff0055" stroke-opacity="0.5" stroke-width="3" stroke-linecap="round" />
+                <line x1="20" y1="125" x2="180" y2="125" stroke="#ff0055" stroke-opacity="0.5" stroke-width="3" stroke-linecap="round" />
+
+                <!-- Neon X Symbol (Top Left) -->
+                <path d="M38 38 L60 60 M60 38 L38 60" stroke="#00f0ff" stroke-width="5" stroke-linecap="round" class="animate-pulse" />
+
+                <!-- Neon O Symbol (Center) -->
+                <circle cx="100" cy="100" r="16" stroke="#ff0055" stroke-width="5" fill="none" class="animate-pulse" style="animation-delay: 0.5s;" />
+                
+                <!-- Neon X Symbol (Bottom Right) -->
+                <path d="M140 140 L162 162 M162 140 L140 162" stroke="#00f0ff" stroke-width="5" stroke-linecap="round" />
+
+                <!-- Strike Victory Laser Line -->
+                <line x1="30" y1="30" x2="170" y2="170" stroke="#ffe600" stroke-width="3.5" stroke-dasharray="6 4" class="animate-pulse" />
+
+                <!-- Holographic Particle Dots -->
+                <circle cx="150" cy="50" r="3" fill="#ff0055" opacity="0.8" />
+                <circle cx="50" cy="150" r="3" fill="#00f0ff" opacity="0.8" />
+                <circle cx="100" cy="45" r="2" fill="#ffe600" opacity="0.6" />
+              </svg>
+            </div>
+
+            <!-- Badges Overlay -->
+            <div class="absolute top-4 left-4 flex flex-wrap gap-2 z-20">
+              <span class="px-2.5 py-1 rounded-md bg-cyber-magenta/20 border border-cyber-magenta/50 text-cyber-magenta font-arcade text-[10px] tracking-wider font-bold backdrop-blur-md">
+                <i class="fa-solid fa-users mr-1"></i> TACTICS & 2-PLAYER
+              </span>
+              <span class="px-2.5 py-1 rounded-md bg-cyber-dark/80 border border-cyber-border text-slate-300 font-mono text-[10px] backdrop-blur-md">
+                SMART MINIMAX AI
+              </span>
+            </div>
+
+            <!-- Favorite Toggle Button -->
+            <button 
+              onclick="App.toggleFavorite('tickcross', event)" 
+              class="fav-btn absolute top-4 right-4 w-9 h-9 rounded-xl bg-cyber-dark/80 border border-cyber-border hover:border-cyber-yellow text-slate-400 hover:text-cyber-yellow transition-all flex items-center justify-center z-20"
+              title="Bookmark this game"
+            >
+              <i class="fa-regular fa-star text-sm"></i>
+            </button>
+
+            <!-- Quick Path Indicator -->
+            <div class="absolute bottom-3 right-4 font-mono text-[10px] text-slate-500 bg-cyber-dark/70 px-2 py-0.5 rounded border border-cyber-border/40">
+              games/tick_cross_pro.html
+            </div>
+          </div>
+
+          <!-- Card Content Body -->
+          <div class="p-6 sm:p-7 flex flex-col flex-grow justify-between space-y-6">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="text-2xl font-arcade font-bold text-white group-hover:text-cyber-magenta transition-colors">
+                  Tick Cross Pro
+                </h3>
+                <div class="flex items-center gap-1 text-cyber-yellow text-xs font-mono font-bold bg-cyber-yellow/10 px-2 py-1 rounded-lg border border-cyber-yellow/20">
+                  <i class="fa-solid fa-star"></i> 4.88
+                </div>
+              </div>
+
+              <p class="text-slate-300 text-sm leading-relaxed font-sans">
+                The ultimate neon-infused reimagining of the timeless duel. Engage with advanced heuristic AI modes from novice to unbeatable, or clash against a friend in pass-and-play split turn combat.
+              </p>
+
+              <!-- Game Feature Tags -->
+              <div class="flex flex-wrap gap-2 pt-1 font-mono text-[11px]">
+                <span class="px-2.5 py-1 rounded-lg bg-cyber-dark border border-cyber-border text-slate-300">
+                  <i class="fa-solid fa-robot text-cyber-magenta mr-1"></i> Unbeatable AI
+                </span>
+                <span class="px-2.5 py-1 rounded-lg bg-cyber-dark border border-cyber-border text-slate-300">
+                  <i class="fa-solid fa-user-group text-cyber-cyan mr-1"></i> Local 2-Player Pass
+                </span>
+                <span class="px-2.5 py-1 rounded-lg bg-cyber-dark border border-cyber-border text-slate-300">
+                  <i class="fa-solid fa-wand-magic-sparkles text-cyber-yellow mr-1"></i> Neon FX & Audio
+                </span>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+              <!-- Play in Hub Modal -->
+              <button 
+                onclick="App.openModal('games/tick_cross_pro.html', 'Tick Cross Pro')" 
+                class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-cyber-magenta to-rose-600 hover:from-pink-500 hover:to-cyber-magenta text-white font-arcade text-xs tracking-wider font-extrabold shadow-lg shadow-cyber-magenta/25 transition-all flex items-center justify-center gap-2 group-hover:scale-[1.02]"
+              >
+                <i class="fa-solid fa-play"></i> PLAY IN HUB
+              </button>
+
+              <!-- Launch Directly in New Tab -->
+              <a 
+                href="games/tick_cross_pro.html" 
+                target="_blank" 
+                onclick="SoundFX.play('launch')"
+                class="w-full py-3 px-4 rounded-xl bg-cyber-dark hover:bg-cyber-border border border-cyber-border hover:border-cyber-magenta/50 text-slate-300 hover:text-white font-mono text-xs font-semibold transition-all flex items-center justify-center gap-2"
+              >
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> FULLSCREEN TAB
+              </a>
+            </div>
+          </div>
+        </article>
+
+      </section>
+
+      <!-- Zero Search Results State (Hidden by default) -->
+      <div id="noResultsState" class="hidden text-center py-16 px-4 bg-cyber-card/50 rounded-3xl border border-cyber-border mb-12">
+        <i class="fa-solid fa-satellite-dish text-4xl text-slate-600 mb-4 animate-bounce"></i>
+        <h3 class="font-arcade text-lg text-white mb-2">NO CARTRIDGES FOUND</h3>
+        <p class="text-xs font-mono text-slate-400 mb-4">No matching titles or filters found in the local cache.</p>
+        <button onclick="App.resetFilters()" class="px-4 py-2 bg-cyber-border hover:bg-cyber-cyan hover:text-cyber-black text-xs font-mono rounded-xl transition-all">
+          RESET SEARCH & FILTERS
+        </button>
+      </div>
+
+      <!-- System Diagnostic & Quick Specs Footer Box -->
+      <section class="rounded-2xl border border-cyber-border/80 bg-cyber-dark/60 p-6 backdrop-blur-md mb-8">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center divide-y sm:divide-y-0 sm:divide-x divide-cyber-border/60">
+          <div class="pt-2 sm:pt-0">
+            <span class="block text-[11px] font-mono text-slate-500 uppercase tracking-widest">Active Engines</span>
+            <span class="font-arcade text-xl sm:text-2xl font-bold text-cyber-cyan">HTML5 / JS</span>
+          </div>
+          <div class="pt-2 sm:pt-0">
+            <span class="block text-[11px] font-mono text-slate-500 uppercase tracking-widest">Latency</span>
+            <span class="font-arcade text-xl sm:text-2xl font-bold text-cyber-green">0.4 ms</span>
+          </div>
+          <div class="pt-2 sm:pt-0">
+            <span class="block text-[11px] font-mono text-slate-500 uppercase tracking-widest">Audio Synthesizer</span>
+            <span class="font-arcade text-xl sm:text-2xl font-bold text-cyber-yellow" id="statAudio">WebAudio 48kHz</span>
+          </div>
+          <div class="pt-2 sm:pt-0">
+            <span class="block text-[11px] font-mono text-slate-500 uppercase tracking-widest">Device Support</span>
+            <span class="font-arcade text-xl sm:text-2xl font-bold text-cyber-magenta">Desktop &bull; Mobile</span>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-cyber-border/80 bg-cyber-dark py-8 px-4 sm:px-6 lg:px-8 text-xs font-mono text-slate-500">
+      <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <span class="w-2 h-2 rounded-full bg-cyber-cyan"></span>
+          <span>CYBERSPACE ARCADE RUNTIME &bull; OFFLINE LOCAL DIRECTORY</span>
+        </div>
+        <div class="flex items-center gap-6">
+          <span>Shortcuts: <kbd class="px-1.5 py-0.5 bg-cyber-card border border-cyber-border rounded text-[10px] text-slate-300">ESC</kbd> Close Player &bull; <kbd class="px-1.5 py-0.5 bg-cyber-card border border-cyber-border rounded text-[10px] text-slate-300">/</kbd> Search &bull; <kbd class="px-1.5 py-0.5 bg-cyber-card border border-cyber-border rounded text-[10px] text-slate-300">M</kbd> Sound</span>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+
+  <!-- ================= IN-HUB MODAL GAME PLAYER ================= -->
+  <div id="gameModal" class="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 lg:p-6 bg-black/85 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
+    
+    <div id="modalBox" class="relative w-full max-w-6xl h-[92vh] bg-cyber-dark border border-cyber-cyan/50 rounded-2xl flex flex-col overflow-hidden shadow-[0_0_50px_rgba(0,240,255,0.25)] transform scale-95 transition-all duration-300">
+      
+      <!-- Modal Header / Controls Bar -->
+      <div class="h-14 bg-cyber-card/90 border-b border-cyber-border px-4 flex items-center justify-between shrink-0">
+        
+        <!-- Left: Game Info & Status -->
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-cyber-cyan/10 border border-cyber-cyan/40 flex items-center justify-center text-cyber-cyan text-sm">
+            <i class="fa-solid fa-gamepad"></i>
+          </div>
+          <div>
+            <h2 id="modalGameTitle" class="font-arcade text-sm sm:text-base font-bold text-white tracking-wide">
+              Game Title
+            </h2>
+            <p id="modalGamePath" class="text-[10px] font-mono text-cyber-cyan hidden sm:block">
+              games/...
+            </p>
+          </div>
+        </div>
+
+        <!-- Right: Action Controls -->
+        <div class="flex items-center gap-2">
+          <!-- Reload Iframe -->
+          <button id="modalReloadBtn" class="p-2 rounded-lg bg-cyber-dark border border-cyber-border hover:border-cyber-cyan hover:text-cyber-cyan text-slate-400 transition-all text-xs" title="Restart Game">
+            <i class="fa-solid fa-rotate-right"></i>
+          </button>
+
+          <!-- Open in Separate Tab -->
+          <a id="modalExternalBtn" href="#" target="_blank" class="p-2 rounded-lg bg-cyber-dark border border-cyber-border hover:border-cyber-cyan hover:text-cyber-cyan text-slate-400 transition-all text-xs" title="Open in Dedicated Tab">
+            <i class="fa-solid fa-up-right-from-square"></i>
+          </a>
+
+          <!-- Toggle Fullscreen on Modal Box -->
+          <button id="modalFullscreenBtn" class="p-2 rounded-lg bg-cyber-dark border border-cyber-border hover:border-cyber-cyan hover:text-cyber-cyan text-slate-400 transition-all text-xs" title="Expand Fullscreen">
+            <i class="fa-solid fa-maximize"></i>
+          </button>
+
+          <!-- Close Modal -->
+          <button id="modalCloseBtn" class="p-2 px-3 rounded-lg bg-red-950/40 border border-red-500/50 hover:bg-red-500 hover:text-white text-red-400 transition-all text-xs font-mono font-bold flex items-center gap-1.5 ml-2" title="Close (ESC)">
+            <i class="fa-solid fa-xmark"></i>
+            <span class="hidden sm:inline">CLOSE</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Iframe Workspace -->
+      <div class="relative flex-grow bg-cyber-black w-full h-full overflow-hidden">
+        <!-- Loading Spinner Placeholder -->
+        <div id="iframeLoader" class="absolute inset-0 flex flex-col items-center justify-center bg-cyber-black z-10 transition-opacity duration-300">
+          <div class="w-12 h-12 border-4 border-cyber-cyan/20 border-t-cyber-cyan rounded-full animate-spin mb-3"></div>
+          <p class="font-arcade text-xs text-cyber-cyan tracking-widest animate-pulse">BOOTING CARTRIDGE...</p>
+        </div>
+
+        <!-- Active Embedded Game Iframe -->
+        <iframe 
+          id="gameIframe" 
+          src="about:blank" 
+          class="w-full h-full border-0 focus:outline-none" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+          allowfullscreen
+        ></iframe>
+      </div>
+
+      <!-- Bottom Mini-bar -->
+      <div class="h-8 bg-cyber-card border-t border-cyber-border px-4 flex items-center justify-between text-[11px] font-mono text-slate-500 shrink-0">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-cyber-green"></span>
+          <span>SANDBOX ISOLATION: ACTIVE</span>
+        </div>
+        <div class="hidden sm:block">
+          <span>Click canvas inside iframe to lock game controls</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <script>
+    /* ==========================================================
+       1. SYNTHESIZED WEB AUDIO SOUND FX (No external audio files)
+       ========================================================== */
+    const SoundFX = {
+      enabled: true,
+      audioCtx: null,
+
+      init() {
+        if (!this.audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) {
+            this.audioCtx = new AudioContextClass();
+          }
+        }
+      },
+
+      play(type) {
+        if (!this.enabled) return;
+        try {
+          this.init();
+          if (!this.audioCtx) return;
+          if (this.audioCtx.state === 'suspended') {
+            this.audioCtx.resume();
+          }
+
+          const ctx = this.audioCtx;
+          const now = ctx.currentTime;
+
+          if (type === 'hover') {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(440, now);
+            osc.frequency.exponentialRampToValueAtTime(880, now + 0.04);
+            gain.gain.setValueAtTime(0.04, now);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.04);
+          } else if (type === 'click') {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(520, now);
+            osc.frequency.exponentialRampToValueAtTime(260, now + 0.07);
+            gain.gain.setValueAtTime(0.08, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.07);
+          } else if (type === 'launch') {
+            // Retro laser warp
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(300, now);
+            osc.frequency.exponentialRampToValueAtTime(1200, now + 0.2);
+            gain.gain.setValueAtTime(0.09, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.2);
+          } else if (type === 'close') {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(600, now);
+            osc.frequency.exponentialRampToValueAtTime(150, now + 0.12);
+            gain.gain.setValueAtTime(0.07, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.12);
+          }
+        } catch (e) {
+          console.warn('Audio synthesis note:', e);
+        }
+      },
+
+      toggle() {
+        this.enabled = !this.enabled;
+        const soundLabel = document.getElementById('soundLabel');
+        const soundIcon = document.getElementById('soundIcon');
+        
+        if (this.enabled) {
+          soundLabel.textContent = 'SFX ON';
+          soundIcon.className = 'fa-solid fa-volume-high text-cyber-cyan';
+          this.play('click');
+        } else {
+          soundLabel.textContent = 'SFX OFF';
+          soundIcon.className = 'fa-solid fa-volume-xmark text-slate-500';
+        }
+      }
+    };
+
+    /* ==========================================================
+       2. INTERACTIVE PARTICLES & PERSPECTIVE GRID CANVAS
+       ========================================================== */
+    const canvas = document.getElementById('cyberCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let mouse = { x: null, y: null, radius: 100 };
+
+    function initCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      particles = [];
+      const particleCount = Math.floor((canvas.width * canvas.height) / 18000);
+      
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          vx: (Math.random() - 0.5) * 0.6,
+          vy: (Math.random() - 0.5) * 0.6,
+          size: Math.random() * 2 + 1,
+          color: Math.random() > 0.5 ? 'rgba(0, 240, 255,' : 'rgba(255, 0, 85,'
+        });
+      }
+    }
+
+    function renderCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+
+        ctx.fillStyle = p.color + '0.7)';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Connect nearby particles
+        for (let j = i + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const dx = p.x - p2.x;
+          const dy = p.y - p2.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < 110) {
+            ctx.strokeStyle = `rgba(0, 240, 255, ${0.15 * (1 - dist / 110)})`;
+            ctx.lineWidth = 0.6;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(renderCanvas);
+    }
+
+    window.addEventListener('resize', () => {
+      initCanvas();
+    });
+
+    /* ==========================================================
+       3. APP STATE & FILTERING LOGIC
+       ========================================================== */
+    const App = {
+      favorites: new Set(JSON.parse(localStorage.getItem('nexus_arcade_favs') || '[]')),
+      activeFilter: 'all',
+      searchQuery: '',
+
+      init() {
+        this.updateFavUI();
+        this.bindEvents();
+        this.startClock();
+      },
+
+      startClock() {
+        const clockEl = document.getElementById('systemClock');
+        const update = () => {
+          const d = new Date();
+          clockEl.textContent = d.toTimeString().split(' ')[0] + ' UTC';
+        };
+        setInterval(update, 1000);
+        update();
+      },
+
+      toggleFavorite(id, event) {
+        event.stopPropagation();
+        SoundFX.play('click');
+        if (this.favorites.has(id)) {
+          this.favorites.delete(id);
+        } else {
+          this.favorites.add(id);
+        }
+        localStorage.setItem('nexus_arcade_favs', JSON.stringify([...this.favorites]));
+        this.updateFavUI();
+        if (this.activeFilter === 'favorites') {
+          this.filterGames();
+        }
+      },
+
+      updateFavUI() {
+        document.querySelectorAll('.game-card').forEach(card => {
+          const id = card.dataset.id;
+          const favBtn = card.querySelector('.fav-btn');
+          const starIcon = favBtn.querySelector('i');
+          if (this.favorites.has(id)) {
+            favBtn.classList.add('border-cyber-yellow', 'text-cyber-yellow');
+            starIcon.className = 'fa-solid fa-star text-sm text-cyber-yellow';
+          } else {
+            favBtn.classList.remove('border-cyber-yellow', 'text-cyber-yellow');
+            starIcon.className = 'fa-regular fa-star text-sm';
+          }
+        });
+      },
+
+      filterGames() {
+        const query = this.searchQuery.toLowerCase().trim();
+        const cards = document.querySelectorAll('.game-card');
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+          const id = card.dataset.id;
+          const title = (card.dataset.title || '').toLowerCase();
+          const category = card.dataset.category;
+          const textContent = card.innerText.toLowerCase();
+
+          // Category check
+          let matchesCategory = false;
+          if (this.activeFilter === 'all') matchesCategory = true;
+          else if (this.activeFilter === 'favorites') matchesCategory = this.favorites.has(id);
+          else if (this.activeFilter === category) matchesCategory = true;
+
+          // Search check
+          const matchesSearch = !query || title.includes(query) || textContent.includes(query);
+
+          if (matchesCategory && matchesSearch) {
+            card.classList.remove('hidden');
+            visibleCount++;
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+
+        const noResults = document.getElementById('noResultsState');
+        if (visibleCount === 0) {
+          noResults.classList.remove('hidden');
+        } else {
+          noResults.classList.add('hidden');
+        }
+      },
+
+      resetFilters() {
+        SoundFX.play('click');
+        this.searchQuery = '';
+        this.activeFilter = 'all';
+        document.getElementById('gameSearchInput').value = '';
+        document.getElementById('clearSearchBtn').classList.add('hidden');
+        
+        // Update category buttons UI
+        document.querySelectorAll('.category-btn').forEach(btn => {
+          if (btn.dataset.filter === 'all') {
+            btn.className = 'category-btn active px-4 py-2 rounded-xl text-xs font-mono font-semibold transition-all flex items-center gap-2 shrink-0 bg-cyber-cyan text-cyber-black shadow-[0_0_15px_rgba(0,240,255,0.4)]';
+          } else {
+            btn.className = 'category-btn px-4 py-2 rounded-xl text-xs font-mono font-semibold transition-all flex items-center gap-2 shrink-0 bg-cyber-card hover:bg-cyber-border text-slate-300 border border-cyber-border';
+          }
+        });
+
+        this.filterGames();
+      },
+
+      /* Modal Game Runner */
+      openModal(url, title) {
+        SoundFX.play('launch');
+        const modal = document.getElementById('gameModal');
+        const modalBox = document.getElementById('modalBox');
+        const iframe = document.getElementById('gameIframe');
+        const loader = document.getElementById('iframeLoader');
+        const titleEl = document.getElementById('modalGameTitle');
+        const pathEl = document.getElementById('modalGamePath');
+        const extBtn = document.getElementById('modalExternalBtn');
+
+        titleEl.textContent = title;
+        pathEl.textContent = url;
+        extBtn.href = url;
+
+        // Reset and display loader
+        loader.style.opacity = '1';
+        loader.style.pointerEvents = 'auto';
+
+        iframe.src = url;
+        iframe.onload = () => {
+          setTimeout(() => {
+            loader.style.opacity = '0';
+            loader.style.pointerEvents = 'none';
+          }, 300);
+        };
+
+        // Animate modal in
+        modal.classList.remove('pointer-events-none');
+        modal.classList.remove('opacity-0');
+        modal.classList.add('opacity-100');
+
+        modalBox.classList.remove('scale-95');
+        modalBox.classList.add('scale-100');
+        document.body.style.overflow = 'hidden';
+      },
+
+      closeModal() {
+        SoundFX.play('close');
+        const modal = document.getElementById('gameModal');
+        const modalBox = document.getElementById('modalBox');
+        const iframe = document.getElementById('gameIframe');
+
+        modalBox.classList.remove('scale-100');
+        modalBox.classList.add('scale-95');
+
+        modal.classList.remove('opacity-100');
+        modal.classList.add('opacity-0');
+
+        setTimeout(() => {
+          modal.classList.add('pointer-events-none');
+          iframe.src = 'about:blank'; // unload to stop game loops / sounds
+          document.body.style.overflow = 'auto';
+        }, 200);
+      },
+
+      bindEvents() {
+        // Sound toggle button
+        document.getElementById('soundToggleBtn').addEventListener('click', () => {
+          SoundFX.toggle();
+        });
+
+        // Hub Fullscreen toggle
+        document.getElementById('hubFullscreenBtn').addEventListener('click', () => {
+          SoundFX.play('click');
+          if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(() => {});
+          } else {
+            document.exitFullscreen().catch(() => {});
+          }
+        });
+
+        // Search inputs
+        const searchInput = document.getElementById('gameSearchInput');
+        const clearSearchBtn = document.getElementById('clearSearchBtn');
+
+        searchInput.addEventListener('input', (e) => {
+          this.searchQuery = e.target.value;
+          if (this.searchQuery) {
+            clearSearchBtn.classList.remove('hidden');
+          } else {
+            clearSearchBtn.classList.add('hidden');
+          }
+          this.filterGames();
+        });
+
+        clearSearchBtn.addEventListener('click', () => {
+          searchInput.value = '';
+          this.searchQuery = '';
+          clearSearchBtn.classList.add('hidden');
+          SoundFX.play('click');
+          this.filterGames();
+          searchInput.focus();
+        });
+
+        // Category Buttons
+        document.querySelectorAll('.category-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            SoundFX.play('click');
+            document.querySelectorAll('.category-btn').forEach(b => {
+              b.className = 'category-btn px-4 py-2 rounded-xl text-xs font-mono font-semibold transition-all flex items-center gap-2 shrink-0 bg-cyber-card hover:bg-cyber-border text-slate-300 border border-cyber-border';
+            });
+            btn.className = 'category-btn active px-4 py-2 rounded-xl text-xs font-mono font-semibold transition-all flex items-center gap-2 shrink-0 bg-cyber-cyan text-cyber-black shadow-[0_0_15px_rgba(0,240,255,0.4)]';
+            this.activeFilter = btn.dataset.filter;
+            this.filterGames();
+          });
+        });
+
+        // Modal Controls
+        document.getElementById('modalCloseBtn').addEventListener('click', () => this.closeModal());
+        
+        document.getElementById('modalReloadBtn').addEventListener('click', () => {
+          SoundFX.play('click');
+          const iframe = document.getElementById('gameIframe');
+          const loader = document.getElementById('iframeLoader');
+          loader.style.opacity = '1';
+          loader.style.pointerEvents = 'auto';
+          iframe.src = iframe.src;
+        });
+
+        document.getElementById('modalFullscreenBtn').addEventListener('click', () => {
+          SoundFX.play('click');
+          const modalBox = document.getElementById('modalBox');
+          if (!document.fullscreenElement) {
+            modalBox.requestFullscreen().catch(() => {});
+          } else {
+            document.exitFullscreen().catch(() => {});
+          }
+        });
+
+        // Close on backdrop click
+        document.getElementById('gameModal').addEventListener('click', (e) => {
+          if (e.target.id === 'gameModal') {
+            this.closeModal();
+          }
+        });
+
+        // Keyboard Shortcuts
+        window.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            const modal = document.getElementById('gameModal');
+            if (!modal.classList.contains('pointer-events-none')) {
+              this.closeModal();
+            }
+          } else if (e.key === '/' && document.activeElement !== searchInput) {
+            e.preventDefault();
+            searchInput.focus();
+          } else if ((e.key === 'm' || e.key === 'M') && document.activeElement !== searchInput) {
+            SoundFX.toggle();
+          }
+        });
+
+        // Card button hover effects
+        document.querySelectorAll('button, a').forEach(el => {
+          el.addEventListener('mouseenter', () => {
+            SoundFX.play('hover');
+          });
+        });
+      }
+    };
+
+    // Initialize application on load
+    window.addEventListener('DOMContentLoaded', () => {
+      initCanvas();
+      renderCanvas();
+      App.init();
+    });
+  </script>
+</body>
+</html>
