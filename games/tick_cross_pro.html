@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tick & Cross Pro - Ultimate Tic-Tac-Toe</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --font-display: 'Outfit', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: #080d1a;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(6, 182, 212, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(244, 63, 94, 0.15) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(99, 102, 241, 0.1) 0px, transparent 50%);
+      min-height: 100vh;
+      color: #f1f5f9;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    h1, h2, h3, .font-heading {
+      font-family: var(--font-display);
+    }
+
+    /* Glassmorphism utility */
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    .glass-btn {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .glass-btn:hover:not(:disabled) {
+      background: rgba(51, 65, 85, 0.8);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+    .glass-btn:active:not(:disabled) {
+      transform: translateY(1px);
+    }
+
+    /* Grid Tile Styling */
+    .cell-btn {
+      aspect-ratio: 1 / 1;
+      position: relative;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1.5px solid rgba(255, 255, 255, 0.07);
+      border-radius: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.03), 0 4px 12px rgba(0, 0, 0, 0.25);
+    }
+
+    @media (hover: hover) {
+      .cell-btn:hover:not(.occupied):not(:disabled) {
+        background: rgba(30, 41, 59, 0.85);
+        border-color: rgba(255, 255, 255, 0.25);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.4);
+      }
+    }
+
+    .cell-btn:active:not(:disabled) {
+      transform: scale(0.96);
+    }
+
+    .cell-btn.winning-cell {
+      animation: winPulse 1.4s ease-in-out infinite alternate;
+      z-index: 5;
+    }
+
+    .winning-cell-p1 {
+      border-color: rgba(6, 182, 212, 0.9) !important;
+      background: rgba(6, 182, 212, 0.22) !important;
+      box-shadow: 0 0 25px rgba(6, 182, 212, 0.45) !important;
+    }
+
+    .winning-cell-p2 {
+      border-color: rgba(244, 63, 94, 0.9) !important;
+      background: rgba(244, 63, 94, 0.22) !important;
+      box-shadow: 0 0 25px rgba(244, 63, 94, 0.45) !important;
+    }
+
+    @keyframes winPulse {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.05); }
+    }
+
+    /* Symbol Animation */
+    .symbol-pop {
+      animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.2) rotate(-20deg); opacity: 0; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    /* Strike-Through SVG line transition */
+    .strike-line {
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: drawStrike 0.45s ease-out forwards;
+    }
+
+    @keyframes drawStrike {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+
+    /* Ghost Hover for Desktop */
+    @media (hover: hover) {
+      .cell-btn:not(.occupied):hover .ghost-preview {
+        opacity: 0.25;
+        transform: scale(0.85);
+      }
+    }
+
+    /* Glow Effects */
+    .p1-glow {
+      box-shadow: 0 0 18px rgba(6, 182, 212, 0.35);
+    }
+    .p2-glow {
+      box-shadow: 0 0 18px rgba(244, 63, 94, 0.35);
+    }
+  </style>
+</head>
+<body class="flex flex-col items-center justify-center p-3 sm:p-6 overflow-x-hidden">
+
+  <!-- Main Container -->
+  <main class="w-full max-w-md mx-auto flex flex-col gap-4">
+
+    <!-- Top Bar: Logo & Actions -->
+    <header class="flex items-center justify-between px-1">
+      <div class="flex items-center gap-2.5">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-500 to-rose-500 p-0.5 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+          <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center font-bold text-sm tracking-tighter">
+            <span class="text-cyan-400">✕</span><span class="text-rose-400">◯</span>
+          </div>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold tracking-tight text-white flex items-center gap-1.5 font-heading">
+            TICK &amp; CROSS <span class="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">Pro</span>
+          </h1>
+          <p class="text-xs text-slate-400">Pass &amp; Play or Minimax AI</p>
+        </div>
+      </div>
+
+      <!-- Quick Audio & Settings Buttons -->
+      <div class="flex items-center gap-2">
+        <!-- Audio Mute/Unmute -->
+        <button id="soundToggleBtn" aria-label="Toggle Sound" class="glass-btn w-9 h-9 rounded-xl flex items-center justify-center text-slate-300 hover:text-white transition">
+          <svg id="soundIconOn" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M11 5L6 9H2v6h4l5 4V5z"/>
+          </svg>
+          <svg id="soundIconOff" class="w-4 h-4 hidden text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"/>
+          </svg>
+        </button>
+
+        <!-- Settings Panel Toggle -->
+        <button id="settingsToggleBtn" aria-label="Game Settings" class="glass-btn w-9 h-9 rounded-xl flex items-center justify-center text-slate-300 hover:text-white transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Collapsible Settings Panel -->
+    <div id="settingsPanel" class="hidden glass-panel rounded-2xl p-4 flex flex-col gap-3.5 border border-indigo-500/20 text-xs">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-700/50">
+        <span class="font-semibold text-slate-200">Customization &amp; Rules</span>
+        <button id="closeSettingsBtn" class="text-slate-400 hover:text-white text-base leading-none">&times;</button>
+      </div>
+
+      <!-- Mode Selector -->
+      <div>
+        <label class="block text-slate-400 mb-1.5 font-medium">Opponent Mode</label>
+        <div class="grid grid-cols-2 gap-1.5 p-1 bg-slate-900/80 rounded-xl border border-slate-800">
+          <button id="modePvP" class="mode-btn py-1.5 rounded-lg font-medium transition text-center text-slate-300">
+            👥 2-Player
+          </button>
+          <button id="modePvC" class="mode-btn py-1.5 rounded-lg font-medium transition text-center text-white bg-indigo-600 shadow-sm">
+            🤖 vs Computer
+          </button>
+        </div>
+      </div>
+
+      <!-- Difficulty Selector (Visible when vs Computer is active) -->
+      <div id="difficultyRow">
+        <label class="block text-slate-400 mb-1.5 font-medium">Computer Difficulty</label>
+        <div class="grid grid-cols-3 gap-1.5 p-1 bg-slate-900/80 rounded-xl border border-slate-800">
+          <button data-diff="easy" class="diff-btn py-1.5 rounded-lg font-medium transition text-center text-slate-400 hover:text-white">
+            Easy
+          </button>
+          <button data-diff="medium" class="diff-btn py-1.5 rounded-lg font-medium transition text-center text-slate-400 hover:text-white">
+            Medium
+          </button>
+          <button data-diff="hard" class="diff-btn py-1.5 rounded-lg font-medium transition text-center text-white bg-rose-600/90 shadow-sm">
+            Unbeatable
+          </button>
+        </div>
+      </div>
+
+      <!-- Symbol Theme Toggle -->
+      <div>
+        <label class="block text-slate-400 mb-1.5 font-medium">Symbol Theme</label>
+        <div class="grid grid-cols-2 gap-1.5 p-1 bg-slate-900/80 rounded-xl border border-slate-800">
+          <button id="themeXO" class="theme-btn py-1.5 rounded-lg font-medium transition text-center text-white bg-slate-800 shadow-sm">
+            Classic (✕ / ◯)
+          </button>
+          <button id="themeTickCross" class="theme-btn py-1.5 rounded-lg font-medium transition text-center text-slate-400 hover:text-white">
+            Tick &amp; Cross (✓ / ✗)
+          </button>
+        </div>
+      </div>
+
+      <!-- Clear Scoreboard button -->
+      <div class="pt-1">
+        <button id="resetScoreBtn" class="w-full py-2 px-3 rounded-xl bg-slate-800/90 hover:bg-rose-950/40 text-slate-300 hover:text-rose-400 border border-slate-700/60 hover:border-rose-500/40 transition flex items-center justify-center gap-1.5 font-medium">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+          </svg>
+          Reset All Scores
+        </button>
+      </div>
+    </div>
+
+    <!-- Scoreboard -->
+    <div class="grid grid-cols-3 gap-2.5">
+      <!-- Player 1 Score Card -->
+      <div id="p1Card" class="glass-panel p-3 rounded-2xl flex flex-col items-center justify-center relative overflow-hidden transition-all duration-300 border-cyan-500/30">
+        <div id="p1Indicator" class="absolute top-0 left-0 right-0 h-1 bg-cyan-400"></div>
+        <div class="flex items-center gap-1.5 mb-1">
+          <span id="p1SymbolIcon" class="text-cyan-400 font-bold text-sm">✕</span>
+          <span id="p1Label" class="text-[11px] font-semibold text-slate-300 uppercase tracking-wider">Player 1</span>
+        </div>
+        <span id="p1Score" class="text-2xl font-extrabold text-white font-heading">0</span>
+      </div>
+
+      <!-- Ties / Draws Card -->
+      <div class="glass-panel p-3 rounded-2xl flex flex-col items-center justify-center border-slate-700/40">
+        <div class="flex items-center gap-1 mb-1">
+          <span class="text-slate-400 font-bold text-xs">🤝</span>
+          <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Ties</span>
+        </div>
+        <span id="tieScore" class="text-2xl font-extrabold text-slate-300 font-heading">0</span>
+      </div>
+
+      <!-- Player 2 / AI Score Card -->
+      <div id="p2Card" class="glass-panel p-3 rounded-2xl flex flex-col items-center justify-center relative overflow-hidden transition-all duration-300 border-transparent opacity-60">
+        <div id="p2Indicator" class="absolute top-0 left-0 right-0 h-1 bg-rose-400 hidden"></div>
+        <div class="flex items-center gap-1.5 mb-1">
+          <span id="p2SymbolIcon" class="text-rose-400 font-bold text-sm">◯</span>
+          <span id="p2Label" class="text-[11px] font-semibold text-slate-300 uppercase tracking-wider">Computer</span>
+        </div>
+        <span id="p2Score" class="text-2xl font-extrabold text-white font-heading">0</span>
+      </div>
+    </div>
+
+    <!-- Status Banner -->
+    <div id="statusBanner" class="glass-panel px-4 py-2.5 rounded-xl flex items-center justify-between border-slate-700/50">
+      <div class="flex items-center gap-2.5">
+        <span id="statusPulse" class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></span>
+        <span id="statusText" class="text-sm font-semibold text-slate-200">Player 1's Turn</span>
+      </div>
+      <span id="difficultyBadge" class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
+        Unbeatable
+      </span>
+    </div>
+
+    <!-- 3x3 Game Board Canvas & Strike Overlay -->
+    <div class="relative w-full aspect-square rounded-3xl p-3 glass-panel border-slate-700/60 shadow-2xl">
+      
+      <!-- Interactive Grid of 9 Cells -->
+      <div id="boardGrid" class="grid grid-cols-3 grid-rows-3 gap-2.5 sm:gap-3 w-full h-full" role="grid" aria-label="Tic Tac Toe Grid">
+        <button class="cell-btn" data-index="0" aria-label="Cell 1"></button>
+        <button class="cell-btn" data-index="1" aria-label="Cell 2"></button>
+        <button class="cell-btn" data-index="2" aria-label="Cell 3"></button>
+        <button class="cell-btn" data-index="3" aria-label="Cell 4"></button>
+        <button class="cell-btn" data-index="4" aria-label="Cell 5"></button>
+        <button class="cell-btn" data-index="5" aria-label="Cell 6"></button>
+        <button class="cell-btn" data-index="6" aria-label="Cell 7"></button>
+        <button class="cell-btn" data-index="7" aria-label="Cell 8"></button>
+        <button class="cell-btn" data-index="8" aria-label="Cell 9"></button>
+      </div>
+
+      <!-- Winning Strike Line Overlay (SVG) -->
+      <svg id="strikeSvg" class="absolute inset-0 w-full h-full pointer-events-none p-3 z-20 hidden" viewBox="0 0 300 300">
+        <defs>
+          <filter id="cyanGlow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#06b6d4" />
+          </filter>
+          <filter id="roseGlow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#f43f5e" />
+          </filter>
+        </defs>
+        <line id="strikePath" x1="0" y1="0" x2="0" y2="0" stroke-width="8" stroke-linecap="round" class="strike-line" />
+      </svg>
+    </div>
+
+    <!-- Action Controls: Play Again / Next Round -->
+    <div class="flex items-center gap-3 w-full">
+      <button id="playAgainBtn" class="flex-1 py-3 px-4 rounded-2xl bg-gradient-to-r from-cyan-500 via-indigo-600 to-rose-500 hover:from-cyan-400 hover:via-indigo-500 hover:to-rose-400 text-white font-bold text-sm font-heading shadow-lg shadow-indigo-500/25 transition-all transform active:scale-[0.98] flex items-center justify-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+        <span>Play Again</span>
+      </button>
+
+      <button id="quickResetBtn" title="Reset Current Board" class="glass-btn px-4 py-3 rounded-2xl text-slate-300 hover:text-white font-medium text-sm flex items-center gap-1.5">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+        <span>Clear</span>
+      </button>
+    </div>
+
+    <!-- Footer Guide / Hints -->
+    <div class="text-center text-[11px] text-slate-500">
+      <span>Tip: Press keys <kbd class="px-1 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">1</kbd>-<kbd class="px-1 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">9</kbd> on keyboard or numpad to place mark</span>
+    </div>
+
+  </main>
+
+  <!-- JavaScript Logic -->
+  <script>
+    /* ==========================================================================
+       1. SYNTHESIZED SOUND ENGINE (Web Audio API)
+       ========================================================================== */
+    class SoundEngine {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+
+      initContext() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) {
+            this.ctx = new AudioContext();
+          }
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+
+      playTone(freq, type = 'sine', duration = 0.1, gainVal = 0.15, pitchBend = 0) {
+        if (!this.enabled) return;
+        this.initContext();
+        if (!this.ctx) return;
+
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+          if (pitchBend !== 0) {
+            osc.frequency.exponentialRampToValueAtTime(freq + pitchBend, this.ctx.currentTime + duration);
+          }
+
+          gain.gain.setValueAtTime(gainVal, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          osc.start();
+          osc.stop(this.ctx.currentTime + duration);
+        } catch (e) {
+          // Audio safe fail
+        }
+      }
+
+      playCellClick(player) {
+        if (player === 'P1') {
+          // Cheerful crisp high-pitch chime
+          this.playTone(587.33, 'triangle', 0.08, 0.2, 120); // D5
+        } else {
+          // Warmer lower-pitch pop
+          this.playTone(392.00, 'sine', 0.09, 0.2, -60); // G4
+        }
+      }
+
+      playWin() {
+        if (!this.enabled) return;
+        this.initContext();
+        // Ascending major arpeggio
+        const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+        notes.forEach((freq, idx) => {
+          setTimeout(() => {
+            this.playTone(freq, 'triangle', 0.18, 0.22, 10);
+          }, idx * 75);
+        });
+      }
+
+      playDraw() {
+        if (!this.enabled) return;
+        this.initContext();
+        // Descending gentle chord
+        const notes = [440, 392, 349.23]; // A4, G4, F4
+        notes.forEach((freq, idx) => {
+          setTimeout(() => {
+            this.playTone(freq, 'sine', 0.22, 0.18, -20);
+          }, idx * 100);
+        });
+      }
+
+      playRestart() {
+        this.playTone(260, 'sine', 0.12, 0.15, 200);
+      }
+
+      playClick() {
+        this.playTone(800, 'sine', 0.03, 0.08, -100);
+      }
+    }
+
+    const sound = new SoundEngine();
+
+    /* ==========================================================================
+       2. SVG MARK DEFINITIONS
+       ========================================================================== */
+    const MarkIcons = {
+      // Classic Cross (P1)
+      cross: `
+        <svg class="w-12 h-12 sm:w-16 sm:h-16 text-cyan-400 drop-shadow-[0_0_12px_rgba(6,182,212,0.6)] symbol-pop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      `,
+      // Classic Circle (P2)
+      circle: `
+        <svg class="w-12 h-12 sm:w-16 sm:h-16 text-rose-400 drop-shadow-[0_0_12px_rgba(244,63,94,0.6)] symbol-pop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"></circle>
+        </svg>
+      `,
+      // Alternative Tick (P1)
+      tick: `
+        <svg class="w-12 h-12 sm:w-16 sm:h-16 text-emerald-400 drop-shadow-[0_0_12px_rgba(52,211,153,0.6)] symbol-pop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      `,
+      // Alternative Bad Cross (P2)
+      crossAlt: `
+        <svg class="w-12 h-12 sm:w-16 sm:h-16 text-amber-400 drop-shadow-[0_0_12px_rgba(251,191,36,0.6)] symbol-pop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      `
+    };
+
+    /* ==========================================================================
+       3. GAME STATE & WIN COMBINATIONS
+       ========================================================================== */
+    const WIN_PATTERNS = [
+      // Rows
+      { combo: [0, 1, 2], p1: [30, 50], p2: [270, 50] },
+      { combo: [3, 4, 5], p1: [30, 150], p2: [270, 150] },
+      { combo: [6, 7, 8], p1: [30, 250], p2: [270, 250] },
+      // Cols
+      { combo: [0, 3, 6], p1: [50, 30], p2: [50, 270] },
+      { combo: [1, 4, 7], p1: [150, 30], p2: [150, 270] },
+      { combo: [2, 5, 8], p1: [250, 30], p2: [250, 270] },
+      // Diagonals
+      { combo: [0, 4, 8], p1: [35, 35], p2: [265, 265] },
+      { combo: [2, 4, 6], p1: [265, 35], p2: [35, 265] }
+    ];
+
+    const state = {
+      board: Array(9).fill(null), // 'P1', 'P2', or null
+      currentPlayer: 'P1',
+      gameActive: true,
+      gameMode: 'pvc', // 'pvp' or 'pvc'
+      aiDifficulty: 'hard', // 'easy', 'medium', 'hard'
+      symbolTheme: 'xo', // 'xo' or 'tickcross'
+      scores: {
+        p1: 0,
+        p2: 0,
+        ties: 0
+      },
+      winningLine: null
+    };
+
+    /* ==========================================================================
+       4. DOM REFERENCES
+       ========================================================================== */
+    const cells = document.querySelectorAll('.cell-btn');
+    const boardGrid = document.getElementById('boardGrid');
+    const strikeSvg = document.getElementById('strikeSvg');
+    const strikePath = document.getElementById('strikePath');
+
+    const statusBanner = document.getElementById('statusBanner');
+    const statusText = document.getElementById('statusText');
+    const statusPulse = document.getElementById('statusPulse');
+    const difficultyBadge = document.getElementById('difficultyBadge');
+
+    const p1Card = document.getElementById('p1Card');
+    const p2Card = document.getElementById('p2Card');
+    const p1Indicator = document.getElementById('p1Indicator');
+    const p2Indicator = document.getElementById('p2Indicator');
+    const p1ScoreEl = document.getElementById('p1Score');
+    const p2ScoreEl = document.getElementById('p2Score');
+    const tieScoreEl = document.getElementById('tieScore');
+    const p1Label = document.getElementById('p1Label');
+    const p2Label = document.getElementById('p2Label');
+    const p1SymbolIcon = document.getElementById('p1SymbolIcon');
+    const p2SymbolIcon = document.getElementById('p2SymbolIcon');
+
+    const soundToggleBtn = document.getElementById('soundToggleBtn');
+    const soundIconOn = document.getElementById('soundIconOn');
+    const soundIconOff = document.getElementById('soundIconOff');
+
+    const settingsToggleBtn = document.getElementById('settingsToggleBtn');
+    const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+    const settingsPanel = document.getElementById('settingsPanel');
+    const difficultyRow = document.getElementById('difficultyRow');
+
+    const modePvPBtn = document.getElementById('modePvP');
+    const modePvCBtn = document.getElementById('modePvC');
+    const diffButtons = document.querySelectorAll('.diff-btn');
+    const themeXOBtn = document.getElementById('themeXO');
+    const themeTickCrossBtn = document.getElementById('themeTickCross');
+
+    const playAgainBtn = document.getElementById('playAgainBtn');
+    const quickResetBtn = document.getElementById('quickResetBtn');
+    const resetScoreBtn = document.getElementById('resetScoreBtn');
+
+    /* ==========================================================================
+       5. HELPER UTILITIES
+       ========================================================================== */
+    function getP1MarkHTML() {
+      return state.symbolTheme === 'xo' ? MarkIcons.cross : MarkIcons.tick;
+    }
+
+    function getP2MarkHTML() {
+      return state.symbolTheme === 'xo' ? MarkIcons.circle : MarkIcons.crossAlt;
+    }
+
+    function getPlayerName(player) {
+      if (player === 'P1') return 'Player 1';
+      return state.gameMode === 'pvc' ? 'Computer' : 'Player 2';
+    }
+
+    /* ==========================================================================
+       6. CORE GAME LOGIC
+       ========================================================================== */
+    function checkWinner(boardState) {
+      for (const pattern of WIN_PATTERNS) {
+        const [a, b, c] = pattern.combo;
+        if (
+          boardState[a] &&
+          boardState[a] === boardState[b] &&
+          boardState[a] === boardState[c]
+        ) {
+          return { winner: boardState[a], pattern };
+        }
+      }
+
+      if (boardState.every(cell => cell !== null)) {
+        return { winner: 'tie' };
+      }
+
+      return null;
+    }
+
+    function makeMove(index, player) {
+      if (state.board[index] !== null || !state.gameActive) return false;
+
+      state.board[index] = player;
+      const cell = cells[index];
+      cell.classList.add('occupied');
+      cell.innerHTML = player === 'P1' ? getP1MarkHTML() : getP2MarkHTML();
+
+      sound.playCellClick(player);
+
+      const winResult = checkWinner(state.board);
+      if (winResult) {
+        handleGameOver(winResult);
+        return true;
+      }
+
+      // Switch turn
+      state.currentPlayer = state.currentPlayer === 'P1' ? 'P2' : 'P1';
+      updateTurnUI();
+
+      // If playing vs computer and it's AI's turn
+      if (state.gameMode === 'pvc' && state.currentPlayer === 'P2' && state.gameActive) {
+        triggerAiMove();
+      }
+
+      return true;
+    }
+
+    function handleGameOver(result) {
+      state.gameActive = false;
+
+      if (result.winner === 'tie') {
+        state.scores.ties++;
+        tieScoreEl.textContent = state.scores.ties;
+        statusText.textContent = "🤝 It's a Draw!";
+        statusPulse.className = 'w-2.5 h-2.5 rounded-full bg-slate-400';
+        sound.playDraw();
+      } else {
+        const winner = result.winner;
+        if (winner === 'P1') {
+          state.scores.p1++;
+          p1ScoreEl.textContent = state.scores.p1;
+          statusText.textContent = `🎉 ${getPlayerName('P1')} Wins!`;
+          statusPulse.className = 'w-2.5 h-2.5 rounded-full bg-cyan-400';
+        } else {
+          state.scores.p2++;
+          p2ScoreEl.textContent = state.scores.p2;
+          statusText.textContent = `🎉 ${getPlayerName('P2')} Wins!`;
+          statusPulse.className = 'w-2.5 h-2.5 rounded-full bg-rose-400';
+        }
+
+        // Draw animated strike line
+        showWinningStrike(result.pattern, winner);
+
+        // Highlight cells
+        result.pattern.combo.forEach(idx => {
+          cells[idx].classList.add(
+            'winning-cell',
+            winner === 'P1' ? 'winning-cell-p1' : 'winning-cell-p2'
+          );
+        });
+
+        sound.playWin();
+      }
+    }
+
+    function showWinningStrike(pattern, winner) {
+      const { p1, p2 } = pattern;
+      strikePath.setAttribute('x1', p1[0]);
+      strikePath.setAttribute('y1', p1[1]);
+      strikePath.setAttribute('x2', p2[0]);
+      strikePath.setAttribute('y2', p2[1]);
+
+      const strokeColor = winner === 'P1' 
+        ? (state.symbolTheme === 'xo' ? '#06b6d4' : '#10b981') 
+        : (state.symbolTheme === 'xo' ? '#f43f5e' : '#f59e0b');
+
+      const filterId = winner === 'P1' ? 'cyanGlow' : 'roseGlow';
+
+      strikePath.setAttribute('stroke', strokeColor);
+      strikePath.setAttribute('filter', `url(#${filterId})`);
+
+      strikeSvg.classList.remove('hidden');
+
+      // Re-trigger dash animation
+      strikePath.classList.remove('strike-line');
+      void strikePath.offsetWidth; // Force reflow
+      strikePath.classList.add('strike-line');
+    }
+
+    /* ==========================================================================
+       7. AI LOGIC (Minimax + Difficulties)
+       ========================================================================= */
+    function triggerAiMove() {
+      // Disable interaction while AI "thinks"
+      boardGrid.classList.add('pointer-events-none');
+      statusText.textContent = "🤖 Computer is thinking...";
+
+      // Humanized realistic delay
+      const thinkDelay = state.aiDifficulty === 'easy' ? 320 : 420;
+
+      setTimeout(() => {
+        if (!state.gameActive) {
+          boardGrid.classList.remove('pointer-events-none');
+          return;
+        }
+
+        let bestIndex;
+        if (state.aiDifficulty === 'easy') {
+          bestIndex = getEasyMove();
+        } else if (state.aiDifficulty === 'medium') {
+          bestIndex = getMediumMove();
+        } else {
+          bestIndex = getMinimaxMove();
+        }
+
+        boardGrid.classList.remove('pointer-events-none');
+        if (bestIndex !== null && bestIndex !== undefined) {
+          makeMove(bestIndex, 'P2');
+        }
+      }, thinkDelay);
+    }
+
+    // Easy AI: Pick purely at random
+    function getEasyMove() {
+      const empties = [];
+      state.board.forEach((val, idx) => {
+        if (val === null) empties.push(idx);
+      });
+      if (empties.length === 0) return null;
+      return empties[Math.floor(Math.random() * empties.length)];
+    }
+
+    // Medium AI: Win if can, block if must, otherwise 50% smart / 50% random
+    function getMediumMove() {
+      // 1. Can AI win immediately?
+      for (let i = 0; i < 9; i++) {
+        if (state.board[i] === null) {
+          state.board[i] = 'P2';
+          const win = checkWinner(state.board);
+          state.board[i] = null;
+          if (win && win.winner === 'P2') return i;
+        }
+      }
+
+      // 2. Can Player win immediately? Block them!
+      for (let i = 0; i < 9; i++) {
+        if (state.board[i] === null) {
+          state.board[i] = 'P1';
+          const win = checkWinner(state.board);
+          state.board[i] = null;
+          if (win && win.winner === 'P1') return i;
+        }
+      }
+
+      // 3. Otherwise 50% random, 50% optimal
+      if (Math.random() > 0.5) {
+        return getEasyMove();
+      }
+      return getMinimaxMove();
+    }
+
+    // Hard AI: Unbeatable Minimax Algorithm
+    function getMinimaxMove() {
+      // If board is totally empty, pick center or corner instantly for variety
+      const emptyCount = state.board.filter(c => c === null).length;
+      if (emptyCount === 9) {
+        const openers = [0, 2, 4, 6, 8];
+        return openers[Math.floor(Math.random() * openers.length)];
+      }
+
+      let bestScore = -Infinity;
+      let optimalMoves = [];
+
+      for (let i = 0; i < 9; i++) {
+        if (state.board[i] === null) {
+          state.board[i] = 'P2';
+          let score = minimax(state.board, 0, false);
+          state.board[i] = null;
+
+          if (score > bestScore) {
+            bestScore = score;
+            optimalMoves = [i];
+          } else if (score === bestScore) {
+            optimalMoves.push(i);
+          }
+        }
+      }
+
+      // Pick randomly among moves that yield max score for unpredictable play
+      return optimalMoves[Math.floor(Math.random() * optimalMoves.length)];
+    }
+
+    function minimax(board, depth, isMaximizing) {
+      const outcome = checkWinner(board);
+      if (outcome) {
+        if (outcome.winner === 'P2') return 10 - depth;
+        if (outcome.winner === 'P1') return depth - 10;
+        if (outcome.winner === 'tie') return 0;
+      }
+
+      if (isMaximizing) {
+        let maxEval = -Infinity;
+        for (let i = 0; i < 9; i++) {
+          if (board[i] === null) {
+            board[i] = 'P2';
+            let evaluation = minimax(board, depth + 1, false);
+            board[i] = null;
+            maxEval = Math.max(maxEval, evaluation);
+          }
+        }
+        return maxEval;
+      } else {
+        let minEval = Infinity;
+        for (let i = 0; i < 9; i++) {
+          if (board[i] === null) {
+            board[i] = 'P1';
+            let evaluation = minimax(board, depth + 1, true);
+            board[i] = null;
+            minEval = Math.min(minEval, evaluation);
+          }
+        }
+        return minEval;
+      }
+    }
+
+    /* ==========================================================================
+       8. UI & THEME UPDATERS
+       ========================================================================== */
+    function updateTurnUI() {
+      const isP1 = state.currentPlayer === 'P1';
+
+      if (isP1) {
+        p1Card.classList.remove('opacity-60', 'border-transparent');
+        p1Card.classList.add('border-cyan-500/40', 'p1-glow');
+        p1Indicator.classList.remove('hidden');
+
+        p2Card.classList.add('opacity-60', 'border-transparent');
+        p2Card.classList.remove('border-rose-500/40', 'p2-glow');
+        p2Indicator.classList.add('hidden');
+
+        statusText.textContent = `${getPlayerName('P1')}'s Turn`;
+        statusPulse.className = 'w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping';
+      } else {
+        p2Card.classList.remove('opacity-60', 'border-transparent');
+        p2Card.classList.add('border-rose-500/40', 'p2-glow');
+        p2Indicator.classList.remove('hidden');
+
+        p1Card.classList.add('opacity-60', 'border-transparent');
+        p1Card.classList.remove('border-cyan-500/40', 'p1-glow');
+        p1Indicator.classList.add('hidden');
+
+        statusText.textContent = `${getPlayerName('P2')}'s Turn`;
+        statusPulse.className = 'w-2.5 h-2.5 rounded-full bg-rose-400 animate-ping';
+      }
+    }
+
+    function updateSymbolLabels() {
+      if (state.symbolTheme === 'xo') {
+        p1SymbolIcon.textContent = '✕';
+        p1SymbolIcon.className = 'text-cyan-400 font-bold text-sm';
+        p2SymbolIcon.textContent = '◯';
+        p2SymbolIcon.className = 'text-rose-400 font-bold text-sm';
+      } else {
+        p1SymbolIcon.textContent = '✓';
+        p1SymbolIcon.className = 'text-emerald-400 font-bold text-sm';
+        p2SymbolIcon.textContent = '✗';
+        p2SymbolIcon.className = 'text-amber-400 font-bold text-sm';
+      }
+    }
+
+    function resetBoardOnly() {
+      state.board = Array(9).fill(null);
+      state.currentPlayer = 'P1';
+      state.gameActive = true;
+
+      cells.forEach(cell => {
+        cell.innerHTML = '';
+        cell.className = 'cell-btn';
+      });
+
+      strikeSvg.classList.add('hidden');
+      updateTurnUI();
+      sound.playRestart();
+    }
+
+    function resetAllScores() {
+      state.scores = { p1: 0, p2: 0, ties: 0 };
+      p1ScoreEl.textContent = '0';
+      p2ScoreEl.textContent = '0';
+      tieScoreEl.textContent = '0';
+      resetBoardOnly();
+    }
+
+    /* ==========================================================================
+       9. EVENT LISTENERS
+       ========================================================================== */
+    // Cell clicks
+    cells.forEach(cell => {
+      cell.addEventListener('click', (e) => {
+        sound.initContext();
+        const index = parseInt(cell.getAttribute('data-index'), 10);
+
+        // In vs AI mode, don't allow clicking during AI turn
+        if (state.gameMode === 'pvc' && state.currentPlayer === 'P2') {
+          return;
+        }
+
+        makeMove(index, state.currentPlayer);
+      });
+    });
+
+    // Keyboard support: 1-9 to play
+    window.addEventListener('keydown', (e) => {
+      const key = e.key;
+      if (key >= '1' && key <= '9') {
+        sound.initContext();
+        const num = parseInt(key, 10);
+        const index = num - 1; // 1-based to 0-based
+        if (state.gameMode === 'pvc' && state.currentPlayer === 'P2') return;
+        makeMove(index, state.currentPlayer);
+      }
+    });
+
+    // Play Again button
+    playAgainBtn.addEventListener('click', () => {
+      sound.initContext();
+      resetBoardOnly();
+    });
+
+    // Quick reset
+    quickResetBtn.addEventListener('click', () => {
+      sound.initContext();
+      resetBoardOnly();
+    });
+
+    // Reset scores
+    resetScoreBtn.addEventListener('click', () => {
+      sound.playClick();
+      resetAllScores();
+      settingsPanel.classList.add('hidden');
+    });
+
+    // Sound toggle
+    soundToggleBtn.addEventListener('click', () => {
+      sound.initContext();
+      sound.enabled = !sound.enabled;
+      if (sound.enabled) {
+        soundIconOn.classList.remove('hidden');
+        soundIconOff.classList.add('hidden');
+        sound.playClick();
+      } else {
+        soundIconOn.classList.add('hidden');
+        soundIconOff.classList.remove('hidden');
+      }
+    });
+
+    // Settings panel toggle
+    settingsToggleBtn.addEventListener('click', () => {
+      sound.playClick();
+      settingsPanel.classList.toggle('hidden');
+    });
+
+    closeSettingsBtn.addEventListener('click', () => {
+      sound.playClick();
+      settingsPanel.classList.add('hidden');
+    });
+
+    // Game Mode selection
+    modePvPBtn.addEventListener('click', () => {
+      sound.playClick();
+      state.gameMode = 'pvp';
+      modePvPBtn.className = 'mode-btn py-1.5 rounded-lg font-medium transition text-center text-white bg-indigo-600 shadow-sm';
+      modePvCBtn.className = 'mode-btn py-1.5 rounded-lg font-medium transition text-center text-slate-300';
+      difficultyRow.classList.add('hidden');
+      difficultyBadge.classList.add('hidden');
+      p2Label.textContent = 'Player 2';
+      resetBoardOnly();
+    });
+
+    modePvCBtn.addEventListener('click', () => {
+      sound.playClick();
+      state.gameMode = 'pvc';
+      modePvCBtn.className = 'mode-btn py-1.5 rounded-lg font-medium transition text-center text-white bg-indigo-600 shadow-sm';
+      modePvPBtn.className = 'mode-btn py-1.5 rounded-lg font-medium transition text-center text-slate-300';
+      difficultyRow.classList.remove('hidden');
+      difficultyBadge.classList.remove('hidden');
+      p2Label.textContent = 'Computer';
+      resetBoardOnly();
+    });
+
+    // Difficulty selection
+    diffButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        sound.playClick();
+        state.aiDifficulty = btn.getAttribute('data-diff');
+        diffButtons.forEach(b => {
+          b.className = 'diff-btn py-1.5 rounded-lg font-medium transition text-center text-slate-400 hover:text-white';
+        });
+
+        if (state.aiDifficulty === 'easy') {
+          btn.className = 'diff-btn py-1.5 rounded-lg font-medium transition text-center text-white bg-emerald-600/90 shadow-sm';
+          difficultyBadge.textContent = 'Easy';
+          difficultyBadge.className = 'text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+        } else if (state.aiDifficulty === 'medium') {
+          btn.className = 'diff-btn py-1.5 rounded-lg font-medium transition text-center text-white bg-amber-600/90 shadow-sm';
+          difficultyBadge.textContent = 'Medium';
+          difficultyBadge.className = 'text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30';
+        } else {
+          btn.className = 'diff-btn py-1.5 rounded-lg font-medium transition text-center text-white bg-rose-600/90 shadow-sm';
+          difficultyBadge.textContent = 'Unbeatable';
+          difficultyBadge.className = 'text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30';
+        }
+        resetBoardOnly();
+      });
+    });
+
+    // Theme toggling (Classic vs Tick & Cross)
+    themeXOBtn.addEventListener('click', () => {
+      sound.playClick();
+      state.symbolTheme = 'xo';
+      themeXOBtn.className = 'theme-btn py-1.5 rounded-lg font-medium transition text-center text-white bg-slate-800 shadow-sm';
+      themeTickCrossBtn.className = 'theme-btn py-1.5 rounded-lg font-medium transition text-center text-slate-400 hover:text-white';
+      updateSymbolLabels();
+      // Re-render currently filled marks
+      renderBoardMarks();
+    });
+
+    themeTickCrossBtn.addEventListener('click', () => {
+      sound.playClick();
+      state.symbolTheme = 'tickcross';
+      themeTickCrossBtn.className = 'theme-btn py-1.5 rounded-lg font-medium transition text-center text-white bg-slate-800 shadow-sm';
+      themeXOBtn.className = 'theme-btn py-1.5 rounded-lg font-medium transition text-center text-slate-400 hover:text-white';
+      updateSymbolLabels();
+      // Re-render currently filled marks
+      renderBoardMarks();
+    });
+
+    function renderBoardMarks() {
+      state.board.forEach((val, idx) => {
+        if (val) {
+          cells[idx].innerHTML = val === 'P1' ? getP1MarkHTML() : getP2MarkHTML();
+        }
+      });
+    }
+
+    // Initialize layout state on load
+    window.addEventListener('DOMContentLoaded', () => {
+      updateTurnUI();
+      updateSymbolLabels();
+    });
+  </script>
+</body>
+</html>

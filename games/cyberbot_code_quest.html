@@ -1,0 +1,2249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CyberBot: Code Quest - Learn to Code</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: JetBrains Mono (Code/Terminal) & Outfit (Cyber UI) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --font-ui: 'Outfit', sans-serif;
+      --font-code: 'JetBrains Mono', monospace;
+      --neon-cyan: #00f3ff;
+      --neon-purple: #c084fc;
+      --neon-amber: #fbbf24;
+      --neon-rose: #f43f5e;
+      --neon-emerald: #34d399;
+    }
+
+    body {
+      font-family: var(--font-ui);
+      background-color: #060913;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(0, 243, 255, 0.08) 0px, transparent 45%),
+        radial-gradient(at 100% 0%, rgba(192, 132, 252, 0.08) 0px, transparent 45%),
+        radial-gradient(at 50% 100%, rgba(244, 63, 94, 0.06) 0px, transparent 50%),
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 100% 100%, 32px 32px, 32px 32px;
+      color: #f1f5f9;
+      min-height: 100vh;
+      overflow-x: hidden;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .font-code {
+      font-family: var(--font-code);
+    }
+
+    /* Cyber Glass Panels */
+    .cyber-panel {
+      background: rgba(11, 17, 32, 0.75);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(0, 243, 255, 0.15);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 1px 1px rgba(255, 255, 255, 0.05);
+    }
+
+    .cyber-glow {
+      box-shadow: 0 0 20px -3px rgba(0, 243, 255, 0.35);
+    }
+
+    .cyber-btn {
+      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .cyber-btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px -2px rgba(0, 243, 255, 0.4);
+    }
+    .cyber-btn:active:not(:disabled) {
+      transform: translateY(1px);
+    }
+
+    /* Custom Scrollbar for Code & Terminal */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(51, 65, 85, 0.8);
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 243, 255, 0.4);
+    }
+
+    /* Code Editor Styling */
+    #codeContainer {
+      position: relative;
+    }
+    #lineGutter {
+      line-height: 1.5rem;
+      user-select: none;
+    }
+    #codeEditor {
+      line-height: 1.5rem;
+      tab-size: 2;
+      caret-color: var(--neon-cyan);
+      resize: none;
+      white-space: pre;
+    }
+
+    /* Pulse Glow animations */
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.85; filter: drop-shadow(0 0 4px rgba(0, 243, 255, 0.6)); }
+      50% { opacity: 0.4; filter: drop-shadow(0 0 1px rgba(0, 243, 255, 0.2)); }
+    }
+    .laser-beam-anim {
+      animation: pulseGlow 1.2s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen text-slate-100">
+
+  <!-- Confetti / Particle Overlay Canvas -->
+  <canvas id="fxCanvas" class="fixed inset-0 pointer-events-none z-50"></canvas>
+
+  <!-- Navigation / Top Header -->
+  <header class="w-full border-b border-cyan-500/20 bg-slate-950/80 backdrop-blur-md sticky top-0 z-40 px-3 sm:px-6 py-2.5 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <!-- Bot Cyber Brand Icon -->
+      <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-500 to-fuchsia-500 p-0.5 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+        <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+          <svg class="w-5 h-5 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <rect x="4" y="6" width="16" height="12" rx="3" stroke-width="2"/>
+            <circle cx="9" cy="11" r="1.5" fill="currentColor"/>
+            <circle cx="15" cy="11" r="1.5" fill="currentColor"/>
+            <path d="M9 15h6" stroke-width="2" stroke-linecap="round"/>
+            <path d="M12 2v4M2 12h2M20 12h2" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <h1 class="text-base sm:text-lg font-black tracking-tight flex items-center gap-2">
+          <span>CyberBot:</span>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-300 to-fuchsia-400">Code Quest</span>
+          <span class="text-[10px] px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-500/30 uppercase font-mono font-bold">v2.4</span>
+        </h1>
+        <p class="text-[11px] text-slate-400 hidden sm:block">Learn JavaScript Algorithms &amp; Automation Through Cyber Puzzle Grids</p>
+      </div>
+    </div>
+
+    <!-- Header Actions & Level Tracker -->
+    <div class="flex items-center gap-2 sm:gap-3">
+      <!-- Level Navigator Pill -->
+      <button id="levelSelectBtn" class="cyber-btn flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700/80 hover:border-cyan-500/50 text-xs font-semibold">
+        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+        <span id="currentLevelNavText">Lvl 1: Boot Sequence</span>
+        <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+      </button>
+
+      <!-- Sandbox Mode Toggle -->
+      <button id="sandboxModeBtn" class="cyber-btn px-2.5 py-1.5 rounded-xl bg-slate-900 border border-purple-500/40 text-purple-300 hover:text-purple-200 text-xs font-semibold flex items-center gap-1.5" title="Custom Sandbox Grid Builder">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"/></svg>
+        <span class="hidden md:inline">Sandbox</span>
+      </button>
+
+      <!-- API Reference Docs -->
+      <button id="openDocsBtn" class="cyber-btn px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-700 hover:border-indigo-500 text-slate-300 hover:text-white text-xs font-semibold flex items-center gap-1" title="API Cheat Sheet">
+        <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+        <span class="hidden sm:inline">Docs</span>
+      </button>
+
+      <!-- Sound Toggle -->
+      <button id="soundToggleBtn" class="cyber-btn p-2 rounded-xl bg-slate-900 border border-slate-700 text-slate-300 hover:text-white" title="Toggle Sound FX">
+        <svg id="soundIconOn" class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M11 5L6 9H2v6h4l5 4V5z"/></svg>
+        <svg id="soundIconOff" class="w-4 h-4 text-rose-400 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Sandbox Toolbar (Hidden until activated) -->
+  <div id="sandboxBar" class="hidden bg-slate-900 border-b border-purple-500/30 px-4 py-2 flex flex-wrap items-center justify-between gap-3 text-xs">
+    <div class="flex items-center gap-2">
+      <span class="text-purple-300 font-bold uppercase tracking-wider text-[11px] flex items-center gap-1">
+        <span>🛠️ Sandbox Brush:</span>
+      </span>
+      <div id="brushPalette" class="flex items-center gap-1.5">
+        <button data-tile="empty" class="brush-btn px-2.5 py-1 rounded-lg bg-slate-800 border border-cyan-500 text-cyan-300 font-medium">Empty</button>
+        <button data-tile="wall" class="brush-btn px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 font-medium">Wall 🧱</button>
+        <button data-tile="gem" class="brush-btn px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 font-medium">Core 💎</button>
+        <button data-tile="laser" class="brush-btn px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 font-medium">Laser ⚡</button>
+        <button data-tile="switch" class="brush-btn px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 font-medium">Switch 🎛️</button>
+        <button data-tile="goal" class="brush-btn px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 font-medium">Portal 🌀</button>
+        <button data-tile="bot" class="brush-btn px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 font-medium">Bot 🤖</button>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <button id="clearCustomMapBtn" class="px-2.5 py-1 rounded-lg bg-rose-950/70 text-rose-300 border border-rose-800 hover:bg-rose-900">Clear Grid</button>
+      <button id="exitSandboxBtn" class="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 border border-slate-700 hover:text-white">Exit Sandbox</button>
+    </div>
+  </div>
+
+  <!-- Main Game Workspace: Side-by-Side Responsive Layout -->
+  <main class="flex-1 w-full max-w-7xl mx-auto p-2 sm:p-4 grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4 items-start">
+    
+    <!-- LEFT COLUMN: Code Workspace & Toolbox (7 cols on lg) -->
+    <section class="lg:col-span-7 flex flex-col gap-3">
+      
+      <!-- Mission Briefing & Objectives Panel -->
+      <div class="cyber-panel rounded-2xl p-3 sm:p-4 border border-cyan-500/20">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <span id="levelBadge" class="text-[10px] font-mono uppercase font-bold px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-500/40">Level 1</span>
+              <h2 id="levelTitle" class="text-lg font-bold text-white tracking-tight">Boot Sequence: Core Directives</h2>
+            </div>
+            <p id="levelDesc" class="text-xs text-slate-300 mt-1 leading-relaxed">
+              Initialize CyberBot's movement servos. Command the bot through the circuit path to harvest the energy core and extract via the quantum portal.
+            </p>
+          </div>
+          <!-- Earned Stars Indicator -->
+          <div id="levelStarsHeader" class="flex items-center gap-1 text-base text-amber-400 shrink-0">
+            <span>★</span><span>★</span><span>★</span>
+          </div>
+        </div>
+
+        <!-- Concept Pill & Objectives Checklist -->
+        <div class="mt-3 pt-3 border-t border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs">
+          <div class="flex items-center gap-1.5">
+            <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Concept:</span>
+            <span id="conceptTag" class="px-2 py-0.5 rounded-md bg-indigo-950/80 text-indigo-300 border border-indigo-500/30 font-mono text-[11px]">Sequencing &amp; Turns</span>
+          </div>
+          <div class="flex items-center gap-3 text-[11px] text-slate-400">
+            <span id="objCoresCheck" class="flex items-center gap-1 text-slate-300">
+              <span class="text-cyan-400">💎</span> Cores: <strong id="objCoresCount" class="text-white">0/1</strong>
+            </span>
+            <span id="objPortalCheck" class="flex items-center gap-1 text-slate-300">
+              <span class="text-purple-400">🌀</span> Portal: <strong id="objPortalState" class="text-rose-400">Unreached</strong>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Code Editor Box -->
+      <div class="cyber-panel rounded-2xl overflow-hidden border border-cyan-500/30 flex flex-col shadow-xl">
+        
+        <!-- Editor Header Bar -->
+        <div class="bg-slate-950/90 px-3 py-2 border-b border-slate-800 flex items-center justify-between text-xs">
+          <div class="flex items-center gap-2">
+            <div class="flex items-center gap-1.5">
+              <span class="w-3 h-3 rounded-full bg-rose-500/80 inline-block"></span>
+              <span class="w-3 h-3 rounded-full bg-amber-500/80 inline-block"></span>
+              <span class="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
+            </div>
+            <span class="font-code text-slate-400 font-semibold ml-2">cyber_script.js</span>
+          </div>
+
+          <div class="flex items-center gap-1.5">
+            <button id="resetCodeTemplateBtn" class="cyber-btn px-2 py-1 rounded bg-slate-900 border border-slate-700 hover:border-slate-500 text-[11px] text-slate-300 flex items-center gap-1" title="Reset to Level Starter Template">
+              <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+              <span>Reset Template</span>
+            </button>
+            <button id="copyCodeBtn" class="cyber-btn px-2 py-1 rounded bg-slate-900 border border-slate-700 hover:border-slate-500 text-[11px] text-slate-300 flex items-center gap-1" title="Copy Code">
+              <svg class="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+              <span>Copy</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Editor Gutter + Textarea -->
+        <div id="codeContainer" class="flex min-h-[260px] sm:min-h-[300px] max-h-[360px] bg-slate-950 font-code text-xs sm:text-[13px] relative overflow-hidden">
+          <!-- Line Number Gutter -->
+          <div id="lineGutter" class="w-10 sm:w-12 py-3 bg-slate-950 text-slate-600 text-right pr-2 select-none border-r border-slate-800/80 font-mono text-xs">
+            1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12
+          </div>
+          <!-- Code Textarea -->
+          <textarea id="codeEditor" spellcheck="false" class="flex-1 py-3 px-3 bg-transparent text-cyan-100 outline-none w-full border-none overflow-y-auto" placeholder="// Enter CyberBot commands here..."></textarea>
+        </div>
+
+        <!-- Quick Insertion Code Toolbox -->
+        <div class="bg-slate-900/90 p-2 border-t border-slate-800/80 flex flex-wrap items-center gap-1.5 text-xs">
+          <span class="text-[10px] uppercase font-bold text-slate-400 px-1 font-mono tracking-wider">Quick Snippets:</span>
+          <button class="snippet-btn px-2 py-1 rounded-md bg-slate-800/80 hover:bg-cyan-950 border border-slate-700 hover:border-cyan-500/50 text-cyan-300 font-code text-[11px]" data-insert="bot.forward();\n">bot.forward()</button>
+          <button class="snippet-btn px-2 py-1 rounded-md bg-slate-800/80 hover:bg-cyan-950 border border-slate-700 hover:border-cyan-500/50 text-cyan-300 font-code text-[11px]" data-insert="bot.turnRight();\n">bot.turnRight()</button>
+          <button class="snippet-btn px-2 py-1 rounded-md bg-slate-800/80 hover:bg-cyan-950 border border-slate-700 hover:border-cyan-500/50 text-cyan-300 font-code text-[11px]" data-insert="bot.turnLeft();\n">bot.turnLeft()</button>
+          <button class="snippet-btn px-2 py-1 rounded-md bg-slate-800/80 hover:bg-cyan-950 border border-slate-700 hover:border-cyan-500/50 text-cyan-300 font-code text-[11px]" data-insert="bot.collect();\n">bot.collect()</button>
+          <button class="snippet-btn px-2 py-1 rounded-md bg-slate-800/80 hover:bg-cyan-950 border border-slate-700 hover:border-cyan-500/50 text-cyan-300 font-code text-[11px]" data-insert="bot.jump();\n">bot.jump()</button>
+          <button class="snippet-btn px-2 py-1 rounded-md bg-slate-800/80 hover:bg-purple-950 border border-slate-700 hover:border-purple-500/50 text-purple-300 font-code text-[11px]" data-insert="for (let i = 0; i < 4; i++) {\n  bot.forward();\n}\n">for loop</button>
+          <button class="snippet-btn px-2 py-1 rounded-md bg-slate-800/80 hover:bg-purple-950 border border-slate-700 hover:border-purple-500/50 text-purple-300 font-code text-[11px]" data-insert="while (!bot.isAtGoal()) {\n  bot.forward();\n}\n">while loop</button>
+          <button class="snippet-btn px-2 py-1 rounded-md bg-slate-800/80 hover:bg-amber-950 border border-slate-700 hover:border-amber-500/50 text-amber-300 font-code text-[11px]" data-insert="if (bot.isLaserAhead()) {\n  bot.jump();\n} else {\n  bot.forward();\n}\n">if / else</button>
+        </div>
+
+        <!-- Execution Control Dock -->
+        <div class="bg-slate-950 p-2.5 sm:p-3 border-t border-slate-800 flex flex-wrap items-center justify-between gap-2.5">
+          <!-- Primary Actions (Run, Step, Pause, Reset) -->
+          <div class="flex items-center gap-1.5 sm:gap-2">
+            <!-- Run Code Button -->
+            <button id="runCodeBtn" class="cyber-btn px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-bold text-xs sm:text-sm font-code flex items-center gap-2 shadow-lg shadow-cyan-500/25">
+              <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <span>RUN CODE</span>
+            </button>
+
+            <!-- Step Forward (Debugger) -->
+            <button id="stepCodeBtn" class="cyber-btn px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-cyan-300 font-semibold text-xs flex items-center gap-1.5" title="Execute Next Single Step">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/></svg>
+              <span>Step</span>
+            </button>
+
+            <!-- Pause Execution -->
+            <button id="pauseCodeBtn" class="cyber-btn px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-amber-300 font-semibold text-xs flex items-center gap-1.5 hidden" title="Pause Execution">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>
+              <span>Pause</span>
+            </button>
+
+            <!-- Reset Simulation -->
+            <button id="resetLevelBtn" class="cyber-btn px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white font-semibold text-xs flex items-center gap-1" title="Reset Grid & Bot State">
+              <svg class="w-4 h-4 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+              <span class="hidden sm:inline">Reset</span>
+            </button>
+          </div>
+
+          <!-- Execution Speed Toggles -->
+          <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-xl border border-slate-800 text-[11px] font-mono">
+            <span class="text-slate-500 px-1 hidden sm:inline">Speed:</span>
+            <button data-speed="slow" class="speed-btn px-2 py-1 rounded-lg text-slate-400 hover:text-white">0.5x</button>
+            <button data-speed="normal" class="speed-btn px-2 py-1 rounded-lg bg-cyan-600 text-white font-bold">1x</button>
+            <button data-speed="fast" class="speed-btn px-2 py-1 rounded-lg text-slate-400 hover:text-white">2x</button>
+            <button data-speed="turbo" class="speed-btn px-2 py-1 rounded-lg text-slate-400 hover:text-white">Turbo</button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- RIGHT COLUMN: Grid Arena & Live Terminal (5 cols on lg) -->
+    <section class="lg:col-span-5 flex flex-col gap-3">
+      
+      <!-- Arena Frame Card -->
+      <div class="cyber-panel rounded-2xl p-3 border border-cyan-500/25 flex flex-col items-center shadow-xl">
+        
+        <!-- Live HUD Status Bar -->
+        <div class="w-full flex items-center justify-between px-1 mb-2 text-xs">
+          <div class="flex items-center gap-2">
+            <span class="flex items-center gap-1 text-slate-300">
+              <span class="text-amber-400">⚡</span> Steps: <strong id="hudStepCount" class="text-white font-mono">0</strong>
+            </span>
+            <span class="text-slate-600">|</span>
+            <span class="flex items-center gap-1 text-slate-300">
+              <span class="text-cyan-400">🔋</span> Fuel: <strong id="hudFuelRemaining" class="text-emerald-400 font-mono">100%</strong>
+            </span>
+          </div>
+
+          <!-- Execution Indicator Light -->
+          <div class="flex items-center gap-1.5">
+            <span id="execStatusDot" class="w-2.5 h-2.5 rounded-full bg-slate-500"></span>
+            <span id="execStatusLabel" class="text-[11px] font-mono font-semibold text-slate-400 uppercase">Standby</span>
+          </div>
+        </div>
+
+        <!-- Canvas Container -->
+        <div class="relative w-full aspect-square max-w-[440px] rounded-xl overflow-hidden bg-slate-950 border border-slate-800 shadow-inner flex items-center justify-center">
+          <canvas id="arenaCanvas" class="w-full h-full block"></canvas>
+
+          <!-- Interactive Grid Hint Tooltip (on hover) -->
+          <div id="gridTileTooltip" class="absolute bottom-2 left-2 px-2 py-1 rounded bg-slate-900/90 backdrop-blur-md border border-cyan-500/30 text-[10px] font-mono text-cyan-300 pointer-events-none hidden">
+            X: 0, Y: 0 [Empty]
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Live Cyber Terminal / Console -->
+      <div class="cyber-panel rounded-2xl overflow-hidden border border-slate-800 flex flex-col shadow-lg">
+        
+        <!-- Terminal Header -->
+        <div class="bg-slate-950 px-3 py-2 border-b border-slate-800 flex items-center justify-between text-xs">
+          <div class="flex items-center gap-2">
+            <span class="text-emerald-400 font-mono font-bold">&gt;_</span>
+            <span class="font-code text-slate-300 font-semibold text-[11px]">CyberBot Diagnostics Terminal</span>
+          </div>
+          <button id="clearTerminalBtn" class="text-[10px] font-mono text-slate-400 hover:text-white px-1.5 py-0.5 rounded bg-slate-900 border border-slate-800">Clear</button>
+        </div>
+
+        <!-- Terminal Output Area -->
+        <div id="terminalBody" class="p-3 bg-slate-950/95 font-code text-[11px] sm:text-xs text-slate-300 flex flex-col gap-1.5 h-36 sm:h-44 overflow-y-auto select-text">
+          <div class="text-slate-500">[SYSTEM] Subsystems calibrated. Neural core online. Ready for program instructions.</div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Level Select Modal -->
+  <div id="levelModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden opacity-0 transition-opacity duration-200">
+    <div class="cyber-panel max-w-2xl w-full rounded-3xl p-5 sm:p-6 border border-cyan-500/40 shadow-2xl flex flex-col gap-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div>
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <span class="text-cyan-400">🗺️</span> Mission Curriculum &amp; Level Matrix
+          </h3>
+          <p class="text-xs text-slate-400">Select any sector or test your mastery with progressive algorithmic concepts.</p>
+        </div>
+        <button id="closeLevelModalBtn" class="text-slate-400 hover:text-white text-2xl leading-none p-1">&times;</button>
+      </div>
+
+      <!-- Level Cards Grid -->
+      <div id="levelGridContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-[60vh] overflow-y-auto pr-1">
+        <!-- Dynamically populated via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- API Reference & Docs Modal -->
+  <div id="docsModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden opacity-0 transition-opacity duration-200">
+    <div class="cyber-panel max-w-2xl w-full rounded-3xl p-5 sm:p-6 border border-indigo-500/40 shadow-2xl flex flex-col gap-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div>
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <span class="text-indigo-400">📖</span> CyberBot API &amp; Syntax Reference
+          </h3>
+          <p class="text-xs text-slate-400">All available methods callable on the autonomous robot instance.</p>
+        </div>
+        <button id="closeDocsModalBtn" class="text-slate-400 hover:text-white text-2xl leading-none p-1">&times;</button>
+      </div>
+
+      <div class="space-y-4 max-h-[62vh] overflow-y-auto text-xs font-code pr-2">
+        <!-- Movement Methods -->
+        <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+          <h4 class="text-cyan-400 font-bold font-sans text-sm mb-1.5">Movement &amp; Navigation</h4>
+          <ul class="space-y-2 text-slate-300">
+            <li><code class="text-cyan-300 font-bold">bot.forward()</code> or <code class="text-cyan-300 font-bold">bot.step(n=1)</code>: Move robot forward 1 (or n) tiles in current facing direction.</li>
+            <li><code class="text-cyan-300 font-bold">bot.backward()</code>: Step 1 tile backward without changing orientation.</li>
+            <li><code class="text-cyan-300 font-bold">bot.turnLeft()</code>: Rotate 90 degrees counter-clockwise.</li>
+            <li><code class="text-cyan-300 font-bold">bot.turnRight()</code>: Rotate 90 degrees clockwise.</li>
+            <li><code class="text-cyan-300 font-bold">bot.jump()</code>: Leap over a 1-tile gap, pit, or active laser barrier directly in front.</li>
+          </ul>
+        </div>
+
+        <!-- Interaction Methods -->
+        <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+          <h4 class="text-amber-400 font-sans text-sm font-bold mb-1.5">Sector Interaction</h4>
+          <ul class="space-y-2 text-slate-300">
+            <li><code class="text-amber-300 font-bold">bot.collect()</code>: Harvest the glowing energy core on the current tile.</li>
+            <li><code class="text-amber-300 font-bold">bot.activate()</code>: Toggle terminal switch on current tile to drop linked laser gates.</li>
+            <li><code class="text-amber-300 font-bold">bot.log(message)</code>: Transmit diagnostic string directly into the cyber terminal.</li>
+          </ul>
+        </div>
+
+        <!-- Sensors & Boolean Conditions -->
+        <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+          <h4 class="text-purple-400 font-sans text-sm font-bold mb-1.5">Sensors (Conditionals &amp; Loops)</h4>
+          <ul class="space-y-2 text-slate-300">
+            <li><code class="text-purple-300 font-bold">bot.isPathClear()</code>: Returns true if the tile directly ahead is safe and walkable.</li>
+            <li><code class="text-purple-300 font-bold">bot.isWallAhead()</code>: Returns true if facing a solid barrier or border wall.</li>
+            <li><code class="text-purple-300 font-bold">bot.isLaserAhead()</code>: Returns true if an energized laser beam lies ahead.</li>
+            <li><code class="text-purple-300 font-bold">bot.isGemAhead()</code>: Returns true if an uncollected core is in the adjacent tile.</li>
+            <li><code class="text-purple-300 font-bold">bot.isAtGoal()</code>: Returns true if the robot is stationed inside the extraction portal.</li>
+            <li><code class="text-purple-300 font-bold">bot.hasGemsRemaining()</code>: Returns true if any unharvested cores remain on grid.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Victory Celebration Modal -->
+  <div id="victoryModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden opacity-0 transition-opacity duration-300">
+    <div class="cyber-panel max-w-sm w-full rounded-3xl p-6 flex flex-col items-center text-center gap-4 border border-cyan-500/50 shadow-2xl relative overflow-hidden">
+      <!-- Glow ambience -->
+      <div class="absolute -top-16 -left-16 w-32 h-32 bg-cyan-500/30 rounded-full blur-2xl pointer-events-none"></div>
+      <div class="absolute -bottom-16 -right-16 w-32 h-32 bg-fuchsia-500/30 rounded-full blur-2xl pointer-events-none"></div>
+
+      <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-400 to-indigo-500 p-0.5 flex items-center justify-center shadow-xl shadow-cyan-500/25">
+        <div class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center text-3xl">
+          🚀
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-2xl font-black text-white font-heading tracking-tight">Sector Extracted!</h3>
+        <p id="victorySubtitle" class="text-xs text-slate-400 mt-0.5">Algorithm executed with zero anomalies.</p>
+      </div>
+
+      <!-- Dynamic Star Score Rating -->
+      <div id="modalVictoryStars" class="flex items-center gap-2 text-3xl">
+        <span class="text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]">★</span>
+        <span class="text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]">★</span>
+        <span class="text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]">★</span>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="grid grid-cols-2 gap-2 w-full bg-slate-900/80 p-3 rounded-2xl border border-slate-800 text-xs">
+        <div class="flex flex-col items-center">
+          <span class="text-slate-400 font-medium">Steps Taken</span>
+          <span id="statStepsText" class="text-lg font-bold text-cyan-400 font-mono">14</span>
+        </div>
+        <div class="flex flex-col items-center">
+          <span class="text-slate-400 font-medium">Code Length</span>
+          <span id="statLinesText" class="text-lg font-bold text-white font-mono">6 lines</span>
+        </div>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="flex flex-col gap-2 w-full pt-1">
+        <button id="nextLevelModalBtn" class="cyber-btn w-full py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 font-bold text-sm text-white shadow-lg shadow-cyan-500/25">
+          Proceed to Next Sector →
+        </button>
+        <button id="replayLevelModalBtn" class="cyber-btn w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs">
+          Re-run Code &amp; Optimize
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT GAME LOGIC & EXECUTION ENGINE -->
+  <script>
+    /* ==========================================================================
+       1. PROCEDURAL SOUND SYNTHESIZER (Web Audio API)
+       ========================================================================== */
+    class SoundEngine {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) {
+            this.ctx = new AudioContext();
+          }
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+
+      // Robot movement tread / servo
+      playStep() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const t = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(220, t);
+          osc.frequency.exponentialRampToValueAtTime(110, t + 0.05);
+          gain.gain.setValueAtTime(0.12, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.05);
+        } catch (e) {}
+      }
+
+      // Robot turn servo chirp
+      playTurn() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const t = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(440, t);
+          osc.frequency.exponentialRampToValueAtTime(320, t + 0.06);
+          gain.gain.setValueAtTime(0.1, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.06);
+        } catch (e) {}
+      }
+
+      // Gem core collect chime
+      playGemCollect() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const freqs = [659.25, 830.61, 987.77, 1318.51];
+        freqs.forEach((f, i) => {
+          setTimeout(() => {
+            try {
+              const t = this.ctx.currentTime;
+              const osc = this.ctx.createOscillator();
+              const gain = this.ctx.createGain();
+              osc.type = 'sine';
+              osc.frequency.setValueAtTime(f, t);
+              gain.gain.setValueAtTime(0.16, t);
+              gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+              osc.connect(gain);
+              gain.connect(this.ctx.destination);
+              osc.start(t);
+              osc.stop(t + 0.22);
+            } catch (e) {}
+          }, i * 45);
+        });
+      }
+
+      // Terminal Switch activate sound
+      playSwitch() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const t = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(260, t);
+          osc.frequency.exponentialRampToValueAtTime(520, t + 0.12);
+          gain.gain.setValueAtTime(0.12, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.12);
+        } catch (e) {}
+      }
+
+      // Jump jet sound
+      playJump() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const t = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(180, t);
+          osc.frequency.exponentialRampToValueAtTime(580, t + 0.14);
+          gain.gain.setValueAtTime(0.15, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.15);
+        } catch (e) {}
+      }
+
+      // Error / Collision buzzer
+      playError() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const t = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(140, t);
+          osc.frequency.linearRampToValueAtTime(70, t + 0.2);
+          gain.gain.setValueAtTime(0.2, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.2);
+        } catch (e) {}
+      }
+
+      // Victory fanfare
+      playVictory() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+        notes.forEach((freq, idx) => {
+          setTimeout(() => {
+            try {
+              const t = this.ctx.currentTime;
+              const osc = this.ctx.createOscillator();
+              const gain = this.ctx.createGain();
+              osc.type = 'triangle';
+              osc.frequency.setValueAtTime(freq, t);
+              gain.gain.setValueAtTime(0.18, t);
+              gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.38);
+              osc.connect(gain);
+              gain.connect(this.ctx.destination);
+              osc.start(t);
+              osc.stop(t + 0.38);
+            } catch (e) {}
+          }, idx * 85);
+        });
+      }
+    }
+
+    const sound = new SoundEngine();
+
+    /* ==========================================================================
+       2. CURRICULUM LEVELS & DATA DEFINITION
+       ========================================================================== */
+    // Directions: 0: North (-y), 1: East (+x), 2: South (+y), 3: West (-x)
+    const DIR_NAMES = ['North', 'East', 'South', 'West'];
+    const DIR_DELTAS = [
+      { dx: 0, dy: -1 }, // North
+      { dx: 1, dy: 0 },  // East
+      { dx: 0, dy: 1 },  // South
+      { dx: -1, dy: 0 }  // West
+    ];
+
+    const CURRICULUM_LEVELS = [
+      {
+        id: 1,
+        title: "Boot Sequence",
+        concept: "Sequencing & Basic Turns",
+        description: "Initialize your movement servos! Code the bot to navigate forward, turn right at the junction, collect the energy core, and proceed directly to the portal.",
+        gridSize: { cols: 5, rows: 5 },
+        botStart: { x: 1, y: 1, dir: 1 }, // (1,1) facing East
+        walls: [
+          {x:0,y:0},{x:1,y:0},{x:2,y:0},{x:3,y:0},{x:4,y:0},
+          {x:0,y:1},{x:4,y:1},
+          {x:0,y:2},{x:1,y:2},{x:2,y:2},{x:4,y:2},
+          {x:0,y:3},{x:4,y:3},
+          {x:0,y:4},{x:1,y:4},{x:2,y:4},{x:3,y:4},{x:4,y:4}
+        ],
+        gems: [{ x: 3, y: 1, id: 'g1' }],
+        lasers: [],
+        switches: [],
+        goal: { x: 3, y: 3 },
+        fuelMax: 20,
+        parSteps: 6,
+        starterCode: `// Mission 1: Move to the core, then extraction\nbot.forward();\nbot.forward();\nbot.collect();\n\n// Turn and reach the portal!\n`
+      },
+      {
+        id: 2,
+        title: "Replication Cycle",
+        concept: "'for' Loops & Iteration",
+        description: "Eliminate repetitive boilerplate code using a 'for' loop. Collect all 4 energy cores lined up along the transmission conduit.",
+        gridSize: { cols: 8, rows: 3 },
+        botStart: { x: 1, y: 1, dir: 1 }, // Facing East
+        walls: [
+          {x:0,y:0},{x:1,y:0},{x:2,y:0},{x:3,y:0},{x:4,y:0},{x:5,y:0},{x:6,y:0},{x:7,y:0},
+          {x:0,y:1},{x:7,y:1},
+          {x:0,y:2},{x:1,y:2},{x:2,y:2},{x:3,y:2},{x:4,y:2},{x:5,y:2},{x:6,y:2},{x:7,y:2}
+        ],
+        gems: [
+          { x: 2, y: 1, id: 'g1' },
+          { x: 3, y: 1, id: 'g2' },
+          { x: 4, y: 1, id: 'g3' },
+          { x: 5, y: 1, id: 'g4' }
+        ],
+        lasers: [],
+        switches: [],
+        goal: { x: 6, y: 1 },
+        fuelMax: 25,
+        parSteps: 6,
+        starterCode: `// Use a 'for' loop to repeat commands cleanly:\nfor (let i = 0; i < 4; i++) {\n  bot.forward();\n  bot.collect();\n}\n\nbot.forward(); // Final step to portal\n`
+      },
+      {
+        id: 3,
+        title: "Zigzag Circuit",
+        concept: "Pattern Recognition & Modularity",
+        description: "The power conduit steps diagonally in a staircase rhythm. Write a clean loop pattern to climb each zigzag step and harvest all 3 cores.",
+        gridSize: { cols: 6, rows: 6 },
+        botStart: { x: 1, y: 1, dir: 1 },
+        walls: [
+          {x:2,y:1},{x:3,y:1},{x:4,y:1},
+          {x:1,y:2},{x:3,y:2},{x:4,y:2},
+          {x:1,y:3},{x:2,y:3},{x:4,y:3},
+          {x:1,y:4},{x:2,y:4},{x:3,y:4}
+        ],
+        gems: [
+          { x: 2, y: 2, id: 'g1' },
+          { x: 3, y: 3, id: 'g2' },
+          { x: 4, y: 4, id: 'g3' }
+        ],
+        lasers: [],
+        switches: [],
+        goal: { x: 5, y: 4 },
+        fuelMax: 30,
+        parSteps: 11,
+        starterCode: `// Notice the repeating pattern: forward, turnRight, forward, turnLeft, collect\nfor (let i = 0; i < 3; i++) {\n  bot.turnRight();\n  bot.forward();\n  bot.turnLeft();\n  bot.forward();\n  bot.collect();\n}\n\nbot.forward();\n`
+      },
+      {
+        id: 4,
+        title: "Hazard Detection",
+        concept: "'if / else' Conditionals & Sensors",
+        description: "Laser barriers are pulsing along the security corridor! Use sensor check `bot.isLaserAhead()`: if energized, use `bot.jump()` to leap the beam; otherwise simply `bot.forward()`.",
+        gridSize: { cols: 7, rows: 3 },
+        botStart: { x: 0, y: 1, dir: 1 },
+        walls: [
+          {x:0,y:0},{x:1,y:0},{x:2,y:0},{x:3,y:0},{x:4,y:0},{x:5,y:0},{x:6,y:0},
+          {x:0,y:2},{x:1,y:2},{x:2,y:2},{x:3,y:2},{x:4,y:2},{x:5,y:2},{x:6,y:2}
+        ],
+        gems: [{ x: 3, y: 1, id: 'g1' }],
+        lasers: [{ x: 2, y: 1, id: 'l1', active: true }, { x: 4, y: 1, id: 'l2', active: true }],
+        switches: [],
+        goal: { x: 6, y: 1 },
+        fuelMax: 20,
+        parSteps: 5,
+        starterCode: `// Loop along corridor using conditional hazard detection\nfor (let i = 0; i < 4; i++) {\n  if (bot.isLaserAhead()) {\n    bot.jump(); // leaps 2 tiles over the beam\n  } else {\n    bot.forward();\n  }\n  \n  if (bot.isGemAhead()) {\n    // check adjacent\n  }\n}\n\nbot.collect();\nbot.forward();\n`
+      },
+      {
+        id: 5,
+        title: "Dynamic Corridors",
+        concept: "'while' Loops (Indefinite Iteration)",
+        description: "The distance to extraction varies dynamically. Navigate until `!bot.isAtGoal()` using a while loop, harvesting any energy cores encountered along the path.",
+        gridSize: { cols: 8, rows: 4 },
+        botStart: { x: 1, y: 1, dir: 1 },
+        walls: [
+          {x:0,y:0},{x:1,y:0},{x:2,y:0},{x:3,y:0},{x:4,y:0},{x:5,y:0},{x:6,y:0},{x:7,y:0},
+          {x:0,y:1},{x:7,y:1},
+          {x:0,y:2},{x:1,y:2},{x:2,y:2},{x:3,y:2},{x:4,y:2},{x:5,y:2},{x:7,y:2},
+          {x:0,y:3},{x:1,y:3},{x:2,y:3},{x:3,y:3},{x:4,y:3},{x:5,y:3},{x:6,y:3},{x:7,y:3}
+        ],
+        gems: [{ x: 3, y: 1, id: 'g1' }, { x: 6, y: 2, id: 'g2' }],
+        lasers: [],
+        switches: [],
+        goal: { x: 6, y: 2 },
+        fuelMax: 35,
+        parSteps: 9,
+        starterCode: `// Run until CyberBot reaches the quantum portal\nwhile (!bot.isAtGoal()) {\n  if (bot.isWallAhead()) {\n    bot.turnRight();\n  } else {\n    bot.forward();\n    bot.collect(); // safe even if no gem on current tile\n  }\n}\n`
+      },
+      {
+        id: 6,
+        title: "Subroutines",
+        concept: "Reusable Custom Functions",
+        description: "Three security pods each contain an energy core and a terminal switch. Define a custom JavaScript function `function clearPod() { ... }` and call it for each wing.",
+        gridSize: { cols: 7, rows: 7 },
+        botStart: { x: 3, y: 3, dir: 0 }, // North
+        walls: [
+          {x:2,y:2},{x:4,y:2},{x:2,y:4},{x:4,y:4}
+        ],
+        gems: [
+          { x: 3, y: 1, id: 'g1' },
+          { x: 1, y: 3, id: 'g2' },
+          { x: 5, y: 3, id: 'g3' }
+        ],
+        lasers: [],
+        switches: [
+          { x: 3, y: 0, id: 's1', linkedLaserId: null },
+          { x: 0, y: 3, id: 's2', linkedLaserId: null },
+          { x: 6, y: 3, id: 's3', linkedLaserId: null }
+        ],
+        goal: { x: 3, y: 5 },
+        fuelMax: 45,
+        parSteps: 22,
+        starterCode: `// Define a reusable sub-routine for harvesting and switching a pod\nfunction processWing() {\n  bot.forward();\n  bot.collect();\n  bot.forward();\n  bot.activate();\n  bot.backward();\n  bot.backward();\n}\n\n// Process North, West, and East wings\nprocessWing();\nbot.turnLeft();\nprocessWing();\nbot.turnLeft();\nbot.turnLeft(); // Turn to opposite wing\nprocessWing();\n\n// Head down to South portal\nbot.turnLeft();\nbot.forward();\nbot.forward();\n`
+      },
+      {
+        id: 7,
+        title: "The Labyrinth",
+        concept: "Autonomous Algorithmic Thinking",
+        description: "Enter the cyber labyrinth! Implement the classic Right-Hand Rule maze algorithm: prioritize turning right if clear; otherwise move forward; otherwise turn left.",
+        gridSize: { cols: 7, rows: 7 },
+        botStart: { x: 1, y: 1, dir: 1 },
+        walls: [
+          {x:2,y:1},{x:4,y:1},{x:5,y:1},
+          {x:2,y:2},{x:4,y:2},
+          {x:1,y:3},{x:2,y:3},{x:4,y:3},{x:5,y:3},
+          {x:4,y:4},
+          {x:1,y:5},{x:2,y:5},{x:3,y:5},{x:4,y:5},{x:5,y:5}
+        ],
+        gems: [{ x: 3, y: 2, id: 'g1' }, { x: 3, y: 4, id: 'g2' }],
+        lasers: [],
+        switches: [],
+        goal: { x: 5, y: 4 },
+        fuelMax: 60,
+        parSteps: 18,
+        starterCode: `// Algorithmic Navigation: Right-Hand Rule\nwhile (!bot.isAtGoal()) {\n  bot.turnRight();\n  \n  if (bot.isPathClear()) {\n    bot.forward();\n    bot.collect();\n  } else {\n    bot.turnLeft();\n    if (bot.isPathClear()) {\n      bot.forward();\n      bot.collect();\n    } else {\n      bot.turnLeft();\n    }\n  }\n}\n`
+      },
+      {
+        id: 8,
+        title: "Quantum Optimization",
+        concept: "Full Logic & Fuel Efficiency",
+        description: "The ultimate test! A security grid guards the quantum core. Trigger both terminal switches to deactivate dual laser barriers, gather all cores, and extract under strict fuel limits.",
+        gridSize: { cols: 7, rows: 7 },
+        botStart: { x: 1, y: 3, dir: 0 },
+        walls: [
+          {x:0,y:2},{x:1,y:2},{x:2,y:2},{x:4,y:2},{x:5,y:2},{x:6,y:2},
+          {x:0,y:4},{x:1,y:4},{x:2,y:4},{x:4,y:4},{x:5,y:4},{x:6,y:4}
+        ],
+        gems: [
+          { x: 3, y: 1, id: 'g1' },
+          { x: 3, y: 5, id: 'g2' },
+          { x: 5, y: 3, id: 'g3' }
+        ],
+        lasers: [
+          { x: 3, y: 2, id: 'laserA', active: true },
+          { x: 3, y: 4, id: 'laserB', active: true }
+        ],
+        switches: [
+          { x: 1, y: 1, id: 'sw1', linkedLaserId: 'laserA' },
+          { x: 1, y: 5, id: 'sw2', linkedLaserId: 'laserB' }
+        ],
+        goal: { x: 6, y: 3 },
+        fuelMax: 45,
+        parSteps: 24,
+        starterCode: `// Tip: Deactivate lasers by triggering the linked switches!\n// Switch at (1,1) lowers top laser\n// Switch at (1,5) lowers bottom laser\n\n// Build your master automation routine here:\n`
+      }
+    ];
+
+    /* ==========================================================================
+       3. GAME ENGINE & STATE MANAGEMENT
+       ========================================================================== */
+    const gameState = {
+      curLevelIndex: 0,
+      isSandbox: false,
+      userCode: "",
+      executionState: 'idle', // 'idle' | 'running' | 'paused' | 'stepping' | 'finished'
+      actionQueue: [],
+      currentStepIndex: 0,
+      speed: 1, // 0.5, 1, 2, 99 (turbo)
+      animProgress: 0,
+      stepCount: 0,
+      fuelUsed: 0,
+      collectedGems: new Set(),
+      activeSwitches: new Set(),
+      deactivatedLasers: new Set(),
+      // Rendering robot state
+      renderBot: { x: 0, y: 0, dir: 1, visualX: 0, visualY: 0, visualAngle: 0 },
+      // Particles
+      particles: [],
+      // Tooltip coordinate
+      hoverGridPos: null
+    };
+
+    // Custom Sandbox Level Data
+    const sandboxLevel = {
+      id: 'sandbox',
+      title: "Cyber Sandbox",
+      concept: "Custom Logic Playground",
+      description: "Paint tiles freely using the brush bar above. Test custom algorithms, mazes, and laser puzzles!",
+      gridSize: { cols: 7, rows: 7 },
+      botStart: { x: 1, y: 1, dir: 1 },
+      walls: [],
+      gems: [],
+      lasers: [],
+      switches: [],
+      goal: { x: 5, y: 5 },
+      fuelMax: 99,
+      parSteps: 20,
+      starterCode: `// Sandbox environment! Create your own path and test your code:\nbot.forward();\n`
+    };
+
+    let activeBrush = 'wall';
+
+    /* ==========================================================================
+       4. DOM REFERENCES
+       ========================================================================== */
+    const canvas = document.getElementById('arenaCanvas');
+    const ctx = canvas.getContext('2d');
+    const fxCanvas = document.getElementById('fxCanvas');
+    const fxCtx = fxCanvas.getContext('2d');
+
+    const codeEditor = document.getElementById('codeEditor');
+    const lineGutter = document.getElementById('lineGutter');
+    const runCodeBtn = document.getElementById('runCodeBtn');
+    const stepCodeBtn = document.getElementById('stepCodeBtn');
+    const pauseCodeBtn = document.getElementById('pauseCodeBtn');
+    const resetLevelBtn = document.getElementById('resetLevelBtn');
+    const resetCodeTemplateBtn = document.getElementById('resetCodeTemplateBtn');
+    const copyCodeBtn = document.getElementById('copyCodeBtn');
+
+    // Stats HUD
+    const hudStepCount = document.getElementById('hudStepCount');
+    const hudFuelRemaining = document.getElementById('hudFuelRemaining');
+    const execStatusDot = document.getElementById('execStatusDot');
+    const execStatusLabel = document.getElementById('execStatusLabel');
+    const terminalBody = document.getElementById('terminalBody');
+    const clearTerminalBtn = document.getElementById('clearTerminalBtn');
+
+    // Header & Info
+    const currentLevelNavText = document.getElementById('currentLevelNavText');
+    const levelBadge = document.getElementById('levelBadge');
+    const levelTitle = document.getElementById('levelTitle');
+    const levelDesc = document.getElementById('levelDesc');
+    const conceptTag = document.getElementById('conceptTag');
+    const levelStarsHeader = document.getElementById('levelStarsHeader');
+    const objCoresCount = document.getElementById('objCoresCount');
+    const objPortalState = document.getElementById('objPortalState');
+
+    // Modals
+    const levelModal = document.getElementById('levelModal');
+    const levelSelectBtn = document.getElementById('levelSelectBtn');
+    const closeLevelModalBtn = document.getElementById('closeLevelModalBtn');
+    const levelGridContainer = document.getElementById('levelGridContainer');
+
+    const docsModal = document.getElementById('docsModal');
+    const openDocsBtn = document.getElementById('openDocsBtn');
+    const closeDocsModalBtn = document.getElementById('closeDocsModalBtn');
+
+    const victoryModal = document.getElementById('victoryModal');
+    const modalVictoryStars = document.getElementById('modalVictoryStars');
+    const statStepsText = document.getElementById('statStepsText');
+    const statLinesText = document.getElementById('statLinesText');
+    const nextLevelModalBtn = document.getElementById('nextLevelModalBtn');
+    const replayLevelModalBtn = document.getElementById('replayLevelModalBtn');
+
+    // Sandbox
+    const sandboxModeBtn = document.getElementById('sandboxModeBtn');
+    const sandboxBar = document.getElementById('sandboxBar');
+    const exitSandboxBtn = document.getElementById('exitSandboxBtn');
+    const clearCustomMapBtn = document.getElementById('clearCustomMapBtn');
+    const brushButtons = document.querySelectorAll('.brush-btn');
+
+    // Sound
+    const soundToggleBtn = document.getElementById('soundToggleBtn');
+    const soundIconOn = document.getElementById('soundIconOn');
+    const soundIconOff = document.getElementById('soundIconOff');
+
+    // Speed Controls
+    const speedButtons = document.querySelectorAll('.speed-btn');
+
+    /* ==========================================================================
+       5. LEVEL INITIALIZATION & PERSISTENCE
+       ========================================================================== */
+    function getCurrentLevel() {
+      if (gameState.isSandbox) return sandboxLevel;
+      return CURRICULUM_LEVELS[gameState.curLevelIndex];
+    }
+
+    function loadLevel(index, preserveCode = false) {
+      gameState.curLevelIndex = index;
+      gameState.isSandbox = false;
+      sandboxBar.classList.add('hidden');
+      const lvl = CURRICULUM_LEVELS[index];
+
+      // Update Header Text
+      currentLevelNavText.textContent = `Lvl ${lvl.id}: ${lvl.title}`;
+      levelBadge.textContent = `Level ${lvl.id}`;
+      levelTitle.textContent = `${lvl.title}: ${lvl.concept}`;
+      levelDesc.textContent = lvl.description;
+      conceptTag.textContent = lvl.concept;
+
+      // Update Star record in header
+      updateHeaderStars(lvl.id);
+
+      // Load starter code or saved code
+      const savedCode = localStorage.getItem(`cyberbot_code_lvl_${lvl.id}`);
+      if (!preserveCode) {
+        codeEditor.value = savedCode || lvl.starterCode;
+      }
+      updateLineGutter();
+
+      resetLevelState();
+      logTerminal(`[LEVEL] Sector ${lvl.id} loaded. Directive: ${lvl.concept}`, 'system');
+    }
+
+    function updateHeaderStars(lvlId) {
+      const savedScore = localStorage.getItem(`cyberbot_stars_lvl_${lvlId}`);
+      const stars = savedScore ? parseInt(savedScore, 10) : 0;
+      let html = '';
+      for (let i = 1; i <= 3; i++) {
+        html += i <= stars 
+          ? '<span class="text-amber-400 drop-shadow-[0_0_6px_rgba(251,191,36,0.5)]">★</span>' 
+          : '<span class="text-slate-700">★</span>';
+      }
+      levelStarsHeader.innerHTML = html;
+    }
+
+    function resetLevelState() {
+      const lvl = getCurrentLevel();
+      gameState.executionState = 'idle';
+      gameState.actionQueue = [];
+      gameState.currentStepIndex = 0;
+      gameState.stepCount = 0;
+      gameState.fuelUsed = 0;
+      gameState.collectedGems.clear();
+      gameState.activeSwitches.clear();
+      gameState.deactivatedLasers.clear();
+      gameState.animProgress = 1;
+
+      // Set robot starting posture
+      gameState.renderBot.x = lvl.botStart.x;
+      gameState.renderBot.y = lvl.botStart.y;
+      gameState.renderBot.dir = lvl.botStart.dir;
+      gameState.renderBot.visualX = lvl.botStart.x;
+      gameState.renderBot.visualY = lvl.botStart.y;
+      gameState.renderBot.visualAngle = lvl.botStart.dir * (Math.PI / 2);
+
+      updateHUD();
+      updateExecStatusUI('idle');
+    }
+
+    function updateHUD() {
+      const lvl = getCurrentLevel();
+      hudStepCount.textContent = gameState.stepCount;
+      const fuelPct = Math.max(0, Math.floor(((lvl.fuelMax - gameState.fuelUsed) / lvl.fuelMax) * 100));
+      hudFuelRemaining.textContent = `${fuelPct}%`;
+      hudFuelRemaining.className = fuelPct < 25 ? 'text-rose-400 font-mono' : 'text-emerald-400 font-mono';
+
+      objCoresCount.textContent = `${gameState.collectedGems.size}/${lvl.gems.length}`;
+      const atGoal = (gameState.renderBot.x === lvl.goal.x && gameState.renderBot.y === lvl.goal.y);
+      objPortalState.textContent = atGoal ? 'Reached' : 'Unreached';
+      objPortalState.className = atGoal ? 'text-emerald-400 font-semibold' : 'text-rose-400 font-semibold';
+    }
+
+    function updateExecStatusUI(status) {
+      gameState.executionState = status;
+      if (status === 'running') {
+        execStatusDot.className = 'w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping';
+        execStatusLabel.textContent = 'Executing';
+        execStatusLabel.className = 'text-[11px] font-mono font-semibold text-cyan-400 uppercase';
+        runCodeBtn.classList.add('hidden');
+        pauseCodeBtn.classList.remove('hidden');
+      } else if (status === 'paused') {
+        execStatusDot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400';
+        execStatusLabel.textContent = 'Paused';
+        execStatusLabel.className = 'text-[11px] font-mono font-semibold text-amber-400 uppercase';
+        runCodeBtn.classList.remove('hidden');
+        pauseCodeBtn.classList.add('hidden');
+      } else {
+        execStatusDot.className = 'w-2.5 h-2.5 rounded-full bg-slate-500';
+        execStatusLabel.textContent = status === 'finished' ? 'Completed' : 'Standby';
+        execStatusLabel.className = 'text-[11px] font-mono font-semibold text-slate-400 uppercase';
+        runCodeBtn.classList.remove('hidden');
+        pauseCodeBtn.classList.add('hidden');
+      }
+    }
+
+    /* ==========================================================================
+       6. SIMULATION SANDBOX & CODE RECORDING ENGINE
+       ========================================================================== */
+    function recordCodeExecution(userCode) {
+      const lvl = getCurrentLevel();
+      const actions = [];
+      let opsCounter = 0;
+      const MAX_OPS = 3500; // Safeguard against infinite loops
+
+      // Clone simulation state
+      const sim = {
+        x: lvl.botStart.x,
+        y: lvl.botStart.y,
+        dir: lvl.botStart.dir, // 0: N, 1: E, 2: S, 3: W
+        fuel: lvl.fuelMax,
+        collectedGems: new Set(),
+        activeSwitches: new Set(),
+        deactivatedLasers: new Set(),
+        failed: false,
+        failReason: ""
+      };
+
+      // Helper queries inside simulation
+      function isWall(gx, gy) {
+        if (gx < 0 || gx >= lvl.gridSize.cols || gy < 0 || gy >= lvl.gridSize.rows) return true;
+        return lvl.walls.some(w => w.x === gx && w.y === gy);
+      }
+
+      function isLaser(gx, gy) {
+        return lvl.lasers.some(l => l.x === gx && l.y === gy && !sim.deactivatedLasers.has(l.id));
+      }
+
+      // Robot Virtual API injected into user scope
+      const bot = {
+        forward: (n = 1) => {
+          for (let step = 0; step < n; step++) {
+            if (sim.failed) return;
+            opsCounter++;
+            if (opsCounter > MAX_OPS) throw new Error("Infinite Loop detected! Check your while/for loop conditions.");
+            
+            const delta = DIR_DELTAS[sim.dir];
+            const nextX = sim.x + delta.dx;
+            const nextY = sim.y + delta.dy;
+
+            // Check collision with walls or boundaries
+            if (isWall(nextX, nextY)) {
+              sim.failed = true;
+              sim.failReason = `Collision with barrier at [${nextX}, ${nextY}]`;
+              actions.push({ type: 'fail', reason: sim.failReason });
+              return;
+            }
+
+            // Check collision with energized laser
+            if (isLaser(nextX, nextY)) {
+              sim.failed = true;
+              sim.failReason = `CyberBot disrupted by active laser beam at [${nextX}, ${nextY}]! Jump over or disable via switch.`;
+              actions.push({ type: 'fail', reason: sim.failReason });
+              return;
+            }
+
+            // Valid step
+            sim.x = nextX;
+            sim.y = nextY;
+            sim.fuel--;
+            actions.push({ type: 'step', x: nextX, y: nextY, dir: sim.dir });
+          }
+        },
+
+        step: function(n = 1) { this.forward(n); },
+
+        backward: () => {
+          if (sim.failed) return;
+          opsCounter++;
+          const delta = DIR_DELTAS[(sim.dir + 2) % 4];
+          const nextX = sim.x + delta.dx;
+          const nextY = sim.y + delta.dy;
+
+          if (isWall(nextX, nextY) || isLaser(nextX, nextY)) {
+            sim.failed = true;
+            sim.failReason = `Collision during reverse movement at [${nextX}, ${nextY}]`;
+            actions.push({ type: 'fail', reason: sim.failReason });
+            return;
+          }
+          sim.x = nextX;
+          sim.y = nextY;
+          sim.fuel--;
+          actions.push({ type: 'step', x: nextX, y: nextY, dir: sim.dir });
+        },
+
+        turnLeft: () => {
+          if (sim.failed) return;
+          opsCounter++;
+          sim.dir = (sim.dir + 3) % 4;
+          sim.fuel--;
+          actions.push({ type: 'turn', dir: sim.dir });
+        },
+
+        turnRight: () => {
+          if (sim.failed) return;
+          opsCounter++;
+          sim.dir = (sim.dir + 1) % 4;
+          sim.fuel--;
+          actions.push({ type: 'turn', dir: sim.dir });
+        },
+
+        jump: () => {
+          if (sim.failed) return;
+          opsCounter++;
+          const delta = DIR_DELTAS[sim.dir];
+          const landX = sim.x + delta.dx * 2;
+          const landY = sim.y + delta.dy * 2;
+
+          if (isWall(landX, landY) || isLaser(landX, landY)) {
+            sim.failed = true;
+            sim.failReason = `Invalid jump trajectory! Landing zone [${landX}, ${landY}] obstructed.`;
+            actions.push({ type: 'fail', reason: sim.failReason });
+            return;
+          }
+
+          sim.x = landX;
+          sim.y = landY;
+          sim.fuel -= 2;
+          actions.push({ type: 'jump', x: landX, y: landY, dir: sim.dir });
+        },
+
+        collect: () => {
+          if (sim.failed) return;
+          opsCounter++;
+          const gem = lvl.gems.find(g => g.x === sim.x && g.y === sim.y && !sim.collectedGems.has(g.id));
+          if (gem) {
+            sim.collectedGems.add(gem.id);
+            actions.push({ type: 'collect', gemId: gem.id, x: sim.x, y: sim.y });
+          } else {
+            actions.push({ type: 'log', text: `[SENSOR] No unharvested core on tile [${sim.x}, ${sim.y}].` });
+          }
+        },
+
+        activate: () => {
+          if (sim.failed) return;
+          opsCounter++;
+          const sw = lvl.switches.find(s => s.x === sim.x && s.y === sim.y);
+          if (sw) {
+            sim.activeSwitches.add(sw.id);
+            if (sw.linkedLaserId) {
+              sim.deactivatedLasers.add(sw.linkedLaserId);
+            }
+            actions.push({ type: 'activate', switchId: sw.id, linkedLaserId: sw.linkedLaserId, x: sim.x, y: sim.y });
+          } else {
+            actions.push({ type: 'log', text: `[SWITCH] No terminal found at [${sim.x}, ${sim.y}].` });
+          }
+        },
+
+        // Sensor queries for conditionals & loops
+        isWallAhead: () => {
+          const delta = DIR_DELTAS[sim.dir];
+          return isWall(sim.x + delta.dx, sim.y + delta.dy);
+        },
+
+        isLaserAhead: () => {
+          const delta = DIR_DELTAS[sim.dir];
+          return isLaser(sim.x + delta.dx, sim.y + delta.dy);
+        },
+
+        isGemAhead: () => {
+          const delta = DIR_DELTAS[sim.dir];
+          const gx = sim.x + delta.dx;
+          const gy = sim.y + delta.dy;
+          return lvl.gems.some(g => g.x === gx && g.y === gy && !sim.collectedGems.has(g.id));
+        },
+
+        isPathClear: () => {
+          const delta = DIR_DELTAS[sim.dir];
+          const nx = sim.x + delta.dx;
+          const ny = sim.y + delta.dy;
+          return !isWall(nx, ny) && !isLaser(nx, ny);
+        },
+
+        isAtGoal: () => {
+          return sim.x === lvl.goal.x && sim.y === lvl.goal.y;
+        },
+
+        hasGemsRemaining: () => {
+          return sim.collectedGems.size < lvl.gems.length;
+        },
+
+        log: (msg) => {
+          actions.push({ type: 'log', text: `[USER BOT] ${msg}` });
+        }
+      };
+
+      // Custom console hook
+      const customConsole = {
+        log: (...args) => {
+          actions.push({ type: 'log', text: `[LOG] ${args.join(' ')}` });
+        },
+        warn: (...args) => {
+          actions.push({ type: 'log', text: `[WARN] ${args.join(' ')}` });
+        },
+        error: (...args) => {
+          actions.push({ type: 'log', text: `[ERROR] ${args.join(' ')}` });
+        }
+      };
+
+      // Execute code inside isolated wrapper
+      try {
+        const executor = new Function('bot', 'console', `"use strict";\n${userCode}`);
+        executor(bot, customConsole);
+
+        // Check victory state if not failed
+        if (!sim.failed) {
+          const reachedGoal = (sim.x === lvl.goal.x && sim.y === lvl.goal.y);
+          const allGemsHarvested = (sim.collectedGems.size === lvl.gems.length);
+
+          if (reachedGoal && allGemsHarvested) {
+            actions.push({ type: 'win' });
+          } else if (!reachedGoal) {
+            actions.push({ type: 'notice', text: "Execution ended, but CyberBot has not entered the extraction portal." });
+          } else if (!allGemsHarvested) {
+            actions.push({ type: 'notice', text: `Portal reached, but ${lvl.gems.length - sim.collectedGems.size} energy core(s) remain uncollected!` });
+          }
+        }
+      } catch (err) {
+        return { error: err.message, actions: [] };
+      }
+
+      return { error: null, actions };
+    }
+
+    /* ==========================================================================
+       7. STEP-BY-STEP PLAYBACK CONTROLLER
+       ========================================================================== */
+    let lastTickTime = performance.now();
+
+    function startCodeExecution() {
+      const code = codeEditor.value;
+      if (!code.trim()) {
+        logTerminal("[SYNTAX] Workspace is empty. Enter bot commands first.", 'error');
+        return;
+      }
+
+      // Save code locally
+      const lvl = getCurrentLevel();
+      if (!gameState.isSandbox) {
+        localStorage.setItem(`cyberbot_code_lvl_${lvl.id}`, code);
+      }
+
+      // If resuming from pause on current queue:
+      if (gameState.executionState === 'paused' && gameState.actionQueue.length > 0) {
+        updateExecStatusUI('running');
+        return;
+      }
+
+      // Reset state for new run
+      resetLevelState();
+      logTerminal("[EXEC] Compiling & simulating directives...", 'system');
+
+      const result = recordCodeExecution(code);
+      if (result.error) {
+        sound.playError();
+        logTerminal(`[COMPILER ERROR] ${result.error}`, 'error');
+        explainFriendlyError(result.error);
+        return;
+      }
+
+      if (result.actions.length === 0) {
+        logTerminal("[EXEC] No movement or actions recorded.", 'warn');
+        return;
+      }
+
+      gameState.actionQueue = result.actions;
+      gameState.currentStepIndex = 0;
+      updateExecStatusUI('running');
+      logTerminal(`[EXEC] Starting autonomous run: ${result.actions.length} commands queued.`, 'system');
+    }
+
+    function stepForwardOnce() {
+      // If idle, record the code first
+      if (gameState.executionState === 'idle' || gameState.actionQueue.length === 0) {
+        const code = codeEditor.value;
+        const result = recordCodeExecution(code);
+        if (result.error) {
+          logTerminal(`[SYNTAX ERROR] ${result.error}`, 'error');
+          return;
+        }
+        gameState.actionQueue = result.actions;
+        gameState.currentStepIndex = 0;
+      }
+
+      if (gameState.currentStepIndex < gameState.actionQueue.length) {
+        executeSingleAction(gameState.actionQueue[gameState.currentStepIndex]);
+        gameState.currentStepIndex++;
+        updateExecStatusUI('paused');
+      } else {
+        updateExecStatusUI('finished');
+        logTerminal("[EXEC] All steps in current queue executed.", 'system');
+      }
+    }
+
+    function executeSingleAction(action) {
+      gameState.stepCount++;
+      gameState.fuelUsed++;
+
+      switch (action.type) {
+        case 'step':
+          gameState.renderBot.x = action.x;
+          gameState.renderBot.y = action.y;
+          gameState.renderBot.dir = action.dir;
+          sound.playStep();
+          break;
+
+        case 'turn':
+          gameState.renderBot.dir = action.dir;
+          sound.playTurn();
+          break;
+
+        case 'jump':
+          gameState.renderBot.x = action.x;
+          gameState.renderBot.y = action.y;
+          gameState.renderBot.dir = action.dir;
+          sound.playJump();
+          createParticleBurst(action.x, action.y, '#00f3ff');
+          break;
+
+        case 'collect':
+          gameState.collectedGems.add(action.gemId);
+          sound.playGemCollect();
+          createParticleBurst(action.x, action.y, '#fbbf24', 16);
+          logTerminal(`[CORE] Harvested Energy Core at [${action.x}, ${action.y}].`, 'success');
+          break;
+
+        case 'activate':
+          gameState.activeSwitches.add(action.switchId);
+          if (action.linkedLaserId) {
+            gameState.deactivatedLasers.add(action.linkedLaserId);
+            logTerminal(`[TERMINAL] Switch triggered! Laser barrier '${action.linkedLaserId}' lowered.`, 'success');
+          }
+          sound.playSwitch();
+          createParticleBurst(action.x, action.y, '#c084fc', 12);
+          break;
+
+        case 'log':
+          logTerminal(action.text, 'info');
+          break;
+
+        case 'fail':
+          sound.playError();
+          logTerminal(`[MISSION FAILURE] ${action.reason}`, 'error');
+          updateExecStatusUI('finished');
+          break;
+
+        case 'notice':
+          logTerminal(`[INCOMPLETE] ${action.text}`, 'warn');
+          updateExecStatusUI('finished');
+          break;
+
+        case 'win':
+          handleVictory();
+          break;
+      }
+
+      updateHUD();
+    }
+
+    function handleVictory() {
+      updateExecStatusUI('finished');
+      sound.playVictory();
+      fireScreenConfetti();
+      logTerminal("[MISSION SUCCESS] Extraction coordinates secured! All objectives verified.", 'success');
+
+      const lvl = getCurrentLevel();
+      const codeLines = codeEditor.value.split('\n').filter(l => l.trim().length > 0 && !l.trim().startsWith('//')).length;
+
+      // Calculate Star Rating
+      let stars = 3;
+      if (gameState.stepCount > lvl.parSteps * 1.5 || codeLines > 16) {
+        stars = 2;
+      }
+      if (gameState.stepCount > lvl.parSteps * 2.2) {
+        stars = 1;
+      }
+
+      // Save Best Stars in localStorage
+      if (!gameState.isSandbox) {
+        const prev = localStorage.getItem(`cyberbot_stars_lvl_${lvl.id}`) || 0;
+        if (stars > parseInt(prev, 10)) {
+          localStorage.setItem(`cyberbot_stars_lvl_${lvl.id}`, stars);
+        }
+        updateHeaderStars(lvl.id);
+      }
+
+      // Update Victory Modal UI
+      let starHtml = '';
+      for (let i = 1; i <= 3; i++) {
+        starHtml += i <= stars 
+          ? '<span class="text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.7)]">★</span>' 
+          : '<span class="text-slate-700">★</span>';
+      }
+      modalVictoryStars.innerHTML = starHtml;
+      statStepsText.textContent = gameState.stepCount;
+      statLinesText.textContent = `${codeLines} lines`;
+
+      setTimeout(() => {
+        victoryModal.classList.remove('hidden');
+        setTimeout(() => victoryModal.classList.remove('opacity-0'), 10);
+      }, 600);
+    }
+
+    function explainFriendlyError(errStr) {
+      if (errStr.includes("bot.") && errStr.includes("is not a function")) {
+        logTerminal("💡 Tip: Double check spelling! Did you type bot.forward() or bot.turnRight()?", 'system');
+      } else if (errStr.includes("Unexpected token")) {
+        logTerminal("💡 Tip: Check for missing closing parentheses ')' or curly braces '}'.", 'system');
+      }
+    }
+
+    /* ==========================================================================
+       8. CANVAS GRAPHICS & RENDERING ENGINE
+       ========================================================================== */
+    function resizeCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+
+      fxCanvas.width = window.innerWidth;
+      fxCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    // Main animation loop
+    function gameLoop(now) {
+      const dt = (now - lastTickTime) / 1000;
+      lastTickTime = now;
+
+      // Handle queued step playback
+      if (gameState.executionState === 'running') {
+        const stepInterval = gameState.speed === 99 ? 0.015 : (0.45 / gameState.speed);
+        gameState.animProgress += dt / stepInterval;
+
+        if (gameState.animProgress >= 1) {
+          gameState.animProgress = 0;
+          if (gameState.currentStepIndex < gameState.actionQueue.length) {
+            executeSingleAction(gameState.actionQueue[gameState.currentStepIndex]);
+            gameState.currentStepIndex++;
+          } else {
+            updateExecStatusUI('finished');
+          }
+        }
+      }
+
+      // Smooth visual interpolation for bot position & orientation
+      const lerpSpeed = Math.min(1, dt * 14 * (gameState.speed === 99 ? 3 : gameState.speed));
+      gameState.renderBot.visualX += (gameState.renderBot.x - gameState.renderBot.visualX) * lerpSpeed;
+      gameState.renderBot.visualY += (gameState.renderBot.y - gameState.renderBot.visualY) * lerpSpeed;
+
+      // Shortest angle lerp
+      const targetAngle = gameState.renderBot.dir * (Math.PI / 2);
+      let diff = targetAngle - gameState.renderBot.visualAngle;
+      while (diff < -Math.PI) diff += Math.PI * 2;
+      while (diff > Math.PI) diff -= Math.PI * 2;
+      gameState.renderBot.visualAngle += diff * lerpSpeed;
+
+      // Draw Grid, Elements, and Robot
+      renderArena(now);
+
+      // Render Floating In-Game Particle Effects
+      updateAndDrawArenaParticles(dt);
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    function renderArena(time) {
+      const rect = canvas.getBoundingClientRect();
+      const w = rect.width;
+      const h = rect.height;
+      ctx.clearRect(0, 0, w, h);
+
+      const lvl = getCurrentLevel();
+      const cols = lvl.gridSize.cols;
+      const rows = lvl.gridSize.rows;
+      const cellSize = Math.min(w / cols, h / rows);
+      const offsetX = (w - cols * cellSize) / 2;
+      const offsetY = (h - rows * cellSize) / 2;
+
+      // 1. Draw Grid Tiles
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const x = offsetX + c * cellSize;
+          const y = offsetY + r * cellSize;
+
+          // Cyber Floor Tile
+          ctx.fillStyle = (r + c) % 2 === 0 ? '#0b1120' : '#080d19';
+          ctx.fillRect(x, y, cellSize, cellSize);
+
+          ctx.strokeStyle = 'rgba(0, 243, 255, 0.08)';
+          ctx.lineWidth = 1;
+          ctx.strokeRect(x, y, cellSize, cellSize);
+
+          // Subtle dot in center of tile
+          ctx.fillStyle = 'rgba(0, 243, 255, 0.2)';
+          ctx.fillRect(x + cellSize / 2 - 1, y + cellSize / 2 - 1, 2, 2);
+        }
+      }
+
+      // 2. Draw Walls
+      lvl.walls.forEach(wall => {
+        const wx = offsetX + wall.x * cellSize;
+        const wy = offsetY + wall.y * cellSize;
+
+        ctx.fillStyle = '#1e293b';
+        ctx.fillRect(wx + 2, wy + 2, cellSize - 4, cellSize - 4);
+
+        // Tech barrier border
+        ctx.strokeStyle = 'rgba(0, 243, 255, 0.3)';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(wx + 3, wy + 3, cellSize - 6, cellSize - 6);
+
+        // Diagonal hazard stripes
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+        ctx.beginPath();
+        ctx.moveTo(wx + 6, wy + cellSize - 6);
+        ctx.lineTo(wx + cellSize - 6, wy + 6);
+        ctx.stroke();
+      });
+
+      // 3. Draw Switches
+      lvl.switches.forEach(sw => {
+        const sx = offsetX + sw.x * cellSize + cellSize / 2;
+        const sy = offsetY + sw.y * cellSize + cellSize / 2;
+        const isActive = gameState.activeSwitches.has(sw.id);
+
+        ctx.save();
+        ctx.translate(sx, sy);
+
+        // Switch Base Pad
+        ctx.fillStyle = isActive ? 'rgba(52, 211, 153, 0.2)' : 'rgba(192, 132, 252, 0.15)';
+        ctx.strokeStyle = isActive ? '#34d399' : '#c084fc';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(0, 0, cellSize * 0.32, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        // Glowing center core
+        ctx.fillStyle = isActive ? '#34d399' : '#f43f5e';
+        ctx.beginPath();
+        ctx.arc(0, 0, cellSize * 0.12, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+      });
+
+      // 4. Draw Lasers
+      lvl.lasers.forEach(laser => {
+        const lx = offsetX + laser.x * cellSize + cellSize / 2;
+        const ly = offsetY + laser.y * cellSize + cellSize / 2;
+        const isDeactivated = gameState.deactivatedLasers.has(laser.id);
+
+        if (!isDeactivated) {
+          // Active Laser Hazard Beam
+          const pulse = (Math.sin(time / 150) + 1) / 2;
+          ctx.save();
+          ctx.translate(lx, ly);
+
+          // Glowing Barrier Halo
+          ctx.fillStyle = `rgba(244, 63, 94, ${0.25 + pulse * 0.25})`;
+          ctx.fillRect(-cellSize / 2 + 3, -cellSize / 6, cellSize - 6, cellSize / 3);
+
+          // Intense core beam
+          ctx.strokeStyle = '#f43f5e';
+          ctx.lineWidth = 3 + pulse * 2;
+          ctx.shadowColor = '#f43f5e';
+          ctx.shadowBlur = 10;
+          ctx.beginPath();
+          ctx.moveTo(-cellSize / 2 + 4, 0);
+          ctx.lineTo(cellSize / 2 - 4, 0);
+          ctx.stroke();
+
+          ctx.restore();
+        } else {
+          // Offline emitter posts
+          ctx.fillStyle = '#475569';
+          ctx.fillRect(offsetX + laser.x * cellSize + 2, ly - 3, 6, 6);
+          ctx.fillRect(offsetX + (laser.x + 1) * cellSize - 8, ly - 3, 6, 6);
+        }
+      });
+
+      // 5. Draw Extraction Portal (Goal)
+      const gx = offsetX + lvl.goal.x * cellSize + cellSize / 2;
+      const gy = offsetY + lvl.goal.y * cellSize + cellSize / 2;
+      ctx.save();
+      ctx.translate(gx, gy);
+      const rot = time / 600;
+
+      // Vortex ring 1
+      ctx.rotate(rot);
+      ctx.strokeStyle = '#c084fc';
+      ctx.lineWidth = 2.5;
+      ctx.shadowColor = '#c084fc';
+      ctx.shadowBlur = 12;
+      ctx.beginPath();
+      ctx.arc(0, 0, cellSize * 0.35, 0, Math.PI * 1.5);
+      ctx.stroke();
+
+      // Vortex ring 2 (counter-rotating)
+      ctx.rotate(-rot * 2);
+      ctx.strokeStyle = '#00f3ff';
+      ctx.lineWidth = 2;
+      ctx.shadowColor = '#00f3ff';
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+      ctx.arc(0, 0, cellSize * 0.22, 0, Math.PI * 1.3);
+      ctx.stroke();
+
+      // Portal Singularity Core
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(0, 0, cellSize * 0.08, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // 6. Draw Energy Core Gems
+      lvl.gems.forEach(gem => {
+        if (gameState.collectedGems.has(gem.id)) return;
+        const gemX = offsetX + gem.x * cellSize + cellSize / 2;
+        const gemY = offsetY + gem.y * cellSize + cellSize / 2;
+        const floatY = Math.sin(time / 240 + gem.x * 2) * 3;
+
+        ctx.save();
+        ctx.translate(gemX, gemY + floatY);
+        ctx.shadowColor = '#fbbf24';
+        ctx.shadowBlur = 10;
+
+        // Gem Shard Octagon / Diamond
+        ctx.fillStyle = '#fbbf24';
+        ctx.beginPath();
+        ctx.moveTo(0, -cellSize * 0.28);
+        ctx.lineTo(cellSize * 0.22, 0);
+        ctx.lineTo(0, cellSize * 0.28);
+        ctx.lineTo(-cellSize * 0.22, 0);
+        ctx.closePath();
+        ctx.fill();
+
+        // Inner Shimmer
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.moveTo(0, -cellSize * 0.2);
+        ctx.lineTo(cellSize * 0.1, 0);
+        ctx.lineTo(0, cellSize * 0.2);
+        ctx.lineTo(-cellSize * 0.1, 0);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.restore();
+      });
+
+      // 7. Draw CyberBot
+      const botX = offsetX + gameState.renderBot.visualX * cellSize + cellSize / 2;
+      const botY = offsetY + gameState.renderBot.visualY * cellSize + cellSize / 2;
+      const angle = gameState.renderBot.visualAngle;
+
+      ctx.save();
+      ctx.translate(botX, botY);
+      ctx.rotate(angle);
+
+      // Headlight Cone Projection
+      const grad = ctx.createRadialGradient(0, 0, cellSize * 0.2, cellSize * 1.1, 0, cellSize * 1.3);
+      grad.addColorStop(0, 'rgba(0, 243, 255, 0.25)');
+      grad.addColorStop(1, 'transparent');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.moveTo(cellSize * 0.2, -cellSize * 0.1);
+      ctx.lineTo(cellSize * 1.2, -cellSize * 0.55);
+      ctx.lineTo(cellSize * 1.2, cellSize * 0.55);
+      ctx.lineTo(cellSize * 0.2, cellSize * 0.1);
+      ctx.closePath();
+      ctx.fill();
+
+      // Bot Shadow
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+      ctx.beginPath();
+      ctx.ellipse(0, 4, cellSize * 0.32, cellSize * 0.26, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Bot Chassis (Rounded Futuristic Cyber Tank)
+      ctx.fillStyle = '#0f172a';
+      ctx.strokeStyle = '#00f3ff';
+      ctx.lineWidth = 2.5;
+      ctx.shadowColor = '#00f3ff';
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+      ctx.roundRect(-cellSize * 0.3, -cellSize * 0.26, cellSize * 0.6, cellSize * 0.52, 8);
+      ctx.fill();
+      ctx.stroke();
+
+      // Side Treads
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(-cellSize * 0.28, -cellSize * 0.32, cellSize * 0.56, 5);
+      ctx.fillRect(-cellSize * 0.28, cellSize * 0.32 - 5, cellSize * 0.56, 5);
+
+      // Cyber Visor / Eye
+      ctx.fillStyle = '#00f3ff';
+      ctx.shadowColor = '#00f3ff';
+      ctx.shadowBlur = 10;
+      ctx.fillRect(cellSize * 0.12, -cellSize * 0.14, 5, cellSize * 0.28);
+
+      // Antenna Sensor Node
+      ctx.fillStyle = '#c084fc';
+      ctx.beginPath();
+      ctx.arc(-cellSize * 0.1, 0, 3.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    /* Particle Bursts */
+    function createParticleBurst(gx, gy, color, count = 12) {
+      const rect = canvas.getBoundingClientRect();
+      const lvl = getCurrentLevel();
+      const cellSize = Math.min(rect.width / lvl.gridSize.cols, rect.height / lvl.gridSize.rows);
+      const offsetX = (rect.width - lvl.gridSize.cols * cellSize) / 2;
+      const offsetY = (rect.height - lvl.gridSize.rows * cellSize) / 2;
+      const px = offsetX + gx * cellSize + cellSize / 2;
+      const py = offsetY + gy * cellSize + cellSize / 2;
+
+      for (let i = 0; i < count; i++) {
+        gameState.particles.push({
+          x: px,
+          y: py,
+          vx: (Math.random() - 0.5) * 120,
+          vy: (Math.random() - 0.5) * 120,
+          size: Math.random() * 4 + 2,
+          color: color,
+          alpha: 1,
+          life: 0.5 + Math.random() * 0.3
+        });
+      }
+    }
+
+    function updateAndDrawArenaParticles(dt) {
+      for (let i = gameState.particles.length - 1; i >= 0; i--) {
+        const p = gameState.particles[i];
+        p.life -= dt;
+        if (p.life <= 0) {
+          gameState.particles.splice(i, 1);
+          continue;
+        }
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        p.alpha = Math.max(0, p.life * 2);
+
+        ctx.save();
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = p.color;
+        ctx.shadowColor = p.color;
+        ctx.shadowBlur = 6;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    /* Fullscreen Screen Celebration Confetti */
+    let fxParticles = [];
+    let fxAnimId = null;
+
+    function fireScreenConfetti() {
+      cancelAnimationFrame(fxAnimId);
+      fxParticles = [];
+      const colors = ['#00f3ff', '#c084fc', '#fbbf24', '#34d399', '#f43f5e'];
+      for (let i = 0; i < 90; i++) {
+        fxParticles.push({
+          x: fxCanvas.width * 0.5 + (Math.random() - 0.5) * 160,
+          y: fxCanvas.height * 0.45,
+          vx: (Math.random() - 0.5) * 16,
+          vy: -Math.random() * 12 - 4,
+          size: Math.random() * 7 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * 360,
+          rotSpeed: (Math.random() - 0.5) * 8,
+          gravity: 0.32
+        });
+      }
+      animateFxConfetti();
+    }
+
+    function animateFxConfetti() {
+      fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+      let alive = false;
+      fxParticles.forEach(p => {
+        p.vy += p.gravity;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rotation += p.rotSpeed;
+        if (p.y < fxCanvas.height + 50) alive = true;
+
+        fxCtx.save();
+        fxCtx.translate(p.x, p.y);
+        fxCtx.rotate((p.rotation * Math.PI) / 180);
+        fxCtx.fillStyle = p.color;
+        fxCtx.globalAlpha = Math.max(0, 1 - (p.y / (fxCanvas.height * 1.1)));
+        fxCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+        fxCtx.restore();
+      });
+
+      if (alive) {
+        fxAnimId = requestAnimationFrame(animateFxConfetti);
+      } else {
+        fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+      }
+    }
+
+    /* ==========================================================================
+       9. TERMINAL & LOGGING UTILITY
+       ========================================================================== */
+    function logTerminal(message, type = 'info') {
+      const line = document.createElement('div');
+      let colorClass = 'text-slate-300';
+      if (type === 'error') colorClass = 'text-rose-400 font-semibold';
+      else if (type === 'success') colorClass = 'text-emerald-400 font-semibold';
+      else if (type === 'system') colorClass = 'text-cyan-400 font-semibold';
+      else if (type === 'warn') colorClass = 'text-amber-400';
+
+      line.className = `${colorClass} leading-relaxed select-text`;
+      line.textContent = message;
+      terminalBody.appendChild(line);
+      terminalBody.scrollTop = terminalBody.scrollHeight;
+    }
+
+    clearTerminalBtn.addEventListener('click', () => {
+      terminalBody.innerHTML = '';
+      logTerminal("[TERMINAL] Logs cleared.", 'system');
+    });
+
+    /* ==========================================================================
+       10. CODE EDITOR ENHANCEMENTS (Line Numbers & Tab Indents)
+       ========================================================================== */
+    function updateLineGutter() {
+      const lines = codeEditor.value.split('\n').length;
+      let gutterText = '';
+      for (let i = 1; i <= Math.max(lines, 12); i++) {
+        gutterText += i + '<br>';
+      }
+      lineGutter.innerHTML = gutterText;
+    }
+
+    codeEditor.addEventListener('input', updateLineGutter);
+    codeEditor.addEventListener('scroll', () => {
+      lineGutter.scrollTop = codeEditor.scrollTop;
+    });
+
+    // Keyboard Tab Indentation & Auto-Closing Brackets
+    codeEditor.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        const start = codeEditor.selectionStart;
+        const end = codeEditor.selectionEnd;
+        codeEditor.value = codeEditor.value.substring(0, start) + '  ' + codeEditor.value.substring(end);
+        codeEditor.selectionStart = codeEditor.selectionEnd = start + 2;
+        updateLineGutter();
+      } else if (e.key === '{') {
+        e.preventDefault();
+        insertTextAtCursor('{}', 1);
+      } else if (e.key === '(') {
+        e.preventDefault();
+        insertTextAtCursor('()', 1);
+      }
+    });
+
+    function insertTextAtCursor(text, offsetBack = 0) {
+      const start = codeEditor.selectionStart;
+      const end = codeEditor.selectionEnd;
+      codeEditor.value = codeEditor.value.substring(0, start) + text + codeEditor.value.substring(end);
+      codeEditor.selectionStart = codeEditor.selectionEnd = start + text.length - offsetBack;
+      codeEditor.focus();
+      updateLineGutter();
+    }
+
+    // Quick insertion buttons
+    document.querySelectorAll('.snippet-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        sound.playTurn();
+        const snippet = btn.getAttribute('data-insert').replace(/\\n/g, '\n');
+        insertTextAtCursor(snippet);
+      });
+    });
+
+    // Copy Code Button
+    copyCodeBtn.addEventListener('click', () => {
+      codeEditor.select();
+      document.execCommand('copy');
+      logTerminal("[CLIPBOARD] Code directives copied.", 'system');
+    });
+
+    // Reset Starter Code Template
+    resetCodeTemplateBtn.addEventListener('click', () => {
+      const lvl = getCurrentLevel();
+      codeEditor.value = lvl.starterCode;
+      updateLineGutter();
+      logTerminal("[CODE] Starter template restored.", 'system');
+    });
+
+    /* ==========================================================================
+       11. MODALS, LEVEL SELECTOR & SANDBOX BUILDER
+       ========================================================================== */
+    function populateLevelSelector() {
+      levelGridContainer.innerHTML = '';
+      CURRICULUM_LEVELS.forEach((lvl, idx) => {
+        const savedScore = localStorage.getItem(`cyberbot_stars_lvl_${lvl.id}`) || 0;
+        const starsNum = parseInt(savedScore, 10);
+
+        let starIcons = '';
+        for (let i = 1; i <= 3; i++) {
+          starIcons += i <= starsNum ? '★' : '☆';
+        }
+
+        const isCurrent = idx === gameState.curLevelIndex && !gameState.isSandbox;
+        const card = document.createElement('div');
+        card.className = `p-3 rounded-2xl border transition cursor-pointer flex flex-col justify-between ${
+          isCurrent 
+            ? 'bg-cyan-950/60 border-cyan-400 shadow-lg shadow-cyan-500/20' 
+            : 'bg-slate-900/80 border-slate-800 hover:border-slate-700'
+        }`;
+
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-mono uppercase font-bold text-cyan-400">Sector ${lvl.id}</span>
+              <span class="text-amber-400 text-sm font-bold tracking-widest">${starIcons}</span>
+            </div>
+            <h4 class="font-bold text-white text-sm mt-0.5">${lvl.title}</h4>
+            <p class="text-[11px] text-slate-400 mt-1 line-clamp-2">${lvl.concept}</p>
+          </div>
+          <button class="mt-3 w-full py-1.5 rounded-lg bg-slate-800 hover:bg-cyan-900 border border-slate-700 text-xs font-semibold text-cyan-200">
+            ${isCurrent ? 'Current Sector' : 'Launch Sector'}
+          </button>
+        `;
+
+        card.addEventListener('click', () => {
+          loadLevel(idx);
+          closeLevelModal();
+        });
+
+        levelGridContainer.appendChild(card);
+      });
+    }
+
+    function openLevelModal() {
+      populateLevelSelector();
+      levelModal.classList.remove('hidden');
+      setTimeout(() => levelModal.classList.remove('opacity-0'), 10);
+    }
+    function closeLevelModal() {
+      levelModal.classList.add('opacity-0');
+      setTimeout(() => levelModal.classList.add('hidden'), 200);
+    }
+    levelSelectBtn.addEventListener('click', openLevelModal);
+    closeLevelModalBtn.addEventListener('click', closeLevelModal);
+
+    // Docs modal
+    openDocsBtn.addEventListener('click', () => {
+      docsModal.classList.remove('hidden');
+      setTimeout(() => docsModal.classList.remove('opacity-0'), 10);
+    });
+    closeDocsModalBtn.addEventListener('click', () => {
+      docsModal.classList.add('opacity-0');
+      setTimeout(() => docsModal.classList.add('hidden'), 200);
+    });
+
+    // Victory Modal Action Buttons
+    nextLevelModalBtn.addEventListener('click', () => {
+      victoryModal.classList.add('opacity-0');
+      setTimeout(() => {
+        victoryModal.classList.add('hidden');
+        if (gameState.curLevelIndex + 1 < CURRICULUM_LEVELS.length) {
+          loadLevel(gameState.curLevelIndex + 1);
+        } else {
+          // Wrapped around to sandbox
+          enableSandboxMode();
+        }
+      }, 200);
+    });
+
+    replayLevelModalBtn.addEventListener('click', () => {
+      victoryModal.classList.add('opacity-0');
+      setTimeout(() => {
+        victoryModal.classList.add('hidden');
+        resetLevelState();
+      }, 200);
+    });
+
+    /* Sandbox Interactive Grid Painting */
+    function enableSandboxMode() {
+      gameState.isSandbox = true;
+      sandboxBar.classList.remove('hidden');
+      currentLevelNavText.textContent = "Sandbox: Custom";
+      levelBadge.textContent = "Sandbox";
+      levelTitle.textContent = "Custom Arena Editor";
+      levelDesc.textContent = "Click any tile on the grid to place the active brush element. Craft custom mazes and write scripts!";
+      conceptTag.textContent = "Free Algorithmic Prototyping";
+      levelStarsHeader.innerHTML = '<span class="text-purple-400 font-mono text-xs">Sandbox Active</span>';
+
+      resetLevelState();
+      logTerminal("[SANDBOX] Mode active. Paint tiles using the brush bar above.", 'system');
+    }
+
+    sandboxModeBtn.addEventListener('click', enableSandboxMode);
+    exitSandboxBtn.addEventListener('click', () => {
+      loadLevel(gameState.curLevelIndex);
+    });
+
+    clearCustomMapBtn.addEventListener('click', () => {
+      sandboxLevel.walls = [];
+      sandboxLevel.gems = [];
+      sandboxLevel.lasers = [];
+      sandboxLevel.switches = [];
+      resetLevelState();
+      logTerminal("[SANDBOX] Grid cleared.", 'system');
+    });
+
+    brushButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        brushButtons.forEach(b => {
+          b.className = 'brush-btn px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 font-medium';
+        });
+        btn.className = 'brush-btn px-2.5 py-1 rounded-lg bg-slate-800 border border-cyan-500 text-cyan-300 font-medium';
+        activeBrush = btn.getAttribute('data-tile');
+      });
+    });
+
+    // Paint tiles on canvas click when in Sandbox
+    canvas.addEventListener('click', (e) => {
+      if (!gameState.isSandbox) return;
+      const rect = canvas.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const clickY = e.clientY - rect.top;
+
+      const lvl = sandboxLevel;
+      const cols = lvl.gridSize.cols;
+      const rows = lvl.gridSize.rows;
+      const cellSize = Math.min(rect.width / cols, rect.height / rows);
+      const offsetX = (rect.width - cols * cellSize) / 2;
+      const offsetY = (rect.height - rows * cellSize) / 2;
+
+      const gridC = Math.floor((clickX - offsetX) / cellSize);
+      const gridR = Math.floor((clickY - offsetY) / cellSize);
+
+      if (gridC >= 0 && gridC < cols && gridR >= 0 && gridR < rows) {
+        // Clear whatever exists on that tile
+        lvl.walls = lvl.walls.filter(w => !(w.x === gridC && w.y === gridR));
+        lvl.gems = lvl.gems.filter(g => !(g.x === gridC && g.y === gridR));
+        lvl.lasers = lvl.lasers.filter(l => !(l.x === gridC && l.y === gridR));
+        lvl.switches = lvl.switches.filter(s => !(s.x === gridC && s.y === gridR));
+
+        if (activeBrush === 'wall') {
+          lvl.walls.push({ x: gridC, y: gridR });
+        } else if (activeBrush === 'gem') {
+          lvl.gems.push({ x: gridC, y: gridR, id: `g_${Date.now()}` });
+        } else if (activeBrush === 'laser') {
+          lvl.lasers.push({ x: gridC, y: gridR, id: `l_${Date.now()}`, active: true });
+        } else if (activeBrush === 'switch') {
+          lvl.switches.push({ x: gridC, y: gridR, id: `s_${Date.now()}`, linkedLaserId: null });
+        } else if (activeBrush === 'goal') {
+          lvl.goal = { x: gridC, y: gridR };
+        } else if (activeBrush === 'bot') {
+          lvl.botStart.x = gridC;
+          lvl.botStart.y = gridR;
+        }
+
+        sound.playTurn();
+        resetLevelState();
+      }
+    });
+
+    /* ==========================================================================
+       12. CONTROLS & SPEED EVENT BINDINGS
+       ========================================================================== */
+    runCodeBtn.addEventListener('click', () => {
+      sound.playTurn();
+      startCodeExecution();
+    });
+
+    stepCodeBtn.addEventListener('click', () => {
+      sound.playTurn();
+      stepForwardOnce();
+    });
+
+    pauseCodeBtn.addEventListener('click', () => {
+      updateExecStatusUI('paused');
+      logTerminal("[EXEC] Code execution paused by user.", 'warn');
+    });
+
+    resetLevelBtn.addEventListener('click', () => {
+      sound.playTurn();
+      resetLevelState();
+      logTerminal("[SYSTEM] Robot and sector reinitialized.", 'system');
+    });
+
+    // Speed Selector Buttons
+    speedButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        speedButtons.forEach(b => {
+          b.className = 'speed-btn px-2 py-1 rounded-lg text-slate-400 hover:text-white';
+        });
+        btn.className = 'speed-btn px-2 py-1 rounded-lg bg-cyan-600 text-white font-bold';
+
+        const s = btn.getAttribute('data-speed');
+        if (s === 'slow') gameState.speed = 0.5;
+        else if (s === 'normal') gameState.speed = 1;
+        else if (s === 'fast') gameState.speed = 2;
+        else if (s === 'turbo') gameState.speed = 99;
+      });
+    });
+
+    // Sound Toggle Button
+    soundToggleBtn.addEventListener('click', () => {
+      sound.enabled = !sound.enabled;
+      if (sound.enabled) {
+        soundIconOn.classList.remove('hidden');
+        soundIconOff.classList.add('hidden');
+        sound.playTurn();
+      } else {
+        soundIconOn.classList.add('hidden');
+        soundIconOff.classList.remove('hidden');
+      }
+    });
+
+    /* ==========================================================================
+       13. STARTUP INITIALIZATION
+       ========================================================================== */
+    window.addEventListener('DOMContentLoaded', () => {
+      resizeCanvas();
+      loadLevel(0);
+      lastTickTime = performance.now();
+      requestAnimationFrame(gameLoop);
+    });
+  </script>
+</body>
+</html>
