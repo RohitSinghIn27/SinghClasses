@@ -1,7 +1,3 @@
-/* ==========================================================================
-   PLANNER & ANALYTICS CLIENT ENGINE (plan.js)
-   Read-only Topics • Live Google Sheets Sync • No Keyloggers • No Mock Data
-   ========================================================================== */
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyG4UFan_caa9X-ol9OCXVm6e5F-0zH2d1ioAHSYGuLBjw5pzNKZ54CsyVviQ8mWDeW/exec';
 const TEMPLATE_VERSION = '2026.10_live_readonly';
 const STORAGE_KEY_PLANNER = 'singhPlanner_core_v2';
