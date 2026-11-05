@@ -443,7 +443,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
 /* RESOURCE BUTTONS */
 .sc-card-links { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: auto; width: 100%; }
 
-/* Card 1 PYQ links (Default 2 columns, last odd item spans across) */
+/* Default Sets Container */
 .sc-card-links.sc-links-sets {
   grid-template-columns: repeat(2, 1fr);
   gap: 5px;
@@ -452,13 +452,13 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
   grid-column: span 2;
 }
 
-/* Circled Set Cards (Sample Papers & Mock Question Papers): 3 in a row, exactly 4.5 rows visible */
+/* 3 IN A ROW: Exactly 3.5 rows visible (Rows 1–3 full, Row 4 cut in half) */
 .sc-custom-card:nth-child(2) .sc-card-links.sc-links-sets,
 .sc-custom-card:nth-child(3) .sc-card-links.sc-links-sets,
 .sc-card-links.sc-links-sets:has(> a:nth-child(4)) {
   grid-template-columns: repeat(3, 1fr);
   gap: 5px;
-  max-height: 158px;
+  max-height: 123px;
   overflow-y: auto;
   padding-right: 3px;
 }
