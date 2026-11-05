@@ -153,7 +153,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
   gap: 6px !important;
   width: 100% !important;
   max-width: 100% !important;
-  margin-top: 0 !important; /* Completely removed top margin gap */
+  margin-top: 0 !important;
 }
 .sc-feature-card {
   display: flex !important;
@@ -329,7 +329,21 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
 
 /* COMPACT CARD DESIGN */
 .sc-cards-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 11px; align-items: stretch; position: relative; z-index: 2; }
-.sc-custom-card { grid-column: span 2; position: relative; overflow: hidden; background-color: var(--card); border: 1.2px solid #E2E8F0; border-radius: 10px; box-shadow: var(--shadow-card); padding: 10px 12px; transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
+.sc-custom-card {
+  grid-column: span 2;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--card);
+  border: 1.2px solid #E2E8F0;
+  border-radius: 10px;
+  box-shadow: var(--shadow-card);
+  padding: 10px 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: 100%;
+}
 .sc-custom-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-soft); border-color: #CBD5E1; }
 
 .sc-unit-badge {
@@ -394,24 +408,81 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
   font-size: 0.92rem;
   font-weight: 700;
   letter-spacing: -0.015em;
-  margin: 0 0 8px 0;
-  padding-bottom: 7px;
+  margin: 0 0 12px 0;
+  padding-bottom: 8px;
   color: var(--deep-navy);
   text-align: center;
   line-height: 1.28;
-  min-height: 2.1em;
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
+  flex-grow: 0;
 }
-.sc-custom-card h3::before, .sc-custom-card h4::before { content: ""; position: absolute; bottom: 1px; left: 50%; transform: translateX(-50%); width: 50px; height: 1.5px; background: var(--border); border-radius: 99px; }
-.sc-custom-card h3::after, .sc-custom-card h4::after { content: ""; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 18px; height: 2px; background: var(--accent-yellow); border-radius: 99px; }
+.sc-custom-card h3::before, .sc-custom-card h4::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 1.5px;
+  background: var(--border);
+  border-radius: 99px;
+}
+.sc-custom-card h3::after, .sc-custom-card h4::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 2px;
+  background: var(--accent-yellow);
+  border-radius: 99px;
+}
 .sc-card-meta { font-family: var(--font-body); font-size: 0.70rem; font-weight: 500; color: var(--muted); text-align: center; margin: -4px 0 8px 0; line-height: 1.35; }
 
 /* RESOURCE BUTTONS */
 .sc-card-links { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: auto; width: 100%; }
-.sc-card-links.sc-links-sets { grid-template-columns: repeat(2, 1fr); gap: 5px; }
+
+/* Card 1 PYQ links (Default 2 columns, last odd item spans across) */
+.sc-card-links.sc-links-sets {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
+}
+.sc-card-links.sc-links-sets > a:last-child:nth-child(odd) {
+  grid-column: span 2;
+}
+
+/* Circled Set Cards (Sample Papers & Mock Question Papers): 3 in a row, exactly 4.5 rows visible */
+.sc-custom-card:nth-child(2) .sc-card-links.sc-links-sets,
+.sc-custom-card:nth-child(3) .sc-card-links.sc-links-sets,
+.sc-card-links.sc-links-sets:has(> a:nth-child(4)) {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  max-height: 158px;
+  overflow-y: auto;
+  padding-right: 3px;
+}
+.sc-custom-card:nth-child(2) .sc-card-links.sc-links-sets > a:last-child:nth-child(odd),
+.sc-custom-card:nth-child(3) .sc-card-links.sc-links-sets > a:last-child:nth-child(odd),
+.sc-card-links.sc-links-sets:has(> a:nth-child(4)) > a:last-child:nth-child(odd) {
+  grid-column: auto;
+}
+
+/* Custom Slim Scrollbar for Sets */
+.sc-card-links.sc-links-sets::-webkit-scrollbar {
+  width: 4px;
+}
+.sc-card-links.sc-links-sets::-webkit-scrollbar-track {
+  background: #F1F5F9;
+  border-radius: 99px;
+}
+.sc-card-links.sc-links-sets::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 99px;
+}
+.sc-card-links.sc-links-sets::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
 
 .sc-card-links a {
   position: relative;
