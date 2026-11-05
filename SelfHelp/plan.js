@@ -1064,9 +1064,8 @@ function dispatchWhatsAppMessage(item) {
 *=•=•=•=•=•=•=•=•==•=•=•=•=•=•=•=•=*
 🏛️ *${getDayName(state.activeDateStr)}’s* ${item.task}
 📍 *Venue:* ${item.venue || 'Sant Nagar / Online'}
-*=•=•=•=•=•=•=•=•==•=•=•=•=•=•=•=•=*
+*-----------------------------------*
 ⏰ *Time:* *${startTime}* to *${endTime}*
-*=•=•=•=•=•=•=•=•==•=•=•=•=•=•=•=•=*
 📚 *Topic:* ${item.topic || 'Class Session'}${absentSection}
 *=•=•=•=•=•=•=•=•==•=•=•=•=•=•=•=•=*
 🌐 *Visit:* www.SinghClasses.in`;
