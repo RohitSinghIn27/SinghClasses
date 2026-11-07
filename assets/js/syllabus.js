@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
     return svg;
   }
 
-  // 6. Section-Wise Resource Availability Calculation & Legend Generator
+  // 6. Section-Wise Resource Availability & Compact Legend with [ A ] Badges
   function initResourceAvailability() {
     const allLinks = document.querySelectorAll('.sc-custom-card .sc-card-links a');
     
@@ -138,8 +138,9 @@ document.addEventListener('DOMContentLoaded', function() {
       const titleEl = section.querySelector('.sc-section-title');
       let rawTitle = titleEl ? titleEl.textContent.trim() : `Section ${idx + 1}`;
       
-      let match = rawTitle.match(/Section\s+[A-Z0-9]+/i);
-      let sectionLabel = match ? match[0] : (rawTitle.split(/[:|•]/)[0].trim() || `Section ${idx + 1}`);
+      let match = rawTitle.match(/Section\s+([A-Z0-9]+)/i);
+      let secCode = section.getAttribute('data-section-code') || (match ? match[1] : String.fromCharCode(65 + idx));
+      let secName = section.getAttribute('data-section-name') || rawTitle.split(/[:•|]/)[1]?.trim() || `Section ${secCode}`;
 
       const secLinks = section.querySelectorAll('.sc-custom-card .sc-card-links a');
       let secReady = 0;
@@ -159,9 +160,12 @@ document.addEventListener('DOMContentLoaded', function() {
       totalLockedLinks += secLocked;
 
       pieData.push({
-        label: sectionLabel,
+        code: secCode,
+        name: secName,
+        label: secName,
         color: SECTION_PALETTE[idx % SECTION_PALETTE.length],
-        count: secReady
+        count: secReady,
+        targetId: section.id || ''
       });
     });
 
@@ -172,10 +176,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     pieData.push({
+      code: '',
+      name: '',
       label: 'Coming Soon',
       color: '#98A2B3',
       count: totalLockedLinks,
-      perc: Math.round((totalLockedLinks / totalTrackedLinks) * 100) || 0
+      perc: Math.round((totalLockedLinks / totalTrackedLinks) * 100) || 0,
+      targetId: ''
     });
 
     const overallPerc = Math.round((totalReadyLinks / totalTrackedLinks) * 100) || 0;
@@ -192,12 +199,32 @@ document.addEventListener('DOMContentLoaded', function() {
       if (overallBarPerc) overallBarPerc.textContent = `${overallPerc}%`;
       pieContainer.innerHTML = generateDonutSVG(pieData, totalTrackedLinks, overallPerc);
 
+      // Render compact [ A ] styled legend navigation items
       legendContainer.innerHTML = pieData.map(d => {
-        const stateClass = d.label === 'Coming Soon' ? 'sc-legend-muted' : 'sc-legend-active';
+        const isComingSoon = !d.code;
+        const stateClass = isComingSoon ? 'sc-legend-muted' : 'sc-legend-active';
+
+        const indicatorHTML = d.code
+          ? `<span class="sc-legend-badge" style="background:${d.color};">${d.code}</span>`
+          : `<span class="sc-legend-dot" aria-hidden="true"></span>`;
+
+        if (d.targetId) {
+          return `
+            <a href="#${d.targetId}" class="sc-legend-item sc-legend-link sc-hero-tab" aria-label="Jump to Section ${d.code}: ${d.name}">
+              <div class="sc-legend-left">
+                ${indicatorHTML}
+                <span class="sc-legend-label ${stateClass}">${d.name}</span>
+              </div>
+              <span class="sc-legend-count ${stateClass}">${d.count}</span>
+              <span class="sc-legend-perc ${stateClass}">(${d.perc}%)</span>
+            </a>
+          `;
+        }
+
         return `
           <div class="sc-legend-item">
             <div class="sc-legend-left">
-              <span class="sc-legend-dot" style="background:${d.color};"></span>
+              ${indicatorHTML}
               <span class="sc-legend-label ${stateClass}">${d.label}</span>
             </div>
             <span class="sc-legend-count ${stateClass}">${d.count}</span>
@@ -205,6 +232,8 @@ document.addEventListener('DOMContentLoaded', function() {
           </div>
         `;
       }).join('');
+
+      bindSectionNavigation();
     }
 
     document.querySelectorAll('.sc-column').forEach(col => {
@@ -222,9 +251,146 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+  // 7. Smooth Scroll Handler for Section Links
+  function bindSectionNavigation() {
+    const navTabs = document.querySelectorAll('.sc-legend-link, .sc-hero-tab');
+    navTabs.forEach(tab => {
+      tab.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href?.startsWith('#') && href.length > 1) {
+          e.preventDefault();
+          navTabs.forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          const target = document.getElementById(href.substring(1));
+          if (target) {
+            window.scrollTo({
+              top: target.getBoundingClientRect().top + window.scrollY - 20,
+              behavior: 'smooth'
+            });
+          }
+        }
+      });
+    });
+  }
+
   initResourceAvailability();
 
-  // 7. Video Modal Intercept
+  // 8. Countdown Notification Lifecycle (1-Min Auto-Shrink, Hover Pause, Mini-Badge Docking)
+  function initCountdownNotification() {
+    const banner = document.getElementById('scExamCountdownBar');
+    const miniBadge = document.getElementById('scCdMiniBadge');
+    const minBtn = document.getElementById('scCdMinBtn');
+    if (!banner) return;
+
+    let autoCollapseTimeout;
+    const COLLAPSE_DELAY = 60000; // 1 minute
+
+    function collapseToMiniBadge() {
+      banner.classList.add('is-collapsed');
+      clearTimeout(autoCollapseTimeout);
+      if (miniBadge) {
+        miniBadge.style.display = 'inline-flex';
+      }
+    }
+
+    function expandFromMiniBadge() {
+      banner.classList.remove('is-collapsed');
+      if (miniBadge) {
+        miniBadge.style.display = 'none';
+      }
+      resetAutoCollapse();
+    }
+
+    function resetAutoCollapse() {
+      clearTimeout(autoCollapseTimeout);
+      autoCollapseTimeout = setTimeout(collapseToMiniBadge, COLLAPSE_DELAY);
+    }
+
+    // Auto-collapse after 1 minute
+    resetAutoCollapse();
+
+    // Pause auto-collapse timer while student hovers over banner
+    banner.addEventListener('mouseenter', () => clearTimeout(autoCollapseTimeout));
+    banner.addEventListener('mouseleave', () => resetAutoCollapse());
+
+    // Manual minimize button click
+    if (minBtn) {
+      minBtn.addEventListener('click', collapseToMiniBadge);
+    }
+
+    // Floating mini badge click restores full timer
+    if (miniBadge) {
+      miniBadge.addEventListener('click', expandFromMiniBadge);
+    }
+
+    // Target Date: 31 Mar 2027 10:30 AM IST
+    const TARGET_DATE = new Date('2027-03-31T10:30:00+05:30').getTime();
+
+    function updateClock() {
+      const now = new Date();
+      const diffMs = TARGET_DATE - now.getTime();
+
+      const monthsEl = document.getElementById('sc-cd-months');
+      const daysEl = document.getElementById('sc-cd-days');
+      const hoursEl = document.getElementById('sc-cd-hours');
+      const minEl = document.getElementById('sc-cd-minutes');
+      const secEl = document.getElementById('sc-cd-seconds');
+      const badgeDaysEl = document.getElementById('sc-cd-badge-days');
+      const miniDaysEl = document.getElementById('sc-cd-mini-days');
+
+      if (diffMs <= 0) {
+        if (monthsEl) monthsEl.textContent = '00';
+        if (daysEl) daysEl.textContent = '00';
+        if (hoursEl) hoursEl.textContent = '00';
+        if (minEl) minEl.textContent = '00';
+        if (secEl) secEl.textContent = '00';
+        if (badgeDaysEl) badgeDaysEl.textContent = '0';
+        if (miniDaysEl) miniDaysEl.textContent = '0';
+        return;
+      }
+
+      // Total continuous days calculated from real-time clock
+      const totalDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+      if (badgeDaysEl) badgeDaysEl.textContent = totalDays;
+      if (miniDaysEl) miniDaysEl.textContent = totalDays;
+
+      // Calendar month & day breakdown for the modular cards
+      let tempDate = new Date(now.getTime());
+      let months = 0;
+
+      while (true) {
+        const nextMonthDate = new Date(tempDate);
+        nextMonthDate.setMonth(nextMonthDate.getMonth() + 1);
+        if (nextMonthDate.getTime() <= TARGET_DATE) {
+          months++;
+          tempDate = nextMonthDate;
+        } else {
+          break;
+        }
+      }
+
+      const remDiff = TARGET_DATE - tempDate.getTime();
+      const days = Math.floor(remDiff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((remDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((remDiff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((remDiff % (1000 * 60)) / 1000);
+
+      const pad = (n) => String(n).padStart(2, '0');
+
+      if (monthsEl) monthsEl.textContent = pad(months);
+      if (daysEl) daysEl.textContent = pad(days);
+      if (hoursEl) hoursEl.textContent = pad(hours);
+      if (minEl) minEl.textContent = pad(minutes);
+      if (secEl) secEl.textContent = pad(seconds);
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+  }
+
+  initCountdownNotification();
+
+  // 9. Video Modal Intercept
   const videoModal = document.getElementById('scVideoModal');
   const btnStay = document.getElementById('scModalStay');
   const btnWatch = document.getElementById('scModalWatch');
@@ -256,24 +422,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // 8. Hero Tabs Smooth Scroll
-  const navTabs = document.querySelectorAll('.sc-hero-tab');
-  navTabs.forEach(tab => {
-    tab.addEventListener('click', function(e) {
-      e.preventDefault();
-      const href = this.getAttribute('href');
-      if (href?.startsWith('#') && href.length > 1) {
-        navTabs.forEach(t => t.classList.remove('active'));
-        this.classList.add('active');
-        const target = document.getElementById(href.substring(1));
-        if (target) {
-          window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 20, behavior: 'smooth' });
-        }
-      }
-    });
-  });
-
-  // 9. Mobile Navigation Hamburger Menu Toggle
+  // 10. Mobile Navigation Hamburger Menu Toggle
   const hamburgerBtn = document.getElementById('hamburgerToggle');
   const navMenu = document.getElementById('nav-menu');
   if (hamburgerBtn && navMenu) {
@@ -284,7 +433,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // 10. Reusable CBT Button Component
+  // 11. Reusable CBT Button Component
   function buildCBTButtonHTML(href = '#', highlight = 'Attempt the CBT', text = 'of CBSE Objective Questions') {
     const targetAttr = href && href !== '#' ? ' target="_blank" rel="noopener noreferrer"' : '';
     return `
