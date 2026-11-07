@@ -64,14 +64,280 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
 .container-inner, .main-content.container-inner { width: 100% !important; max-width: 100% !important; display: flex; flex-direction: column; align-items: center; margin: 0 auto !important; padding: 0 16px !important; }
 .inline-svg-icon { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px; vertical-align: middle; margin-right: 6px; }
 .icon-orange { color: var(--royal-blue); }
-.announcement-bar { width: 100%; max-width: 1250px; background: var(--card); border: 1px solid var(--border); border-radius: 999px; padding: 7px 20px; margin: 10px auto 14px auto; display: flex; justify-content: center; align-items: center; gap: 12px; font-size: 0.80rem; font-weight: 600; color: var(--deep-navy); box-shadow: var(--shadow-card); }
+.announcement-bar { width: 100%; max-width: 1250px; background: var(--card); border: 1px solid var(--border); border-radius: 999px; padding: 7px 20px; margin: 10px auto 10px auto; display: flex; justify-content: center; align-items: center; gap: 12px; font-size: 0.80rem; font-weight: 600; color: var(--deep-navy); box-shadow: var(--shadow-card); }
 .announcement-cta { color: var(--royal-blue); font-weight: 700; text-decoration: none; }
 .announcement-cta:hover { color: var(--deep-navy); }
 .announcement-bar .divider { color: var(--border-strong); font-weight: 400; }
+
+/* ==========================================================================
+   CBSE CLASS XII CS EXAM COUNTDOWN DASHBOARD BAR & SHRINK COLLAPSE
+   ========================================================================== */
+.sc-exam-countdown-bar {
+  width: 100%;
+  max-width: 1250px;
+  max-height: 80px;
+  margin: 0 auto 14px auto;
+  background: linear-gradient(90deg, #051433 0%, #071942 50%, #051433 100%);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: 12px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  box-shadow: 0 6px 20px rgba(6, 27, 79, 0.18);
+  position: relative;
+  z-index: 10;
+  overflow: hidden;
+  transition: opacity 0.35s ease, max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), margin 0.4s ease, padding 0.4s ease, transform 0.35s ease;
+}
+
+/* Collapsed State (Shrunk into Floating Mini-Badge) */
+.sc-exam-countdown-bar.is-collapsed {
+  opacity: 0 !important;
+  max-height: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  border-top-width: 0 !important;
+  border-bottom-width: 0 !important;
+  transform: translateY(-8px) scale(0.98);
+  pointer-events: none !important;
+}
+
+/* Left: Icon, Title & Target Date Badge */
+.sc-cd-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.sc-cd-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: rgba(14, 165, 233, 0.08);
+  border: 1.5px solid rgba(56, 189, 248, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #38BDF8;
+  flex-shrink: 0;
+}
+.sc-cd-icon svg { width: 18px; height: 18px; }
+.sc-cd-title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+.sc-cd-title {
+  font-family: var(--font-nav);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  letter-spacing: -0.01em;
+}
+.sc-cd-highlight {
+  font-style: italic;
+  font-weight: 800;
+  color: #F5C400;
+}
+.sc-cd-target-date {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.08);
+  color: #F0F9FF;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 6px;
+  padding: 3px 8px;
+  display: inline-flex;
+  align-items: center;
+  letter-spacing: 0.25px;
+}
+
+/* Center: Modular Countdown Cards */
+.sc-cd-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1 1 auto;
+}
+.sc-cd-cards {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.sc-cd-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  height: 42px;
+  padding: 3px 6px 4px 6px;
+  background: linear-gradient(180deg, rgba(14, 38, 85, 0.85) 0%, rgba(6, 21, 56, 0.95) 100%);
+  border: 1.2px solid rgba(56, 189, 248, 0.32);
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  transition: transform 0.18s ease, border-color 0.18s ease;
+}
+.sc-cd-card:hover {
+  transform: translateY(-1px);
+  border-color: rgba(56, 189, 248, 0.55);
+}
+.sc-cd-card-live {
+  border-color: rgba(56, 189, 248, 0.5);
+  box-shadow: 0 2px 8px rgba(14, 165, 233, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  animation: scCardPulse 2s infinite ease-in-out;
+}
+@keyframes scCardPulse {
+  0%, 100% { border-color: rgba(56, 189, 248, 0.4); }
+  50% { border-color: rgba(56, 189, 248, 0.85); box-shadow: 0 2px 10px rgba(56, 189, 248, 0.35); }
+}
+.sc-cd-card-num {
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+.sc-cd-card-lbl {
+  font-family: var(--font-body);
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: #38BDF8;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  margin-top: 1px;
+}
+
+/* Right: Ribbon & Minimize Button */
+.sc-cd-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.sc-cd-ribbon {
+  background: #F5C400;
+  padding: 6px 18px;
+  border-radius: 6px;
+  height: 42px;
+  transform: skewX(-12deg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(245, 196, 0, 0.25);
+}
+.sc-cd-ribbon-text {
+  transform: skewX(12deg);
+  font-family: var(--font-nav);
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #051433;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+.sc-cd-ribbon-text strong {
+  font-size: 0.96rem;
+  margin-right: 3px;
+}
+.sc-cd-ribbon-sep {
+  margin: 0 6px;
+  opacity: 0.5;
+  font-weight: 400;
+}
+.sc-cd-min-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #94A3B8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+.sc-cd-min-btn svg { width: 14px; height: 14px; }
+.sc-cd-min-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+  transform: scale(1.05);
+}
+
+/* ==========================================================================
+   FLOATING COUNTDOWN MINI-BADGE (DOCKS WHEN HEADER SHRINK-COLLAPSES)
+   ========================================================================== */
+.sc-cd-mini-badge {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  background: var(--deep-navy);
+  border: 1.5px solid var(--accent-yellow);
+  border-radius: 999px;
+  padding: 7px 16px 7px 12px;
+  color: #FFFFFF;
+  box-shadow: 0 8px 24px rgba(6, 27, 79, 0.32);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 700;
+  animation: scMiniBadgePop 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+.sc-cd-mini-badge:hover {
+  transform: translateY(-2px);
+  background: var(--deep-navy-hover);
+  box-shadow: 0 10px 28px rgba(6, 27, 79, 0.42);
+}
+@keyframes scMiniBadgePop {
+  from { opacity: 0; transform: translateY(16px) scale(0.92); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.sc-cd-mini-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(56, 189, 248, 0.16);
+  color: #38BDF8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.sc-cd-mini-icon svg { width: 12px; height: 12px; }
+.sc-cd-mini-text strong {
+  color: var(--accent-yellow);
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  margin-right: 2px;
+}
+.sc-cd-mini-arrow {
+  font-size: 0.62rem;
+  color: #94A3B8;
+  margin-left: 2px;
+  transition: transform 0.2s ease;
+}
+.sc-cd-mini-badge:hover .sc-cd-mini-arrow {
+  color: #FFFFFF;
+  transform: translateY(-1.5px);
+}
+
 .sc-widget-container { width: 100% !important; max-width: 1250px !important; margin: 0 auto; padding: 18px; position: relative; background: var(--card); border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow-card); }
 
 /* ==========================================================================
-   3-COLUMN HERO & RESOURCE AVAILABILITY PANEL (COMPACT HEIGHT)
+   2-COLUMN HERO & INTEGRATED RESOURCE AVAILABILITY CARD
    ========================================================================== */
 .sc-hero-wrapper {
   position: relative !important;
@@ -83,8 +349,8 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
   margin-bottom: 20px !important;
   box-shadow: 0 4px 18px rgba(6, 27, 79, 0.04) !important;
   display: grid !important;
-  grid-template-columns: minmax(0, 1.38fr) minmax(0, 0.96fr) minmax(0, 1.02fr) !important;
-  gap: 14px !important;
+  grid-template-columns: minmax(0, 1fr) 360px !important;
+  gap: 16px !important;
   align-items: stretch !important;
   width: 100% !important;
 }
@@ -95,7 +361,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
 .sc-hero-decor-corner::after { content: ""; position: absolute; bottom: 18px; left: 18px; width: 50px; height: 36px; background-image: radial-gradient(#93C5FD 1.5px, transparent 1.5px); background-size: 12px 12px; opacity: 0.6; }
 .sc-hero-decor-wave { position: absolute; bottom: 0; left: 20%; width: 220px; height: 18px; background: radial-gradient(ellipse at center bottom, #F1F5F9 0%, transparent 70%); pointer-events: none; z-index: 1; }
 
-/* Column 1: Left Hero Content */
+/* Left Hero Content */
 .sc-hero-left {
   position: relative !important;
   z-index: 2 !important;
@@ -138,25 +404,25 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
 .sc-title-gradient { display: block !important; color: #0066EE !important; background: none !important; -webkit-text-fill-color: #0066EE !important; }
 .sc-hero-title-underline { width: 44px; height: 3px; background: #F59E0B; border-radius: 99px; margin-bottom: 8px; flex-shrink: 0; }
 
-.sc-hero-checks { display: flex !important; align-items: center !important; flex-wrap: nowrap !important; gap: 8px !important; margin-bottom: 6px !important; width: 100% !important; }
+.sc-hero-checks { display: flex !important; align-items: center !important; flex-wrap: nowrap !important; gap: 8px !important; margin-bottom: 10px !important; width: 100% !important; }
 .sc-check-item { display: inline-flex !important; align-items: center !important; gap: 4px !important; font-family: var(--font-body) !important; font-size: 0.70rem !important; font-weight: 600 !important; color: #1E293B !important; white-space: nowrap !important; }
 .sc-check-item svg { width: 14px !important; height: 14px !important; color: #061B4F !important; flex-shrink: 0 !important; }
 .sc-check-divider { width: 1px !important; height: 10px !important; background: #CBD5E1 !important; flex-shrink: 0 !important; }
 
-/* 3 Bottom Feature Cards */
+/* Expanded Feature Cards: Stretches smoothly across the left area */
 .sc-hero-feature-cards {
   display: grid !important;
   grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  gap: 6px !important;
+  gap: 10px !important;
   width: 100% !important;
   max-width: 100% !important;
-  margin-top: 0 !important;
+  margin-top: 2px !important;
 }
 .sc-feature-card {
   display: flex !important;
   align-items: center !important;
-  gap: 6px !important;
-  padding: 5px 6px !important;
+  gap: 8px !important;
+  padding: 7px 10px !important;
   border-radius: 8px !important;
   border: 1px solid transparent !important;
   transition: var(--transition-smooth) !important;
@@ -168,15 +434,15 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
 }
 .sc-feature-card:hover { transform: translateY(-1px) !important; box-shadow: 0 3px 8px rgba(6, 27, 79, 0.05) !important; }
 .sc-fc-icon {
-  width: 24px !important;
-  height: 24px !important;
+  width: 28px !important;
+  height: 28px !important;
   border-radius: 6px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   flex-shrink: 0 !important;
 }
-.sc-fc-icon svg { width: 15px !important; height: 15px !important; }
+.sc-fc-icon svg { width: 16px !important; height: 16px !important; }
 .sc-fc-text {
   display: flex !important;
   flex-direction: column !important;
@@ -186,9 +452,9 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
 }
 .sc-fc-text strong {
   font-family: var(--font-body) !important;
-  font-size: 0.65rem !important;
+  font-size: 0.68rem !important;
   font-weight: 700 !important;
-  line-height: 1.15 !important;
+  line-height: 1.18 !important;
   white-space: nowrap !important;
   display: block !important;
 }
@@ -205,73 +471,14 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
 .sc-feature-card.card-amber .sc-fc-icon { color: #B45309 !important; }
 .sc-feature-card.card-amber .sc-fc-text strong { color: #92400E !important; }
 
-/* Column 2: Middle Section Jump Directory Card */
-.sc-hero-sections-card {
-  position: relative !important;
-  z-index: 2 !important;
-  background: #FFFFFF !important;
-  border: 1px solid #E2E8F0 !important;
-  border-radius: 12px !important;
-  padding: 4px 10px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: space-between !important;
-  box-shadow: 0 2px 8px rgba(6, 27, 79, 0.03) !important;
-  min-width: 0 !important;
-  width: 100% !important;
-}
-.sc-hero-sections-card .sc-sec-nav-item,
-.sc-hero-sections-card a.sc-hero-tab {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-  gap: 9px !important;
-  padding: 5px 2px !important;
-  border-bottom: 1px solid #F1F5F9 !important;
-  border-top: none !important;
-  border-left: none !important;
-  border-right: none !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  text-align: left !important;
-  width: 100% !important;
-  min-height: 0 !important;
-  transition: transform 0.18s ease !important;
-}
-.sc-hero-sections-card .sc-sec-nav-item:last-child,
-.sc-hero-sections-card a.sc-hero-tab:last-child { border-bottom: none !important; }
-.sc-hero-sections-card .sc-sec-nav-item:hover { transform: translateX(3px) !important; background: transparent !important; }
-.sc-hero-sections-card .sc-sec-nav-item.active { background: transparent !important; box-shadow: none !important; }
-.sc-hero-sections-card .sc-sec-nav-item.active .sc-sec-nav-title { color: #0066EE !important; }
-
-.sc-sec-nav-icon {
-  width: 30px !important;
-  height: 30px !important;
-  border-radius: 50% !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  flex-shrink: 0 !important;
-}
-.sc-sec-nav-icon svg { width: 15px !important; height: 15px !important; }
-.icon-sec-a { background: #EFF6FF !important; color: #0066EE !important; }
-.icon-sec-b { background: #FEF9C3 !important; color: #0066EE !important; }
-.icon-sec-c { background: #DCFCE7 !important; color: #0066EE !important; }
-.icon-sec-d { background: #EDE9FE !important; color: #0066EE !important; }
-
-.sc-sec-nav-content { display: flex !important; flex-direction: column !important; justify-content: center !important; min-width: 0 !important; flex: 1 1 auto !important; }
-.sc-sec-nav-tag { font-family: var(--font-body) !important; font-size: 0.58rem !important; font-weight: 800 !important; color: #0066EE !important; text-transform: uppercase !important; letter-spacing: 0.35px !important; line-height: 1.1 !important; }
-.sc-sec-nav-title { font-family: var(--font-nav) !important; font-size: 0.82rem !important; font-weight: 700 !important; color: #061B4F !important; line-height: 1.18 !important; margin: 1px 0 0 0 !important; }
-
-/* Column 3: Right Resource Availability Card */
+/* Right Column: Resource Availability Card */
 .sc-multi-progress-card {
   position: relative !important;
   z-index: 2 !important;
-  flex: initial !important;
   width: 100% !important;
-  max-width: 100% !important;
-  min-width: 0 !important;
+  max-width: 360px !important;
+  min-width: 360px !important;
+  margin-left: auto !important;
   background: #FFFFFF !important;
   border: 1px solid #E2E8F0 !important;
   border-radius: 12px !important;
@@ -295,15 +502,109 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
 
 .pie-layout { display: flex !important; flex-direction: row !important; gap: 8px !important; align-items: center !important; justify-content: space-between !important; width: 100% !important; margin: auto 0 !important; }
 .pie-container { width: 84px !important; height: 84px !important; flex-shrink: 0 !important; position: relative !important; }
-.pie-legend { display: flex !important; flex-direction: column !important; gap: 0 !important; flex: 1 1 auto !important; min-width: 0 !important; border-left: 1px solid #F1F5F9 !important; padding-left: 8px !important; }
-.sc-legend-item { display: grid !important; grid-template-columns: minmax(0, 1fr) 20px 36px !important; align-items: center !important; column-gap: 3px !important; font-size: 0.67rem !important; padding: 2px 0 !important; border-radius: 0 !important; border: none !important; border-bottom: 1px solid #F1F5F9 !important; background: transparent !important; width: 100% !important; }
+.pie-legend { display: flex !important; flex-direction: column !important; gap: 2px !important; flex: 1 1 auto !important; min-width: 0 !important; border-left: 1px solid #F1F5F9 !important; padding-left: 8px !important; }
+
+/* Tightened Legend Alignment with Clean Left Vertical Axis */
+.sc-legend-item {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 22px 38px !important;
+  align-items: center !important;
+  column-gap: 5px !important;
+  font-size: 0.67rem !important;
+  padding: 2.5px 4px !important;
+  border-radius: 5px !important;
+  border: none !important;
+  border-bottom: 1px solid #F8FAFC !important;
+  background: transparent !important;
+  width: 100% !important;
+  color: inherit !important;
+  text-decoration: none !important;
+  transition: var(--transition-smooth) !important;
+}
 .sc-legend-item:last-child { border-bottom: none !important; }
-.sc-legend-left { display: flex !important; align-items: center !important; gap: 5px !important; min-width: 0 !important; overflow: hidden !important; }
-.sc-legend-dot { width: 6px !important; height: 6px !important; border-radius: 50% !important; display: inline-block !important; flex-shrink: 0 !important; }
-.sc-legend-label { font-weight: 700 !important; font-family: var(--font-body) !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
-.sc-legend-count, .sc-legend-val, .sc-legend-perc { font-weight: 700 !important; font-family: var(--font-body) !important; text-align: right !important; white-space: nowrap !important; }
+
+/* Uniform Dimension Badge for Sections & Coming Soon */
+.sc-legend-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-family: var(--font-mono) !important;
+  font-size: 0.58rem !important;
+  font-weight: 800 !important;
+  color: #FFFFFF !important;
+  border-radius: 4px !important;
+  min-width: 18px !important;
+  height: 15px !important;
+  line-height: 1 !important;
+  flex-shrink: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Aligned Neutral Marker for Coming Soon */
+.sc-legend-dot {
+  min-width: 18px !important;
+  height: 15px !important;
+  border-radius: 4px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  background: #E2E8F0 !important;
+  box-sizing: border-box !important;
+}
+.sc-legend-dot::after {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #94A3B8;
+  display: block;
+}
+
+.sc-legend-left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+.sc-legend-label {
+  font-weight: 600 !important;
+  font-family: var(--font-body) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  color: #1E293B !important;
+}
+.sc-legend-count {
+  font-weight: 700 !important;
+  font-family: var(--font-body) !important;
+  text-align: right !important;
+  min-width: 20px !important;
+  white-space: nowrap !important;
+}
+.sc-legend-perc {
+  font-weight: 700 !important;
+  font-family: var(--font-body) !important;
+  text-align: right !important;
+  min-width: 36px !important;
+  white-space: nowrap !important;
+}
 .sc-legend-active { color: #061B4F !important; }
 .sc-legend-muted { color: #64748B !important; font-weight: 500 !important; }
+
+/* Interactive Section Navigation Link States */
+a.sc-legend-link { cursor: pointer !important; }
+a.sc-legend-link:hover {
+  background: #F0F7FF !important;
+  transform: translateX(2px) !important;
+}
+a.sc-legend-link:hover .sc-legend-label { color: #0066EE !important; }
+a.sc-legend-link.active { background: #EEF5FF !important; }
+a.sc-legend-link.active .sc-legend-label {
+  color: #0066EE !important;
+  font-weight: 800 !important;
+}
 
 .sc-pie-slice { stroke: #FFFFFF; stroke-width: 2px; }
 .sc-donut-center { fill: #FFFFFF; }
@@ -440,7 +741,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
 /* RESOURCE BUTTONS */
 .sc-card-links { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-top: auto; width: 100%; }
 
-/* Default Sets Container */
 .sc-card-links.sc-links-sets {
   grid-template-columns: repeat(2, 1fr);
   gap: 5px;
@@ -449,7 +749,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
   grid-column: span 2;
 }
 
-/* 3 IN A ROW: Exactly 3.5 rows visible (Rows 1–3 full, Row 4 cut in half) */
 .sc-custom-card:nth-child(2) .sc-card-links.sc-links-sets,
 .sc-custom-card:nth-child(3) .sc-card-links.sc-links-sets,
 .sc-card-links.sc-links-sets:has(> a:nth-child(4)) {
@@ -465,7 +764,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
   grid-column: auto;
 }
 
-/* Custom Slim Scrollbar for Sets */
 .sc-card-links.sc-links-sets::-webkit-scrollbar {
   width: 4px;
 }
@@ -603,17 +901,42 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
 .sc-canvas-bg { display: none; }
 
 /* RESPONSIVE BREAKPOINTS */
-@media (max-width: 1140px) {
-  .sc-hero-wrapper { grid-template-columns: 1fr 1fr !important; }
-  .sc-hero-left { grid-column: 1 / -1 !important; }
-}
-
 @media (max-width: 992px) {
-  .sc-hero-wrapper { grid-template-columns: 1fr !important; gap: 14px !important; padding: 14px !important; }
+  .sc-hero-wrapper {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+    padding: 14px !important;
+  }
+  .sc-multi-progress-card {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+  }
+  .sc-hero-feature-cards {
+    max-width: 100% !important;
+  }
   .sc-cards-grid { grid-template-columns: repeat(2, 1fr); }
   .sc-custom-card, .sc-cards-grid > .sc-custom-card:last-child:nth-child(3n+1), .sc-cards-grid > .sc-custom-card:nth-last-child(2):nth-child(3n+1), .sc-cards-grid > .sc-custom-card:last-child:nth-child(3n+2) { grid-column: span 1; }
   .sc-cards-grid > .sc-custom-card:last-child:nth-child(2n+1) { grid-column: span 2; }
   .sc-card-links, .sc-cards-grid > .sc-custom-card:last-child:nth-child(3n+1) .sc-card-links { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 960px) {
+  .sc-exam-countdown-bar {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    padding: 10px 14px;
+    max-height: 160px;
+  }
+  .sc-cd-center {
+    order: 3;
+    width: 100%;
+  }
+  .sc-cd-right {
+    justify-content: center;
+    width: 100%;
+  }
 }
 
 @media (max-width: 850px) {
@@ -650,6 +973,41 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--royal-blue); ou
   .sc-sbg-left { flex-direction: column; text-align: center; }
   .sc-cbt-btn { padding: 8px 14px; gap: 7px; font-size: 0.75rem; width: 100%; justify-content: center; }
   .sc-cbt-label { white-space: normal; text-align: center; }
+  .sc-cd-mini-badge {
+    bottom: 16px;
+    right: 16px;
+    padding: 6px 14px 6px 10px;
+    font-size: 0.74rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .sc-cd-left {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+    width: 100%;
+  }
+  .sc-cd-title-group {
+    flex-direction: column;
+    gap: 4px;
+  }
+  .sc-cd-card {
+    min-width: 42px;
+    height: 38px;
+    padding: 2px 4px;
+  }
+  .sc-cd-ribbon {
+    height: 38px;
+    padding: 4px 14px;
+  }
+  .sc-cd-card-num {
+    font-size: 0.98rem;
+  }
+  .sc-cd-card-lbl {
+    font-size: 0.50rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
