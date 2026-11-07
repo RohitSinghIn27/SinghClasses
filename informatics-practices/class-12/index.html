@@ -106,33 +106,91 @@
       <span class="announcement-segment hide-mobile">
         <span class="inline-svg-icon icon-orange" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+        </span>Online &amp; Offline Classes Available
+      </span>
+      <span class="divider hide-mobile" aria-hidden="true">|</span>
+      <span class="announcement-segment hide-mobile">
+        <span class="inline-svg-icon icon-orange" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
             <line x1="2" y1="20" x2="22" y2="20"></line>
             <line x1="12" y1="17" x2="12" y2="20"></line>
           </svg>
         </span>Learn CS, IP &amp; AI with Rohit Singh
       </span>
-      <span class="divider hide-mobile" aria-hidden="true">|</span>
-      <span class="announcement-segment hide-mobile">
-        <span class="inline-svg-icon icon-orange" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-            <circle cx="12" cy="10" r="3"></circle>
+    </div>
+
+    <!-- CBSE Class XII IP Exam Countdown Notification Bar -->
+    <div class="sc-exam-countdown-bar" id="scExamCountdownBar" role="region" aria-label="CBSE Class 12 IP Exam Countdown">
+      <!-- Left: Icon, Subject Title & Target Date Badge -->
+      <div class="sc-cd-left">
+        <div class="sc-cd-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
           </svg>
-        </span>Online &amp; Offline Classes Available
-      </span>
+        </div>
+        <div class="sc-cd-title-group">
+          <span class="sc-cd-title">CBSE Class XII – <span class="sc-cd-highlight">IP Exam</span></span>
+          <span class="sc-cd-target-date">31 Mar 2027</span>
+        </div>
+      </div>
+
+      <!-- Center: Modular Countdown Cards -->
+      <div class="sc-cd-center">
+        <div class="sc-cd-cards" role="timer" aria-label="Exam Countdown Timer">
+          <div class="sc-cd-card">
+            <span class="sc-cd-card-num" id="sc-cd-months">04</span>
+            <span class="sc-cd-card-lbl">MON</span>
+          </div>
+          <div class="sc-cd-card">
+            <span class="sc-cd-card-num" id="sc-cd-days">23</span>
+            <span class="sc-cd-card-lbl">DAYS</span>
+          </div>
+          <div class="sc-cd-card">
+            <span class="sc-cd-card-num" id="sc-cd-hours">20</span>
+            <span class="sc-cd-card-lbl">HRS</span>
+          </div>
+          <div class="sc-cd-card">
+            <span class="sc-cd-card-num" id="sc-cd-minutes">06</span>
+            <span class="sc-cd-card-lbl">MIN</span>
+          </div>
+          <div class="sc-cd-card sc-cd-card-live">
+            <span class="sc-cd-card-num" id="sc-cd-seconds">17</span>
+            <span class="sc-cd-card-lbl">SEC</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Days Left + Board Exam Ribbon & Minimize Button -->
+      <div class="sc-cd-right">
+        <div class="sc-cd-ribbon">
+          <span class="sc-cd-ribbon-text"><strong id="sc-cd-badge-days">143</strong> DAYS LEFT <span class="sc-cd-ribbon-sep" aria-hidden="true">•</span> BOARD EXAM 2026–27</span>
+        </div>
+        <button type="button" class="sc-cd-min-btn" id="scCdMinBtn" title="Minimize countdown into floating badge" aria-label="Minimize countdown">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
     </div>
 
     <div class="sc-widget-container">
 
-      <!-- Hero Section (Redesigned 3-Column UI) -->
+      <!-- Hero Section (Balanced 2-Column UI) -->
       <section class="sc-hero-wrapper" aria-labelledby="page-main-heading">
         <div class="sc-hero-decor-dots-top" aria-hidden="true"></div>
         <div class="sc-hero-decor-circle" aria-hidden="true"></div>
         <div class="sc-hero-decor-corner" aria-hidden="true"></div>
         <div class="sc-hero-decor-wave" aria-hidden="true"></div>
 
-        <!-- Column 1: Hero Title, Trust Checks & Feature Cards -->
+        <!-- Left Column: Hero Title, Trust Checks & Expanded Feature Cards -->
         <div class="sc-hero-left">
           <div class="sc-hero-tag">
             <span class="sc-tag-dot" aria-hidden="true"></span> CBSE CODE 065 • SESSION 2026–27
@@ -171,7 +229,7 @@
             </span>
           </div>
 
-          <!-- 3 Feature Cards -->
+          <!-- 3 Feature Cards (Proportionally Expanded across Left Area) -->
           <div class="sc-hero-feature-cards">
             <div class="sc-feature-card card-blue">
               <div class="sc-fc-icon" aria-hidden="true">
@@ -204,7 +262,7 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="12" cy="12" r="10"></circle>
                   <circle cx="12" cy="12" r="6"></circle>
-                  <circle cx="12" cy="12" r="2"></circle>
+                  <circle cx="12" cy="2" r="2"></circle>
                 </svg>
               </div>
               <div class="sc-fc-text">
@@ -214,70 +272,8 @@
           </div>
         </div>
 
-        <!-- Column 2: Section Jump Directory Card -->
-        <nav class="sc-hero-sections-card" aria-label="Section Jump Navigation">
-          <a href="#colA" class="sc-hero-tab sc-sec-nav-item active">
-            <div class="sc-sec-nav-icon icon-sec-a" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                <line x1="8" y1="21" x2="16" y2="21"></line>
-                <line x1="12" y1="17" x2="12" y2="21"></line>
-              </svg>
-            </div>
-            <div class="sc-sec-nav-content">
-              <span class="sc-sec-nav-tag">SECTION A</span>
-              <strong class="sc-sec-nav-title">Study Resources</strong>
-            </div>
-          </a>
-
-          <a href="#colB" class="sc-hero-tab sc-sec-nav-item">
-            <div class="sc-sec-nav-icon icon-sec-b" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="20" x2="18" y2="10"></line>
-                <line x1="12" y1="20" x2="12" y2="4"></line>
-                <line x1="6" y1="20" x2="6" y2="14"></line>
-              </svg>
-            </div>
-            <div class="sc-sec-nav-content">
-              <span class="sc-sec-nav-tag">SECTION B</span>
-              <strong class="sc-sec-nav-title">Theory Chapters</strong>
-            </div>
-          </a>
-
-          <a href="#colC" class="sc-hero-tab sc-sec-nav-item">
-            <div class="sc-sec-nav-icon icon-sec-c" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M10 2v7.31"></path>
-                <path d="M14 9.3V1.99"></path>
-                <path d="M8.5 2h7"></path>
-                <path d="M14 9.3a6.5 6.5 0 1 1-4 0"></path>
-                <path d="M5.52 16h12.96"></path>
-              </svg>
-            </div>
-            <div class="sc-sec-nav-content">
-              <span class="sc-sec-nav-tag">SECTION C</span>
-              <strong class="sc-sec-nav-title">Practical Preparation</strong>
-            </div>
-          </a>
-
-          <a href="#colD" class="sc-hero-tab sc-sec-nav-item">
-            <div class="sc-sec-nav-icon icon-sec-d" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                <polyline points="14 2 14 8 20 8"></polyline>
-                <line x1="16" y1="13" x2="8" y2="13"></line>
-                <line x1="16" y1="17" x2="8" y2="17"></line>
-              </svg>
-            </div>
-            <div class="sc-sec-nav-content">
-              <span class="sc-sec-nav-tag">SECTION D</span>
-              <strong class="sc-sec-nav-title">Exam Practice</strong>
-            </div>
-          </a>
-        </nav>
-
-        <!-- Column 3: Resource Availability Card -->
-        <aside class="sc-multi-progress-card" aria-label="Study Material Availability Summary">
+        <!-- Right Column: Resource Availability & Sections A–D Integrated Card -->
+        <aside class="sc-multi-progress-card" aria-label="Study Material Availability and Section Navigation">
           <div class="sc-mp-header">
             <h2 class="sc-mp-title">Resource Availability</h2>
             <span id="mp-subtitle-custom" class="sc-mp-count">0 of 0</span>
@@ -294,7 +290,8 @@
 
           <div class="pie-layout">
             <div id="dynamic-pie-container" class="pie-container" aria-hidden="true"></div>
-            <div id="dynamic-pie-legend" class="pie-legend"></div>
+            <!-- Integrated Legend & Navigation -->
+            <nav id="dynamic-pie-legend" class="pie-legend" aria-label="Section Quick Jump and Availability"></nav>
           </div>
         </aside>
       </section>
@@ -303,15 +300,14 @@
       <div class="sc-main-grid">
 
         <!-- Section A: Study Resources -->
-        <section class="sc-column sc-column-a" id="colA" data-count-to-content="true" aria-labelledby="sec-a-heading">
+        <section class="sc-column sc-column-a" id="colA" data-count-to-content="true" data-section-code="A" data-section-name="Study Resources" aria-labelledby="sec-a-heading">
           <div class="sc-column-bg"><canvas id="canvasA" class="sc-canvas-bg"></canvas></div>
           <h2 class="sc-section-title" id="sec-a-heading">Section A: CBSE Official Resources • 2026–27</h2>
           <p class="sc-section-subtitle">Official CBSE curriculum documents, reference textbook, supporting material, and question banks</p>
           <div class="sc-section-progress-track" aria-hidden="true"><div class="sc-section-progress-fill"></div></div>
 
           <div class="sc-cards-grid">
-
-                        <article class="sc-custom-card">
+            <article class="sc-custom-card">
               <div class="sc-unit-badge"><span>01</span><span>XII IP 2026-27</span></div>
               <h3>CBSE Curriculum &amp; Syllabus</h3>
               <div class="sc-card-links">
@@ -321,7 +317,7 @@
             
             <article class="sc-custom-card">
               <div class="sc-unit-badge"><span>02</span><span>XII IP 2026-27</span></div>
-             <h3>NCERT Textbook</h3>
+              <h3>NCERT Textbook</h3>
               <div class="sc-card-links">
                 <a href="https://drive.google.com/file/d/1ArldYs8lpQhJ9V5_cOl34oCnbd3DeZBr/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="sc-btn-notes">View Now</a>
               </div>
@@ -335,14 +331,14 @@
               </div>
             </article>
             
-    
-                   <article class="sc-custom-card">
+            <article class="sc-custom-card">
               <div class="sc-unit-badge"><span>04</span><span>XII IP 2026–27</span></div>
               <h3>Sample Question Paper</h3>
               <div class="sc-card-links">
                 <a href="https://drive.google.com/file/d/1cdSqNkoFr4eno5_sDV6lmSvIo6YWHZsW/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="sc-btn-notes">View Now</a>
               </div>
             </article>
+
             <article class="sc-custom-card">
               <div class="sc-unit-badge"><span>05</span><span>XII IP 2026–27</span></div>
               <h3>Chapter-Wise Question Bank</h3>
@@ -358,16 +354,15 @@
                 <a href="../../computer-science/class-11/resource/question-bank.html" target="_blank" rel="noopener noreferrer" class="sc-btn-notes">View Now</a>
               </div>
             </article>
-            
           </div>
         </section>
 
         <!-- Section B: Theory Chapters -->
-        <section class="sc-column sc-column-b" id="colB" data-count-to-content="true" aria-labelledby="sec-b-heading">
+        <section class="sc-column sc-column-b" id="colB" data-count-to-content="true" data-section-code="B" data-section-name="Theory Chapters" aria-labelledby="sec-b-heading">
           <div class="sc-column-bg"><canvas id="canvasB" class="sc-canvas-bg"></canvas></div>
           <h2 class="sc-section-title" id="sec-b-heading">Section B: Theory Syllabus • 70 Marks</h2>
-            <p class="sc-section-subtitle">Chapter-wise videos, notes, and practice resources for CBSE exam preparation.</p>
-        <div class="sc-section-progress-track" aria-hidden="true"><div class="sc-section-progress-fill"></div></div>
+          <p class="sc-section-subtitle">Chapter-wise videos, notes, and practice resources for CBSE exam preparation.</p>
+          <div class="sc-section-progress-track" aria-hidden="true"><div class="sc-section-progress-fill"></div></div>
 
           <div class="sc-cards-grid">
             <article class="sc-custom-card">
@@ -477,11 +472,11 @@
         </section>
 
         <!-- Section C: Practical Preparation -->
-        <section class="sc-column sc-column-c" id="colC" data-count-to-content="true" aria-labelledby="sec-c-heading">
+        <section class="sc-column sc-column-c" id="colC" data-count-to-content="true" data-section-code="C" data-section-name="Practical Prep" aria-labelledby="sec-c-heading">
           <div class="sc-column-bg"><canvas id="canvasC" class="sc-canvas-bg"></canvas></div>
           <h2 class="sc-section-title" id="sec-c-heading">Section C: Practical Preparation • 30 Marks</h2>
-            <p class="sc-section-subtitle">CBSE practical prep: lab tests, project work, practical files and viva questions</p>
-        <div class="sc-section-progress-track" aria-hidden="true"><div class="sc-section-progress-fill"></div></div>
+          <p class="sc-section-subtitle">CBSE practical prep: lab tests, project work, practical files and viva questions</p>
+          <div class="sc-section-progress-track" aria-hidden="true"><div class="sc-section-progress-fill"></div></div>
 
           <div class="sc-cards-grid">
             <article class="sc-custom-card">
@@ -495,7 +490,7 @@
             <article class="sc-custom-card">
               <div class="sc-unit-badge"><span>02</span><span>7 + 8 = 15 Marks</span></div>
               <h3>Practical + Project File</h3>
-                <div class="sc-card-links">
+              <div class="sc-card-links">
                 <a href="#" class="sc-btn-notes">Details</a>
               </div>
             </article>
@@ -510,15 +505,15 @@
           </div>
         </section>
 
-  <!-- Section D: Exam Practice (Mock Papers & PYQs) -->
-        <section class="sc-column sc-column-d" id="colD" data-count-to-content="true" aria-labelledby="sec-d-heading">
+        <!-- Section D: Exam Practice (Mock Papers & PYQs) -->
+        <section class="sc-column sc-column-d" id="colD" data-count-to-content="true" data-section-code="D" data-section-name="Exam Practice" aria-labelledby="sec-d-heading">
           <div class="sc-column-bg"><canvas id="canvasD" class="sc-canvas-bg"></canvas></div>
           <h2 class="sc-section-title" id="sec-d-heading">Section D: Exam Practice • 2026–27</h2>
           <p class="sc-section-subtitle">Sectional practice sets, full-length mark mock papers, and official CBSE board papers</p>
           <div class="sc-section-progress-track" aria-hidden="true"><div class="sc-section-progress-fill"></div></div>
 
           <div class="sc-cards-grid">
-                        <!-- Card 1: Official CBSE Previous-Year Questions -->
+            <!-- Card 1: Official CBSE Previous-Year Questions -->
             <article class="sc-custom-card">
               <div class="sc-unit-badge"><span>01 • PYQs</span><span>70 Marks</span></div>
               <h3>CBSE Previous-Year Questions</h3>
@@ -532,11 +527,11 @@
             <!-- Card 2: 70-Mark Sectional Sample Papers -->
             <article class="sc-custom-card">
               <div class="sc-unit-badge"><span>02 • SQP-MS</span><span>70 Marks</span></div>
-              <h3> Sample Papers</h3>
+              <h3>Sample Papers</h3>
               <div class="sc-card-links sc-links-sets">
                 <a href="#" class="sc-btn-notes">Set 01</a>
                 <a href="#" class="sc-btn-notes">Set 02</a>
-                                <a href="#" class="sc-btn-notes">Set 03</a>
+                <a href="#" class="sc-btn-notes">Set 03</a>
                 <a href="#" class="sc-btn-notes">Set 04</a>
               </div>
             </article>
@@ -551,7 +546,8 @@
                 <a href="#" class="sc-btn-notes">Set 03</a>
                 <a href="#" class="sc-btn-notes">Set 04</a>
               </div>
-            </article>          </div>
+            </article>
+          </div>
 
           <!-- Primary Mock Test Action (CBT) -->
           <div class="sc-cbt-section" data-cbt-href="../../informatics-practices/class-12/mcq/cbse-objective-questions.html" data-cbt-highlight="Attempt the CBT" data-cbt-text="of objective questions"></div>
@@ -592,6 +588,20 @@
       </div>
     </div>
   </footer>
+
+  <!-- Floating Countdown Mini-Badge (Docks when top banner collapses after 1 min or upon manual minimize) -->
+  <button type="button" class="sc-cd-mini-badge" id="scCdMiniBadge" aria-label="Expand CBSE IP Exam Countdown" style="display: none;">
+    <span class="sc-cd-mini-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
+        <line x1="16" y1="2" x2="16" y2="6"></line>
+        <line x1="8" y1="2" x2="8" y2="6"></line>
+        <line x1="3" y1="10" x2="21" y2="10"></line>
+      </svg>
+    </span>
+    <span class="sc-cd-mini-text"><strong id="sc-cd-mini-days">143</strong> Days to IP Exam</span>
+    <span class="sc-cd-mini-arrow" aria-hidden="true">▲</span>
+  </button>
 
   <!-- Video Confirmation Modal -->
   <div id="scVideoModal" class="sc-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="scModalTitle">
