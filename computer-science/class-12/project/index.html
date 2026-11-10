@@ -150,7 +150,7 @@
     }
 
     /* ==========================================================================
-       Strict 3-Cards-Per-Row Grid Layout & 3. Tightened Yellow Divider Spacing
+       Compact 3-Cards-Per-Row Grid Layout & Spacing Tuning
        ========================================================================== */
     #colA .sc-cards-grid {
       display: grid !important;
@@ -167,29 +167,47 @@
       width: 100% !important;
       max-width: 100% !important;
       margin: 0 !important;
+      padding: 1.1rem 1.15rem 1rem !important;
       display: flex !important;
       flex-direction: column !important;
       justify-content: space-between !important;
     }
 
-    /* 3. Remove Extra Gap Above Yellow Divider Line */
-    #colA .sc-custom-card h3 {
-      min-height: auto !important;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 0.45rem;
-      text-align: center;
-      line-height: 1.35;
-      margin-bottom: 0.15rem;
+    /* Unit Badge Spacing & Pill Alignment */
+    #colA .sc-unit-badge {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 0.5rem !important;
+      margin-bottom: 0.35rem !important;
+      width: 100% !important;
     }
 
+    #colA .sc-unit-badge span {
+      white-space: nowrap !important;
+    }
+
+    /* Compact Heading & Yellow Line Spacing */
+    #colA .sc-custom-card h3 {
+      min-height: auto !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 0.35rem !important;
+      text-align: center !important;
+      line-height: 1.3 !important;
+      font-size: 1.05rem !important;
+      margin-top: 0.15rem !important;
+      margin-bottom: 0.1rem !important;
+    }
+
+    /* Tightened Image Placeholder Margins */
     .sc-card-img-placeholder {
       position: relative;
       width: 100%;
       aspect-ratio: 16 / 9;
-      margin: 0.75rem 0 1.1rem;
+      margin: 0.55rem 0 0.75rem !important;
       border-radius: 10px;
       overflow: hidden;
       background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
@@ -209,9 +227,14 @@
       transform: scale(1.04);
     }
 
+    #colA .sc-card-links {
+      margin-top: auto !important;
+      width: 100% !important;
+    }
+
     #colA .sc-card-links .sc-btn-notes {
       width: 100%;
-      padding: 0.65rem 1rem;
+      padding: 0.58rem 1rem !important;
       font-weight: 600;
       background: #eff6ff;
       color: #1d4ed8;
@@ -239,7 +262,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 0.9rem 1rem;
+      padding: 0.75rem 0.85rem !important;
       background:
         radial-gradient(circle at 90% 15%, rgba(242, 184, 36, 0.28) 0%, transparent 45%),
         radial-gradient(circle at 10% 90%, rgba(56, 189, 248, 0.22) 0%, transparent 50%),
@@ -280,11 +303,11 @@
     }
 
     .sc-cb-middle {
-      margin: 0.35rem 0;
+      margin: 0.25rem 0 !important;
     }
 
     .sc-cb-middle h4 {
-      margin: 0 0 0.2rem 0;
+      margin: 0 0 0.15rem 0;
       font-family: 'Poppins', sans-serif;
       font-size: 0.95rem;
       font-weight: 700;
@@ -297,7 +320,7 @@
       font-family: 'Inter', sans-serif;
       font-size: 0.72rem;
       color: #cbd5e1;
-      line-height: 1.4;
+      line-height: 1.35;
     }
 
     .sc-cb-channels {
@@ -341,7 +364,7 @@
       justify-content: center;
       gap: 6px;
       width: 100%;
-      padding: 0.62rem 0.6rem !important;
+      padding: 0.55rem 0.5rem !important;
       font-family: 'Inter', sans-serif;
       font-size: 0.78rem !important;
       font-weight: 700 !important;
@@ -730,8 +753,8 @@
           <div class="sc-cards-grid">
             <!-- 01. Playcave (Student Management System) -->
             <article class="sc-custom-card">
-              <div class="sc-unit-badge"><span>01</span><span>Python + MySQL</span></div>
-              <h3>Playcave (Student Management System)</h3>
+              <div class="sc-unit-badge"><span>Project 01</span><span>Python + MySQL</span></div>
+              <h3>Student Management System</h3>
               <div class="sc-card-img-placeholder">
                 <img src="../../../assets/images/project/play-cave.png" alt="Playcave (Student Management System) Python Project" loading="lazy">
               </div>
@@ -742,7 +765,7 @@
 
             <!-- 02. Lab Management System -->
             <article class="sc-custom-card">
-              <div class="sc-unit-badge"><span>02</span><span>Python + MySQL</span></div>
+              <div class="sc-unit-badge"><span>Project 02</span><span>Python + MySQL</span></div>
               <h3>Lab Management System</h3>
               <div class="sc-card-img-placeholder">
                 <img src="../../../assets/images/project/lab-management-system.png" alt="Lab Management System Python Project" loading="lazy">
@@ -754,7 +777,7 @@
 
             <!-- 03. Medical Management System -->
             <article class="sc-custom-card">
-              <div class="sc-unit-badge"><span>03</span><span>Python + MySQL</span></div>
+              <div class="sc-unit-badge"><span>Project 03</span><span>Python + MySQL</span></div>
               <h3>Medical Management System</h3>
               <div class="sc-card-img-placeholder">
                 <img src="../../../assets/images/project/medical-management-system-banner.png" alt="Medical Management System Python Project" loading="lazy">
@@ -766,7 +789,7 @@
 
             <!-- 04. Employee Lab Management System -->
             <article class="sc-custom-card">
-              <div class="sc-unit-badge"><span>04</span><span>Python + CSV</span></div>
+              <div class="sc-unit-badge"><span>Project 04</span><span>Python + CSV</span></div>
               <h3>Employee Lab Management System</h3>
               <div class="sc-card-img-placeholder">
                 <img src="../../../assets/images/project/employee-lab-management-system.png" alt="Employee Lab Management System Python Project" loading="lazy">
@@ -778,7 +801,7 @@
 
             <!-- 05. Sports Management System -->
             <article class="sc-custom-card">
-              <div class="sc-unit-badge"><span>05</span><span>Python + MySQL</span></div>
+              <div class="sc-unit-badge"><span>Project 05</span><span>Python + MySQL</span></div>
               <h3>Sports Management System</h3>
               <div class="sc-card-img-placeholder">
                 <img src="../../../assets/images/project/sports-management-system.png" alt="Sports Management System Python Project" loading="lazy">
@@ -790,7 +813,7 @@
 
             <!-- 06. Fashion Management System -->
             <article class="sc-custom-card">
-              <div class="sc-unit-badge"><span>06</span><span>Pandas + Matplotlib</span></div>
+              <div class="sc-unit-badge"><span>Project 06</span><span>Pandas + Matplotlib</span></div>
               <h3>Fashion Management System</h3>
               <div class="sc-card-img-placeholder">
                 <img src="../../../assets/images/project/fashion-management-system.png" alt="Fashion Management System Python Project" loading="lazy">
@@ -802,7 +825,7 @@
 
             <!-- 07. Bakery Management System -->
             <article class="sc-custom-card">
-              <div class="sc-unit-badge"><span>07</span><span>Python + MySQL</span></div>
+              <div class="sc-unit-badge"><span>Project 07</span><span>Python + MySQL</span></div>
               <h3>Bakery Management System</h3>
               <div class="sc-card-img-placeholder">
                 <img src="../../../assets/images/project/bakery-management-system.png" alt="Bakery Management System Python Project" loading="lazy">
@@ -814,7 +837,7 @@
 
             <!-- 08. Pet Management System -->
             <article class="sc-custom-card">
-              <div class="sc-unit-badge"><span>08</span><span>Python + CSV</span></div>
+              <div class="sc-unit-badge"><span>Project 08</span><span>Python + CSV</span></div>
               <h3>Pet Management System</h3>
               <div class="sc-card-img-placeholder">
                 <img src="../../../assets/images/project/pet-management-system.png" alt="Pet Management System Python Project" loading="lazy">
@@ -826,7 +849,7 @@
 
             <!-- 09. Student Management System -->
             <article class="sc-custom-card">
-              <div class="sc-unit-badge"><span>09</span><span>Python + MySQL</span></div>
+              <div class="sc-unit-badge"><span>Project 09</span><span>Python + MySQL</span></div>
               <h3>Student Management System</h3>
               <div class="sc-card-img-placeholder">
                 <img src="../../../assets/images/project/student-management-system.png" alt="Student Management System Python Project" loading="lazy">
@@ -838,7 +861,7 @@
 
             <!-- 10. Food Management System -->
             <article class="sc-custom-card">
-              <div class="sc-unit-badge"><span>10</span><span>Pandas + Matplotlib</span></div>
+              <div class="sc-unit-badge"><span>Project 10</span><span>Pandas + Matplotlib</span></div>
               <h3>Food Management System</h3>
               <div class="sc-card-img-placeholder">
                 <img src="../../../assets/images/project/food-management-system.png" alt="Food Management System Python Project" loading="lazy">
@@ -850,7 +873,7 @@
 
             <!-- 11. Share Your Project & Project Queries (Interactive Connect Card) -->
             <article class="sc-custom-card sc-connect-card">
-              <div class="sc-unit-badge"><span>11</span><span>Community &amp; Support</span></div>
+              <div class="sc-unit-badge"><span>Project 11</span><span>Community &amp; Support</span></div>
               <h3>Share Project &amp; Project Queries</h3>
               <div class="sc-card-img-placeholder sc-connect-banner">
                 <div class="sc-cb-top">
