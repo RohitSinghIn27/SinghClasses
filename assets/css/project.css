@@ -1,9 +1,5 @@
 /* ==========================================================================
-   1. Modern, Clean & High-Precision Hero Banner UI
-      - Pure Geometric Shapes, Tech Grids & Orbit Accent Rings (No Cartoon Images)
-      - Perfectly Balanced Responsive Spacing
-      - Yellow Code Pill </> & Floating Navy Title Bar with Amber Border
-      - Sleek Tri-Dash Accent Divider (Royal Blue - Golden Amber - Royal Blue)
+   1. Modern, Clean & High-Precision Hero Banner UI (Fixed Centered Stack)
    ========================================================================== */
 
 @keyframes scSpinCW {
@@ -18,13 +14,13 @@
 
 @keyframes scFloatSpinLeft {
   0% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-7px) rotate(180deg); }
+  50% { transform: translateY(-5px) rotate(180deg); }
   100% { transform: translateY(0px) rotate(360deg); }
 }
 
 @keyframes scFloatSpinRight {
   0% { transform: translateY(0px) rotate(360deg); }
-  50% { transform: translateY(7px) rotate(180deg); }
+  50% { transform: translateY(5px) rotate(180deg); }
   100% { transform: translateY(0px) rotate(0deg); }
 }
 
@@ -40,30 +36,29 @@
   align-items: center !important;
   justify-content: center !important;
   text-align: center !important;
-  padding: 3rem 2.5rem 3.4rem !important;
-  border-radius: 26px !important;
+  padding: 1.85rem 2rem 1.95rem !important;
+  border-radius: 22px !important;
   background:
-    radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.10) 0%, transparent 40%),
-    radial-gradient(circle at 90% 20%, rgba(245, 158, 11, 0.12) 0%, transparent 42%),
+    radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 90% 20%, rgba(245, 158, 11, 0.10) 0%, transparent 42%),
     linear-gradient(180deg, #ffffff 0%, #f7faff 65%, #edf4fe 100%) !important;
   border: 1.5px solid rgba(191, 219, 254, 0.85) !important;
   box-shadow:
-    0 22px 48px -18px rgba(11, 24, 73, 0.10),
-    0 4px 16px -2px rgba(11, 24, 73, 0.04),
+    0 18px 40px -16px rgba(11, 24, 73, 0.09),
+    0 4px 14px -2px rgba(11, 24, 73, 0.03),
     inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
   overflow: hidden !important;
 }
 
-/* Crisp Technical Dot Grid + Smooth Bottom Gradient Blend */
 .sc-hero-wrapper.sc-page-header-pro::before {
   content: "" !important;
   display: block !important;
   position: absolute;
   inset: 0;
   background-image:
-    radial-gradient(ellipse 95% 40% at 50% 122%, #004ecc 0%, #08298a 52%, transparent 72%),
-    radial-gradient(ellipse 65% 30% at 14% 112%, #f59e0b 0%, #d97706 48%, transparent 68%),
-    radial-gradient(rgba(37, 99, 235, 0.20) 1.25px, transparent 1.25px);
+    radial-gradient(ellipse 95% 35% at 50% 122%, #004ecc 0%, #08298a 52%, transparent 72%),
+    radial-gradient(ellipse 65% 26% at 14% 112%, #f59e0b 0%, #d97706 48%, transparent 68%),
+    radial-gradient(rgba(37, 99, 235, 0.18) 1.25px, transparent 1.25px);
   background-size: 100% 100%, 100% 100%, 22px 22px;
   background-repeat: no-repeat, no-repeat, repeat;
   mask-image: radial-gradient(ellipse at 50% 45%, rgba(0, 0, 0, 0.3) 15%, rgba(0, 0, 0, 0.9) 80%, transparent 100%);
@@ -72,60 +67,53 @@
   z-index: 0;
 }
 
-/* Left Geometric Floating Tech Square (Replaces Laptop Illustration) */
 .sc-hero-wrapper.sc-page-header-pro::after {
   content: "" !important;
   display: block !important;
   position: absolute !important;
-  left: 5% !important;
+  left: 4.5% !important;
   top: 50% !important;
-  width: 44px !important;
-  height: 44px !important;
-  margin-top: -22px !important;
-  border-radius: 12px !important;
-  border: 2.5px solid rgba(37, 99, 235, 0.30) !important;
+  width: 36px !important;
+  height: 36px !important;
+  margin-top: -18px !important;
+  border-radius: 10px !important;
+  border: 2px solid rgba(37, 99, 235, 0.30) !important;
   border-top-color: rgba(245, 158, 11, 0.85) !important;
   background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(245, 158, 11, 0.10)) !important;
-  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.12) !important;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.10) !important;
   animation: scFloatSpinLeft 14s ease-in-out infinite !important;
   pointer-events: none !important;
   z-index: 1 !important;
 }
 
-/* Subtle Geometric Concentric Orbit Rings for Flanking Balance */
 .sc-hero-accent-left,
 .sc-hero-accent-right {
   display: block !important;
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 250px;
+  width: 220px;
   height: 100%;
   pointer-events: none;
   z-index: 1;
 }
 
-.sc-hero-accent-left {
-  left: 0;
-}
-
-.sc-hero-accent-right {
-  right: 0;
-}
+.sc-hero-accent-left { left: 0; }
+.sc-hero-accent-right { right: 0; }
 
 .sc-hero-accent-left circle:nth-of-type(2) {
-  stroke-opacity: 0.28 !important;
-  stroke-width: 1.8px !important;
-  stroke-dasharray: 8 6 !important;
+  stroke-opacity: 0.25 !important;
+  stroke-width: 1.6px !important;
+  stroke-dasharray: 7 5 !important;
   transform-box: fill-box;
   transform-origin: center;
   animation: scSpinCW 28s linear infinite;
 }
 
 .sc-hero-accent-right circle:nth-of-type(2) {
-  stroke-opacity: 0.45 !important;
-  stroke-width: 2px !important;
-  stroke-dasharray: 18 8 !important;
+  stroke-opacity: 0.40 !important;
+  stroke-width: 1.8px !important;
+  stroke-dasharray: 16 7 !important;
   transform-box: fill-box;
   transform-origin: center;
   animation: scSpinCCW 24s linear infinite;
@@ -137,26 +125,26 @@
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
+  justify-content: center !important;
   text-align: center !important;
   width: 100%;
-  max-width: 880px;
+  max-width: 860px;
   margin: 0 auto;
 }
 
-/* Right Geometric Floating Diamond (Replaces Database/Gear Illustration) */
 .sc-page-header-pro .sc-hero-left::after {
   content: "" !important;
   position: absolute !important;
-  right: 2% !important;
+  right: 1.5% !important;
   top: 48% !important;
-  width: 38px !important;
-  height: 38px !important;
-  margin-top: -19px !important;
-  border-radius: 10px !important;
-  border: 2px solid rgba(29, 78, 216, 0.32) !important;
+  width: 32px !important;
+  height: 32px !important;
+  margin-top: -16px !important;
+  border-radius: 9px !important;
+  border: 2px solid rgba(29, 78, 216, 0.30) !important;
   border-bottom-color: rgba(245, 158, 11, 0.85) !important;
   background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(37, 99, 235, 0.06)) !important;
-  box-shadow: 0 8px 20px rgba(11, 24, 73, 0.08) !important;
+  box-shadow: 0 6px 16px rgba(11, 24, 73, 0.07) !important;
   animation: scFloatSpinRight 15s ease-in-out infinite !important;
   pointer-events: none !important;
 }
@@ -165,30 +153,29 @@
   display: none !important;
 }
 
-/* Eyebrow Pill Badge with Graduation Cap Icon */
 .sc-page-header-pro .sc-hero-tag {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 0.6rem !important;
-  margin-bottom: 1.15rem !important;
+  gap: 0.55rem !important;
+  margin-bottom: 0.8rem !important;
   background: #ffffff !important;
   border: 1.5px solid #bfdbfe !important;
   color: #081a4a !important;
   font-family: 'Inter', sans-serif !important;
   font-weight: 800 !important;
-  padding: 0.44rem 1.35rem !important;
+  padding: 0.36rem 1.15rem !important;
   border-radius: 999px !important;
-  font-size: 0.86rem !important;
+  font-size: 0.82rem !important;
   letter-spacing: 0.04em !important;
   box-shadow:
-    0 6px 16px rgba(11, 24, 73, 0.06),
-    0 2px 4px rgba(37, 99, 235, 0.08) !important;
+    0 4px 12px rgba(11, 24, 73, 0.05),
+    0 1px 3px rgba(37, 99, 235, 0.07) !important;
 }
 
 .sc-page-header-pro .sc-hero-tag .sc-tag-dot {
-  width: 18px !important;
-  height: 18px !important;
+  width: 16px !important;
+  height: 16px !important;
   border-radius: 0 !important;
   background: transparent !important;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231d4ed8'%3E%3Cpath d='M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z'/%3E%3C/svg%3E") !important;
@@ -198,28 +185,29 @@
   display: inline-block !important;
 }
 
-/* Main Heading Container */
 .sc-page-header-pro .sc-hero-title {
   width: 100%;
   margin: 0 !important;
-  text-align: center;
-  line-height: 1.15;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
 }
 
-/* Subtitle Row with Yellow Code Badge </> and Thin Flanking Rules */
 .sc-hero-subtitle-row {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  width: auto;
-  margin: 0 auto 0.65rem auto;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.7rem !important;
+  width: 100% !important;
+  margin: 0 auto 0.45rem auto !important;
 }
 
 .sc-flank-line {
   position: relative;
   height: 2px;
-  width: clamp(28px, 5vw, 65px);
+  width: clamp(24px, 4vw, 55px);
   border-radius: 999px;
   background: #3b82f6 !important;
   flex-shrink: 0;
@@ -232,10 +220,10 @@
 .sc-subtitle-italic {
   display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
+  gap: 0.5rem;
   font-family: 'Poppins', sans-serif;
   font-weight: 800;
-  font-size: clamp(1.3rem, 2.1vw, 1.75rem);
+  font-size: clamp(1.15rem, 1.85vw, 1.55rem);
   color: #081a4a;
   letter-spacing: -0.01em;
   white-space: nowrap;
@@ -246,26 +234,25 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 28px;
-  border-radius: 7px;
+  width: 34px;
+  height: 25px;
+  border-radius: 6px;
   background: #f59e0b;
   color: #081a4a;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 900;
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   letter-spacing: -0.05em;
-  box-shadow: 0 3px 8px rgba(245, 158, 11, 0.4);
+  box-shadow: 0 2px 7px rgba(245, 158, 11, 0.38);
 }
 
-/* Primary Banner Floating Pill: "CLASS XII COMPUTER SCIENCE" */
 .sc-page-header-pro .sc-title-gradient {
   display: inline-block !important;
-  margin-top: 0.2rem !important;
-  padding: 0.75rem 2.6rem !important;
-  border-radius: 18px !important;
+  margin-top: 0.15rem !important;
+  padding: 0.62rem 2.2rem !important;
+  border-radius: 16px !important;
   font-family: 'Poppins', sans-serif !important;
-  font-size: clamp(1.65rem, 3.4vw, 2.85rem) !important;
+  font-size: clamp(1.45rem, 2.9vw, 2.45rem) !important;
   font-weight: 900 !important;
   font-style: italic !important;
   letter-spacing: 0.01em !important;
@@ -274,59 +261,120 @@
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
   background: linear-gradient(180deg, #071948 0%, #081d54 100%) !important;
-  border: 3.5px solid #f59e0b !important;
+  border: 3px solid #f59e0b !important;
   box-shadow:
-    0 12px 28px -6px rgba(8, 29, 84, 0.65),
-    0 0 0 1px rgba(245, 158, 11, 0.5),
+    0 10px 24px -5px rgba(8, 29, 84, 0.60),
+    0 0 0 1px rgba(245, 158, 11, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
   filter: none !important;
 }
 
-/* 3-Dash Colored Bar Below Banner (Royal Blue - Golden Amber - Royal Blue) */
 .sc-header-divider-bar {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  margin-top: 1.25rem;
+  gap: 10px;
+  margin-top: 0.85rem;
   margin-bottom: 0;
+  width: 100%;
 }
 
 .sc-header-divider-bar .bar-main {
-  width: 44px;
-  height: 6px;
+  width: 40px;
+  height: 5px;
   border-radius: 999px;
   background: #f59e0b;
-  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.45);
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.40);
   order: 2;
 }
 
 .sc-header-divider-bar .bar-dot {
-  width: 34px;
-  height: 6px;
+  width: 30px;
+  height: 5px;
   border-radius: 999px;
   background: #004ecc;
-  box-shadow: 0 2px 8px rgba(0, 78, 204, 0.45);
+  box-shadow: 0 2px 6px rgba(0, 78, 204, 0.40);
   order: 1;
 }
 
 .sc-header-divider-bar::after {
   content: "";
-  width: 34px;
-  height: 6px;
+  width: 30px;
+  height: 5px;
   border-radius: 999px;
   background: #004ecc;
-  box-shadow: 0 2px 8px rgba(0, 78, 204, 0.45);
+  box-shadow: 0 2px 6px rgba(0, 78, 204, 0.40);
   order: 3;
 }
 
 /* ==========================================================================
-   2. Project Grid, Modern Cards & Image Frame
+   2. Centered Section Header & Progress Bar
+   ========================================================================== */
+#colA {
+  padding: 1.25rem 1.1rem 1.5rem !important;
+}
+
+#colA .sc-section-header-wrap {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  width: 100% !important;
+  margin: 0 auto 1rem auto !important;
+}
+
+#colA .sc-section-title {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 0 0.5rem 0 !important;
+  padding: 0.45rem 1.45rem !important;
+  border-radius: 999px !important;
+  background: #081a4a !important;
+  color: #ffffff !important;
+  border: 2px solid #f59e0b !important;
+  font-family: 'Poppins', sans-serif !important;
+  font-size: 0.92rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  box-shadow: 0 4px 14px rgba(8, 26, 74, 0.25) !important;
+}
+
+#colA .sc-section-subtitle {
+  text-align: center !important;
+  margin: 0 auto 0.65rem auto !important;
+  max-width: 780px !important;
+  color: #475569 !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.88rem !important;
+  line-height: 1.45 !important;
+}
+
+#colA .sc-section-progress-track {
+  width: 140px !important;
+  height: 3px !important;
+  margin: 0.2rem auto 1.15rem auto !important;
+  background: #e2e8f0 !important;
+  border-radius: 999px !important;
+  overflow: hidden !important;
+}
+
+#colA .sc-section-progress-fill {
+  width: 100% !important;
+  height: 100% !important;
+  background: #004ecc !important;
+  border-radius: 999px !important;
+}
+
+/* ==========================================================================
+   3. Compact Project Grid & Centered Project Topic Title Styling
    ========================================================================== */
 #colA .sc-cards-grid {
   display: grid !important;
   grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  gap: 1.35rem !important;
+  gap: 0.95rem !important;
   align-items: stretch !important;
 }
 
@@ -336,15 +384,15 @@
   width: 100% !important;
   max-width: 100% !important;
   margin: 0 !important;
-  padding: 1.05rem 1.1rem 1rem !important;
+  padding: 0.75rem 0.8rem 0.75rem !important;
   display: flex !important;
   flex-direction: column !important;
   justify-content: flex-start !important;
   background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%) !important;
   border: 1px solid rgba(37, 99, 235, 0.16) !important;
-  border-radius: 18px !important;
-  box-shadow: 0 6px 18px -6px rgba(11, 24, 73, 0.06) !important;
-  transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  border-radius: 15px !important;
+  box-shadow: 0 4px 14px -4px rgba(11, 24, 73, 0.05) !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 #colA .sc-cards-grid > .sc-custom-card:hover,
@@ -352,17 +400,18 @@
 #colA .sc-cards-grid > .sc-custom-card.active {
   background: linear-gradient(145deg, #eef6ff 0%, #dbeafe 100%) !important;
   border-color: #60a5fa !important;
-  transform: translateY(-4px) !important;
+  transform: translateY(-3px) !important;
   box-shadow:
-    0 18px 34px -10px rgba(29, 78, 216, 0.18),
-    0 4px 12px -2px rgba(29, 78, 216, 0.08) !important;
+    0 14px 28px -8px rgba(29, 78, 216, 0.16),
+    0 4px 10px -2px rgba(29, 78, 216, 0.06) !important;
 }
 
 #colA .sc-unit-badge {
+  order: 1 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
-  gap: 0.5rem !important;
+  gap: 0.45rem !important;
   margin-bottom: 0.45rem !important;
   width: 100% !important;
   background: transparent !important;
@@ -371,17 +420,17 @@
 #colA .sc-unit-badge span {
   white-space: nowrap !important;
   font-family: 'Inter', sans-serif !important;
-  font-size: 0.74rem !important;
+  font-size: 0.72rem !important;
   font-weight: 700 !important;
   letter-spacing: 0.02em !important;
-  padding: 0.24rem 0.65rem !important;
-  border-radius: 7px !important;
+  padding: 0.22rem 0.55rem !important;
+  border-radius: 6px !important;
 }
 
 #colA .sc-unit-badge > span:first-child {
   display: inline-flex !important;
   align-items: center !important;
-  gap: 6px !important;
+  gap: 5px !important;
   background: #081a4a !important;
   color: #ffffff !important;
 }
@@ -389,8 +438,8 @@
 #colA .sc-unit-badge > span:first-child::before {
   content: "" !important;
   display: inline-block !important;
-  width: 13px !important;
-  height: 13px !important;
+  width: 12px !important;
+  height: 12px !important;
   flex-shrink: 0 !important;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='7' width='20' height='14' rx='2' ry='2'/%3E%3Cpath d='M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2'/%3E%3Cpath d='M2 12h8'/%3E%3Cpath d='M14 12h8'/%3E%3Ccircle cx='12' cy='12' r='2'/%3E%3C/svg%3E") !important;
   background-size: contain !important;
@@ -404,13 +453,13 @@
   gap: 4px !important;
   background: rgba(37, 99, 235, 0.10) !important;
   color: #1d4ed8 !important;
-  border: 1px solid rgba(37, 99, 235, 0.28) !important;
+  border: 1px solid rgba(37, 99, 235, 0.25) !important;
   font-weight: 700 !important;
 }
 
 #colA .sc-unit-badge span.sc-badge-mysql .sc-tech-icon {
-  width: 13px;
-  height: 13px;
+  width: 12px;
+  height: 12px;
   flex-shrink: 0;
   display: inline-block;
 }
@@ -429,41 +478,70 @@
   font-weight: 700 !important;
 }
 
-/* Card Header Strip */
+.sc-custom-card:not(.sc-connect-card) .sc-card-img-placeholder,
+.sc-custom-card:not(.sc-connect-card):hover .sc-card-img-placeholder,
+.sc-custom-card:not(.sc-connect-card).active .sc-card-img-placeholder {
+  order: 2 !important;
+  position: relative !important;
+  z-index: 1 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 138px !important;
+  margin: 0 0 0.55rem 0 !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  background: #f1f5f9 !important;
+  border: 1px solid rgba(226, 232, 240, 0.9) !important;
+  box-shadow: 0 2px 8px rgba(11, 24, 73, 0.05) !important;
+}
+
+.sc-card-img-placeholder img,
+.sc-custom-card:hover .sc-card-img-placeholder img,
+.sc-custom-card.active .sc-card-img-placeholder img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: fill !important;
+  object-position: center !important;
+  border-radius: 10px !important;
+  display: block !important;
+}
+
 #colA .sc-cards-grid > .sc-custom-card:not(.sc-connect-card) h3 {
+  order: 3 !important;
   position: relative !important;
   z-index: 2 !important;
   min-height: 0 !important;
-  height: 33px !important;
-  line-height: 33px !important;
+  height: auto !important;
+  line-height: 1.35 !important;
   display: block !important;
   width: 100% !important;
   box-sizing: border-box !important;
-  padding: 0 0.75rem !important;
-  margin: 0.35rem 0 0 0 !important;
-  background: linear-gradient(90deg, rgba(8, 26, 74, 0.95) 0%, rgba(15, 41, 99, 0.90) 50%, rgba(8, 26, 74, 0.95) 100%) !important;
-  border-radius: 12px 12px 0 0 !important;
-  font-family: 'Poppins', 'Inter', sans-serif !important;
-  font-size: clamp(0.88rem, 1vw, 0.96rem) !important;
-  font-weight: 600 !important;
-  letter-spacing: -0.01em !important;
-  color: #ffffff !important;
+  padding: 0 0.25rem !important;
+  margin: 0.1rem auto 0.6rem auto !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  font-family: 'Poppins', sans-serif !important;
+  font-size: clamp(0.92rem, 1.05vw, 1.02rem) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.015em !important;
+  color: #0b1849 !important;
   text-align: center !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35) !important;
+  text-shadow: none !important;
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
 }
 
 #colA .sc-cards-grid > .sc-connect-card h3 {
+  order: 2 !important;
   min-height: 0 !important;
   display: block !important;
   width: 100% !important;
   box-sizing: border-box !important;
-  padding: 0.3rem 0.4rem !important;
-  margin: 0.25rem 0 0.15rem !important;
-  font-family: 'Poppins', 'Inter', sans-serif !important;
-  font-size: clamp(0.94rem, 1.05vw, 1.05rem) !important;
+  padding: 0.1rem 0.2rem !important;
+  margin: 0.2rem 0 0.2rem !important;
+  font-family: 'Poppins', sans-serif !important;
+  font-size: clamp(0.92rem, 1.02vw, 1.02rem) !important;
   font-weight: 700 !important;
   letter-spacing: -0.01em !important;
   line-height: 1.35 !important;
@@ -479,93 +557,65 @@
   display: none !important;
 }
 
-/* Reduced Height Card Image Frame */
-.sc-custom-card:not(.sc-connect-card) .sc-card-img-placeholder,
-.sc-custom-card:not(.sc-connect-card):hover .sc-card-img-placeholder,
-.sc-custom-card:not(.sc-connect-card).active .sc-card-img-placeholder {
-  position: relative !important;
-  z-index: 1 !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  height: 136px !important;
-  margin: 0 0 0.75rem 0 !important;
-  border-radius: 0 0 12px 12px !important;
-  overflow: hidden !important;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: 0 4px 14px rgba(11, 24, 73, 0.06) !important;
-  transition: none !important;
-  transform: none !important;
-}
-
-.sc-card-img-placeholder img,
-.sc-custom-card:hover .sc-card-img-placeholder img,
-.sc-custom-card.active .sc-card-img-placeholder img {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: fill !important;
-  object-position: center !important;
-  border-radius: 0 !important;
-  display: block !important;
-  transition: none !important;
-  transform: none !important;
-  animation: none !important;
-}
-
 #colA .sc-card-links {
+  order: 4 !important;
   margin-top: auto !important;
   width: 100% !important;
 }
 
 #colA .sc-card-links .sc-btn-notes {
   width: 100%;
-  padding: 0.62rem 1rem !important;
+  padding: 0.58rem 0.85rem !important;
   font-family: 'Inter', sans-serif;
-  font-size: 0.84rem;
-  font-weight: 600;
-  background: #ffffff;
-  color: #1d4ed8;
-  border: 1px solid #bfdbfe;
-  border-radius: 11px;
-  transition: all 0.22s ease;
+  font-size: 0.82rem;
+  font-weight: 700;
+  background: #081a4a !important;
+  color: #ffffff !important;
+  border: 1px solid #081a4a !important;
+  border-radius: 9px;
+  transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: 8px;
   text-decoration: none;
+  box-shadow: 0 4px 10px rgba(8, 26, 74, 0.18) !important;
+}
+
+#colA .sc-card-links .sc-btn-notes::after {
+  display: none !important;
+  content: none !important;
+}
+
+#colA .sc-card-links .sc-btn-notes svg {
+  color: #facc15 !important;
 }
 
 #colA .sc-custom-card:hover .sc-card-links .sc-btn-notes {
-  background: #081a4a !important;
-  color: #ffffff !important;
-  border-color: #081a4a !important;
-  box-shadow: 0 6px 16px rgba(8, 26, 74, 0.22) !important;
-}
-
-#colA .sc-custom-card:hover .sc-card-links .sc-btn-notes svg {
-  color: #facc15 !important;
-  stroke: currentColor !important;
+  background: #1d4ed8 !important;
+  border-color: #1d4ed8 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(29, 78, 216, 0.25) !important;
 }
 
 /* ==========================================================================
-   3. Dynamically Adapting Student Hub Card (3-Col, 2-Col or 1-Col)
+   4. Dynamically Adapting Student Hub Card
    ========================================================================== */
 #colA .sc-cards-grid > .sc-connect-card {
   border: 1.5px solid rgba(37, 99, 235, 0.28) !important;
   background: linear-gradient(180deg, #ffffff 0%, #f4f8ff 100%) !important;
   min-height: 100%;
+  padding: 0.85rem 1rem !important;
 }
 
 @media (min-width: 961px) {
   #colA .sc-cards-grid > .sc-connect-card.sc-hub-span-2 {
     grid-column: span 2 !important;
   }
-
   #colA .sc-cards-grid > .sc-connect-card:nth-child(3n + 1):last-child,
   #colA .sc-cards-grid > .sc-connect-card.sc-hub-span-3 {
     grid-column: 1 / -1 !important;
   }
-
   #colA .sc-cards-grid > .sc-connect-card:nth-child(3n):last-child,
   #colA .sc-cards-grid > .sc-connect-card.sc-hub-span-1 {
     grid-column: span 1 !important;
@@ -576,23 +626,24 @@
 #colA .sc-custom-card:hover .sc-card-img-placeholder.sc-connect-banner,
 #colA .sc-custom-card.active .sc-card-img-placeholder.sc-connect-banner,
 #colA .sc-custom-card:focus-within .sc-card-img-placeholder.sc-connect-banner {
+  order: 3 !important;
   width: 100% !important;
   max-width: 100% !important;
-  min-height: 136px !important;
+  min-height: 120px !important;
   height: auto !important;
-  margin: 0.45rem 0 0.75rem !important;
-  border-radius: 12px !important;
+  margin: 0.35rem 0 0.65rem !important;
+  border-radius: 11px !important;
   display: flex !important;
   flex-direction: column !important;
   justify-content: space-between !important;
-  gap: 0.55rem !important;
-  padding: 1rem 1.3rem !important;
+  gap: 0.5rem !important;
+  padding: 0.85rem 1.15rem !important;
   background:
     radial-gradient(circle at 90% 15%, rgba(245, 158, 11, 0.25) 0%, transparent 45%),
     radial-gradient(circle at 10% 90%, rgba(56, 189, 248, 0.20) 0%, transparent 50%),
     linear-gradient(135deg, #081a4a 0%, #13386b 60%, #1d4ed8 100%) !important;
   border: 1px solid rgba(29, 78, 216, 0.3) !important;
-  box-shadow: 0 8px 22px -6px rgba(11, 24, 73, 0.22) !important;
+  box-shadow: 0 6px 18px -4px rgba(11, 24, 73, 0.2) !important;
   color: #ffffff !important;
   text-align: left !important;
 }
@@ -608,15 +659,15 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 3px 10px;
+  padding: 2px 9px;
   border-radius: 999px;
   background: rgba(245, 158, 11, 0.2) !important;
   border: 1px solid rgba(245, 158, 11, 0.5) !important;
   color: #facc15 !important;
   font-family: 'Inter', sans-serif;
-  font-size: 0.68rem;
+  font-size: 0.66rem;
   font-weight: 700;
-  letter-spacing: 0.035em;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
 }
 
@@ -625,23 +676,23 @@
   align-items: center;
   gap: 6px;
   font-family: 'Inter', sans-serif;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: #e2e8f0 !important;
 }
 
 .sc-cb-live-dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: #4ade80 !important;
-  box-shadow: 0 0 10px #4ade80 !important;
+  box-shadow: 0 0 8px #4ade80 !important;
 }
 
 .sc-cb-middle h4 {
-  margin: 0 0 0.25rem 0;
+  margin: 0 0 0.2rem 0;
   font-family: 'Poppins', sans-serif;
-  font-size: 1.05rem;
+  font-size: 0.98rem;
   font-weight: 700;
   color: #ffffff !important;
   line-height: 1.25;
@@ -650,15 +701,16 @@
 .sc-cb-middle p {
   margin: 0;
   font-family: 'Inter', sans-serif;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   color: #cbd5e1 !important;
-  line-height: 1.42;
+  line-height: 1.38;
 }
 
 .sc-connect-links {
+  order: 4 !important;
   display: grid !important;
   grid-template-columns: 1fr 1fr !important;
-  gap: 0.75rem !important;
+  gap: 0.65rem !important;
 }
 
 .sc-connect-links a.sc-btn-share-proj,
@@ -666,15 +718,15 @@
   display: inline-flex !important;
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: 6px;
   width: 100%;
-  padding: 0.64rem 0.85rem !important;
+  padding: 0.58rem 0.75rem !important;
   font-family: 'Inter', sans-serif;
-  font-size: 0.82rem !important;
+  font-size: 0.8rem !important;
   font-weight: 700 !important;
-  border-radius: 11px !important;
+  border-radius: 10px !important;
   text-decoration: none;
-  transition: all 0.22s ease;
+  transition: all 0.2s ease;
   cursor: pointer;
 }
 
@@ -688,7 +740,7 @@
   background: #1d4ed8 !important;
   border-color: #1d4ed8 !important;
   transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(29, 78, 216, 0.25);
+  box-shadow: 0 6px 14px rgba(29, 78, 216, 0.25);
 }
 
 .sc-connect-links a.sc-btn-ask-query {
@@ -702,11 +754,11 @@
   color: #081a4a !important;
   border-color: #f59e0b !important;
   transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(245, 158, 11, 0.28);
+  box-shadow: 0 6px 14px rgba(245, 158, 11, 0.28);
 }
 
 /* ==========================================================================
-   4. Interactive Project Connect Modal (WhatsApp Only)
+   5. Interactive Project Connect Modal
    ========================================================================== */
 .sc-connect-modal-overlay {
   position: fixed;
@@ -889,91 +941,40 @@
 }
 
 /* ==========================================================================
-   5. Responsive Breakpoints & Adaptive Layouts
+   6. Responsive Breakpoints
    ========================================================================== */
 @media (max-width: 960px) {
-  .sc-hero-wrapper.sc-page-header-pro {
-    padding: 2.4rem 1.4rem 2.6rem !important;
-    border-radius: 22px !important;
+  #colA {
+    padding: 1rem 0.85rem !important;
   }
-
-  .sc-hero-wrapper.sc-page-header-pro::after,
-  .sc-page-header-pro .sc-hero-left::after {
+  .sc-hero-wrapper.sc-page-header-pro {
+    padding: 1.7rem 1.2rem !important;
+  }
+  .sc-hero-accent-left,
+  .sc-hero-accent-right,
+  .sc-page-header-pro .sc-hero-left::after,
+  .sc-hero-wrapper.sc-page-header-pro::after {
     display: none !important;
   }
-
-  .sc-hero-accent-left,
-  .sc-hero-accent-right {
-    width: 160px;
-    opacity: 0.55;
-  }
-
   #colA .sc-cards-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 1.15rem !important;
+    gap: 0.85rem !important;
   }
-
   #colA .sc-cards-grid > .sc-connect-card {
     grid-column: 1 / -1 !important;
   }
 }
 
 @media (max-width: 640px) {
-  .sc-hero-wrapper.sc-page-header-pro {
-    padding: 1.85rem 1rem 2.2rem !important;
-    border-radius: 18px !important;
+  #colA {
+    padding: 0.75rem 0.5rem !important;
   }
-
-  .sc-hero-accent-left,
-  .sc-hero-accent-right {
-    display: none;
-  }
-
-  .sc-page-header-pro .sc-title-gradient {
-    padding: 0.6rem 1.25rem !important;
-    font-size: 1.35rem !important;
-    border-radius: 14px !important;
-    border-width: 2.5px !important;
-  }
-
-  .sc-subtitle-italic {
-    font-size: 1.15rem;
-    white-space: normal;
-    text-align: center;
-  }
-
-  .sc-flank-line {
-    width: 18px;
-  }
-
-  .sc-header-divider-bar {
-    gap: 8px;
-  }
-
-  .sc-header-divider-bar .bar-main {
-    width: 32px;
-  }
-
-  .sc-header-divider-bar .bar-dot,
-  .sc-header-divider-bar::after {
-    width: 24px;
-  }
-
   #colA .sc-cards-grid {
     grid-template-columns: 1fr !important;
-    gap: 1rem !important;
+    gap: 0.8rem !important;
   }
-
-  #colA .sc-cards-grid > .sc-connect-card {
-    grid-column: 1 / -1 !important;
-  }
-
   .sc-cm-row-2,
   .sc-connect-links {
     grid-template-columns: 1fr !important;
-  }
-
-  .sc-card-img-placeholder.sc-connect-banner {
-    padding: 0.85rem 1rem !important;
   }
 }
