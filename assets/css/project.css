@@ -1,5 +1,5 @@
 /* ==========================================================================
-   1. Modern, Clean & High-Precision Hero Banner UI (Fixed Centered Stack)
+   1. Modern, Clean & High-Precision Hero Banner UI
    ========================================================================== */
 
 @keyframes scSpinCW {
@@ -36,13 +36,13 @@
   align-items: center !important;
   justify-content: center !important;
   text-align: center !important;
-  padding: 1.85rem 2rem 1.95rem !important;
-  border-radius: 22px !important;
+  padding: 1.8rem 2rem 1.9rem !important;
+  border-radius: 24px !important;
   background:
     radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.08) 0%, transparent 40%),
     radial-gradient(circle at 90% 20%, rgba(245, 158, 11, 0.10) 0%, transparent 42%),
     linear-gradient(180deg, #ffffff 0%, #f7faff 65%, #edf4fe 100%) !important;
-  border: 1.5px solid rgba(191, 219, 254, 0.85) !important;
+  border: 1.5px solid rgba(191, 219, 254, 0.9) !important;
   box-shadow:
     0 18px 40px -16px rgba(11, 24, 73, 0.09),
     0 4px 14px -2px rgba(11, 24, 73, 0.03),
@@ -308,264 +308,461 @@
 }
 
 /* ==========================================================================
-   2. Column Section Padding & Compact Grid Layout (Removed Header Wrap)
+   2. Column Section & Removal of Sub-Header Elements
    ========================================================================== */
 #colA {
-  padding: 1.25rem 1.1rem 1.5rem !important;
+  padding: 1.25rem 1.15rem 1.55rem !important;
 }
 
-/* Hide the duplicate header wrap completely */
-#colA .sc-section-header-wrap {
+#colA .sc-section-header-wrap,
+#colA .sc-section-title,
+#colA .sc-section-subtitle,
+#colA .sc-section-progress-track {
   display: none !important;
 }
 
-#colA .sc-cards-grid {
+/* ==========================================================================
+   3. Card Grid & Interactive Full-Card Button UI
+   ========================================================================== */
+#colA #scProjectsGrid.sc-cards-grid {
   display: grid !important;
   grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  gap: 0.95rem !important;
+  gap: 1.35rem !important;
   align-items: stretch !important;
 }
 
-#colA .sc-cards-grid > .sc-custom-card {
+#colA #scProjectsGrid.sc-cards-grid > .sc-custom-card {
+  position: relative !important;
   grid-column: span 1;
   flex: none !important;
   width: 100% !important;
   max-width: 100% !important;
   margin: 0 !important;
-  padding: 0.75rem 0.8rem 0.75rem !important;
+  padding: 0.95rem 1rem 1.05rem !important;
   display: flex !important;
   flex-direction: column !important;
   justify-content: flex-start !important;
   background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%) !important;
-  border: 1px solid rgba(37, 99, 235, 0.16) !important;
-  border-radius: 15px !important;
-  box-shadow: 0 4px 14px -4px rgba(11, 24, 73, 0.05) !important;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
-}
-
-#colA .sc-cards-grid > .sc-custom-card:hover,
-#colA .sc-cards-grid > .sc-custom-card:focus-within,
-#colA .sc-cards-grid > .sc-custom-card.active {
-  background: linear-gradient(145deg, #eef6ff 0%, #dbeafe 100%) !important;
-  border-color: #60a5fa !important;
-  transform: translateY(-3px) !important;
+  border: 1.8px solid #d0e0f8 !important;
+  border-radius: 22px !important;
   box-shadow:
-    0 14px 28px -8px rgba(29, 78, 216, 0.16),
-    0 4px 10px -2px rgba(29, 78, 216, 0.06) !important;
+    0 10px 26px -8px rgba(11, 24, 73, 0.08),
+    0 3px 10px -2px rgba(11, 24, 73, 0.03),
+    inset 0 1px 0 #ffffff !important;
+  transition:
+    transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.22s ease,
+    background 0.22s ease !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
 }
 
-#colA .sc-unit-badge {
+/* Make entire project card act & feel like an interactive button */
+#colA #scProjectsGrid.sc-cards-grid > .sc-custom-card:not(.sc-connect-card) {
+  cursor: pointer !important;
+  user-select: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+#colA #scProjectsGrid.sc-cards-grid > .sc-custom-card:not(.sc-connect-card) * {
+  cursor: pointer !important;
+}
+
+#colA #scProjectsGrid.sc-cards-grid > .sc-custom-card:not(.sc-connect-card):hover,
+#colA #scProjectsGrid.sc-cards-grid > .sc-custom-card:not(.sc-connect-card):focus-visible {
+  border-color: #60a5fa !important;
+  background: linear-gradient(180deg, #ffffff 0%, #f2f7ff 100%) !important;
+  transform: translateY(-5px) !important;
+  box-shadow:
+    0 20px 38px -10px rgba(29, 78, 216, 0.18),
+    0 8px 18px -4px rgba(11, 24, 73, 0.06),
+    0 0 0 1px rgba(96, 165, 250, 0.25),
+    inset 0 1px 0 #ffffff !important;
+  outline: none !important;
+}
+
+/* Tactile button press feedback when clicking anywhere on the card */
+#colA #scProjectsGrid.sc-cards-grid > .sc-custom-card:not(.sc-connect-card):active {
+  transform: translateY(-1px) scale(0.992) !important;
+  border-color: #3b82f6 !important;
+  box-shadow:
+    0 8px 18px -6px rgba(29, 78, 216, 0.16),
+    0 2px 6px -1px rgba(11, 24, 73, 0.05) !important;
+  transition-duration: 0.08s !important;
+}
+
+/* --- Top Badges Row --- */
+#colA #scProjectsGrid .sc-unit-badge {
   order: 1 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
-  gap: 0.45rem !important;
-  margin-bottom: 0.45rem !important;
+  gap: 0.4rem !important;
+  margin: 0 0 0.7rem 0 !important;
+  padding: 0 !important;
   width: 100% !important;
   background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+  box-sizing: border-box !important;
 }
 
-#colA .sc-unit-badge span {
-  white-space: nowrap !important;
-  font-family: 'Inter', sans-serif !important;
-  font-size: 0.72rem !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.02em !important;
-  padding: 0.22rem 0.55rem !important;
-  border-radius: 6px !important;
-}
-
-#colA .sc-unit-badge > span:first-child {
+/* Left Badge: Pill-left Navy Tag with Slanted Right Edge & Rounded Golden Ribbon */
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-unit-badge > span:first-child,
+#colA #scProjectsGrid .sc-unit-badge span.sc-badge-hub {
+  position: relative !important;
+  z-index: 1 !important;
   display: inline-flex !important;
   align-items: center !important;
-  gap: 5px !important;
-  background: #081a4a !important;
-  color: #ffffff !important;
+  gap: 6.5px !important;
+  padding: 0.36rem 0.82rem 0.36rem 0.75rem !important;
+  margin-right: 7px !important;
+  background: #07194a !important;
+  color: #fbbf24 !important;
+  font-family: 'Poppins', sans-serif !important;
+  font-size: clamp(0.73rem, 0.82vw, 0.83rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+  line-height: 1.2 !important;
+  border-radius: 999px 4px 16px 999px !important;
+  border: none !important;
+  box-shadow: 0 4px 10px rgba(7, 25, 74, 0.16) !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  overflow: visible !important;
 }
 
-#colA .sc-unit-badge > span:first-child::before {
+/* White Briefcase Icon inside Left Badge (Project Cards & Student Hub) */
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-unit-badge > span:first-child::before,
+#colA #scProjectsGrid .sc-unit-badge span.sc-badge-hub::before {
   content: "" !important;
   display: inline-block !important;
-  width: 12px !important;
-  height: 12px !important;
+  width: 15px !important;
+  height: 15px !important;
   flex-shrink: 0 !important;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='7' width='20' height='14' rx='2' ry='2'/%3E%3Cpath d='M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2'/%3E%3Cpath d='M2 12h8'/%3E%3Cpath d='M14 12h8'/%3E%3Ccircle cx='12' cy='12' r='2'/%3E%3C/svg%3E") !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='7' width='20' height='14' rx='2.5' ry='2.5'/%3E%3Cpath d='M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2'/%3E%3Cpath d='M2 12h8'/%3E%3Cpath d='M14 12h8'/%3E%3Crect x='10' y='10.5' width='4' height='3' rx='0.5'/%3E%3C/svg%3E") !important;
   background-size: contain !important;
   background-repeat: no-repeat !important;
   background-position: center !important;
 }
 
-#colA .sc-unit-badge span.sc-badge-mysql {
+/* Slanted Navy Extension + Golden-Yellow Slanted Edge on Right */
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-unit-badge > span:first-child::after,
+#colA #scProjectsGrid .sc-unit-badge span.sc-badge-hub::after {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  right: -6px !important;
+  width: 17px !important;
+  background: linear-gradient(90deg, #07194a 0%, #07194a 47%, #f59e0b 50%, #fbbf24 100%) !important;
+  transform: skewX(-20deg) !important;
+  border-radius: 0 5px 5px 0 !important;
+  z-index: -1 !important;
+  pointer-events: none !important;
+}
+
+/* Right Badge: Soft Sky-Blue Pill with Two-Tone Python + Blue MySQL Icon */
+#colA #scProjectsGrid .sc-unit-badge span.sc-badge-mysql {
   display: inline-flex !important;
   align-items: center !important;
-  gap: 4px !important;
-  background: rgba(37, 99, 235, 0.10) !important;
-  color: #1d4ed8 !important;
-  border: 1px solid rgba(37, 99, 235, 0.25) !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  padding: 0.35rem 0.74rem !important;
+  background: #eaf3ff !important;
+  color: #07194a !important;
+  border: 1.5px solid #bed6f7 !important;
+  border-radius: 999px !important;
+  font-family: 'Poppins', sans-serif !important;
+  font-size: clamp(0.72rem, 0.8vw, 0.81rem) !important;
   font-weight: 700 !important;
+  line-height: 1.2 !important;
+  box-shadow: inset 0 1px 0 #ffffff, 0 2px 5px rgba(30, 100, 183, 0.07) !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
 }
 
-#colA .sc-unit-badge span.sc-badge-mysql .sc-tech-icon {
-  width: 12px;
-  height: 12px;
-  flex-shrink: 0;
-  display: inline-block;
+#colA #scProjectsGrid .sc-unit-badge span.sc-badge-mysql .sc-tech-icon {
+  width: 14.5px !important;
+  height: 14.5px !important;
+  flex-shrink: 0 !important;
 }
 
-#colA .sc-unit-badge span.sc-badge-hub {
-  background: linear-gradient(135deg, #081a4a 0%, #1d4ed8 100%) !important;
-  color: #facc15 !important;
-  border: 1px solid rgba(245, 158, 11, 0.45) !important;
-  font-weight: 700 !important;
+/* Two-Color Python Logo (Blue + Yellow) */
+#colA #scProjectsGrid .sc-unit-badge span.sc-badge-mysql .sc-tech-icon:first-of-type path {
+  display: none !important;
 }
 
-#colA .sc-unit-badge span.sc-badge-support {
-  background: rgba(245, 158, 11, 0.16) !important;
+#colA #scProjectsGrid .sc-unit-badge span.sc-badge-mysql .sc-tech-icon:first-of-type {
+  color: transparent !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%231862b5' d='M11.914 0C5.82 0 6.2 2.656 6.2 2.656l.007 2.752h5.814v.826H3.9S0 5.789 0 11.969c0 6.18 3.403 5.96 3.403 5.96h2.03v-2.867s-.109-3.42 3.35-3.42h5.766s3.24.052 3.24-3.148V3.202S18.28 0 11.914 0zM8.708 1.85c.578 0 1.046.47 1.046 1.048 0 .578-.468 1.047-1.046 1.047-.579 0-1.047-.469-1.047-1.047 0-.578.468-1.048 1.047-1.048z'/%3E%3Cpath fill='%23f59e0b' d='M12.086 24c6.094 0 5.714-2.656 5.714-2.656l-.007-2.752h-5.814v-.826h8.121S24 18.211 24 12.031c0-6.18-3.403-5.96-3.403-5.96h-2.03v2.867s.109 3.42-3.35 3.42H9.451s-3.24-.052-3.24 3.148v5.292S5.72 24 12.086 24zm3.206-1.85c-.578 0-1.046-.47-1.046-1.048 0-.578.468-1.047 1.046-1.047.579 0 1.047.469 1.047 1.047 0 .578-.468 1.048-1.047 1.048z'/%3E%3C/svg%3E") !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+}
+
+/* MySQL Stacked Cylinder Icon Color */
+#colA #scProjectsGrid .sc-unit-badge span.sc-badge-mysql .sc-tech-icon:last-of-type {
+  color: #1862b5 !important;
+}
+
+#colA #scProjectsGrid .sc-unit-badge span.sc-badge-support {
+  padding: 0.35rem 0.85rem !important;
+  border-radius: 999px !important;
+  background: #fffbeb !important;
   color: #92400e !important;
-  border: 1px solid rgba(245, 158, 11, 0.45) !important;
+  border: 1.5px solid #fde68a !important;
+  font-family: 'Poppins', sans-serif !important;
+  font-size: 0.78rem !important;
   font-weight: 700 !important;
+  box-shadow: inset 0 1px 0 #ffffff !important;
 }
 
-.sc-custom-card:not(.sc-connect-card) .sc-card-img-placeholder,
-.sc-custom-card:not(.sc-connect-card):hover .sc-card-img-placeholder,
-.sc-custom-card:not(.sc-connect-card).active .sc-card-img-placeholder {
+/* --- Card Image Frame (Reduced Height & Uncropped) --- */
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-card-img-placeholder,
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card):hover .sc-card-img-placeholder,
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card).active .sc-card-img-placeholder,
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card):focus-within .sc-card-img-placeholder {
   order: 2 !important;
   position: relative !important;
   z-index: 1 !important;
   width: 100% !important;
   max-width: 100% !important;
   height: 138px !important;
-  margin: 0 0 0.55rem 0 !important;
-  border-radius: 10px !important;
+  min-height: 0 !important;
+  max-height: 138px !important;
+  margin: 0 0 0.72rem 0 !important;
+  padding: 0 !important;
+  border-radius: 14px !important;
   overflow: hidden !important;
-  background: #f1f5f9 !important;
-  border: 1px solid rgba(226, 232, 240, 0.9) !important;
-  box-shadow: 0 2px 8px rgba(11, 24, 73, 0.05) !important;
+  background: #f8fafc !important;
+  border: 1px solid rgba(191, 219, 254, 0.85) !important;
+  box-shadow: 0 5px 14px -4px rgba(11, 24, 73, 0.12) !important;
 }
 
-.sc-card-img-placeholder img,
-.sc-custom-card:hover .sc-card-img-placeholder img,
-.sc-custom-card.active .sc-card-img-placeholder img {
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-card-img-placeholder img,
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card).active .sc-card-img-placeholder img {
   width: 100% !important;
   height: 100% !important;
   object-fit: fill !important;
   object-position: center !important;
-  border-radius: 10px !important;
+  border-radius: 13px !important;
   display: block !important;
+  transform: scale(1) !important;
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), filter 0.32s ease !important;
 }
 
-#colA .sc-cards-grid > .sc-custom-card:not(.sc-connect-card) h3 {
-  order: 3 !important;
-  position: relative !important;
-  z-index: 2 !important;
-  min-height: 0 !important;
-  height: auto !important;
-  line-height: 1.35 !important;
-  display: block !important;
+/* Subtle polish on card hover */
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card):hover .sc-card-img-placeholder img {
+  transform: scale(1.02) !important;
+  filter: saturate(1.05) contrast(1.02) !important;
+}
+
+/* --- Centered Project Title with Flanking Golden Lines --- */
+#colA #scProjectsGrid.sc-cards-grid > .sc-custom-card:not(.sc-connect-card) h3,
+#colA #scProjectsGrid.sc-cards-grid > .sc-connect-card h3 {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
   width: 100% !important;
+  min-height: 0 !important;
   box-sizing: border-box !important;
-  padding: 0 0.25rem !important;
-  margin: 0.1rem auto 0.6rem auto !important;
+  padding: 0 !important;
   background: transparent !important;
+  border: none !important;
   border-radius: 0 !important;
+  box-shadow: none !important;
   font-family: 'Poppins', sans-serif !important;
-  font-size: clamp(0.92rem, 1.05vw, 1.02rem) !important;
+  font-size: clamp(0.86rem, 0.94vw, 0.98rem) !important;
   font-weight: 800 !important;
   letter-spacing: -0.015em !important;
-  color: #0b1849 !important;
+  line-height: 1.3 !important;
+  color: #07194a !important;
   text-align: center !important;
   text-shadow: none !important;
   white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
 }
 
-#colA .sc-cards-grid > .sc-connect-card h3 {
+#colA #scProjectsGrid.sc-cards-grid > .sc-custom-card:not(.sc-connect-card) h3 {
+  order: 3 !important;
+  margin: 0.05rem auto 0.78rem auto !important;
+}
+
+#colA #scProjectsGrid.sc-cards-grid > .sc-connect-card h3 {
   order: 2 !important;
-  min-height: 0 !important;
+  margin: 0.1rem auto 0.45rem auto !important;
+}
+
+#colA #scProjectsGrid.sc-cards-grid > .sc-custom-card:not(.sc-connect-card) h3::before,
+#colA #scProjectsGrid.sc-cards-grid > .sc-custom-card:not(.sc-connect-card) h3::after,
+#colA #scProjectsGrid.sc-cards-grid > .sc-connect-card h3::before,
+#colA #scProjectsGrid.sc-cards-grid > .sc-connect-card h3::after {
+  content: "" !important;
   display: block !important;
+  position: static !important;
+  flex: 1 1 10px !important;
+  max-width: 34px !important;
+  min-width: 8px !important;
+  height: 2.5px !important;
+  background: linear-gradient(90deg, #fbbf24, #f59e0b) !important;
+  border-radius: 999px !important;
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+/* --- Card Button: Pill Navy Core + Top-Left & Bottom-Right Golden Crescent Accents --- */
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-card-links {
+  order: 4 !important;
+  position: relative !important;
+  margin-top: auto !important;
   width: 100% !important;
+  border-radius: 999px !important;
+  background: linear-gradient(
+    114deg,
+    #fbbf24 0%,
+    #f59e0b 13%,
+    #091e56 13.5%,
+    #061542 86.5%,
+    #f59e0b 87%,
+    #fbbf24 100%
+  ) !important;
+  padding: 1.5px 6px !important;
+  box-shadow: 0 5px 14px rgba(7, 25, 74, 0.20) !important;
+  transition: all 0.22s ease !important;
   box-sizing: border-box !important;
-  padding: 0.1rem 0.2rem !important;
-  margin: 0.2rem 0 0.2rem !important;
+}
+
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-card-links .sc-btn-notes {
+  position: relative !important;
+  width: 100% !important;
+  padding: 0.6rem 0.95rem !important;
   font-family: 'Poppins', sans-serif !important;
-  font-size: clamp(0.92rem, 1.02vw, 1.02rem) !important;
+  font-size: clamp(0.82rem, 0.9vw, 0.9rem) !important;
   font-weight: 700 !important;
   letter-spacing: -0.01em !important;
-  line-height: 1.35 !important;
-  color: #081a4a !important;
-  text-align: center !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
+  background: linear-gradient(180deg, #0b2265 0%, #061542 100%) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  border: none !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+  transition: all 0.22s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 9px !important;
+  text-decoration: none !important;
+  box-sizing: border-box !important;
 }
 
-#colA .sc-cards-grid > .sc-custom-card h3::after,
-#colA .sc-cards-grid > .sc-custom-card h3::before {
+/* Keep button text visible while neutralizing any icon/dot wrapper spans injected by syllabus.js */
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-card-links .sc-btn-notes svg {
   display: none !important;
 }
 
-#colA .sc-card-links {
-  order: 4 !important;
-  margin-top: auto !important;
-  width: 100% !important;
-}
-
-#colA .sc-card-links .sc-btn-notes {
-  width: 100%;
-  padding: 0.58rem 0.85rem !important;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.82rem;
-  font-weight: 700;
-  background: #081a4a !important;
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-card-links .sc-btn-notes > * {
+  display: inline !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  border-radius: 0 !important;
   color: #ffffff !important;
-  border: 1px solid #081a4a !important;
-  border-radius: 9px;
-  transition: all 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  text-decoration: none;
-  box-shadow: 0 4px 10px rgba(8, 26, 74, 0.18) !important;
+  -webkit-text-fill-color: #ffffff !important;
+  font: inherit !important;
 }
 
-#colA .sc-card-links .sc-btn-notes::after {
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-card-links .sc-btn-notes > *:empty,
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-card-links .sc-btn-notes > *:has(> svg:only-child),
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-card-links .sc-btn-notes *::before,
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-card-links .sc-btn-notes *::after {
   display: none !important;
   content: none !important;
 }
 
-#colA .sc-card-links .sc-btn-notes svg {
-  color: #facc15 !important;
+/* Outlined Golden Document Icon with Folded Corner & Text Lines */
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-card-links .sc-btn-notes::before {
+  content: "" !important;
+  display: inline-block !important;
+  width: 18px !important;
+  height: 18px !important;
+  flex-shrink: 0 !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fbbf24' stroke-width='2.1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpolyline points='14 2 14 8 20 8'/%3E%3Cline x1='8' y1='13' x2='16' y2='13'/%3E%3Cline x1='8' y1='17' x2='16' y2='17'/%3E%3Cline x1='8' y1='9' x2='10' y2='9'/%3E%3C/svg%3E") !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
 }
 
-#colA .sc-custom-card:hover .sc-card-links .sc-btn-notes {
-  background: #1d4ed8 !important;
-  border-color: #1d4ed8 !important;
-  transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(29, 78, 216, 0.25) !important;
+/* Golden Circle with White Outer Ring & Dark Navy Right Chevron */
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-card-links .sc-btn-notes::after {
+  content: "" !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 21px !important;
+  height: 21px !important;
+  flex-shrink: 0 !important;
+  border-radius: 50% !important;
+  border: 1.5px solid #ffffff !important;
+  background-color: #fbbf24 !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2307194a' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='9 18 15 12 9 6'%3E%3C/polyline%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: 11.5px !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) !important;
+  margin-left: 2px !important;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease !important;
+  box-sizing: border-box !important;
+}
+
+/* Hovering ANYWHERE on the card illuminates the button & slides the chevron */
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card):hover .sc-card-links,
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card):focus-visible .sc-card-links {
+  box-shadow:
+    0 8px 20px rgba(7, 25, 74, 0.28),
+    0 0 0 2px rgba(251, 191, 36, 0.35) !important;
+}
+
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card):hover .sc-card-links .sc-btn-notes,
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card):focus-visible .sc-card-links .sc-btn-notes {
+  background: linear-gradient(180deg, #12308a 0%, #091e58 100%) !important;
+}
+
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card):hover .sc-card-links .sc-btn-notes::after,
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card):focus-visible .sc-card-links .sc-btn-notes::after {
+  transform: translateX(4px) scale(1.05) !important;
+  background-color: #fde047 !important;
 }
 
 /* ==========================================================================
-   4. Dynamically Adapting Student Hub Card
+   4. Dynamically Adapting Student Hub Card (Polished to Match Grid)
    ========================================================================== */
-#colA .sc-cards-grid > .sc-connect-card {
-  border: 1.5px solid rgba(37, 99, 235, 0.28) !important;
-  background: linear-gradient(180deg, #ffffff 0%, #f4f8ff 100%) !important;
+#colA #scProjectsGrid.sc-cards-grid > .sc-connect-card {
+  border: 1.8px solid #d0e0f8 !important;
+  background: linear-gradient(180deg, #ffffff 0%, #f6f9ff 100%) !important;
   min-height: 100%;
-  padding: 0.85rem 1rem !important;
+  padding: 1rem 1.15rem 1.1rem !important;
 }
 
 @media (min-width: 961px) {
-  #colA .sc-cards-grid > .sc-connect-card.sc-hub-span-2 {
+  #colA #scProjectsGrid.sc-cards-grid > .sc-connect-card.sc-hub-span-2 {
     grid-column: span 2 !important;
   }
-  #colA .sc-cards-grid > .sc-connect-card:nth-child(3n + 1):last-child,
-  #colA .sc-cards-grid > .sc-connect-card.sc-hub-span-3 {
+  #colA #scProjectsGrid.sc-cards-grid > .sc-connect-card:nth-child(3n + 1):last-child,
+  #colA #scProjectsGrid.sc-cards-grid > .sc-connect-card.sc-hub-span-3 {
     grid-column: 1 / -1 !important;
   }
-  #colA .sc-cards-grid > .sc-connect-card:nth-child(3n):last-child,
-  #colA .sc-cards-grid > .sc-connect-card.sc-hub-span-1 {
+  #colA #scProjectsGrid.sc-cards-grid > .sc-connect-card:nth-child(3n):last-child,
+  #colA #scProjectsGrid.sc-cards-grid > .sc-connect-card.sc-hub-span-1 {
     grid-column: span 1 !important;
   }
 }
@@ -577,20 +774,20 @@
   order: 3 !important;
   width: 100% !important;
   max-width: 100% !important;
-  min-height: 120px !important;
+  min-height: 116px !important;
   height: auto !important;
-  margin: 0.35rem 0 0.65rem !important;
-  border-radius: 11px !important;
+  margin: 0.25rem 0 0.8rem !important;
+  border-radius: 15px !important;
   display: flex !important;
   flex-direction: column !important;
   justify-content: space-between !important;
   gap: 0.5rem !important;
-  padding: 0.85rem 1.15rem !important;
+  padding: 0.95rem 1.25rem !important;
   background:
     radial-gradient(circle at 90% 15%, rgba(245, 158, 11, 0.25) 0%, transparent 45%),
     radial-gradient(circle at 10% 90%, rgba(56, 189, 248, 0.20) 0%, transparent 50%),
-    linear-gradient(135deg, #081a4a 0%, #13386b 60%, #1d4ed8 100%) !important;
-  border: 1px solid rgba(29, 78, 216, 0.3) !important;
+    linear-gradient(135deg, #07194a 0%, #13386b 60%, #1d4ed8 100%) !important;
+  border: 1px solid rgba(29, 78, 216, 0.32) !important;
   box-shadow: 0 6px 18px -4px rgba(11, 24, 73, 0.2) !important;
   color: #ffffff !important;
   text-align: left !important;
@@ -607,13 +804,13 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 2px 9px;
+  padding: 3px 10px;
   border-radius: 999px;
-  background: rgba(245, 158, 11, 0.2) !important;
-  border: 1px solid rgba(245, 158, 11, 0.5) !important;
-  color: #facc15 !important;
+  background: rgba(245, 158, 11, 0.22) !important;
+  border: 1px solid rgba(251, 191, 36, 0.55) !important;
+  color: #fde047 !important;
   font-family: 'Inter', sans-serif;
-  font-size: 0.66rem;
+  font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.03em;
   text-transform: uppercase;
@@ -624,7 +821,7 @@
   align-items: center;
   gap: 6px;
   font-family: 'Inter', sans-serif;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-weight: 600;
   color: #e2e8f0 !important;
 }
@@ -638,9 +835,9 @@
 }
 
 .sc-cb-middle h4 {
-  margin: 0 0 0.2rem 0;
+  margin: 0 0 0.22rem 0;
   font-family: 'Poppins', sans-serif;
-  font-size: 0.98rem;
+  font-size: 1rem;
   font-weight: 700;
   color: #ffffff !important;
   line-height: 1.25;
@@ -649,16 +846,19 @@
 .sc-cb-middle p {
   margin: 0;
   font-family: 'Inter', sans-serif;
-  font-size: 0.75rem;
-  color: #cbd5e1 !important;
-  line-height: 1.38;
+  font-size: 0.76rem;
+  color: #dbeafe !important;
+  line-height: 1.4;
 }
 
 .sc-connect-links {
   order: 4 !important;
   display: grid !important;
   grid-template-columns: 1fr 1fr !important;
-  gap: 0.65rem !important;
+  gap: 0.75rem !important;
+  background: transparent !important;
+  padding: 0 !important;
+  box-shadow: none !important;
 }
 
 .sc-connect-links a.sc-btn-share-proj,
@@ -666,43 +866,46 @@
   display: inline-flex !important;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 8px;
   width: 100%;
-  padding: 0.58rem 0.75rem !important;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.8rem !important;
+  padding: 0.65rem 1rem !important;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.84rem !important;
   font-weight: 700 !important;
-  border-radius: 10px !important;
+  border-radius: 999px !important;
   text-decoration: none;
   transition: all 0.2s ease;
   cursor: pointer;
+  box-sizing: border-box !important;
 }
 
 .sc-connect-links a.sc-btn-share-proj {
-  background: #081a4a !important;
+  background: linear-gradient(180deg, #0b2265 0%, #061542 100%) !important;
   color: #ffffff !important;
-  border: 1px solid #081a4a !important;
+  -webkit-text-fill-color: #ffffff !important;
+  border: 1.5px solid #07194a !important;
+  box-shadow: 0 4px 12px rgba(7, 25, 74, 0.18) !important;
 }
 
 .sc-connect-links a.sc-btn-share-proj:hover {
-  background: #1d4ed8 !important;
-  border-color: #1d4ed8 !important;
+  background: linear-gradient(180deg, #12308a 0%, #091e58 100%) !important;
   transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(29, 78, 216, 0.25);
+  box-shadow: 0 6px 16px rgba(29, 78, 216, 0.25) !important;
 }
 
 .sc-connect-links a.sc-btn-ask-query {
-  background: #fffbeb !important;
-  color: #92400e !important;
-  border: 1px solid #fde68a !important;
+  background: linear-gradient(180deg, #fffbeb 0%, #fef3c7 100%) !important;
+  color: #07194a !important;
+  -webkit-text-fill-color: #07194a !important;
+  border: 1.5px solid #f59e0b !important;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15) !important;
 }
 
 .sc-connect-links a.sc-btn-ask-query:hover {
-  background: #f59e0b !important;
-  color: #081a4a !important;
-  border-color: #f59e0b !important;
+  background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%) !important;
+  color: #07194a !important;
   transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(245, 158, 11, 0.28);
+  box-shadow: 0 6px 16px rgba(245, 158, 11, 0.28) !important;
 }
 
 /* ==========================================================================
@@ -904,11 +1107,11 @@
   .sc-hero-wrapper.sc-page-header-pro::after {
     display: none !important;
   }
-  #colA .sc-cards-grid {
+  #colA #scProjectsGrid.sc-cards-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 0.85rem !important;
+    gap: 1.1rem !important;
   }
-  #colA .sc-cards-grid > .sc-connect-card {
+  #colA #scProjectsGrid.sc-cards-grid > .sc-connect-card {
     grid-column: 1 / -1 !important;
   }
 }
@@ -917,9 +1120,9 @@
   #colA {
     padding: 0.75rem 0.5rem !important;
   }
-  #colA .sc-cards-grid {
+  #colA #scProjectsGrid.sc-cards-grid {
     grid-template-columns: 1fr !important;
-    gap: 0.8rem !important;
+    gap: 1rem !important;
   }
   .sc-cm-row-2,
   .sc-connect-links {
