@@ -308,69 +308,17 @@
 }
 
 /* ==========================================================================
-   2. Centered Section Header & Progress Bar
+   2. Column Section Padding & Compact Grid Layout (Removed Header Wrap)
    ========================================================================== */
 #colA {
   padding: 1.25rem 1.1rem 1.5rem !important;
 }
 
+/* Hide the duplicate header wrap completely */
 #colA .sc-section-header-wrap {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-  width: 100% !important;
-  margin: 0 auto 1rem auto !important;
+  display: none !important;
 }
 
-#colA .sc-section-title {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  margin: 0 0 0.5rem 0 !important;
-  padding: 0.45rem 1.45rem !important;
-  border-radius: 999px !important;
-  background: #081a4a !important;
-  color: #ffffff !important;
-  border: 2px solid #f59e0b !important;
-  font-family: 'Poppins', sans-serif !important;
-  font-size: 0.92rem !important;
-  font-weight: 800 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.05em !important;
-  box-shadow: 0 4px 14px rgba(8, 26, 74, 0.25) !important;
-}
-
-#colA .sc-section-subtitle {
-  text-align: center !important;
-  margin: 0 auto 0.65rem auto !important;
-  max-width: 780px !important;
-  color: #475569 !important;
-  font-family: 'Inter', sans-serif !important;
-  font-size: 0.88rem !important;
-  line-height: 1.45 !important;
-}
-
-#colA .sc-section-progress-track {
-  width: 140px !important;
-  height: 3px !important;
-  margin: 0.2rem auto 1.15rem auto !important;
-  background: #e2e8f0 !important;
-  border-radius: 999px !important;
-  overflow: hidden !important;
-}
-
-#colA .sc-section-progress-fill {
-  width: 100% !important;
-  height: 100% !important;
-  background: #004ecc !important;
-  border-radius: 999px !important;
-}
-
-/* ==========================================================================
-   3. Compact Project Grid & Centered Project Topic Title Styling
-   ========================================================================== */
 #colA .sc-cards-grid {
   display: grid !important;
   grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
