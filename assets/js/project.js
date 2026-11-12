@@ -1,134 +1,15 @@
 /**
- * SinghClasses — Class 12 CS & IP Projects Page (Modular Architecture)
+ * SinghClasses — Reusable Projects Page Engine (Modular Architecture)
  */
 (function () {
   'use strict';
 
   /* ========================================================================
-     1. Project Catalog Data (Single Source of Truth)
+     1. Page-Specific Project Catalog Data (Injected via HTML)
      ======================================================================== */
-  const PROJECTS_DATA = [
-    {
-      number: '01',
-      title: 'Alumni Management System',
-      category: 'education',
-      categoryLabel: 'Education & Campus',
-      image: '../../../assets/images/project/alumni-management-system.jpg',
-      summary: 'Batch records, graduate directory & event database',
-      tech: ['Python', 'MySQL'],
-      pdfUrl: 'https://drive.google.com/file/d/1ohyBfg7OdOEXypwoLxImgwSwXObYPoZX/view?usp=sharing'
-    },
-    {
-      number: '02',
-      title: 'Library Management System',
-      category: 'education',
-      categoryLabel: 'Education & Campus',
-      image: '../../../assets/images/project/library-management-system.jpg',
-      summary: 'Book catalog, issue/return logs & late fine calculation',
-      tech: ['Python', 'MySQL'],
-      pdfUrl: 'https://drive.google.com/file/d/1OpY1rRczd7vhLA9cWvvnYxaJYlZEtkd6/view?usp=sharing'
-    },
-    {
-      number: '03',
-      title: 'Electricity Management System',
-      category: 'utility',
-      categoryLabel: 'Public & Utility',
-      image: '../../../assets/images/project/electricity-management-system.jpg',
-      summary: 'Meter units, slab tariff billing & consumer records',
-      tech: ['Python', 'MySQL'],
-      pdfUrl: 'https://drive.google.com/file/d/1k1IsZd104aWoi_ixvGkdmWS-ECT98OZZ/view?usp=sharing'
-    },
-    {
-      number: '04',
-      title: 'Employee Management System',
-      category: 'management',
-      categoryLabel: 'Business & Admin',
-      image: '../../../assets/images/project/employee-management-system.jpg',
-      summary: 'Staff records, department roles & salary slips',
-      tech: ['Python', 'MySQL'],
-      pdfUrl: 'https://drive.google.com/file/d/1EpVAehUxZ72gs7mtFgOh1rpJhxZ6AxIw/view?usp=sharing'
-    },
-    {
-      number: '05',
-      title: 'Fashion Management System',
-      category: 'retail',
-      categoryLabel: 'Retail & Billing',
-      image: '../../../assets/images/project/fashion-management-system.jpg',
-      summary: 'Apparel catalog, size variants & retail invoicing',
-      tech: ['Python', 'MySQL'],
-      pdfUrl: 'https://drive.google.com/file/d/1vGRiuOXYPqmf1mZD_RVN4ZIgqw9ERiIi/view?usp=sharing'
-    },
-    {
-      number: '06',
-      title: 'Bakery Management System',
-      category: 'retail',
-      categoryLabel: 'Retail & Billing',
-      image: '../../../assets/images/project/bakery-management-system.jpg',
-      summary: 'Product menu, customer orders & daily stock tracking',
-      tech: ['Python', 'MySQL'],
-      pdfUrl: 'https://drive.google.com/file/d/1LQwC8eH9j6PMFIrxMmJ4mru4WtFlW0-g/view?usp=sharing'
-    },
-    {
-      number: '07',
-      title: 'GST Billing Management System',
-      category: 'retail',
-      categoryLabel: 'Retail & Billing',
-      image: '../../../assets/images/project/gst-billing-system.jpg',
-      summary: 'CGST/SGST tax calculation & itemized invoice generation',
-      tech: ['Python', 'MySQL'],
-      pdfUrl: 'https://drive.google.com/file/d/1EdXL0qVGhvryHCghE4VIXbybGEMvLQca/view?usp=sharing'
-    },
-    {
-      number: '08',
-      title: 'Inventory Management System',
-      category: 'management',
-      categoryLabel: 'Business & Admin',
-      image: '../../../assets/images/project/lab-management-system.jpg',
-      summary: 'Equipment stock levels, supplier logs & reorder alerts',
-      tech: ['Python', 'MySQL'],
-      pdfUrl: 'https://drive.google.com/file/d/1kNOiQl4o_nHYiuFhf-hhyAztkIhvFv3t/view?usp=sharing'
-    },
-    {
-      number: '09',
-      title: 'Medical Store Management System',
-      category: 'retail',
-      categoryLabel: 'Retail & Billing',
-      image: '../../../assets/images/project/medical-store-management-system.jpeg',
-      summary: 'Medicine inventory, batch expiry & pharmacy billing',
-      tech: ['Python', 'MySQL'],
-      pdfUrl: 'https://drive.google.com/file/d/1Eoog2X9-RnNNmiurS_5hyw7TZrwrZiDv/view?usp=sharing'
-    },
-    {
-      number: '10',
-      title: 'Sports Management System',
-      category: 'education',
-      categoryLabel: 'Education & Campus',
-      image: '../../../assets/images/project/sports-management-system.jpg',
-      summary: 'Player registration, kit issue & tournament fixtures',
-      tech: ['Python', 'MySQL'],
-      pdfUrl: 'https://drive.google.com/file/d/1Z12QS-sBrUB2Ca1ThNPbUg04AIPKrJnp/view?usp=sharing'
-    },
-    {
-      number: '11',
-      title: 'Real Estate Management System',
-      category: 'management',
-      categoryLabel: 'Business & Admin',
-      image: '../../../assets/images/project/real-estate-management-system.jpg',
-      summary: 'Property listings, buyer inquiries & booking status',
-      tech: ['Python', 'MySQL'],
-      pdfUrl: 'https://drive.google.com/file/d/1kVdwxRwrzWTlRGtJ6vCAYFSRTTuvNxPi/view?usp=sharing'
-    },
-    {
-      number: '12',
-      title: 'Railway Management System',
-      category: 'utility',
-      categoryLabel: 'Public & Utility',
-      image: '../../../assets/images/project/railway-reservation-system.jpg',
-      summary: 'Train schedules, seat reservation & PNR status lookup',
-      tech: ['Python', 'MySQL'],
-      pdfUrl: 'https://drive.google.com/file/d/1cBcqqUwGLym1xi2IPOSJoCTUnajdlgue/view?usp=sharing'
-    }
-  ];
+  const PROJECTS_DATA = Array.isArray(window.SC_PROJECTS_DATA)
+    ? window.SC_PROJECTS_DATA
+    : [];
 
   /* ========================================================================
      2. Reusable SVG Icon Templates
@@ -142,6 +23,17 @@
     MySQL: `
       <svg viewBox="0 0 24 24" fill="#60a5fa" aria-hidden="true">
         <path d="M12 2C6.48 2 2 3.79 2 6v2c0 2.21 4.48 4 10 4s10-1.79 10-4V6c0-2.21-4.48-4-10-4zm0 12c-5.52 0-10-1.79-10-4v3c0 2.21 4.48 4 10 4s10-1.79 10-4v-3c0 2.21-4.48 4-10 4zm0 5c-5.52 0-10-1.79-10-4v3c0 2.21 4.48 4 10 4s10-1.79 10-4v-3c0 2.21-4.48 4-10 4z"/>
+      </svg>`,
+    Pandas: `
+      <svg viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
+        <line x1="6" y1="4" x2="6" y2="20"/>
+        <line x1="12" y1="7" x2="12" y2="17"/>
+        <line x1="18" y1="4" x2="18" y2="20"/>
+      </svg>`,
+    CSV: `
+      <svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
       </svg>`
   };
 
@@ -150,6 +42,7 @@
      ======================================================================== */
   const ProjectCatalogModule = {
     createTechPills(techList) {
+      if (!Array.isArray(techList)) return '';
       return techList
         .map(
           (name) => `
@@ -166,6 +59,8 @@
       article.className = 'sc-custom-card';
       article.setAttribute('data-category', project.category);
 
+      const techAltLabel = Array.isArray(project.tech) ? project.tech.join(' ') : 'Python';
+
       article.innerHTML = `
         <div class="sc-unit-badge">
           <span>Project ${project.number}</span>
@@ -176,7 +71,7 @@
 
         <div class="sc-card-media">
           <div class="sc-card-media-img">
-            <img src="${project.image}" alt="${project.title} Python MySQL Project" loading="lazy">
+            <img src="${project.image}" alt="${project.title} ${techAltLabel} Project" loading="lazy">
           </div>
           <span class="sc-media-info-cue" aria-hidden="true">ⓘ</span>
           <div class="sc-card-media-flip">
@@ -215,7 +110,7 @@
     render() {
       const grid = document.getElementById('scProjectsGrid');
       const hubCard = document.getElementById('scStudentHubCard');
-      if (!grid) return;
+      if (!grid || !PROJECTS_DATA.length) return;
 
       const fragment = document.createDocumentFragment();
       PROJECTS_DATA.forEach((project) => {
