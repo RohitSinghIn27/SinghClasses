@@ -73,7 +73,7 @@
         </div>
       </a>
 
-      <button class="hamburger-toggle" id="hamburgerToggle" aria-label="Toggle Navigation Menu" aria-expanded="false" aria-controls="nav-menu">
+      <button class="hamburger-toggle" id="hamburgerToggle" type="button" aria-label="Toggle Navigation Menu" aria-expanded="false" aria-controls="nav-menu">
         <span class="hamburger-bar"></span>
         <span class="hamburger-bar"></span>
         <span class="hamburger-bar"></span>
@@ -131,7 +131,7 @@
 
     <div class="sc-widget-container">
 
-      <!-- Hero Header (Reduced Height & Centered Stack) -->
+      <!-- Hero Header -->
       <section class="sc-hero-wrapper sc-page-header-pro" aria-labelledby="page-main-heading">
         <svg class="sc-hero-accent-left" viewBox="0 0 280 260" preserveAspectRatio="xMinYMid slice" aria-hidden="true">
           <circle cx="-20" cy="15" r="145" fill="rgba(37,99,235,0.06)"/>
@@ -157,6 +157,22 @@
             <span class="sc-title-gradient">CLASS XII COMPUTER SCIENCE</span>
           </h1>
 
+          <!-- Three Small Information Chips -->
+          <div class="sc-hero-chips" role="list" aria-label="Project Highlights">
+            <span class="sc-hero-chip" role="listitem">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+              12 Project Ideas
+            </span>
+            <span class="sc-hero-chip" role="listitem">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+              Python + MySQL
+            </span>
+            <span class="sc-hero-chip sc-hero-chip-accent" role="listitem">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              CBSE Project Ready
+            </span>
+          </div>
+
           <div class="sc-header-divider-bar" aria-hidden="true">
             <span class="bar-main"></span>
             <span class="bar-dot"></span>
@@ -169,305 +185,80 @@
         <section class="sc-column sc-column-a" id="colA" data-count-to-content="true" data-section-code="A" data-section-name="CS Projects">
           <div class="sc-column-bg"><canvas id="canvasA" class="sc-canvas-bg"></canvas></div>
 
+          <!-- Horizontal Scrolling Category Filter Bar -->
+          <div class="sc-filter-bar-wrap">
+            <div class="sc-filter-bar" role="tablist" aria-label="Filter projects by category">
+              <button type="button" class="sc-filter-chip active" data-filter="all" role="tab" aria-selected="true">All Projects (12)</button>
+              <button type="button" class="sc-filter-chip" data-filter="education" role="tab" aria-selected="false">Education &amp; Campus</button>
+              <button type="button" class="sc-filter-chip" data-filter="retail" role="tab" aria-selected="false">Retail &amp; Billing</button>
+              <button type="button" class="sc-filter-chip" data-filter="management" role="tab" aria-selected="false">Business &amp; Admin</button>
+              <button type="button" class="sc-filter-chip" data-filter="utility" role="tab" aria-selected="false">Public &amp; Utility</button>
+            </div>
+          </div>
+
           <div class="sc-cards-grid" id="scProjectsGrid">
-            <!-- 01. Alumni Management System -->
-            <article class="sc-custom-card">
-              <div class="sc-unit-badge">
-                <span>Project 01</span>
-                <span class="sc-badge-mysql">
-                  <svg class="sc-tech-icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fill="#1862b5" d="M11.914 0C5.82 0 6.2 2.656 6.2 2.656l.007 2.752h5.814v.826H3.9S0 5.789 0 11.969c0 6.18 3.403 5.96 3.403 5.96h2.03v-2.867s-.109-3.42 3.35-3.42h5.766s3.24.052 3.24-3.148V3.202S18.28 0 11.914 0zM8.708 1.85c.578 0 1.046.47 1.046 1.048 0 .578-.468 1.047-1.046 1.047-.579 0-1.047-.469-1.047-1.047 0-.578.468-1.048 1.047-1.048z"/>
-                    <path fill="#f59e0b" d="M12.086 24c6.094 0 5.714-2.656 5.714-2.656l-.007-2.752h-5.814v-.826h8.121S24 18.211 24 12.031c0-6.18-3.403-5.96-3.403-5.96h-2.03v2.867s.109 3.42-3.35 3.42H9.451s-3.24-.052-3.24 3.148v5.292S5.72 24 12.086 24zm3.206-1.85c-.578 0-1.046-.47-1.046-1.048 0-.578.468-1.047 1.046-1.047.579 0 1.047.469 1.047 1.047 0 .578-.468 1.048-1.047 1.048z"/>
-                  </svg>
-                  Python +
-                  <svg class="sc-tech-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 3.79 2 6v2c0 2.21 4.48 4 10 4s10-1.79 10-4V6c0-2.21-4.48-4-10-4zm0 12c-5.52 0-10-1.79-10-4v3c0 2.21 4.48 4 10 4s10-1.79 10-4v-3c0 2.21-4.48 4-10 4zm0 5c-5.52 0-10-1.79-10-4v3c0 2.21 4.48 4 10 4s10-1.79 10-4v-3c0 2.21-4.48 4-10 4z"/></svg>
-                  MySQL
-                </span>
-              </div>
-              <div class="sc-card-img-placeholder">
-                <img src="../../../assets/images/project/alumni-management-system.jpg" alt="Alumni Management System Python MySQL Project" loading="lazy">
-              </div>
-              <h3>Alumni Management System</h3>
-              <div class="sc-card-links">
-                <a href="https://drive.google.com/file/d/1ohyBfg7OdOEXypwoLxImgwSwXObYPoZX/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="sc-btn-notes">Download Project PDF</a>
-              </div>
-            </article>
+            <!-- Project cards are rendered modularly via project.js -->
 
-            <!-- 02. Library Management System -->
-            <article class="sc-custom-card">
-              <div class="sc-unit-badge">
-                <span>Project 02</span>
-                <span class="sc-badge-mysql">
-                  <svg class="sc-tech-icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fill="#1862b5" d="M11.914 0C5.82 0 6.2 2.656 6.2 2.656l.007 2.752h5.814v.826H3.9S0 5.789 0 11.969c0 6.18 3.403 5.96 3.403 5.96h2.03v-2.867s-.109-3.42 3.35-3.42h5.766s3.24.052 3.24-3.148V3.202S18.28 0 11.914 0zM8.708 1.85c.578 0 1.046.47 1.046 1.048 0 .578-.468 1.047-1.046 1.047-.579 0-1.047-.469-1.047-1.047 0-.578.468-1.048 1.047-1.048z"/>
-                    <path fill="#f59e0b" d="M12.086 24c6.094 0 5.714-2.656 5.714-2.656l-.007-2.752h-5.814v-.826h8.121S24 18.211 24 12.031c0-6.18-3.403-5.96-3.403-5.96h-2.03v2.867s.109 3.42-3.35 3.42H9.451s-3.24-.052-3.24 3.148v5.292S5.72 24 12.086 24zm3.206-1.85c-.578 0-1.046-.47-1.046-1.048 0-.578.468-1.047 1.046-1.047.579 0 1.047.469 1.047 1.047 0 .578-.468 1.048-1.047 1.048z"/>
-                  </svg>
-                  Python +
-                  <svg class="sc-tech-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 3.79 2 6v2c0 2.21 4.48 4 10 4s10-1.79 10-4V6c0-2.21-4.48-4-10-4zm0 12c-5.52 0-10-1.79-10-4v3c0 2.21 4.48 4 10 4s10-1.79 10-4v-3c0 2.21-4.48 4-10 4zm0 5c-5.52 0-10-1.79-10-4v3c0 2.21 4.48 4 10 4s10-1.79 10-4v-3c0 2.21-4.48 4-10 4z"/></svg>
-                  MySQL
-                </span>
-              </div>
-              <div class="sc-card-img-placeholder">
-                <img src="../../../assets/images/project/library-management-system.jpg" alt="Library Management System Python MySQL Project" loading="lazy">
-              </div>
-              <h3>Library Management System</h3>
-              <div class="sc-card-links">
-                <a href="https://drive.google.com/file/d/1OpY1rRczd7vhLA9cWvvnYxaJYlZEtkd6/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="sc-btn-notes">Download Project PDF</a>
-              </div>
-            </article>
-
-            <!-- 03. Electricity Management System -->
-            <article class="sc-custom-card">
-              <div class="sc-unit-badge">
-                <span>Project 03</span>
-                <span class="sc-badge-mysql">
-                  <svg class="sc-tech-icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fill="#1862b5" d="M11.914 0C5.82 0 6.2 2.656 6.2 2.656l.007 2.752h5.814v.826H3.9S0 5.789 0 11.969c0 6.18 3.403 5.96 3.403 5.96h2.03v-2.867s-.109-3.42 3.35-3.42h5.766s3.24.052 3.24-3.148V3.202S18.28 0 11.914 0zM8.708 1.85c.578 0 1.046.47 1.046 1.048 0 .578-.468 1.047-1.046 1.047-.579 0-1.047-.469-1.047-1.047 0-.578.468-1.048 1.047-1.048z"/>
-                    <path fill="#f59e0b" d="M12.086 24c6.094 0 5.714-2.656 5.714-2.656l-.007-2.752h-5.814v-.826h8.121S24 18.211 24 12.031c0-6.18-3.403-5.96-3.403-5.96h-2.03v2.867s.109 3.42-3.35 3.42H9.451s-3.24-.052-3.24 3.148v5.292S5.72 24 12.086 24zm3.206-1.85c-.578 0-1.046-.47-1.046-1.048 0-.578.468-1.047 1.046-1.047.579 0 1.047.469 1.047 1.047 0 .578-.468 1.048-1.047 1.048z"/>
-                  </svg>
-                  Python +
-                  <svg class="sc-tech-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 3.79 2 6v2c0 2.21 4.48 4 10 4s10-1.79 10-4V6c0-2.21-4.48-4-10-4zm0 12c-5.52 0-10-1.79-10-4v3c0 2.21 4.48 4 10 4s10-1.79 10-4v-3c0 2.21-4.48 4-10 4zm0 5c-5.52 0-10-1.79-10-4v3c0 2.21 4.48 4 10 4s10-1.79 10-4v-3c0 2.21-4.48 4-10 4z"/></svg>
-                  MySQL
-                </span>
-              </div>
-              <div class="sc-card-img-placeholder">
-                <img src="../../../assets/images/project/electricity-management-system.jpg" alt="Electricity Management System Python MySQL Project" loading="lazy">
-              </div>
-              <h3>Electricity Management System</h3>
-              <div class="sc-card-links">
-                <a href="https://drive.google.com/file/d/1k1IsZd104aWoi_ixvGkdmWS-ECT98OZZ/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="sc-btn-notes">Download Project PDF</a>
-              </div>
-            </article>
-
-            <!-- 04. Employee Management System -->
-            <article class="sc-custom-card">
-              <div class="sc-unit-badge">
-                <span>Project 04</span>
-                <span class="sc-badge-mysql">
-                  <svg class="sc-tech-icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fill="#1862b5" d="M11.914 0C5.82 0 6.2 2.656 6.2 2.656l.007 2.752h5.814v.826H3.9S0 5.789 0 11.969c0 6.18 3.403 5.96 3.403 5.96h2.03v-2.867s-.109-3.42 3.35-3.42h5.766s3.24.052 3.24-3.148V3.202S18.28 0 11.914 0zM8.708 1.85c.578 0 1.046.47 1.046 1.048 0 .578-.468 1.047-1.046 1.047-.579 0-1.047-.469-1.047-1.047 0-.578.468-1.048 1.047-1.048z"/>
-                    <path fill="#f59e0b" d="M12.086 24c6.094 0 5.714-2.656 5.714-2.656l-.007-2.752h-5.814v-.826h8.121S24 18.211 24 12.031c0-6.18-3.403-5.96-3.403-5.96h-2.03v2.867s.109 3.42-3.35 3.42H9.451s-3.24-.052-3.24 3.148v5.292S5.72 24 12.086 24zm3.206-1.85c-.578 0-1.046-.47-1.046-1.048 0-.578.468-1.047 1.046-1.047.579 0 1.047.469 1.047 1.047 0 .578-.468 1.048-1.047 1.048z"/>
-                  </svg>
-                  Python +
-                  <svg class="sc-tech-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 3.79 2 6v2c0 2.21 4.48 4 10 4s10-1.79 10-4V6c0-2.21-4.48-4-10-4zm0 12c-5.52 0-10-1.79-10-4v3c0 2.21 4.48 4 10 4s10-1.79 10-4v-3c0 2.21-4.48 4-10 4zm0 5c-5.52 0-10-1.79-10-4v3c0 2.21 4.48 4 10 4s10-1.79 10-4v-3c0 2.21-4.48 4-10 4z"/></svg>
-                  MySQL
-                </span>
-              </div>
-              <div class="sc-card-img-placeholder">
-                <img src="../../../assets/images/project/employee-management-system.jpg" alt="Employee Management System Python MySQL Project" loading="lazy">
-              </div>
-              <h3>Employee Management System</h3>
-              <div class="sc-card-links">
-                <a href="https://drive.google.com/file/d/1EpVAehUxZ72gs7mtFgOh1rpJhxZ6AxIw/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="sc-btn-notes">Download Project PDF</a>
-              </div>
-            </article>
-
-            <!-- 05. Fashion Management System -->
-            <article class="sc-custom-card">
-              <div class="sc-unit-badge">
-                <span>Project 05</span>
-                <span class="sc-badge-mysql">
-                  <svg class="sc-tech-icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fill="#1862b5" d="M11.914 0C5.82 0 6.2 2.656 6.2 2.656l.007 2.752h5.814v.826H3.9S0 5.789 0 11.969c0 6.18 3.403 5.96 3.403 5.96h2.03v-2.867s-.109-3.42 3.35-3.42h5.766s3.24.052 3.24-3.148V3.202S18.28 0 11.914 0zM8.708 1.85c.578 0 1.046.47 1.046 1.048 0 .578-.468 1.047-1.046 1.047-.579 0-1.047-.469-1.047-1.047 0-.578.468-1.048 1.047-1.048z"/>
-                    <path fill="#f59e0b" d="M12.086 24c6.094 0 5.714-2.656 5.714-2.656l-.007-2.752h-5.814v-.826h8.121S24 18.211 24 12.031c0-6.18-3.403-5.96-3.403-5.96h-2.03v2.867s.109 3.42-3.35 3.42H9.451s-3.24-.052-3.24 3.148v5.292S5.72 24 12.086 24zm3.206-1.85c-.578 0-1.046-.47-1.046-1.048 0-.578.468-1.047 1.046-1.047.579 0 1.047.469 1.047 1.047 0 .578-.468 1.048-1.047 1.048z"/>
-                  </svg>
-                  Python +
-                  <svg class="sc-tech-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 3.79 2 6v2c0 2.21 4.48 4 10 4s10-1.79 10-4V6c0-2.21-4.48-4-10-4zm0 12c-5.52 0-10-1.79-10-4v3c0 2.21 4.48 4 10 4s10-1.79 10-4v-3c0 2.21-4.48 4-10 4zm0 5c-5.52 0-10-1.79-10-4v3c0 2.21 4.48 4 10 4s10-1.79 10-4v-3c0 2.21-4.48 4-10 4z"/></svg>
-                  MySQL
-                </span>
-              </div>
-              <div class="sc-card-img-placeholder">
-                <img src="../../../assets/images/project/fashion-management-system.jpg" alt="Fashion Management System Python MySQL Project" loading="lazy">
-              </div>
-              <h3>Fashion Management System</h3>
-              <div class="sc-card-links">
-                <a href="https://drive.google.com/file/d/1vGRiuOXYPqmf1mZD_RVN4ZIgqw9ERiIi/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="sc-btn-notes">Download Project PDF</a>
-              </div>
-            </article>
-
-            <!-- 06. Bakery Management System -->
-            <article class="sc-custom-card">
-              <div class="sc-unit-badge">
-                <span>Project 06</span>
-                <span class="sc-badge-mysql">
-                  <svg class="sc-tech-icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fill="#1862b5" d="M11.914 0C5.82 0 6.2 2.656 6.2 2.656l.007 2.752h5.814v.826H3.9S0 5.789 0 11.969c0 6.18 3.403 5.96 3.403 5.96h2.03v-2.867s-.109-3.42 3.35-3.42h5.766s3.24.052 3.24-3.148V3.202S18.28 0 11.914 0zM8.708 1.85c.578 0 1.046.47 1.046 1.048 0 .578-.468 1.047-1.046 1.047-.579 0-1.047-.469-1.047-1.047 0-.578.468-1.048 1.047-1.048z"/>
-                    <path fill="#f59e0b" d="M12.086 24c6.094 0 5.714-2.656 5.714-2.656l-.007-2.752h-5.814v-.826h8.121S24 18.211 24 12.031c0-6.18-3.403-5.96-3.403-5.96h-2.03v2.867s.109 3.42-3.35 3.42H9.451s-3.24-.052-3.24 3.148v5.292S5.72 24 12.086 24zm3.206-1.85c-.578 0-1.046-.47-1.046-1.048 0-.578.468-1.047 1.046-1.047.579 0 1.047.469 1.047 1.047 0 .578-.468 1.048-1.047 1.048z"/>
-                  </svg>
-                  Python +
-                  <svg class="sc-tech-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 3.79 2 6v2c0 2.21 4.48 4 10 4s10-1.79 10-4V6c0-2.21-4.48-4-10-4zm0 12c-5.52 0-10-1.79-10-4v3c0 2.21 4.48 4 10 4s10-1.79 10-4v-3c0 2.21-4.48 4-10 4zm0 5c-5.52 0-10-1.79-10-4v3c0 2.21 4.48 4 10 4s10-1.79 10-4v-3c0 2.21-4.48 4-10 4z"/></svg>
-                  MySQL
-                </span>
-              </div>
-              <div class="sc-card-img-placeholder">
-                <img src="../../../assets/images/project/bakery-management-system.jpg" alt="Bakery Management System Python MySQL Project" loading="lazy">
-              </div>
-              <h3>Bakery Management System</h3>
-              <div class="sc-card-links">
-                <a href="https://drive.google.com/file/d/1LQwC8eH9j6PMFIrxMmJ4mru4WtFlW0-g/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="sc-btn-notes">Download Project PDF</a>
-              </div>
-            </article>
-
-            <!-- 07. GST Billing Management System -->
-            <article class="sc-custom-card">
-              <div class="sc-unit-badge">
-                <span>Project 07</span>
-                <span class="sc-badge-mysql">
-                  <svg class="sc-tech-icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fill="#1862b5" d="M11.914 0C5.82 0 6.2 2.656 6.2 2.656l.007 2.752h5.814v.826H3.9S0 5.789 0 11.969c0 6.18 3.403 5.96 3.403 5.96h2.03v-2.867s-.109-3.42 3.35-3.42h5.766s3.24.052 3.24-3.148V3.202S18.28 0 11.914 0zM8.708 1.85c.578 0 1.046.47 1.046 1.048 0 .578-.468 1.047-1.046 1.047-.579 0-1.047-.469-1.047-1.047 0-.578.468-1.048 1.047-1.048z"/>
-                    <path fill="#f59e0b" d="M12.086 24c6.094 0 5.714-2.656 5.714-2.656l-.007-2.752h-5.814v-.826h8.121S24 18.211 24 12.031c0-6.18-3.403-5.96-3.403-5.96h-2.03v2.867s.109 3.42-3.35 3.42H9.451s-3.24-.052-3.24 3.148v5.292S5.72 24 12.086 24zm3.206-1.85c-.578 0-1.046-.47-1.046-1.048 0-.578.468-1.047 1.046-1.047.579 0 1.047.469 1.047 1.047 0 .578-.468 1.048-1.047 1.048z"/>
-                  </svg>
-                  Python +
-                  <svg class="sc-tech-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 3.79 2 6v2c0 2.21 4.48 4 10 4s10-1.79 10-4V6c0-2.21-4.48-4-10-4zm0 12c-5.52 0-10-1.79-10-4v3c0 2.21 4.48 4 10 4s10-1.79 10-4v-3c0 2.21-4.48 4-10 4zm0 5c-5.52 0-10-1.79-10-4v3c0 2.21 4.48 4 10 4s10-1.79 10-4v-3c0 2.21-4.48 4-10 4z"/></svg>
-                  MySQL
-                </span>
-              </div>
-              <div class="sc-card-img-placeholder">
-                <img src="../../../assets/images/project/gst-billing-system.jpg" alt="GST Billing Management System Python MySQL Project" loading="lazy">
-              </div>
-              <h3>GST Billing Management System</h3>
-              <div class="sc-card-links">
-                <a href="https://drive.google.com/file/d/1EdXL0qVGhvryHCghE4VIXbybGEMvLQca/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="sc-btn-notes">Download Project PDF</a>
-              </div>
-            </article>
-
-            <!-- 08. Inventory Management System -->
-            <article class="sc-custom-card">
-              <div class="sc-unit-badge">
-                <span>Project 08</span>
-                <span class="sc-badge-mysql">
-                  <svg class="sc-tech-icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fill="#1862b5" d="M11.914 0C5.82 0 6.2 2.656 6.2 2.656l.007 2.752h5.814v.826H3.9S0 5.789 0 11.969c0 6.18 3.403 5.96 3.403 5.96h2.03v-2.867s-.109-3.42 3.35-3.42h5.766s3.24.052 3.24-3.148V3.202S18.28 0 11.914 0zM8.708 1.85c.578 0 1.046.47 1.046 1.048 0 .578-.468 1.047-1.046 1.047-.579 0-1.047-.469-1.047-1.047 0-.578.468-1.048 1.047-1.048z"/>
-                    <path fill="#f59e0b" d="M12.086 24c6.094 0 5.714-2.656 5.714-2.656l-.007-2.752h-5.814v-.826h8.121S24 18.211 24 12.031c0-6.18-3.403-5.96-3.403-5.96h-2.03v2.867s.109 3.42-3.35 3.42H9.451s-3.24-.052-3.24 3.148v5.292S5.72 24 12.086 24zm3.206-1.85c-.578 0-1.046-.47-1.046-1.048 0-.578.468-1.047 1.046-1.047.579 0 1.047.469 1.047 1.047 0 .578-.468 1.048-1.047 1.048z"/>
-                  </svg>
-                  Python +
-                  <svg class="sc-tech-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 3.79 2 6v2c0 2.21 4.48 4 10 4s10-1.79 10-4V6c0-2.21-4.48-4-10-4zm0 12c-5.52 0-10-1.79-10-4v3c0 2.21 4.48 4 10 4s10-1.79 10-4v-3c0 2.21-4.48 4-10 4zm0 5c-5.52 0-10-1.79-10-4v3c0 2.21 4.48 4 10 4s10-1.79 10-4v-3c0 2.21-4.48 4-10 4z"/></svg>
-                  MySQL
-                </span>
-              </div>
-              <div class="sc-card-img-placeholder">
-                <img src="../../../assets/images/project/lab-management-system.jpg" alt="Inventory Management System Python MySQL Project" loading="lazy">
-              </div>
-              <h3>Inventory Management System</h3>
-              <div class="sc-card-links">
-                <a href="https://drive.google.com/file/d/1kNOiQl4o_nHYiuFhf-hhyAztkIhvFv3t/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="sc-btn-notes">Download Project PDF</a>
-              </div>
-            </article>
-
-            <!-- 09. Medical Store Management System -->
-            <article class="sc-custom-card">
-              <div class="sc-unit-badge">
-                <span>Project 09</span>
-                <span class="sc-badge-mysql">
-                  <svg class="sc-tech-icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fill="#1862b5" d="M11.914 0C5.82 0 6.2 2.656 6.2 2.656l.007 2.752h5.814v.826H3.9S0 5.789 0 11.969c0 6.18 3.403 5.96 3.403 5.96h2.03v-2.867s-.109-3.42 3.35-3.42h5.766s3.24.052 3.24-3.148V3.202S18.28 0 11.914 0zM8.708 1.85c.578 0 1.046.47 1.046 1.048 0 .578-.468 1.047-1.046 1.047-.579 0-1.047-.469-1.047-1.047 0-.578.468-1.048 1.047-1.048z"/>
-                    <path fill="#f59e0b" d="M12.086 24c6.094 0 5.714-2.656 5.714-2.656l-.007-2.752h-5.814v-.826h8.121S24 18.211 24 12.031c0-6.18-3.403-5.96-3.403-5.96h-2.03v2.867s.109 3.42-3.35 3.42H9.451s-3.24-.052-3.24 3.148v5.292S5.72 24 12.086 24zm3.206-1.85c-.578 0-1.046-.47-1.046-1.048 0-.578.468-1.047 1.046-1.047.579 0 1.047.469 1.047 1.047 0 .578-.468 1.048-1.047 1.048z"/>
-                  </svg>
-                  Python +
-                  <svg class="sc-tech-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 3.79 2 6v2c0 2.21 4.48 4 10 4s10-1.79 10-4V6c0-2.21-4.48-4-10-4zm0 12c-5.52 0-10-1.79-10-4v3c0 2.21 4.48 4 10 4s10-1.79 10-4v-3c0 2.21-4.48 4-10 4zm0 5c-5.52 0-10-1.79-10-4v3c0 2.21 4.48 4 10 4s10-1.79 10-4v-3c0 2.21-4.48 4-10 4z"/></svg>
-                  MySQL
-                </span>
-              </div>
-              <div class="sc-card-img-placeholder">
-                <img src="../../../assets/images/project/medical-store-management-system.jpeg" alt="Medical Store Management System Python MySQL Project" loading="lazy">
-              </div>
-              <h3>Medical Store Management System</h3>
-              <div class="sc-card-links">
-                <a href="https://drive.google.com/file/d/1Eoog2X9-RnNNmiurS_5hyw7TZrwrZiDv/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="sc-btn-notes">Download Project PDF</a>
-              </div>
-            </article>
-
-            <!-- 10. Sports Management System -->
-            <article class="sc-custom-card">
-              <div class="sc-unit-badge">
-                <span>Project 10</span>
-                <span class="sc-badge-mysql">
-                  <svg class="sc-tech-icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fill="#1862b5" d="M11.914 0C5.82 0 6.2 2.656 6.2 2.656l.007 2.752h5.814v.826H3.9S0 5.789 0 11.969c0 6.18 3.403 5.96 3.403 5.96h2.03v-2.867s-.109-3.42 3.35-3.42h5.766s3.24.052 3.24-3.148V3.202S18.28 0 11.914 0zM8.708 1.85c.578 0 1.046.47 1.046 1.048 0 .578-.468 1.047-1.046 1.047-.579 0-1.047-.469-1.047-1.047 0-.578.468-1.048 1.047-1.048z"/>
-                    <path fill="#f59e0b" d="M12.086 24c6.094 0 5.714-2.656 5.714-2.656l-.007-2.752h-5.814v-.826h8.121S24 18.211 24 12.031c0-6.18-3.403-5.96-3.403-5.96h-2.03v2.867s.109 3.42-3.35 3.42H9.451s-3.24-.052-3.24 3.148v5.292S5.72 24 12.086 24zm3.206-1.85c-.578 0-1.046-.47-1.046-1.048 0-.578.468-1.047 1.046-1.047.579 0 1.047.469 1.047 1.047 0 .578-.468 1.048-1.047 1.048z"/>
-                  </svg>
-                  Python +
-                  <svg class="sc-tech-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 3.79 2 6v2c0 2.21 4.48 4 10 4s10-1.79 10-4V6c0-2.21-4.48-4-10-4zm0 12c-5.52 0-10-1.79-10-4v3c0 2.21 4.48 4 10 4s10-1.79 10-4v-3c0 2.21-4.48 4-10 4zm0 5c-5.52 0-10-1.79-10-4v3c0 2.21 4.48 4 10 4s10-1.79 10-4v-3c0 2.21-4.48 4-10 4z"/></svg>
-                  MySQL
-                </span>
-              </div>
-              <div class="sc-card-img-placeholder">
-                <img src="../../../assets/images/project/sports-management-system.jpg" alt="Sports Management System Python MySQL Project" loading="lazy">
-              </div>
-              <h3>Sports Management System</h3>
-              <div class="sc-card-links">
-                <a href="https://drive.google.com/file/d/1Z12QS-sBrUB2Ca1ThNPbUg04AIPKrJnp/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="sc-btn-notes">Download Project PDF</a>
-              </div>
-            </article>
-
-            <!-- 11. Real Estate Management System -->
-            <article class="sc-custom-card">
-              <div class="sc-unit-badge">
-                <span>Project 11</span>
-                <span class="sc-badge-mysql">
-                  <svg class="sc-tech-icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fill="#1862b5" d="M11.914 0C5.82 0 6.2 2.656 6.2 2.656l.007 2.752h5.814v.826H3.9S0 5.789 0 11.969c0 6.18 3.403 5.96 3.403 5.96h2.03v-2.867s-.109-3.42 3.35-3.42h5.766s3.24.052 3.24-3.148V3.202S18.28 0 11.914 0zM8.708 1.85c.578 0 1.046.47 1.046 1.048 0 .578-.468 1.047-1.046 1.047-.579 0-1.047-.469-1.047-1.047 0-.578.468-1.048 1.047-1.048z"/>
-                    <path fill="#f59e0b" d="M12.086 24c6.094 0 5.714-2.656 5.714-2.656l-.007-2.752h-5.814v-.826h8.121S24 18.211 24 12.031c0-6.18-3.403-5.96-3.403-5.96h-2.03v2.867s.109 3.42-3.35 3.42H9.451s-3.24-.052-3.24 3.148v5.292S5.72 24 12.086 24zm3.206-1.85c-.578 0-1.046-.47-1.046-1.048 0-.578.468-1.047 1.046-1.047.579 0 1.047.469 1.047 1.047 0 .578-.468 1.048-1.047 1.048z"/>
-                  </svg>
-                  Python +
-                  <svg class="sc-tech-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 3.79 2 6v2c0 2.21 4.48 4 10 4s10-1.79 10-4V6c0-2.21-4.48-4-10-4zm0 12c-5.52 0-10-1.79-10-4v3c0 2.21 4.48 4 10 4s10-1.79 10-4v-3c0 2.21-4.48 4-10 4zm0 5c-5.52 0-10-1.79-10-4v3c0 2.21 4.48 4 10 4s10-1.79 10-4v-3c0 2.21-4.48 4-10 4z"/></svg>
-                  MySQL
-                </span>
-              </div>
-              <div class="sc-card-img-placeholder">
-                <img src="../../../assets/images/project/real-estate-management-system.jpg" alt="Real Estate Management System Python MySQL Project" loading="lazy">
-              </div>
-              <h3>Real Estate Management System</h3>
-              <div class="sc-card-links">
-                <a href="https://drive.google.com/file/d/1kVdwxRwrzWTlRGtJ6vCAYFSRTTuvNxPi/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="sc-btn-notes">Download Project PDF</a>
-              </div>
-            </article>
-
-            <!-- 12. Railway Management System -->
-            <article class="sc-custom-card">
-              <div class="sc-unit-badge">
-                <span>Project 12</span>
-                <span class="sc-badge-mysql">
-                  <svg class="sc-tech-icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fill="#1862b5" d="M11.914 0C5.82 0 6.2 2.656 6.2 2.656l.007 2.752h5.814v.826H3.9S0 5.789 0 11.969c0 6.18 3.403 5.96 3.403 5.96h2.03v-2.867s-.109-3.42 3.35-3.42h5.766s3.24.052 3.24-3.148V3.202S18.28 0 11.914 0zM8.708 1.85c.578 0 1.046.47 1.046 1.048 0 .578-.468 1.047-1.046 1.047-.579 0-1.047-.469-1.047-1.047 0-.578.468-1.048 1.047-1.048z"/>
-                    <path fill="#f59e0b" d="M12.086 24c6.094 0 5.714-2.656 5.714-2.656l-.007-2.752h-5.814v-.826h8.121S24 18.211 24 12.031c0-6.18-3.403-5.96-3.403-5.96h-2.03v2.867s.109 3.42-3.35 3.42H9.451s-3.24-.052-3.24 3.148v5.292S5.72 24 12.086 24zm3.206-1.85c-.578 0-1.046-.47-1.046-1.048 0-.578.468-1.047 1.046-1.047.579 0 1.047.469 1.047 1.047 0 .578-.468 1.048-1.047 1.048z"/>
-                  </svg>
-                  Python +
-                  <svg class="sc-tech-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 3.79 2 6v2c0 2.21 4.48 4 10 4s10-1.79 10-4V6c0-2.21-4.48-4-10-4zm0 12c-5.52 0-10-1.79-10-4v3c0 2.21 4.48 4 10 4s10-1.79 10-4v-3c0 2.21-4.48 4-10 4zm0 5c-5.52 0-10-1.79-10-4v3c0 2.21 4.48 4 10 4s10-1.79 10-4v-3c0 2.21-4.48 4-10 4z"/></svg>
-                  MySQL
-                </span>
-              </div>
-              <div class="sc-card-img-placeholder">
-                <img src="../../../assets/images/project/railway-reservation-system.jpg" alt="Railway Management System Python MySQL Project" loading="lazy">
-              </div>
-              <h3>Railway Management System</h3>
-              <div class="sc-card-links">
-                <a href="https://drive.google.com/file/d/1cBcqqUwGLym1xi2IPOSJoCTUnajdlgue/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="sc-btn-notes">Download Project PDF</a>
-              </div>
-            </article>
-
-            <!-- Student Hub -->
-            <article class="sc-custom-card sc-connect-card sc-hub-span-2" id="scStudentHubCard">
-              <div class="sc-unit-badge">
-                <span class="sc-badge-hub">Student Hub</span>
-                <span class="sc-badge-support">Community &amp; Viva Support</span>
-              </div>
-              <h3>Share Project, Custom Topic &amp; Viva Queries</h3>
-              <div class="sc-card-img-placeholder sc-connect-banner">
-                <div class="sc-cb-top">
-                  <span class="sc-cb-pill">✦ Direct Mentor Desk</span>
-                  <span class="sc-cb-live-status">
-                    <span class="sc-cb-live-dot" aria-hidden="true"></span> Active Support
-                  </span>
+            <!-- Dedicated Navy-Blue Student Hub Panel -->
+            <article class="sc-custom-card sc-connect-card sc-hub-navy-panel" id="scStudentHubCard">
+              <div class="sc-hub-top-bar">
+                <div class="sc-hub-badges-left">
+                  <span class="sc-hub-tag-pill">✦ Student Hub • Mentor Desk</span>
+                  <span class="sc-hub-sub-pill">CBSE CS &amp; IP Practical Support</span>
                 </div>
-                <div class="sc-cb-middle">
-                  <h4>Contribute a Project or Ask a Practical Doubt</h4>
-                  <p>Submit your Python investigatory project to get featured on SinghClasses.in, request a custom project topic, or get help with MySQL connectivity errors &amp; CBSE external viva questions.</p>
+                <div class="sc-hub-active-pill" role="status">
+                  <span class="sc-hub-pulse-dot" aria-hidden="true"></span>
+                  <span>Active Support • Mentor Online</span>
                 </div>
               </div>
-              <div class="sc-card-links sc-connect-links">
-                <a href="https://wa.me/918800873871?text=Hi%20Rohit%20Sir%2C%20I%20want%20to%20share%20my%20Python%20Project%20for%20SinghClasses.in" target="_blank" rel="noopener noreferrer" class="sc-btn-share-proj" data-connect-mode="share">📤 Share Your Project</a>
-                <a href="https://wa.me/918800873871?text=Hi%20Rohit%20Sir%2C%20I%20have%20a%20query%20regarding%20my%20Class%2012%20Python%20Project" target="_blank" rel="noopener noreferrer" class="sc-btn-ask-query" data-connect-mode="query">💬 Ask Query / Viva Help</a>
+
+              <div class="sc-hub-main-content">
+                <div class="sc-hub-copy">
+                  <h3>Share Your Project, Request a Custom Topic, or Get Viva Help</h3>
+                  <p>Submit your working Python + MySQL project to get featured on SinghClasses.in, request a tailored CBSE investigatory project topic, or get quick guidance on database errors and external viva questions.</p>
+                </div>
+
+                <!-- Coding Illustration -->
+                <div class="sc-hub-illustration" aria-hidden="true">
+                  <svg viewBox="0 0 220 135" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="8" y="8" width="168" height="106" rx="12" fill="#051133" stroke="#3b82f6" stroke-opacity="0.45" stroke-width="1.5"/>
+                    <path d="M8 20C8 13.3726 13.3726 8 20 8H164C170.627 8 176 13.3726 176 20V28H8V20Z" fill="#0b225e"/>
+                    <circle cx="22" cy="18" r="3.5" fill="#f87171"/>
+                    <circle cx="33" cy="18" r="3.5" fill="#fbbf24"/>
+                    <circle cx="44" cy="18" r="3.5" fill="#4ade80"/>
+                    <rect x="64" y="15" width="58" height="6" rx="3" fill="#60a5fa" fill-opacity="0.35"/>
+                    <rect x="22" y="40" width="32" height="6" rx="3" fill="#fbbf24"/>
+                    <rect x="60" y="40" width="66" height="6" rx="3" fill="#93c5fd" fill-opacity="0.75"/>
+                    <rect x="32" y="54" width="48" height="6" rx="3" fill="#38bdf8"/>
+                    <rect x="86" y="54" width="54" height="6" rx="3" fill="#e2e8f0" fill-opacity="0.45"/>
+                    <rect x="32" y="68" width="76" height="6" rx="3" fill="#4ade80" fill-opacity="0.85"/>
+                    <rect x="22" y="82" width="40" height="6" rx="3" fill="#f59e0b"/>
+                    <rect x="68" y="82" width="44" height="6" rx="3" fill="#93c5fd" fill-opacity="0.55"/>
+                    <rect x="22" y="96" width="56" height="6" rx="3" fill="#60a5fa" fill-opacity="0.6"/>
+                    <rect x="136" y="66" width="76" height="58" rx="11" fill="url(#hubCardGrad)" stroke="#fbbf24" stroke-width="1.5"/>
+                    <text x="150" y="91" fill="#fbbf24" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700">&gt;&gt;&gt; SQL</text>
+                    <rect x="150" y="99" width="46" height="5" rx="2.5" fill="#ffffff" fill-opacity="0.75"/>
+                    <rect x="150" y="108" width="32" height="5" rx="2.5" fill="#4ade80"/>
+                    <defs>
+                      <linearGradient id="hubCardGrad" x1="136" y1="66" x2="212" y2="124" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#0f2d7a"/>
+                        <stop offset="1" stop-color="#07194a"/>
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="sc-card-links sc-hub-actions-grid">
+                <a href="https://wa.me/918800873871?text=Hi%20Rohit%20Sir%2C%20I%20want%20to%20share%20my%20Python%20Project%20for%20SinghClasses.in" target="_blank" rel="noopener noreferrer" class="sc-hub-btn sc-hub-btn-primary" data-connect-mode="share">
+                  <span aria-hidden="true">📤</span> Share Project
+                </a>
+                <a href="https://wa.me/918800873871?text=Hi%20Rohit%20Sir%2C%20I%20want%20to%20request%20a%20custom%20Class%2012%20Python%20Project%20topic" target="_blank" rel="noopener noreferrer" class="sc-hub-btn sc-hub-btn-secondary" data-connect-mode="custom">
+                  <span aria-hidden="true">💡</span> Custom Topic
+                </a>
+                <a href="https://wa.me/918800873871?text=Hi%20Rohit%20Sir%2C%20I%20need%20help%20with%20my%20Class%2012%20CS%2FIP%20Project%20Viva%20%26%20Doubts" target="_blank" rel="noopener noreferrer" class="sc-hub-btn sc-hub-btn-secondary" data-connect-mode="viva">
+                  <span aria-hidden="true">🎓</span> Viva Help
+                </a>
               </div>
             </article>
           </div>
@@ -515,9 +306,10 @@
         <button type="button" class="sc-cm-close" id="scCloseConnectModal" aria-label="Close Modal">✕</button>
       </div>
 
-      <div class="sc-cm-tabs" role="tablist">
-        <button type="button" class="sc-cm-tab active" id="tabBtnShare" data-tab="share" role="tab" aria-selected="true">📤 Share Your Project</button>
-        <button type="button" class="sc-cm-tab" id="tabBtnQuery" data-tab="query" role="tab" aria-selected="false">💬 Ask Project Query</button>
+      <div class="sc-cm-tabs sc-cm-tabs-3" role="tablist">
+        <button type="button" class="sc-cm-tab active" id="tabBtnShare" data-tab="share" role="tab" aria-selected="true">📤 Share Project</button>
+        <button type="button" class="sc-cm-tab" id="tabBtnCustom" data-tab="custom" role="tab" aria-selected="false">💡 Custom Topic</button>
+        <button type="button" class="sc-cm-tab" id="tabBtnViva" data-tab="viva" role="tab" aria-selected="false">🎓 Viva Help</button>
       </div>
 
       <form id="scProjectConnectForm" class="sc-cm-body" onsubmit="return false;">
@@ -545,15 +337,15 @@
             <label for="scProjectTech" id="lblProjectTech">Tech Stack / Query Type</label>
             <select id="scProjectTech">
               <option value="Python + MySQL">Python + MySQL</option>
-              <option value="Project Report / Viva Help">Project Report / Viva Help</option>
               <option value="Custom Project Request">Custom Project Request</option>
+              <option value="Project Report / Viva Help">Project Report / Viva Help</option>
             </select>
           </div>
         </div>
 
         <div class="sc-cm-field">
           <label for="scProjectDetails" id="lblProjectDetails">Drive / GitHub Link or Brief Project Note *</label>
-          <textarea id="scProjectDetails" rows="3" placeholder="Paste your Google Drive / GitHub link or describe your project / query..." required></textarea>
+          <textarea id="scProjectDetails" rows="3" placeholder="Paste your Google Drive / GitHub link or describe your project features..." required></textarea>
         </div>
 
         <div class="sc-cm-connect-btns">
