@@ -1,7 +1,24 @@
 /* ==========================================================================
+   0. Design Tokens
+   ========================================================================== */
+:root {
+  --sc-navy-950: #06153d;
+  --sc-navy-900: #07194a;
+  --sc-navy-800: #0d2b6b;
+  --sc-blue-600: #1d4ed8;
+  --sc-blue-500: #2563eb;
+  --sc-gold-500: #f59e0b;
+  --sc-gold-400: #fbbf24;
+  --sc-gold-300: #fde047;
+  --sc-green-900: #0b3b26;
+  --sc-green-800: #0f4c32;
+  --sc-green-700: #166534;
+  --sc-ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ==========================================================================
    1. Modern, Clean & High-Precision Hero Banner UI
    ========================================================================== */
-
 @keyframes scSpinCW {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -12,21 +29,15 @@
   100% { transform: rotate(0deg); }
 }
 
-@keyframes scFloatSpinLeft {
-  0% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-5px) rotate(180deg); }
-  100% { transform: translateY(0px) rotate(360deg); }
-}
-
-@keyframes scFloatSpinRight {
-  0% { transform: translateY(0px) rotate(360deg); }
-  50% { transform: translateY(5px) rotate(180deg); }
-  100% { transform: translateY(0px) rotate(0deg); }
-}
-
-@keyframes scTagPulse {
-  0%, 100% { box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18), 0 0 0 0 rgba(37, 99, 235, 0.4); }
-  50% { box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.25), 0 0 0 7px rgba(37, 99, 235, 0); }
+@keyframes scLivePulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(74, 222, 128, 0);
+    transform: scale(1.12);
+  }
 }
 
 .sc-hero-wrapper.sc-page-header-pro {
@@ -36,7 +47,7 @@
   align-items: center !important;
   justify-content: center !important;
   text-align: center !important;
-  padding: 1.8rem 2rem 1.9rem !important;
+  padding: 1.65rem 2rem 1.75rem !important;
   border-radius: 24px !important;
   background:
     radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.08) 0%, transparent 40%),
@@ -58,7 +69,7 @@
   background-image:
     radial-gradient(ellipse 95% 35% at 50% 122%, #004ecc 0%, #08298a 52%, transparent 72%),
     radial-gradient(ellipse 65% 26% at 14% 112%, #f59e0b 0%, #d97706 48%, transparent 68%),
-    radial-gradient(rgba(37, 99, 235, 0.18) 1.25px, transparent 1.25px);
+    radial-gradient(rgba(37, 99, 235, 0.16) 1.25px, transparent 1.25px);
   background-size: 100% 100%, 100% 100%, 22px 22px;
   background-repeat: no-repeat, no-repeat, repeat;
   mask-image: radial-gradient(ellipse at 50% 45%, rgba(0, 0, 0, 0.3) 15%, rgba(0, 0, 0, 0.9) 80%, transparent 100%);
@@ -67,23 +78,10 @@
   z-index: 0;
 }
 
-.sc-hero-wrapper.sc-page-header-pro::after {
-  content: "" !important;
-  display: block !important;
-  position: absolute !important;
-  left: 4.5% !important;
-  top: 50% !important;
-  width: 36px !important;
-  height: 36px !important;
-  margin-top: -18px !important;
-  border-radius: 10px !important;
-  border: 2px solid rgba(37, 99, 235, 0.30) !important;
-  border-top-color: rgba(245, 158, 11, 0.85) !important;
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(245, 158, 11, 0.10)) !important;
-  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.10) !important;
-  animation: scFloatSpinLeft 14s ease-in-out infinite !important;
-  pointer-events: none !important;
-  z-index: 1 !important;
+.sc-hero-wrapper.sc-page-header-pro::after,
+.sc-page-header-pro .sc-hero-left::before,
+.sc-page-header-pro .sc-hero-left::after {
+  display: none !important;
 }
 
 .sc-hero-accent-left,
@@ -132,41 +130,20 @@
   margin: 0 auto;
 }
 
-.sc-page-header-pro .sc-hero-left::after {
-  content: "" !important;
-  position: absolute !important;
-  right: 1.5% !important;
-  top: 48% !important;
-  width: 32px !important;
-  height: 32px !important;
-  margin-top: -16px !important;
-  border-radius: 9px !important;
-  border: 2px solid rgba(29, 78, 216, 0.30) !important;
-  border-bottom-color: rgba(245, 158, 11, 0.85) !important;
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(37, 99, 235, 0.06)) !important;
-  box-shadow: 0 6px 16px rgba(11, 24, 73, 0.07) !important;
-  animation: scFloatSpinRight 15s ease-in-out infinite !important;
-  pointer-events: none !important;
-}
-
-.sc-page-header-pro .sc-hero-left::before {
-  display: none !important;
-}
-
 .sc-page-header-pro .sc-hero-tag {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   gap: 0.55rem !important;
-  margin-bottom: 0.8rem !important;
+  margin-bottom: 0.72rem !important;
   background: #ffffff !important;
   border: 1.5px solid #bfdbfe !important;
   color: #081a4a !important;
   font-family: 'Inter', sans-serif !important;
   font-weight: 800 !important;
-  padding: 0.36rem 1.15rem !important;
+  padding: 0.34rem 1.1rem !important;
   border-radius: 999px !important;
-  font-size: 0.82rem !important;
+  font-size: 0.8rem !important;
   letter-spacing: 0.04em !important;
   box-shadow:
     0 4px 12px rgba(11, 24, 73, 0.05),
@@ -181,7 +158,6 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231d4ed8'%3E%3Cpath d='M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z'/%3E%3C/svg%3E") !important;
   background-size: contain !important;
   background-repeat: no-repeat !important;
-  animation: none !important;
   display: inline-block !important;
 }
 
@@ -201,7 +177,7 @@
   justify-content: center !important;
   gap: 0.7rem !important;
   width: 100% !important;
-  margin: 0 auto 0.45rem auto !important;
+  margin: 0 auto 0.42rem auto !important;
 }
 
 .sc-flank-line {
@@ -211,10 +187,6 @@
   border-radius: 999px;
   background: #3b82f6 !important;
   flex-shrink: 0;
-}
-
-.sc-flank-line::after {
-  display: none !important;
 }
 
 .sc-subtitle-italic {
@@ -237,7 +209,7 @@
   width: 34px;
   height: 25px;
   border-radius: 6px;
-  background: #f59e0b;
+  background: var(--sc-gold-500);
   color: #081a4a;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 900;
@@ -248,11 +220,11 @@
 
 .sc-page-header-pro .sc-title-gradient {
   display: inline-block !important;
-  margin-top: 0.15rem !important;
+  margin-top: 0.12rem !important;
   padding: 0.62rem 2.2rem !important;
   border-radius: 16px !important;
   font-family: 'Poppins', sans-serif !important;
-  font-size: clamp(1.45rem, 2.9vw, 2.45rem) !important;
+  font-size: clamp(1.45rem, 2.95vw, 2.48rem) !important;
   font-weight: 900 !important;
   font-style: italic !important;
   letter-spacing: 0.01em !important;
@@ -261,12 +233,51 @@
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
   background: linear-gradient(180deg, #071948 0%, #081d54 100%) !important;
-  border: 3px solid #f59e0b !important;
+  border: 3px solid var(--sc-gold-500) !important;
   box-shadow:
     0 10px 24px -5px rgba(8, 29, 84, 0.60),
     0 0 0 1px rgba(245, 158, 11, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
-  filter: none !important;
+}
+
+.sc-hero-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  margin-top: 0.85rem;
+}
+
+.sc-hero-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.34rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid #cbd5e1;
+  color: #1e293b;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+}
+
+.sc-hero-chip svg {
+  color: var(--sc-blue-600);
+  flex-shrink: 0;
+}
+
+.sc-hero-chip.sc-hero-chip-accent {
+  background: #fffbeb;
+  border-color: #fcd34d;
+  color: #78350f;
+}
+
+.sc-hero-chip.sc-hero-chip-accent svg {
+  color: #d97706;
 }
 
 .sc-header-divider-bar {
@@ -274,7 +285,7 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  margin-top: 0.85rem;
+  margin-top: 0.78rem;
   margin-bottom: 0;
   width: 100%;
 }
@@ -283,7 +294,7 @@
   width: 40px;
   height: 5px;
   border-radius: 999px;
-  background: #f59e0b;
+  background: var(--sc-gold-500);
   box-shadow: 0 2px 6px rgba(245, 158, 11, 0.40);
   order: 2;
 }
@@ -308,10 +319,10 @@
 }
 
 /* ==========================================================================
-   2. Column Section & Removal of Sub-Header Elements
+   2. Column Section & Horizontal Scrolling Category Filter Bar
    ========================================================================== */
 #colA {
-  padding: 1.25rem 1.15rem 1.55rem !important;
+  padding: 1rem 1.15rem 1.35rem !important;
 }
 
 #colA .sc-section-header-wrap,
@@ -321,13 +332,64 @@
   display: none !important;
 }
 
+.sc-filter-bar-wrap {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 1rem;
+}
+
+.sc-filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 0.15rem 0.1rem;
+}
+
+.sc-filter-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.sc-filter-chip {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  border: 1.5px solid #cbd5e1;
+  background: #ffffff;
+  color: #334155;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.81rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s var(--sc-ease-smooth);
+  box-shadow: 0 2px 5px rgba(15, 23, 42, 0.03);
+}
+
+.sc-filter-chip:hover {
+  border-color: #60a5fa;
+  color: var(--sc-navy-900);
+  background: #f0f7ff;
+}
+
+.sc-filter-chip.active {
+  background: var(--sc-navy-900);
+  border-color: var(--sc-navy-900);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(7, 25, 74, 0.18);
+}
+
 /* ==========================================================================
-   3. Card Grid & Interactive Full-Card Button UI
+   3. Card Grid, Compact Spacing & Half-and-Half Image Flip on Hover
    ========================================================================== */
 #colA #scProjectsGrid.sc-cards-grid {
   display: grid !important;
   grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  gap: 1.35rem !important;
+  column-gap: 1.25rem !important;
+  row-gap: 1.25rem !important;
   align-items: stretch !important;
 }
 
@@ -336,60 +398,43 @@
   grid-column: span 1;
   flex: none !important;
   width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
   max-width: 100% !important;
   margin: 0 !important;
-  padding: 0.95rem 1rem 1.05rem !important;
+  padding: 0.85rem 0.95rem 0.95rem !important;
   display: flex !important;
   flex-direction: column !important;
   justify-content: flex-start !important;
   background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%) !important;
-  border: 1.8px solid #d0e0f8 !important;
+  border: 1.5px solid #d4e2f7 !important;
   border-radius: 22px !important;
   box-shadow:
-    0 10px 26px -8px rgba(11, 24, 73, 0.08),
-    0 3px 10px -2px rgba(11, 24, 73, 0.03),
+    0 8px 22px -8px rgba(11, 24, 73, 0.07),
+    0 2px 8px -2px rgba(11, 24, 73, 0.03),
     inset 0 1px 0 #ffffff !important;
   transition:
-    transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 0.22s ease,
-    background 0.22s ease !important;
+    transform 0.28s var(--sc-ease-smooth),
+    box-shadow 0.28s var(--sc-ease-smooth),
+    border-color 0.24s ease,
+    background 0.24s ease !important;
   box-sizing: border-box !important;
   overflow: hidden !important;
 }
 
-/* Make entire project card act & feel like an interactive button */
-#colA #scProjectsGrid.sc-cards-grid > .sc-custom-card:not(.sc-connect-card) {
-  cursor: pointer !important;
-  user-select: none !important;
-  -webkit-tap-highlight-color: transparent !important;
+#colA #scProjectsGrid.sc-cards-grid > .sc-custom-card.sc-card-hidden {
+  display: none !important;
 }
 
-#colA #scProjectsGrid.sc-cards-grid > .sc-custom-card:not(.sc-connect-card) * {
-  cursor: pointer !important;
-}
-
-#colA #scProjectsGrid.sc-cards-grid > .sc-custom-card:not(.sc-connect-card):hover,
-#colA #scProjectsGrid.sc-cards-grid > .sc-custom-card:not(.sc-connect-card):focus-visible {
+#colA #scProjectsGrid.sc-cards-grid > .sc-custom-card:not(.sc-connect-card):hover {
   border-color: #60a5fa !important;
-  background: linear-gradient(180deg, #ffffff 0%, #f2f7ff 100%) !important;
+  background: linear-gradient(180deg, #ffffff 0%, #f3f8ff 100%) !important;
   transform: translateY(-5px) !important;
   box-shadow:
-    0 20px 38px -10px rgba(29, 78, 216, 0.18),
+    0 22px 40px -12px rgba(15, 45, 122, 0.16),
     0 8px 18px -4px rgba(11, 24, 73, 0.06),
-    0 0 0 1px rgba(96, 165, 250, 0.25),
+    0 0 0 1px rgba(96, 165, 250, 0.22),
     inset 0 1px 0 #ffffff !important;
-  outline: none !important;
-}
-
-/* Tactile button press feedback when clicking anywhere on the card */
-#colA #scProjectsGrid.sc-cards-grid > .sc-custom-card:not(.sc-connect-card):active {
-  transform: translateY(-1px) scale(0.992) !important;
-  border-color: #3b82f6 !important;
-  box-shadow:
-    0 8px 18px -6px rgba(29, 78, 216, 0.16),
-    0 2px 6px -1px rgba(11, 24, 73, 0.05) !important;
-  transition-duration: 0.08s !important;
 }
 
 /* --- Top Badges Row --- */
@@ -399,7 +444,7 @@
   align-items: center !important;
   justify-content: space-between !important;
   gap: 0.4rem !important;
-  margin: 0 0 0.7rem 0 !important;
+  margin: 0 0 0.58rem 0 !important;
   padding: 0 !important;
   width: 100% !important;
   background: transparent !important;
@@ -409,38 +454,35 @@
   box-sizing: border-box !important;
 }
 
-/* Left Badge: Pill-left Navy Tag with Slanted Right Edge & Rounded Golden Ribbon */
-#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-unit-badge > span:first-child,
-#colA #scProjectsGrid .sc-unit-badge span.sc-badge-hub {
+/* Left Badge: Project Number Tag */
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-unit-badge > span:first-child {
   position: relative !important;
   z-index: 1 !important;
   display: inline-flex !important;
   align-items: center !important;
-  gap: 6.5px !important;
-  padding: 0.36rem 0.82rem 0.36rem 0.75rem !important;
-  margin-right: 7px !important;
-  background: #07194a !important;
-  color: #fbbf24 !important;
+  gap: 6px !important;
+  padding: 0.34rem 0.78rem 0.34rem 0.72rem !important;
+  margin-right: 6px !important;
+  background: var(--sc-navy-900) !important;
+  color: var(--sc-gold-400) !important;
   font-family: 'Poppins', sans-serif !important;
-  font-size: clamp(0.73rem, 0.82vw, 0.83rem) !important;
+  font-size: 0.76rem !important;
   font-weight: 700 !important;
   letter-spacing: -0.01em !important;
   line-height: 1.2 !important;
   border-radius: 999px 4px 16px 999px !important;
   border: none !important;
-  box-shadow: 0 4px 10px rgba(7, 25, 74, 0.16) !important;
+  box-shadow: 0 3px 8px rgba(7, 25, 74, 0.14) !important;
   white-space: nowrap !important;
   flex-shrink: 0 !important;
   overflow: visible !important;
 }
 
-/* White Briefcase Icon inside Left Badge (Project Cards & Student Hub) */
-#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-unit-badge > span:first-child::before,
-#colA #scProjectsGrid .sc-unit-badge span.sc-badge-hub::before {
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-unit-badge > span:first-child::before {
   content: "" !important;
   display: inline-block !important;
-  width: 15px !important;
-  height: 15px !important;
+  width: 14px !important;
+  height: 14px !important;
   flex-shrink: 0 !important;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='7' width='20' height='14' rx='2.5' ry='2.5'/%3E%3Cpath d='M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2'/%3E%3Cpath d='M2 12h8'/%3E%3Cpath d='M14 12h8'/%3E%3Crect x='10' y='10.5' width='4' height='3' rx='0.5'/%3E%3C/svg%3E") !important;
   background-size: contain !important;
@@ -448,173 +490,267 @@
   background-position: center !important;
 }
 
-/* Slanted Navy Extension + Golden-Yellow Slanted Edge on Right */
-#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-unit-badge > span:first-child::after,
-#colA #scProjectsGrid .sc-unit-badge span.sc-badge-hub::after {
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-unit-badge > span:first-child::after {
   content: "" !important;
   display: block !important;
   position: absolute !important;
   top: 0 !important;
   bottom: 0 !important;
-  right: -6px !important;
-  width: 17px !important;
-  background: linear-gradient(90deg, #07194a 0%, #07194a 47%, #f59e0b 50%, #fbbf24 100%) !important;
+  right: -5px !important;
+  width: 15px !important;
+  background: linear-gradient(90deg, var(--sc-navy-900) 0%, var(--sc-navy-900) 47%, var(--sc-gold-500) 50%, var(--sc-gold-400) 100%) !important;
   transform: skewX(-20deg) !important;
   border-radius: 0 5px 5px 0 !important;
   z-index: -1 !important;
   pointer-events: none !important;
 }
 
-/* Right Badge: Soft Sky-Blue Pill with Two-Tone Python + Blue MySQL Icon */
-#colA #scProjectsGrid .sc-unit-badge span.sc-badge-mysql {
+/* Right Badge: Informative Category Tag */
+#colA #scProjectsGrid .sc-unit-badge span.sc-badge-category {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   gap: 5px !important;
-  padding: 0.35rem 0.74rem !important;
-  background: #eaf3ff !important;
-  color: #07194a !important;
-  border: 1.5px solid #bed6f7 !important;
+  padding: 0.24rem 0.62rem !important;
   border-radius: 999px !important;
-  font-family: 'Poppins', sans-serif !important;
-  font-size: clamp(0.72rem, 0.8vw, 0.81rem) !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.68rem !important;
   font-weight: 700 !important;
   line-height: 1.2 !important;
-  box-shadow: inset 0 1px 0 #ffffff, 0 2px 5px rgba(30, 100, 183, 0.07) !important;
   white-space: nowrap !important;
   flex-shrink: 0 !important;
 }
 
-#colA #scProjectsGrid .sc-unit-badge span.sc-badge-mysql .sc-tech-icon {
-  width: 14.5px !important;
-  height: 14.5px !important;
+#colA #scProjectsGrid .sc-unit-badge span.sc-badge-category::before {
+  content: "" !important;
+  display: inline-block !important;
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 50% !important;
   flex-shrink: 0 !important;
 }
 
-/* Two-Color Python Logo (Blue + Yellow) */
-#colA #scProjectsGrid .sc-unit-badge span.sc-badge-mysql .sc-tech-icon:first-of-type path {
-  display: none !important;
+#colA #scProjectsGrid .sc-unit-badge span.sc-badge-category.sc-cat-education {
+  background: #eff6ff !important;
+  color: #1d4ed8 !important;
+  border: 1px solid #bfdbfe !important;
 }
 
-#colA #scProjectsGrid .sc-unit-badge span.sc-badge-mysql .sc-tech-icon:first-of-type {
-  color: transparent !important;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%231862b5' d='M11.914 0C5.82 0 6.2 2.656 6.2 2.656l.007 2.752h5.814v.826H3.9S0 5.789 0 11.969c0 6.18 3.403 5.96 3.403 5.96h2.03v-2.867s-.109-3.42 3.35-3.42h5.766s3.24.052 3.24-3.148V3.202S18.28 0 11.914 0zM8.708 1.85c.578 0 1.046.47 1.046 1.048 0 .578-.468 1.047-1.046 1.047-.579 0-1.047-.469-1.047-1.047 0-.578.468-1.048 1.047-1.048z'/%3E%3Cpath fill='%23f59e0b' d='M12.086 24c6.094 0 5.714-2.656 5.714-2.656l-.007-2.752h-5.814v-.826h8.121S24 18.211 24 12.031c0-6.18-3.403-5.96-3.403-5.96h-2.03v2.867s.109 3.42-3.35 3.42H9.451s-3.24-.052-3.24 3.148v5.292S5.72 24 12.086 24zm3.206-1.85c-.578 0-1.046-.47-1.046-1.048 0-.578.468-1.047 1.046-1.047.579 0 1.047.469 1.047 1.047 0 .578-.468 1.048-1.047 1.048z'/%3E%3C/svg%3E") !important;
-  background-size: contain !important;
-  background-repeat: no-repeat !important;
-  background-position: center !important;
+#colA #scProjectsGrid .sc-unit-badge span.sc-badge-category.sc-cat-education::before {
+  background: #2563eb !important;
 }
 
-/* MySQL Stacked Cylinder Icon Color */
-#colA #scProjectsGrid .sc-unit-badge span.sc-badge-mysql .sc-tech-icon:last-of-type {
-  color: #1862b5 !important;
-}
-
-#colA #scProjectsGrid .sc-unit-badge span.sc-badge-support {
-  padding: 0.35rem 0.85rem !important;
-  border-radius: 999px !important;
+#colA #scProjectsGrid .sc-unit-badge span.sc-badge-category.sc-cat-retail {
   background: #fffbeb !important;
-  color: #92400e !important;
-  border: 1.5px solid #fde68a !important;
-  font-family: 'Poppins', sans-serif !important;
-  font-size: 0.78rem !important;
-  font-weight: 700 !important;
-  box-shadow: inset 0 1px 0 #ffffff !important;
+  color: #b45309 !important;
+  border: 1px solid #fde68a !important;
 }
 
-/* --- Card Image Frame (Reduced Height & Uncropped) --- */
-#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-card-img-placeholder,
-#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card):hover .sc-card-img-placeholder,
-#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card).active .sc-card-img-placeholder,
-#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card):focus-within .sc-card-img-placeholder {
+#colA #scProjectsGrid .sc-unit-badge span.sc-badge-category.sc-cat-retail::before {
+  background: #f59e0b !important;
+}
+
+#colA #scProjectsGrid .sc-unit-badge span.sc-badge-category.sc-cat-management {
+  background: #eef2ff !important;
+  color: #4338ca !important;
+  border: 1px solid #c7d2fe !important;
+}
+
+#colA #scProjectsGrid .sc-unit-badge span.sc-badge-category.sc-cat-management::before {
+  background: #4f46e5 !important;
+}
+
+#colA #scProjectsGrid .sc-unit-badge span.sc-badge-category.sc-cat-utility {
+  background: #ecfdf5 !important;
+  color: #047857 !important;
+  border: 1px solid #a7f3d0 !important;
+}
+
+#colA #scProjectsGrid .sc-unit-badge span.sc-badge-category.sc-cat-utility::before {
+  background: #10b981 !important;
+}
+
+/* --- Card Media Frame: Half-and-Half Flip on Card Hover --- */
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-card-media {
   order: 2 !important;
   position: relative !important;
   z-index: 1 !important;
   width: 100% !important;
-  max-width: 100% !important;
-  height: 138px !important;
-  min-height: 0 !important;
-  max-height: 138px !important;
-  margin: 0 0 0.72rem 0 !important;
+  height: 164px !important;
+  min-height: 164px !important;
+  max-height: 164px !important;
+  margin: 0 0 0.58rem 0 !important;
   padding: 0 !important;
   border-radius: 14px !important;
   overflow: hidden !important;
-  background: #f8fafc !important;
-  border: 1px solid rgba(191, 219, 254, 0.85) !important;
+  background: var(--sc-navy-950) !important;
+  border: 1px solid rgba(191, 219, 254, 0.9) !important;
   box-shadow: 0 5px 14px -4px rgba(11, 24, 73, 0.12) !important;
+  perspective: 950px !important;
 }
 
-#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-card-img-placeholder img,
-#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card).active .sc-card-img-placeholder img {
+/* Left Half: Image Pane (100% by default, shrinks to 50% on hover) */
+.sc-card-media-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  transition: width 0.44s var(--sc-ease-smooth);
+}
+
+.sc-card-media-img img {
   width: 100% !important;
   height: 100% !important;
-  object-fit: fill !important;
+  object-fit: cover !important;
   object-position: center !important;
-  border-radius: 13px !important;
   display: block !important;
-  transform: scale(1) !important;
-  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), filter 0.32s ease !important;
+  transition: transform 0.44s var(--sc-ease-smooth), filter 0.35s ease !important;
 }
 
-/* Subtle polish on card hover */
-#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card):hover .sc-card-img-placeholder img {
-  transform: scale(1.02) !important;
-  filter: saturate(1.05) contrast(1.02) !important;
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card):hover .sc-card-media-img,
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card).is-flipped .sc-card-media-img {
+  width: 50%;
 }
 
-/* --- Centered Project Title with Flanking Golden Lines --- */
-#colA #scProjectsGrid.sc-cards-grid > .sc-custom-card:not(.sc-connect-card) h3,
-#colA #scProjectsGrid.sc-cards-grid > .sc-connect-card h3 {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 8px !important;
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card):hover .sc-card-media-img img,
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card).is-flipped .sc-card-media-img img {
+  transform: scale(1.06) !important;
+  filter: contrast(1.03) saturate(1.05) !important;
+}
+
+/* Right Half: 3D Flipped Info + Python & MySQL Pane */
+.sc-card-media-flip {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  padding: 0.62rem 0.58rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: left;
+  background:
+    radial-gradient(circle at 90% 12%, rgba(245, 158, 11, 0.2) 0%, transparent 55%),
+    linear-gradient(155deg, var(--sc-navy-950) 0%, var(--sc-navy-800) 100%);
+  border-left: 1.5px solid rgba(251, 191, 36, 0.6);
+  color: #ffffff;
+  transform-origin: left center;
+  transform: rotateY(-95deg);
+  opacity: 0;
+  pointer-events: none;
+  backface-visibility: hidden;
+  transition:
+    transform 0.44s var(--sc-ease-smooth),
+    opacity 0.26s ease;
+}
+
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card):hover .sc-card-media-flip,
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card).is-flipped .sc-card-media-flip {
+  transform: rotateY(0deg);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sc-flip-info-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.sc-flip-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--sc-gold-400);
+}
+
+.sc-flip-desc {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  line-height: 1.35;
+  color: #f1f5f9;
+}
+
+.sc-flip-tech-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.32rem;
+  padding-top: 0.36rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.sc-flip-tech-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0.18rem 0.44rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(191, 219, 254, 0.28);
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.63rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.sc-flip-tech-pill svg {
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
+}
+
+/* --- Card Content Body (Compact & Clean Title Only) --- */
+.sc-card-body {
+  order: 3 !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 2.5rem;
+  margin: 0 0 0.62rem 0 !important;
+  padding: 0 !important;
+  flex: 1 1 auto;
+}
+
+#colA #scProjectsGrid.sc-cards-grid > .sc-custom-card:not(.sc-connect-card) h3 {
+  display: block !important;
   width: 100% !important;
   min-height: 0 !important;
   box-sizing: border-box !important;
+  margin: 0 !important;
   padding: 0 !important;
   background: transparent !important;
   border: none !important;
   border-radius: 0 !important;
   box-shadow: none !important;
   font-family: 'Poppins', sans-serif !important;
-  font-size: clamp(0.86rem, 0.94vw, 0.98rem) !important;
+  font-size: clamp(0.87rem, 0.93vw, 0.95rem) !important;
   font-weight: 800 !important;
   letter-spacing: -0.015em !important;
   line-height: 1.3 !important;
-  color: #07194a !important;
+  color: var(--sc-navy-900) !important;
   text-align: center !important;
   text-shadow: none !important;
-  white-space: nowrap !important;
-}
-
-#colA #scProjectsGrid.sc-cards-grid > .sc-custom-card:not(.sc-connect-card) h3 {
-  order: 3 !important;
-  margin: 0.05rem auto 0.78rem auto !important;
-}
-
-#colA #scProjectsGrid.sc-cards-grid > .sc-connect-card h3 {
-  order: 2 !important;
-  margin: 0.1rem auto 0.45rem auto !important;
 }
 
 #colA #scProjectsGrid.sc-cards-grid > .sc-custom-card:not(.sc-connect-card) h3::before,
-#colA #scProjectsGrid.sc-cards-grid > .sc-custom-card:not(.sc-connect-card) h3::after,
-#colA #scProjectsGrid.sc-cards-grid > .sc-connect-card h3::before,
-#colA #scProjectsGrid.sc-cards-grid > .sc-connect-card h3::after {
-  content: "" !important;
-  display: block !important;
-  position: static !important;
-  flex: 1 1 10px !important;
-  max-width: 34px !important;
-  min-width: 8px !important;
-  height: 2.5px !important;
-  background: linear-gradient(90deg, #fbbf24, #f59e0b) !important;
-  border-radius: 999px !important;
-  transform: none !important;
-  opacity: 1 !important;
+#colA #scProjectsGrid.sc-cards-grid > .sc-custom-card:not(.sc-connect-card) h3::after {
+  display: none !important;
+  content: none !important;
 }
 
-/* --- Card Button: Pill Navy Core + Top-Left & Bottom-Right Golden Crescent Accents --- */
+/* --- Bottom-Aligned Primary CTA Button --- */
 #colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-card-links {
   order: 4 !important;
   position: relative !important;
@@ -623,23 +759,23 @@
   border-radius: 999px !important;
   background: linear-gradient(
     114deg,
-    #fbbf24 0%,
-    #f59e0b 13%,
+    var(--sc-gold-400) 0%,
+    var(--sc-gold-500) 13%,
     #091e56 13.5%,
     #061542 86.5%,
-    #f59e0b 87%,
-    #fbbf24 100%
+    var(--sc-gold-500) 87%,
+    var(--sc-gold-400) 100%
   ) !important;
   padding: 1.5px 6px !important;
-  box-shadow: 0 5px 14px rgba(7, 25, 74, 0.20) !important;
-  transition: all 0.22s ease !important;
+  box-shadow: 0 5px 14px rgba(7, 25, 74, 0.18) !important;
+  transition: transform 0.24s var(--sc-ease-smooth), box-shadow 0.24s ease !important;
   box-sizing: border-box !important;
 }
 
 #colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-card-links .sc-btn-notes {
   position: relative !important;
   width: 100% !important;
-  padding: 0.6rem 0.95rem !important;
+  padding: 0.62rem 0.95rem !important;
   font-family: 'Poppins', sans-serif !important;
   font-size: clamp(0.82rem, 0.9vw, 0.9rem) !important;
   font-weight: 700 !important;
@@ -650,7 +786,8 @@
   border: none !important;
   border-radius: 999px !important;
   box-shadow: none !important;
-  transition: all 0.22s ease !important;
+  cursor: pointer !important;
+  transition: background 0.24s ease, color 0.24s ease !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -659,7 +796,7 @@
   box-sizing: border-box !important;
 }
 
-/* Keep button text visible while neutralizing any icon/dot wrapper spans injected by syllabus.js */
+/* Neutralize any extra icons injected by syllabus.js */
 #colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-card-links .sc-btn-notes svg {
   display: none !important;
 }
@@ -689,7 +826,6 @@
   content: none !important;
 }
 
-/* Outlined Golden Document Icon with Folded Corner & Text Lines */
 #colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-card-links .sc-btn-notes::before {
   content: "" !important;
   display: inline-block !important;
@@ -702,7 +838,6 @@
   background-position: center !important;
 }
 
-/* Golden Circle with White Outer Ring & Dark Navy Right Chevron */
 #colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-card-links .sc-btn-notes::after {
   content: "" !important;
   display: inline-flex !important;
@@ -713,203 +848,257 @@
   flex-shrink: 0 !important;
   border-radius: 50% !important;
   border: 1.5px solid #ffffff !important;
-  background-color: #fbbf24 !important;
+  background-color: var(--sc-gold-400) !important;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2307194a' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='9 18 15 12 9 6'%3E%3C/polyline%3E%3C/svg%3E") !important;
   background-repeat: no-repeat !important;
   background-position: center !important;
   background-size: 11.5px !important;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) !important;
   margin-left: 2px !important;
-  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease !important;
+  transition: transform 0.24s var(--sc-ease-smooth), background-color 0.22s ease !important;
   box-sizing: border-box !important;
 }
 
-/* Hovering ANYWHERE on the card illuminates the button & slides the chevron */
-#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card):hover .sc-card-links,
-#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card):focus-visible .sc-card-links {
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-card-links:hover,
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-card-links:focus-within {
   box-shadow:
-    0 8px 20px rgba(7, 25, 74, 0.28),
+    0 8px 20px rgba(7, 25, 74, 0.26),
     0 0 0 2px rgba(251, 191, 36, 0.35) !important;
 }
 
-#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card):hover .sc-card-links .sc-btn-notes,
-#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card):focus-visible .sc-card-links .sc-btn-notes {
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-card-links .sc-btn-notes:hover,
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-card-links .sc-btn-notes:focus-visible {
   background: linear-gradient(180deg, #12308a 0%, #091e58 100%) !important;
 }
 
-#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card):hover .sc-card-links .sc-btn-notes::after,
-#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card):focus-visible .sc-card-links .sc-btn-notes::after {
-  transform: translateX(4px) scale(1.05) !important;
-  background-color: #fde047 !important;
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-card-links .sc-btn-notes:hover::after,
+#colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-card-links .sc-btn-notes:focus-visible::after {
+  transform: translateX(4px) !important;
+  background-color: var(--sc-gold-300) !important;
 }
 
 /* ==========================================================================
-   4. Dynamically Adapting Student Hub Card (Polished to Match Grid)
+   4. Dedicated Navy-Blue Student Hub Panel
    ========================================================================== */
-#colA #scProjectsGrid.sc-cards-grid > .sc-connect-card {
-  border: 1.8px solid #d0e0f8 !important;
-  background: linear-gradient(180deg, #ffffff 0%, #f6f9ff 100%) !important;
-  min-height: 100%;
-  padding: 1rem 1.15rem 1.1rem !important;
-}
-
-@media (min-width: 961px) {
-  #colA #scProjectsGrid.sc-cards-grid > .sc-connect-card.sc-hub-span-2 {
-    grid-column: span 2 !important;
-  }
-  #colA #scProjectsGrid.sc-cards-grid > .sc-connect-card:nth-child(3n + 1):last-child,
-  #colA #scProjectsGrid.sc-cards-grid > .sc-connect-card.sc-hub-span-3 {
-    grid-column: 1 / -1 !important;
-  }
-  #colA #scProjectsGrid.sc-cards-grid > .sc-connect-card:nth-child(3n):last-child,
-  #colA #scProjectsGrid.sc-cards-grid > .sc-connect-card.sc-hub-span-1 {
-    grid-column: span 1 !important;
-  }
-}
-
-#colA .sc-card-img-placeholder.sc-connect-banner,
-#colA .sc-custom-card:hover .sc-card-img-placeholder.sc-connect-banner,
-#colA .sc-custom-card.active .sc-card-img-placeholder.sc-connect-banner,
-#colA .sc-custom-card:focus-within .sc-card-img-placeholder.sc-connect-banner {
-  order: 3 !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  min-height: 116px !important;
-  height: auto !important;
-  margin: 0.25rem 0 0.8rem !important;
-  border-radius: 15px !important;
+#colA #scProjectsGrid.sc-cards-grid > .sc-connect-card.sc-hub-navy-panel {
+  grid-column: 1 / -1 !important;
+  padding: 1.35rem 1.55rem !important;
+  border-radius: 22px !important;
+  background:
+    radial-gradient(circle at 92% 18%, rgba(245, 158, 11, 0.22) 0%, transparent 42%),
+    radial-gradient(circle at 8% 88%, rgba(56, 189, 248, 0.18) 0%, transparent 48%),
+    linear-gradient(135deg, var(--sc-navy-950) 0%, var(--sc-navy-800) 55%, #164096 100%) !important;
+  border: 1.5px solid rgba(96, 165, 250, 0.38) !important;
+  box-shadow:
+    0 18px 36px -12px rgba(6, 21, 61, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
+  color: #ffffff !important;
   display: flex !important;
   flex-direction: column !important;
-  justify-content: space-between !important;
-  gap: 0.5rem !important;
-  padding: 0.95rem 1.25rem !important;
-  background:
-    radial-gradient(circle at 90% 15%, rgba(245, 158, 11, 0.25) 0%, transparent 45%),
-    radial-gradient(circle at 10% 90%, rgba(56, 189, 248, 0.20) 0%, transparent 50%),
-    linear-gradient(135deg, #07194a 0%, #13386b 60%, #1d4ed8 100%) !important;
-  border: 1px solid rgba(29, 78, 216, 0.32) !important;
-  box-shadow: 0 6px 18px -4px rgba(11, 24, 73, 0.2) !important;
-  color: #ffffff !important;
-  text-align: left !important;
+  gap: 1rem !important;
 }
 
-.sc-cb-top {
+.sc-hub-top-bar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;
+  gap: 0.75rem;
 }
 
-.sc-cb-pill {
+.sc-hub-badges-left {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.sc-hub-tag-pill {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 3px 10px;
+  gap: 6px;
+  padding: 0.34rem 0.9rem;
   border-radius: 999px;
-  background: rgba(245, 158, 11, 0.22) !important;
-  border: 1px solid rgba(251, 191, 36, 0.55) !important;
-  color: #fde047 !important;
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(251, 191, 36, 0.55);
+  color: var(--sc-gold-300);
   font-family: 'Inter', sans-serif;
-  font-size: 0.68rem;
-  font-weight: 700;
+  font-size: 0.74rem;
+  font-weight: 800;
   letter-spacing: 0.03em;
   text-transform: uppercase;
 }
 
-.sc-cb-live-status {
+.sc-hub-sub-pill {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  padding: 0.32rem 0.82rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #dbeafe;
   font-family: 'Inter', sans-serif;
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   font-weight: 600;
-  color: #e2e8f0 !important;
 }
 
-.sc-cb-live-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #4ade80 !important;
-  box-shadow: 0 0 8px #4ade80 !important;
-}
-
-.sc-cb-middle h4 {
-  margin: 0 0 0.22rem 0;
-  font-family: 'Poppins', sans-serif;
-  font-size: 1rem;
+.sc-hub-active-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.38rem 0.95rem;
+  border-radius: 999px;
+  background: rgba(22, 163, 74, 0.24);
+  border: 1.5px solid rgba(74, 222, 128, 0.65);
+  color: #bbf7d0;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
   font-weight: 700;
-  color: #ffffff !important;
-  line-height: 1.25;
+  box-shadow: 0 0 16px rgba(34, 197, 94, 0.22);
 }
 
-.sc-cb-middle p {
+.sc-hub-pulse-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #4ade80;
+  flex-shrink: 0;
+  animation: scLivePulse 2s infinite;
+}
+
+.sc-hub-main-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.sc-hub-copy {
+  flex: 1 1 auto;
+  text-align: left;
+}
+
+#colA #scProjectsGrid.sc-cards-grid > .sc-hub-navy-panel .sc-hub-copy h3 {
+  display: block !important;
+  margin: 0 0 0.4rem 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  font-family: 'Poppins', sans-serif !important;
+  font-size: clamp(1.12rem, 1.5vw, 1.38rem) !important;
+  font-weight: 800 !important;
+  line-height: 1.3 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-align: left !important;
+}
+
+#colA #scProjectsGrid.sc-cards-grid > .sc-hub-navy-panel .sc-hub-copy h3::before,
+#colA #scProjectsGrid.sc-cards-grid > .sc-hub-navy-panel .sc-hub-copy h3::after {
+  display: none !important;
+}
+
+.sc-hub-copy p {
   margin: 0;
   font-family: 'Inter', sans-serif;
-  font-size: 0.76rem;
-  color: #dbeafe !important;
-  line-height: 1.4;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: #dbeafe;
+  max-width: 680px;
 }
 
-.sc-connect-links {
-  order: 4 !important;
+.sc-hub-illustration {
+  flex: 0 0 210px;
+  width: 210px;
+  filter: drop-shadow(0 10px 18px rgba(4, 12, 36, 0.35));
+}
+
+.sc-hub-illustration svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.sc-hub-actions-grid {
   display: grid !important;
-  grid-template-columns: 1fr 1fr !important;
-  gap: 0.75rem !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 0.85rem !important;
+  width: 100% !important;
+  margin-top: 0.1rem !important;
   background: transparent !important;
   padding: 0 !important;
   box-shadow: none !important;
 }
 
-.sc-connect-links a.sc-btn-share-proj,
-.sc-connect-links a.sc-btn-ask-query {
+.sc-hub-btn {
   display: inline-flex !important;
   align-items: center;
   justify-content: center;
   gap: 8px;
   width: 100%;
-  padding: 0.65rem 1rem !important;
-  font-family: 'Poppins', sans-serif;
-  font-size: 0.84rem !important;
-  font-weight: 700 !important;
+  padding: 0.7rem 1rem !important;
   border-radius: 999px !important;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.85rem !important;
+  font-weight: 700 !important;
   text-decoration: none;
-  transition: all 0.2s ease;
   cursor: pointer;
   box-sizing: border-box !important;
+  transition: transform 0.22s var(--sc-ease-smooth), box-shadow 0.22s ease, background 0.22s ease;
 }
 
-.sc-connect-links a.sc-btn-share-proj {
-  background: linear-gradient(180deg, #0b2265 0%, #061542 100%) !important;
+.sc-hub-btn-primary {
+  background: linear-gradient(180deg, var(--sc-gold-400) 0%, var(--sc-gold-500) 100%) !important;
+  color: var(--sc-navy-900) !important;
+  -webkit-text-fill-color: var(--sc-navy-900) !important;
+  border: 1.5px solid #fde68a !important;
+  box-shadow: 0 6px 16px rgba(245, 158, 11, 0.30) !important;
+}
+
+.sc-hub-btn-primary:hover {
+  background: linear-gradient(180deg, var(--sc-gold-300) 0%, var(--sc-gold-400) 100%) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(245, 158, 11, 0.40) !important;
+}
+
+.sc-hub-btn-secondary {
+  background: rgba(255, 255, 255, 0.12) !important;
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
-  border: 1.5px solid #07194a !important;
-  box-shadow: 0 4px 12px rgba(7, 25, 74, 0.18) !important;
+  border: 1.5px solid rgba(191, 219, 254, 0.42) !important;
+  backdrop-filter: blur(6px);
 }
 
-.sc-connect-links a.sc-btn-share-proj:hover {
-  background: linear-gradient(180deg, #12308a 0%, #091e58 100%) !important;
+.sc-hub-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.22) !important;
+  border-color: #93c5fd !important;
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(29, 78, 216, 0.25) !important;
-}
-
-.sc-connect-links a.sc-btn-ask-query {
-  background: linear-gradient(180deg, #fffbeb 0%, #fef3c7 100%) !important;
-  color: #07194a !important;
-  -webkit-text-fill-color: #07194a !important;
-  border: 1.5px solid #f59e0b !important;
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15) !important;
-}
-
-.sc-connect-links a.sc-btn-ask-query:hover {
-  background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%) !important;
-  color: #07194a !important;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(245, 158, 11, 0.28) !important;
+  box-shadow: 0 8px 18px rgba(4, 14, 42, 0.25) !important;
 }
 
 /* ==========================================================================
-   5. Interactive Project Connect Modal
+   5. YouTube Subscription Banner (Forest Green & Separated from Footer)
+   ========================================================================== */
+#bottomSection.sc-subscribe-banner-green {
+  margin-top: 1.15rem !important;
+  margin-bottom: 1.25rem !important;
+  background: linear-gradient(135deg, var(--sc-green-900) 0%, var(--sc-green-800) 55%, var(--sc-green-700) 100%) !important;
+  border: 1.5px solid rgba(74, 222, 128, 0.35) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 16px 34px -12px rgba(15, 76, 50, 0.38) !important;
+}
+
+#bottomSection.sc-subscribe-banner-green .sc-sbg-text h2 {
+  color: #ffffff !important;
+}
+
+#bottomSection.sc-subscribe-banner-green .sc-sbg-text p {
+  color: #dcfce7 !important;
+}
+
+/* ==========================================================================
+   6. Interactive Project Connect Modal
    ========================================================================== */
 .sc-connect-modal-overlay {
   position: fixed;
@@ -934,14 +1123,14 @@
 
 .sc-connect-modal-box {
   width: 100%;
-  max-width: 500px;
+  max-width: 520px;
   background: #ffffff;
   border-radius: 20px;
   border: 1px solid rgba(19, 56, 107, 0.15);
   box-shadow: 0 25px 55px -12px rgba(8, 26, 74, 0.35);
   overflow: hidden;
   transform: translateY(16px) scale(0.98);
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.25s var(--sc-ease-smooth);
 }
 
 .sc-connect-modal-overlay.active .sc-connect-modal-box {
@@ -984,31 +1173,32 @@
   background: rgba(255, 255, 255, 0.24);
 }
 
-.sc-cm-tabs {
+.sc-cm-tabs.sc-cm-tabs-3 {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5rem;
-  padding: 0.85rem 1.4rem 0;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.4rem;
+  padding: 0.85rem 1.2rem 0;
   background: #f8fafc;
   border-bottom: 1px solid #e2e8f0;
 }
 
 .sc-cm-tab {
-  padding: 0.65rem 0.75rem;
+  padding: 0.62rem 0.5rem;
   border: none;
   border-bottom: 3px solid transparent;
   background: transparent;
   font-family: 'Inter', sans-serif;
-  font-size: 0.84rem;
+  font-size: 0.8rem;
   font-weight: 700;
   color: #64748b;
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .sc-cm-tab.active {
   color: #081a4a;
-  border-bottom-color: #2563eb;
+  border-bottom-color: var(--sc-blue-500);
   background: #ffffff;
   border-radius: 8px 8px 0 0;
 }
@@ -1055,7 +1245,7 @@
 .sc-cm-field select:focus,
 .sc-cm-field textarea:focus {
   outline: none;
-  border-color: #2563eb;
+  border-color: var(--sc-blue-500);
   background: #ffffff;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
@@ -1092,40 +1282,150 @@
 }
 
 /* ==========================================================================
-   6. Responsive Breakpoints
+   7. Mobile Experience & Responsive Breakpoints
    ========================================================================== */
 @media (max-width: 960px) {
+  .site-header .header-container {
+    padding: 0.65rem 1rem;
+  }
+
+  .hamburger-toggle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 38px;
+    height: 38px;
+    padding: 7px;
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+  }
+
+  .hamburger-bar {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: #ffffff;
+    border-radius: 2px;
+    transition: transform 0.22s ease, opacity 0.22s ease;
+  }
+
+  .main-navigation {
+    display: none;
+    width: 100%;
+  }
+
+  .main-navigation.open,
+  .main-navigation.active {
+    display: block;
+    padding-top: 0.65rem;
+  }
+
+  .main-navigation .nav-links-list {
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
   #colA {
-    padding: 1rem 0.85rem !important;
+    padding: 0.9rem 0.85rem 1.2rem !important;
   }
+
   .sc-hero-wrapper.sc-page-header-pro {
-    padding: 1.7rem 1.2rem !important;
+    padding: 1.4rem 1.1rem !important;
   }
+
   .sc-hero-accent-left,
-  .sc-hero-accent-right,
-  .sc-page-header-pro .sc-hero-left::after,
-  .sc-hero-wrapper.sc-page-header-pro::after {
+  .sc-hero-accent-right {
     display: none !important;
   }
+
+  .sc-filter-bar {
+    justify-content: flex-start;
+    padding-bottom: 0.3rem;
+  }
+
   #colA #scProjectsGrid.sc-cards-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 1.1rem !important;
+    column-gap: 1rem !important;
+    row-gap: 1.1rem !important;
   }
-  #colA #scProjectsGrid.sc-cards-grid > .sc-connect-card {
-    grid-column: 1 / -1 !important;
+
+  #colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-card-media {
+    height: 158px !important;
+    min-height: 158px !important;
+    max-height: 158px !important;
+  }
+
+  .sc-hub-illustration {
+    flex: 0 0 165px;
+    width: 165px;
+  }
+
+  .sc-hub-actions-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 0.65rem !important;
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 500px) {
   #colA {
-    padding: 0.75rem 0.5rem !important;
+    padding: 0.75rem 0.55rem 1.1rem !important;
   }
+
+  .sc-page-header-pro .sc-title-gradient {
+    padding: 0.55rem 1.2rem !important;
+    font-size: 1.28rem !important;
+  }
+
+  .sc-hero-chips {
+    gap: 0.4rem;
+  }
+
+  .sc-hero-chip {
+    font-size: 0.72rem;
+    padding: 0.28rem 0.7rem;
+  }
+
   #colA #scProjectsGrid.sc-cards-grid {
     grid-template-columns: 1fr !important;
-    gap: 1rem !important;
+    row-gap: 1.05rem !important;
   }
-  .sc-cm-row-2,
-  .sc-connect-links {
+
+  #colA #scProjectsGrid .sc-custom-card:not(.sc-connect-card) .sc-card-media {
+    height: 176px !important;
+    min-height: 176px !important;
+    max-height: 176px !important;
+  }
+
+  .sc-card-body {
+    min-height: 0;
+  }
+
+  #colA #scProjectsGrid.sc-cards-grid > .sc-connect-card.sc-hub-navy-panel {
+    padding: 1.15rem 1rem !important;
+  }
+
+  .sc-hub-main-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.9rem;
+  }
+
+  .sc-hub-illustration {
+    flex: none;
+    width: 185px;
+    align-self: center;
+  }
+
+  .sc-hub-actions-grid,
+  .sc-cm-row-2 {
     grid-template-columns: 1fr !important;
+  }
+
+  .sc-cm-tabs.sc-cm-tabs-3 {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
   }
 }
