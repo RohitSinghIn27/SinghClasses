@@ -178,6 +178,7 @@
           <div class="sc-card-media-img">
             <img src="${project.image}" alt="${project.title} Python MySQL Project" loading="lazy">
           </div>
+          <span class="sc-media-info-cue" aria-hidden="true">ⓘ</span>
           <div class="sc-card-media-flip">
             <div class="sc-flip-info-wrap">
               <span class="sc-flip-eyebrow">Key Modules</span>
