@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CBSE Class XII Date Sheet 2026-27</title>
+  <style>
+    :root {
+      --navy-dark: #0f294a;
+      --navy-main: #1e3a8a;
+      --blue-accent: #2563eb;
+      --border-light: #cbd5e1;
+      --border-day: #94a3b8;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+
+      /* Odd Exam Day Palette (Cool Slate) */
+      --odd-date-bg: #f1f5f9;
+      --odd-date-accent: #475569;
+      --odd-row-bg: #ffffff;
+      --odd-row-stripe: #f8fafc;
+
+      /* Even Exam Day Palette (Soft Azure) */
+      --even-date-bg: #dbeafe;
+      --even-date-accent: #1d4ed8;
+      --even-row-bg: #eff6ff;
+      --even-row-stripe: #e5effd;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-main);
+      background-color: #e2e8f0;
+      padding: 28px 16px;
+      line-height: 1.45;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 28px 32px 34px;
+      border-radius: 10px;
+      border: 1px solid var(--border-light);
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+      padding: 18px 20px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%);
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(30, 58, 138, 0.18);
+    }
+
+    header h1 {
+      font-size: 1.55rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .legend {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 14px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+    }
+
+    .legend-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 3px;
+      display: inline-block;
+    }
+
+    .legend-dot.dur-3h {
+      background-color: #e0e7ff;
+      border: 1px solid #818cf8;
+    }
+
+    .legend-dot.dur-2h {
+      background-color: #ccfbf1;
+      border: 1px solid #2dd4bf;
+    }
+
+    .table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: 8px;
+      border: 1px solid var(--border-day);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+
+    thead th {
+      background-color: var(--navy-dark);
+      color: #ffffff;
+      font-weight: 700;
+      text-align: left;
+      padding: 13px 16px;
+      border-bottom: 2px solid var(--navy-dark);
+      letter-spacing: 0.4px;
+      font-size: 0.85rem;
+    }
+
+    thead th.code-col {
+      text-align: center;
+      width: 145px;
+    }
+
+    thead th.date-col {
+      width: 235px;
+    }
+
+    thead th.time-col {
+      width: 195px;
+    }
+
+    tbody.exam-day td {
+      padding: 9px 16px;
+      border-bottom: 1px solid var(--border-light);
+      border-right: 1px solid var(--border-light);
+      vertical-align: middle;
+      transition: background-color 0.15s ease;
+    }
+
+    tbody.exam-day td:last-child {
+      border-right: none;
+    }
+
+    /* Alternating Day Group Shading */
+    tbody.exam-day:nth-of-type(odd) td {
+      background-color: var(--odd-row-bg);
+    }
+
+    tbody.exam-day:nth-of-type(odd) tr:nth-child(even) td:not(.date-cell):not(.time-cell) {
+      background-color: var(--odd-row-stripe);
+    }
+
+    tbody.exam-day:nth-of-type(odd) td.date-cell {
+      background-color: var(--odd-date-bg);
+      border-left: 4px solid var(--odd-date-accent);
+    }
+
+    tbody.exam-day:nth-of-type(even) td {
+      background-color: var(--even-row-bg);
+    }
+
+    tbody.exam-day:nth-of-type(even) tr:nth-child(even) td:not(.date-cell):not(.time-cell) {
+      background-color: var(--even-row-stripe);
+    }
+
+    tbody.exam-day:nth-of-type(even) td.date-cell {
+      background-color: var(--even-date-bg);
+      border-left: 4px solid var(--even-date-accent);
+    }
+
+    /* Strong divider between different exam days */
+    tbody.exam-day tr:last-child td,
+    tbody.exam-day td[rowspan] {
+      border-bottom: 2px solid var(--border-day);
+    }
+
+    /* Subtle hover highlight for easy horizontal scanning */
+    tbody.exam-day tr:hover td:not(.date-cell):not(.time-cell) {
+      background-color: #fef9c3 !important;
+    }
+
+    td.date-cell {
+      vertical-align: top;
+      padding-top: 12px;
+    }
+
+    .day-name {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      color: var(--navy-main);
+      margin-bottom: 2px;
+    }
+
+    .date-text {
+      display: block;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    td.time-cell {
+      vertical-align: top;
+      padding-top: 11px;
+      white-space: nowrap;
+    }
+
+    .time-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .time-badge.dur-3h {
+      background-color: #e0e7ff;
+      color: #1e40af;
+      border: 1px solid #c7d2fe;
+    }
+
+    .time-badge.dur-2h {
+      background-color: #ccfbf1;
+      color: #0f766e;
+      border: 1px solid #99f6e4;
+    }
+
+    td.code-cell {
+      text-align: center;
+    }
+
+    .code-pill {
+      display: inline-block;
+      min-width: 52px;
+      padding: 2px 10px;
+      border-radius: 5px;
+      background-color: #ffffff;
+      border: 1px solid #cbd5e1;
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: #1e293b;
+      font-variant-numeric: tabular-nums;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+
+    td.subject-cell {
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+        padding: 0;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .container {
+        box-shadow: none;
+        border: none;
+        padding: 0;
+        max-width: 100%;
+      }
+      thead {
+        display: table-header-group;
+      }
+      tr {
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>CBSE Class XII Date Sheet 2026-27</h1>
+    </header>
+
+    <div class="legend" aria-label="Exam duration color key">
+      <span class="legend-item"><span class="legend-dot dur-3h"></span> 3 Hours (10:30 AM – 01:30 PM)</span>
+      <span class="legend-item"><span class="legend-dot dur-2h"></span> 2 Hours (10:30 AM – 12:30 PM)</span>
+    </div>
+
+    <main class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th class="date-col">DAY &amp; DATE</th>
+            <th class="time-col">TIME</th>
+            <th class="code-col">SUBJECT CODE</th>
+            <th>SUBJECT NAME</th>
+          </tr>
+        </thead>
+
+        <!-- Tuesday, 16th February 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell">
+              <span class="day-name">TUESDAY</span>
+              <span class="date-text">16th FEBRUARY, 2027</span>
+            </td>
+            <td class="time-cell"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">042</span></td>
+            <td class="subject-cell">PHYSICS</td>
+          </tr>
+        </tbody>
+
+        <!-- Wednesday, 17th February 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell" rowspan="9">
+              <span class="day-name">WEDNESDAY</span>
+              <span class="date-text">17th FEBRUARY, 2027</span>
+            </td>
+            <td class="time-cell"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">046</span></td>
+            <td class="subject-cell">ENGINEERING GRAPHICS</td>
+          </tr>
+          <tr>
+            <td class="time-cell" rowspan="6"><span class="time-badge dur-2h">10:30 AM – 12:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">057</span></td>
+            <td class="subject-cell">BHARATANATYAM-DANCE</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">058</span></td>
+            <td class="subject-cell">KUCHIPUDI - DANCE</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">059</span></td>
+            <td class="subject-cell">ODISSI-DANCE</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">060</span></td>
+            <td class="subject-cell">MANIPURI - DANCE</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">061</span></td>
+            <td class="subject-cell">KATHAKALI - DANCE</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">807</span></td>
+            <td class="subject-cell">BEAUTY &amp; WELLNESS</td>
+          </tr>
+          <tr>
+            <td class="time-cell" rowspan="2"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">816</span></td>
+            <td class="subject-cell">HORTICULTURE</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">823</span></td>
+            <td class="subject-cell">COST ACCOUNTING</td>
+          </tr>
+        </tbody>
+
+        <!-- Thursday, 18th February 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell">
+              <span class="day-name">THURSDAY</span>
+              <span class="date-text">18th FEBRUARY, 2027</span>
+            </td>
+            <td class="time-cell"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">048</span></td>
+            <td class="subject-cell">PHYSICAL EDUCATION</td>
+          </tr>
+        </tbody>
+
+        <!-- Friday, 19th February 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell" rowspan="5">
+              <span class="day-name">FRIDAY</span>
+              <span class="date-text">19th FEBRUARY, 2027</span>
+            </td>
+            <td class="time-cell" rowspan="4"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">045</span></td>
+            <td class="subject-cell">BIOTECHNOLOGY</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">066</span></td>
+            <td class="subject-cell">ENTREPRENEURSHIP</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">825</span></td>
+            <td class="subject-cell">SHORTHAND (ENGLISH)</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">826</span></td>
+            <td class="subject-cell">SHORTHAND (HINDI)</td>
+          </tr>
+          <tr>
+            <td class="time-cell"><span class="time-badge dur-2h">10:30 AM – 12:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">846</span></td>
+            <td class="subject-cell">LAND TRANSPORTATION ASSOCIATE</td>
+          </tr>
+        </tbody>
+
+        <!-- Saturday, 20th February 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell" rowspan="3">
+              <span class="day-name">SATURDAY</span>
+              <span class="date-text">20th FEBRUARY, 2027</span>
+            </td>
+            <td class="time-cell" rowspan="2"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">819</span></td>
+            <td class="subject-cell">ELECTRICAL TECHNOLOGY</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">835</span></td>
+            <td class="subject-cell">MASS MEDIA STUDIES</td>
+          </tr>
+          <tr>
+            <td class="time-cell"><span class="time-badge dur-2h">10:30 AM – 12:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">848</span></td>
+            <td class="subject-cell">DESIGN THINKING AND INNOVATION</td>
+          </tr>
+        </tbody>
+
+        <!-- Monday, 22nd February 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell" rowspan="3">
+              <span class="day-name">MONDAY</span>
+              <span class="date-text">22nd FEBRUARY, 2027</span>
+            </td>
+            <td class="time-cell" rowspan="3"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">076</span></td>
+            <td class="subject-cell">NATIONAL CADET CORPS (NCC)</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">804</span></td>
+            <td class="subject-cell">AUTOMOTIVE</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">837</span></td>
+            <td class="subject-cell">FASHION STUDIES</td>
+          </tr>
+        </tbody>
+
+        <!-- Tuesday, 23rd February 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell">
+              <span class="day-name">TUESDAY</span>
+              <span class="date-text">23rd FEBRUARY, 2027</span>
+            </td>
+            <td class="time-cell"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">055</span></td>
+            <td class="subject-cell">ACCOUNTANCY</td>
+          </tr>
+        </tbody>
+
+        <!-- Wednesday, 24th February 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell" rowspan="4">
+              <span class="day-name">WEDNESDAY</span>
+              <span class="date-text">24th FEBRUARY, 2027</span>
+            </td>
+            <td class="time-cell" rowspan="4"><span class="time-badge dur-2h">10:30 AM – 12:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">049</span></td>
+            <td class="subject-cell">PAINTING</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">050</span></td>
+            <td class="subject-cell">GRAPHICS</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">051</span></td>
+            <td class="subject-cell">SCULPTURE</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">052</span></td>
+            <td class="subject-cell">APPLIED ART (COMMERCIAL ART)</td>
+          </tr>
+        </tbody>
+
+        <!-- Thursday, 25th February 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell">
+              <span class="day-name">THURSDAY</span>
+              <span class="date-text">25th FEBRUARY, 2027</span>
+            </td>
+            <td class="time-cell"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">029</span></td>
+            <td class="subject-cell">GEOGRAPHY</td>
+          </tr>
+        </tbody>
+
+        <!-- Friday, 26th February 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell" rowspan="3">
+              <span class="day-name">FRIDAY</span>
+              <span class="date-text">26th FEBRUARY, 2027</span>
+            </td>
+            <td class="time-cell" rowspan="2"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">824</span></td>
+            <td class="subject-cell">OFFICE PROCEDURES &amp; PRACTICES</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">836</span></td>
+            <td class="subject-cell">LIBRARY &amp; INFORMATION SCIENCE</td>
+          </tr>
+          <tr>
+            <td class="time-cell"><span class="time-badge dur-2h">10:30 AM – 12:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">842</span></td>
+            <td class="subject-cell">EARLY CHILDHOOD CARE &amp; EDUCATION</td>
+          </tr>
+        </tbody>
+
+        <!-- Saturday, 27th February 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell">
+              <span class="day-name">SATURDAY</span>
+              <span class="date-text">27th FEBRUARY, 2027</span>
+            </td>
+            <td class="time-cell"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">043</span></td>
+            <td class="subject-cell">CHEMISTRY</td>
+          </tr>
+        </tbody>
+
+        <!-- Monday, 1st March 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell" rowspan="9">
+              <span class="day-name">MONDAY</span>
+              <span class="date-text">1st MARCH, 2027</span>
+            </td>
+            <td class="time-cell" rowspan="2"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">003</span></td>
+            <td class="subject-cell">URDU ELECTIVE</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">022</span></td>
+            <td class="subject-cell">SANSKRIT ELECTIVE</td>
+          </tr>
+          <tr>
+            <td class="time-cell" rowspan="3"><span class="time-badge dur-2h">10:30 AM – 12:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">031</span></td>
+            <td class="subject-cell">CARNATIC MUSIC VOCAL</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">032</span></td>
+            <td class="subject-cell">CARNATIC MUSIC MEL INS</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">033</span></td>
+            <td class="subject-cell">CARNATIC MUSIC PER INS MRIDANGAM</td>
+          </tr>
+          <tr>
+            <td class="time-cell" rowspan="4"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">303</span></td>
+            <td class="subject-cell">URDU CORE</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">814</span></td>
+            <td class="subject-cell">INSURANCE</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">818</span></td>
+            <td class="subject-cell">GEOSPATIAL TECHNOLOGY</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">834</span></td>
+            <td class="subject-cell">FOOD NUTRITION &amp; DIETETICS</td>
+          </tr>
+        </tbody>
+
+        <!-- Tuesday, 2nd March 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell">
+              <span class="day-name">TUESDAY</span>
+              <span class="date-text">2nd MARCH, 2027</span>
+            </td>
+            <td class="time-cell"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">037</span></td>
+            <td class="subject-cell">PSYCHOLOGY</td>
+          </tr>
+        </tbody>
+
+        <!-- Wednesday, 3rd March 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell" rowspan="29">
+              <span class="day-name">WEDNESDAY</span>
+              <span class="date-text">3rd MARCH, 2027</span>
+            </td>
+            <td class="time-cell" rowspan="29"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">104</span></td>
+            <td class="subject-cell">PUNJABI</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">105</span></td>
+            <td class="subject-cell">BENGALI</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">106</span></td>
+            <td class="subject-cell">TAMIL</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">107</span></td>
+            <td class="subject-cell">TELUGU</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">108</span></td>
+            <td class="subject-cell">SINDHI</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">109</span></td>
+            <td class="subject-cell">MARATHI</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">110</span></td>
+            <td class="subject-cell">GUJARATI</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">111</span></td>
+            <td class="subject-cell">MANIPURI</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">112</span></td>
+            <td class="subject-cell">MALAYALAM</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">113</span></td>
+            <td class="subject-cell">ODIA</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">114</span></td>
+            <td class="subject-cell">ASSAMESE</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">115</span></td>
+            <td class="subject-cell">KANNADA</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">116</span></td>
+            <td class="subject-cell">ARABIC</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">117</span></td>
+            <td class="subject-cell">TIBETAN</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">118</span></td>
+            <td class="subject-cell">FRENCH</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">120</span></td>
+            <td class="subject-cell">GERMAN</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">121</span></td>
+            <td class="subject-cell">RUSSIAN</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">123</span></td>
+            <td class="subject-cell">PERSIAN</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">124</span></td>
+            <td class="subject-cell">NEPALI</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">125</span></td>
+            <td class="subject-cell">LIMBOO</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">126</span></td>
+            <td class="subject-cell">LEPCHA</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">189</span></td>
+            <td class="subject-cell">TELUGU TELANGANA</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">192</span></td>
+            <td class="subject-cell">BODO</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">193</span></td>
+            <td class="subject-cell">TANGKHUL</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">194</span></td>
+            <td class="subject-cell">JAPANESE</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">195</span></td>
+            <td class="subject-cell">BHUTIA</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">196</span></td>
+            <td class="subject-cell">SPANISH</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">197</span></td>
+            <td class="subject-cell">KASHMIRI</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">198</span></td>
+            <td class="subject-cell">MIZO</td>
+          </tr>
+        </tbody>
+
+        <!-- Thursday, 4th March 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell" rowspan="3">
+              <span class="day-name">THURSDAY</span>
+              <span class="date-text">4th MARCH, 2027</span>
+            </td>
+            <td class="time-cell"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">810</span></td>
+            <td class="subject-cell">FRONT OFFICE OPERATIONS</td>
+          </tr>
+          <tr>
+            <td class="time-cell"><span class="time-badge dur-2h">10:30 AM – 12:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">841</span></td>
+            <td class="subject-cell">YOGA</td>
+          </tr>
+          <tr>
+            <td class="time-cell"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">847</span></td>
+            <td class="subject-cell">ELECTRONICS &amp; HARDWARE</td>
+          </tr>
+        </tbody>
+
+        <!-- Friday, 5th March 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell" rowspan="2">
+              <span class="day-name">FRIDAY</span>
+              <span class="date-text">5th MARCH, 2027</span>
+            </td>
+            <td class="time-cell" rowspan="2"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">001</span></td>
+            <td class="subject-cell">ENGLISH ELECTIVE</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">301</span></td>
+            <td class="subject-cell">ENGLISH CORE</td>
+          </tr>
+        </tbody>
+
+        <!-- Saturday, 6th March 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell" rowspan="3">
+              <span class="day-name">SATURDAY</span>
+              <span class="date-text">6th MARCH, 2027</span>
+            </td>
+            <td class="time-cell" rowspan="2"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">809</span></td>
+            <td class="subject-cell">FOOD PRODUCTION</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">813</span></td>
+            <td class="subject-cell">HEALTH CARE</td>
+          </tr>
+          <tr>
+            <td class="time-cell"><span class="time-badge dur-2h">10:30 AM – 12:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">830</span></td>
+            <td class="subject-cell">DESIGN</td>
+          </tr>
+        </tbody>
+
+        <!-- Monday, 8th March 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell" rowspan="2">
+              <span class="day-name">MONDAY</span>
+              <span class="date-text">8th MARCH, 2027</span>
+            </td>
+            <td class="time-cell" rowspan="2"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">806</span></td>
+            <td class="subject-cell">TOURISM</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">827</span></td>
+            <td class="subject-cell">AIR-CONDITIONING &amp; REFRIGERATION</td>
+          </tr>
+        </tbody>
+
+        <!-- Tuesday, 9th March 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell" rowspan="2">
+              <span class="day-name">TUESDAY</span>
+              <span class="date-text">9th MARCH, 2027</span>
+            </td>
+            <td class="time-cell" rowspan="2"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">041</span></td>
+            <td class="subject-cell">MATHEMATICS</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">241</span></td>
+            <td class="subject-cell">APPLIED MATHEMATICS</td>
+          </tr>
+        </tbody>
+
+        <!-- Thursday, 11th March 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell">
+              <span class="day-name">THURSDAY</span>
+              <span class="date-text">11th MARCH, 2027</span>
+            </td>
+            <td class="time-cell"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">064</span></td>
+            <td class="subject-cell">HOME SCIENCE</td>
+          </tr>
+        </tbody>
+
+        <!-- Friday, 12th March 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell">
+              <span class="day-name">FRIDAY</span>
+              <span class="date-text">12th MARCH, 2027</span>
+            </td>
+            <td class="time-cell"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">817</span></td>
+            <td class="subject-cell">TYPOGRAPHY &amp; COMPUTER APPLICATION</td>
+          </tr>
+        </tbody>
+
+        <!-- Saturday, 13th March 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell" rowspan="2">
+              <span class="day-name">SATURDAY</span>
+              <span class="date-text">13th MARCH, 2027</span>
+            </td>
+            <td class="time-cell" rowspan="2"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">002</span></td>
+            <td class="subject-cell">HINDI ELECTIVE</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">302</span></td>
+            <td class="subject-cell">HINDI CORE</td>
+          </tr>
+        </tbody>
+
+        <!-- Monday, 15th March 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell" rowspan="3">
+              <span class="day-name">MONDAY</span>
+              <span class="date-text">15th MARCH, 2027</span>
+            </td>
+            <td class="time-cell" rowspan="3"><span class="time-badge dur-2h">10:30 AM – 12:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">034</span></td>
+            <td class="subject-cell">HINDUSTANI MUSIC VOCAL</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">035</span></td>
+            <td class="subject-cell">HINDUSTANI MUSIC MEL INS</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">036</span></td>
+            <td class="subject-cell">HINDUSTANI MUSIC PER INS</td>
+          </tr>
+        </tbody>
+
+        <!-- Tuesday, 16th March 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell">
+              <span class="day-name">TUESDAY</span>
+              <span class="date-text">16th MARCH, 2027</span>
+            </td>
+            <td class="time-cell"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">030</span></td>
+            <td class="subject-cell">ECONOMICS</td>
+          </tr>
+        </tbody>
+
+        <!-- Wednesday, 17th March 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell">
+              <span class="day-name">WEDNESDAY</span>
+              <span class="date-text">17th MARCH, 2027</span>
+            </td>
+            <td class="time-cell"><span class="time-badge dur-2h">10:30 AM – 12:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">845</span></td>
+            <td class="subject-cell">PHYSICAL ACTIVITY TRAINER</td>
+          </tr>
+        </tbody>
+
+        <!-- Thursday, 18th March 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell">
+              <span class="day-name">THURSDAY</span>
+              <span class="date-text">18th MARCH, 2027</span>
+            </td>
+            <td class="time-cell"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">812</span></td>
+            <td class="subject-cell">MARKETING</td>
+          </tr>
+        </tbody>
+
+        <!-- Friday, 19th March 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell">
+              <span class="day-name">FRIDAY</span>
+              <span class="date-text">19th MARCH, 2027</span>
+            </td>
+            <td class="time-cell"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">028</span></td>
+            <td class="subject-cell">POLITICAL SCIENCE</td>
+          </tr>
+        </tbody>
+
+        <!-- Saturday, 20th March 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell">
+              <span class="day-name">SATURDAY</span>
+              <span class="date-text">20th MARCH, 2027</span>
+            </td>
+            <td class="time-cell"><span class="time-badge dur-2h">10:30 AM – 12:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">843</span></td>
+            <td class="subject-cell">ARTIFICIAL INTELLIGENCE</td>
+          </tr>
+        </tbody>
+
+        <!-- Monday, 22nd March 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell" rowspan="5">
+              <span class="day-name">MONDAY</span>
+              <span class="date-text">22nd MARCH, 2027</span>
+            </td>
+            <td class="time-cell" rowspan="5"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">073</span></td>
+            <td class="subject-cell">KNOWLEDGE TRADITION &amp; PRACTICES OF INDIA</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">188</span></td>
+            <td class="subject-cell">BHOTI</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">191</span></td>
+            <td class="subject-cell">KOKBOROK</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">811</span></td>
+            <td class="subject-cell">BANKING</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">820</span></td>
+            <td class="subject-cell">ELECTRONICS TECHNOLOGY</td>
+          </tr>
+        </tbody>
+
+        <!-- Wednesday, 24th March 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell">
+              <span class="day-name">WEDNESDAY</span>
+              <span class="date-text">24th MARCH, 2027</span>
+            </td>
+            <td class="time-cell"><span class="time-badge dur-2h">10:30 AM – 12:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">056</span></td>
+            <td class="subject-cell">KATHAK-DANCE</td>
+          </tr>
+        </tbody>
+
+        <!-- Thursday, 25th March 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell">
+              <span class="day-name">THURSDAY</span>
+              <span class="date-text">25th MARCH, 2027</span>
+            </td>
+            <td class="time-cell"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">044</span></td>
+            <td class="subject-cell">BIOLOGY</td>
+          </tr>
+        </tbody>
+
+        <!-- Saturday, 27th March 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell">
+              <span class="day-name">SATURDAY</span>
+              <span class="date-text">27th MARCH, 2027</span>
+            </td>
+            <td class="time-cell"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">027</span></td>
+            <td class="subject-cell">HISTORY</td>
+          </tr>
+        </tbody>
+
+        <!-- Monday, 29th March 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell" rowspan="4">
+              <span class="day-name">MONDAY</span>
+              <span class="date-text">29th MARCH, 2027</span>
+            </td>
+            <td class="time-cell" rowspan="4"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">805</span></td>
+            <td class="subject-cell">FINANCIAL MARKET MANAGEMENT</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">808</span></td>
+            <td class="subject-cell">AGRICULTURE</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">828</span></td>
+            <td class="subject-cell">MEDICAL DIAGNOSTICS</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">831</span></td>
+            <td class="subject-cell">SALESMANSHIP</td>
+          </tr>
+        </tbody>
+
+        <!-- Tuesday, 30th March 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell">
+              <span class="day-name">TUESDAY</span>
+              <span class="date-text">30th MARCH, 2027</span>
+            </td>
+            <td class="time-cell"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">039</span></td>
+            <td class="subject-cell">SOCIOLOGY</td>
+          </tr>
+        </tbody>
+
+        <!-- Wednesday, 31st March 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell" rowspan="3">
+              <span class="day-name">WEDNESDAY</span>
+              <span class="date-text">31st MARCH, 2027</span>
+            </td>
+            <td class="time-cell" rowspan="3"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">065</span></td>
+            <td class="subject-cell">INFORMATICS PRACTICES</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">083</span></td>
+            <td class="subject-cell">COMPUTER SCIENCE</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">802</span></td>
+            <td class="subject-cell">INFORMATION TECHNOLOGY</td>
+          </tr>
+        </tbody>
+
+        <!-- Thursday, 1st April 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell" rowspan="2">
+              <span class="day-name">THURSDAY</span>
+              <span class="date-text">1st APRIL, 2027</span>
+            </td>
+            <td class="time-cell" rowspan="2"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">054</span></td>
+            <td class="subject-cell">BUSINESS STUDIES</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">833</span></td>
+            <td class="subject-cell">BUSINESS ADMINISTRATION</td>
+          </tr>
+        </tbody>
+
+        <!-- Tuesday, 6th April 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell" rowspan="2">
+              <span class="day-name">TUESDAY</span>
+              <span class="date-text">6th APRIL, 2027</span>
+            </td>
+            <td class="time-cell" rowspan="2"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">322</span></td>
+            <td class="subject-cell">SANSKRIT CORE</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">822</span></td>
+            <td class="subject-cell">TAXATION</td>
+          </tr>
+        </tbody>
+
+        <!-- Wednesday, 7th April 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell" rowspan="3">
+              <span class="day-name">WEDNESDAY</span>
+              <span class="date-text">7th APRIL, 2027</span>
+            </td>
+            <td class="time-cell"><span class="time-badge dur-2h">10:30 AM – 12:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">821</span></td>
+            <td class="subject-cell">MULTI-MEDIA</td>
+          </tr>
+          <tr>
+            <td class="time-cell"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">829</span></td>
+            <td class="subject-cell">TEXTILE DESIGN</td>
+          </tr>
+          <tr>
+            <td class="time-cell"><span class="time-badge dur-2h">10:30 AM – 12:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">844</span></td>
+            <td class="subject-cell">DATA SCIENCE</td>
+          </tr>
+        </tbody>
+
+        <!-- Thursday, 8th April 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell">
+              <span class="day-name">THURSDAY</span>
+              <span class="date-text">8th APRIL, 2027</span>
+            </td>
+            <td class="time-cell"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">074</span></td>
+            <td class="subject-cell">LEGAL STUDIES</td>
+          </tr>
+        </tbody>
+
+        <!-- Friday, 9th April 2027 -->
+        <tbody class="exam-day">
+          <tr>
+            <td class="date-cell" rowspan="2">
+              <span class="day-name">FRIDAY</span>
+              <span class="date-text">9th APRIL, 2027</span>
+            </td>
+            <td class="time-cell" rowspan="2"><span class="time-badge dur-3h">10:30 AM – 01:30 PM</span></td>
+            <td class="code-cell"><span class="code-pill">801</span></td>
+            <td class="subject-cell">RETAIL</td>
+          </tr>
+          <tr>
+            <td class="code-cell"><span class="code-pill">803</span></td>
+            <td class="subject-cell">WEB APPLICATION</td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
+  </div>
+</body>
+</html>
