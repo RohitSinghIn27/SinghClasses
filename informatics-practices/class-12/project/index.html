@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-IN">
+<html lang="en-IN" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +10,7 @@
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
   <link rel="canonical" href="https://www.singhclasses.in/informatics-practices/projects/index.html">
 
-  <!-- Open Graph Metadata -->
+  <!-- Open Graph & Twitter Metadata -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="SinghClasses">
   <meta property="og:title" content="Python Projects for Class 12 Informatics Practices | SinghClasses">
@@ -22,71 +22,60 @@
   <meta name="twitter:description" content="Complete CBSE investigatory projects for Class 12 Informatics Practices (Code 065) with executable Python source code, Pandas DataFrames, and CSV files.">
   <meta name="twitter:image" content="https://www.singhclasses.in/assets/images/project/library-management-system.jpeg">
 
-  <!-- Fonts -->
+  <!-- Fonts & Stylesheets -->
   <link rel="icon" href="../../assets/images/favicon/favicon.ico" type="image/x-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-
-  <!-- Stylesheets -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      important: true,
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Poppins', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'], serif: ['Fraunces', 'serif'] },
+          colors: {
+            navy: { 950: '#041338', 900: '#07194a', 800: '#0d2b6b' },
+            gold: { 500: '#f59e0b', 400: '#fbbf24', 300: '#fde047' },
+            forest: { 900: '#0b3b26', 800: '#0f4c32', 700: '#166534' }
+          }
+        }
+      }
+    };
+  </script>
   <link rel="stylesheet" href="../../../assets/css/dashboard.css">
   <link rel="stylesheet" href="../../../assets/css/syllabus.css">
   <link rel="stylesheet" href="../../../assets/css/project.css">
 
   <!-- JSON-LD Structured Data -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Course",
-    "name": "Python Projects for Class 12 Informatics Practices (Code 065) - Session 2026-27",
-    "description": "Looking for Python projects for Class 12 Informatics Practices with full source code? This page lists complete CBSE investigatory projects for Class 12 Informatics Practices (Code 065) — covering Python, Pandas DataFrames, CSV files, and project reports.",
-    "provider": {
-      "@type": "Organization",
-      "name": "SinghClasses",
-      "url": "https://www.singhclasses.in",
-      "sameAs": "https://www.singhclasses.in"
-    },
-    "educationalLevel": "Class 12",
-    "courseCode": "065",
-    "inLanguage": "en",
-    "timeRequired": "P1Y"
-  }
+  {"@context":"https://schema.org","@type":"Course","name":"Python Projects for Class 12 Informatics Practices (Code 065) - Session 2026-27","description":"Looking for Python projects for Class 12 Informatics Practices with full source code? This page lists complete CBSE investigatory projects for Class 12 Informatics Practices (Code 065) — covering Python, Pandas DataFrames, CSV files, and project reports.","provider":{"@type":"Organization","name":"SinghClasses","url":"https://www.singhclasses.in","sameAs":"https://www.singhclasses.in"},"educationalLevel":"Class 12","courseCode":"065","inLanguage":"en","timeRequired":"P1Y"}
   </script>
 </head>
-<body>
+<body class="bg-slate-100 text-slate-900 font-sans antialiased">
 
   <!-- Header Navigation -->
   <header class="site-header" role="banner">
     <div class="header-container">
       <a class="logo-brand" href="../../index.html" aria-label="SinghClasses Home">
         <div class="logo-text-group">
-          <div class="logo-title-row">
-            <span class="logo-singh">Singh</span><span class="logo-classes">Classes</span><span class="logo-in">.in</span>
-          </div>
+          <div class="logo-title-row"><span class="logo-singh">Singh</span><span class="logo-classes">Classes</span><span class="logo-in">.in</span></div>
           <div class="logo-tagline-row">
-            <span class="tagline-line"></span>
-            <span class="tagline-text">Think Logic</span>
-            <span class="tagline-separator" aria-hidden="true">✦</span>
-            <span class="tagline-text">Code Magic</span>
-            <span class="tagline-line"></span>
+            <span class="tagline-line"></span><span class="tagline-text">Think Logic</span><span class="tagline-separator" aria-hidden="true">✦</span><span class="tagline-text">Code Magic</span><span class="tagline-line"></span>
           </div>
         </div>
       </a>
-
       <button class="hamburger-toggle" id="hamburgerToggle" type="button" aria-label="Toggle Navigation Menu" aria-expanded="false" aria-controls="nav-menu">
-        <span class="hamburger-bar"></span>
-        <span class="hamburger-bar"></span>
-        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span><span class="hamburger-bar"></span><span class="hamburger-bar"></span>
       </button>
-
       <nav class="main-navigation" id="nav-menu" aria-label="Primary Navigation">
         <ul class="nav-links-list">
-          <li><a class="nav-link" href="../../computer-science/index.html">Computer Science</a></li>
-          <li><a class="nav-link active" href="../../informatics-practices/index.html">Informatics Practices</a></li>
-          <li><a class="nav-link" href="../../artificial-intelligence/index.html">Artificial Intelligence</a></li>
-          <li><a class="nav-link" href="../../higher-education/index.html">Higher Edu.</a></li>
-          <li><a class="nav-link" href="../../legal/about-us.html">About Us</a></li>
-          <li><a class="nav-link" href="../../legal/contact-us.html">Contact Us</a></li>
+          <li><a class="nav-link" href="../../../computer-science/index.html">Computer Science</a></li>
+          <li><a class="nav-link active" href="../../../informatics-practices/index.html">Informatics Practices</a></li>
+          <li><a class="nav-link" href="../../../artificial-intelligence/index.html">Artificial Intelligence</a></li>
+          <li><a class="nav-link" href="../../../higher-education/index.html">Higher Edu.</a></li>
+          <li><a class="nav-link" href="../../../legal/about-us.html">About Us</a></li>
+          <li><a class="nav-link" href="../../../legal/contact-us.html">Contact Us</a></li>
         </ul>
       </nav>
     </div>
@@ -98,34 +87,19 @@
     <!-- Announcement Bar -->
     <div class="announcement-bar" role="region" aria-label="Admissions Announcement">
       <span class="announcement-segment">
-        <span class="inline-svg-icon icon-orange" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
-            <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
-            <path d="M2 2l7.5 1.5"></path>
-            <path d="M14 14l3 3"></path>
-          </svg>
-        </span>Admissions Open 2026–27 <span class="divider" aria-hidden="true">|</span>
+        <span class="inline-svg-icon icon-orange" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.5 1.5"></path><path d="M14 14l3 3"></path></svg></span>
+        Admissions Open 2026–27 <span class="divider" aria-hidden="true">|</span>
         <a href="https://wa.me/918800873871?text=I%20want%20a%20demo%20class" target="_blank" rel="noopener noreferrer" class="announcement-cta">Book Your Free Demo Class</a>
       </span>
       <span class="divider hide-mobile" aria-hidden="true">|</span>
       <span class="announcement-segment hide-mobile">
-        <span class="inline-svg-icon icon-orange" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-            <line x1="2" y1="20" x2="22" y2="20"></line>
-            <line x1="12" y1="17" x2="12" y2="20"></line>
-          </svg>
-        </span>Learn CS, IP &amp; AI with Rohit Singh
+        <span class="inline-svg-icon icon-orange" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="20" x2="22" y2="20"></line><line x1="12" y1="17" x2="12" y2="20"></line></svg></span>
+        Learn CS, IP &amp; AI with Rohit Singh
       </span>
       <span class="divider hide-mobile" aria-hidden="true">|</span>
       <span class="announcement-segment hide-mobile">
-        <span class="inline-svg-icon icon-orange" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-            <circle cx="12" cy="10" r="3"></circle>
-          </svg>
-        </span>Online &amp; Offline Classes Available
+        <span class="inline-svg-icon icon-orange" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></span>
+        Online &amp; Offline Classes Available
       </span>
     </div>
 
@@ -133,15 +107,11 @@
 
       <!-- Hero Header -->
       <section class="sc-hero-wrapper sc-page-header-pro" aria-labelledby="page-main-heading">
-        <!-- Left Corner Wave, Swoop & Dot Matrix -->
         <svg class="sc-hero-accent-left" viewBox="0 0 320 260" preserveAspectRatio="xMinYMid slice" aria-hidden="true">
-          <!-- Bottom-left soft warm wave -->
           <path d="M0 175 C95 190, 175 235, 310 260 L0 260 Z" fill="rgba(251, 191, 36, 0.14)"/>
           <path d="M0 210 C80 222, 155 245, 250 260 L0 260 Z" fill="rgba(245, 158, 11, 0.18)"/>
-          <!-- Top-left gold & navy corner ribbon -->
           <path d="M0 0 L125 0 C72 18, 28 52, 0 98 Z" fill="#fbbf24"/>
           <path d="M0 0 L82 0 C45 14, 18 38, 0 68 Z" fill="#0d3b8c"/>
-          <!-- Top-left 5x3 dot grid -->
           <g fill="#1e3a8a" opacity="0.85">
             <circle cx="52" cy="54" r="2.2"/><circle cx="62" cy="54" r="2.2"/><circle cx="72" cy="54" r="2.2"/><circle cx="82" cy="54" r="2.2"/><circle cx="92" cy="54" r="2.2"/>
             <circle cx="52" cy="64" r="2.2"/><circle cx="62" cy="64" r="2.2"/><circle cx="72" cy="64" r="2.2"/><circle cx="82" cy="64" r="2.2"/><circle cx="92" cy="64" r="2.2"/>
@@ -149,59 +119,31 @@
           </g>
         </svg>
 
-        <!-- Right Corner Dashed Circles, Dot Matrix & Bottom Ribbon -->
         <svg class="sc-hero-accent-right" viewBox="0 0 320 260" preserveAspectRatio="xMaxYMid slice" aria-hidden="true">
-          <!-- Top-right warm glow & concentric dashed circles -->
           <circle cx="295" cy="38" r="110" fill="rgba(251, 191, 36, 0.10)"/>
           <circle cx="295" cy="38" r="102" fill="none" stroke="#60a5fa" stroke-opacity="0.45" stroke-width="1.5" stroke-dasharray="5 5"/>
           <circle cx="295" cy="38" r="82" fill="none" stroke="#fbbf24" stroke-opacity="0.65" stroke-width="1.6" stroke-dasharray="6 6"/>
-          <!-- Bottom-right 5x3 dot grid -->
           <g fill="#1e3a8a" opacity="0.85">
             <circle cx="225" cy="196" r="2.2"/><circle cx="235" cy="196" r="2.2"/><circle cx="245" cy="196" r="2.2"/><circle cx="255" cy="196" r="2.2"/><circle cx="265" cy="196" r="2.2"/>
             <circle cx="225" cy="206" r="2.2"/><circle cx="235" cy="206" r="2.2"/><circle cx="245" cy="206" r="2.2"/><circle cx="255" cy="206" r="2.2"/><circle cx="265" cy="206" r="2.2"/>
             <circle cx="225" cy="216" r="2.2"/><circle cx="235" cy="216" r="2.2"/><circle cx="245" cy="216" r="2.2"/><circle cx="255" cy="216" r="2.2"/><circle cx="265" cy="216" r="2.2"/>
           </g>
-          <!-- Bottom-right gold & navy corner wave -->
           <path d="M165 260 C235 256, 285 232, 320 175 L320 260 Z" fill="#fbbf24"/>
           <path d="M155 260 C215 242, 275 242, 320 198 L320 260 Z" fill="#061a48"/>
         </svg>
 
         <div class="sc-hero-left">
-          <div class="sc-hero-tag">
-            <span class="sc-tag-dot" aria-hidden="true"></span> CBSE • CLASS XII • INFORMATICS PRACTICES (065) • 2026–27
-          </div>
-
+          <div class="sc-hero-tag"><span class="sc-tag-dot" aria-hidden="true"></span> CBSE • CLASS XII • INFORMATICS PRACTICES (065) • 2026–27</div>
           <h1 class="sc-hero-title" id="page-main-heading">
-            <span class="sc-hero-subtitle-row">
-              <span class="sc-flank-line left" aria-hidden="true"></span>
-              <span class="sc-subtitle-italic">Python Projects for</span>
-              <span class="sc-flank-line right" aria-hidden="true"></span>
-            </span>
-            <span class="sc-title-gradient">
-              <span class="sc-title-white">CLASS XII</span> <span class="sc-title-gold">INFORMATICS PRACTICES</span>
-            </span>
+            <span class="sc-hero-subtitle-row"><span class="sc-flank-line left" aria-hidden="true"></span><span class="sc-subtitle-italic">Python Projects for</span><span class="sc-flank-line right" aria-hidden="true"></span></span>
+            <span class="sc-title-gradient"><span class="sc-title-white">CLASS XII</span> <span class="sc-title-gold">INFORMATICS PRACTICES</span></span>
           </h1>
-
-          <!-- Three Small Information Chips -->
           <div class="sc-hero-chips" role="list" aria-label="Project Highlights">
-            <span class="sc-hero-chip" role="listitem">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
-              15 Project Ideas
-            </span>
-            <span class="sc-hero-chip" role="listitem">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="14" y1="4" x2="10" y2="20"/></svg>
-              Python + Pandas + CSV
-            </span>
-            <span class="sc-hero-chip sc-hero-chip-accent" role="listitem">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-              CBSE Project Ready
-            </span>
+            <span class="sc-hero-chip" role="listitem"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg> 15 Project Ideas</span>
+            <span class="sc-hero-chip" role="listitem"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="14" y1="4" x2="10" y2="20"/></svg> Python + Pandas + CSV</span>
+            <span class="sc-hero-chip sc-hero-chip-accent" role="listitem"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> CBSE Project Ready</span>
           </div>
-
-          <div class="sc-header-divider-bar" aria-hidden="true">
-            <span class="bar-dot"></span>
-            <span class="bar-main"></span>
-          </div>
+          <div class="sc-header-divider-bar" aria-hidden="true"><span class="bar-dot"></span><span class="bar-main"></span></div>
         </div>
       </section>
 
@@ -210,7 +152,6 @@
         <section class="sc-column sc-column-a" id="colA" data-count-to-content="true" data-section-code="A" data-section-name="IP Projects">
           <div class="sc-column-bg"><canvas id="canvasA" class="sc-canvas-bg"></canvas></div>
 
-          <!-- Horizontal Scrolling Category Filter Bar -->
           <div class="sc-filter-bar-wrap">
             <div class="sc-filter-bar" role="tablist" aria-label="Filter projects by category">
               <button type="button" class="sc-filter-chip active" data-filter="all" role="tab" aria-selected="true">All Projects (15)</button>
@@ -221,20 +162,16 @@
             </div>
           </div>
 
-          <div class="sc-cards-grid" id="scProjectsGrid">
-            <!-- Project cards are rendered modularly via project.js from window.SC_PROJECTS_DATA -->
-
+          <div class="sc-cards-grid grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch" id="scProjectsGrid">
             <!-- Dedicated Navy-Blue Student Hub Panel -->
-            <article class="sc-custom-card sc-connect-card sc-hub-navy-panel" id="scStudentHubCard">
+            <article class="sc-custom-card sc-connect-card sc-hub-navy-panel col-span-full" id="scStudentHubCard">
               <div class="sc-hub-top-bar">
                 <div class="sc-hub-badges-left">
                   <span class="sc-hub-tag-pill"><span class="sc-hub-code-icon" aria-hidden="true">&lt;/&gt;</span> PROJECT SUBMISSION</span>
                   <span class="sc-hub-sub-pill">CBSE Class XII – Informatics Practices</span>
                 </div>
                 <div class="sc-hub-active-pill" role="status">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
                   <span>Python • Pandas • CSV Projects</span>
                 </div>
               </div>
@@ -245,66 +182,36 @@
                   <span class="sc-hub-title-bar" aria-hidden="true"></span>
                   <p>Submit your project (Python + Pandas + CSV) for review, ask for a custom project topic as per your interest, or get guidance and viva preparation support from Rohit Sir. We'll help you make your project complete, error-free, and CBSE-ready.</p>
                 </div>
-
-                <!-- Coding Illustration -->
                 <div class="sc-hub-illustration" aria-hidden="true">
                   <svg viewBox="0 0 230 138" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="8" y="6" width="172" height="108" rx="12" fill="#04102e" stroke="#2563eb" stroke-opacity="0.55" stroke-width="1.6"/>
                     <path d="M8 18C8 11.3726 13.3726 6 20 6H168C174.627 6 180 11.3726 180 18V27H8V18Z" fill="#0c2461"/>
-                    <circle cx="22" cy="16.5" r="3.8" fill="#ef4444"/>
-                    <circle cx="34" cy="16.5" r="3.8" fill="#fbbf24"/>
-                    <circle cx="46" cy="16.5" r="3.8" fill="#22c55e"/>
+                    <circle cx="22" cy="16.5" r="3.8" fill="#ef4444"/><circle cx="34" cy="16.5" r="3.8" fill="#fbbf24"/><circle cx="46" cy="16.5" r="3.8" fill="#22c55e"/>
                     <rect x="64" y="13.5" width="62" height="6" rx="3" fill="#3b82f6" fill-opacity="0.35"/>
-                    <!-- Code Lines -->
-                    <rect x="24" y="39" width="34" height="6.5" rx="3.25" fill="#fbbf24"/>
-                    <rect x="64" y="39" width="68" height="6.5" rx="3.25" fill="#60a5fa" fill-opacity="0.8"/>
-                    <rect x="34" y="53" width="48" height="6.5" rx="3.25" fill="#38bdf8"/>
-                    <rect x="88" y="53" width="52" height="6.5" rx="3.25" fill="#64748b" fill-opacity="0.55"/>
-                    <rect x="34" y="67" width="78" height="6.5" rx="3.25" fill="#4ade80"/>
-                    <rect x="24" y="81" width="42" height="6.5" rx="3.25" fill="#f59e0b"/>
-                    <rect x="72" y="81" width="46" height="6.5" rx="3.25" fill="#60a5fa" fill-opacity="0.65"/>
-                    <rect x="24" y="95" width="58" height="6.5" rx="3.25" fill="#2563eb"/>
-                    <!-- Overlapping Code Badge -->
+                    <rect x="24" y="39" width="34" height="6.5" rx="3.25" fill="#fbbf24"/><rect x="64" y="39" width="68" height="6.5" rx="3.25" fill="#60a5fa" fill-opacity="0.8"/>
+                    <rect x="34" y="53" width="48" height="6.5" rx="3.25" fill="#38bdf8"/><rect x="88" y="53" width="52" height="6.5" rx="3.25" fill="#64748b" fill-opacity="0.55"/>
+                    <rect x="34" y="67" width="78" height="6.5" rx="3.25" fill="#4ade80"/><rect x="24" y="81" width="42" height="6.5" rx="3.25" fill="#f59e0b"/>
+                    <rect x="72" y="81" width="46" height="6.5" rx="3.25" fill="#60a5fa" fill-opacity="0.65"/><rect x="24" y="95" width="58" height="6.5" rx="3.25" fill="#2563eb"/>
                     <rect x="142" y="68" width="80" height="62" rx="11" fill="url(#hubCardGrad)" stroke="#fbbf24" stroke-width="2"/>
                     <text x="182" y="93" text-anchor="middle" fill="#fbbf24" font-family="JetBrains Mono, monospace" font-size="16" font-weight="800">&lt;/&gt;</text>
-                    <rect x="156" y="102" width="48" height="5.5" rx="2.75" fill="#7dd3fc"/>
-                    <rect x="156" y="112" width="36" height="5.5" rx="2.75" fill="#38bdf8"/>
+                    <rect x="156" y="102" width="48" height="5.5" rx="2.75" fill="#7dd3fc"/><rect x="156" y="112" width="36" height="5.5" rx="2.75" fill="#38bdf8"/>
                     <path d="M208 119.5H214.5C215.88 119.5 217 118.38 217 117C217 115.72 216.03 114.67 214.78 114.52C214.35 112.8 212.8 111.5 210.95 111.5C208.77 111.5 207 113.27 207 115.45C205.9 115.65 205 116.6 205 117.75C205 118.72 205.78 119.5 206.75 119.5H208Z" fill="#e2e8f0" fill-opacity="0.85"/>
-                    <defs>
-                      <linearGradient id="hubCardGrad" x1="142" y1="68" x2="222" y2="130" gradientUnits="userSpaceOnUse">
-                        <stop stop-color="#0f2d7a"/>
-                        <stop offset="1" stop-color="#06153d"/>
-                      </linearGradient>
-                    </defs>
+                    <defs><linearGradient id="hubCardGrad" x1="142" y1="68" x2="222" y2="130" gradientUnits="userSpaceOnUse"><stop stop-color="#0f2d7a"/><stop offset="1" stop-color="#06153d"/></linearGradient></defs>
                   </svg>
                 </div>
               </div>
 
-              <div class="sc-card-links sc-hub-actions-grid">
+              <div class="sc-hub-actions-grid grid grid-cols-1 sm:grid-cols-3 gap-3.5 w-full">
                 <a href="https://wa.me/918800873871?text=Hi%20Rohit%20Sir%2C%20I%20want%20to%20share%20my%20Python%20Pandas%20Project%20for%20SinghClasses.in" target="_blank" rel="noopener noreferrer" class="sc-hub-btn sc-hub-btn-primary" data-connect-mode="share">
-                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="17 8 12 3 7 8"></polyline>
-                    <line x1="12" y1="3" x2="12" y2="15"></line>
-                  </svg>
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
                   <span>Submit Your Project</span>
                 </a>
-                <a href="https://wa.me/918800873871?text=Hi%20Rohit%20Sir%2C%20I%20want%20to%20request%20a%20custom%20Class%2012%20IP%20Python%20Project%20topic" target="_blank" rel="noopener noreferrer" class="sc-hub-btn sc-hub-btn-secondary" data-connect-mode="custom">
-                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                    <circle cx="9" cy="10" r="1" fill="currentColor"></circle>
-                    <circle cx="12" cy="10" r="1" fill="currentColor"></circle>
-                    <circle cx="15" cy="10" r="1" fill="currentColor"></circle>
-                  </svg>
+                <a href="https://wa.me/918800873871?text=Hi%20Rohit%20Sir%2C%20I%20want%20to%20request%20a%20custom%20Class%2012%20IP%20Python%20Project%20topic" target="_blank" rel="noopener noreferrer" class="sc-hub-btn sc-hub-btn-secondary bg-white/10 hover:bg-white/15 border border-blue-300/60 text-white" data-connect-mode="custom">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><circle cx="9" cy="10" r="1" fill="currentColor"></circle><circle cx="12" cy="10" r="1" fill="currentColor"></circle><circle cx="15" cy="10" r="1" fill="currentColor"></circle></svg>
                   <span>Request a Custom Topic</span>
                 </a>
-                <a href="https://wa.me/918800873871?text=Hi%20Rohit%20Sir%2C%20I%20need%20help%20with%20my%20Class%2012%20IP%20(065)%20Project%20Viva%20%26%20Doubts" target="_blank" rel="noopener noreferrer" class="sc-hub-btn sc-hub-btn-secondary" data-connect-mode="viva">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="9" cy="7" r="4"></circle>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                  </svg>
+                <a href="https://wa.me/918800873871?text=Hi%20Rohit%20Sir%2C%20I%20need%20help%20with%20my%20Class%2012%20IP%20(065)%20Project%20Viva%20%26%20Doubts" target="_blank" rel="noopener noreferrer" class="sc-hub-btn sc-hub-btn-secondary bg-white/10 hover:bg-white/15 border border-blue-300/60 text-white" data-connect-mode="viva">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                   <span>Get Viva Help</span>
                 </a>
               </div>
@@ -318,7 +225,7 @@
         <canvas id="canvasBottom" class="sc-canvas-bg"></canvas>
         <div class="sc-sbg-left">
           <div class="sc-sbg-icon" aria-hidden="true">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
           </div>
           <div class="sc-sbg-text">
             <h2>Master Concepts with OneShot Revision Classes</h2>
@@ -326,7 +233,7 @@
           </div>
         </div>
         <a href="https://www.youtube.com/channel/UCQpNeGvzbBLsRLnNX7ga8FQ?sub_confirmation=1" target="_blank" rel="noopener noreferrer" class="sc-sbg-btn">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
           Subscribe Now
         </a>
       </aside>
@@ -346,26 +253,21 @@
     </div>
   </footer>
 
-  <!-- Interactive Project Connect Modal (WhatsApp Only) -->
+  <!-- Interactive Project Connect Modal -->
   <div id="scProjectConnectModal" class="sc-connect-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="scConnectModalTitle">
     <div class="sc-connect-modal-box">
       <div class="sc-cm-header">
         <h3 id="scConnectModalTitle">Connect with Rohit Sir • Project Desk</h3>
         <button type="button" class="sc-cm-close" id="scCloseConnectModal" aria-label="Close Modal">✕</button>
       </div>
-
       <div class="sc-cm-tabs sc-cm-tabs-3" role="tablist">
         <button type="button" class="sc-cm-tab active" id="tabBtnShare" data-tab="share" role="tab" aria-selected="true">📤 Share Project</button>
         <button type="button" class="sc-cm-tab" id="tabBtnCustom" data-tab="custom" role="tab" aria-selected="false">💡 Custom Topic</button>
         <button type="button" class="sc-cm-tab" id="tabBtnViva" data-tab="viva" role="tab" aria-selected="false">🎓 Viva Help</button>
       </div>
-
-      <form id="scProjectConnectForm" class="sc-cm-body" onsubmit="return false;">
+      <form id="scProjectConnectForm" class="sc-cm-body">
         <div class="sc-cm-row-2">
-          <div class="sc-cm-field">
-            <label for="scStudentName">Your Name *</label>
-            <input type="text" id="scStudentName" placeholder="e.g., Aarav Sharma" required>
-          </div>
+          <div class="sc-cm-field"><label for="scStudentName">Your Name *</label><input type="text" id="scStudentName" placeholder="e.g., Aarav Sharma" required></div>
           <div class="sc-cm-field">
             <label for="scStudentClass">Class &amp; Subject *</label>
             <select id="scStudentClass">
@@ -375,12 +277,8 @@
             </select>
           </div>
         </div>
-
         <div class="sc-cm-row-2">
-          <div class="sc-cm-field">
-            <label for="scProjectTitle" id="lblProjectTitle">Project Title / Topic *</label>
-            <input type="text" id="scProjectTitle" placeholder="e.g., Library Management System" required>
-          </div>
+          <div class="sc-cm-field"><label for="scProjectTitle" id="lblProjectTitle">Project Title / Topic *</label><input type="text" id="scProjectTitle" placeholder="e.g., Library Management System" required></div>
           <div class="sc-cm-field">
             <label for="scProjectTech" id="lblProjectTech">Tech Stack / Query Type</label>
             <select id="scProjectTech">
@@ -390,17 +288,10 @@
             </select>
           </div>
         </div>
-
-        <div class="sc-cm-field">
-          <label for="scProjectDetails" id="lblProjectDetails">Drive / GitHub Link or Brief Project Note *</label>
-          <textarea id="scProjectDetails" rows="3" placeholder="Paste your Google Drive / GitHub link or describe your project features..." required></textarea>
-        </div>
-
+        <div class="sc-cm-field"><label for="scProjectDetails" id="lblProjectDetails">Drive / GitHub Link or Brief Project Note *</label><textarea id="scProjectDetails" rows="3" placeholder="Paste your Google Drive / GitHub link or describe your project features..." required></textarea></div>
         <div class="sc-cm-connect-btns">
           <button type="button" class="sc-cm-btn-wa" id="scSendWhatsApp">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-            </svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
             Connect on WhatsApp
           </button>
         </div>
@@ -408,13 +299,10 @@
     </div>
   </div>
 
-  <!-- Video Confirmation Modal -->
+  <!-- Video Confirmation Modal & Toast -->
   <div id="scVideoModal" class="sc-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="scModalTitle">
     <div class="sc-modal-card">
-      <div class="sc-modal-icon-wrapper" aria-hidden="true">
-        <div class="sc-modal-icon-bg"></div>
-        <div class="sc-modal-play-btn">▶</div>
-      </div>
+      <div class="sc-modal-icon-wrapper" aria-hidden="true"><div class="sc-modal-icon-bg"></div><div class="sc-modal-play-btn">▶</div></div>
       <h2 id="scModalTitle">Watch OneShot Lecture?</h2>
       <p>This will open the video lecture on YouTube in a new tab.</p>
       <div class="sc-modal-actions">
@@ -423,163 +311,26 @@
       </div>
     </div>
   </div>
-
-  <!-- Toast Notification -->
   <div id="scToast" class="sc-toast" role="status" aria-live="polite">🚧 Coming Soon: This study resource is currently being prepared.</div>
 
   <!-- Page-Specific Project Data -->
   <script>
     window.SC_PROJECTS_DATA = [
-      {
-        number: '01',
-        title: 'Automobile Management System',
-        category: 'retail',
-        categoryLabel: 'Retail & Billing',
-        image: '../../../assets/images/project/auto-mobile-management-system.jpeg',
-        summary: 'Vehicle models, showroom sales records & CSV stock analytics',
-        tech: ['Python', 'Pandas', 'CSV'],
-        pdfUrl: 'https://drive.google.com/file/d/1eMBlbzR5uTlU2J_pGPT2YGPZpnLfX1ar/view?usp=sharing'
-      },
-      {
-        number: '02',
-        title: 'Bank Management System',
-        category: 'management',
-        categoryLabel: 'Business & Admin',
-        image: '../../../assets/images/project/bank-management-system.jpeg',
-        summary: 'Account records, deposit/withdrawal logs & balance analysis',
-        tech: ['Python', 'Pandas', 'CSV'],
-        pdfUrl: 'https://drive.google.com/file/d/1HwBlnWNwdw4dDXhmMn_icfc0zEka9eZD/view?usp=sharing'
-      },
-      {
-        number: '03',
-        title: 'Clothing Store Management System',
-        category: 'retail',
-        categoryLabel: 'Retail & Billing',
-        image: '../../../assets/images/project/clothing-store-management-system.jpeg',
-        summary: 'Apparel catalog, size-wise inventory & retail sales DataFrames',
-        tech: ['Python', 'Pandas', 'CSV'],
-        pdfUrl: 'https://drive.google.com/file/d/1wP5zIS7MW5c3f5AbJoX_KX9Msco568ir/view?usp=sharing'
-      },
-      {
-        number: '04',
-        title: 'COVID-19 Management System',
-        category: 'utility',
-        categoryLabel: 'Public & Utility',
-        image: '../../../assets/images/project/covid-19-management-system.jpeg',
-        summary: 'State-wise case datasets, recovery trends & statistical insights',
-        tech: ['Python', 'Pandas', 'CSV'],
-        pdfUrl: 'https://drive.google.com/file/d/1x-jLDwhq6PvjR1Q8eAf-1hYkI8QuhqeU/view?usp=sharing'
-      },
-      {
-        number: '05',
-        title: 'E-Commerce Management System',
-        category: 'retail',
-        categoryLabel: 'Retail & Billing',
-        image: '../../../assets/images/project/e-commerce-management-system.jpeg',
-        summary: 'Online order logs, product ratings & revenue DataFrame analysis',
-        tech: ['Python', 'Pandas', 'CSV'],
-        pdfUrl: 'https://drive.google.com/file/d/1oQvCtjHchWTkXTVn2dc4LR0YpjXWaOgs/view?usp=sharing'
-      },
-      {
-        number: '06',
-        title: 'Employee Management System',
-        category: 'management',
-        categoryLabel: 'Business & Admin',
-        image: '../../../assets/images/project/employee-management-system.jpeg',
-        summary: 'Staff directory, department payroll & attendance CSV reports',
-        tech: ['Python', 'Pandas', 'CSV'],
-        pdfUrl: 'https://drive.google.com/file/d/1xo5TcUSY6fCfoEe1RKP0f-F1O-SQBoi1/view?usp=sharing'
-      },
-      {
-        number: '07',
-        title: 'Pharmacy Management System',
-        category: 'retail',
-        categoryLabel: 'Retail & Billing',
-        image: '../../../assets/images/project/pharmacy-management-system.jpeg',
-        summary: 'Medicine stock CSV, expiry tracking & customer billing records',
-        tech: ['Python', 'Pandas', 'CSV'],
-        pdfUrl: 'https://drive.google.com/file/d/1Eime_O1VrOUslqipIlhq2ff-Wg6mKcHT/view?usp=sharing'
-      },
-      {
-        number: '08',
-        title: 'Hotel Management System',
-        category: 'management',
-        categoryLabel: 'Business & Admin',
-        image: '../../../assets/images/project/hotel-management-system.jpeg',
-        summary: 'Room booking logs, guest records & tariff DataFrame summaries',
-        tech: ['Python', 'Pandas', 'CSV'],
-        pdfUrl: 'https://drive.google.com/file/d/1T1g-xbYYTg4jS5Pw3d-B50cwY8aveJmJ/view?usp=sharing'
-      },
-      {
-        number: '09',
-        title: 'IPL Data Analysis System',
-        category: 'utility',
-        categoryLabel: 'Public & Utility',
-        image: '../../../assets/images/project/ipl-data-analysis-system.jpeg',
-        summary: 'Team standings, player stats & season performance CSV analysis',
-        tech: ['Python', 'Pandas', 'CSV'],
-        pdfUrl: 'https://drive.google.com/file/d/1Gn3xVg67AOqA9LaoxCR2_fpINGpdvsQj/view?usp=sharing'
-      },
-      {
-        number: '10',
-        title: 'Library Management System',
-        category: 'education',
-        categoryLabel: 'Education & Campus',
-        image: '../../../assets/images/project/library-management-system.jpeg',
-        summary: 'Book catalog CSV, issue/return tracking & member records',
-        tech: ['Python', 'Pandas', 'CSV'],
-        pdfUrl: 'https://drive.google.com/file/d/1_AYgzx4xlc64vDzqA4Cou1k2VfP_K8E8/view?usp=sharing'
-      },
-      {
-        number: '11',
-        title: 'OTT Platform Management System',
-        category: 'management',
-        categoryLabel: 'Business & Admin',
-        image: '../../../assets/images/project/ott-platform-management-system.jpeg',
-        summary: 'Movies & shows dataset, genre filtering & viewer trend analysis',
-        tech: ['Python', 'Pandas', 'CSV'],
-        pdfUrl: 'https://drive.google.com/file/d/1_TYh1OLTvE0jFd3WpwqE8Q6YfJehM17Q/view?usp=sharing'
-      },
-      {
-        number: '12',
-        title: 'Population Management System',
-        category: 'utility',
-        categoryLabel: 'Public & Utility',
-        image: '../../../assets/images/project/population-management-system.jpeg',
-        summary: 'Demographic census CSV, growth rates & regional comparisons',
-        tech: ['Python', 'Pandas', 'CSV'],
-        pdfUrl: 'https://drive.google.com/file/d/1MwdA4ebRve8K91UaYnaS80tCatcyZwtG/view?usp=sharing'
-      },
-      {
-        number: '13',
-        title: 'Student Report Card Management System',
-        category: 'education',
-        categoryLabel: 'Education & Campus',
-        image: '../../../assets/images/project/student-report-card-management-system.jpeg',
-        summary: 'Subject marks DataFrames, percentage calculation & grade sheets',
-        tech: ['Python', 'Pandas', 'CSV'],
-        pdfUrl: 'https://drive.google.com/file/d/1pVsyp8UhoJt9phBQOc5tCvlpfFe1ljeN/view?usp=sharing'
-      },
-      {
-        number: '14',
-        title: 'Sales Management System',
-        category: 'retail',
-        categoryLabel: 'Retail & Billing',
-        image: '../../../assets/images/project/sales-management-system.jpeg',
-        summary: 'Monthly sales CSV, product performance & profit summaries',
-        tech: ['Python', 'Pandas', 'CSV'],
-        pdfUrl: 'https://drive.google.com/file/d/1jLIr1JbJQomUY4hZc24g7zxOL22S5ymW/view?usp=sharing'
-      },
-      {
-        number: '15',
-        title: 'Tour and Travel Management System',
-        category: 'utility',
-        categoryLabel: 'Public & Utility',
-        image: '../../../assets/images/project/tour-and-travel-management-system.jpeg',
-        summary: 'Holiday packages, booking CSV records & destination filtering',
-        tech: ['Python', 'Pandas', 'CSV'],
-        pdfUrl: 'https://drive.google.com/file/d/1AQrAwUHPShVxgneDEc93hqSv2GnAR9il/view?usp=sharing'
-      }
+      { number: '01', title: 'Automobile Management System', category: 'retail', categoryLabel: 'Retail & Billing', image: '../../../assets/images/project/auto-mobile-management-system.jpeg', summary: 'Vehicle models, showroom sales records & CSV stock analytics', tech: ['Python', 'Pandas', 'CSV'], pdfUrl: 'https://drive.google.com/file/d/1eMBlbzR5uTlU2J_pGPT2YGPZpnLfX1ar/view?usp=sharing' },
+      { number: '02', title: 'Bank Management System', category: 'management', categoryLabel: 'Business & Admin', image: '../../../assets/images/project/bank-management-system.jpeg', summary: 'Account records, deposit/withdrawal logs & balance analysis', tech: ['Python', 'Pandas', 'CSV'], pdfUrl: 'https://drive.google.com/file/d/1HwBlnWNwdw4dDXhmMn_icfc0zEka9eZD/view?usp=sharing' },
+      { number: '03', title: 'Clothing Store Management System', category: 'retail', categoryLabel: 'Retail & Billing', image: '../../../assets/images/project/clothing-store-management-system.jpeg', summary: 'Apparel catalog, size-wise inventory & retail sales DataFrames', tech: ['Python', 'Pandas', 'CSV'], pdfUrl: 'https://drive.google.com/file/d/1wP5zIS7MW5c3f5AbJoX_KX9Msco568ir/view?usp=sharing' },
+      { number: '04', title: 'COVID-19 Management System', category: 'utility', categoryLabel: 'Public & Utility', image: '../../../assets/images/project/covid-19-management-system.jpeg', summary: 'State-wise case datasets, recovery trends & statistical insights', tech: ['Python', 'Pandas', 'CSV'], pdfUrl: 'https://drive.google.com/file/d/1x-jLDwhq6PvjR1Q8eAf-1hYkI8QuhqeU/view?usp=sharing' },
+      { number: '05', title: 'E-Commerce Management System', category: 'retail', categoryLabel: 'Retail & Billing', image: '../../../assets/images/project/e-commerce-management-system.jpeg', summary: 'Online order logs, product ratings & revenue DataFrame analysis', tech: ['Python', 'Pandas', 'CSV'], pdfUrl: 'https://drive.google.com/file/d/1oQvCtjHchWTkXTVn2dc4LR0YpjXWaOgs/view?usp=sharing' },
+      { number: '06', title: 'Employee Management System', category: 'management', categoryLabel: 'Business & Admin', image: '../../../assets/images/project/employee-management-system.jpeg', summary: 'Staff directory, department payroll & attendance CSV reports', tech: ['Python', 'Pandas', 'CSV'], pdfUrl: 'https://drive.google.com/file/d/1xo5TcUSY6fCfoEe1RKP0f-F1O-SQBoi1/view?usp=sharing' },
+      { number: '07', title: 'Pharmacy Management System', category: 'retail', categoryLabel: 'Retail & Billing', image: '../../../assets/images/project/pharmacy-management-system.jpeg', summary: 'Medicine stock CSV, expiry tracking & customer billing records', tech: ['Python', 'Pandas', 'CSV'], pdfUrl: 'https://drive.google.com/file/d/1Eime_O1VrOUslqipIlhq2ff-Wg6mKcHT/view?usp=sharing' },
+      { number: '08', title: 'Hotel Management System', category: 'management', categoryLabel: 'Business & Admin', image: '../../../assets/images/project/hotel-management-system.jpeg', summary: 'Room booking logs, guest records & tariff DataFrame summaries', tech: ['Python', 'Pandas', 'CSV'], pdfUrl: 'https://drive.google.com/file/d/1T1g-xbYYTg4jS5Pw3d-B50cwY8aveJmJ/view?usp=sharing' },
+      { number: '09', title: 'IPL Data Analysis System', category: 'utility', categoryLabel: 'Public & Utility', image: '../../../assets/images/project/ipl-data-analysis-system.jpeg', summary: 'Team standings, player stats & season performance CSV analysis', tech: ['Python', 'Pandas', 'CSV'], pdfUrl: 'https://drive.google.com/file/d/1Gn3xVg67AOqA9LaoxCR2_fpINGpdvsQj/view?usp=sharing' },
+      { number: '10', title: 'Library Management System', category: 'education', categoryLabel: 'Education & Campus', image: '../../../assets/images/project/library-management-system.jpeg', summary: 'Book catalog CSV, issue/return tracking & member records', tech: ['Python', 'Pandas', 'CSV'], pdfUrl: 'https://drive.google.com/file/d/1_AYgzx4xlc64vDzqA4Cou1k2VfP_K8E8/view?usp=sharing' },
+      { number: '11', title: 'OTT Platform Management System', category: 'management', categoryLabel: 'Business & Admin', image: '../../../assets/images/project/ott-platform-management-system.jpeg', summary: 'Movies & shows dataset, genre filtering & viewer trend analysis', tech: ['Python', 'Pandas', 'CSV'], pdfUrl: 'https://drive.google.com/file/d/1_TYh1OLTvE0jFd3WpwqE8Q6YfJehM17Q/view?usp=sharing' },
+      { number: '12', title: 'Population Management System', category: 'utility', categoryLabel: 'Public & Utility', image: '../../../assets/images/project/population-management-system.jpeg', summary: 'Demographic census CSV, growth rates & regional comparisons', tech: ['Python', 'Pandas', 'CSV'], pdfUrl: 'https://drive.google.com/file/d/1MwdA4ebRve8K91UaYnaS80tCatcyZwtG/view?usp=sharing' },
+      { number: '13', title: 'Student Report Card Management System', category: 'education', categoryLabel: 'Education & Campus', image: '../../../assets/images/project/student-report-card-management-system.jpeg', summary: 'Subject marks DataFrames, percentage calculation & grade sheets', tech: ['Python', 'Pandas', 'CSV'], pdfUrl: 'https://drive.google.com/file/d/1pVsyp8UhoJt9phBQOc5tCvlpfFe1ljeN/view?usp=sharing' },
+      { number: '14', title: 'Sales Management System', category: 'retail', categoryLabel: 'Retail & Billing', image: '../../../assets/images/project/sales-management-system.jpeg', summary: 'Monthly sales CSV, product performance & profit summaries', tech: ['Python', 'Pandas', 'CSV'], pdfUrl: 'https://drive.google.com/file/d/1jLIr1JbJQomUY4hZc24g7zxOL22S5ymW/view?usp=sharing' },
+      { number: '15', title: 'Tour and Travel Management System', category: 'utility', categoryLabel: 'Public & Utility', image: '../../../assets/images/project/tour-and-travel-management-system.jpeg', summary: 'Holiday packages, booking CSV records & destination filtering', tech: ['Python', 'Pandas', 'CSV'], pdfUrl: 'https://drive.google.com/file/d/1AQrAwUHPShVxgneDEc93hqSv2GnAR9il/view?usp=sharing' }
     ];
   </script>
 
