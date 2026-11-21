@@ -17,6 +17,18 @@ const getHomeUrl = () => window.CBT_CONFIG?.HOME_URL ?? "https://www.singhclasse
 const getYoutubeUrl = () => window.CBT_CONFIG?.YOUTUBE_URL ?? "https://youtu.be/cqiM2VVs-HM";
 const getNotesUrl = () => window.CBT_CONFIG?.NOTES_URL ?? "#";
 
+const AUTO_NEXT_STORAGE_KEY = "cbt_auto_next_seconds";
+function getAutoNextSeconds() {
+  try {
+    const raw = localStorage.getItem(AUTO_NEXT_STORAGE_KEY);
+    if (raw !== null && raw !== "") {
+      const val = Number(raw);
+      if ([0, 3, 5].includes(val)) return val;
+    }
+  } catch (e) {}
+  return 3;
+}
+
 const ICON_ALERT = `<svg class="sc-svg-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`;
 const ICON_FULLSCREEN = `<polyline points="15 3 21 3 21 9"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><polyline points="9 21 3 21 3 15"></polyline><line x1="3" y1="21" x2="10" y2="14"></line>`;
 const ICON_MINIMIZE = `<polyline points="4 14 10 14 10 20"></polyline><line x1="10" y1="14" x2="3" y2="21"></line><polyline points="20 10 14 10 14 4"></polyline><line x1="14" y1="10" x2="21" y2="3"></line>`;
@@ -37,10 +49,11 @@ window.CBTState = {
   feedbackRating: 0,
   feedbackCategory: "",
   feedbackDataStore: [], hasAnimatedStars: false,
-  isExpandedSubmissions: false, allFetchedRecords: [], hasFetchedFeedback: false
+  isExpandedSubmissions: false, allFetchedRecords: [], hasFetchedFeedback: false,
+  autoNextSeconds: getAutoNextSeconds()
 };
 
-let spacePressTimestamps = [], autoAdvanceTimer = null;
+let spacePressTimestamps = [], autoAdvanceTimer = null, autoAdvanceCountdownInterval = null;
 let touchStartX = 0, touchStartY = 0, lastOptionTapTime = 0, lastTappedIndex = -1;
 
 const debounce = (fn, delay = 150) => {
@@ -80,21 +93,47 @@ function showToastAlert(m) {
 
 function cancelAutoAdvance() {
   if (autoAdvanceTimer) { clearTimeout(autoAdvanceTimer); autoAdvanceTimer = null; }
+  if (autoAdvanceCountdownInterval) { clearInterval(autoAdvanceCountdownInterval); autoAdvanceCountdownInterval = null; }
   document.querySelectorAll('.option-countdown-strip').forEach(el => el.remove());
 }
 
-function scheduleAutoAdvance(delay = 2000) {
+function scheduleAutoAdvance(seconds = CBTState.autoNextSeconds) {
   cancelAutoAdvance();
+  const sec = Number(seconds);
+  if (!sec || sec <= 0) return;
   const activeLabel = document.querySelector('#q-options input[name="option"]:checked')?.closest('label');
+  let textEl = null;
   if (activeLabel) {
     const strip = document.createElement('div');
     strip.className = 'option-countdown-strip';
+    textEl = document.createElement('span');
+    textEl.className = 'option-countdown-text';
+    textEl.innerText = `⏳ Next in ${sec}s`;
+    strip.appendChild(textEl);
     activeLabel.appendChild(strip);
   }
+  let remaining = sec;
+  autoAdvanceCountdownInterval = setInterval(() => {
+    remaining--;
+    if (remaining > 0 && textEl) textEl.innerText = `⏳ Next in ${remaining}s`;
+    else { clearInterval(autoAdvanceCountdownInterval); autoAdvanceCountdownInterval = null; }
+  }, 1000);
   autoAdvanceTimer = setTimeout(() => {
+    cancelAutoAdvance();
     if (CBTState.isExamActive && !CBTState.sections[CBTState.currentYearIndex]?.submitted) nextQuestion();
-  }, delay);
+  }, sec * 1000);
 }
+
+window.setAutoNextSeconds = function(sec) {
+  const val = [0, 3, 5].includes(Number(sec)) ? Number(sec) : 3;
+  CBTState.autoNextSeconds = val;
+  try { localStorage.setItem(AUTO_NEXT_STORAGE_KEY, String(val)); } catch (e) {}
+  document.querySelectorAll('.rail-autonext-btn').forEach(btn => {
+    btn.classList.toggle('active', Number(btn.dataset.sec) === val);
+  });
+  if (val === 0) cancelAutoAdvance();
+  showToastAlert(val === 0 ? "Auto-Next turned Off" : `Auto-Next set to ${val} seconds`);
+};
 
 /* ==========================================================================
    SECTION 3: HEADER ACTIONS, LEFT RAIL ACTIONS, NAVIGATION & FULLSCREEN
@@ -155,6 +194,7 @@ window.handleRailAction = function(type) {
   } else if (type === 'settings') {
     const cMarks = getCorrectMarks(), iMarks = getIncorrectMarks(), pMarks = getPenaltyMarks();
     const fsLabel = document.fullscreenElement ? 'Exit Fullscreen' : 'Enter Fullscreen';
+    const curAuto = CBTState.autoNextSeconds;
     modal.innerHTML = `
       <div class="custom-modal-box" style="max-width:420px;text-align:left;">
         <div class="lb-modal-header" style="margin-bottom:10px;">
@@ -176,6 +216,14 @@ window.handleRailAction = function(type) {
           <div style="display:flex;justify-content:space-between;padding:8px 12px;border-bottom:1px solid #f1f5f9;">
             <span style="color:#475569;font-weight:600;">Proctoring Mode</span>
             <strong style="color:${isProctoringEnabled() ? '#d97706' : '#64748b'};">${isProctoringEnabled() ? `Active (-${pMarks} Penalty)` : 'Practice Mode (Off)'}</strong>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid #f1f5f9;">
+            <span style="color:#475569;font-weight:600;">Auto-Next Timer</span>
+            <div class="rail-autonext-group" role="group" aria-label="Auto-Next Timer">
+              <button type="button" class="rail-autonext-btn ${curAuto === 0 ? 'active' : ''}" data-sec="0" onclick="setAutoNextSeconds(0)">Off</button>
+              <button type="button" class="rail-autonext-btn ${curAuto === 3 ? 'active' : ''}" data-sec="3" onclick="setAutoNextSeconds(3)">3s</button>
+              <button type="button" class="rail-autonext-btn ${curAuto === 5 ? 'active' : ''}" data-sec="5" onclick="setAutoNextSeconds(5)">5s</button>
+            </div>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;">
             <span style="color:#475569;font-weight:600;">Screen Mode</span>
@@ -293,6 +341,8 @@ function restoreSession(data) {
   if ($('unified-nav')) $('unified-nav').style.display = 'flex';
   ensureReviewControlsExist(); enableDesktopFullscreen();
   buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion();
+  if (CBTState.allFetchedRecords?.length > 0) renderSidebarToppers(CBTState.allFetchedRecords);
+  fetchAndRenderSidebarToppers();
   if (CBTState.userAnswers.some(ans => ans !== null)) triggerFeedbackSectionAnimation();
   showToastAlert("Previous exam attempt restored successfully!");
 }
@@ -892,8 +942,12 @@ window.loadQuestion = () => {
     if (expChar) expChar.innerText = lt[ci];
     if (isL) {
       btnExp.classList.remove('disabled');
+      if (wrapper) wrapper.classList.remove('is-disabled');
       if (expVerdict) expVerdict.innerHTML = (userChoice === ci) ? `<strong>Well done!</strong> Great effort.` : `<strong>Review the solution above to understand the concept.</strong>`;
-    } else btnExp.classList.add('disabled');
+    } else {
+      btnExp.classList.add('disabled');
+      if (wrapper) wrapper.classList.add('is-disabled');
+    }
   }
 
   if ($('btn-prev')) $('btn-prev').disabled = CBTState.currentQuestion === s.start;
@@ -1113,10 +1167,10 @@ function placeActionMatrix() {
   const matrix = $('action-matrix-slot'), contentArea = $('question-content'), palette = $('palette-column-container');
   if (!matrix || !contentArea || !palette) return;
   if (window.innerWidth <= 640) {
-    const toppers = $('sidebar-toppers');
-    if (toppers && toppers.parentNode === contentArea) contentArea.insertBefore(matrix, toppers);
-    else contentArea.appendChild(matrix);
-  } else palette.appendChild(matrix);
+    if (matrix.parentNode !== contentArea) contentArea.appendChild(matrix);
+  } else if (matrix.parentNode !== palette) {
+    palette.appendChild(matrix);
+  }
 }
 
 window.addEventListener('resize', debounce(() => {
@@ -1147,7 +1201,7 @@ window.handleOptionDoubleTap = function(e, idx) {
     e.preventDefault();
     if (!CBTState.lockedAnswers[CBTState.currentQuestion] && !CBTState.sections[CBTState.currentYearIndex].submitted) {
       try { navigator.vibrate?.(35); } catch (err) {}
-      saveAnswer(idx); CBTState.lockedAnswers[CBTState.currentQuestion] = true; loadQuestion(); scheduleAutoAdvance(2000);
+      saveAnswer(idx); CBTState.lockedAnswers[CBTState.currentQuestion] = true; loadQuestion(); scheduleAutoAdvance();
     }
     lastOptionTapTime = 0; lastTappedIndex = -1;
   } else { lastOptionTapTime = currentTime; lastTappedIndex = idx; }
@@ -1156,7 +1210,7 @@ window.handleOptionDoubleTap = function(e, idx) {
 window.handleOptionDesktopDblClick = function(e, idx) {
   if (window.innerWidth <= 640) return;
   if (!CBTState.lockedAnswers[CBTState.currentQuestion] && !CBTState.sections[CBTState.currentYearIndex].submitted) {
-    saveAnswer(idx); CBTState.lockedAnswers[CBTState.currentQuestion] = true; loadQuestion(); scheduleAutoAdvance(2000);
+    saveAnswer(idx); CBTState.lockedAnswers[CBTState.currentQuestion] = true; loadQuestion(); scheduleAutoAdvance();
   }
 };
 
@@ -1284,7 +1338,8 @@ function renderSidebarToppers(toppersArray) {
   }).join('');
   if (top7.length < 7) cardsHTML += `<div class="tp6-compact-card tp6-next-card"><span class="tp6-next-trophy">🏆</span><span class="tp6-next-text">You Could Be Next!</span></div>`;
   listEl.innerHTML = `<div class="tp6-row">${cardsHTML}</div>`;
-  container.style.display = 'flex';
+  const isViewReady = CBTState.isExamActive || $('quiz-screen')?.style.display === 'block' || $('result-screen')?.style.display === 'block';
+  container.style.display = isViewReady ? 'flex' : 'none';
 }
 
 function calculateCurrentExamScore() {
