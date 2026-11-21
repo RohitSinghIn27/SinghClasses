@@ -394,9 +394,13 @@ window.CBT_CONFIG = {
             </div>
 
             <!-- Explanation Accordion -->
-            <div id="q-explanation-wrapper" class="comp-exp-container">
+            <div id="q-explanation-wrapper" class="comp-exp-container is-disabled">
               <button type="button" id="btn-toggle-exp" class="comp-exp-header-btn disabled" onclick="toggleExplanation()">
-                <span class="comp-exp-header-center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg><span id="btn-exp-label">View Explanation</span></span>
+                <span class="comp-exp-header-center">
+                  <svg id="exp-lock-icon" class="exp-lock-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                  <svg id="exp-book-icon" class="exp-book-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                  <span id="btn-exp-label">View Explanation</span>
+                </span>
                 <svg class="comp-exp-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
               </button>
               <div id="explanation-box" class="comp-exp-content-box">
@@ -431,18 +435,6 @@ window.CBT_CONFIG = {
             <div class="matrix-divider"></div>
             <button type="button" class="btn-submit" id="main-section-submit-btn" onclick="showSubmitModal()"><span>SUBMIT SECTION &rarr;</span></button>
             <div class="submit-warning-notice"><svg class="warning-shield-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg><span>You cannot edit after submitting</span></div>
-          </div>
-
-          <!-- Top Performers Strip -->
-          <div id="sidebar-toppers" class="sidebar-toppers-container toppers-img6-compact" style="display:none;">
-            <div class="toppers-hero-header">
-              <div class="toppers-title-group"><span class="toppers-vertical-accent"></span><span class="toppers-crown-icon" aria-hidden="true">👑</span><h3 class="shortcut-label">Top Performers</h3></div>
-              <div class="toppers-header-actions">
-                <span id="user-current-rank-badge" class="topper-user-rank-pill" style="display:none;">Your current rank: <strong id="user-current-rank-text">-</strong></span>
-                <button type="button" class="btn-toppers-leaderboard" onclick="openLeaderboardModal()" aria-label="View Leaderboard"><span class="toppers-lb-trophy">🏆</span><span>Leaderboard</span><svg class="toppers-lb-arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
-              </div>
-            </div>
-            <div id="sidebar-toppers-list" class="sidebar-toppers-grid-img6"></div>
           </div>
         </div>
       </div>
@@ -536,6 +528,18 @@ window.CBT_CONFIG = {
       </div>
       <div class="img4-btn-wrapper"><button type="button" class="img4-green-home-btn" onclick="goToHome()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg><span>BACK TO HOME</span></button></div>
     </div>
+  </div>
+
+  <!-- SECTION: Top Performers Strip (Positioned Before Feedback & Suggestions) -->
+  <div id="sidebar-toppers" class="sidebar-toppers-container toppers-img6-compact" style="display:none;">
+    <div class="toppers-hero-header">
+      <div class="toppers-title-group"><span class="toppers-vertical-accent"></span><span class="toppers-crown-icon" aria-hidden="true">👑</span><h3 class="shortcut-label">Top Performers</h3></div>
+      <div class="toppers-header-actions">
+        <span id="user-current-rank-badge" class="topper-user-rank-pill" style="display:none;">Your current rank: <strong id="user-current-rank-text">-</strong></span>
+        <button type="button" class="btn-toppers-leaderboard" onclick="openLeaderboardModal()" aria-label="View Leaderboard"><span class="toppers-lb-trophy">🏆</span><span>Leaderboard</span><svg class="toppers-lb-arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+      </div>
+    </div>
+    <div id="sidebar-toppers-list" class="sidebar-toppers-grid-img6"></div>
   </div>
 
   <!-- SECTION: Interactive Feedback & Student Submissions Showcase -->
