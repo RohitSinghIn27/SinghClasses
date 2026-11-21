@@ -17,15 +17,7 @@ const getHomeUrl = () => window.CBT_CONFIG?.HOME_URL ?? "https://www.singhclasse
 const getYoutubeUrl = () => window.CBT_CONFIG?.YOUTUBE_URL ?? "https://youtu.be/cqiM2VVs-HM";
 const getNotesUrl = () => window.CBT_CONFIG?.NOTES_URL ?? "#";
 
-const AUTO_NEXT_STORAGE_KEY = "cbt_auto_next_seconds";
 function getAutoNextSeconds() {
-  try {
-    const raw = localStorage.getItem(AUTO_NEXT_STORAGE_KEY);
-    if (raw !== null && raw !== "") {
-      const val = Number(raw);
-      if ([0, 3, 5].includes(val)) return val;
-    }
-  } catch (e) {}
   return 3;
 }
 
@@ -127,7 +119,6 @@ function scheduleAutoAdvance(seconds = CBTState.autoNextSeconds) {
 window.setAutoNextSeconds = function(sec) {
   const val = [0, 3, 5].includes(Number(sec)) ? Number(sec) : 3;
   CBTState.autoNextSeconds = val;
-  try { localStorage.setItem(AUTO_NEXT_STORAGE_KEY, String(val)); } catch (e) {}
   document.querySelectorAll('.rail-autonext-btn').forEach(btn => {
     btn.classList.toggle('active', Number(btn.dataset.sec) === val);
   });
@@ -192,16 +183,12 @@ window.handleRailAction = function(type) {
       </div>`;
     modal.style.display = 'flex';
   } else if (type === 'settings') {
-    const cMarks = getCorrectMarks(), iMarks = getIncorrectMarks(), pMarks = getPenaltyMarks();
+    const cMarks = getCorrectMarks(), iMarks = getIncorrectMarks();
     const fsLabel = document.fullscreenElement ? 'Exit Fullscreen' : 'Enter Fullscreen';
     const curAuto = CBTState.autoNextSeconds;
     modal.innerHTML = `
       <div class="custom-modal-box" style="max-width:420px;text-align:left;">
-        <div class="lb-modal-header" style="margin-bottom:10px;">
-          <div class="lb-modal-title-group">
-            <h3 class="lb-modal-title">⚙️ Exam Info &amp; Display</h3>
-            <span class="lb-modal-subtitle">${escapeHTML(getTestName())} · Ch ${escapeHTML(getChapterNumber())}</span>
-          </div>
+        <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
           <button type="button" class="lb-close-btn" onclick="closeRailUtilityModal()" title="Close">✕</button>
         </div>
         <div style="border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;background:#ffffff;font-size:0.82rem;">
@@ -212,10 +199,6 @@ window.handleRailAction = function(type) {
           <div style="display:flex;justify-content:space-between;padding:8px 12px;border-bottom:1px solid #f1f5f9;">
             <span style="color:#475569;font-weight:600;">Incorrect Answer</span>
             <strong style="color:#dc2626;">-${iMarks} Marks</strong>
-          </div>
-          <div style="display:flex;justify-content:space-between;padding:8px 12px;border-bottom:1px solid #f1f5f9;">
-            <span style="color:#475569;font-weight:600;">Proctoring Mode</span>
-            <strong style="color:${isProctoringEnabled() ? '#d97706' : '#64748b'};">${isProctoringEnabled() ? `Active (-${pMarks} Penalty)` : 'Practice Mode (Off)'}</strong>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid #f1f5f9;">
             <span style="color:#475569;font-weight:600;">Auto-Next Timer</span>
@@ -394,12 +377,13 @@ async function loadQuestionsFromSheet(retries = 3) {
           title: getVerbatim(paper, ['sectiontitle', 'SectionTitle', 'title', 'Title'], "Section"),
           year: getVerbatim(paper, ['section', 'Section', 'year', 'Year'], "1"),
           questions: (paper.questions || []).map(q => {
-            const cleanOpts = (Array.isArray(q.options) ? q.options : [
+            const rawOpts = Array.isArray(q.options) ? q.options : [
               getVerbatim(q, ['optiona', 'OptionA', 'option1', '0'], ""),
               getVerbatim(q, ['optionb', 'OptionB', 'option2', '1'], ""),
               getVerbatim(q, ['optionc', 'OptionC', 'option3', '2'], ""),
               getVerbatim(q, ['optiond', 'OptionD', 'option4', '3'], "")
-            ]).map(o => (o ?? "").toString());
+            ];
+            const cleanOpts = rawOpts.map(o => (o ?? "").toString()).filter(o => o.trim() !== "");
             return {
               text: getVerbatim(q, ['text', 'Text', 'question', 'Question'], "").toString(),
               tag: getVerbatim(q, ['tag', 'Tag', 'TAG', 'column', 'info', 'Info', 'metadata'], "CBSE").toString().trim(),
@@ -408,7 +392,7 @@ async function loadQuestionsFromSheet(retries = 3) {
               explanation: getVerbatim(q, ['explanation', 'Explanation', 'exp', 'Exp', 'solution'], "").toString(),
               correctAnswerText: resolveCorrectText(getVerbatim(q, ['correctIndex', 'correct', 'answer', 'ans', '4'], "A"), cleanOpts)
             };
-          }).filter(q => q.text !== "")
+          }).filter(q => q.text !== "" && q.options.length > 0)
         })).filter(p => p.questions.length > 0);
       } else {
         const sectionsMap = {};
@@ -424,7 +408,8 @@ async function loadQuestionsFromSheet(retries = 3) {
             getVerbatim(r, ['optionb', 'option2', 'b'], ""),
             getVerbatim(r, ['optionc', 'option3', 'c'], ""),
             getVerbatim(r, ['optiond', 'option4', 'd'], "")
-          ].map(o => o.toString());
+          ].map(o => (o ?? "").toString()).filter(o => o.trim() !== "");
+          if (options.length === 0) return;
           if (!sectionsMap[sNum]) sectionsMap[sNum] = { title: sTitle, year: sNum, questions: [] };
           sectionsMap[sNum].questions.push({
             text: qText.toString(),
@@ -904,7 +889,7 @@ window.loadQuestion = () => {
   const s = CBTState.sections[CBTState.currentYearIndex], qy = CBTState.currentQuestion - s.start, tot = s.end - s.start, curQ = CBTState.questions[CBTState.currentQuestion];
   if ($('q-number')) $('q-number').innerText = (window.innerWidth <= 640) ? `Q${qy + 1} of ${tot}` : `Question ${qy + 1} of ${tot}`;
   const tagEl = $('q-tag-pill');
-  if (tagEl) tagEl.innerText = (curQ?.tag?.trim().length > 0) ? curQ.tag.trim().toUpperCase() : "CBSE";
+  if (tagEl) tagEl.innerText = (curQ?.tag?.trim().length > 0) ? curQ.tag.trim() : "CBSE";
   const pBar = $('qhc-progress-bar');
   if (pBar && tot > 0) pBar.style.width = `${Math.round(((qy + 1) / tot) * 100)}%`;
 
@@ -1070,7 +1055,7 @@ window.toggleExplanation = function() {
    ========================================================================== */
 function updateTimerDisplay() {
   const t = CBTState.sectionTimes[CBTState.currentYearIndex] || 0, m = Math.floor(t / 60), s = t % 60;
-  if ($('time-left')) $('time-left').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+  if ($('time-left')) $('time-left').innerText = `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
 }
 
 function startTimer() {
