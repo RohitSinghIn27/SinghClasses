@@ -36,7 +36,7 @@ window.CBTState = {
   studentSectionVal: "A", schoolNameVal: "", studentName: "", selectedSectionMode: "ALL",
   userAnswers: [], visitedQuestions: [], lockedAnswers: [], markedQuestions: [], sectionTimes: [],
   timerInterval: null, isTimerPaused: true, isTimerFrozen: false, securityWarnings: 0,
-  isExamActive: false, currentFilter: 'all', activeResourceUrl: "", lastWT: 0,
+  isExamActive: false, isFocusMode: false, currentFilter: 'all', activeResourceUrl: "", lastWT: 0,
   sectionToppersFetched: [], pendingRestoreData: null,
   feedbackRating: 0,
   feedbackCategory: "",
@@ -127,7 +127,7 @@ window.setAutoNextSeconds = function(sec) {
 };
 
 /* ==========================================================================
-   SECTION 3: HEADER ACTIONS, LEFT RAIL ACTIONS, NAVIGATION & FULLSCREEN
+   SECTION 3: HEADER ACTIONS, LEFT RAIL ACTIONS, FOCUS MODE & FULLSCREEN
    ========================================================================== */
 function goPageBack() {
   if (document.referrer && window.history.length > 1) window.history.back();
@@ -142,6 +142,30 @@ window.handleHeaderBack = function() {
   else goPageBack();
 };
 
+function syncFocusModeUI() {
+  const active = !!CBTState.isFocusMode;
+  document.body.classList.toggle('cbt-focus-mode', active);
+  const btn = $('btn-rail-focus');
+  if (btn) {
+    btn.classList.toggle('active-focus', active);
+    btn.title = active ? "Exit Focus Mode (Shortcut: F)" : "Focus Mode (Shortcut: F)";
+    btn.setAttribute('aria-label', btn.title);
+  }
+  const icon = $('rail-focus-icon');
+  if (icon) {
+    icon.innerHTML = active
+      ? `<path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path>`
+      : `<path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path><circle cx="12" cy="12" r="3"></circle>`;
+  }
+}
+
+window.toggleFocusMode = function(forceState) {
+  CBTState.isFocusMode = typeof forceState === 'boolean' ? forceState : !CBTState.isFocusMode;
+  syncFocusModeUI();
+  placeActionMatrix();
+  showToastAlert(CBTState.isFocusMode ? "Focus Mode enabled (Question view only)" : "Focus Mode exited");
+};
+
 window.handleRailAction = function(type) {
   let modal = $('modal-rail-utility');
   if (!modal) {
@@ -152,12 +176,45 @@ window.handleRailAction = function(type) {
     document.body.appendChild(modal);
   }
 
-  if (type === 'shortcuts') {
+  if (type === 'instructions') {
+    const cMarks = getCorrectMarks(), iMarks = getIncorrectMarks(), pMarks = getPenaltyMarks();
+    const sec = CBTState.sections[CBTState.currentYearIndex];
+    const secTitle = sec ? `${sec.title}` : getTestName();
+    modal.innerHTML = `
+      <div class="custom-modal-box" style="max-width:440px;text-align:left;">
+        <div class="lb-modal-header" style="margin-bottom:10px;">
+          <div class="lb-modal-title-group">
+            <h3 class="lb-modal-title">📋 Exam Instructions</h3>
+            <span class="lb-modal-subtitle">${escapeHTML(secTitle)} · Quick Reference</span>
+          </div>
+          <button type="button" class="lb-close-btn" onclick="closeRailUtilityModal()" title="Close">✕</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:0.82rem;">
+          <div style="padding:9px 12px;border-radius:10px;background:#f0f6ff;border:1px solid #d0e2ff;">
+            <strong style="color:#0b1a3d;">Time Limit:</strong> <span style="color:#0066ff;font-weight:800;">1 minute</span> <span style="color:#334155;">per question in each section.</span>
+          </div>
+          <div style="padding:9px 12px;border-radius:10px;background:#eefaf3;border:1px solid #c6ebd7;">
+            <strong style="color:#0b1a3d;">Marking Scheme:</strong> <span style="color:#046a38;font-weight:800;">+${cMarks}</span> for correct answer · <span style="color:#dc2626;font-weight:800;">-${iMarks}</span> for incorrect answer.
+          </div>
+          <div style="padding:9px 12px;border-radius:10px;background:#fff1f2;border:1px solid #fecdd3;">
+            <strong style="color:#0b1a3d;">Tab Switching Penalty:</strong> <span style="color:#ef4444;font-weight:800;">-${pMarks} marks</span> <span style="color:#334155;">for leaving or switching test window.</span>
+          </div>
+          <div style="padding:9px 12px;border-radius:10px;background:#f8fafc;border:1px solid #e2e8f0;color:#475569;font-size:0.78rem;line-height:1.4;">
+            Use <strong>Save &amp; Next</strong> to lock an answer and view its explanation. Use <strong>Review</strong> to bookmark tricky questions.
+          </div>
+        </div>
+        <div style="margin-top:14px;">
+          <button type="button" class="modal-btn-confirm-cancel" onclick="closeRailUtilityModal()" style="width:100%;">Got It</button>
+        </div>
+      </div>`;
+    modal.style.display = 'flex';
+  } else if (type === 'shortcuts') {
     const shortcuts = [
       ['A / B / C / D  or  1–4', 'Select Option'],
       ['Enter', 'Save & Next'],
       ['Backspace', 'Previous Question'],
       ['M', 'Mark / Unmark for Review'],
+      ['F', 'Toggle Focus Mode'],
       ['Delete', 'Clear Response'],
       ['Double Click Option', 'Lock & Auto-Next']
     ];
@@ -322,7 +379,7 @@ function restoreSession(data) {
   document.body.classList.add('exam-in-progress');
   if ($('quiz-screen')) $('quiz-screen').style.display = 'block';
   if ($('unified-nav')) $('unified-nav').style.display = 'flex';
-  ensureReviewControlsExist(); enableDesktopFullscreen();
+  ensureReviewControlsExist(); syncFocusModeUI(); enableDesktopFullscreen();
   buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion();
   if (CBTState.allFetchedRecords?.length > 0) renderSidebarToppers(CBTState.allFetchedRecords);
   fetchAndRenderSidebarToppers();
@@ -483,6 +540,7 @@ function validateStudentDetails() {
       if (!msgEl) {
         msgEl = document.createElement('span');
         msgEl.className = 'field-error-msg';
+        msgEl.innerText = f.err;
         box.appendChild(msgEl);
       }
       msgEl.innerText = f.err;
@@ -829,7 +887,7 @@ window.beginExam = async () => {
 
   if ($('quiz-screen')) $('quiz-screen').style.display = 'block';
   if ($('unified-nav')) $('unified-nav').style.display = 'flex';
-  ensureReviewControlsExist(); enableDesktopFullscreen();
+  ensureReviewControlsExist(); syncFocusModeUI(); enableDesktopFullscreen();
   buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion(); saveSessionToLocalStorage(); fetchAndRenderSidebarToppers();
 };
 
@@ -1126,6 +1184,7 @@ document.addEventListener('keydown', e => {
       return;
     }
     if (key === 'M') { e.preventDefault(); toggleMarkForReview(); return; }
+    if (key === 'F') { e.preventDefault(); toggleFocusMode(); return; }
     if (e.key === 'Enter') { e.preventDefault(); nextQuestion(); return; }
     if (e.key === 'Backspace') { e.preventDefault(); prevQuestion(); return; }
     if (e.key === 'Delete') { e.preventDefault(); clearResponse(); return; }
@@ -1151,7 +1210,7 @@ window.addEventListener("blur", handleBlurOrHide);
 function placeActionMatrix() {
   const matrix = $('action-matrix-slot'), contentArea = $('question-content'), palette = $('palette-column-container');
   if (!matrix || !contentArea || !palette) return;
-  if (window.innerWidth <= 640) {
+  if (window.innerWidth <= 640 || CBTState.isFocusMode) {
     if (matrix.parentNode !== contentArea) contentArea.appendChild(matrix);
   } else if (matrix.parentNode !== palette) {
     palette.appendChild(matrix);
@@ -1831,6 +1890,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   ensureSectionSelectionModalExists();
   ensureReviewControlsExist();
+  syncFocusModeUI();
   syncMarkingLabelsInDOM();
 
   resetFeedbackForm();
