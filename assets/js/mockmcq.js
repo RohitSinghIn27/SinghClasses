@@ -42,7 +42,9 @@ window.CBTState = {
   feedbackCategory: "",
   feedbackDataStore: [], hasAnimatedStars: false,
   isExpandedSubmissions: false, allFetchedRecords: [], hasFetchedFeedback: false,
-  autoNextSeconds: getAutoNextSeconds()
+  autoNextSeconds: getAutoNextSeconds(),
+  themeMode: localStorage.getItem('cbt_theme_mode') || 'light',
+  showTimer: localStorage.getItem('cbt_show_timer') !== null ? localStorage.getItem('cbt_show_timer') === 'true' : true
 };
 
 let spacePressTimestamps = [], autoAdvanceTimer = null, autoAdvanceCountdownInterval = null;
@@ -124,6 +126,35 @@ window.setAutoNextSeconds = function(sec) {
   });
   if (val === 0) cancelAutoAdvance();
   showToastAlert(val === 0 ? "Auto-Next turned Off" : `Auto-Next set to ${val} seconds`);
+};
+
+window.setThemeMode = function(mode) {
+  const validMode = ['light', 'warm', 'dark'].includes(mode) ? mode : 'light';
+  CBTState.themeMode = validMode;
+  try { localStorage.setItem('cbt_theme_mode', validMode); } catch (e) {}
+  document.body.setAttribute('data-theme', validMode);
+  document.querySelectorAll('.rail-theme-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.mode === validMode);
+  });
+  const labels = { light: 'Light Mode', warm: 'Warm Mode', dark: 'Dark Mode' };
+  showToastAlert(`${labels[validMode]} enabled`);
+};
+
+function syncTimerVisibilityUI() {
+  const visible = CBTState.showTimer !== false;
+  document.body.classList.toggle('cbt-timer-hidden', !visible);
+  document.querySelectorAll('.rail-timer-vis-btn').forEach(btn => {
+    const btnVisible = btn.dataset.visible === 'true';
+    btn.classList.toggle('active', btnVisible === visible);
+  });
+}
+
+window.setTimerVisibility = function(isVisible) {
+  const visible = Boolean(isVisible);
+  CBTState.showTimer = visible;
+  try { localStorage.setItem('cbt_show_timer', String(visible)); } catch (e) {}
+  syncTimerVisibilityUI();
+  showToastAlert(visible ? "Timer shown" : "Timer hidden (runs in background)");
 };
 
 /* ==========================================================================
@@ -243,22 +274,39 @@ window.handleRailAction = function(type) {
     const cMarks = getCorrectMarks(), iMarks = getIncorrectMarks();
     const fsLabel = document.fullscreenElement ? 'Exit Fullscreen' : 'Enter Fullscreen';
     const curAuto = CBTState.autoNextSeconds;
+    const curMode = CBTState.themeMode || 'light';
+    const curTimerVisible = CBTState.showTimer !== false;
     modal.innerHTML = `
       <div class="custom-modal-box" style="max-width:420px;text-align:left;">
         <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
           <button type="button" class="lb-close-btn" onclick="closeRailUtilityModal()" title="Close">✕</button>
         </div>
-        <div style="border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;background:#ffffff;font-size:0.82rem;">
-          <div style="display:flex;justify-content:space-between;padding:8px 12px;border-bottom:1px solid #f1f5f9;">
-            <span style="color:#475569;font-weight:600;">Correct Answer</span>
+        <div style="border:1px solid var(--border-color);border-radius:10px;overflow:hidden;background:var(--container-bg);font-size:0.82rem;">
+          <div style="display:flex;justify-content:space-between;padding:8px 12px;border-bottom:1px solid var(--border-color);">
+            <span style="color:var(--stat-lbl-color);font-weight:600;">Correct Answer</span>
             <strong style="color:#16a34a;">+${cMarks} Mark${cMarks === 1 ? '' : 's'}</strong>
           </div>
-          <div style="display:flex;justify-content:space-between;padding:8px 12px;border-bottom:1px solid #f1f5f9;">
-            <span style="color:#475569;font-weight:600;">Incorrect Answer</span>
+          <div style="display:flex;justify-content:space-between;padding:8px 12px;border-bottom:1px solid var(--border-color);">
+            <span style="color:var(--stat-lbl-color);font-weight:600;">Incorrect Answer</span>
             <strong style="color:#dc2626;">-${iMarks} Marks</strong>
           </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid #f1f5f9;">
-            <span style="color:#475569;font-weight:600;">Auto-Next Timer</span>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--border-color);">
+            <span style="color:var(--stat-lbl-color);font-weight:600;">Mode</span>
+            <div class="rail-autonext-group" role="group" aria-label="Mode">
+              <button type="button" class="rail-autonext-btn rail-theme-btn ${curMode === 'light' ? 'active' : ''}" data-mode="light" onclick="setThemeMode('light')">Light</button>
+              <button type="button" class="rail-autonext-btn rail-theme-btn ${curMode === 'warm' ? 'active' : ''}" data-mode="warm" onclick="setThemeMode('warm')">Warm</button>
+              <button type="button" class="rail-autonext-btn rail-theme-btn ${curMode === 'dark' ? 'active' : ''}" data-mode="dark" onclick="setThemeMode('dark')">Dark</button>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--border-color);">
+            <span style="color:var(--stat-lbl-color);font-weight:600;">Timer</span>
+            <div class="rail-autonext-group" role="group" aria-label="Timer Visibility">
+              <button type="button" class="rail-autonext-btn rail-timer-vis-btn ${curTimerVisible ? 'active' : ''}" data-visible="true" onclick="setTimerVisibility(true)">Show</button>
+              <button type="button" class="rail-autonext-btn rail-timer-vis-btn ${!curTimerVisible ? 'active' : ''}" data-visible="false" onclick="setTimerVisibility(false)">Hide</button>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--border-color);">
+            <span style="color:var(--stat-lbl-color);font-weight:600;">Auto-Next Timer</span>
             <div class="rail-autonext-group" role="group" aria-label="Auto-Next Timer">
               <button type="button" class="rail-autonext-btn ${curAuto === 0 ? 'active' : ''}" data-sec="0" onclick="setAutoNextSeconds(0)">Off</button>
               <button type="button" class="rail-autonext-btn ${curAuto === 3 ? 'active' : ''}" data-sec="3" onclick="setAutoNextSeconds(3)">3s</button>
@@ -266,7 +314,7 @@ window.handleRailAction = function(type) {
             </div>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;">
-            <span style="color:#475569;font-weight:600;">Screen Mode</span>
+            <span style="color:var(--stat-lbl-color);font-weight:600;">Screen Mode</span>
             <button type="button" class="btn-retry-sections" onclick="toggleFullScreen();closeRailUtilityModal();">${fsLabel}</button>
           </div>
         </div>
@@ -379,7 +427,7 @@ function restoreSession(data) {
   document.body.classList.add('exam-in-progress');
   if ($('quiz-screen')) $('quiz-screen').style.display = 'block';
   if ($('unified-nav')) $('unified-nav').style.display = 'flex';
-  ensureReviewControlsExist(); syncFocusModeUI(); enableDesktopFullscreen();
+  ensureReviewControlsExist(); syncFocusModeUI(); syncTimerVisibilityUI(); enableDesktopFullscreen();
   buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion();
   if (CBTState.allFetchedRecords?.length > 0) renderSidebarToppers(CBTState.allFetchedRecords);
   fetchAndRenderSidebarToppers();
@@ -887,7 +935,7 @@ window.beginExam = async () => {
 
   if ($('quiz-screen')) $('quiz-screen').style.display = 'block';
   if ($('unified-nav')) $('unified-nav').style.display = 'flex';
-  ensureReviewControlsExist(); syncFocusModeUI(); enableDesktopFullscreen();
+  ensureReviewControlsExist(); syncFocusModeUI(); syncTimerVisibilityUI(); enableDesktopFullscreen();
   buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion(); saveSessionToLocalStorage(); fetchAndRenderSidebarToppers();
 };
 
@@ -1875,6 +1923,9 @@ window.toggleAllSubmissions = function() {
    SECTION 13: DOM CONTENT LOADED INITIALIZATION
    ========================================================================== */
 document.addEventListener('DOMContentLoaded', async () => {
+  document.body.setAttribute('data-theme', CBTState.themeMode || 'light');
+  syncTimerVisibilityUI();
+
   const activeName = getTestName(), chNum = getChapterNumber(), weight = getChapterWeightage();
   if ($('header-ch-num')) $('header-ch-num').innerText = `Ch ${chNum}`;
   if ($('header-ch-title')) $('header-ch-title').innerText = activeName;
