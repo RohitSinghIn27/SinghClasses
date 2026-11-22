@@ -2,6 +2,514 @@
    SECTION 1: CSS VARIABLES, RESET & GLOBAL BASE
    ========================================================================== */
 :root { --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; --text-xs: 0.74rem; --text-sm: 0.86rem; --text-base: 0.98rem; --text-lg: 1.10rem; --text-xl: 1.22rem; --text-2xl: 1.55rem; --bg-color: #f8fafc; --app-bg: #ffffff; --text-color: #0f172a; --nav-bg: #151d2a; --container-bg: #ffffff; --border-color: #e2e8f0; --footer-bg: #0e1726; --primary-color: #046a38; --primary-accent: #2563eb; --accent-yellow: #eab308; --color-correct: #16a34a; --color-wrong: #dc2626; --color-warning: #d97706; --color-danger: #e11d48; --color-review: #7c3aed; --btn-radius: 10px; --modal-width: 520px; --header-bg: #0d1527; --header-text: #ffffff; --top-header-bg: var(--primary-color); --nav-active-border: var(--accent-yellow); --tab-active-lbl: #cbd5e1; --tab-inactive-lbl: #94a3b8; --tab-active-val: #f59e0b; --tab-inactive-val: #e2e8f0; --q-num-color: #1e3a8a; --option-bg: #ffffff; --option-border: #cbd5e1; --option-hover-bg: #f1f5f9; --opt-sel-bg: #eff6ff; --opt-sel-border: #2563eb; --opt-sel-text: #1e40af; --opt-sel-letter-bg: #2563eb; --palette-unvisited: #64748b; --stat-lbl-color: #475569; --modal-bg: #ffffff; --modal-text: #0f172a; --timer-bg: #1f2937; --timer-text: #ffffff; --rs-bg-outer: #ffffff; --rs-bg-card: #ffffff; }
+
+/* Timer Visibility Toggle */
+body.cbt-timer-hidden #timer-box {
+  display: none !important;
+}
+
+/* Theme Mode: Warm */
+body[data-theme="warm"] {
+  --bg-color: #f6efe2;
+  --app-bg: #fbf6ec;
+  --text-color: #292118;
+  --container-bg: #fdf9f1;
+  --border-color: #e3d5be;
+  --option-bg: #fdf9f1;
+  --option-border: #d8c7ab;
+  --option-hover-bg: #f4ead8;
+  --opt-sel-bg: #fef3c7;
+  --opt-sel-border: #d97706;
+  --opt-sel-text: #78350f;
+  --opt-sel-letter-bg: #d97706;
+  --stat-lbl-color: #5c4d3c;
+  --modal-bg: #fbf6ec;
+  --modal-text: #292118;
+  --rs-bg-outer: #fbf6ec;
+  --rs-bg-card: #fdf9f1;
+}
+body[data-theme="warm"] .sc-widget-container,
+body[data-theme="warm"] .cbt-container,
+body[data-theme="warm"] .q-workspace-box,
+body[data-theme="warm"] .cbt-question-header-card,
+body[data-theme="warm"] .toppers-img6-compact,
+body[data-theme="warm"] .fb-two-row-card,
+body[data-theme="warm"] .submissions-showcase-container,
+body[data-theme="warm"] .img4-summary-card,
+body[data-theme="warm"] .img4-table-body,
+body[data-theme="warm"] .img4-row:not(.total-row),
+body[data-theme="warm"] .rs-stat-box-card,
+body[data-theme="warm"] .img3-saving-container,
+body[data-theme="warm"] .ssc-approved-image1-card,
+body[data-theme="warm"] .ssc-appr-user-bubble {
+  background-color: #fdf9f1;
+  border-color: #e3d5be;
+  color: #292118;
+}
+body[data-theme="warm"] .q-options-box,
+body[data-theme="warm"] .palette-filter-bar,
+body[data-theme="warm"] .rs-score-banner-box,
+body[data-theme="warm"] .img4-row.total-row,
+body[data-theme="warm"] .ssc-wave-header-hero {
+  background: #f5ebd8;
+  border-color: #e3d5be;
+}
+body[data-theme="warm"] .question-text,
+body[data-theme="warm"] .option-text,
+body[data-theme="warm"] .qhc-title-text,
+body[data-theme="warm"] .ssc-wave-title,
+body[data-theme="warm"] .ssc-col-banner h4,
+body[data-theme="warm"] .ssc-appr-name,
+body[data-theme="warm"] .ssc-pending-name,
+body[data-theme="warm"] .rs-hero-title,
+body[data-theme="warm"] .rs-stat-box-val {
+  color: #292118;
+}
+
+/* Theme Mode: Dark (Option 2: True Neutral Charcoal - Zero Eye-Strain) */
+body[data-theme="dark"] {
+  --bg-color: #0d1117;
+  --app-bg: #161b22;
+  --text-color: #e6edf3;
+  --container-bg: #161b22;
+  --border-color: #30363d;
+  --q-num-color: #58a6ff;
+  --option-bg: #21262d;
+  --option-border: #30363d;
+  --option-hover-bg: #292f38;
+  --opt-sel-bg: #13233a;
+  --opt-sel-border: #388bfd;
+  --opt-sel-text: #cde4ff;
+  --opt-sel-letter-bg: #2ea043;
+  --palette-unvisited: #8b949e;
+  --stat-lbl-color: #8b949e;
+  --modal-bg: #161b22;
+  --modal-text: #e6edf3;
+  --rs-bg-outer: #161b22;
+  --rs-bg-card: #21262d;
+}
+body[data-theme="dark"] .sc-widget-container,
+body[data-theme="dark"] .cbt-container,
+body[data-theme="dark"] .q-workspace-box,
+body[data-theme="dark"] .cbt-question-header-card,
+body[data-theme="dark"] .toppers-img6-compact,
+body[data-theme="dark"] .fb-two-row-card,
+body[data-theme="dark"] .submissions-showcase-container,
+body[data-theme="dark"] .img4-summary-card,
+body[data-theme="dark"] .img4-table-body,
+body[data-theme="dark"] .img4-row:not(.total-row),
+body[data-theme="dark"] .rs-stat-box-card,
+body[data-theme="dark"] .img3-saving-container,
+body[data-theme="dark"] .ssc-approved-image1-card,
+body[data-theme="dark"] .leaderboard-modal-box,
+body[data-theme="dark"] .lb-table-wrap,
+body[data-theme="dark"] .lb-candidate-list,
+body[data-theme="dark"] .lb-table-row {
+  background-color: #161b22;
+  border-color: #30363d;
+  color: #e6edf3;
+}
+body[data-theme="dark"] .q-options-box,
+body[data-theme="dark"] .palette-filter-bar,
+body[data-theme="dark"] .rs-score-banner-box,
+body[data-theme="dark"] .img4-row.total-row,
+body[data-theme="dark"] .ssc-appr-user-bubble,
+body[data-theme="dark"] .lb-table-header,
+body[data-theme="dark"] .rail-autonext-group {
+  background: #21262d;
+  border-color: #30363d;
+  color: #e6edf3;
+}
+body[data-theme="dark"] .qhc-right-group {
+  background: #21262d;
+  border-color: #30363d;
+}
+body[data-theme="dark"] .qhc-brand-url {
+  color: #e6edf3;
+}
+body[data-theme="dark"] .qhc-tag-pill {
+  background-color: rgba(210, 153, 34, 0.16);
+  border-color: #d29922;
+  color: #f0c674;
+}
+body[data-theme="dark"] .qhc-hamburger-badge {
+  background: #21262d;
+  border-color: #30363d;
+}
+body[data-theme="dark"] .qhc-progress-track {
+  background-color: #21262d;
+}
+body[data-theme="dark"] .qhc-progress-bar {
+  background-color: #2ea043;
+}
+body[data-theme="dark"] .ssc-wave-header-hero {
+  background: linear-gradient(180deg, #1c2128 0%, #161b22 100%);
+  border-bottom-color: #30363d;
+}
+body[data-theme="dark"] .submissions-showcase-container {
+  border-color: #30363d;
+  border-top-color: #484f58;
+}
+body[data-theme="dark"] .submissions-showcase-container::before {
+  background: linear-gradient(90deg, #21262d 0%, #30363d 50%, #21262d 100%);
+}
+body[data-theme="dark"] .fb-two-row-card {
+  border-color: #30363d;
+  border-bottom-color: #484f58;
+}
+body[data-theme="dark"] .fb-two-row-card::before {
+  background: #2ea043;
+}
+body[data-theme="dark"] .question-text,
+body[data-theme="dark"] .option-text,
+body[data-theme="dark"] .qhc-title-text,
+body[data-theme="dark"] .ssc-wave-title,
+body[data-theme="dark"] .ssc-col-banner h4,
+body[data-theme="dark"] .ssc-appr-name,
+body[data-theme="dark"] .ssc-pending-name,
+body[data-theme="dark"] .ssc-inst-name,
+body[data-theme="dark"] .rs-hero-title,
+body[data-theme="dark"] .rs-stat-box-val,
+body[data-theme="dark"] .rs-score-banner-text,
+body[data-theme="dark"] .img4-sec-name,
+body[data-theme="dark"] .img4-summary-title,
+body[data-theme="dark"] .img3-saving-title,
+body[data-theme="dark"] .lb-modal-title,
+body[data-theme="dark"] .lb-col-name {
+  color: #e6edf3;
+}
+body[data-theme="dark"] .ssc-wave-desc,
+body[data-theme="dark"] .ssc-col-banner p,
+body[data-theme="dark"] .ssc-appr-date,
+body[data-theme="dark"] .ssc-pending-date,
+body[data-theme="dark"] .ssc-inst-date,
+body[data-theme="dark"] .fb-char-counter,
+body[data-theme="dark"] .submit-warning-notice,
+body[data-theme="dark"] .lb-modal-subtitle,
+body[data-theme="dark"] .lb-col-school {
+  color: #8b949e;
+}
+body[data-theme="dark"] .option-letter {
+  background: #161b22;
+  color: #e6edf3;
+  border-color: #30363d;
+}
+body[data-theme="dark"] .options label.correct-answer {
+  background: #12261e !important;
+  border-color: #2ea043 !important;
+  color: #7ee787 !important;
+}
+body[data-theme="dark"] .options label.correct-answer .option-text {
+  color: #7ee787 !important;
+}
+body[data-theme="dark"] .options label.wrong-answer {
+  background: #2b1418 !important;
+  border-color: #f85149 !important;
+  color: #ffa198 !important;
+}
+body[data-theme="dark"] .options label.wrong-answer .option-text {
+  color: #ffa198 !important;
+}
+body[data-theme="dark"] .comp-exp-container {
+  background-color: #12261e;
+  border-color: #2ea043;
+}
+body[data-theme="dark"] .comp-exp-container.is-disabled,
+body[data-theme="dark"] .comp-exp-container:has(.comp-exp-header-btn.disabled) {
+  background-color: #21262d;
+  border-color: #30363d;
+}
+body[data-theme="dark"] .comp-exp-header-btn {
+  background-color: #12261e;
+  color: #7ee787;
+}
+body[data-theme="dark"] .comp-exp-header-btn.disabled {
+  background-color: #21262d;
+  color: #8b949e;
+}
+body[data-theme="dark"] .comp-exp-content-box,
+body[data-theme="dark"] .comp-exp-main-body {
+  background: #161b22;
+}
+body[data-theme="dark"] .comp-exp-sol-body,
+body[data-theme="dark"] .comp-exp-verdict-pill {
+  color: #e6edf3;
+}
+body[data-theme="dark"] .comp-exp-footer-bar {
+  background: #12261e;
+  border-top-color: #234737;
+}
+body[data-theme="dark"] .comp-exp-correct-pill {
+  color: #7ee787;
+}
+body[data-theme="dark"] .palette-btn {
+  background-color: #21262d;
+  border-color: #30363d;
+  color: #e6edf3;
+}
+body[data-theme="dark"] .palette-btn.dsp-unvisited {
+  background-color: #21262d;
+  border-color: #30363d;
+  color: #8b949e;
+}
+body[data-theme="dark"] .palette-btn.dsp-answered {
+  background-color: #12261e;
+  border-color: #2ea043;
+  color: #7ee787;
+}
+body[data-theme="dark"] .palette-btn.dsp-not-answered {
+  background-color: #2b2111;
+  border-color: #d29922;
+  color: #e3b341;
+}
+body[data-theme="dark"] .palette-btn.dsp-wrong {
+  background-color: #2b1418;
+  border-color: #f85149;
+  color: #ffa198;
+}
+body[data-theme="dark"] .palette-btn.dsp-marked {
+  background-color: #221934;
+  border-color: #8957e5;
+  color: #d2a8ff;
+}
+body[data-theme="dark"] .palette-btn.current-question {
+  color: #ffffff;
+}
+body[data-theme="dark"] .stat-card-right {
+  background-color: #12261e;
+  border: 1px solid #234737;
+}
+body[data-theme="dark"] .stat-card-right .stat-card-val {
+  color: #3fb950;
+}
+body[data-theme="dark"] .stat-card-wrong {
+  background-color: #2b1418;
+  border: 1px solid #542228;
+}
+body[data-theme="dark"] .stat-card-wrong .stat-card-val {
+  color: #f85149;
+}
+body[data-theme="dark"] .stat-card-score {
+  background-color: #13233a;
+  border: 1px solid #233f66;
+}
+body[data-theme="dark"] .stat-card-score .stat-card-val {
+  color: #58a6ff;
+}
+body[data-theme="dark"] .matrix-row-secondary .btn-prev,
+body[data-theme="dark"] .matrix-row-secondary .btn-prev:disabled,
+body[data-theme="dark"] .matrix-row-secondary .btn-clear,
+body[data-theme="dark"] .matrix-row-secondary .btn-clear:disabled {
+  background-color: #21262d;
+  border-color: #30363d;
+  color: #c9d1d9;
+}
+body[data-theme="dark"] .matrix-row-secondary .btn-review {
+  background-color: #221934;
+  border-color: #6e40c9;
+  color: #d2a8ff;
+}
+body[data-theme="dark"] .matrix-row-secondary .btn-review.active-marked {
+  background-color: #6e40c9;
+  color: #ffffff;
+}
+body[data-theme="dark"] .filter-pill-btn {
+  color: #8b949e;
+}
+body[data-theme="dark"] .filter-pill-btn.active,
+body[data-theme="dark"] .filter-pill-btn:hover {
+  background: #0d1117;
+  color: #3fb950;
+  border-color: #2ea043;
+}
+body[data-theme="dark"] .fb-input-wrapper-embedded {
+  background: #0d1117;
+  border-color: #30363d;
+}
+body[data-theme="dark"] .fb-input-wrapper-embedded textarea {
+  color: #e6edf3;
+}
+body[data-theme="dark"] .fb-input-wrapper-embedded textarea::placeholder {
+  color: #8b949e;
+}
+body[data-theme="dark"] .fb-rate-title,
+body[data-theme="dark"] .fb-type-heading,
+body[data-theme="dark"] .fb-card-row-bottom {
+  background-color: transparent;
+  color: #e6edf3;
+}
+body[data-theme="dark"] .fb-row-badge-icon {
+  background: #21262d;
+  border-color: #30363d;
+}
+body[data-theme="dark"] .fb-row2-divider {
+  background-color: #30363d;
+}
+body[data-theme="dark"] .fb-radio-pill-exact,
+body[data-theme="dark"] #pill-opt-sugg {
+  background: #21262d;
+  border-color: #30363d;
+  color: #e6edf3;
+}
+body[data-theme="dark"] #pill-opt-sugg.active {
+  background: #13233a !important;
+  border-color: #388bfd !important;
+  color: #79c0ff !important;
+}
+body[data-theme="dark"] #pill-opt-issue.active {
+  background: #2b1418 !important;
+  border-color: #f85149 !important;
+  color: #ffa198 !important;
+}
+body[data-theme="dark"] .toppers-hero-header {
+  border-bottom-color: #30363d;
+}
+body[data-theme="dark"] .toppers-hero-header .shortcut-label {
+  color: #e6edf3;
+}
+body[data-theme="dark"] .topper-user-rank-pill {
+  background: #13233a;
+  border-color: #233f66;
+  color: #79c0ff;
+}
+body[data-theme="dark"] .topper-user-rank-pill strong {
+  color: #a5d6ff;
+}
+body[data-theme="dark"] .tp6-compact-card.rank-1 {
+  background: #262011;
+  border-color: #6e5214;
+}
+body[data-theme="dark"] .tp6-compact-card.rank-2 {
+  background: #21262d;
+  border-color: #30363d;
+}
+body[data-theme="dark"] .tp6-compact-card.rank-3 {
+  background: #271a12;
+  border-color: #6e3b1e;
+}
+body[data-theme="dark"] .tp6-compact-card.rank-rest {
+  background: #12261e;
+  border-color: #234737;
+}
+body[data-theme="dark"] .tp6-name-text {
+  color: #e6edf3;
+}
+body[data-theme="dark"] .tp6-score-text,
+body[data-theme="dark"] .tp6-class-text {
+  color: #8b949e;
+}
+body[data-theme="dark"] .tp6-pipe {
+  color: #484f58;
+}
+body[data-theme="dark"] .tp6-school-tag,
+body[data-theme="dark"] .ssc-appr-class-tag,
+body[data-theme="dark"] .ssc-pending-class-tag {
+  background: #13233a;
+  border-color: #233f66;
+  color: #79c0ff;
+}
+body[data-theme="dark"] .tp6-compact-card.tp6-next-card {
+  background: #161b22;
+  border-color: #388bfd;
+  color: #79c0ff;
+}
+body[data-theme="dark"] .tp6-next-text {
+  color: #79c0ff;
+}
+body[data-theme="dark"] .ssc-pending-image6-card {
+  background: #231e12;
+  border-color: #5c4814;
+}
+body[data-theme="dark"] .ssc-pending-badge-pill {
+  background: #2e2511;
+  border-color: #6e5214;
+  color: #e3b341;
+}
+body[data-theme="dark"] .approved-banner {
+  background: #12261e;
+  border-color: #234737;
+}
+body[data-theme="dark"] .pending-banner {
+  background: #231e12;
+  border-color: #5c4814;
+}
+body[data-theme="dark"] .ssc-col-count {
+  background: #0d1117;
+}
+body[data-theme="dark"] .ssc-inst-reply-bubble {
+  background-color: #12261e;
+  border-color: #234737;
+  color: #7ee787;
+}
+body[data-theme="dark"] .ssc-admin-tag-pill {
+  background-color: #12261e;
+  border-color: #234737;
+  color: #3fb950;
+}
+body[data-theme="dark"] .ssc-thread-stem,
+body[data-theme="dark"] .ssc-thread-stem::after {
+  background-color: #30363d;
+}
+body[data-theme="dark"] .btn-action-home,
+body[data-theme="dark"] .modal-btn-confirm-cancel,
+body[data-theme="dark"] .lb-close-btn,
+body[data-theme="dark"] .lb-class-pill,
+body[data-theme="dark"] .btn-load-more-responses {
+  background: #21262d;
+  border-color: #30363d;
+  color: #e6edf3;
+}
+body[data-theme="dark"] .btn-action-leaderboard {
+  background: #13233a;
+  border-color: #233f66;
+  color: #79c0ff;
+}
+body[data-theme="dark"] .btn-action-reattempt {
+  background: #291a10;
+  border-color: #6e3b1e;
+  color: #ffa657;
+}
+body[data-theme="dark"] .btn-action-notes {
+  background: #221934;
+  border-color: #553098;
+  color: #d2a8ff;
+}
+body[data-theme="dark"] .btn-action-video {
+  background: #2b1418;
+  border-color: #6e2730;
+  color: #ffa198;
+}
+body[data-theme="dark"] .rail-autonext-btn {
+  color: #8b949e;
+}
+body[data-theme="dark"] .rail-autonext-btn:hover:not(.active) {
+  background: #30363d;
+  color: #e6edf3;
+}
+body[data-theme="dark"] .rail-autonext-btn.active {
+  background: #2ea043;
+  color: #ffffff;
+}
+body[data-theme="dark"] .btn-retry-sections {
+  background: #21262d;
+  color: #3fb950;
+  border-color: #2ea043;
+}
+body[data-theme="dark"] .btn-retry-sections:hover {
+  background: #2ea043;
+  color: #ffffff;
+}
+body[data-theme="dark"] .option-text code,
+body[data-theme="dark"] .question-text code {
+  background: #0d1117;
+  border-color: #30363d;
+  color: #79c0ff;
+}
+body[data-theme="dark"] .unfixed-site-footer {
+  background-color: #161b22;
+  border: 1px solid #30363d;
+}
+
 *, *::before, *::after { box-sizing: border-box; }
 html, body { overflow-x: hidden; width: 100%; min-height: 100%; }
 body { font-family: var(--font-sans); background-color: var(--bg-color); color: var(--text-color); margin: 0; display: flex; flex-direction: column; align-items: center; font-size: var(--text-sm); font-weight: 400; line-height: 1.45; padding: 10px 10px 18px 10px; transition: background-color 0.25s ease, color 0.25s ease; }
