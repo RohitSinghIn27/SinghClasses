@@ -1,4 +1,3 @@
-<!-- CBT Mock Portal Template[cite: 1] -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,10 +14,10 @@
 <meta property="og:site_name" content="SinghClasses" />
 <link rel="icon" href="../../../assets/images/favicon/favicon.ico" type="image/x-icon" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="../../../assets/css/style.css" />
-<link rel="stylesheet" href="../../../assets/css/mcq.css" />
+<link rel="stylesheet" href="../../../assets/css/mockmcq.css" />
 <script>
 window.CBT_CONFIG = {
   ENABLE_PROCTORING: true,
@@ -34,7 +33,7 @@ window.CBT_CONFIG = {
   SaveRecordOfCBT: "https://script.google.com/macros/s/AKfycbxnj5lCU9hPlynIxu2AiEtSmfz3lPa3581SGcDumLMxtON_qbfouNW48tseU2IiGYns7Q/exec",
   HOME_URL: "https://www.singhclasses.in/",
   YOUTUBE_URL: "https://www.youtube.com/channel/UCQpNeGvzbBLsRLnNX7ga8FQ?sub_confirmation=1",
-  NOTES_URL: "https://singhclasses.in/informatics-practices/class-11/index.html"
+  NOTES_URL: "https://singhclasses.in/computer-science/class-11/index.html"
 };
 </script>
 </head>
@@ -54,15 +53,11 @@ window.CBT_CONFIG = {
   </defs>
 </svg>
 
-<!-- SECTION: Modern Top Header -->
-<header class="img5-modern-header" role="banner">
-  <div class="img5-header-left">
-    <button class="img5-nav-btn img5-back-btn" onclick="handleHeaderBack()" aria-label="Go Back">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-      <span>Back</span>
-    </button>
-    <div class="img5-chapter-capsule">
-      <span class="img5-ch-num" id="header-ch-num">Code 083/065 · Ch 09</span>
+<!-- SECTION: Unified Top Pill Header -->
+<header class="unified-top-bar" role="banner">
+  <div class="top-bar-left">
+    <div class="img5-chapter-capsule top-chapter-capsule">
+      <span class="img5-ch-num" id="header-ch-num">Ch 09</span>
       <div class="nav-hud-divider"></div>
       <h1 class="img5-ch-title" id="header-ch-title" style="margin:0;padding:0;display:inline;">Emerging Trends</h1>
       <span class="img5-weight-pill" id="header-ch-weightage">
@@ -71,21 +66,27 @@ window.CBT_CONFIG = {
       </span>
     </div>
   </div>
-  <div class="img5-header-right">
-    <button class="img5-action-btn img5-share-btn" id="btn-share-page" onclick="sharePage()" title="Copy Page Link" aria-label="Share">
-      <svg id="share-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
-      <span class="share-copied-badge" id="share-copied-badge">Copied!</span>
-    </button>
-    <button class="img5-action-btn img5-notes-btn" onclick="triggerVerifyModal('notes')" aria-label="Notes">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-      <span>Notes</span>
-    </button>
-    <button class="img5-action-btn img5-oneshot-btn" id="yt-trigger-btn" onclick="triggerVerifyModal('yt')" aria-label="OneShot Video">
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.377.55a3.016 3.016 0 0 0-2.122 2.136C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.55 9.376.55 9.376.55s7.505 0 9.377-.55a3.016 3.016 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-      <span>OneShot</span>
-    </button>
-    <button class="img5-action-btn img5-fs-btn" id="fullscreen-toggle-btn" onclick="toggleFullScreen()" title="Fullscreen" aria-label="Fullscreen">
-      <svg id="fs-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><polyline points="9 21 3 21 3 15"></polyline><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+
+  <div class="top-exam-hud" id="unified-nav" style="display:none;">
+    <div class="nav-hud-divider top-section-sep"></div>
+    <div class="year-nav-bar" id="year-nav-container"></div>
+    <div class="nav-right-hud">
+      <div class="timer" id="timer-box" title="Double click to unfreeze timer">
+        <span class="timer-sand-icon">⏳</span>
+        <span id="time-left">00:00</span>
+      </div>
+      <div class="nav-hud-divider"></div>
+      <div class="tracking-eyes-container desktop-eyes">
+        <div class="eye-ball"><div class="pupil"></div></div>
+        <div class="eye-ball"><div class="pupil"></div></div>
+      </div>
+      <div class="nav-hud-divider top-fs-sep"></div>
+    </div>
+  </div>
+
+  <div class="top-bar-far-right">
+    <button type="button" class="top-fs-btn" id="fullscreen-toggle-btn" onclick="toggleFullScreen()" title="Fullscreen" aria-label="Fullscreen">
+      <svg id="fs-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><polyline points="9 21 3 21 3 15"></polyline><line x1="3" y1="21" x2="10" y2="14"></line></svg>
     </button>
   </div>
 </header>
@@ -95,16 +96,6 @@ window.CBT_CONFIG = {
 <div class="sc-widget-container">
   <div id="custom-alert-toast" class="sc-custom-alert"><span id="custom-alert-text">Notification</span></div>
   <div class="sc-progress-wrapper"><div class="sc-progress-fill" id="scProgressBar"></div></div>
-
-  <!-- Sub-Navigation & Timer Bar -->
-  <div class="unified-nav" id="unified-nav" style="display:none;">
-    <div class="year-nav-bar" id="year-nav-container"></div>
-    <div class="nav-right-hud">
-      <div class="timer" id="timer-box" title="Double click to unfreeze timer"><span class="timer-sand-icon">⏳</span><span id="time-left">00:00</span></div>
-      <div class="nav-hud-divider"></div>
-      <div class="tracking-eyes-container desktop-eyes"><div class="eye-ball"><div class="pupil"></div></div><div class="eye-ball"><div class="pupil"></div></div></div>
-    </div>
-  </div>
 
   <!-- MODAL: Resume Session -->
   <div id="modal-resume" class="custom-modal-overlay">
@@ -174,8 +165,8 @@ window.CBT_CONFIG = {
           <div class="field-box" data-field="student-class-input">
             <svg class="field-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#046a38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
             <select id="student-class-input" class="field-control select-control" required>
-              <option value="" disabled>Select Class</option>
-              <option value="12">Class XII</option><option value="11" selected>Class XI</option><option value="10">Class X</option><option value="9">Class IX</option><option value="OTHER">Other</option>
+              <option value="" disabled>&nbsp;Select Class</option>
+              <option value="12">&nbsp;Class XII</option><option value="11" selected>&nbsp;Class XI</option><option value="10">&nbsp;Class X</option><option value="9">&nbsp;Class IX</option><option value="OTHER">&nbsp;Other</option>
             </select>
             <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="2.2"><polyline points="6 9 12 15 18 9"></polyline></svg>
             <span class="field-error-msg">Class is required</span>
@@ -183,8 +174,8 @@ window.CBT_CONFIG = {
           <div class="field-box" data-field="student-section-input">
             <svg class="field-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#046a38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
             <select id="student-section-input" class="field-control select-control" required>
-              <option value="" disabled selected>Select Section</option>
-              <option value="A">Sec A</option><option value="B">Sec B</option><option value="C">Sec C</option><option value="D">Sec D</option><option value="E">Sec E</option><option value="F">Sec F</option><option value="OTHER">Other</option>
+              <option value="" disabled selected>&nbsp;Select Section</option>
+              <option value="A">&nbsp;&nbsp;Sec A</option><option value="B">&nbsp;&nbsp;Sec B</option><option value="C">&nbsp;&nbsp;Sec C</option><option value="D">&nbsp;&nbsp;Sec D</option><option value="E">&nbsp;&nbsp;Sec E</option><option value="F">&nbsp;&nbsp;Sec F</option><option value="OTHER">&nbsp;&nbsp;Other</option>
             </select>
             <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="2.2"><polyline points="6 9 12 15 18 9"></polyline></svg>
             <span class="field-error-msg">Section is required</span>
@@ -349,34 +340,86 @@ window.CBT_CONFIG = {
   <div id="quiz-screen" style="display:none;">
     <div class="main-wrapper">
       <div class="cbt-container">
-        <div class="content" id="question-content">
-          <div class="cbt-question-header-card">
-            <div class="qhc-top-row">
-              <div class="qhc-left-group">
-                <button type="button" class="qhc-hamburger-badge" aria-label="Question Information"><svg class="qhc-db-badge-svg" width="17" height="17" viewBox="0 0 24 24"><use href="#db-icon-3d"></use></svg></button>
-                <span class="qhc-title-text" id="q-number">Question 1 of 25</span>
-              </div>
-              <div class="qhc-right-group"><span class="qhc-brand-url">www.SinghClasses.in</span><span class="qhc-pipe-divider">|</span><span class="qhc-tag-pill" id="q-tag-pill">CBSE CS / IP</span></div>
-            </div>
-            <div class="qhc-progress-track"><div class="qhc-progress-bar" id="qhc-progress-bar" style="width:5%;"></div></div>
-          </div>
-          <div class="question-text" id="q-text"></div>
-          <ul class="options" id="q-options"></ul>
+        <!-- Left Vertical Action Rail Inside Question Box -->
+        <aside class="left-action-rail" aria-label="Quick Actions">
+          <button type="button" class="rail-btn rail-back-btn" onclick="handleHeaderBack()" title="Go Back" aria-label="Go Back">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
 
-          <!-- Explanation Accordion -->
-          <div id="q-explanation-wrapper" class="comp-exp-container">
-            <button type="button" id="btn-toggle-exp" class="comp-exp-header-btn disabled" onclick="toggleExplanation()">
-              <span class="comp-exp-header-center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg><span id="btn-exp-label">View Explanation</span></span>
-              <svg class="comp-exp-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-            <div id="explanation-box" class="comp-exp-content-box">
-              <div class="comp-exp-main-body">
-                <div class="comp-exp-bulb-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"></path><path d="M10 22h4"></path><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5"></path></svg></div>
-                <div class="comp-exp-text-flow"><div id="explanation-text-content" class="comp-exp-sol-body"></div></div>
+          <div class="rail-divider" aria-hidden="true"></div>
+
+          <button type="button" class="rail-btn rail-share-btn" id="btn-share-page" onclick="sharePage()" title="Copy Page Link" aria-label="Share">
+            <svg id="share-icon-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+            <span class="share-copied-badge" id="share-copied-badge">Copied!</span>
+          </button>
+
+          <button type="button" class="rail-btn rail-notes-btn" onclick="triggerVerifyModal('notes')" title="Study Notes" aria-label="Notes">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          </button>
+
+          <button type="button" class="rail-btn rail-oneshot-btn" id="yt-trigger-btn" onclick="triggerVerifyModal('yt')" title="OneShot Video" aria-label="OneShot Video">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.377.55a3.016 3.016 0 0 0-2.122 2.136C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.55 9.376.55 9.376.55s7.505 0 9.377-.55a3.016 3.016 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </button>
+
+          <button type="button" class="rail-btn rail-instructions-btn" id="btn-rail-instructions" onclick="handleRailAction('instructions')" title="Exam Instructions" aria-label="Exam Instructions">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          </button>
+
+          <button type="button" class="rail-btn rail-focus-btn" id="btn-rail-focus" onclick="toggleFocusMode()" title="Focus Mode" aria-label="Focus Mode">
+            <svg id="rail-focus-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path><circle cx="12" cy="12" r="3"></circle></svg>
+          </button>
+
+          <div class="rail-divider" aria-hidden="true"></div>
+
+          <button type="button" class="rail-btn rail-settings-btn" id="btn-rail-settings" onclick="handleRailAction('settings')" title="Settings" aria-label="Settings">
+            <svg class="settings-gear-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          </button>
+
+          <button type="button" class="rail-btn rail-shortcuts-btn" id="btn-rail-shortcuts" onclick="handleRailAction('shortcuts')" title="Keyboard Shortcuts" aria-label="Keyboard Shortcuts">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"></path></svg>
+          </button>
+        </aside>
+
+        <div class="content" id="question-content">
+          <!-- Subtle Bordered Question Workspace (Header + Prompt + Options + Explanation) -->
+          <div class="q-workspace-box">
+            <div class="cbt-question-header-card">
+              <div class="qhc-top-row">
+                <div class="qhc-left-group">
+                  <button type="button" class="qhc-hamburger-badge" aria-label="Question Information"><svg class="qhc-db-badge-svg" width="17" height="17" viewBox="0 0 24 24"><use href="#db-icon-3d"></use></svg></button>
+                  <span class="qhc-title-text" id="q-number">Question 1 of 25</span>
+                </div>
+                <div class="qhc-right-group"><span class="qhc-brand-url">www.SinghClasses.in</span><span class="qhc-pipe-divider">|</span><span class="qhc-tag-pill" id="q-tag-pill">CBSE CS / IP</span></div>
               </div>
-              <div class="comp-exp-footer-bar">
-                <div class="comp-exp-correct-pill"><span class="comp-exp-check-circle">✓</span><span class="comp-exp-opt-label">Correct Option:</span><span class="comp-exp-opt-char" id="exp-correct-char">A</span></div>
-                <div class="comp-exp-verdict-pill"><span class="comp-exp-emojis">✨</span><span class="comp-exp-verdict-text" id="exp-verdict-text"><strong>Well done!</strong> Great effort.</span></div>
+              <div class="qhc-progress-track"><div class="qhc-progress-bar" id="qhc-progress-bar" style="width:5%;"></div></div>
+            </div>
+
+            <div class="question-text" id="q-text"></div>
+
+            <!-- Subtle Bordered Options Group -->
+            <div class="q-options-box">
+              <ul class="options" id="q-options"></ul>
+            </div>
+
+            <!-- Explanation Accordion -->
+            <div id="q-explanation-wrapper" class="comp-exp-container is-disabled">
+              <button type="button" id="btn-toggle-exp" class="comp-exp-header-btn disabled" onclick="toggleExplanation()">
+                <span class="comp-exp-header-center">
+                  <svg id="exp-lock-icon" class="exp-lock-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                  <svg id="exp-book-icon" class="exp-book-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                  <span id="btn-exp-label">View Explanation</span>
+                </span>
+                <svg class="comp-exp-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+              <div id="explanation-box" class="comp-exp-content-box">
+                <div class="comp-exp-main-body">
+                  <div class="comp-exp-bulb-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"></path><path d="M10 22h4"></path><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5"></path></svg></div>
+                  <div class="comp-exp-text-flow"><div id="explanation-text-content" class="comp-exp-sol-body"></div></div>
+                </div>
+                <div class="comp-exp-footer-bar">
+                  <div class="comp-exp-correct-pill"><span class="comp-exp-check-circle">✓</span><span class="comp-exp-opt-label">Correct Option:</span><span class="comp-exp-opt-char" id="exp-correct-char">A</span></div>
+                  <div class="comp-exp-verdict-pill"><span class="comp-exp-emojis">✨</span><span class="comp-exp-verdict-text" id="exp-verdict-text"><strong>Well done!</strong> Great effort.</span></div>
+                </div>
               </div>
             </div>
           </div>
@@ -400,18 +443,6 @@ window.CBT_CONFIG = {
             <div class="matrix-divider"></div>
             <button type="button" class="btn-submit" id="main-section-submit-btn" onclick="showSubmitModal()"><span>SUBMIT SECTION &rarr;</span></button>
             <div class="submit-warning-notice"><svg class="warning-shield-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg><span>You cannot edit after submitting</span></div>
-          </div>
-
-          <!-- Top Performers Strip -->
-          <div id="sidebar-toppers" class="sidebar-toppers-container toppers-img6-compact" style="display:none;">
-            <div class="toppers-hero-header">
-              <div class="toppers-title-group"><span class="toppers-vertical-accent"></span><span class="toppers-crown-icon" aria-hidden="true">👑</span><h3 class="shortcut-label">Top Performers</h3></div>
-              <div class="toppers-header-actions">
-                <span id="user-current-rank-badge" class="topper-user-rank-pill" style="display:none;">Your current rank: <strong id="user-current-rank-text">-</strong></span>
-                <button type="button" class="btn-toppers-leaderboard" onclick="openLeaderboardModal()" aria-label="View Leaderboard"><span class="toppers-lb-trophy">🏆</span><span>Leaderboard</span><svg class="toppers-lb-arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
-              </div>
-            </div>
-            <div id="sidebar-toppers-list" class="sidebar-toppers-grid-img6"></div>
           </div>
         </div>
       </div>
@@ -507,6 +538,18 @@ window.CBT_CONFIG = {
     </div>
   </div>
 
+  <!-- SECTION: Top Performers Strip (Positioned Before Feedback & Suggestions) -->
+  <div id="sidebar-toppers" class="sidebar-toppers-container toppers-img6-compact" style="display:none;">
+    <div class="toppers-hero-header">
+      <div class="toppers-title-group"><span class="toppers-vertical-accent"></span><span class="toppers-crown-icon" aria-hidden="true">👑</span><h3 class="shortcut-label">Top Performers</h3></div>
+      <div class="toppers-header-actions">
+        <span id="user-current-rank-badge" class="topper-user-rank-pill" style="display:none;">Your current rank: <strong id="user-current-rank-text">-</strong></span>
+        <button type="button" class="btn-toppers-leaderboard" onclick="openLeaderboardModal()" aria-label="View Leaderboard"><span class="toppers-lb-trophy">🏆</span><span>Leaderboard</span><svg class="toppers-lb-arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+      </div>
+    </div>
+    <div id="sidebar-toppers-list" class="sidebar-toppers-grid-img6"></div>
+  </div>
+
   <!-- SECTION: Interactive Feedback & Student Submissions Showcase -->
   <div id="cbt-interactive-feedback-wrapper" class="interactive-feedback-showcase-flow">
     <section class="feedback-input-container" id="feedback-rating-section">
@@ -593,6 +636,6 @@ window.CBT_CONFIG = {
 </footer>
 
 <script src="../../../assets/js/script.js"></script>
-<script src="../../../assets/js/mcq.js"></script>
+<script src="../../../assets/js/mockmcq.js"></script>
 </body>
 </html>
