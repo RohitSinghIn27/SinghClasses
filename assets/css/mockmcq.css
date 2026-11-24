@@ -1542,7 +1542,25 @@ body.cbt-focus-mode .cbt-container {
 }
 
 /* ==========================================================================
-   SECTION 15: PRINT STYLES FOR SCORECARD & EVALUATION
+   SECTION 15: LEFT RAIL INITIALS BADGE & QUESTION NESTED BORDER
+   ========================================================================== */
+.top-student-initials { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, #16294a 0%, #0d1a31 100%); border: 1.6px solid #f59e0b; color: #fde68a; font-size: 0.80rem; font-weight: 800; letter-spacing: 0.03em; display: none; align-items: center; justify-content: center; flex-shrink: 0; position: relative; cursor: default; user-select: none; box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.35), 0 0 8px rgba(245, 158, 11, 0.18); transition: transform 0.16s ease, border-color 0.16s ease, color 0.16s ease; }
+.top-student-initials.visible { display: inline-flex; }
+.top-student-initials:hover { border-color: #fbbf24; color: #ffffff; transform: translateY(-1px); }
+.top-student-initials::after { content: attr(data-student); position: absolute; left: calc(100% + 9px); top: 50%; transform: translateY(-50%) translateX(-4px); background: #0f172a; color: #f8fafc; border: 1px solid #334155; font-size: 0.72rem; font-weight: 700; padding: 4px 10px; border-radius: 7px; white-space: nowrap; box-shadow: 0 6px 16px rgba(15, 23, 42, 0.28); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s ease; z-index: 80; }
+.top-student-initials:hover::after { opacity: 1; visibility: visible; transform: translateY(-50%) translateX(0); }
+.q-workspace-box > .question-text { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px; margin-bottom: 10px; box-sizing: border-box; }
+body[data-theme="warm"] .q-workspace-box > .question-text { background: #f5ebd8; border-color: #e3d5be; }
+body[data-theme="dark"] .q-workspace-box > .question-text { background: #21262d; border-color: #30363d; }
+@media (max-width: 640px) {
+  .top-student-initials { width: 34px; height: 34px; font-size: 0.72rem; border-width: 1.4px; }
+  .top-student-initials::after { left: 50%; top: calc(100% + 7px); transform: translateX(-50%) translateY(-4px); }
+  .top-student-initials:hover::after { transform: translateX(-50%) translateY(0); }
+  .q-workspace-box > .question-text { padding: 8px 10px; margin-bottom: 8px; border-radius: 9px; }
+}
+
+/* ==========================================================================
+   SECTION 16: PRINT STYLES FOR SCORECARD & EVALUATION
    ========================================================================== */
 @media print {
   body { background: #ffffff !important; padding: 0 !important; }
