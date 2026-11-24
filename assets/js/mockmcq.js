@@ -158,8 +158,33 @@ window.setTimerVisibility = function(isVisible) {
 };
 
 /* ==========================================================================
-   SECTION 3: HEADER ACTIONS, LEFT RAIL ACTIONS, FOCUS MODE & FULLSCREEN
+   SECTION 3: HEADER ACTIONS, LEFT RAIL ACTIONS, INITIALS, FOCUS MODE & FULLSCREEN
    ========================================================================== */
+function getStudentInitials(name) {
+  const parts = (name || "").trim().replace(/[^a-zA-Z\s]/g, "").split(/\s+/).filter(Boolean);
+  if (!parts.length) return "";
+  return (parts.length === 1 ? parts[0].slice(0, 2) : parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function updateTopBarInitials() {
+  const rail = document.querySelector('.left-action-rail');
+  if (!rail) return;
+  let badge = $('top-student-initials');
+  if (!badge) {
+    badge = document.createElement('div');
+    badge.id = 'top-student-initials';
+    badge.className = 'top-student-initials';
+  }
+  if (badge.parentNode !== rail) rail.insertBefore(badge, rail.firstChild);
+  const initials = getStudentInitials(CBTState.studentNameVal);
+  if (!initials) { badge.classList.remove('visible'); return; }
+  const meta = [CBTState.studentNameVal, CBTState.studentClassVal, CBTState.studentSectionVal ? `Sec ${CBTState.studentSectionVal}` : ""].filter(Boolean).join(" · ");
+  badge.innerText = initials;
+  badge.setAttribute('data-student', meta);
+  badge.setAttribute('aria-label', meta);
+  badge.classList.add('visible');
+}
+
 function goPageBack() {
   if (document.referrer && window.history.length > 1) window.history.back();
   else if (document.referrer) window.location.href = document.referrer;
@@ -428,6 +453,7 @@ function restoreSession(data) {
   if ($('quiz-screen')) $('quiz-screen').style.display = 'block';
   if ($('unified-nav')) $('unified-nav').style.display = 'flex';
   ensureReviewControlsExist(); syncFocusModeUI(); syncTimerVisibilityUI(); enableDesktopFullscreen();
+  updateTopBarInitials();
   buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion();
   if (CBTState.allFetchedRecords?.length > 0) renderSidebarToppers(CBTState.allFetchedRecords);
   fetchAndRenderSidebarToppers();
@@ -798,6 +824,7 @@ window.goToSectionSelectionStep = () => {
   CBTState.studentSectionVal = $('student-section-input') ? $('student-section-input').value : "A";
   CBTState.schoolNameVal = ($('student-school-input') ? $('student-school-input').value.trim() : "").toUpperCase();
   CBTState.studentName = `${CBTState.studentNameVal} | ${CBTState.studentClassVal} | SEC: ${CBTState.studentSectionVal} | ${CBTState.schoolNameVal}`;
+  updateTopBarInitials();
   renderDynamicSectionPickerCards();
   if ($('welcome-step-1')) $('welcome-step-1').style.display = 'none';
   if ($('welcome-step-section')) $('welcome-step-section').style.display = 'block';
@@ -936,6 +963,7 @@ window.beginExam = async () => {
   if ($('quiz-screen')) $('quiz-screen').style.display = 'block';
   if ($('unified-nav')) $('unified-nav').style.display = 'flex';
   ensureReviewControlsExist(); syncFocusModeUI(); syncTimerVisibilityUI(); enableDesktopFullscreen();
+  updateTopBarInitials();
   buildYearNav(); updateTimerDisplay(); startTimer(); loadQuestion(); saveSessionToLocalStorage(); fetchAndRenderSidebarToppers();
 };
 
@@ -1616,6 +1644,7 @@ window.reAttemptExam = function() {
   if ($('unified-nav')) $('unified-nav').style.display = 'flex';
 
   ensureReviewControlsExist();
+  updateTopBarInitials();
   buildYearNav();
   updateTimerDisplay();
   startTimer();
